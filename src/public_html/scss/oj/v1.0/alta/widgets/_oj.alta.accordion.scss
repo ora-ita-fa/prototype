@@ -1,0 +1,310 @@
+@import "../../utilities/oj.utilities";
+
+$includeAccordionClasses:  $includeAllClasses !default;
+
+// include dependencies
+@if $includeAccordionClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers"; 
+@import "oj.alta.core.icons";
+
+//--------------------------------------------------------
+
+@mixin oj-collapsible-header-common {
+  display: block;
+  position: relative;
+  font-family: $fontFamily;
+  font-weight: $headerFontWeight;
+  color: $headerTextColor;
+}
+
+@mixin oj-collapsible-disabled-header-common {
+  background-image: none;
+  color: $textColorDisabled;
+}
+
+@mixin oj-collapsible-content-common {
+  color: $textColor;
+  background-color: $background1Color;
+}
+
+@if $includeAccordionClasses != false {
+  @include exports("accordion") {
+
+    /* collapsible */
+    /* --------------------------------------------------------------- */
+
+    /* collapsible with "showDetail" style */
+    /* ------------------------------------*/
+    /* 
+     * this is the default style for collapsible header
+     */
+    .oj-collapsible-header {
+      @include oj-collapsible-header-common;
+      font-size: $fontSize;
+      padding: 4px 0 4px 0;
+      background-image: none;
+      border: 0;
+    }
+
+    /*
+     * applied to the disabled collapsible header 
+     */
+    .oj-collapsible.oj-disabled > .oj-collapsible-header {
+      @include oj-collapsible-disabled-header-common;
+    }
+
+    /*
+     * this is the default style for collapsible content
+     */
+    .oj-collapsible-content {
+      @include oj-collapsible-content-common;
+      background-color: transparent;
+      padding-top: 1px;
+      padding-bottom: 5px;
+      border: 0;
+
+      @include oj-ltr() {
+        padding-left: 24px;
+        padding-right: 10px;
+      }
+      @include oj-rtl() {
+        padding-right: 24px;
+        padding-left: 10px;
+      }
+
+    }
+
+
+    /* collapsible with "accordion" style */
+    /* -----------------------------------*/
+    /*
+     * applied to the accordion style header but not to any nested collapsible headers
+     */
+    .oj-accordion-collapsible > .oj-collapsible-header
+    {
+      @include oj-collapsible-header-common;
+      font-size: $mediumFontSize;
+      border: $borderWidth solid $headerBorderColor;
+      background-color: $headerBgColor;
+      @include oj-linear-gradient($headerGradientStops, $headerGradientDirection);
+
+    }
+
+    /*
+     * applied to the disabled accordion style header 
+     */
+    .oj-collapsible.oj-disabled.oj-accordion-collapsible > .oj-collapsible-header
+    {
+      @include oj-collapsible-disabled-header-common;
+      background-color: #FAFAFA;
+    }
+
+
+    /*
+     * applied to the accordion style content but not to any nested collapsible contents
+     */
+    .oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible-content
+    {
+      @include oj-collapsible-content-common;
+
+      padding: 10px;
+      border: $borderWidth solid $border1Color;
+      border-top: 0;
+    }
+
+
+    /* collapsible with "box" style */
+    /* -----------------------------*/
+    /* 
+     * applied to the box style header but not to any nested collapsible headers
+     */
+    .oj-collapsible.oj-box > .oj-collapsible-header {
+      @include oj-collapsible-header-common;
+
+      font-size: $mediumFontSize;
+      padding: 5px;
+      border: $borderWidth solid $headerBorderColor;
+      border-bottom: 0;
+
+      background-image: none;
+    }
+
+    /*
+     * applied to the disabled box style header 
+     */
+    .oj-collapsible.oj-disabled.oj-box > .oj-collapsible-header {
+      @include oj-collapsible-disabled-header-common;
+    }
+
+
+    /* 
+     * applied to the box style wrapper but not to any nested collapsible wrapper
+     * make sure border appear even when it's collapsed
+     */
+    .oj-collapsible.oj-box > .oj-collapsible-wrapper {
+      border: $borderWidth solid $border1Color;
+      border-top: 0;
+    }
+
+    /*
+     * applied to the box style content but not to any nested collapsible content
+     */
+    .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible-content {
+      @include oj-collapsible-content-common;
+
+      @include oj-ltr() {
+        padding-left: 5px;
+      }
+      @include oj-rtl() {
+        padding-right: 5px;
+      }
+    }
+
+    /*
+     * applied to the nested collapsible content
+     * reduce padding in the case of nested collapsible
+     */
+    .oj-collapsible > .oj-collapsible-wrapper > .oj-collapsible,
+    .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible.oj-box,
+    .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible.oj-accordion-collapsible,
+    .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-accordion
+    {
+      padding: 0;
+      @include oj-ltr() {
+        padding-left: 24px;
+      }
+      @include oj-rtl() {
+        padding-right: 24px;
+      }
+    }
+
+
+    /* collapsible content transition effects */
+    /* -------------------------------------- */
+
+    /*
+     * transtion properties and duration
+     */
+    .oj-collapsible-transition {
+      @include oj-transition-property(max-height 0.5s);
+    }
+
+    /*
+     * hide any collapsed content
+     */
+    .oj-collapsible-wrapper {
+      overflow: hidden;
+    }
+
+
+    /* suppress all browser decorations of anchors in the header */
+    /* --------------------------------------------------------- */
+    .oj-collapsible-header a,
+    .oj-collapsible-header a:active,
+    .oj-collapsible-header a:visited,
+    .oj-collapsible-header a:hover,
+    .oj-collapsible-header a:focus {
+      text-decoration: none;
+    }
+
+
+    /* disclosure icons for headers */
+    /* -----------------------------*/
+
+    /*
+     * For disabled headers
+     */
+    .oj-collapsible.oj-disabled .oj-collapsible-header-icon {
+/*      display: none; */
+      color: $iconColorDisabled;
+      opacity: $opacityDisabled;
+    }
+
+    .oj-collapsible-header .oj-collapsible-header-icon {
+      @include oj-rtl() {
+        margin-left: 4px;
+      }
+    }
+
+    .oj-collapsible-header-icon {
+      font-size: $mediumFontSize;
+      padding: 5px;
+
+      // todo: for a basic collapsible (not in an accordion)
+      // the closed font icon has some whitespace on the left side, 
+      // use a negative margin to move over the icon?
+      // margin-left: -2px;
+    }
+
+    .oj-collapsible-close-icon:before {
+      @include oj-ltr() {
+        // use East icon for left to right locale
+        @extend .oj-fwk-icon-arrow-e:before;
+
+      }
+
+      @include oj-rtl() {
+        // use West icon for right to left locale
+        @extend .oj-fwk-icon-arrow-w:before;
+
+      }
+    }
+
+    .oj-collapsible-open-icon:before {
+      @include oj-ltr() {
+        // use se icon for left to right locale
+        @extend .oj-fwk-icon-arrow-se:before;
+      }
+
+      @include oj-rtl() {
+        // use sw icon for right to left locale
+        @extend .oj-fwk-icon-arrow-sw:before;
+      }
+    }
+
+    /* set hand cursor while over the cliclable area */
+    .oj-collapsible-header.oj-hover,
+    .oj-collapsible-header-icon.oj-hover {
+      cursor: pointer;
+    }
+
+    /* accordion */
+    /* --------------------------------------------------------------- */
+
+    /*
+     * For the first Collapsible in an accordion 
+     * display all borders and put radius on top border
+     */
+    .oj-accordion > .oj-accordion-collapsible:first-child > .oj-collapsible-header {
+      border: $borderWidth solid $headerBorderColor;
+      @include oj-border-radius( $smallBorderRadius) {
+        border-top-left-radius: $smallBorderRadius; 
+        border-top-right-radius: $smallBorderRadius;
+      }
+    }
+
+    /*
+     * For the middle Collapsibles in an accordion 
+     * display right, bottom and left borders and without any radius
+     */
+    .oj-accordion > .oj-accordion-collapsible > .oj-collapsible-header {
+      margin-top: 0; 
+      border: $borderWidth solid $headerBorderColor;
+      border-top: 0;
+    }
+
+    /*
+     * For the last Collapsible in an accordion 
+     * display right, bottom and left borders and put radius on bottom border
+     */
+    .oj-accordion > .oj-accordion-collapsible:last-child > .oj-collapsible-header {
+      @include oj-border-radius($smallBorderRadius) {
+        border-bottom-left-radius: $smallBorderRadius; 
+        border-bottom-right-radius: $smallBorderRadius;
+      }
+    }
+  }
+}

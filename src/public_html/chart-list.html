@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Chart List</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="css/chart-list.css">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <script src="js/libs/require/require.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            require(['chart-list']);
+        </script>
+    </head>
+
+    <body>
+        <script id="chart-template" type="text/template">
+            <div class="chart-container">
+            <div class="chart" data-bind="ojComponent: {
+            component: 'ojChart', 
+            type: chartType, 
+            selection: 'multiple', 
+            series: lineSeriesValue, 
+            groups: lineGroupsValue, 
+            animationOnDisplay: 'auto',
+            animationOnDataChange: 'auto',
+            orientation: 'vertical'
+            }"></div>
+            </div>
+        </script>
+        <div class="chart-list">
+
+            <div id="add-chart">
+
+            </div>
+        </div>
+        <div id="timeseries-container">
+            <div style="text-align: right">
+                <button id="back-to-chart-list"
+                        data-bind="
+                    click: goBack,
+                    ojComponent: {
+                    component:'ojButton', 
+                    icons: {end:'oj-fwk-icon-caret-end oj-fwk-icon'}, 
+                    label: 'Run Analysis'
+                }"></button>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+@import "../../utilities/oj.utilities";
+
+$includeProgressbarClasses: $includeAllClasses !default;
+
+@import "../../common/helpers/oj.common.helpers"; 
+
+@if $includeProgressbarClasses != false  {
+  @include exports("progressbar") {
+
+    /* progressbar */
+    /* --------------------------------------------------------------- */
+
+    .oj-progressbar { 
+        // explicitly set box-sizing when height and border both specified
+        box-sizing: content-box;
+        height: 10px;   
+        width: 200px;  	
+        text-align: left; 
+        overflow: hidden; 
+        background: #fcfdfe; 
+    	background-image: linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%);
+        border: 1px solid #dfe4e7;
+    	border-radius: 2px;
+    }
+    .oj-progressbar .oj-progressbar-value {
+        margin: 0; 
+        // explicitly set box-sizing when height and border both specified
+        box-sizing: content-box;
+        height: 100%; 
+        background: #fcfdfe;
+        border: 0;
+    }
+    .oj-progressbar .oj-progressbar-overlay {
+      background: oj-image-url("animated-overlay.gif");
+      height: 100%;
+      filter: alpha(opacity=25);
+      opacity: 0.25;
+    }
+
+    .oj-progressbar-indeterminate .oj-progressbar-value {
+      background:  oj-image-url("animated-overlay.gif");
+      background-repeat: repeat-x;
+    }
+  }
+}

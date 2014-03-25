@@ -1,0 +1,22 @@
+@import "../../utilities/oj.utilities";
+
+
+$includeDataGridClasses:      $includeAllClasses !default;
+
+// include dependencies
+@if $includeDataGridClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "oj.jq.core.icons";
+
+
+@import "../../common/widgets/oj.common.datagrid";
+
+@if $includeDataGridClasses != false {
+  @include exports("datagrid") {
+
+
+
+  }
+}

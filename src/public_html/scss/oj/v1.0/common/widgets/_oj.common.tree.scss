@@ -1,0 +1,107 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// WARNING: do not directly import this file, instead import the 
+//          version in your base theme's directory, 
+//          for example alta/widgets/_oj.alta.tree.scss
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@import "../../utilities/oj.utilities";  
+
+@if $includeTreeClasses != false  {
+  @include exports("common.tree") {
+
+    /* tree */
+    /* --------------------------------------------------------------- */
+
+    .oj-tree-default .oj-tree-list li, 
+    .oj-tree-default .oj-tree-list ins {
+        background-image: oj-image-url("d.png");
+        background-repeat:no-repeat;
+        background-color:transparent;
+    }
+    .oj-tree-default .oj-tree-list li {
+        background-position:-90px 0;
+        background-repeat:repeat-y;
+    }
+    .oj-tree-default li.oj-tree-last {
+        background:transparent;
+    }
+    .oj-tree-default .oj-tree-open > ins {
+        background-position:-72px 0;
+    }
+    .oj-tree-default .oj-tree-closed > ins {
+        background-position:-54px 0;
+    }
+    .oj-tree-default .oj-tree-leaf > ins {
+        background-position:-36px 0;
+    }
+    .oj-tree-default .oj-tree-list a {
+        font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; color:#145c9e;
+    }
+    .oj-tree-default .oj-tree-hovered {
+       background:#e7f4f9;
+       border:1px solid #d8f0fa;
+       padding:0 2px 0 1px;
+    }
+    .oj-tree-default .oj-tree-clicked {
+       background:#beebff;
+       border:1px solid #99defd;
+       padding:0 2px 0 1px;
+    }
+    .oj-tree-default .oj-tree-list a .oj-tree-icon {
+       background-position:-56px -19px;
+    }
+    .oj-tree-default a.oj-tree-loading .oj-tree-icon {
+       background: oj-image-url("ojtreeload.gif") center center no-repeat;
+    }
+    .oj-tree-default.oj-tree-focused {
+       background: transparent;
+    }
+    .oj-tree-default .oj-tree-no-dots li, 
+    .oj-tree-default .oj-tree-no-dots .oj-tree-leaf > ins {
+       background:transparent;
+    }
+    .oj-tree-default .oj-tree-no-dots .oj-tree-open > ins {
+       background-position:-18px 0;
+    }
+    .oj-tree-default .oj-tree-no-dots .oj-tree-closed > ins {
+       background-position:0 0;
+    }
+    .oj-tree-default .oj-tree-no-icons a .oj-tree-icon {
+       display:none;
+    }
+    .oj-tree-default .oj-tree-search {
+       font-style:italic;
+    }
+    .oj-tree-default .oj-tree-no-icons .oj-tree-checkbox {
+      display:inline-block;
+    }
+    .oj-tree-default .oj-tree-no-checkboxes .oj-tree-checkbox {
+       display:none
+     }
+    .oj-tree-default .oj-tree-checked > a > .oj-tree-checkbox {
+       background-position:-38px -19px;
+    }
+    .oj-tree-default .oj-tree-unchecked > a > .oj-tree-checkbox {
+       background-position:-2px -19px;
+    }
+    .oj-tree-default .oj-tree-undetermined > a > .oj-tree-checkbox {
+       background-position:-20px -19px;
+    }
+    .oj-tree-default .oj-tree-checked > a > .oj-tree-checkbox:hover {
+       background-position:-38px -37px;
+    }
+    .oj-tree-default .oj-tree-unchecked > a > .oj-tree-checkbox:hover {
+       background-position:-2px -37px;
+    }
+    .oj-tree-default .oj-tree-undetermined > a > .oj-tree-checkbox:hover {
+       background-position:-20px -37px;
+    }
+    .oj-tree-default a.oj-tree-search {
+       color:aqua;
+    }
+    .oj-tree-default .oj-tree-locked a {
+       color:silver;
+       cursor:default;
+    }
+  }
+}

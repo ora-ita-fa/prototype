@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/libs/oj/v1.0/alta/oj-alta.css" id="css" >
+        <script src="js/libs/require/require.js"></script>
+        <script src="js/main.js"></script>
+    </head>
+    <body>
+           <form id="form1">
+                <input id="inputnumber-id" data-bind="
+                ojComponent: {
+                    component: 'ojInputNumber', 
+                    max:100, 
+                    min:-20, 
+                    step:10, 
+                    value:currentValue
+                }"/>
+                <input value="test"/>
+        </form> 
+        <script>
+            
+             require(['measureSelector'],function(measureSelector){
+                measureSelector.popup(
+                        {
+                            filter:'',
+                            measures:'',
+                            cubes:''
+                        } ,
+                        function(abc){
+                            console.log(abc);
+                        });
+             });
+            
+//            require(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'], function(oj, ko, $){
+//                function MeasureSelector(){
+//                    this.currentValue = ko.observable(-20);
+//                }
+//                measure = new MeasureSelector();
+//                
+//                $(function(){
+//                    $("#form1")
+//                    ko.applyBindings(measure, document.getElementById('form1'));
+//                });   
+//            });
+        </script>
+    </body>
+</html>

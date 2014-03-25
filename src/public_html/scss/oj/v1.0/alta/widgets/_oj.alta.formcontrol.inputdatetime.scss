@@ -1,0 +1,422 @@
+@import "../../utilities/oj.utilities";
+
+$includeInputDateTimeClasses:   $includeFormControlClasses !default;
+
+// include dependencies
+@if $includeInputDateTimeClasses != false {
+  $includeIconClasses:              true !global;
+  $includeNoteWindowClasses:        true !global;
+  $includeButtonClasses:            true !global;
+  $includeLabelClasses:             true !global;
+  $includeMessagingClasses:         true !global;
+  $includeFormControlCommonClasses: true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers"; 
+@import "oj.alta.core.icons";
+@import "oj.alta.tooltip";
+@import "oj.alta.button";
+@import "oj.alta.core.messaging";
+@import "oj.alta.formcontrol.label";
+@import "oj.alta.formcontrol.common";
+
+
+// most of the styling in common file
+@import "../../common/widgets/oj.common.formcontrol.inputdatetime";
+
+@if $includeInputDateTimeClasses != false {
+  @include exports("inputdatetime") {
+
+    /* Class for the root node that contains the floating calendar */
+    .oj-datepicker-content 
+    { 
+      @include oj-box-sizing-property(border-box);
+      background-color: $background1Color;
+      border: $formControlBorderWidth solid $border1Color; 
+      display: none;
+      padding: 5px 3px 0 4px;
+      width: 16em;
+      @include oj-rtl()
+      {
+        direction: rtl;
+      }
+    }
+
+    .oj-datepicker-header 
+    { 
+      position: relative; 
+      padding: 1px 0;
+      background: none;
+      border: 0;
+      color: $headerTextColor;
+      font-weight: $headerFontWeight;
+    }
+    .oj-datepicker-prev-icon, 
+    .oj-datepicker-next-icon 
+    { 
+      position: absolute; 
+      top: 2px;
+      width: 21px;
+      height: 21px;
+	  border-radius: $buttonBorderRadius;
+    }
+	.oj-datepicker-prev-icon.oj-hover 
+    { 
+      @include oj-ltr()
+      {
+        left: 1px;
+      }
+      @include oj-rtl()
+      {
+        right: 1px;
+      }
+    }
+    .oj-datepicker-next-icon.oj-hover 
+    { 
+      @include oj-ltr()
+      {
+        right: 1px;
+      }
+      @include oj-rtl()
+      {
+        left: 1px;
+      }
+    }
+	.oj-datepicker-prev-icon,
+	.oj-datepicker-prev-icon.oj-disabled //since with oj-hover it changes slightly
+    { 
+      @include oj-ltr()
+      {
+        left: 2px; 
+      }
+      @include oj-rtl()
+      {
+        right: 2px;
+      }
+    }
+    .oj-datepicker-next-icon,
+	.oj-datepicker-next-icon.oj-disabled //since with oj-hover it changes slightly
+    { 
+      @include oj-ltr()
+      {
+        right: 2px;
+      }
+      @include oj-rtl()
+      {
+        left: 2px;
+      }
+    }
+	
+	.oj-datepicker-prev-icon.oj-hover, 
+    .oj-datepicker-next-icon.oj-hover 
+    { 
+      top: 1px; 
+      border: $formControlBorderWidth solid $buttonBorderColor;
+      cursor: pointer;
+      background-color: $buttonBgColor;
+      @include oj-linear-gradient($buttonGradientStopsHover, $buttonGradientDirectionHover);
+    }
+
+    .oj-datepicker-prev-icon.oj-disabled,
+    .oj-datepicker-next-icon.oj-disabled
+    {
+      color: $linkTextColorDisabled;
+      border-width: 0;
+      background: $formControlBgColorReadOnly;
+      top: 2px;
+      cursor: default;
+    }
+
+    .oj-datepicker-prev-icon span, 
+    .oj-datepicker-next-icon span 
+    { 
+      display: block; 
+      position: absolute; 
+      left: 50%; 
+      margin-left: -8px; 
+      top: 50%; 
+      margin-top: -8px;  
+    }
+	
+    .oj-datepicker-title 
+    { 
+      margin: 0 2.3em; 
+      line-height: 1.8em; 
+      text-align: center; 
+    }
+	
+    .oj-datepicker-title select 
+    { 
+      font-size: $fontSize; 
+      margin: 1px 0;
+    }
+	
+    .oj-datepicker-month-year 
+    {
+      width: 100%;
+    }
+	
+    .oj-datepicker-month 
+    {
+      margin-right: 3px;
+    }
+	
+    .oj-datepicker-month, 
+    .oj-datepicker-year 
+    { 
+      width: 48%;
+      min-width: 0;
+    }
+	
+    .oj-datepicker-calendar 
+    {
+      width: 100%; 
+      font-size: $fontSize;
+      border-collapse: collapse; 
+      margin: 0 0 4px;
+      outline: 0 none;
+    }
+	
+	.oj-datepicker-calendar th,
+	.oj-datepicker-calendar td 
+	{
+	  border: 0;
+	  text-align: center; 
+	  font-weight: bold;
+	}
+
+    .oj-datepicker-calendar th 
+    { 
+      padding: .7em .3em; 
+      text-transform: uppercase;
+      font-size: $smallFontSize;
+      color: $tertiaryTextColor;
+    }
+	
+    .oj-datepicker-calendar td 
+    {     
+      padding: 0;
+    }
+	
+    .oj-datepicker-calendar td span, 
+    .oj-datepicker-calendar td a 
+    { 
+      display: block; 
+      padding: 5px 0 4px;
+      text-align: center;
+    }
+	
+	.oj-datepicker-calendar td a.oj-enabled
+	{
+	  background: none;
+	  border: $formControlBorderWidth solid $formControlBgColorReadOnly;
+	  color: $textColor;
+	  font-weight: bold;
+	}
+	.oj-datepicker-calendar td a.oj-hover 
+    {
+      text-decoration: underline;
+    }
+	.oj-datepicker-calendar td a.oj-selected 
+    {
+      background: $interaction1Color; 
+      color: $contrastTextColor; 
+    }
+    .oj-datepicker-calendar td.oj-disabled span 
+    { 
+      color: $linkTextColorDisabled;
+    }
+	
+	//Today
+	.oj-datepicker-today
+    {
+      border: $formControlBorderWidth solid $interaction1Color; 
+      text-decoration: none;
+    }
+
+    .oj-datepicker-buttonpane 
+    { 
+      margin: 2px 0 0;    
+      padding: 0 3px;
+      border: $formControlBorderWidth solid $border1Color; 
+	  border-width: $formControlBorderWidth 0 0;
+      
+      @include oj-rtl()
+      { 
+        clear: right; 
+      }
+    }
+    .oj-datepicker-buttonpane button 
+    { 
+      margin: 7px 0;
+      padding: 0 7px; 
+      width: auto; 
+      overflow: visible;
+    }
+	
+	//Float the buttons using the include
+    .oj-datepicker-buttonpane .oj-datepicker-current 
+    {
+      @include oj-bidi-property($property: 'float', $startOrEnd: start);
+    }
+	.oj-datepicker-buttonpane .oj-datepicker-close
+	{
+	  @include oj-bidi-property($property: 'float', $startOrEnd: end);
+	}
+
+    /* with multiple calendars, need to override the width */
+    .oj-datepicker-content.oj-datepicker-multi 
+    { 
+      width: auto; 
+    }
+    .oj-datepicker-multi .oj-datepicker-group 
+    { 
+      @include oj-bidi-property($property: 'float', $startOrEnd: start);
+    }
+    .oj-datepicker-multi .oj-datepicker-group .oj-datepicker-calendar 
+    { 
+      width: 95%; 
+      margin: 0 auto .4em; 
+    }
+    .oj-datepicker-multi-2 .oj-datepicker-group 
+    { 
+      width: 50%; 
+    }
+    .oj-datepicker-multi-3 .oj-datepicker-group 
+    { 
+      width: 33.3%; 
+    }
+    .oj-datepicker-multi-4 .oj-datepicker-group 
+    { 
+      width: 25%; 
+    }
+    .oj-datepicker-multi .oj-datepicker-group-last .oj-datepicker-header,
+    .oj-datepicker-multi .oj-datepicker-group-middle .oj-datepicker-header 
+    { 
+      @include oj-ltr()
+      {
+        border-left-width: 0;
+      }
+      @include oj-rtl()
+      {
+        border-right-width: 0; 
+      }
+    }
+    .oj-datepicker-multi .oj-datepicker-buttonpane 
+    { 
+      clear: left; 
+    }
+    .oj-datepicker-row-break 
+    { 
+      clear: both; 
+      width: 100%; 
+      font-size: 0; 
+    }
+
+    .oj-datepicker-unselectable 
+    {
+      opacity: 0.35;
+    }
+	
+	//CSS when one navigates over the days
+    .oj-datepicker-days-cell-over 
+    {
+      outline: $formControlBorderWidth dotted #145c9e;
+    }
+	
+	//CSS for the week columns
+    .oj-datepicker-week-col 
+    {
+      color: $formControlLabelColor;
+    }
+    th.oj-datepicker-week-col 
+    {
+      background-color: #FAFAFA;
+    }
+    td.oj-datepicker-week-col 
+    {
+      background-color: $background4Color;
+    }
+	
+	//CSS to be applied when of inline, so to allow separation with the time picker
+    .oj-datepicker-inline 
+    {
+      margin-bottom: 6px;
+    }
+
+    .oj-datepicker-time 
+    {
+      box-shadow: $smallBoxShadow;
+      display: none;
+      height: 150px;
+      left: -10000px;
+      overflow: auto;
+      position: absolute;
+      width: 15em;
+      z-index: 100;
+    }
+
+    .oj-datepicker-time-list 
+    {
+      border: 0 none;
+      list-style: none outside none;
+      margin: 0;
+      position: relative;
+	  color: $textColor;
+	  background: $background1Color;
+	  @include oj-ltr()
+      {
+        padding-left: 0;
+      }
+      @include oj-rtl()
+      {
+        padding-right: 0;
+      }
+    }
+
+    .oj-datepicker-time-list-item 
+    {
+      border-radius: $mediumBorderRadius;
+      line-height: 1.8em;
+      padding: 1px 10px;
+    }
+    .oj-datepicker-time-list-item.oj-active 
+    {
+      background-color: $interaction2Color;
+    }
+    .oj-datepicker-time-list-item.oj-checked 
+    {
+      background-color: $interaction3Color;
+    }
+
+    // icons
+    //------------------------------------------
+
+    .oj-datepicker-prev-icon span:before 
+    {
+      @include oj-ltr()
+      {
+        @extend .oj-fwk-icon-caret-w:before;
+      }
+      
+      @include oj-rtl()
+      {
+        @extend .oj-fwk-icon-caret-e:before;
+      }
+    }
+
+    .oj-datepicker-next-icon span:before 
+    {
+      @include oj-ltr()
+      {
+        @extend .oj-fwk-icon-caret-e:before;
+      }
+
+      @include oj-rtl()
+      {
+        @extend .oj-fwk-icon-caret-w:before;
+      }
+    }
+
+  }
+}

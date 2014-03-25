@@ -1,0 +1,34 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-24, 14:09:28
+    Author     : danfjian
+*/
+
+#add-chart {
+    width:400px;
+    height:247px;
+    border:2px solid silver;
+    background:url('../images/add.svg') center no-repeat;
+    cursor:pointer;
+}
+
+#timeseries-container {
+    display:none;
+}
+
+.chart-list>div{
+    border:2px solid silver;
+    display:inline-block;
+    width:400px;
+    height:247px;
+    margin:5px;
+    vertical-align: top;
+}
+
+.chart-list .chart{
+    height:100%;width:100%;
+}

@@ -1,0 +1,48 @@
+@import "../../utilities/oj.utilities";
+
+@include exports("common.helper") {
+
+  /* Layout helpers
+  ----------------------------------*/
+
+  .oj-helper-hidden {
+    display: none;
+  }
+  .oj-helper-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  .oj-helper-reset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    line-height: 1.3;
+    text-decoration: none;
+    font-size: 100%;
+    list-style: none;
+  }
+
+  .oj-helper-reset:focus {
+    outline: 0;
+  }
+
+  .oj-helper-clearfix:before,
+  .oj-helper-clearfix:after {
+    content: "";
+    display: table;
+    border-collapse: collapse;
+  }
+  .oj-helper-clearfix:after {
+    clear: both;
+  }
+  .oj-helper-clearfix {
+    min-height: 0; /* support: IE7 */
+  }
+
+}

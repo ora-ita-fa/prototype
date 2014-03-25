@@ -1,0 +1,31 @@
+@import "../../utilities/oj.utilities";
+
+$includeLabelClasses:   $includeFormControlClasses !default;
+
+@if $includeLabelClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers"; 
+@import "oj.alta.core.icons";
+
+// label layout in common.label
+@import "../../common/widgets/oj.common.formcontrol.label"; 
+
+@if $includeLabelClasses != false {
+  @include exports("label") {
+
+    .oj-label-required-icon {
+         color: $colorRequired;
+         font-size: $largeFontSize;
+         font-weight: normal;
+         line-height: $fontSize;
+         font-family: inherit;
+    }
+
+    .oj-label-help-icon:before {
+      @extend .oj-fwk-icon-help:before;
+    }
+
+  }
+}

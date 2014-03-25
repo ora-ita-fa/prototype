@@ -1,0 +1,40 @@
+@import "../../utilities/oj.utilities";
+
+@if $includeTagsCoreClasses != false {
+  @include exports("common.tagscore") {
+
+    /* html */
+    /* --------------------------------------------------------------- */
+    // we want to allow for using rems, which requires the base 
+    // font size is set on the html element.
+    $currSelectors: if($allowTagSelectors, 
+      // tag selectors:  
+      "html",
+
+      // class selectors: 
+      ".oj-html");
+    #{$currSelectors} {
+        @include oj-normalize-html;
+        font-family: $fontFamily;
+        font-size: $rootFontSize; 
+    }
+
+    /* body */
+    /* --------------------------------------------------------------- */
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "body", 
+
+      // class selectors: 
+      ".oj-body");
+    #{$currSelectors} {
+        @include oj-normalize-body;
+        background-image: oj-image-url($bodyBgImage);
+        background-repeat: repeat;
+        background-position: top left;    
+        color: $bodyTextColor;  
+        background-color: $bodyBgColor;
+    }
+  }
+}

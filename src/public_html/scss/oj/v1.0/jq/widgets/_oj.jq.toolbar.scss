@@ -1,0 +1,50 @@
+@import "../../utilities/oj.utilities";
+
+$includeToolbarClasses: $includeAllClasses !default;
+
+@import "../../common/helpers/oj.common.helpers"; 
+
+@if $includeToolbarClasses != false {
+  @include exports("toolbar") {
+
+    /* toolbar */
+    /* --------------------------------------------------------------- */
+
+    // JQ doesn't have a toolbar component, so this file just emulates the theming seen 
+    // at http://jqueryui.com/button/#toolbar 
+
+    .oj-toolbar {
+        display: inline-block;
+        padding: 0.333em;
+        border: 1px solid #aaaaaa;
+        border-radius: 4px;
+        background-color: #cccccc;
+        // TODO: JQUI demo has this bg gradient.  Should we do the same?  What's the best way to do so?:
+        // url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
+    }
+
+    .oj-toolbar .oj-button {
+        margin-bottom: 0;
+    }
+
+    /* Apps can apply this class to a span to get a toolbar separator.  To make it accessible, the span should also have 
+     * role="separator" aria-orientation="vertical".
+     */
+    .oj-toolbar-separator {
+        border-left:solid 1px #dddddd; 
+        height: 1.833em;
+        display:inline-block; 
+        vertical-align:middle;
+        margin-left: 0.167em; // equals 2px
+        margin-right: 0.167em; // equals 2px
+    }
+
+    // keep oj-toolbar-no-chrome definition after oj-toolbar definition
+    // so that it has a higher specificity
+    /* can be applied to the toolbar to remove the chrome (background and border) */
+    .oj-toolbar-no-chrome {
+        background-color: transparent;
+        border: 0;
+    }
+  }
+}

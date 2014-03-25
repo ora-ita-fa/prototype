@@ -1,0 +1,21 @@
+@import "../../utilities/oj.utilities";
+
+$includeTableClasses:  $includeAllClasses !default;
+
+// include dependencies
+@if $includeTableClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "oj.jq.core.icons";
+
+
+@import "../../common/widgets/oj.common.table"; 
+
+@if $includeTableClasses != false {
+  @include exports("table") {
+
+
+
+  }
+}

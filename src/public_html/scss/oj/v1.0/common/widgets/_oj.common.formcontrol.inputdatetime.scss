@@ -1,0 +1,230 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// WARNING: do not directly import this file, instead import the 
+//          version in your base theme's directory, 
+//          for example alta/widgets/_oj.alta.formcontrol.inputdatetime.scss
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@import "../../utilities/oj.utilities";
+@import "oj.common.formcontrol.mixins";
+
+
+@if $includeInputDateTimeClasses != false {
+  @include exports("common.inputdatetime") {
+
+    /* datepicker */
+    /* --------------------------------------------------------------- */
+    
+    /* Main widget classes */
+    .oj-inputdate,
+    .oj-inputdatetime,
+    .oj-inputtime
+    { 
+    }
+
+    /* Class that wraps the input element */
+    .oj-inputdate-input-container,
+    .oj-inputtime-input-container,
+    .oj-inputdatetime-input-container
+    {
+      @include oj-form-control-content;
+      @include oj-box-sizing-property(border-box);
+      border-width: 0; //Disable border as mentioned as the input + trigger will maintain it
+      padding: 0 1px;
+      display: inline-table;
+
+      /* use a width of 100% and then max and min width so that when 
+         there's less room for the form control it can automatically 
+         get smaller instead of overflowing its boundaries */
+      max-width: $formControlMediumMaxWidth;
+      min-width: $formControlMinWidth;
+      width: 100%;
+
+      // font size needs to be here, because max/min width is in em.
+      font-size: $fontSize;
+    }
+	
+	//actual input element
+    .oj-inputdate-input,
+    .oj-inputdatetime-input, 
+    .oj-inputtime-input
+    {
+      @include oj-box-sizing-property(border-box);
+      background: none;
+      color: $formControlValueColor;
+      border: $formControlBorderWidth solid $formControlBorderColor;
+      display: table-cell;
+      font-family: inherit;
+      font-weight: normal;
+      padding: 0 $formControlPadding; 
+      height: $formControlHeight;
+      width: 100%;
+      @include oj-placeholder()
+      {
+        color: $formControlPlaceholderColor;
+      }
+    }
+	
+    .oj-inputdate-input.oj-has-trigger,
+    .oj-inputdatetime-input.oj-has-trigger, 
+    .oj-inputtime-input.oj-has-trigger
+    {
+      @include oj-ltr()
+      {
+        border-width: $formControlBorderWidth 0 $formControlBorderWidth $formControlBorderWidth; //need to disable right border if trigger exists
+		border-radius: $formControlBorderRadius 0 0 $formControlBorderRadius;
+      }
+
+      @include oj-rtl()
+      {
+        border-width: $formControlBorderWidth $formControlBorderWidth $formControlBorderWidth 0; //need to disable left border if trigger exists
+		border-radius: 0 $formControlBorderRadius $formControlBorderRadius 0;
+      }
+    }
+	
+    //Trigger contains the calendar-icon + time-icon
+    .oj-datepicker-trigger 
+    {
+      @include oj-box-sizing-property(border-box);
+      border: $formControlBorderWidth solid $formControlBorderColor;
+      display: table-cell;
+      background-color: $formControlBgColor;
+      height: $formControlHeight;
+	  padding: 0 3px;
+      vertical-align: middle;
+	  white-space: nowrap;
+	  // by setting width to 1 the cell is only as big as it needs to be
+      // even when the input date max width is set to 100%
+	  width: 1px;
+	  
+	  @include oj-ltr()
+      {
+        border-width: $formControlBorderWidth $formControlBorderWidth $formControlBorderWidth 0; //disable left border
+		border-radius: 0 $formControlBorderRadius $formControlBorderRadius 0;
+      }
+
+      @include oj-rtl()
+      {
+        border-width: $formControlBorderWidth 0 $formControlBorderWidth $formControlBorderWidth;
+		border-radius: $formControlBorderRadius 0 0 $formControlBorderRadius;
+      }
+    }
+    
+	//oj-invalid
+	//Change border color + width when is invalid
+    .oj-inputdate-input-container.oj-invalid .oj-inputdate-input,
+    .oj-inputtime-input-container.oj-invalid .oj-inputtime-input,
+    .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input 
+    {
+      border-color: $borderColorError;
+      border-width: $formControlMessagingBorderWidth;
+    }
+	
+	//note need to disable ONLY when it has a trigger
+    .oj-inputdate-input-container.oj-invalid .oj-inputdate-input.oj-has-trigger,
+    .oj-inputtime-input-container.oj-invalid .oj-inputtime-input.oj-has-trigger,
+    .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger 
+    {
+      @include oj-ltr()
+      {
+        border-width: $formControlMessagingBorderWidth 0 $formControlMessagingBorderWidth $formControlMessagingBorderWidth;
+      }
+
+      @include oj-rtl()
+      {
+        border-width: $formControlMessagingBorderWidth $formControlMessagingBorderWidth $formControlMessagingBorderWidth 0;
+      }
+    }
+	
+	//change the width when invalid
+	.oj-inputdate-input-container.oj-invalid .oj-datepicker-trigger,
+    .oj-inputtime-input-container.oj-invalid .oj-datepicker-trigger,
+    .oj-inputdatetime-input-container.oj-invalid .oj-datepicker-trigger
+    {
+      border-color: $borderColorError;
+	  @include oj-ltr()
+      {
+        border-width: $formControlMessagingBorderWidth $formControlMessagingBorderWidth $formControlMessagingBorderWidth 0;
+      }
+
+      @include oj-rtl()
+      {
+        border-width: $formControlMessagingBorderWidth 0 $formControlMessagingBorderWidth $formControlMessagingBorderWidth;
+      }
+    }
+	
+	//oj-disabled
+	.oj-inputdate-input-container.oj-disabled,
+    .oj-inputtime-input-container.oj-disabled,
+    .oj-inputdatetime-input-container.oj-disabled
+    {
+      background-color: $formControlBgColorDisabled;
+    }
+	.oj-inputdate-input-container.oj-disabled .oj-inputdate-input,
+    .oj-inputtime-input-container.oj-disabled .oj-inputtime-input,
+    .oj-inputdatetime-input-container.oj-disabled .oj-inputdatetime-input
+    {
+      @include oj-form-control-content-disabled;
+    }
+	.oj-inputdate-input-container.oj-disabled .oj-datepicker-trigger,
+    .oj-inputtime-input-container.oj-disabled .oj-datepicker-trigger,
+    .oj-inputdatetime-input-container.oj-disabled .oj-datepicker-trigger
+    {
+      background-color: $formControlBgColorDisabled;
+      border-color: $formControlBorderColorDisabled;
+    }    
+	
+	//oj-read-only
+	.oj-inputdate-input-container.oj-read-only,
+	.oj-inputdate-input-container.oj-read-only .oj-inputdate-input,
+    .oj-inputtime-input-container.oj-read-only,
+	.oj-inputtime-input-container.oj-read-only .oj-inputtime-input,
+    .oj-inputdatetime-input-container.oj-read-only,
+	.oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input
+    {
+	  @include oj-form-control-content-readonly;
+	}
+	// Hide when is of read-only
+	.oj-inputdate-input-container.oj-read-only .oj-datepicker-trigger,
+    .oj-inputtime-input-container.oj-read-only .oj-datepicker-trigger,
+    .oj-inputdatetime-input-container.oj-read-only .oj-datepicker-trigger
+	{
+		display: none;
+	}
+	
+	//Note that this margin will be placed ONLY when is of datetime, meaning not w/ date as no separation is needed from time icon
+	.oj-inputdatetime-input-container .oj-datepicker-calendar-icon
+    {
+      @include oj-ltr()
+      {
+        margin-right: 5px;
+      }
+      @include oj-rtl()
+      {
+        margin-left: 5px;
+      }
+    }
+    .oj-datepicker-calendar-icon,
+    .oj-datepicker-time-icon 
+    {
+      cursor: pointer; //need to have cursor as a pointer since we are using icon-fonts and otherwise would be default
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .oj-datepicker-calendar-icon:before 
+    {
+      @extend .oj-fwk-icon-calendar:before;
+    }
+
+    .oj-datepicker-calendar-icon.oj-disabled,
+    .oj-datepicker-time-icon.oj-disabled
+    {
+      background-color: $formControlBgColorDisabled;
+      cursor: default;
+    }
+
+    .oj-datepicker-time-icon:before 
+    {
+      @extend .oj-fwk-icon-clock:before;
+    }
+  }
+}

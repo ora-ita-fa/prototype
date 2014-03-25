@@ -1,0 +1,247 @@
+
+//
+// Grid Variables
+//
+
+//-------------------------------------------------------------------------------------------------
+// grid variables for defaulting whether certain types of grid classes are generated
+//
+//
+// $gridGenerateBasics:    generate basic grid classes like .oj-sm-1, .oj-sm-2, etc.
+// $gridGenerateOffsets:   generate offset grid classes like .oj-sm-offset-1, .oj-sm-offset-2, etc.
+// $gridGenerateCentering: generate centering grid classes like .oj-sm-center
+// $gridGenerateOddEven:   generate odd and even grid classes like .oj-sm-odd-cols-1, 
+//                         .oj-sm-odd-cols-2, etc.
+// $gridGenerateDeprecatedOrdering:  
+//                         generate push/pull grid classes like 
+//                         .oj-sm-pull-1, .oj-sm-push-3, etc. In the future we expect to switch
+//                         to a flexbox implementation of the grid, and the push/pull classes will 
+//                         not be forward compatible, therefore by default these are not enabled.
+//-------------------------------------------------------------------------------------------------
+$gridGenerateBasics:             true !default;
+$gridGenerateOffsets:            true !default;
+$gridGenerateCentering:          true !default;
+$gridGenerateOddEven:            true !default;
+$gridGenerateDeprecatedOrdering: false !default;
+
+
+
+//
+// Grid Mixins
+//
+
+//-------------------------------------------------------------------------------------------------
+// Create default, nested, and collapsed rows
+// 
+// $behavior - Any special beavior for this row? 
+//             Options: nest, collapse, nest-collapse, false.
+//             Default: false. 
+//-------------------------------------------------------------------------------------------------
+@mixin oj-float-grid-row($behavior: false) {
+
+  // use @include oj-float-grid-row(nest); to include a nested row
+  @if $behavior == nest {
+    margin-left: -($gridColumnGutter/2);
+    margin-right: -($gridColumnGutter/2);
+    max-width: none;
+    width: auto;
+  }
+
+  // use @include oj-float-grid-row(collapse); to collapsed a container row margins
+  @else if $behavior == collapse {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: $gridMaxWidth;
+    width: 100%;
+  }
+
+  // use @include oj-float-grid-row(nest-collapse); to collapse outer margins on a nested row
+  @else if $behavior == nest-collapse {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+    width: auto;
+  }
+
+  // use @include oj-float-grid-row; to use a container row
+  @else {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: $gridMaxWidth;
+    width: 100%;
+  }
+
+  @include oj-box-sizing-property(border-box);
+
+  // We use this to clear floats http://nicolasgallagher.com/micro-clearfix-hack/
+  &:before, &:after { content: " "; display: table; }
+  &:after { clear: both; }
+}
+
+
+//-------------------------------------------------------------------------------------------------
+// For creating columns 
+//
+// $columns:   The number of columns this should be. Default: false
+// $center:    Center these columns? Default: false.
+// $offset:    # of columns to offset. Default: false.
+// $push:      # of columns to push. Default: false.
+// $pull:      # of columns to pull. Default: false.
+// $padding:   left and right padding value on column. 
+//             Null means use $gridColumnGutter/2. 
+//             Default: null.
+// $float:     Should this float? 
+//             Options: true, false, left, right.
+//             Default: true. 
+// $direction: what is the reading direction, 
+//             Options: ltr and rtl. 
+//             Default: ltr
+//-------------------------------------------------------------------------------------------------
+@mixin oj-float-grid-column($columns:   false, 
+                            $center:    false, 
+                            $offset:    false, 
+                            $push:      false, 
+                            $pull:      false, 
+                            $padding:   null, 
+                            $float:     false, 
+                            $direction: ltr) {
+
+  $direction-start: oj-direction-start($direction);
+  $direction-end: oj-direction-end($direction);
+
+  @if $padding == true {
+    padding-left: $gridColumnGutter / 2;
+    padding-right: $gridColumnGutter / 2;
+  }
+  // If padding, get rid of gutter padding
+  @else if $padding != null {
+    padding-left: $padding;
+    padding-right: $padding;
+  }
+
+  // If a column number is given, calculate width
+  @if $columns {
+    width: percentage($columns/$gridTotalColumns);
+
+  }
+
+  // If offset, calculate appropriate margins
+  @if $offset { 
+    $offsetPercentage: $offset/$gridTotalColumns;
+
+    @if ($offsetPercentage == 0) { margin-#{$direction-start}: 0;}
+    @else                        { margin-#{$direction-start}: percentage($offsetPercentage);}
+  }
+
+  // Source Ordering, adds left/right depending on which you use.
+  @if $push { #{$direction-start}: percentage($push/$gridTotalColumns); #{$direction-end}: auto; }
+  @if $pull { #{$direction-end}: percentage($pull/$gridTotalColumns); #{$direction-start}: auto; }
+
+  // If centered, get rid of float and add appropriate margins
+  @if $center {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+  }
+
+  // if float is set to true use float to the start side by default.
+  // otherwise just use the float value passed in if any
+  @if $float != false {
+    @if $float == true { float: oj-direction-start($textDirection); }
+    @else { float: $float; }
+  }
+
+}
+
+
+
+
+//-------------------------------------------------------------------------------------------------
+// generate grid classes, usually these belong inside of media queries
+//
+//
+// $selectorPrefix:    name of class prefix to use, i.e. "oj-sm" will generate 
+//                     .oj-sm-1, .oj-sm-offset-1, etc.
+// $generateBasics:    generate basic grid classes like .oj-sm-1, .oj-sm-2, etc.
+// $generateOffsets:   generate offset grid classes like .oj-sm-offset-1, .oj-sm-offset-2, etc.
+// $generateCentering: generate centering grid classes like .oj-sm-center
+// $generateOddEven:   generate odd and even grid classes like .oj-sm-odd-cols-1, 
+//                     .oj-sm-odd-cols-2, etc.
+// $generateDeprecatedOrdering:  generate push/pull grid classes like 
+//                     .oj-sm-pull-1, .oj-sm-push-3, etc. In the future we expect to switch
+//                     to a flexbox implementation of the grid, and the push/pull classes will not
+//                     be forward compatible, therefore by default these are not enabled.
+//-------------------------------------------------------------------------------------------------
+@mixin oj-float-grid-responsive($selectorPrefix, 
+                           $generateBasics:             $gridGenerateBasics, 
+                           $generateOffsets:            $gridGenerateOffsets, 
+                           $generateCentering:          $gridGenerateCentering,
+                           $generateOddEven:            $gridGenerateOddEven,
+                           $generateDeprecatedOrdering: $gridGenerateDeprecatedOrdering) {
+
+  @if ($generateBasics) {
+    @for $i from 1 through $gridTotalColumns {
+      .#{$selectorPrefix}-#{$i} { @include oj-float-grid-column($columns:$i); }
+    }
+  }
+
+  @if ($generateOffsets) {
+    @for $i from 0 through $gridTotalColumns - 1 {
+      .#{$selectorPrefix}-offset-#{$i} {
+        @include oj-ltr()
+        {
+          @include oj-float-grid-column($offset:$i, $direction:ltr);
+        }
+        @include oj-rtl()
+        {
+          @include oj-float-grid-column($offset:$i, $direction:rtl);
+        }
+      }
+    }
+  }
+
+  @if ($generateDeprecatedOrdering)
+  {
+    @for $i from 1 through $gridTotalColumns - 1 {
+      .#{$selectorPrefix}-push#{-$i} { @include oj-float-grid-column($push:$i); }
+      .#{$selectorPrefix}-pull#{-$i} { @include oj-float-grid-column($pull:$i); }
+    }
+  }
+
+  @if ($generateCentering) {
+    .oj-row.#{$selectorPrefix}-center > .oj-col { @include oj-float-grid-column($center:true); }
+
+    /* Centering multiple columns with th current implementation makes them stack.
+       In future we plan to switch the grid to use flexbox which would not stack the columns,
+       so to future proof the current classes jet only supports centering a single column, 
+       anything after the first column is hidden.*/
+    .oj-row.#{$selectorPrefix}-center > .oj-col:not(:first-child){display:none;}
+  }
+
+  @if ($generateOddEven) {
+    // only need to specify odd in a 2 column grid
+    @for $i from 1 through $gridTotalColumns - 1 {
+
+      .#{$selectorPrefix}-odd-cols-#{$i} > .oj-row > .oj-col:nth-child(odd) {
+         @include oj-float-grid-column($i);
+      }
+
+      .#{$selectorPrefix}-odd-cols-#{$i} > .oj-row > .oj-col:nth-child(even) {
+         @include oj-float-grid-column($gridTotalColumns - $i);
+      }
+    }
+
+
+    // used for when there's 4+ columns
+    @for $i from 1 through (($gridTotalColumns/2) - 1) {
+
+      .#{$selectorPrefix}-even-cols-#{$i} > .oj-row > .oj-col:nth-child(even) {
+         @include oj-float-grid-column($i);
+      }
+    }
+  }
+
+}
+

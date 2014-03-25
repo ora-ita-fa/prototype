@@ -1,0 +1,59 @@
+@import "../../utilities/oj.utilities";
+
+@if $includeGaugeClasses != false {
+  @include exports("common.gauge") {
+    
+    .oj-dialgauge {
+      width:200px;
+      height:200px;
+      border-style: none; 
+      border-width: 1px; 
+      border-color: #000000;
+    }
+
+    .oj-ledgauge {
+      width:40px;
+      height:40px;
+      border-style: none; 
+      border-width: 1px; 
+      border-color: #000000;
+    }
+
+    .oj-statusmetergauge {
+      width:220px;
+      height:25px;
+      border-style: none; 
+      border-width: 1px; 
+      border-color: #000000;
+    }
+
+    .oj-ratinggauge {
+      width:120px;
+      height:25px;
+      border-style: none; 
+      border-width: 1px; 
+      border-color: #000000;
+    }
+
+    .oj-gauge-metric-label {
+      font-weight: bold;
+      font-family: $fontFamily;
+    }
+    
+    .oj-gauge-tick-label {
+      font-family: $fontFamily;
+    }
+
+    .oj-gauge-threshold-index1 {
+      color: $dvtThreshold1Color;
+    }
+
+    .oj-gauge-threshold-index2 {
+      color: $dvtThreshold2Color;
+    }
+
+    .oj-gauge-threshold-index3 {
+      color: $dvtThreshold3Color;
+    }
+  }
+}

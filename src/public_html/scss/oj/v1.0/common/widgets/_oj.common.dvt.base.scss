@@ -1,0 +1,136 @@
+// !!!
+// WARNING: do not directly import this file, instead import the 
+//          version in your theme's directory, 
+//          for example alta/widgets/_oj.alta.dvt.base.scss
+// !!!
+
+@import "../../utilities/oj.utilities";
+
+@if $includeDvtBaseClasses != false {
+  @include exports("common.dvtbase") {
+    .oj-dvtbase {
+      /* For internal use only. Do not override or remove */
+      outline:none;
+      display:block;
+      position:relative;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      font-family: $fontFamily;
+      animation-duration: $dvtAnimationDuration;
+      -webkit-animation-duration: $dvtAnimationDuration;
+    }
+    
+    .oj-dvt-category-index1 {
+      color: $dvtCategory1Color;
+    }
+    
+    .oj-dvt-category-index2 {
+      color: $dvtCategory2Color;
+    }
+    
+    .oj-dvt-category-index3 {
+      color: $dvtCategory3Color;
+    }
+    
+    .oj-dvt-category-index4 {
+      color: $dvtCategory4Color;
+    }
+    
+    .oj-dvt-category-index5 {
+      color: $dvtCategory5Color;
+    }
+    
+    .oj-dvt-category-index6 {
+      color: $dvtCategory6Color;
+    }
+    
+    .oj-dvt-category-index7 {
+      color: $dvtCategory7Color;
+    }
+    
+    .oj-dvt-category-index8 {
+      color: $dvtCategory8Color;
+    }
+    
+    .oj-dvt-category-index9 {
+      color: $dvtCategory9Color;
+    }
+    
+    .oj-dvt-category-index10 {
+      color: $dvtCategory10Color;
+    }
+    
+    .oj-dvt-category-index11 {
+      color: $dvtCategory11Color;
+    }
+    
+    .oj-dvt-category-index12 {
+      color: $dvtCategory12Color;
+    }
+    
+    .OraBITooltipText {
+      /* For internal use only. Needs renaming */
+      font-size: 12px;
+      color: red
+    }
+
+    .OraDVTTooltipPopup {
+      /* For internal use only. Needs renaming */
+      background-color: #f9f9f9;
+      color: #333333;
+      border-style: solid;
+      border-color: black;
+      border-width: 1px;
+      padding: 2px;
+      position: absolute;
+      z-index: 2147483647;
+      font-size: 12px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    .OraDVTDatatipPopup {
+      /* For internal use only. Needs renaming */
+      background-color: #f9f9f9;
+      color: #333333;
+      border-style: solid;
+      border-color: black;
+      border-radius: 1px;
+      border-width: 2px;
+      padding: 2px;
+      position: absolute;
+      z-index: 2147483647;
+      font-size: 12px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    .OraDVTUnstyledPopup {
+      /* For internal use only. Needs renaming */
+      position: absolute;
+      z-index: 2147483647
+    }
+
+    .OraDVTContextMenuPopup {
+      /* For internal use only. Needs renaming */
+      position: absolute;
+      z-index: 2147483647;
+    }
+    
+    .oj-legend {
+      font-size: 11px;
+      color: $textColor;
+    }
+
+    .oj-legend-title {
+      font-size: 11px;
+      color: $textColor;
+    }
+
+    .oj-legend-section-title {
+      font-size: 11px;
+      color: $textColor;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+
+@import "widgets/oj.jq.mixins.jquery.ui.theme";
+
+
+// helpers
+@import "../common/helpers/oj.common.helpers"; 
+
+// tags
+@import "widgets/oj.jq.tags.core";
+@import "widgets/oj.jq.tags.typography";
+
+// shared
+@import "widgets/oj.jq.core.icons";
+@import "widgets/oj.jq.core.resizable";
+@import "widgets/oj.jq.core.selectable";
+@import "widgets/oj.jq.core.windows";
+@import "widgets/oj.jq.core.messaging";
+
+
+// layout
+@import "widgets/oj.jq.accordion";
+@import "widgets/oj.jq.conveyorbelt";
+@import "widgets/oj.jq.tabs";
+
+// secondary windows
+@import "widgets/oj.jq.dialog";
+@import "widgets/oj.jq.tooltip";
+
+// behavior
+@import "widgets/oj.jq.progressbar";
+
+// menu and button
+@import "widgets/oj.jq.button";
+@import "widgets/oj.jq.menu";
+@import "widgets/oj.jq.toolbar";
+
+// data collection
+@import "widgets/oj.jq.pagingcontrol";
+//@import "../alta/widgets/oj.alta.pagingcontrol";
+@import "widgets/oj.jq.table";
+@import "widgets/oj.jq.datagrid";
+@import "widgets/oj.jq.tree";
+@import "widgets/oj.jq.rowexpander";
+
+// form controls and messaging
+@import "widgets/oj.jq.formcontrol.label";
+@import "widgets/oj.jq.formcontrol.inputtextarea";
+@import "widgets/oj.jq.formcontrol.inputnumber";
+@import "widgets/oj.jq.formcontrol.inputdatetime";
+@import "widgets/oj.jq.formcontrol.radiocheckbox";
+// oj.jq.formcontrol.common needs to be after oj.alta.input, otherwise 
+// when $normalize is false (compatibility mode) the input will get 
+// a margin of 0 which will override the margin seto in j.jq.formcontrol.common
+@import "widgets/oj.jq.formcontrol.common";
+
+// data visualizations
+@import "widgets/oj.jq.dvt.base";
+@import "widgets/oj.jq.dvt.chart";
+@import "widgets/oj.jq.dvt.gauge";
+@import "widgets/oj.jq.dvt.sunburst";
+@import "widgets/oj.jq.dvt.thematicmap";
+@import "widgets/oj.jq.dvt.treemap";
+
+// responsive
+@import "widgets/oj.jq.grid";
+@import "widgets/oj.jq.responsive.helpers";
+@import "widgets/oj.jq.formlayout";

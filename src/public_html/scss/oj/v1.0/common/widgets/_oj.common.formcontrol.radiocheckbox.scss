@@ -1,0 +1,99 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// WARNING: do not directly import this file, instead import the 
+//          version in your theme's directory, 
+//          for example alta/widgets/_oj.alta.formcontrol.radiocheckbox.scss
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+@import "../../utilities/oj.utilities";
+
+
+@if $includeRadioCheckboxClasses != false {
+  @include exports("common.radiocheckbox") {
+
+    /* radioset and checkboxset styles */
+    /* this styles the radio, checkbox, and their labels */
+    /* --------------------------------------------------------------- */
+
+    /* App developer can use this styleclass if they would like to put on a span
+    around the input/label */
+    .oj-choice-row {
+        display: block;
+        margin: 0;
+        // alta spec says 24 between radio buttons when vertical. 1.8 
+        // accomplishes this when browser is default font size. our
+        // html is set to .75 (of 16px) = 12px.
+        line-height: 1.8;
+    }
+
+    // These are the styleclasses rendered on the input type=radio|checkbox.
+    // We include the 'common' css properties in this definition. rtl or ltr
+    // specific properties will follow.
+    .oj-radio,
+    .oj-checkbox {
+      @include oj-normalize-choice;
+      display: inline-block;    	     
+      vertical-align: middle;
+
+      @include oj-ltr() {
+        // I'm not using $formControlLabelInlineGutter since this variable
+        // is for the main label gutter, and if this is changed to something
+        // big, let's say, we probably don't want the radio label gutter to
+        // be affected. 
+        margin: 0 .45em 0 0; 
+      }
+      @include oj-rtl() {
+        margin: 0 0 0 .45em;
+      }
+    }
+
+    .oj-radioset {
+      display: inline-block;
+    }
+
+    // everywhere we have oj-label-inline-top in a selector, also create a selector
+    // with oj-radioset-label
+    .oj-radioset-label {
+      @extend .oj-label-inline-top;
+    }
+
+    /* Invalid styling for the radioset */
+    .oj-radioset.oj-invalid .oj-radio {
+        -moz-outline-radius: 8px 8px 8px 8px;
+        // styling border does not work. Using outline like we do in ADF Faces
+        // radio components.
+        outline: $formControlMessagingBorderWidth solid $borderColorError;
+    }
+
+    /* Warning styling for the radioset */
+    .oj-radioset.oj-warning .oj-radio {
+        -moz-outline-radius: 8px 8px 8px 8px;
+        outline: $formControlMessagingBorderWidth solid $borderColorWarning;
+    }  
+	
+	/* Invalid styling for the checkboxset */
+    .oj-checkboxset.oj-invalid .oj-checkbox {
+       outline: $formControlMessagingBorderWidth solid $borderColorError;
+    }
+
+    /* Warning styling for the checkboxset */
+    .oj-checkboxset.oj-warning .oj-checkbox {
+        outline: $formControlMessagingBorderWidth solid $borderColorWarning;
+    }
+	
+    .oj-radio-label,
+    .oj-checkbox-label {
+      color: $textColor;
+      display: inline-block;
+      font-size: $fontSize;
+      font-weight: normal;
+      vertical-align: middle;
+    }
+
+    .oj-radio-label.oj-disabled,
+    .oj-checkbox-label.oj-disabled {
+      color: $formControlValueColorDisabled;
+      opacity: $formControlOpacityDisabled;
+    }
+  }
+}

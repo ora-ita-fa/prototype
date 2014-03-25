@@ -1,0 +1,78 @@
+// todo: search through all the code for ms-, webkit-, etc and create a mixin. No prefixes should be anywhere but in the mixins.
+
+// todo temporarily false
+$removeSlowBorderRadius: false !default;
+
+// NOTE: The mixins defined in these files are needed 
+// based on our current supported browsers. Mixins in this 
+// file will be removed when we no longer need to use vendor 
+// prefixes for a particular property.
+
+@mixin oj-transform-property ($transformValue)
+{
+    -webkit-transform: $transformValue;
+    -ms-transform: $transformValue;
+    transform: $transformValue;
+}
+
+
+@mixin oj-transition-property ($transitionValue...) {
+  -webkit-transition: $transitionValue;
+  -moz-transition: $transitionValue;
+  -o-transition: $transitionValue;
+  transition: $transitionValue;
+}
+
+
+@mixin oj-box-sizing-property ($boxSizingValue)
+{
+    -moz-box-sizing: $boxSizingValue;
+    box-sizing: $boxSizingValue;
+}
+
+  // todo: look for slow radius, can't use this in rtl mixin cause you get 
+  //"html[dir='rtl'] .oj-slow-borderradius" but both are on the html element
+// todo:where to put border radius mixin?
+@mixin oj-border-radius ($borderRadiusValue)
+{
+  @content;
+
+  @if ($removeSlowBorderRadius) {
+
+    // only override the border radius if the value isn't already 0 or null
+    @if ($borderRadiusValue and $borderRadiusValue != 0)
+    {
+      .oj-slow-borderradius & {
+        border-radius: 0;
+      }
+    }
+  }
+}
+
+//*****************************************************************************
+//
+// Usage Example:
+//
+// .oj-foo, .oj-bar
+// {
+//   @include oj-placeholder()
+//   {
+//     color: red;
+//   }
+// }
+//*****************************************************************************
+
+@mixin oj-placeholder ()
+{
+  &::-webkit-input-placeholder {
+   @content
+  }
+
+  &::-moz-placeholder{
+   @content
+  }
+
+  &:-ms-input-placeholder {
+   @content
+  }
+}

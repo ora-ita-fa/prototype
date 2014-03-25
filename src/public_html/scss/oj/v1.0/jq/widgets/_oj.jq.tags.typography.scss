@@ -1,0 +1,143 @@
+@import "../../utilities/oj.utilities";
+
+$includeTagsTypographyClasses: $includeTagClasses !default;
+
+@if $includeTagsTypographyClasses != false {
+  @include exports("tagstypography") {
+
+    // TODO - look at whether we need the inherit on some of these properties.
+
+    /* links */
+    /* --------------------------------------------------------------- */
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "a", 
+
+      // class selectors: 
+      ".oj-link");
+    #{$currSelectors} {
+        color: $linkTextColor;
+        line-height: inherit;
+        text-decoration: none; 
+    }
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "a:visited", 
+
+      // class selectors: 
+      ".oj-link:visited");
+    #{$currSelectors} {
+        color: $linkTextColorVisited; 
+    }
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "a:hover, a:focus", 
+
+      // class selectors: 
+      ".oj-link:hover, .oj-link:focus");
+    #{$currSelectors} {
+        text-decoration: underline;
+    }
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "a:active", 
+
+      // class selectors: 
+      ".oj-link:active");
+    #{$currSelectors} {
+        font-weight: bold;
+    }
+
+
+
+
+
+    /* header */
+    /* --------------------------------------------------------------- */
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "h1, h2, h3, h4", 
+
+      // class selectors: 
+      ".oj-header");
+    #{$currSelectors} {
+        color: $headerTextColor; 
+        font-family: inherit;
+        font-style: normal;
+        font-weight: bold; 
+        margin: 10px 0;
+    }
+
+
+    @if $allowTagSelectors 
+    {
+
+      h1 {
+          font-size: $largestFontSize;
+      }
+
+      h2 {
+          font-size: $largeFontSize; 
+      }
+
+      h3 {
+         font-size: $mediumFontSize; 
+      }
+
+      h4 {
+         font-size: $fontSize; 
+      }
+    }
+    @else 
+    {
+      h1.oj-header {
+          font-size: $largestFontSize;
+      }
+
+      h2.oj-header {
+           font-size: $largeFontSize; 
+      }
+
+      h3.oj-header {
+          font-size: $mediumFontSize; 
+      }
+
+      h4.oj-header {
+          font-size: $fontSize; 
+      }
+    }
+
+    /* hr */
+    /* --------------------------------------------------------------- */
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "hr", 
+
+      // class selectors: 
+      ".oj-hr");
+    #{$currSelectors} {
+        border: solid $contentBorderColor;
+        border-width: 1px 0 0;
+    }
+
+
+
+
+    // /* p */
+    ///* --------------------------------------------------------------- */
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "p", 
+
+      // class selectors: 
+      ".oj-p ");
+    #{$currSelectors} {
+      // no properties in jq theme
+    }
+  }
+}

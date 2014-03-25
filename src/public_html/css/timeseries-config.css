@@ -1,0 +1,206 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-20, 14:58:57
+    Author     : danfjian
+*/
+
+.inline-title{
+    display: inline;
+    margin-right: 10px;
+}
+
+.timeseries-main {
+    position:relative;
+    height:600px;
+}
+
+.timeseries-main .left {
+    padding:30px;
+    height:100%; 
+    width:280px; 
+    position:absolute; 
+    top:0; 
+    left:0;
+}
+
+.timeseries-main .left .measure-selector{
+    height:320px;
+    width:290px;
+}
+
+.tree-table {
+    overflow-y: scroll ;
+    overflow-x: hidden;
+    border:1px solid rgb(214, 223, 230);
+}
+
+.no-collapsable ul{
+    margin-left:-22px;
+    padding-left:5px;
+}
+
+.tree-table a{
+    line-height: 20px;
+    width:100%;
+}
+
+.tree-table>ul>li:nth-child(even)>a{
+    background-color:rgb(238, 238, 238);
+}
+
+.tree-table>ul>li:nth-child(odd)>ul>li:nth-child(odd)>a{
+    background-color:rgb(238, 238, 238);
+}
+
+.tree-table>ul>li:nth-child(even)>ul>li:nth-child(even)>a{
+    background-color:rgb(238, 238, 238);
+}
+
+.timeseries-main .left .measure-selector a ins{
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-image:url('../images/warehouse_measure_ena.png');
+}
+
+.timeseries-main .left .dimension-selector{
+    width:290px;
+    height:320px;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+
+.timeseries-main .left .dimension-selector>ul>li>a ins{
+    background-image:url('../images/warehouse_dimension_ena.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+}
+
+.timeseries-main .left .dimension-selector>ul>li>ul>li>a ins{
+    background-image:url('../images/warehouse_attribute.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+}
+
+.timeseries-main .middle{
+    padding:30px;
+    margin-left:300px;
+    margin-right:450px;
+    height:100%; 
+}
+
+.timeseries-main .middle .selected-measures{
+    background-color: silver;
+    line-height:22px;
+}
+
+.timeseries-main .middle .main-config{
+    margin-top:10px;
+    height:310px;
+}
+
+.timeseries-main .middle .main-config #chart-container{
+    width:100%;
+    float:left;
+    overflow: hidden;
+}
+
+.timeseries-main .middle .main-config .data-series{
+    width:32%;
+    float:right;
+    padding-top:110px;
+}
+
+.timeseries-main .middle .main-config .data-series .title{
+    clear:both;
+}
+
+
+
+.timeseries-main .middle .x-axis .time-settings{
+    background-color: silver;
+    line-height:22px;
+}
+
+.timeseries-main .middle .include{
+    margin-top:20px;
+}
+
+
+
+.timeseries-main .right{
+    padding:30px;
+    height:100%; 
+    width:420px; 
+    position:absolute; 
+    top:0; 
+    right:0;
+}
+
+.timeseries-main .right .oj-tabs-panel{
+    height:100%}
+
+.timeseries-main .right .data-display table th{
+    padding:10px 15px 10px 0;
+    text-align:right;
+}
+
+.timeseries-main .right .data-display .chart-options {
+    margin-top:50px;
+}
+
+.timeseries-main .right .data-display .chart-options .type{
+    float:left;
+    width:50px;
+    border-right: 1px solid #d6dfe6;
+    text-align: right;
+}
+
+.timeseries-main .right .data-display .chart-options .type img{
+    width:32px;
+    height:32px;
+}
+
+.timeseries-main .right .data-display .chart-options .type .line-icon {
+    width:32px;
+    height:32px;
+}
+.timeseries-main .right .data-display .chart-options .type .line-icon :before {
+    content: url("/fa/images/graph_line.png"); 
+}
+
+.timeseries-main .right .data-display .chart-options .type .bar-icon {
+    width:32px;
+    height:32px;
+}
+.timeseries-main .right .data-display .chart-options .type .bar-icon :before {
+    content: url("/fa/images/graph_bar.png"); 
+}
+
+.timeseries-main .right .data-display .chart-options .type .area-icon {
+    width:32px;
+    height:32px;
+}
+.timeseries-main .right .data-display .chart-options .type .area-icon :before {
+    content: url("/fa/images/graph_area.png"); 
+}
+.timeseries-main .right .data-display .chart-options .displays{
+    float:left;
+}
+
+.timeseries-main .right .data-display .chart-options .displays .show-title{
+    float:left;
+    padding-left:20px;
+}
+
+.timeseries-main .right .data-display .chart-options .displays .show-options{
+    float:left;
+    padding-left: 10px;
+}
+
+.timeseries-main .right .data-display .chart-options .displays .show-options div{
+    line-height: 20px;
+}

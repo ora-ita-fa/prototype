@@ -1,0 +1,106 @@
+@import "../../utilities/oj.utilities";
+
+$includeAccordionClasses:  $includeAllClasses !default;
+
+// include dependencies
+@if $includeAccordionClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers"; 
+@import "oj.jq.core.icons";
+
+
+@if $includeAccordionClasses != false {
+  @include exports("accordion") {
+
+
+    /* accordion */
+    /* --------------------------------------------------------------- */
+
+    .oj-collapsible-header,
+    .oj-accordion-collapsible > .oj-collapsible-header {
+      @include ui-widget-header;
+      @include ui-corner-all;
+    	display: block;
+    	cursor: pointer;
+    	position: relative;
+    	margin-top: 2px;
+    	padding: .5em .5em .5em .7em;
+    	min-height: 0; /* support: IE7 */
+    }
+
+    // TODO why is the .oj-accordion needed for styles above and below? can't we just do .oj-collapsible-header
+    .oj-collapsible-header.oj-enabled {
+      @include ui-state-default;
+    }
+
+    .oj-collapsible-header a.oj-enabled{
+      @include ui-state-default-link;
+    }
+
+    .oj-collapsible-header.oj-hover {
+      @include ui-state-hover;
+    }
+
+    .oj-collapsible-header a.oj-hover {
+      @include ui-state-hover-link;
+    }
+
+    .oj-collapsible-header.oj-active {
+      @include ui-state-active;
+      border-bottom-left-radius: 0; 
+      border-bottom-right-radius: 0;
+    }
+
+    .oj-collapsible-header a.oj-active {
+      @include ui-state-active-link;
+    }
+
+    .oj-collapsible:not(.oj-disabled) .oj-collapsible-icons {
+      padding-left: 2.2em;
+    }
+
+    .oj-collapsible-header .oj-collapsible-header-icon {
+    	position: absolute;
+    	left: .5em;
+    	top: 50%;
+    	margin-top: -8px;
+    }
+
+    /*
+     * hide any collapsed content
+     */
+    .oj-collapsible-wrapper {
+      overflow: hidden;
+    }
+
+    .oj-collapsible-content,
+    .oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible-content {
+      @include ui-widget-content;
+      @include ui-corner-bottom;
+    	padding: 1em 2.2em;
+    	border-top: 0;
+    	overflow: auto;
+    }
+
+
+
+    // icons
+    //------------------------------------------
+
+    .oj-collapsible-close-icon:before {
+      @include oj-ltr() {
+        @extend .oj-fwk-icon-arrow-e:before;
+      }
+
+      @include oj-rtl() {
+        @extend .oj-fwk-icon-arrow-w:before;
+      } 
+    }
+
+    .oj-collapsible-open-icon:before {
+      @extend .oj-fwk-icon-arrow-s:before;
+    }
+  }
+}

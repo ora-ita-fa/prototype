@@ -1,0 +1,45 @@
+@import "../../utilities/oj.utilities";
+
+
+@if $includeThematicMapClasses != false {
+  @include exports("common.thematicmap") {
+    .oj-thematicmap{
+      width:600px;
+      height:375px;
+      border-style: solid;
+      border-width: 1px;
+      background-color: $dvtComponentBgColor;
+      border-color: $dvtPanelBorderColor;
+    }
+
+    .oj-thematicmap-arealayer {
+      background-color: $dvtMapBgColor;
+      border-color: $dvtBorder2Color;
+      font-family: $fontFamily;
+      font-size: $fontSize;
+    }
+
+    .oj-thematicmap-area {
+      border-color: $dvtBorder2Color;
+    }
+
+    .oj-thematicmap-area.oj-hover {
+      border-color: $dvtBorder2Color;
+    }
+
+    .oj-thematicmap-area.oj-selected {
+      border-top-color: $dvtBorder2Color;
+      border-bottom-color: $dvtBorderColor;
+    }
+
+    .oj-thematicmap-marker {
+      border-width: 0.5px;
+      border-style: solid;
+      border-color: $dvtBorder2Color;
+      background-color: $dvtMapMarkerBgColor;
+      color: $textColor;
+      font-family: $fontFamily;
+      font-size: $fontSize;
+    }
+  }
+}

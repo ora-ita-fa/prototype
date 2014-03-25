@@ -1,0 +1,25 @@
+@import "../../utilities/oj.utilities";
+
+$includeNoteWindowClasses:  $includeAllClasses !default;
+
+@import "../../common/helpers/oj.common.helpers"; 
+
+@if $includeNoteWindowClasses != false {
+  @include exports("notewindow") {
+
+    /* tootip */
+    /* --------------------------------------------------------------- */
+
+    .ui-tooltip {
+        padding: 5px;
+        position: absolute;
+        z-index: 9999;
+        max-width: 300px;
+        box-shadow: $smallBoxShadow;
+    }
+    body .ui-tooltip { 
+        background: $background1Color; // TODO: should this be windowBgColor?
+        border: $borderWidth solid $windowBorderColor;
+    }
+  }
+}

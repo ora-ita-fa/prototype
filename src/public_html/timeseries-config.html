@@ -1,0 +1,213 @@
+
+        <div class="timeseries-main">
+            <div class="left">
+                <h2>Measures</h2>
+                <div id="measure-selector" class="measure-selector tree-table no-collapsable" 
+                     data-bind="
+                     ojComponent:{
+                         component: 'ojTree', 
+                         json_data:measures}
+                     ">
+                </div>
+                <h2>Dimension Attributes</h2>
+                <div id="dimension-selector" class="dimension-selector tree-table"
+                     data-bind="
+                     ojComponent:{
+                         component: 'ojTree', 
+                         json_data:dimensions}
+                     ">
+                </div>
+            </div>
+
+            <div class="middle">
+                <div class="header-bar">
+                    <h2>Data Selection</h2>
+                </div>
+                <div class="selected-measures">Selected Measures</div>
+
+                <div class="main-config">
+                        <!-- <div class="sample-chart">
+                            <img src="images/sample-chart.png" alt="Sample Chart"/>
+                        </div>-->
+                    <div id='chart-container'>
+                        <!-- <button id= "button"
+                                data-bind="click: chartTypeButtonClick, 
+                            ojComponent: {component: 'ojButton', label: 'Vertical/Horizontal'}">
+                             </button>-->
+                        <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: chartType, 
+                                selection: 'multiple', 
+                                series: lineSeriesValue, 
+                                groups: lineGroupsValue, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical'
+                                }"
+                             style="width:100%;height:300px;">
+                        </div>
+                    </div>
+                    <!-- <div class="data-series">
+                        <h3 class="title">Data Series</h3>
+                        <p>Data Series Place Holder</p>
+                    </div>-->
+                </div>
+
+                <div class="x-axis">
+                    <div>
+                        <h3 class="inline-title">X-Axis</h3>
+                        <label>
+                            <input type="checkbox" />
+                            Enable Global Time Slider
+                        </label>                        
+                    </div>
+                    <div class="time-settings">Time: In the past: 1 Year(s)</div>
+                </div>
+
+                <div class="include">
+                    <h3 class="inline-title">Include </h3>
+                    <label>
+                        <input type="checkbox"/>
+                        Comparison Cube		 
+                    </label>
+                </div>
+            </div>
+            <div id="tabs" class="right"
+                 data-bind="
+                 ojComponent:{
+                     component:'ojTabs',
+                     active:1
+                 }
+                 ">
+                <div>
+                    <span>Filters</span>
+                    <p>Filters</p>
+                </div>
+                <div class="data-display">
+                    <span>Data Display</span>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>* Region Name</th>
+                                <td><input/></td>
+                            </tr>
+                            <tr>
+                                <th rowspan="2">Display</th>
+                                <td>
+                                    <label>
+                                        <input type="radio"/>
+                                        Chart
+                                    </label>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="radio"/>
+                                        Table of
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Region Height(px)</th>
+                                <td>
+                                    <label>
+                                        <input type="checkbox"/>
+                                        Auto
+                                    </label>
+                                    <label> Slider Control Place Holder</label>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="chart-options">
+                            <h3>Chart Options</h3>
+                            <hr/>
+                            <div class="type"> 
+                                <button  id="line"
+                                         class="line-icon"
+                                         data-bind="click: chartTypeButtonClick,
+                                     ojComponent: {
+                                    component:'ojButton', 
+                                    display: 'icons', 
+                                    icons: {start:'line-icon'}, 
+                                    label: 'line chart'}">
+                                </button>
+                                <button id="bar"
+                                        class="bar-icon"
+                                        data-bind="click: chartTypeButtonClick,
+                                        ojComponent: {
+                                    component:'ojButton', 
+                                    display: 'icons', 
+                                    icons: {start:'bar-icon'}, 
+                                    label: 'bar chart'}">
+                                </button>
+                                <button id="area"
+                                        class="area-icon"
+                                        data-bind="click: chartTypeButtonClick,
+                                        ojComponent: {
+                                    component:'ojButton', 
+                                    display: 'icons', 
+                                    icons: {start:'bar-icon'}, 
+                                    label: 'area chart'}">
+                                </button>
+                                <!-- <img src="images/LINE_VERT_ABS.png" alt="line chart"/>
+                                <img src="images/AREA_VERT_ABS.png" alt="area chart"/>
+                                <img src="images/BAR_VERT_CLUST.png" alt="bar chart"/>-->
+                            </div>
+                            <div class="displays">
+                                <div class="show-title">Show </div>
+                                <div class="show-options">
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" checked/>
+                                            Multiple Data Series in One Chart
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" checked/>
+                                            Legend
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" checked/>
+                                            Tooltips
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label>
+                                            <input type="checkbox"/>	
+                                            X-Axis Label
+                                        </label>
+                                        <input value="<Cutomized X-Axis Label>"/>
+                                    </div>
+                                    <div>
+                                        <label>
+                                            <input type="checkbox"/>	
+                                            Y-Axis Label
+                                        </label>
+                                        <input value="<Cutomized X-Axis Label>"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <span>Data Series Display</span>
+                    <p></p>
+                </div>
+                <div>
+                    <span>Trending,Forecasting and Baseline</span>
+                    <p></p>
+                </div>
+                <div>
+                    <span>Correlation</span>
+                    <p></p>
+                </div>
+
+            </div>            
+        </div>

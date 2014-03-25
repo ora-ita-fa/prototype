@@ -1,0 +1,233 @@
+@import "../../utilities/oj.utilities";
+
+$includePagingControlClasses: $includeAllClasses !default;
+
+// include dependencies
+@if $includePagingControlClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers"; 
+//todo: temporarily comment
+//@import "oj.alta.core.icons";
+
+
+// todo: these should be named paging control specific names. 
+$navPaddingLeftRight: 5px !default;
+$navArrowPadding: 5px !default;
+
+@if $includePagingControlClasses != false  {
+  @include exports("pagingcontrol") {
+
+    /* paging control */
+    /* --------------------------------------------------------------- */
+
+    /* Styling for the component. */
+    .oj-pagingcontrol {
+      background-color: $background1Color;
+    }
+
+    /* Styling for the component content. */
+    .oj-pagingcontrol-content {
+      line-height: 2.5 * $fontSize;
+      overflow: hidden;
+    }
+
+    /* Styling for the loadMore mode contents. */
+    .oj-pagingcontrol-loadmore {
+      @include oj-ltr() {    
+        text-align: right;
+      }
+
+      @include oj-rtl() {    
+        text-align: left;
+      }
+    }
+
+    /* Styling for the Show More link. */
+    .oj-pagingcontrol-loadmore-link {
+      color: $linkTextColor;
+      white-space: nowrap;
+    }
+
+    /* Styling for the loadMore mode range. */
+    .oj-pagingcontrol-loadmore-range {
+      padding-left: 2 * $navPaddingLeftRight;
+      padding-right: 2 * $navPaddingLeftRight;
+      white-space: nowrap;
+    }
+
+    /* Styling for the page mode contents. */
+    .oj-pagingcontrol-nav {
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    /* Styling for the page mode page input section. */
+    .oj-pagingcontrol-nav-input-section {
+      display: inline-block;
+      vertical-align: middle;
+      white-space: nowrap;
+      @include oj-ltr() {    
+        padding-right: $navPaddingLeftRight;
+      }
+      @include oj-rtl() {    
+        padding-left: $navPaddingLeftRight;
+      }
+    }
+
+    /* Styling for the page mode navigation arrows section. */
+    .oj-pagingcontrol-nav-arrow-section {
+      display: inline-block; 
+      vertical-align: middle;
+      @include oj-ltr() {    
+        border-left: $borderWidth solid $border1Color;
+        padding-left: $navPaddingLeftRight;
+      }
+      @include oj-rtl() {    
+        border-right: $borderWidth solid $border1Color;
+        padding-right: $navPaddingLeftRight;
+      }
+    }
+
+    /* Styling for the page mode page links section. */
+    .oj-pagingcontrol-nav-pages-section {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* Styling for the page mode page links. */
+    .oj-pagingcontrol-nav-page {
+      color: $linkTextColor;
+      min-width: $fontSize;
+      padding: 4px 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    /* Styling for the page mode page link when selected. */
+    .oj-pagingcontrol-nav-page.oj-checked {
+       border: $borderWidth solid $pagingControlPageLinkBorder;
+       display: inline;
+    }
+
+    /* Styling for the page mode page link when disabled. */
+    .oj-pagingcontrol-nav-page.oj-disabled {
+       color: $textColorDisabled;
+       opacity: $opacityDisabled;
+    }
+
+    /* Styling for the page mode page label. */
+    .oj-pagingcontrol-nav-label {
+      @include oj-ltr() {    
+        padding-left: $navPaddingLeftRight;
+      }
+      @include oj-rtl() {    
+        padding-right: $navPaddingLeftRight;
+      }
+      color: $formControlLabelColor;
+      vertical-align: middle;
+    }
+
+    /* Styling for the page mode page input element. */
+    .oj-pagingcontrol-nav-input {
+    // todo: should this match input and be $formControlBgColor
+      background-color: $background3Color;
+      margin: 3px 0 3px 8px;
+      text-align: center;
+      width: 2 * $fontSize;
+      vertical-align: middle;
+      min-height: 2 * $fontSize;
+    }
+
+    /* Styling for the page mode maximum number of pages text. */
+    .oj-pagingcontrol-nav-input-max {
+      vertical-align: middle;
+      @include oj-ltr() {    
+        padding-left: $navPaddingLeftRight; 
+      }
+      @include oj-rtl() {    
+        padding-right: $navPaddingLeftRight; 
+      } 
+    }
+
+    /* Styling for the page mode page range summary. */
+    .oj-pagingcontrol-nav-input-summary {
+      vertical-align: middle;
+      @include oj-ltr() {    
+        padding-left: $navPaddingLeftRight; 
+      }
+      @include oj-rtl() {    
+        padding-right: $navPaddingLeftRight; 
+      }
+    }
+
+    /* Styling for the page mode navigation first page arrow. */
+    .oj-pagingcontrol-nav-first {
+      display: inline-block;
+      vertical-align: middle;
+      padding: $navArrowPadding;
+    }
+
+    /* Styling for the page mode navigation previous page arrow. */
+    .oj-pagingcontrol-nav-previous {
+      display: inline-block;
+      vertical-align: middle;
+      padding: $navArrowPadding;
+    }
+
+    /* Styling for the page mode navigation next page arrow. */
+    .oj-pagingcontrol-nav-next {
+      display: inline-block;
+      vertical-align: middle;
+      padding: $navArrowPadding;
+    }
+
+    /* Styling for the page mode navigation last page arrow. */
+    .oj-pagingcontrol-nav-last {
+      display: inline-block;
+      vertical-align: middle;
+      padding: $navArrowPadding;
+    }
+
+    /* Styling for the page mode navigation first page arrow icon. */
+    .oj-pagingcontrol-nav-first-icon {
+      @include oj-ltr() {    
+        @extend .oj-fwk-icon-caret02end-w;
+      }
+      @include oj-rtl() {    
+        @extend .oj-fwk-icon-caret02end-e;
+      }
+    }
+
+    /* Styling for the page mode navigation previous page arrow icon. */
+    .oj-pagingcontrol-nav-previous-icon {
+      @include oj-ltr() {    
+        @extend .oj-fwk-icon-caret02-w;
+      }
+      @include oj-rtl() {    
+        @extend .oj-fwk-icon-caret02-e;
+      }
+    }
+
+    /* Styling for the page mode navigation next page arrow icon. */
+    .oj-pagingcontrol-nav-next-icon {
+      @include oj-ltr() {    
+        @extend .oj-fwk-icon-caret02-e;
+      }
+      @include oj-rtl() {    
+        @extend .oj-fwk-icon-caret02-w;
+      }
+    }
+
+    /* Styling for the page mode navigation last page arrow icon. */
+    .oj-pagingcontrol-nav-last-icon {
+      @include oj-ltr() {    
+        @extend .oj-fwk-icon-caret02end-e;
+      }
+      @include oj-rtl() {    
+        @extend .oj-fwk-icon-caret02end-w;
+      }
+    }
+  }
+}

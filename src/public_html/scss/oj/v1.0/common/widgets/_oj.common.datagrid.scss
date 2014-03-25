@@ -1,0 +1,324 @@
+@import "../../utilities/oj.utilities";
+
+
+@if $includeDataGridClasses != false {
+  @include exports("common.datagrid") {
+
+    .oj-datagrid {
+        position:relative;
+        border: $dataGridBorderWidth solid $dataGridBorderColor;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .oj-datagrid-cell{
+        position:absolute;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        width:100%;
+        height:100%;
+        font-family:$fontFamily;
+        font-size: $smallFontSize;
+        font-weight: normal;
+        color: $dataGridCellTextColor;
+        -moz-box-sizing:border-box;
+        box-sizing:border-box;    
+        background-color: $dataGridCellBgColor;
+        border-bottom: $dataGridBorderWidth solid $dataGridCellBorderColor; 
+        padding:5px;    
+
+        @include oj-ltr() {
+            border-right: $dataGridBorderWidth solid $dataGridCellBorderColor;  
+        }
+
+        @include oj-rtl() {    
+            border-left: $dataGridBorderWidth solid $dataGridCellBorderColor;  
+        }
+    }
+
+    .oj-datagrid-row.oj-datagrid-banded .oj-datagrid-cell {
+        background-color: $dataGridCellBandedBgColor;
+    }
+
+    .oj-datagrid-row.oj-hover .oj-datagrid-cell {
+        background-color: $dataGridCellBgColorHover; 
+    }
+
+    .oj-datagrid-row.oj-checked .oj-datagrid-cell{
+        background-color: $dataGridCellBgColorSelected;
+    }
+
+    .oj-datagrid-row.oj-active .oj-datagrid-cell{
+        background-color: $dataGridCellBgColorFocus;
+    }
+
+    .oj-datagrid-row .oj-datagrid-cell.oj-hover {
+        background-color: $dataGridCellBgColorHover; 
+    }
+
+    .oj-datagrid-row .oj-datagrid-cell.oj-checked {
+        background-color: $dataGridCellBgColorSelected;
+    }
+
+    .oj-datagrid-row .oj-datagrid-cell.oj-active {
+        background-color: $dataGridCellBgColorFocus;
+    }
+
+    .oj-datagrid-cell.oj-datagrid-banded {
+    background-color: $dataGridCellBandedBgColor; }
+
+    .oj-datagrid-cell.oj-hover {
+    background-color: $dataGridCellBgColorHover; }
+
+    .oj-datagrid-cell.oj-checked {
+    background-color: $dataGridCellBgColorSelected; }
+
+    .oj-datagrid-cell.oj-active {
+    background-color: $dataGridCellBgColorFocus; }
+
+    .oj-datagrid-row {
+        position:absolute;
+        width:100%;
+        -moz-box-sizing: border-box;    
+        box-sizing:border-box;
+    }
+
+    .oj-datagrid-header {
+        position:absolute;
+        overflow:hidden;
+    }
+
+    .oj-datagrid-databody {
+        position:absolute;
+        overflow:hidden;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;    
+        user-select:none;
+    }
+
+    .oj-datagrid-scrollers {
+        position:absolute;
+        overflow:auto;
+    }
+
+    .oj-datagrid-scroller-mobile {
+        position:absolute;
+        -webkit-transition:0.5s;
+        -webkit-transition-timing-function:ease-out;
+        -webkit-backface-visibility: hidden;
+        -webkit-perspective: 1000;
+        width:100%;
+        height:100%;
+    }
+
+    .oj-datagrid-scroller {
+        position:absolute;
+        width:100%;
+        height:100%;
+    }
+
+    .oj-datagrid-headercell {
+        position:absolute;
+        width:100%;
+        height:100%;
+        -moz-box-sizing:border-box;
+        box-sizing:border-box;
+        padding:5px;
+        overflow:hidden;    
+        background-color: $dataGridColumnHeaderBgColor;         
+    }
+
+    .oj-datagrid-colheadercell {
+      @include oj-ltr() {
+        border-right: $dataGridBorderWidth solid $dataGridCellBorderColor;
+      }
+
+      @include oj-rtl() {
+          border-left: $dataGridBorderWidth solid $dataGridCellBorderColor;
+      }
+    }
+
+    .oj-datagrid-rowheadercell {
+        border-bottom: $dataGridBorderWidth solid $dataGridCellBorderColor;
+    }
+
+    .oj-datagrid-rowheader {
+        font-family:$fontFamily;
+        font-size: $dataGridColumnHeaderFontSize;
+        font-weight: $dataGridHeaderFontWeight;
+        color: $dataGridHeaderTextColor;
+        text-align: center;
+        -moz-box-sizing:border-box;    
+        box-sizing:border-box;
+
+        @include oj-ltr() {
+            border-right: $dataGridBorderWidth solid #C4CED7;    
+        }
+
+        @include oj-rtl() {
+            border-left: $dataGridBorderWidth solid #C4CED7;    
+        }
+    }
+
+    .oj-datagrid-colheader {
+        font-family:$fontFamily;
+        font-size: $dataGridColumnHeaderFontSize;
+        font-weight: $dataGridHeaderFontWeight;
+        color: $dataGridHeaderTextColor;
+        -moz-box-sizing:border-box;    
+        box-sizing:border-box;
+        border-bottom: $dataGridBorderWidth solid #C4CED7;    
+    }
+
+    .oj-datagrid-status {
+        font-family: $fontFamily;
+        font-size: $fontSize;
+        position:absolute;
+        display:none;
+        z-index:5;
+        background-color:#FFFFFF;
+        padding:5px;
+        top:50%;
+    }
+
+    .oj-datagrid-empty-text {
+        font-family:$fontFamily;
+        font-size: $fontSize;
+        position:absolute;
+    }
+
+    .oj-datagrid-top-corner {
+        position:absolute;
+        background-color: #F7F9FC;
+        -moz-box-sizing:border-box;    
+        box-sizing: border-box;    
+        border-bottom: $dataGridBorderWidth solid #C4CED7;   
+
+        @include oj-ltr() {
+            border-right: $dataGridBorderWidth solid #C4CED7;
+        }
+
+        @include oj-rtl() {
+            border-left: $dataGridBorderWidth solid #C4CED7;   
+        }
+    }
+
+
+    .oj-datagrid-bottom-corner {
+        position:absolute;
+        background-color: #F7F9FC;
+        -moz-box-sizing:border-box;    
+        box-sizing: border-box;
+    }
+
+    .oj-datagrid-row-header-spacer {
+        position:absolute;
+        background-color: #F7F9FC;  
+        border-top: $dataGridBorderWidth solid $dataGridBorderColor;     
+        -moz-box-sizing:border-box;    
+        box-sizing: border-box;
+
+        @include oj-ltr() {
+            border-right: $dataGridBorderWidth solid #C4CED7;  
+        }
+
+        @include oj-rtl() {
+            border-left: $dataGridBorderWidth solid #C4CED7;   
+        }
+    }
+
+    .oj-datagrid-column-header-spacer {
+        position:absolute;
+        background-color: #F7F9FC;     
+        border-bottom: $dataGridBorderWidth solid #C4CED7; 
+        -moz-box-sizing:border-box;        
+        box-sizing: border-box;
+
+        @include oj-ltr() {
+            border-left: $dataGridBorderWidth solid $dataGridBorderColor;  
+        }
+
+        @include oj-rtl() {
+            border-right: $dataGridBorderWidth solid $dataGridBorderColor;  
+        }
+    }
+
+    .oj-datagrid-sort-indicators {
+        position:absolute;
+        height: 14px;
+        width: 28px;
+        display: inline-block;
+    	top:5px;
+    	@include oj-ltr() {
+    		right: 5px;    
+    	}
+
+    	@include oj-rtl() {
+    		left: 5px;    
+    	}	
+    }
+
+    .oj-datagrid-sort-ascending-icon {
+        @extend .oj-fwk-icon-arrow-n;
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        @include oj-ltr() {
+    		left: 0;    
+        }
+
+       @include oj-rtl() {
+    		right: 0;    
+        }		
+    }
+
+    .oj-datagrid-sort-descending-icon {
+        @extend .oj-fwk-icon-arrow-s;  
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        @include oj-ltr() {
+    		right: 0;    
+        }
+
+       @include oj-rtl() {
+    		left: 0;    
+        }	
+    }
+    
+    .oj-datagrid-sort-ascending-icon.oj-disabled {
+      display:none;
+    }
+
+    .oj-datagrid-sort-descending-icon.oj-disabled {
+      display:none;
+    }    
+    
+    .oj-datagrid-row.oj-datagrid-cut .oj-datagrid-cell{
+        opacity: 0.8;
+    }
+
+    .oj-datagrid-row.oj-datagrid-cut {
+        opacity: 0.8;
+    }
+
+    .oj-datagrid-row.oj-datagrid-move {
+      opacity: 0.8; 
+      z-index:  1;
+    }
+
+    .oj-datagrid-headercell.oj-active {
+        background-color: $interaction5Color;
+    }
+    .oj-datagrid-droptarget {
+        width:100%;
+        position:absolute;
+        border-color: #C3EAF3;
+        background-color: #D9F4FA;
+        opacity:.8;
+        box-sizing: border-box;
+    }    
+  }
+}

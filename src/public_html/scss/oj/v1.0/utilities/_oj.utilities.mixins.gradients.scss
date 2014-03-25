@@ -1,0 +1,47 @@
+
+// TODO add doc
+// TODO added support for direction null to turn off gradients.
+@mixin oj-linear-gradient($colorStops, $direction: to bottom) 
+{
+
+    // we only support prefixes that we require for our supported browsers
+    // don't use ms- prefix: http://blogs.msdn.com/b/ie/archive/2012/06/06/moving-the-stable-web-forward-in-ie10-release-preview.aspx
+    // See: http://www.css3files.com/gradient/
+    // don't need -moz-linear-gradient, that's for FF 15 and older. 
+    // don't need -webkit-gradient, use -webkit-linear-gradient
+
+
+    // todo: review this function
+    @if ($colorStops == none)
+    {
+      background-image: none;
+    }
+    @else if ($colorStops != null) 
+    {
+
+      $directionVal: $direction;
+      @if (length($direction) > 1) {$directionVal: nth($direction, 2);}
+
+      $directionVal2: null;
+      @if (length($direction) > 2) {$directionVal2: nth($direction, 3);}
+
+      // webkit
+      $webkitGradientDirection: $direction;
+
+      @if      ($directionVal == bottom) {$webkitGradientDirection: top;}
+      @else if ($directionVal == top)    {$webkitGradientDirection: bottom;}
+      @else if ($directionVal == right)  {$webkitGradientDirection: left;}
+      @else if ($directionVal == left)   {$webkitGradientDirection: right;}
+
+      @if      ($directionVal2 == bottom) {$webkitGradientDirection: $webkitGradientDirection top;}
+      @else if ($directionVal2 == top)    {$webkitGradientDirection: $webkitGradientDirection bottom;}
+      @else if ($directionVal2 == right)  {$webkitGradientDirection: $webkitGradientDirection left;}
+      @else if ($directionVal2 == left)   {$webkitGradientDirection: $webkitGradientDirection right;}
+
+      background-image: -webkit-linear-gradient($webkitGradientDirection, $colorStops); 
+
+      // standard
+      background-image: linear-gradient($direction, $colorStops); 
+
+  }
+}
