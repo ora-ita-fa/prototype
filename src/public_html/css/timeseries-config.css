@@ -169,7 +169,7 @@ and open the template in the editor.
     height:32px;
 }
 .timeseries-main .right .data-display .chart-options .type .line-icon :before {
-    content: url("/fa/images/graph_line.png"); 
+    content: url("../images/graph_line.png"); 
 }
 
 .timeseries-main .right .data-display .chart-options .type .bar-icon {
@@ -177,7 +177,7 @@ and open the template in the editor.
     height:32px;
 }
 .timeseries-main .right .data-display .chart-options .type .bar-icon :before {
-    content: url("/fa/images/graph_bar.png"); 
+    content: url("../images/graph_bar.png"); 
 }
 
 .timeseries-main .right .data-display .chart-options .type .area-icon {
@@ -185,7 +185,7 @@ and open the template in the editor.
     height:32px;
 }
 .timeseries-main .right .data-display .chart-options .type .area-icon :before {
-    content: url("/fa/images/graph_area.png"); 
+    content: url("../images/graph_area.png"); 
 }
 .timeseries-main .right .data-display .chart-options .displays{
     float:left;

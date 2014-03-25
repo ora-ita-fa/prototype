@@ -20,10 +20,23 @@ define(['timeseries-config','ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout'
             this.lineGroupsValue = ko.observableArray(lineGroups);
             this.chartType = ko.observable('line');
         }
+        
+        var fakeLevelValueMapping = {
+            'All Selected target':['Center1','Center2','Center3'],
+            'Center1':['host1','database1','wls3','host4','wls7','database7','database4'],
+            'Center2':['host2','wls3','database6','database5'],
+            'Center3':['wls9','database11']
+        };
+        
+        function RollupTableModel() {
+            this.levels = ['All Selected target','By COSTCENTER_Level','By DISPLAYNAME_Level'];
+                    
+        }
     
         function addChart(){
             var $newChart = $($("#chart-template").html());
             $("#add-chart").before($newChart);
+            
             var chartEl = $newChart.find('.chart').get(0);
             var demoChart = new DemoChartModel();
             demoChart.chartType(ts.configs.getChartType());
@@ -34,6 +47,9 @@ define(['timeseries-config','ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout'
                     ko.applyBindings(demoChart,chartEl);
                 }
             });
+            
+            var rollupTableEl = $newChart.find(".rollup-table").get(0);
+            
         }
         
         var renderred = false;

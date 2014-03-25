@@ -29,6 +29,14 @@ and open the template in the editor.
     vertical-align: top;
 }
 
-.chart-list .chart{
-    height:100%;width:100%;
+.chart-list .region .rollup-table{
+    height:100%;
+    width:29%;
+    float:left;
+}
+
+.chart-list .region .chart{
+    height:100%;
+    width:70%;
+    float:left;
 }
