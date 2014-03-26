@@ -5,7 +5,7 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $) {
+define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita) {
 
     function loadMeasures() {
         return {
@@ -281,24 +281,31 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
         ko.applyBindings(model, $('#chart-container')[0]);
         ko.applyBindings(chartTypeModel, $('#tabs')[0]);
     }
-
-    function renderTo(containerId) {
-        if (containerId && typeof containerId === 'string') {
-            var $container = $("#" + containerId);
-            if ($container && $container.length === 1) {
-                $.get('timeseries-config.html', function(resp) {
-                    $('head').append('<link rel="stylesheet" href="css/timeseries-config.css">');
-                    $container.append(resp);
-                    koBind();
-                });
+    
+    ita.registerTool(
+            {
+                name: 'timeseries-config',
+                init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+                    // This will be called when the binding is first applied to an element
+                    // Set up any initial state, event handlers, etc. here
+                    console.log(element);
+                    console.log(valueAccessor);
+                    console.log(allBindings);
+                    console.log(viewModel);
+                    console.log(bindingContext);
+                    $.get('timeseries-config.html', function(resp) {
+                        $('head').append('<link rel="stylesheet" href="css/timeseries-config.css">');
+                        var $container = $(element);
+                        $container.append(resp);
+                        koBind();
+                    });
+                }
             }
-        }
-    }
+    );
 
     return {
-        renderTo: renderTo,
-        configs:{
-            getChartType:function(){
+        configs: {
+            getChartType: function() {
                 return model.chartType();
             }
         }
