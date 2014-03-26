@@ -55,11 +55,12 @@ define(['timeseries-config','ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout'
         var renderred = false;
         $("#add-chart").click(function() {
             $('.chart-list').toggle('slide');
-            $('#timeseries-container').toggle('slide',function(){
+            $('.timeseries-container').toggle('slide',function(){
                 // render the timeseries after finishing slide effects,
                 // to prevent chart displaying problems.
                 if(!renderred){
-                    ts.renderTo('timeseries-container');
+                    console.log($('.timeseries-region').get(0));
+                    ko.applyBindings(null,$('.timeseries-region').get(0));
                     renderred = true;
                 }
             });
@@ -67,7 +68,7 @@ define(['timeseries-config','ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout'
 
         ko.applyBindings({
             goBack: function() {
-                $('#timeseries-container').toggle('slide');
+                $('.timeseries-container').toggle('slide');
                 $('.chart-list').toggle('slide',function(){
                     addChart();
                 });

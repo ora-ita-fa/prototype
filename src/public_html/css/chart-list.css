@@ -18,7 +18,7 @@ and open the template in the editor.
 }
 /* line 19, D:\GitHub\prototype\src\public_html\less\chart-list.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/chart-list\.less}line{font-family:\0000319}}
-#timeseries-container {
+.timeseries-container {
   display: none;
 }
 /* line 25, D:\GitHub\prototype\src\public_html\less\chart-list.less */
