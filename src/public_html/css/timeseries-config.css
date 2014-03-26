@@ -4,203 +4,242 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
 /* 
-    Created on : 2014-3-20, 14:58:57
+    Created on : 2014-3-26, 13:37:22
     Author     : danfjian
 */
-
-.inline-title{
-    display: inline;
-    margin-right: 10px;
+/* line 13, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000313}}
+.inline-title {
+  display: inline;
+  margin-right: 10px;
 }
-
-.timeseries-main {
-    position:relative;
-    height:600px;
-}
-
-.timeseries-main .left {
-    padding:30px;
-    height:100%; 
-    width:280px; 
-    position:absolute; 
-    top:0; 
-    left:0;
-}
-
-.timeseries-main .left .measure-selector{
-    height:320px;
-    width:290px;
-}
-
+/* line 18, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000318}}
 .tree-table {
-    overflow-y: scroll ;
-    overflow-x: hidden;
-    border:1px solid rgb(214, 223, 230);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border: 1px solid #d6dfe6;
 }
-
-.no-collapsable ul{
-    margin-left:-22px;
-    padding-left:5px;
+/* line 23, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000323}}
+.tree-table a {
+  line-height: 20px;
+  width: 100%;
 }
-
-.tree-table a{
-    line-height: 20px;
-    width:100%;
+/* line 29, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000329}}
+.tree-table > ul > li:nth-child(even) > a {
+  background-color: #eeeeee;
 }
-
-.tree-table>ul>li:nth-child(even)>a{
-    background-color:rgb(238, 238, 238);
+/* line 33, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000333}}
+.tree-table > ul > li:nth-child(odd) > ul > li:nth-child(odd) > a {
+  background-color: #eeeeee;
 }
-
-.tree-table>ul>li:nth-child(odd)>ul>li:nth-child(odd)>a{
-    background-color:rgb(238, 238, 238);
+/* line 37, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000337}}
+.tree-table > ul > li:nth-child(even) > ul > li:nth-child(even) > a {
+  background-color: #eeeeee;
 }
-
-.tree-table>ul>li:nth-child(even)>ul>li:nth-child(even)>a{
-    background-color:rgb(238, 238, 238);
+/* line 43, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000343}}
+.tree-not-collapsable ul {
+  margin-left: -22px;
+  padding-left: 5px;
 }
-
-.timeseries-main .left .measure-selector a ins{
-    background-repeat: no-repeat;
-    background-position: top left;
-    background-image:url('../images/warehouse_measure_ena.png');
+/* line 48, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000348}}
+.timeseries-main {
+  position: relative;
+  height: 600px;
 }
-
-.timeseries-main .left .dimension-selector{
-    width:290px;
-    height:320px;
-    overflow-y:scroll;
-    overflow-x:hidden;
+/* line 52, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000352}}
+.timeseries-main .left {
+  padding: 30px;
+  height: 100%;
+  width: 280px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-
-.timeseries-main .left .dimension-selector>ul>li>a ins{
-    background-image:url('../images/warehouse_dimension_ena.png');
-    background-repeat: no-repeat;
-    background-position: top left;
+/* line 60, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000360}}
+.timeseries-main .left .measure-selector {
+  height: 320px;
+  width: 290px;
 }
-
-.timeseries-main .left .dimension-selector>ul>li>ul>li>a ins{
-    background-image:url('../images/warehouse_attribute.png');
-    background-repeat: no-repeat;
-    background-position: top left;
+/* line 64, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000364}}
+.timeseries-main .left .measure-selector a ins {
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-image: url('../images/warehouse_measure_ena.png');
 }
-
-.timeseries-main .middle{
-    padding:30px;
-    margin-left:300px;
-    margin-right:450px;
-    height:100%; 
+/* line 71, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000371}}
+.timeseries-main .left .dimension-selector {
+  width: 290px;
+  height: 320px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
-
-.timeseries-main .middle .selected-measures{
-    background-color: silver;
-    line-height:22px;
+/* line 78, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000378}}
+.timeseries-main .left .dimension-selector > ul > li > a ins {
+  background-image: url('../images/warehouse_dimension_ena.png');
+  background-repeat: no-repeat;
+  background-position: top left;
 }
-
-.timeseries-main .middle .main-config{
-    margin-top:10px;
-    height:310px;
+/* line 84, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000384}}
+.timeseries-main .left .dimension-selector > ul > li > ul > li > a ins {
+  background-image: url('../images/warehouse_attribute.png');
+  background-repeat: no-repeat;
+  background-position: top left;
 }
-
-.timeseries-main .middle .main-config #chart-container{
-    width:100%;
-    float:left;
-    overflow: hidden;
+/* line 93, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000393}}
+.timeseries-main .middle {
+  padding: 30px;
+  margin-left: 300px;
+  margin-right: 450px;
+  height: 100%;
 }
-
-.timeseries-main .middle .main-config .data-series{
-    width:32%;
-    float:right;
-    padding-top:110px;
+/* line 99, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\0000399}}
+.timeseries-main .middle .selected-measures {
+  background-color: silver;
+  line-height: 22px;
 }
-
-.timeseries-main .middle .main-config .data-series .title{
-    clear:both;
+/* line 104, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003104}}
+.timeseries-main .middle .main-config {
+  margin-top: 10px;
+  height: 310px;
 }
-
-
-
-.timeseries-main .middle .x-axis .time-settings{
-    background-color: silver;
-    line-height:22px;
+/* line 108, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003108}}
+.timeseries-main .middle .main-config #chart-container {
+  width: 100%;
+  float: left;
+  overflow: hidden;
 }
-
-.timeseries-main .middle .include{
-    margin-top:20px;
+/* line 114, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003114}}
+.timeseries-main .middle .main-config .data-series {
+  width: 32%;
+  float: right;
+  padding-top: 110px;
 }
-
-
-
-.timeseries-main .right{
-    padding:30px;
-    height:100%; 
-    width:420px; 
-    position:absolute; 
-    top:0; 
-    right:0;
+/* line 119, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003119}}
+.timeseries-main .middle .main-config .data-series .title {
+  clear: both;
 }
-
-.timeseries-main .right .oj-tabs-panel{
-    height:100%}
-
-.timeseries-main .right .data-display table th{
-    padding:10px 15px 10px 0;
-    text-align:right;
+/* line 125, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003125}}
+.timeseries-main .middle .x-axis .time-settings {
+  background-color: silver;
+  line-height: 22px;
 }
-
+/* line 130, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003130}}
+.timeseries-main .middle .include {
+  margin-top: 20px;
+}
+/* line 135, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003135}}
+.timeseries-main .right {
+  padding: 30px;
+  height: 100%;
+  width: 420px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+/* line 143, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003143}}
+.timeseries-main .right .oj-tabs-panel {
+  height: 100%;
+}
+/* line 149, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003149}}
+.timeseries-main .right .data-display table th {
+  padding: 10px 15px 10px 0;
+  text-align: right;
+}
+/* line 154, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003154}}
 .timeseries-main .right .data-display .chart-options {
-    margin-top:50px;
+  margin-top: 50px;
 }
-
-.timeseries-main .right .data-display .chart-options .type{
-    float:left;
-    width:50px;
-    border-right: 1px solid #d6dfe6;
-    text-align: right;
+/* line 157, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003157}}
+.timeseries-main .right .data-display .chart-options .type {
+  float: left;
+  width: 50px;
+  border-right: 1px solid #d6dfe6;
+  text-align: right;
 }
-
-.timeseries-main .right .data-display .chart-options .type img{
-    width:32px;
-    height:32px;
+/* line 168, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003168}}
+.timeseries-main .right .data-display .chart-options .type .img {
+  width: 32px;
+  height: 32px;
 }
-
+/* line 172, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003172}}
 .timeseries-main .right .data-display .chart-options .type .line-icon {
-    width:32px;
-    height:32px;
+  width: 32px;
+  height: 32px;
 }
+/* line 174, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003174}}
 .timeseries-main .right .data-display .chart-options .type .line-icon :before {
-    content: url("../images/graph_line.png"); 
+  content: url("../images/graph_line.png");
 }
-
+/* line 179, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003179}}
 .timeseries-main .right .data-display .chart-options .type .bar-icon {
-    width:32px;
-    height:32px;
+  width: 32px;
+  height: 32px;
 }
+/* line 181, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003181}}
 .timeseries-main .right .data-display .chart-options .type .bar-icon :before {
-    content: url("../images/graph_bar.png"); 
+  content: url("../images/graph_bar.png");
 }
-
+/* line 186, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003186}}
 .timeseries-main .right .data-display .chart-options .type .area-icon {
-    width:32px;
-    height:32px;
+  width: 32px;
+  height: 32px;
 }
+/* line 188, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003188}}
 .timeseries-main .right .data-display .chart-options .type .area-icon :before {
-    content: url("../images/graph_area.png"); 
+  content: url("../images/graph_area.png");
 }
-.timeseries-main .right .data-display .chart-options .displays{
-    float:left;
+/* line 194, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003194}}
+.timeseries-main .right .data-display .chart-options .displays {
+  float: left;
 }
-
-.timeseries-main .right .data-display .chart-options .displays .show-title{
-    float:left;
-    padding-left:20px;
+/* line 197, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003197}}
+.timeseries-main .right .data-display .chart-options .displays .show-title {
+  float: left;
+  padding-left: 20px;
 }
-
-.timeseries-main .right .data-display .chart-options .displays .show-options{
-    float:left;
-    padding-left: 10px;
+/* line 202, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003202}}
+.timeseries-main .right .data-display .chart-options .displays .show-options {
+  float: left;
+  padding-left: 10px;
 }
-
-.timeseries-main .right .data-display .chart-options .displays .show-options div{
-    line-height: 20px;
+/* line 206, D:\GitHub\prototype\src\public_html\less\timeseries-config.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/timeseries-config\.less}line{font-family:\00003206}}
+.timeseries-main .right .data-display .chart-options .displays .show-options div {
+  line-height: 20px;
 }
