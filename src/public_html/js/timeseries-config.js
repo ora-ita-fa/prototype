@@ -289,7 +289,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                     // This will be called when the binding is first applied to an element
                     // Set up any initial state, event handlers, etc. here
                     console.log(element);
-                    console.log(valueAccessor);
+                    console.log(valueAccessor());
                     console.log(allBindings);
                     console.log(viewModel);
                     console.log(bindingContext);
