@@ -30,7 +30,6 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                     var chartEl = $newChart.find('.chart').get(0);
                     var demoChart = new DemoChartModel();
                     demoChart.chartType(timeseriesRegion.configs.getChartType());
-                    ko.applyBindings(demoChart, chartEl);
                     $newChart.resizable({
                         stop: function(event, ui) {
                             ko.cleanNode(chartEl);
@@ -39,7 +38,26 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                     });
                     
                     var rollupEl = $newChart.find('.rollup-table').get(0);
-                    ko.applyBindings(null,rollupEl);
+                    
+                    function handleRollupDrilldown(series){
+                        lines = [];
+                        $.each(series,function(i,seriesName){
+                            
+                            function r(){
+                                return Math.floor((Math.random()*100));
+                            }
+                            lines.push({
+                                name: seriesName, 
+                                items: [r(),r(),r(),r(),r()]
+                            });
+                        });
+                        demoChart.lineSeriesValue = ko.observableArray(lines);
+                        ko.cleanNode(chartEl);
+                        ko.applyBindings(demoChart, chartEl);                       
+                    }
+                    ko.applyBindings({
+                        handleRollupDrilldown:handleRollupDrilldown
+                    },rollupEl);
                 }
 
                 var renderred = false;

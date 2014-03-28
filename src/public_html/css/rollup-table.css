@@ -37,3 +37,8 @@ and open the template in the editor.
   background: url("../images/sortnumberascending_ena.png") no-repeat;
   cursor: pointer;
 }
+/* line 29, D:\GitHub\prototype\src\public_html\less\rollup-table.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/rollup-table\.less}line{font-family:\0000329}}
+.rollup-main ul li a {
+  cursor: pointer;
+}

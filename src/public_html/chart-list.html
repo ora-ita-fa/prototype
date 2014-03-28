@@ -25,7 +25,8 @@ and open the template in the editor.
                 <div class="rollup-table" 
                     data-bind="
                     itaComponent:{
-                         component:'rollup-table'
+                        component:'rollup-table',
+                        rollupDrilldown:handleRollupDrilldown     
                     }
                     ">
                 </div>
@@ -61,7 +62,7 @@ and open the template in the editor.
             <div class="timeseries-region"
                 data-bind="
                 itaComponent:{
-                     component:'timeseries-config'
+                    component:'timeseries-config' 
                 }
                 ">
             </div>
