@@ -30,9 +30,7 @@
         <!-- ko if: name === $parent.currentLevel.name -->
         <a  class="rollup-link"
             data-bind="
-            click: function(){
-                alert('rollup ' + name);
-            }
+            click: $root.rollup.bind($root,name)
             "></a>
         <!-- /ko -->
     </li>
@@ -47,8 +45,6 @@
             attr: {
                 'data-level-name': $parent.currentLevel.name
             }, 
-            click: function(){
-                alert(0);
-            }"></a>
+            click: $root.drilldown.bind($root,$parent.currentLevel.name)"></a>
     </li>
 </script>

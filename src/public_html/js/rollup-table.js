@@ -8,17 +8,6 @@
 define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita) {
 
 
-    var fakeLevelValueMapping = {
-        'All Selected target': ['Center1', 'Center2', 'Center3'],
-        'Center1': ['host1', 'database1', 'wls3', 'host4', 'wls7', 'database7', 'database4'],
-        'Center2': ['host2', 'wls3', 'database6', 'database5'],
-        'Center3': ['wls9', 'database11']
-    };
-
-    function RollupTableModel() {
-        this.levels = ['All Selected target', 'By COSTCENTER_Level', 'By DISPLAYNAME_Level'];
-    }
-
     ita.registerTool({
         name: 'rollup-table',
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
@@ -32,40 +21,146 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
             $.get('rollup-table.html', function(resp) {
                 $('head').append('<link rel="stylesheet" href="css/rollup-table.css">');
                 
-                var $el = $(element);
-                $el.append(resp);
-                ko.applyBindings({
-                    dimension: 'target',
-                    levels: [
+                var properties = valueAccessor();
+
+                var $rollupTableRoot;
+
+                var levels = [
+                                {
+                                    display: 'All Selected target',
+                                    name: 'root'
+                                },
+                                {
+                                    display: 'By COSTCENTER_Level',
+                                    name: 'COSTCENTER'
+                                },
+                                {
+                                    display: 'By DISPLAYNAME_Level',
+                                    name: 'DISPLAYNAME'
+                                }
+                            ];
+                var dimension = 'target';
+
+                var rootLevel = 
                         {
-                            display: 'All Selected target',
-                            name: null
-                        },
+                            dimension: dimension,
+                            levels: levels,
+                            currentLevel: {
+                                name: 'root'
+                            },
+                            attributeValues: [
+                                {
+                                    value: 'all targets'
+                                }
+                            ]
+                        };
+
+                var costCenterLevel =
                         {
-                            display: 'By COSTCENTER_Level',
-                            name: 'COSTCENTER'
-                        },
+                            dimension: dimension,
+                            levels: levels,
+                            currentLevel: {
+                                name: 'COSTCENTER'
+                            },
+                            attributeValues: [
+                                {
+                                    value: 'cost center 1'
+                                },
+                                {
+                                    value: 'cost center 2'
+                                },
+                                {
+                                    value: 'cost center 3'
+                                }
+                            ]
+                        };
+
+                var targetInstanceLevel = 
                         {
-                            display: 'By DISPLAYNAME_Level',
-                            name: 'DISPLAYNAME'
-                        }
-                    ],
-                    currentLevel: {
-                        name: 'COSTCENTER'
-                    },
-                    attributeValues: [
-                        {
-                            value: 'cost center 1'
-                        },
-                        {
-                            value: 'cost center 2'
-                        },
-                        {
-                            value: 'cost center 3'
-                        }
-                    ]
-                },
-                $el.find('.rollup-main').get(0));
+                            dimension: dimension,
+                            levels: levels,
+                            currentLevel: {
+                                name: 'DISPLAYNAME'
+                            },
+                            attributeValues: [
+                                {
+                                    value: 'host1'
+                                },
+                                {
+                                    value: 'database1'
+                                },
+                                {
+                                    value: 'wls3'
+                                },
+                                {
+                                    value: 'database7'
+                                },
+                                {
+                                    value: 'database5'
+                                },
+                                {
+                                    value: 'database6'
+                                },
+                                {
+                                    value: 'database11'
+                                },
+                                {
+                                    value: 'wls9'
+                                }
+                            ]       
+                        };
+
+                function redraw(model){
+                    var el = $rollupTableRoot.find('.rollup-main').get(0);
+                    ko.cleanNode(el);
+                    model.drilldown = drilldown;
+                    model.rollup = rollup;
+                    ko.applyBindings(model, el);
+
+                    var series = [];
+                    $.each(model.attributeValues,function(i,attr){
+                        series.push(attr.value);
+                    });
+
+                    var listener = properties.rollupDrilldown;
+                    if(listener && typeof listener === 'function'){
+                        listener(series);
+                    }
+                }
+
+                function drilldown(currentLevel){
+                    var mappedModel = null;
+                    switch(currentLevel){
+                        case 'root':
+                            mappedModel = costCenterLevel;
+                            break;
+                        case 'COSTCENTER':
+                            mappedModel = targetInstanceLevel;
+                            break;
+                    }
+                    if(mappedModel !== null){
+                        redraw(mappedModel);
+                    }
+                }
+
+                function rollup(currentLevel){
+                    var mappedModel = null;
+                    switch(currentLevel){
+                        case 'DISPLAYNAME':
+                            mappedModel = costCenterLevel;
+                            break;
+                        case 'COSTCENTER':
+                            mappedModel = rootLevel;
+                            break;
+                    }
+                    if(mappedModel !== null){
+                        redraw(mappedModel);
+                    }
+                }
+                $rollupTableRoot = $(element);
+                $rollupTableRoot.append(resp);
+                
+                redraw(targetInstanceLevel);
             });
         }
     });
