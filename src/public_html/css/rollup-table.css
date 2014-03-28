@@ -1,0 +1,39 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-27, 16:12:37
+    Author     : danfjian
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-27, 17:25:12
+    Author     : danfjian
+*/
+/* line 13, D:\GitHub\prototype\src\public_html\less\rollup-table.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/rollup-table\.less}line{font-family:\0000313}}
+.rollup-main ul {
+  padding-left: 10px;
+}
+/* line 16, D:\GitHub\prototype\src\public_html\less\rollup-table.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/rollup-table\.less}line{font-family:\0000316}}
+.rollup-main ul li {
+  list-style: none;
+  line-height: 20px;
+}
+/* line 20, D:\GitHub\prototype\src\public_html\less\rollup-table.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/rollup-table\.less}line{font-family:\0000320}}
+.rollup-main ul li .rollup-link {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  vertical-align: middle;
+  background: url("../images/sortnumberascending_ena.png") no-repeat;
+  cursor: pointer;
+}

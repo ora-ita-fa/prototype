@@ -22,13 +22,12 @@ and open the template in the editor.
     <body>
         <script id="chart-template" type="text/template">
             <div class="region">
-                <div class="rollup-table" id="rollup-table" 
-                     data-bind="
-                     ojComponent:{
-                         component: 'ojTree', 
-                         json_data:levels}
-                     ">
-                     Roll up table
+                <div class="rollup-table" 
+                    data-bind="
+                    itaComponent:{
+                         component:'rollup-table'
+                    }
+                    ">
                 </div>
                 <div class="chart" data-bind="ojComponent: {
                     component: 'ojChart', 

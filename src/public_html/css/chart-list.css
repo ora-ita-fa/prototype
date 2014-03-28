@@ -10,7 +10,7 @@ and open the template in the editor.
 /* line 11, D:\GitHub\prototype\src\public_html\less\chart-list.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/chart-list\.less}line{font-family:\0000311}}
 #add-chart {
-  width: 400px;
+  width: 600px;
   height: 247px;
   border: 2px solid silver;
   background: url('../images/add.svg') center no-repeat;
@@ -26,7 +26,7 @@ and open the template in the editor.
 .chart-list > div {
   border: 2px solid silver;
   display: inline-block;
-  width: 400px;
+  width: 800px;
   height: 247px;
   margin: 5px;
   vertical-align: top;
@@ -44,4 +44,9 @@ and open the template in the editor.
   height: 100%;
   width: 70%;
   float: left;
+}
+/* line 50, D:\GitHub\prototype\src\public_html\less\chart-list.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/chart-list\.less}line{font-family:\0000350}}
+.test {
+  background-color: red;
 }

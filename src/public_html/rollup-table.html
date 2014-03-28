@@ -1,0 +1,54 @@
+<div class="rollup-main">
+    <ul 
+        class="rollup-header"
+        data-bind="
+            template: {
+                name: 'level-hierarchy-template',
+                foreach: levels
+            }
+        ">
+    </ul>
+    
+    <ul class="attr-values"
+        data-bind="
+        template: {
+            name: 'attr-value-list-template',
+            foreach: attributeValues       
+        }">
+    </ul>
+</div>
+
+
+
+<script type="text/html" id="level-hierarchy-template">
+    <li data-bind="
+        style: {
+            marginLeft: $index() * 20 + 'px'
+        }
+        ">
+        <span data-bind="text: display"></span>
+        <!-- ko if: name === $parent.currentLevel.name -->
+        <a  class="rollup-link"
+            data-bind="
+            click: function(){
+                alert('rollup ' + name);
+            }
+            "></a>
+        <!-- /ko -->
+    </li>
+
+</script>
+
+
+<script type="text/html" id="attr-value-list-template">
+    <li>
+        <a  data-bind="
+            text: value,
+            attr: {
+                'data-level-name': $parent.currentLevel.name
+            }, 
+            click: function(){
+                alert(0);
+            }"></a>
+    </li>
+</script>
