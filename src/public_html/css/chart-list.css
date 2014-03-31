@@ -37,16 +37,17 @@ and open the template in the editor.
   height: 100%;
   width: 29%;
   float: left;
+  overflow: hidden;
 }
-/* line 42, D:\GitHub\prototype\src\public_html\less\chart-list.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/chart-list\.less}line{font-family:\0000342}}
+/* line 43, D:\GitHub\prototype\src\public_html\less\chart-list.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/chart-list\.less}line{font-family:\0000343}}
 .chart-list .region .chart {
   height: 100%;
   width: 70%;
   float: left;
 }
-/* line 50, D:\GitHub\prototype\src\public_html\less\chart-list.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/chart-list\.less}line{font-family:\0000350}}
+/* line 51, D:\GitHub\prototype\src\public_html\less\chart-list.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/D\:\/GitHub\/prototype\/src\/public_html\/less\/chart-list\.less}line{font-family:\0000351}}
 .test {
   background-color: red;
 }

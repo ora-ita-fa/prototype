@@ -67,7 +67,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                         ko.applyBindings(wm, $("#worksheet-table")[0]);
                         ko.applyBindings(new MenuModel(), $('#menu-container')[0]);
                         ko.applyBindings(null, $('#menuSet')[0]);
-                        ko.applyBindings(null, $("#worksheet-search")[0]);
+                        ko.applyBindings(null, $(".worksheet-search")[0]);
                     }
             );
 });
