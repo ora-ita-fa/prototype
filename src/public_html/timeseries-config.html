@@ -25,9 +25,9 @@
         <div class="selected-measures">Selected Measures</div>
 
         <div class="main-config">
-                <!-- <div class="sample-chart">
-                    <img src="images/sample-chart.png" alt="Sample Chart"/>
-                </div>-->
+            <!-- <div class="sample-chart">
+                <img src="images/sample-chart.png" alt="Sample Chart"/>
+            </div>-->
             <div id='chart-container'>
                 <!-- <button id= "button"
                         data-bind="click: chartTypeButtonClick, 
@@ -78,20 +78,6 @@
              active:1
          }
          ">
-        <div>
-            <span>Filters</span>
-            <p>
-                The roll up table here is just for testing 'region' include 'region'.
-                Please ignore.
-            </p>
-            <div class="rollup-table" 
-                    data-bind="
-                    itaComponent:{
-                        component:'rollup-table' 
-                    }
-                    ">
-            </div>
-        </div>
         <div class="data-display">
             <span>Data Display</span>
             <div>
@@ -104,7 +90,7 @@
                         <th rowspan="2">Display</th>
                         <td>
                             <label>
-                                <input type="radio"/>
+                                <input type="radio" name="data-display-display"/>
                                 Chart
                             </label>
 
@@ -113,7 +99,7 @@
                     <tr>
                         <td>
                             <label>
-                                <input type="radio"/>
+                                <input type="radio" name="data-display-display"/>
                                 Table of
                             </label>
                         </td>
@@ -205,18 +191,132 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div class="data-series-display">
             <span>Data Series Display</span>
-            <p></p>
+            <div>
+                <h3>Drill Down</h3>
+                <hr/>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><input id ="check-by-month-of-year" type="checkbox"  /></td>
+                            <td><label>By Month of Year</label></td>
+                        </tr>
+                        <tr><td></td>
+                            <td> <div id='lowest-level-div'>
+                                    <label>Lowest Level</label>
+                                    <select name="lowest-level" >
+                                        <option value="day" selected>Day of Month</option>
+                                        <option value="month">Month of Year</option>
+                                        <option value="hour">Hour</option>
+                                    </select>
+                                </div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="top-bottom">
+                    <h3>Top/Bottom</h3>
+                    <hr/>
+                    <table>
+                        <tr><td>
+                                <div >
+                                    <label>Show&nbsp;</label>
+                                    <input id='check-show-only-topbottom' type="checkbox" />
+                                    <label>Only Top/Bottom Data Series</label>
+                                </div>
+                                <div class='top-bottom-editable'>
+                                    <label>Include</label> 
+                                    <select  id='include-select'>
+                                        <option value="top" >Top</option>
+                                        <option value="bottom">Bottom</option>
+                                    </select>
+                                </div>
+                                <div class='top-bottom-editable'>
+                                    <label><input type= "radio" name="include-radio" /><span id='top-or-bottom-span'>Top</span> N Data Series</label><br>
+                                    <div class="inputnumber"><input id="inputnumber-1"   data-bind="ojComponent: {component: 'ojInputNumber', max:100, min:-20, step:1,value:5}"/></div>
+                                    <label><input type= "radio" name="include-radio"/><span  id='largest-or-smallest-span' >Largest</span> Contributors</label><br/>
+                                     <div  class="inputnumber"><input id="inputnumber-2"   data-bind="ojComponent: {component: 'ojInputNumber', max:100, min:-20, step:1,value:5}"/><span>% or more of total</span></div>
+                                    <label><input type= "radio" name="include-radio"/>Percentile Rank </label><br>
+                                    <div  class="inputnumber"><input id="inputnumber-3"   data-bind="ojComponent: {component: 'ojInputNumber', max:100, min:-20, step:1,value:5}"/><span>% or more</span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class='top-bottom-editable'>
+                                    <label>By Attribute</label> 
+                                    <select id="by-attribute-select" >
+                                        <option value="none" ></option>
+                                        <option value="target-level">Target Level</option>
+                                    </select>
+                                </div>
+                                <div class='top-bottom-editable'>
+                                    <label>Measure</label>
+                                    <select name="measure" >
+                                        <option value="none" ></option>
+                                        <option value="measure">Average($dimension)</option>
+                                    </select>
+                                </div>
+                                <div class='value-div'>
+                                    <div >
+                                        <label>Value</label> 
+                                    </div>
+                                    <div class="top-bottom-editable">
+                                        <label><input type= "radio" name="val" />Sum</label><br>
+                                        <label><input type= "radio" name="val"/>Maximum</label><br>
+                                        <label><input type= "radio" name="val"/>Minimum</label><br>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div>
+        <div class="tren-fore-base" >
             <span>Trending,Forecasting and Baseline</span>
+            <table>
+                <tbody>
+                    <tr>
+                        <th >Display</th>
+                        <td><input type="checkbox" checked><label>Trending & Forecasting</label></td>
+                    </tr>
+                    <tr><th></th>
+                        <td><input type="checkbox"><label>Baseline</label></td>
+                    </tr>
+                    <tr><th></th>
+                        <td>* The minimum points for baseline is 50. Please adjust your time range and granularity</td>
+                    </tr>
+                </tbody>
+            </table>
             <p></p>
         </div>
-        <div>
+        <div class="correlation">
             <span>Correlation</span>
-            <p></p>
-        </div>
+            <p>
+                To correlate data in a chart, add the dimensions/members for comparison to the data series axis. 
+                When correlating data in a table, data series from either the rows or columns can be compared.
+            </p>
+            <div>
+                <div><span> Correlate</span></div>
+                <div>
+                    <label><input type= "radio" name="correlate" />None</label><br>
+                    <label><input type= "radio" name="correlate"/>One To Many</label><br>
+                    <label><input type= "radio" name="correlate"/>Many To One</label><br>
+                </div>
+            </div>
+            <div class="correlation-analyze">
+                <div><span>Analyze</span></div>
+                <div>
+                    <label><input type= "radio" name="Analyze" />All Data</label><br>
+                    <label><input type= "radio" name="Analyze"/>Data without Outliers</label><br>
+                </div>
+            </div>
+            <div>
+                <div><span>Correlation Coefficient</span></div>
+                <div>
+                    <label><input type= "radio" name="correlate" />Pearson (best for linear data series)</label><br>
+                    <label><input type= "radio" name="correlate"/>Spearman (best for non-linear data series)</label><br>
+                </div>
+            </div>
 
-    </div>            
-</div>
+        </div>            
+    </div>
