@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Worksheets</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="css/worksheet-list.css">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <script src="js/libs/require/require.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            require(['worksheet-list']);
+        </script>
+    </head>
+    <body>
+        <div class='worksheet' >
+            <div class="worksheet-search">
+                <div>
+                    <h1>Worksheets</h1>
+                </div>
+
+                <div class="oj-form oj-md-labels-inline oj-md-odd-cols-1 ">
+                    <div class="oj-row">
+                        <div class="oj-col">
+                            <label for="inputcontrol">Name</label>
+                        </div>
+                        <div class="oj-col">
+                            <input id="inputcontrol"
+                                   data-bind="ojComponent: {component: 'ojInputText', value:''}">
+                        </div>
+                        <div class="oj-col">
+                            <label for="combobox">Analysis Type</label>
+                        </div>
+                        <div class="oj-col">
+                            <input id="combobox" list="browsers"
+                                   data-bind="ojComponent: {component: 'ojCombobox',
+                        value: 'FA'}"/>
+                            <datalist id="browsers">
+                                <option value="FA">Flexible Analysis</option>
+                                <option value="SOA">SOA</option>
+                                <option value="DB Performance">DB Performance</option>
+                                <option value="DB Resource Planning">DB Resource Planning</option>
+                                <option value="APM">Application Performance Analysis</option>
+                            </datalist>
+                        </div>
+                        <div class="oj-col"><label for="search-worksheet"> </label></div>
+                        <!--                    <div class="oj-col">
+                                                <label for="inputcontrol">Created By</label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <input id="inputcontrol"
+                                                       data-bind="ojComponent: {component: 'ojInputText', value:'Sysman'}">
+                                            </div>
+                                            <div class="oj-col">
+                                                <label for="datetimepickercontrol">Created</label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <input id="datetimepickercontrol"
+                                                       data-bind="ojComponent: {component: 'ojInputDateTime', 
+                                                     value: new Date()}">
+                                            </div>-->
+                    </div>
+                    <div style="text-align: right">
+                        <button id="search-worksheet"
+                                data-bind="
+                    ojComponent: {
+                    component:'ojButton', 
+                    icons: {end:'oj-fwk-icon-caret-end oj-fwk-icon'}, 
+                    label: 'Search'
+                }"></button>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+            <div id="worksheet-menu">
+                <div id="menuSet" data-bind="ojComponent: {component: 'ojButtonset'}"
+                     aria-label="Use left and right arrow keys to navigate.">
+                    <button id="menuButton1" class="oj-button-half-chrome"
+                            data-bind="ojComponent: {component: 'ojButton', label: 'Create', 
+                                     menu: {'menu': 'analysisTypes'}}">
+                    </button>
+                    <button id="menuButton2" class="oj-button-half-chrome"
+                            data-bind="ojComponent: {component: 'ojButton', label: 'Edit', 
+                                     menu: {'menu': 'worksheetList'}}">
+                    </button>
+                    <button id="menuButton3" class="oj-button-half-chrome"
+                            data-bind="ojComponent: {component: 'ojButton', label: 'Execute', 
+                                     menu: {'menu': 'worksheetList'}}">
+                    </button>
+                </div>
+
+                <div id='menu-container'>
+                    <!-- To handle menu item selection, use a select listener as shown, not a click listener. -->
+                    <ul id="analysisTypes" style="display:none"
+                        data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}">
+                        <li id="fa"><a href="chart-list.html">
+                                <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>Flexible Analysis
+                            </a></li>
+                        <li id="soa" class="oj-disabled"><a href="#">
+                                <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>SOA
+                            </a></li>
+                        <li id="dbPerf" class="oj-disabled"><a href="#">
+                                <span class="oj-menu-item-icon demo-icon-font demo-bookmark-icon"></span>DB Performance
+                            </a></li>
+                        <li id="dbRsr" class="oj-disabled"><a href="#">
+                                <span class="oj-menu-item-icon demo-icon-font demo-chat-icon"></span>DB Resource Planning
+                            </a></li>
+                        <li id="apa" class="oj-disabled"><a href="#">
+                                <span class="oj-menu-item-icon demo-icon-font demo-chat-icon"></span>Application Performance Analysis
+                            </a></li>
+                    </ul>
+                    <ul id="worksheetList" style="display:none"
+                        data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}">
+                        <li id="worksheet1"><a href="#">
+                                <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>worksheet1
+                            </a></li>
+                        <li id="worksheet2"><a href="#">
+                                <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>worksheet2
+                            </a></li>
+                        <li id="worksheet3"><a href="#">
+                                <span class="oj-menu-item-icon demo-icon-font demo-bookmark-icon"></span>worksheet3
+                            </a></li>
+                    </ul>
+<!--                    <p>
+                    <p>
+                    <p class="bold">Last selected menu item:
+                        <span id="results" data-bind='text: selectedMenuItem'></span>
+                    </p>-->
+                </div>
+            </div>
+            <div class="worksheet-list">
+                <table id="worksheet-table" data-bind="ojComponent: 
+                {component: 'ojTable', 
+                    data: datasource, 
+                    containerClassName: 'worksheet-table',
+                    columns:
+                        [{headerText: 'Name', field: 'Name',headerStyle:'white-space:nowrap;;width:20%;',id:'Name',style:'white-space:nowrap'},
+                        {headerText: 'Application Type', field: 'ApplicationType',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Description', field: 'Description',headerStyle:'white-space:nowrap; width:100%'},
+                        {headerText: 'Created', field: 'Created',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Created By', field: 'CreatedBy',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Execution Status', field: 'ExecutionStatus',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Last Execution Time', field: 'LastExecutionTime',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Last Execution User', field: 'LastExecutionUser',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Updated', field: 'Updated',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Updated By', field: 'UpdatedBy',headerStyle:'white-space:nowrap;'},
+                        {headerText: 'Precalculated', field: 'Precalculated',headerStyle: 'white-space:nowrap;'}],
+                    columnTemplates: [{columnId: 'Name1', type: 'cell', template: 'name'}]}
+                       ">
+                </table>
+                <script type="text/html" id="name">
+                    <td>
+                        <a href="/chart-list.html">worksheet i</a>
+                    </td>
+                    </script>
+                </div>
+            </div>
+        </body>
+    </html>

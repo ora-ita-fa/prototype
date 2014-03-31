@@ -1,0 +1,30 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 28, 2014, 3:45:29 PM
+    Author     : phzhou
+*/
+
+.worksheet{
+    padding: 10px;
+    height: 100%;
+}
+
+.worksheet-list{
+     right:0;
+}
+
+.worksheet-table{
+     white-space: nowrap;
+     right:0;
+     width:100%;
+}
+
+.worksheet-table .worksheet-table-column1 { 
+    width: 300px;
+    white-space: nowrap;
+    background-color: red;
+}
