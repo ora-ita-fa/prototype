@@ -8,11 +8,13 @@ and open the template in the editor.
     Author     : danfjian
 */
 
+@import "common.less";
+
 #add-chart {
     width:600px;
     height:247px;
     border:2px solid silver;
-    background:url('../images/add.svg') center no-repeat;
+    background:url('@{img-path}/add.svg') center no-repeat;
     cursor:pointer;
 }
 
@@ -21,7 +23,7 @@ and open the template in the editor.
 }
 
 .chart-list {
-    
+
     > div {
         border:2px solid silver;
         display:inline-block;
@@ -30,21 +32,123 @@ and open the template in the editor.
         margin:5px;
         vertical-align: top;
     }
-    
+
     .region {
-        
+
         .rollup-table{
             height:100%;
             width:29%;
             float:left;
             overflow:hidden;
         }
-        
+
         .chart{
             height:100%;
             width:70%;
             float:left;
         }
+    }
+}
+.icon-style(){
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;  /* width of the image plus a little extra padding */
+}
+
+.menus-bar{
+    padding:10px 15px 0px 20px;
+    float:left;
+    width:1200px;
+    > button{
+        margin: 0px 0px 2px 0px;
+        vertical-align: top;
+        height:30px;
+        max-width:200px;
+        min-width:30px;
+        border-width: 1px;
+    }
+    > span {
+        height:28px;
+        vertical-align:middle;
+        color:  #0572CE;
+    }
+
+    .icon-size() {
+        width: 24px;
+        height: 24px;
+    }
+
+    img {
+        .icon-size;
+    }
+
+    .action-icon{
+        .icon-style;
+        background-image: url("@{img-path}/action-icon.png");
+    }
+    .delete-icon{
+        .icon-style;
+        background-image: url("@{img-path}/delete-icon.png");
+    }
+    .create-icon{
+        .icon-style;
+        background-image: url("@{img-path}/new_ena.png");
+    } 
+    .import-icon{
+        .icon-style;
+        background-image: url("@{img-path}/importIcon_ena.png");
+    }
+    .edit-icon{
+        .icon-style;
+        background-image: url("@{img-path}/edit_ena.png");
+    }
+    .control-icon{
+        .icon-style;
+        background-image: url("@{img-path}/agent_ena.png");
+    }
+    .view-icon{
+        .icon-style;
+        background-image: url("@{img-path}/eyeglasses.png");
+    }
+    
+    .layout-icon{
+        .icon-style;
+        background-image: url("@{img-path}/layout-icon.png");
+    }
+}
+
+#menu-container{
+    a {
+        padding-left: 20px;
+        padding-right: 18px;
+    }
+
+    .command-icon {
+        .icon-style;
+        background-image: url("@{img-path}/command-icon.png");
+    }
+
+    .line-icon {
+        .icon-style;
+        background-image: url("@{img-path}/graph_line.png");
+    }
+
+    .bar-icon {
+        .icon-style;
+        background-image: url("@{img-path}/graph_bar.png");
+    }
+    .one-column{
+        .icon-style;
+        background-image: url("@{img-path}/layout-1-icon.png");
+    }
+    .two-column{
+        .icon-style;
+        background-image: url("@{img-path}/layout-2-icon.png");
+    }
+    .three-column{
+        .icon-style;
+        background-image: url("@{img-path}/layout-3-icon.png");
     }
 }
 

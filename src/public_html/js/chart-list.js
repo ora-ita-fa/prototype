@@ -36,32 +36,33 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                             ko.applyBindings(demoChart, chartEl);
                         }
                     });
-                    
+
                     var rollupEl = $newChart.find('.rollup-table').get(0);
-                    
-                    function handleRollupDrilldown(series){
+
+                    function handleRollupDrilldown(series) {
                         lines = [];
-                        $.each(series,function(i,seriesName){
-                            
-                            function r(){
-                                return Math.floor((Math.random()*100));
+                        $.each(series, function(i, seriesName) {
+
+                            function r() {
+                                return Math.floor((Math.random() * 100));
                             }
                             lines.push({
-                                name: seriesName, 
-                                items: [r(),r(),r(),r(),r()]
+                                name: seriesName,
+                                items: [r(), r(), r(), r(), r()]
                             });
                         });
                         demoChart.lineSeriesValue = ko.observableArray(lines);
                         ko.cleanNode(chartEl);
-                        ko.applyBindings(demoChart, chartEl);                       
+                        ko.applyBindings(demoChart, chartEl);
                     }
                     ko.applyBindings({
-                        handleRollupDrilldown:handleRollupDrilldown
-                    },rollupEl);
+                        handleRollupDrilldown: handleRollupDrilldown
+                    }, rollupEl);
                 }
 
                 var renderred = false;
                 $("#add-chart").click(function() {
+                    $('.menus-bar').toggle('slide');
                     $('.chart-list').toggle('slide');
                     $('.timeseries-container').toggle('slide', function() {
                         // render the timeseries after finishing slide effects,
@@ -76,11 +77,38 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
 
                 ko.applyBindings({
                     goBack: function() {
+                        $('.menus-bar').toggle('slide');
                         $('.timeseries-container').toggle('slide');
                         $('.chart-list').toggle('slide', function() {
                             addChart();
                         });
                     }
                 }, $("#back-to-chart-list")[0]);
+
+                function MenuModel() {
+                    var self = this;
+                    self.selectedMenuItem = ko.observable("(None selected yet)");
+                    self.menuItemSelect = function(event, ui) {
+                        self.selectedMenuItem(ui.item.children("a").text());
+                    };
+                }
+                //binding menu mode;
+                for (var i = 0; i < $('#menu-container div').size(); i++) {
+                    ko.applyBindings(new MenuModel(), $('#menu-container div')[i]);
+                }
+
+                function ButtonModel() {
+                    this.setHalfChrome = function(event) {
+                        $(event.target).parent().addClass("oj-button-half-chrome");
+                    };
+                    this.setNoChrome = function(event) {
+                        $(event.target).parent().addClass("oj-button-no-chrome");
+                    };
+                }
+                ;
+                //binding view model to menu bar buttons 
+                for (var i = 0; i < $('.menus-bar button').size(); i++) {
+                    ko.applyBindings(new ButtonModel(), $('.menus-bar button')[i]);
+                }
             });
         });
