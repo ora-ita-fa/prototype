@@ -7,35 +7,161 @@ and open the template in the editor.
     Created on : 2014-3-26, 15:31:11
     Author     : danfjian
 */
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-27, 17:25:12
+    Author     : danfjian
+*/
 #add-chart {
   width: 600px;
   height: 247px;
   border: 2px solid silver;
-  background: url('../images/add.svg') center no-repeat;
-  cursor: pointer;
-}
+  background: url("../images/add.svg") center no-repeat;
+  cursor: pointer; }
+
 .timeseries-container {
-  display: none;
-}
+  display: none; }
+
 .chart-list > div {
   border: 2px solid silver;
   display: inline-block;
   width: 800px;
   height: 247px;
   margin: 5px;
-  vertical-align: top;
-}
+  vertical-align: top; }
 .chart-list .region .rollup-table {
   height: 100%;
   width: 29%;
   float: left;
-  overflow: hidden;
-}
+  overflow: hidden; }
 .chart-list .region .chart {
   height: 100%;
   width: 70%;
+  float: left; }
+
+.menus-bar {
+  padding: 10px 15px 0px 20px;
   float: left;
-}
-.test {
-  background-color: red;
-}
+  width: 1200px; }
+  .menus-bar > button {
+    margin: 0px 0px 2px 0px;
+    vertical-align: top;
+    height: 30px;
+    max-width: 200px;
+    min-width: 30px;
+    border-width: 1px; }
+  .menus-bar > span {
+    height: 28px;
+    vertical-align: middle;
+    color: #0572CE; }
+  .menus-bar img {
+    width: 24px;
+    height: 24px; }
+  .menus-bar .action-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/action-icon.png"); }
+  .menus-bar .delete-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/delete-icon.png"); }
+  .menus-bar .create-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/new_ena.png"); }
+  .menus-bar .import-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/importIcon_ena.png"); }
+  .menus-bar .edit-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/edit_ena.png"); }
+  .menus-bar .control-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/agent_ena.png"); }
+  .menus-bar .view-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/eyeglasses.png"); }
+  .menus-bar .layout-icon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */
+    background-image: url("../images/layout-icon.png"); }
+
+#menu-container a {
+  padding-left: 20px;
+  padding-right: 18px; }
+#menu-container .command-icon {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+  /* width of the image plus a little extra padding */
+  background-image: url("../images/command-icon.png"); }
+#menu-container .line-icon {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+  /* width of the image plus a little extra padding */
+  background-image: url("../images/graph_line.png"); }
+#menu-container .bar-icon {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+  /* width of the image plus a little extra padding */
+  background-image: url("../images/graph_bar.png"); }
+#menu-container .one-column {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+  /* width of the image plus a little extra padding */
+  background-image: url("../images/layout-1-icon.png"); }
+#menu-container .two-column {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+  /* width of the image plus a little extra padding */
+  background-image: url("../images/layout-2-icon.png"); }
+#menu-container .three-column {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+  /* width of the image plus a little extra padding */
+  background-image: url("../images/layout-3-icon.png"); }
+
+/*# sourceMappingURL=chart-list.css.map */

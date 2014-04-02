@@ -8,11 +8,16 @@ and open the template in the editor.
     Author     : danfjian
 */
 
-@import "common.less"; 
+@import "common.scss"; 
 
 .inline-title {
     display: inline;
     margin-right: 10px;
+}
+
+@mixin icon-size {
+    width: 32px;
+    height: 32px;
 }
 
 .tree-table {
@@ -64,7 +69,7 @@ and open the template in the editor.
             a ins {
                 background-repeat: no-repeat;
                 background-position: top left;
-                background-image: url('@{img-path}/warehouse_measure_ena.png');
+                background-image: url('#{$img-path}/warehouse_measure_ena.png');
             }
         }
 
@@ -76,13 +81,13 @@ and open the template in the editor.
 
             > ul > li {
                 > a ins {
-                    background-image: url('@{img-path}/warehouse_dimension_ena.png');
+                    background-image: url('#{$img-path}/warehouse_dimension_ena.png');
                     background-repeat: no-repeat;
                     background-position: top left;
                 }
 
                 > ul > li > a ins {
-                    background-image: url('@{img-path}/warehouse_attribute.png');
+                    background-image: url('#{$img-path}/warehouse_attribute.png');
                     background-repeat: no-repeat;
                     background-position: top left;
                 }
@@ -160,33 +165,28 @@ and open the template in the editor.
                     border-right: 1px solid #d6dfe6;
                     text-align: right;
 
-                    .icon-size() {
-                        width: 32px;
-                        height: 32px;
-                    }
-
                     .img {
-                        .icon-size;
+                        @include icon-size;
                     }
 
                     .line-icon {
-                        .icon-size;
+                        @include icon-size;
                         :before {
-                            content: url("@{img-path}/graph_line.png");
+                            content: url("#{$img-path}/graph_line.png");
                         }
                     }
 
                     .bar-icon {
-                        .icon-size;
+                        @include icon-size;
                         :before {
-                            content: url("@{img-path}/graph_bar.png");
+                            content: url("#{$img-path}/graph_bar.png");
                         }
                     }
 
                     .area-icon {
-                        .icon-size;
+                        @include icon-size;
                         :before {
-                            content: url("@{img-path}/graph_area.png");
+                            content: url("#{$img-path}/graph_area.png");
                         }
                     }
                 }

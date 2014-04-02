@@ -17,20 +17,18 @@ and open the template in the editor.
     Author     : danfjian
 */
 .rollup-main ul {
-  padding-left: 10px;
-}
-.rollup-main ul li {
-  list-style: none;
-  line-height: 20px;
-}
-.rollup-main ul li .rollup-link {
-  display: inline-block;
-  height: 16px;
-  width: 16px;
-  vertical-align: middle;
-  background: url("../images/sortnumberascending_ena.png") no-repeat;
-  cursor: pointer;
-}
-.rollup-main ul li a {
-  cursor: pointer;
-}
+  padding-left: 10px; }
+  .rollup-main ul li {
+    list-style: none;
+    line-height: 20px; }
+    .rollup-main ul li .rollup-link {
+      display: inline-block;
+      height: 16px;
+      width: 16px;
+      vertical-align: middle;
+      background: url("../images/sortnumberascending_ena.png") no-repeat;
+      cursor: pointer; }
+    .rollup-main ul li a {
+      cursor: pointer; }
+
+/*# sourceMappingURL=rollup-table.css.map */
