@@ -61,7 +61,7 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                 }
 
                 var renderred = false;
-                $("#add-chart").click(function() {
+                   function addChartFunction () {
                     $('.menus-bar').toggle('slide');
                     $('.chart-list').toggle('slide');
                     $('.timeseries-container').toggle('slide', function() {
@@ -73,7 +73,9 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                             renderred = true;
                         }
                     });
-                });
+                }
+                $("#add-chart").click(addChartFunction);
+                $("#add-chart-button").click(addChartFunction);
 
                 ko.applyBindings({
                     goBack: function() {
