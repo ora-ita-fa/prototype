@@ -21,26 +21,76 @@ and open the template in the editor.
     <body>
         <script id="chart-template" type="text/template">
             <div class="region">
-                <div class="rollup-table" 
-                    data-bind="
-                    itaComponent:{
-                        component:'rollup-table',
-                        rollupDrilldown:handleRollupDrilldown     
-                    }
-                    ">
-                </div>
-                <div class="chart" data-bind="ojComponent: {
-                    component: 'ojChart', 
-                    type: chartType, 
-                    selection: 'multiple', 
-                    series: lineSeriesValue, 
-                    groups: lineGroupsValue, 
-                    animationOnDisplay: 'auto',
-                    animationOnDataChange: 'auto',
-                    orientation: 'vertical'
-                    }"></div>
+            <div class="rollup-table" 
+            data-bind="
+            itaComponent:{
+            component:'rollup-table',
+            rollupDrilldown:handleRollupDrilldown     
+            }
+            ">
+            </div>
+            <div class="chart" data-bind="ojComponent: {
+            component: 'ojChart', 
+            type: chartType, 
+            selection: 'multiple', 
+            series: lineSeriesValue, 
+            groups: lineGroupsValue, 
+            animationOnDisplay: 'auto',
+            animationOnDataChange: 'auto',
+            orientation: 'vertical'
+            }"></div>
             </div>
         </script>
+        <div id='menu-container'>
+            <div >
+                <ul id="action-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
+                    <li ><a href="#"><span class="command-icon"></span>Command 1</a></li>
+                    <li ><a href="#"><span class="command-icon"></span>Command 2</a></li>
+                </ul>
+            </div>
+            <div >
+                <ul id="demo-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
+                    <li ><a href="#"><span class="line-icon"></span>Region_1</a></li>
+                    <li ><a href="#"><span class="bar-icon"></span>Region_2</a></li>
+                </ul>
+            </div>
+            <div >
+                <ul id="layout-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
+                    <li ><a href="#"><span class="one-column"></span>One Column</a></li>
+                    <li ><a href="#"><span class="two-column"></span>Two Column</a></li>
+                    <li ><a href="#"><span class="three-column"></span>Three Column</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class='menus-bar'>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', 
+                                                          icons: {start:'action-icon'}, label: 'Action',menu: {'menu': 'action-menu'} }">       
+            </button>
+            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Create Chart/Table',  
+                                                          icons: {start:'create-icon'}}">       
+            </button>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Import Chart/Table',  
+                                                          icons: {start:'import-icon'}}">       
+            </button>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Edit',  
+                                                          icons: {start:'edit-icon'},menu: {'menu': 'demo-menu'} }">       
+            </button>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Delete',  
+                                                          icons: {start:'delete-icon'},menu: {'menu': 'demo-menu'} }">       
+            </button>
+            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Show Control Panel',  
+                                                          icons: {start:'control-icon'},menu: {'menu': 'demo-menu'} }">       
+            </button>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'View Query',  
+                                                          icons: {start:'view-icon'},menu: {'menu': 'demo-menu'} }">       
+            </button>
+            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
+            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Change Layout',  
+                                                          icons: {start:'layout-icon'},menu: {'menu': 'layout-menu'} }">      
+            </button>
+        </div>
         <div class="chart-list">
 
             <div id="add-chart">
@@ -59,11 +109,11 @@ and open the template in the editor.
                 }"></button>
             </div>
             <div class="timeseries-region"
-                data-bind="
+                 data-bind="
                 itaComponent:{
                     component:'timeseries-config' 
                 }
-                ">
+                 ">
             </div>
         </div>
     </body>
