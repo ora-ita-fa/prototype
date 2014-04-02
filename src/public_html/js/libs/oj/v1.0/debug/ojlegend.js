@@ -60,11 +60,11 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryFilter</code> callback specified:</caption>
      * $(".selector").ojLegend({
-     *   "categoryFilter": function(event){}
+     *   "categoryFilter": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryfilter</code> event:</caption>
-     * $(".selector").on("ojcategoryfilter", function(event){});
+     * $(".selector").on("ojcategoryfilter", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -82,11 +82,11 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryHighlight</code> callback specified:</caption>
      * $(".selector").ojLegend({
-     *   "categoryHighlight": function(event){}
+     *   "categoryHighlight": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryhighlight</code> event:</caption>
-     * $(".selector").on("ojcategoryhighlight", function(event){});
+     * $(".selector").on("ojcategoryhighlight", function(event, ui){});
      * 
      * @expose 
      * @event 

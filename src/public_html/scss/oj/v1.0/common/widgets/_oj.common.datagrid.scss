@@ -10,7 +10,11 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
     }
-
+	
+	.oj-datagrid:focus, .oj-datagrid-cell:focus, .oj-datagrid-headercell:focus{
+		outline: none; 
+	}
+	
     .oj-datagrid-cell{
         position:absolute;
         white-space:nowrap;

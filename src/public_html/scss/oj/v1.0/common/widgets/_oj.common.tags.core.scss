@@ -30,7 +30,7 @@
       ".oj-body");
     #{$currSelectors} {
         @include oj-normalize-body;
-        background-image: oj-image-url($bodyBgImage);
+        @include oj-background-image($bodyBgImage);
         background-repeat: repeat;
         background-position: top left;    
         color: $bodyTextColor;  

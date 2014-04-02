@@ -13,11 +13,8 @@ $includeToolbarClasses: $includeAllClasses !default;
     .oj-toolbar {
         // padding-top/bottom from spec was replaced with top/bottom margin in ".oj-toolbar .oj-button" so that 
         // when toolbar wraps, the buttons have a little vertical spacing between them.
-        padding: 0;
-        margin-left: 0.833em; // 10px in spec
-        margin-right: 0.833em; // 10px in spec
-        background: transparent;
-        //width: 100%; spec has this but may be more for toolBOX, and seems to behave the same without it anyway
+        padding-left: 0.833em; // 10px in spec
+        padding-right: 0.833em; // 10px in spec
     }
 
     // todo: review with Gab
@@ -39,7 +36,7 @@ $includeToolbarClasses: $includeAllClasses !default;
      * role="separator" aria-orientation="vertical".
      */
     .oj-toolbar-separator {
-        border-left:solid 1px #D6DFE6; 
+        border-left: solid 1px $toolbarBorderColor; 
         height: 1.833em; // spec says 22px
         display:inline-block; 
         vertical-align:middle;
@@ -52,12 +49,32 @@ $includeToolbarClasses: $includeAllClasses !default;
 
     /* Apps can apply this class if a top toolbar border is desired */
     .oj-toolbar-top-border {
-        border-top: $toolbarBorder;
+        border-top: 1px solid $toolbarBorderColor;
     }
 
     /* Apps can apply this class if a bottom toolbar border is desired */
     .oj-toolbar-bottom-border {
-        border-bottom: $toolbarBorder;
+        border-bottom: 1px solid $toolbarBorderColor;
+    }
+
+    .oj-toolbar-row .oj-toolbar {
+      display: inline-block;
+    }
+
+
+    .oj-toolbar-row .oj-toolbar + .oj-toolbar {
+      @include oj-ltr()
+      {
+        border-left: 1px solid $toolbarBorderColor;
+      }
+      @include oj-rtl()
+      {
+        border-right: 1px solid $toolbarBorderColor;
+      }
+    }
+
+    .oj-toolbar-row + .oj-toolbar-row {
+      border-top: 1px solid $toolbarBorderColor;
     }
   }
 }

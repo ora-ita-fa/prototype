@@ -357,6 +357,16 @@ table {
   min-height: 0;
   /* support: IE7 */ }
 
+/* Used by the framework's support for detecting resize */
+.oj-helper-detect-resize {
+  position: absolute;
+  overflow: hidden;
+  visibility: hidden;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+
 /* html */
 /* --------------------------------------------------------------- */
 html {
@@ -471,7 +481,8 @@ a:visited.oj-clickable-icon,
 .oj-enabled .oj-clickable-icon,
 .oj-enabled.oj-clickable-icon {
   color: #878c90;
-  font-weight: normal; }
+  font-weight: normal;
+  cursor: pointer; }
 
 a:hover .oj-clickable-icon,
 a:hover.oj-clickable-icon,
@@ -495,7 +506,8 @@ a.oj-disabled .oj-clickable-icon,
 a.oj-disabled.oj-clickable-icon,
 .oj-disabled .oj-clickable-icon,
 .oj-disabled.oj-clickable-icon {
-  color: #d4d6d7; }
+  color: #d4d6d7;
+  cursor: default; }
 
 @font-face {
   font-family: 'Alta Icon Font';
@@ -529,16 +541,16 @@ a.oj-disabled.oj-clickable-icon,
   display: inline-block; }
 
 /* Icon Font Icons =========== */
-.oj-fwk-icon-arrow-e:before, html[dir="rtl"] .oj-fwk-icon-arrow-start:before, html:not([dir="rtl"]) .oj-fwk-icon-arrow-end:before, html:not([dir="rtl"]) .oj-collapsible-close-icon:before, html:not([dir="rtl"]) .oj-menu-icon:before, html:not([dir="rtl"]) .oj-rowexpander-expand-icon:before {
+.oj-fwk-icon-arrow-e:before, html[dir="rtl"] .oj-fwk-icon-arrow-start:before, html:not([dir="rtl"]) .oj-fwk-icon-arrow-end:before, html:not([dir="rtl"]) .oj-collapsible-close-icon:before, html:not([dir="rtl"]) .oj-menu-submenu-icon:before, html:not([dir="rtl"]) .oj-rowexpander-expand-icon:before {
   content: "\e600"; }
 
 .oj-fwk-icon-arrow-se:before, html[dir="rtl"] .oj-fwk-icon-arrow-s-start:before, html:not([dir="rtl"]) .oj-fwk-icon-arrow-s-end:before, html:not([dir="rtl"]) .oj-collapsible-open-icon:before, html:not([dir="rtl"]) .oj-rowexpander-collapse-icon:before {
   content: "\e601"; }
 
-.oj-fwk-icon-caret-e:before, html[dir="rtl"] .oj-fwk-icon-caret-start:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-end:before, html[dir="rtl"] .oj-conveyorbelt-start-overflow-icon:before, html:not([dir="rtl"]) .oj-conveyorbelt-end-overflow-icon:before, html[dir="rtl"] .oj-datepicker-prev-icon span:before, html:not([dir="rtl"]) .oj-datepicker-next-icon span:before {
+.oj-fwk-icon-caret-e:before, html[dir="rtl"] .oj-fwk-icon-caret-start:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-end:before, html[dir="rtl"] .oj-conveyorbelt-start-overflow-icon:before, html:not([dir="rtl"]) .oj-conveyorbelt-end-overflow-icon:before, html[dir="rtl"] .oj-datepicker-prev-icon:before, html:not([dir="rtl"]) .oj-datepicker-next-icon:before {
   content: "\e602"; }
 
-.oj-fwk-icon-cross:before, .oj-tabs-close-icon:before, .oj-dialog-close-icon:before {
+.oj-fwk-icon-cross:before, .oj-tabs-close-icon:before, .oj-dialog-close-icon:before, .oj-listbox-search-clear-entry-icon:before {
   content: "\e603"; }
 
 .oj-fwk-icon-calendar:before, .oj-datepicker-calendar-icon:before {
@@ -556,17 +568,17 @@ a.oj-disabled.oj-clickable-icon,
 .oj-fwk-icon-caret02end-e:before, html[dir="rtl"] .oj-fwk-icon-caret02end-start:before, html:not([dir="rtl"]) .oj-fwk-icon-caret02end-end:before, html[dir="rtl"] .oj-pagingcontrol-nav-first-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-last-icon:before {
   content: "\e608"; }
 
-.oj-fwk-icon-arrow02-s:before, .oj-button-menu-dropdown-icon:before, .oj-combobox-open-icon:before, .oj-select-open-icon:before {
+.oj-fwk-icon-arrow02-s:before, .oj-button-menu-dropdown-icon:before, .oj-combobox-open-icon:before, .oj-listbox-open-icon:before, .oj-select-open-icon:before {
   content: "\e609"; }
 
 .oj-fwk-icon-cross02:before {
   content: "\e60a"; }
 
-.oj-fwk-icon-magnifier:before, .oj-select-search-icon:before {
+.oj-fwk-icon-magnifier:before, .oj-listbox-search-icon:before, .oj-select-search-icon:before {
   content: "\e60b"; }
 
 /* Rotation =========== */
-.oj-fwk-icon-arrow-w:before, html:not([dir="rtl"]) .oj-fwk-icon-arrow-start:before, html[dir="rtl"] .oj-fwk-icon-arrow-end:before, html[dir="rtl"] .oj-collapsible-close-icon:before, html[dir="rtl"] .oj-menu-icon:before, html[dir="rtl"] .oj-rowexpander-expand-icon:before {
+.oj-fwk-icon-arrow-w:before, html:not([dir="rtl"]) .oj-fwk-icon-arrow-start:before, html[dir="rtl"] .oj-fwk-icon-arrow-end:before, html[dir="rtl"] .oj-collapsible-close-icon:before, html[dir="rtl"] .oj-menu-submenu-icon:before, html[dir="rtl"] .oj-rowexpander-expand-icon:before {
   content: "\e600";
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
@@ -608,7 +620,7 @@ a.oj-disabled.oj-clickable-icon,
   -ms-transform: rotate(90deg);
   transform: rotate(90deg); }
 
-.oj-fwk-icon-caret-w:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-start:before, html[dir="rtl"] .oj-fwk-icon-caret-end:before, html:not([dir="rtl"]) .oj-conveyorbelt-start-overflow-icon:before, html[dir="rtl"] .oj-conveyorbelt-end-overflow-icon:before, html:not([dir="rtl"]) .oj-datepicker-prev-icon span:before, html[dir="rtl"] .oj-datepicker-next-icon span:before {
+.oj-fwk-icon-caret-w:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-start:before, html[dir="rtl"] .oj-fwk-icon-caret-end:before, html:not([dir="rtl"]) .oj-conveyorbelt-start-overflow-icon:before, html[dir="rtl"] .oj-conveyorbelt-end-overflow-icon:before, html:not([dir="rtl"]) .oj-datepicker-prev-icon:before, html[dir="rtl"] .oj-datepicker-next-icon:before {
   content: "\e602";
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
@@ -843,6 +855,8 @@ a.oj-disabled.oj-clickable-icon,
   opacity: .3;
   filter: Alpha(Opacity=30);
   border-radius: 8px; }
+  html.oj-slow-borderradius .oj-widget-shadow {
+    border-radius: 0; }
 
 /* Overlays */
 .ui-widget-overlay {
@@ -862,6 +876,8 @@ a.oj-disabled.oj-clickable-icon,
   opacity: .3;
   filter: Alpha(Opacity=30);
   border-radius: 8px; }
+  html.oj-slow-borderradius .ui-widget-shadow {
+    border-radius: 0; }
 
 /* collapsible */
 /* --------------------------------------------------------------- */
@@ -921,6 +937,8 @@ a.oj-disabled.oj-clickable-icon,
   background-color: whitesmoke;
   background-image: -webkit-linear-gradient(top, whitesmoke 0%, #f0f0f0 100%);
   background-image: linear-gradient(to bottom, whitesmoke 0%, #f0f0f0 100%); }
+  html.oj-slow-cssgradients .oj-accordion-collapsible > .oj-collapsible-header {
+    background-image: none; }
 
 /*
  * applied to the disabled accordion style header 
@@ -1060,6 +1078,10 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
   border: 1px solid #d6dfe6;
   border-top-left-radius: 1px;
   border-top-right-radius: 1px; }
+  html.oj-slow-borderradius .oj-accordion > .oj-accordion-collapsible:first-child > .oj-collapsible-header {
+    border-top-left-radius: 0; }
+  html.oj-slow-borderradius .oj-accordion > .oj-accordion-collapsible:first-child > .oj-collapsible-header {
+    border-top-right-radius: 0; }
 
 /*
  * For the middle Collapsibles in an accordion 
@@ -1077,6 +1099,10 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
 .oj-accordion > .oj-accordion-collapsible:last-child > .oj-collapsible-header {
   border-bottom-left-radius: 1px;
   border-bottom-right-radius: 1px; }
+  html.oj-slow-borderradius .oj-accordion > .oj-accordion-collapsible:last-child > .oj-collapsible-header {
+    border-bottom-left-radius: 0; }
+  html.oj-slow-borderradius .oj-accordion > .oj-accordion-collapsible:last-child > .oj-collapsible-header {
+    border-bottom-right-radius: 0; }
 
 /* conveyorbelt */
 /* --------------------------------------------------------------- */
@@ -1097,6 +1123,8 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
   border: 1px solid transparent;
   font-weight: bold;
   text-shadow: 0 1px 0 white; }
+  html.oj-slow-borderradius .oj-conveyorbelt-overflow-indicator {
+    border-radius: 0; }
 
 .oj-conveyorbelt-overflow-indicator.oj-hover {
   background-color: #f7f8f9;
@@ -1113,7 +1141,8 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
 .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-end-overflow-icon,
 .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-top-overflow-icon,
 .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-bottom-overflow-icon {
-  color: #878c90; }
+  color: #878c90;
+  cursor: inherit; }
 
 .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-start-overflow-icon,
 .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-end-overflow-icon,
@@ -1155,6 +1184,9 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
 .oj-tabs > .oj-tabs-nav {
   white-space: nowrap; }
 
+.oj-tabs-conveyor {
+  display: inline-block; }
+
 /*
  * applied to the enabled Tab Title
  * display inline so the close icon is aligned with the title text
@@ -1166,12 +1198,23 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
 /*
  * Tab Title text
  */
+.oj-tabs-title {
+  vertical-align: middle; }
+
+.oj-tabs-title-overflow {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; }
+
 .oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
   font-weight: normal;
   text-decoration: none;
   cursor: pointer;
   color: #145c9e;
-  outline: none; }
+  outline: none;
+  padding-right: 8px;
+  padding-left: 8px; }
 
 /*
  * applied to the selected Tab Title
@@ -1203,6 +1246,8 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
   border: 1px solid #d6dfe6;
   border-radius: 3px;
   margin-top: -1px; }
+  html.oj-slow-borderradius .oj-tabs-panel {
+    border-radius: 0; }
 
 /*
  * applied to the tabs
@@ -1223,9 +1268,11 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
 .oj-tabs-nav > .oj-tabs-default > .oj-tabs-tab-content {
   white-space: nowrap;
   padding-top: 4px;
-  padding-right: 8px;
-  padding-bottom: 4px;
-  padding-left: 8px;
+  padding-bottom: 3px;
+  /*
+        padding-right: $paddingEnd;
+        padding-left: $paddingEnd;
+  */
   border-top: 0;
   border-bottom: 0;
   border-right: 1px solid transparent;
@@ -1251,15 +1298,18 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
  * close icon style
  */
 .oj-tabs-close-icon {
-  text-align: center;
   overflow: hidden;
-  vertical-align: middle;
   cursor: pointer;
-  font-size: 0.75rem; }
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.85rem;
+  line-height: 20px;
+  width: 22px;
+  height: 22px; }
   html:not([dir="rtl"]) .oj-tabs-close-icon {
-    margin-left: 6px; }
+    margin-left: -8px; }
   html[dir="rtl"] .oj-tabs-close-icon {
-    margin-right: 6px; }
+    margin-right: -8px; }
 
 html:not([dir="rtl"]) .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-close-icon {
   float: right; }
@@ -1380,10 +1430,16 @@ html[dir="rtl"] .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-clo
 .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
   border: 1px solid #d6dfe6; }
   html:not([dir="rtl"]) .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
-    border-top-left-radius: 2px;
+    border-top-left-radius: 2px; }
+  html.oj-slow-borderradius .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
+    border-top-left-radius: 0; }
+  html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
+    border-top-right-radius: 2px; }
+  html.oj-slow-borderradius .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
+    border-top-right-radius: 0; }
+  html:not([dir="rtl"]) .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
     border-right: 0; }
   html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
-    border-top-right-radius: 2px;
     border-left: 0; }
 
 /*
@@ -1404,10 +1460,16 @@ html[dir="rtl"] .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-clo
  * display bottom and left borders and put radius on bottom border
  */
 html:not([dir="rtl"]) .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
-  border-bottom-left-radius: 2px;
+  border-bottom-left-radius: 2px; }
+html.oj-slow-borderradius .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
+  border-bottom-left-radius: 0; }
+html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
+  border-bottom-right-radius: 2px; }
+html.oj-slow-borderradius .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
+  border-bottom-right-radius: 0; }
+html:not([dir="rtl"]) .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
   border-right: 0; }
 html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
-  border-bottom-right-radius: 2px;
   border-left: 0; }
 
 /* progressbar */
@@ -1422,6 +1484,8 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   background-image: linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%);
   border: 1px solid #dfe4e7;
   border-radius: 2px; }
+  html.oj-slow-borderradius .oj-progressbar {
+    border-radius: 0; }
 
 .oj-progressbar .oj-progressbar-value {
   margin: 0;
@@ -1441,7 +1505,7 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   background-repeat: repeat-x; }
 
 .oj-dialog-front {
-  z-index: 100; }
+  z-index: 1050; }
 
 /* dialog */
 /* --------------------------------------------------------------- */
@@ -1454,6 +1518,8 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   background: #f9f9f9;
   border: 1px solid #c4ced7;
   border-radius: 1px; }
+  html.oj-slow-borderradius .oj-dialog {
+    border-radius: 0; }
 
 .oj-dialog .oj-dialog-header {
   padding: 10px;
@@ -1468,6 +1534,10 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   color: #252525;
   font-weight: bold;
   border-radius: 1px 1px 0 0; }
+  html.oj-slow-cssgradients .oj-dialog .oj-dialog-header {
+    background-image: none; }
+  html.oj-slow-borderradius .oj-dialog .oj-dialog-header {
+    border-radius: 0; }
 
 .oj-dialog .oj-dialog-title {
   float: left;
@@ -1535,11 +1605,17 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
 /* --------------------------------------------------------------- */
 .oj-popup {
   border: 1px solid #c4ced7;
-  z-index: 2;
+  z-index: 1000;
   position: absolute;
   border-radius: 1px;
   background-color: #f9f9f9;
-  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.4); }
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
+  html.oj-slow-borderradius .oj-popup {
+    border-radius: 0; }
+
+.oj-popup.oj-popup-tail-simple {
+  z-index: 1030;
+  box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.45); }
 
 .oj-popup-no-chrome {
   border-width: 0;
@@ -1551,19 +1627,26 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
 
 .oj-popup-tail {
   position: absolute;
-  pointer-events: none; }
+  pointer-events: none;
+  z-index: 1001; }
 
-.oj-popup-tail-simple {
+.oj-popup-tail-simple > .oj-popup-tail {
   height: 13px;
   width: 14px;
   background-position: center center;
   background-color: transparent;
-  background-repeat: no-repeat; }
+  background-repeat: no-repeat;
+  z-index: 1031; }
 
-.oj-popup-tail-simple-start-top, .oj-popup-tail-simple-start-middle, .oj-popup-tail-simple-center-top {
+.oj-popup-tail-simple-start-top, .oj-popup-tail-simple-start-middle {
   top: 0;
   left: -14px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAZklEQVQoU43RsQ6AMAgE0Pv/39LZuDmZLv4EE5ahpFHgOtzGu6aA/bh0Craz0agqYMOG7vboakmfdehYRGhJn4E//cUjUYlDhqOS36cZHgk3toLTdTNc3qrCKWS4hBWmMMMURdjyAhXCJGsoKfTHAAAAAElFTkSuQmCC); }
+
+.oj-popup-tail-simple-center-top {
+  left: 50%;
+  top: -13px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACJSURBVChTYzhy7vp/IGAgBTMxAMHR8zf+g2hiAViTpCAvSRqZrA01GJ+//0ySRrBNICAjJUq0RrimJ89eE68RFiKgUPz58ycY373/5D++UIXbhAwI2YiiCeREGMCnEa4JForIAJdGrM5DBtg0YmhCdiIMoGtE14ThRBhA1oiu6T9IAheAaORlAACRvI787TdGjAAAAABJRU5ErkJggg==); }
 
 .oj-popup-tail-simple-start-middle {
   top: 50%; }
@@ -1573,10 +1656,15 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   left: -14px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAV0lEQVQokZ3RMQ4AEAyF4d7/XGarSSwu0alCIlF5Wgxvkf8bGiQi9LIQk+RS/xAz/6FruKMriJALT8iEFjpCD0Foof4O/xGhGS8bHUR7jM5RyIsVfInXNbifVqg9Iea7AAAAAElFTkSuQmCC); }
 
-.oj-popup-tail-simple-end-top, .oj-popup-tail-simple-end-middle, .oj-popup-tail-simple-center-bottom {
+.oj-popup-tail-simple-end-top, .oj-popup-tail-simple-end-middle {
   top: 0;
   right: -14px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAY0lEQVQoU5XRIRLAIAxE0b3/tUAzOFQnppdYtVUIaBJase4/k6B0w9fVNjT3K77sVm1DkgCSr+0xyQUt0IvndiQJiOIMlW6AF59QCjMUwhNyoYdI5jBCKcxQCE/IhfOP2SG8PZAPN99zpHp2AAAAAElFTkSuQmCC); }
+
+.oj-popup-tail-simple-center-bottom {
+  left: 50%;
+  bottom: -13px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC6SURBVChTYzxy7vp/U20lBlzg9NV7DEB5RhD71PVnYDEmEPHk2Wswh1jAZG2owfj8/WecGiUFeUG2/YdywQBsEz6NMlKiUBYCgDWBACEbkQHTkYsPoEzcGtGdCLbp169fYA4IYNOI7kS48whpRAZwTSCATyPIiYz/foCdiKIJBHBpRHYi4+EL96FMVGCjrwBlMTAcPX/jP8gmkAH/mTgYMWyCAWyhCnMiTk0ggE0jCODVBALoGhkYGBgA+JJyzMnGoIEAAAAASUVORK5CYII=); }
 
 .oj-popup-tail-simple-end-middle {
   top: 50%; }
@@ -1608,7 +1696,7 @@ body .ui-tooltip {
   list-style: none;
   padding: 1px 0;
   margin: 0;
-  display: block;
+  display: inline-block;
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35);
   font-size: 1rem;
   white-space: nowrap; }
@@ -1677,16 +1765,16 @@ html[dir="rtl"] .oj-menu-item-icon {
   right: 0.583em; }
 
 /* submenu icon*/
-.oj-menu-icon {
+.oj-menu-submenu-icon {
   position: absolute;
   line-height: 2.5;
   height: auto;
   font-size: 1rem; }
 
-html:not([dir="rtl"]) .oj-menu-icon {
+html:not([dir="rtl"]) .oj-menu-submenu-icon {
   right: 0; }
 
-html[dir="rtl"] .oj-menu-icon {
+html[dir="rtl"] .oj-menu-submenu-icon {
   left: 0; }
 
 /* button */
@@ -1706,6 +1794,8 @@ html[dir="rtl"] .oj-menu-icon {
   line-height: 2.34rem;
   font-size: inherit;
   font-family: inherit; }
+  html.oj-slow-borderradius .oj-button {
+    border-radius: 0; }
 
 /* The label of radio and checkbox buttons */
 .oj-button-label {
@@ -1724,6 +1814,7 @@ html[dir="rtl"] .oj-menu-icon {
   outline: none; }
 
 .oj-button.oj-enabled {
+  background-color: #e4e8ea;
   background-image: -webkit-linear-gradient(top, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
   background-image: linear-gradient(to bottom, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
   border: 1px solid #c4ced7;
@@ -1731,6 +1822,8 @@ html[dir="rtl"] .oj-menu-icon {
   color: black;
   font-weight: bold;
   text-shadow: 0 1px 0 white; }
+  html.oj-slow-cssgradients .oj-button.oj-enabled {
+    background-image: none; }
 
 .oj-button.oj-enabled .oj-button-icon-start,
 .oj-button.oj-enabled .oj-button-icon-end {
@@ -1914,13 +2007,26 @@ html[dir="rtl"] .oj-button-icons-only .oj-button-icon-start {
 .oj-buttonset .oj-button.oj-button-half-chrome {
   border-right-width: 1px; }
 
-html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-start,
+html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 2px 0 0 2px; }
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 0; }
+html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 0 2px 2px 0; }
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 0; }
+html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-right-width: 1px; }
+
+html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-end {
+  border-radius: 0 2px 2px 0; }
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-end {
+  border-radius: 0; }
 html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-end {
   border-radius: 2px 0 0 2px; }
-
-html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-end,
-html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-start {
-  border-radius: 0 2px 2px 0;
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-end {
+  border-radius: 0; }
+html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-end {
   border-right-width: 1px; }
 
 /* workarounds */
@@ -1938,10 +2044,8 @@ button.oj-button::-moz-focus-inner {
 /* toolbar*/
 /* --------------------------------------------------------------- */
 .oj-toolbar {
-  padding: 0;
-  margin-left: 0.833em;
-  margin-right: 0.833em;
-  background: transparent; }
+  padding-left: 0.833em;
+  padding-right: 0.833em; }
 
 .oj-toolbar .oj-button {
   margin-top: 0.250em;
@@ -1951,7 +2055,7 @@ button.oj-button::-moz-focus-inner {
  * role="separator" aria-orientation="vertical".
  */
 .oj-toolbar-separator {
-  border-left: solid 1px #D6DFE6;
+  border-left: solid 1px #d6dfe6;
   height: 1.833em;
   display: inline-block;
   vertical-align: middle;
@@ -1960,11 +2064,22 @@ button.oj-button::-moz-focus-inner {
 
 /* Apps can apply this class if a top toolbar border is desired */
 .oj-toolbar-top-border {
-  border-top: 0.083em solid #d6dfe6; }
+  border-top: 1px solid #d6dfe6; }
 
 /* Apps can apply this class if a bottom toolbar border is desired */
 .oj-toolbar-bottom-border {
-  border-bottom: 0.083em solid #d6dfe6; }
+  border-bottom: 1px solid #d6dfe6; }
+
+.oj-toolbar-row .oj-toolbar {
+  display: inline-block; }
+
+html:not([dir="rtl"]) .oj-toolbar-row .oj-toolbar + .oj-toolbar {
+  border-left: 1px solid #d6dfe6; }
+html[dir="rtl"] .oj-toolbar-row .oj-toolbar + .oj-toolbar {
+  border-right: 1px solid #d6dfe6; }
+
+.oj-toolbar-row + .oj-toolbar-row {
+  border-top: 1px solid #d6dfe6; }
 
 /* train */
 /* --------------------------------------------------------------- */
@@ -2220,6 +2335,14 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
 /* Styling for the page mode navigation previous page arrow icon. */
 /* Styling for the page mode navigation next page arrow icon. */
 /* Styling for the page mode navigation last page arrow icon. */
+/* Styling which can be used when paging control is paired with ojTable. */
+.oj-pagingcontrol-table-border {
+  border: 1px solid #d6dfe6; }
+
+/* Styling which can be used when paging control is paired with ojDataGrid. */
+.oj-pagingcontrol-datagrid-border {
+  border: 1px solid #d6dfe6; }
+
 /* table */
 /* --------------------------------------------------------------- */
 /* Dimension variables */
@@ -2464,11 +2587,85 @@ html[dir="rtl"] .oj-table-body-row-selector {
   color: silver;
   cursor: default; }
 
+.ojtreeu-dragged {
+  display: block;
+  margin: 0 0 0 0;
+  padding: 4px 4px 4px 24px;
+  position: absolute;
+  top: -2000px;
+  line-height: 16px;
+  z-index: 10000; }
+
+.ojtreeu-dragged ins {
+  display: block;
+  text-decoration: none;
+  width: 16px;
+  height: 16px;
+  margin: 0 0 0 0;
+  padding: 0;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border-radius: 4px; }
+  html.oj-slow-borderradius .ojtreeu-dragged ins {
+    border-radius: 0; }
+
+.ojtreeu-dragged ins.oj-tree-ok {
+  background: url("images/d.png") -2px -53px no-repeat; }
+
+.ojtreeu-dragged ins.oj-tree-invalid {
+  background: url("images/d.png") -18px -53px no-repeat; }
+
+.oj-tree-marker {
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  overflow: hidden;
+  height: 12px;
+  width: 8px;
+  position: absolute;
+  top: -30px;
+  z-index: 10001;
+  background-repeat: no-repeat;
+  display: none;
+  background-color: transparent;
+  text-shadow: 1px 1px 1px white;
+  color: black;
+  line-height: 10px;
+  background: url("images/d.png") -41px -57px no-repeat;
+  text-indent: -100px; }
+
+.oj-tree-marker-line {
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  font-size: 1px;
+  overflow: hidden;
+  height: 1px;
+  width: 100px;
+  position: absolute;
+  top: -30px;
+  z-index: 10000;
+  background-repeat: no-repeat;
+  display: none;
+  background-color: #456c43;
+  cursor: pointer;
+  border-left: 0;
+  -moz-box-shadow: 0 0 2px #666;
+  -webkit-box-shadow: 0 0 2px #666;
+  box-shadow: 0 0 2px #666;
+  border-radius: 1px; }
+  html.oj-slow-borderradius .oj-tree-marker-line {
+    border-radius: 0; }
+
 .oj-datagrid {
   position: relative;
   border: 1px solid #d6dfe6;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
+
+.oj-datagrid:focus, .oj-datagrid-cell:focus, .oj-datagrid-headercell:focus {
+  outline: none; }
 
 .oj-datagrid-cell {
   position: absolute;
@@ -2714,28 +2911,22 @@ html[dir="rtl"] .oj-datagrid-colheadercell {
   width: 14px;
   height: 14px;
   display: inline-block;
-  position: relative; }
+  vertical-align: top; }
 
-.oj-rowexpander-expand-icon {
-  position: absolute; }
-  html:not([dir="rtl"]) .oj-rowexpander-expand-icon {
-    right: 0; }
-  html[dir="rtl"] .oj-rowexpander-expand-icon {
-    left: 0; }
+html:not([dir="rtl"]) .oj-rowexpander-expand-icon {
+  float: right; }
+html[dir="rtl"] .oj-rowexpander-expand-icon {
+  float: left; }
 
-.oj-rowexpander-collapse-icon {
-  position: absolute; }
-  html:not([dir="rtl"]) .oj-rowexpander-collapse-icon {
-    right: 0; }
-  html[dir="rtl"] .oj-rowexpander-collapse-icon {
-    left: 0; }
+html:not([dir="rtl"]) .oj-rowexpander-collapse-icon {
+  float: right; }
+html[dir="rtl"] .oj-rowexpander-collapse-icon {
+  float: left; }
 
-.oj-rowexpander-leaf-icon {
-  position: absolute; }
-  html:not([dir="rtl"]) .oj-rowexpander-leaf-icon {
-    right: 0; }
-  html[dir="rtl"] .oj-rowexpander-leaf-icon {
-    left: 0; }
+html:not([dir="rtl"]) .oj-rowexpander-leaf-icon {
+  float: right; }
+html[dir="rtl"] .oj-rowexpander-leaf-icon {
+  float: left; }
 
 .oj-dvtbase {
   /* For internal use only. Do not override or remove */
@@ -2818,6 +3009,8 @@ html[dir="rtl"] .oj-datagrid-colheadercell {
   z-index: 2147483647;
   font-size: 12px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  html.oj-slow-borderradius .OraDVTDatatipPopup {
+    border-radius: 0; }
 
 .OraDVTUnstyledPopup {
   /* For internal use only. Needs renaming */
@@ -2985,6 +3178,8 @@ html[dir="rtl"] .oj-datagrid-colheadercell {
   border-color: #d6dfe6;
   background-color: white;
   color: #333333; }
+  html.oj-slow-borderradius .oj-treemap {
+    border-radius: 0; }
 
 html:not([dir="rtl"]) .oj-treemap-isolate-icon {
   content: url("../common/images/dvt/treemap/s_max_ena.png"); }
@@ -3296,16 +3491,10 @@ html .oj-form-control {
 .oj-inputtext,
 .oj-inputpassword,
 .oj-textarea {
-  color: #333333;
-  background-color: #fcfdfe;
-  border: 1px solid #dfe4e7;
-  border-radius: 2px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
-  font-family: inherit;
   font-size: 1rem;
-  font-weight: normal;
   /* use a width of 100% and then max and min width so that when 
      there's less room for the form control it can automatically 
      get smaller instead of overflowing its boundaries */
@@ -3313,54 +3502,76 @@ html .oj-form-control {
   min-width: 8em;
   width: 100%; }
 
-.oj-inputtext,
-.oj-inputpassword {
+.oj-inputtext-input,
+.oj-inputpassword-input,
+.oj-textarea-input {
+  color: #333333;
+  background-color: #fcfdfe;
+  border: 1px solid #dfe4e7;
+  border-radius: 2px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-weight: normal;
+  width: 100%; }
+  html.oj-slow-borderradius .oj-inputtext-input, html.oj-slow-borderradius
+  .oj-inputpassword-input, html.oj-slow-borderradius
+  .oj-textarea-input {
+    border-radius: 0; }
+  .oj-inputtext-input::-webkit-input-placeholder,
+  .oj-inputpassword-input::-webkit-input-placeholder,
+  .oj-textarea-input::-webkit-input-placeholder {
+    color: #737373; }
+  .oj-inputtext-input::-moz-placeholder,
+  .oj-inputpassword-input::-moz-placeholder,
+  .oj-textarea-input::-moz-placeholder {
+    color: #737373; }
+  .oj-inputtext-input:-ms-input-placeholder,
+  .oj-inputpassword-input:-ms-input-placeholder,
+  .oj-textarea-input:-ms-input-placeholder {
+    color: #737373; }
+
+.oj-inputtext-input[size],
+.oj-inputpassword-input[size],
+.oj-textarea-input[size] {
+  width: auto; }
+
+.oj-inputtext-input,
+.oj-inputpassword-input {
   height: 2.34rem;
   padding: 0 5px; }
 
-.oj-textarea {
+.oj-textarea-input {
   height: auto;
   padding: 5px;
   resize: none; }
 
-.oj-inputtext.oj-invalid,
-.oj-inputpassword.oj-invalid,
-.oj-textarea.oj-invalid {
+.oj-inputtext.oj-invalid .oj-inputtext-input,
+.oj-inputpassword.oj-invalid .oj-inputpassword-input,
+.oj-textarea.oj-invalid .oj-textarea-input {
   border: 2px solid #c70000; }
 
-.oj-inputtext.oj-warning,
-.oj-inputpassword.oj-warning,
-.oj-textarea.oj-warning {
+.oj-inputtext.oj-warning .oj-inputtext-input,
+.oj-inputpassword.oj-warning .oj-inputpassword-input,
+.oj-textarea.oj-warning .oj-textarea-input {
   border: 2px solid #ffaa2b; }
 
-.oj-inputtext[size],
-.oj-inputpassword[size],
-.oj-textarea[size] {
-  width: auto; }
-
-.oj-inputtext::-webkit-input-placeholder, .oj-inputpassword::-webkit-input-placeholder, .oj-textarea::-webkit-input-placeholder {
-  color: #737373; }
-.oj-inputtext::-moz-placeholder, .oj-inputpassword::-moz-placeholder, .oj-textarea::-moz-placeholder {
-  color: #737373; }
-.oj-inputtext:-ms-input-placeholder, .oj-inputpassword:-ms-input-placeholder, .oj-textarea:-ms-input-placeholder {
-  color: #737373; }
-
-.oj-inputtext.oj-disabled,
-.oj-inputpassword.oj-disabled,
-.oj-textarea.oj-disabled {
+.oj-inputtext.oj-disabled .oj-inputtext-input,
+.oj-inputpassword.oj-disabled .oj-inputpassword-input,
+.oj-textarea.oj-disabled .oj-textarea-input {
   color: #9e9e9e;
   background-color: #efeff1;
   border: 1px solid #efeff1; }
 
-.oj-inputtext.oj-read-only,
-.oj-inputpassword.oj-read-only,
-.oj-textarea.oj-read-only {
+.oj-inputtext.oj-read-only .oj-inputtext-input,
+.oj-inputpassword.oj-read-only .oj-inputpassword-input,
+.oj-textarea.oj-read-only .oj-textarea-input {
   color: #333333;
   background-color: transparent;
   border: 0;
   padding: 0; }
 
-.oj-textarea.oj-read-only {
+.oj-textarea.oj-read-only .oj-textarea-input {
   padding-top: 6px; }
 
 /* inputnumber */
@@ -3389,25 +3600,43 @@ html .oj-form-control {
   padding: 0 5px;
   height: 2.34rem;
   width: 100%;
-  display: table-cell; }
-  html:not([dir="rtl"]) .oj-inputnumber-input {
-    border-radius: 2px 0 0 2px; }
-  html[dir="rtl"] .oj-inputnumber-input {
-    border-radius: 0 2px 2px 0; }
+  display: table-cell;
+  font-family: inherit;
+  font-size: 100%; }
+  html.oj-slow-borderradius .oj-inputnumber-input {
+    border-radius: 0; }
   .oj-inputnumber-input::-webkit-input-placeholder {
     color: #737373; }
   .oj-inputnumber-input::-moz-placeholder {
     color: #737373; }
   .oj-inputnumber-input:-ms-input-placeholder {
     color: #737373; }
+  html:not([dir="rtl"]) .oj-inputnumber-input {
+    border-radius: 2px 0 0 2px; }
+  html.oj-slow-borderradius .oj-inputnumber-input {
+    border-radius: 0; }
+  html[dir="rtl"] .oj-inputnumber-input {
+    border-radius: 0 2px 2px 0; }
+  html.oj-slow-borderradius .oj-inputnumber-input {
+    border-radius: 0; }
 
-/* Invalid styling for the widget */
+/* Invalid styling for the widget. Spec calls for border around entire
+ component, not just input. */
 .oj-inputnumber.oj-invalid .oj-inputnumber-input {
   border: 2px solid #c70000; }
+  html:not([dir="rtl"]) .oj-inputnumber.oj-invalid .oj-inputnumber-input {
+    border-right: none; }
+  html[dir="rtl"] .oj-inputnumber.oj-invalid .oj-inputnumber-input {
+    border-left: none; }
 
-/* Warning styling for the widget */
+/* Warning styling for the widget.  Spec calls for border around entire
+ component, not just input. */
 .oj-inputnumber.oj-warning .oj-inputnumber-input {
   border: 2px solid #ffaa2b; }
+  html:not([dir="rtl"]) .oj-inputnumber.oj-warning .oj-inputnumber-input {
+    border-right: none; }
+  html[dir="rtl"] .oj-inputnumber.oj-warning .oj-inputnumber-input {
+    border-left: none; }
 
 /* Disabled styling for the widget */
 .oj-inputnumber.oj-disabled .oj-inputnumber-input {
@@ -3438,6 +3667,7 @@ html .oj-form-control {
 
 /* more specificity is required here to overide default button borders */
 .oj-inputnumber-button.oj-button {
+  margin-bottom: 0;
   border-color: #dfe4e7;
   line-height: normal; }
   html:not([dir="rtl"]) .oj-inputnumber-button.oj-button {
@@ -3445,485 +3675,52 @@ html .oj-form-control {
   html[dir="rtl"] .oj-inputnumber-button.oj-button {
     border-right: none; }
 
+/* Error border  for the widget. */
+.oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button {
+  border: 2px solid #c70000; }
+
+/* Warning border color for the widget.  */
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button {
+  border: 2px solid #ffaa2b; }
+
+/* Warning/error styling for the widget.  Spec calls for border around entire
+ component, not just input. We make sure the border is only on the outside
+ of the buttons by setting border-left/right to none as appropriate.
+ The 'down' button is the outside button.
+*/
+html:not([dir="rtl"]) .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down, html:not([dir="rtl"])
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+  border-left: none; }
+html[dir="rtl"] .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down, html[dir="rtl"]
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+  border-right: none; }
+
+.oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up,
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up {
+  border-left: none;
+  border-right: none; }
+
 .oj-inputnumber-up.oj-button {
   border-radius: 0; }
 
 html:not([dir="rtl"]) .oj-inputnumber-down.oj-button {
   border-radius: 0 2px 2px 0; }
+html.oj-slow-borderradius .oj-inputnumber-down.oj-button {
+  border-radius: 0; }
 html[dir="rtl"] .oj-inputnumber-down.oj-button {
   border-radius: 2px 0 0 2px; }
+html.oj-slow-borderradius .oj-inputnumber-down.oj-button {
+  border-radius: 0; }
 
 .oj-inputnumber .oj-inputnumber-up-icon,
 .oj-inputnumber .oj-inputnumber-down-icon {
-  font-size: 1rem;
-  margin-bottom: 0; }
-
-/* datepicker */
-/* --------------------------------------------------------------- */
-/* Main widget classes */
-/* Class that wraps the input element */
-.oj-inputdate-input-container,
-.oj-inputtime-input-container,
-.oj-inputdatetime-input-container {
-  color: #333333;
-  background-color: #fcfdfe;
-  border: 1px solid #dfe4e7;
-  border-radius: 2px;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-width: 0;
-  padding: 0 1px;
-  display: inline-table;
-  /* use a width of 100% and then max and min width so that when 
-     there's less room for the form control it can automatically 
-     get smaller instead of overflowing its boundaries */
-  max-width: 15em;
-  min-width: 8em;
-  width: 100%;
   font-size: 1rem; }
 
-.oj-inputdate-input,
-.oj-inputdatetime-input,
-.oj-inputtime-input {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  background: none;
-  color: #333333;
-  border: 1px solid #dfe4e7;
-  display: table-cell;
-  font-family: inherit;
-  font-weight: normal;
-  padding: 0 5px;
-  height: 2.34rem;
-  width: 100%; }
-  .oj-inputdate-input::-webkit-input-placeholder,
-  .oj-inputdatetime-input::-webkit-input-placeholder,
-  .oj-inputtime-input::-webkit-input-placeholder {
-    color: #737373; }
-  .oj-inputdate-input::-moz-placeholder,
-  .oj-inputdatetime-input::-moz-placeholder,
-  .oj-inputtime-input::-moz-placeholder {
-    color: #737373; }
-  .oj-inputdate-input:-ms-input-placeholder,
-  .oj-inputdatetime-input:-ms-input-placeholder,
-  .oj-inputtime-input:-ms-input-placeholder {
-    color: #737373; }
-
-html:not([dir="rtl"]) .oj-inputdate-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputdatetime-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputtime-input.oj-has-trigger {
-  border-width: 1px 0 1px 1px;
-  border-radius: 2px 0 0 2px; }
-html[dir="rtl"] .oj-inputdate-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputdatetime-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputtime-input.oj-has-trigger {
-  border-width: 1px 1px 1px 0;
-  border-radius: 0 2px 2px 0; }
-
-.oj-datepicker-trigger {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border: 1px solid #dfe4e7;
-  display: table-cell;
-  background-color: #fcfdfe;
-  height: 2.34rem;
-  padding: 0 3px;
-  vertical-align: middle;
-  white-space: nowrap;
-  width: 1px; }
-  html:not([dir="rtl"]) .oj-datepicker-trigger {
-    border-width: 1px 1px 1px 0;
-    border-radius: 0 2px 2px 0; }
-  html[dir="rtl"] .oj-datepicker-trigger {
-    border-width: 1px 0 1px 1px;
-    border-radius: 2px 0 0 2px; }
-
-.oj-inputdate-input-container.oj-invalid .oj-inputdate-input,
-.oj-inputtime-input-container.oj-invalid .oj-inputtime-input,
-.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input {
-  border-color: #c70000;
-  border-width: 2px; }
-
-html:not([dir="rtl"]) .oj-inputdate-input-container.oj-invalid .oj-inputdate-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputtime-input-container.oj-invalid .oj-inputtime-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger {
-  border-width: 2px 0 2px 2px; }
-html[dir="rtl"] .oj-inputdate-input-container.oj-invalid .oj-inputdate-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputtime-input-container.oj-invalid .oj-inputtime-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger {
-  border-width: 2px 2px 2px 0; }
-
-.oj-inputdate-input-container.oj-invalid .oj-datepicker-trigger,
-.oj-inputtime-input-container.oj-invalid .oj-datepicker-trigger,
-.oj-inputdatetime-input-container.oj-invalid .oj-datepicker-trigger {
-  border-color: #c70000; }
-  html:not([dir="rtl"]) .oj-inputdate-input-container.oj-invalid .oj-datepicker-trigger, html:not([dir="rtl"])
-  .oj-inputtime-input-container.oj-invalid .oj-datepicker-trigger, html:not([dir="rtl"])
-  .oj-inputdatetime-input-container.oj-invalid .oj-datepicker-trigger {
-    border-width: 2px 2px 2px 0; }
-  html[dir="rtl"] .oj-inputdate-input-container.oj-invalid .oj-datepicker-trigger, html[dir="rtl"]
-  .oj-inputtime-input-container.oj-invalid .oj-datepicker-trigger, html[dir="rtl"]
-  .oj-inputdatetime-input-container.oj-invalid .oj-datepicker-trigger {
-    border-width: 2px 0 2px 2px; }
-
-.oj-inputdate-input-container.oj-disabled,
-.oj-inputtime-input-container.oj-disabled,
-.oj-inputdatetime-input-container.oj-disabled {
-  background-color: #efeff1; }
-
-.oj-inputdate-input-container.oj-disabled .oj-inputdate-input,
-.oj-inputtime-input-container.oj-disabled .oj-inputtime-input,
-.oj-inputdatetime-input-container.oj-disabled .oj-inputdatetime-input {
-  color: #9e9e9e;
-  background-color: #efeff1;
-  border: 1px solid #efeff1; }
-
-.oj-inputdate-input-container.oj-disabled .oj-datepicker-trigger,
-.oj-inputtime-input-container.oj-disabled .oj-datepicker-trigger,
-.oj-inputdatetime-input-container.oj-disabled .oj-datepicker-trigger {
-  background-color: #efeff1;
-  border-color: #efeff1; }
-
-.oj-inputdate-input-container.oj-read-only,
-.oj-inputdate-input-container.oj-read-only .oj-inputdate-input,
-.oj-inputtime-input-container.oj-read-only,
-.oj-inputtime-input-container.oj-read-only .oj-inputtime-input,
-.oj-inputdatetime-input-container.oj-read-only,
-.oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input {
-  color: #333333;
-  background-color: transparent;
-  border: 0; }
-
-.oj-inputdate-input-container.oj-read-only .oj-datepicker-trigger,
-.oj-inputtime-input-container.oj-read-only .oj-datepicker-trigger,
-.oj-inputdatetime-input-container.oj-read-only .oj-datepicker-trigger {
-  display: none; }
-
-html:not([dir="rtl"]) .oj-inputdatetime-input-container .oj-datepicker-calendar-icon {
-  margin-right: 5px; }
-html[dir="rtl"] .oj-inputdatetime-input-container .oj-datepicker-calendar-icon {
-  margin-left: 5px; }
-
-.oj-datepicker-calendar-icon,
-.oj-datepicker-time-icon {
-  cursor: pointer;
-  display: inline-block;
-  vertical-align: middle; }
-
-.oj-datepicker-calendar-icon.oj-disabled,
-.oj-datepicker-time-icon.oj-disabled {
-  background-color: #efeff1;
-  cursor: default; }
-
-/* Class for the root node that contains the floating calendar */
-.oj-datepicker-content {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  background-color: white;
-  border: 1px solid #d6dfe6;
-  display: none;
-  padding: 5px 3px 0 4px;
-  width: 16em; }
-  html[dir="rtl"] .oj-datepicker-content {
-    direction: rtl; }
-
-.oj-datepicker-header {
-  position: relative;
-  padding: 1px 0;
-  background: none;
-  border: 0;
-  color: #252525;
-  font-weight: bold; }
-
-.oj-datepicker-prev-icon,
-.oj-datepicker-next-icon {
-  position: absolute;
-  top: 2px;
-  width: 21px;
-  height: 21px;
-  border-radius: 2px; }
-
-html:not([dir="rtl"]) .oj-datepicker-prev-icon.oj-hover {
-  left: 1px; }
-html[dir="rtl"] .oj-datepicker-prev-icon.oj-hover {
-  right: 1px; }
-
-html:not([dir="rtl"]) .oj-datepicker-next-icon.oj-hover {
-  right: 1px; }
-html[dir="rtl"] .oj-datepicker-next-icon.oj-hover {
-  left: 1px; }
-
-html:not([dir="rtl"]) .oj-datepicker-prev-icon, html:not([dir="rtl"])
-.oj-datepicker-prev-icon.oj-disabled {
-  left: 2px; }
-html[dir="rtl"] .oj-datepicker-prev-icon, html[dir="rtl"]
-.oj-datepicker-prev-icon.oj-disabled {
-  right: 2px; }
-
-html:not([dir="rtl"]) .oj-datepicker-next-icon, html:not([dir="rtl"])
-.oj-datepicker-next-icon.oj-disabled {
-  right: 2px; }
-html[dir="rtl"] .oj-datepicker-next-icon, html[dir="rtl"]
-.oj-datepicker-next-icon.oj-disabled {
-  left: 2px; }
-
-.oj-datepicker-prev-icon.oj-hover,
-.oj-datepicker-next-icon.oj-hover {
-  top: 1px;
-  border: 1px solid #c4ced7;
-  cursor: pointer;
-  background-image: none; }
-
-.oj-datepicker-prev-icon.oj-disabled,
-.oj-datepicker-next-icon.oj-disabled {
-  color: #9e9e9e;
-  border-width: 0;
-  background: transparent;
-  top: 2px;
-  cursor: default; }
-
-.oj-datepicker-prev-icon span,
-.oj-datepicker-next-icon span {
-  display: block;
-  position: absolute;
-  left: 50%;
-  margin-left: -8px;
-  top: 50%;
-  margin-top: -8px; }
-
-.oj-datepicker-title {
-  margin: 0 2.3em;
-  line-height: 1.8em;
-  text-align: center; }
-
-.oj-datepicker-title select {
-  font-size: 1rem;
-  margin: 1px 0; }
-
-.oj-datepicker-month-year {
-  width: 100%; }
-
-.oj-datepicker-month {
-  margin-right: 3px; }
-
-.oj-datepicker-month,
-.oj-datepicker-year {
-  width: 48%;
-  min-width: 0; }
-
-.oj-datepicker-calendar {
-  width: 100%;
-  font-size: 1rem;
-  border-collapse: collapse;
-  margin: 0 0 4px;
-  outline: 0 none; }
-
-.oj-datepicker-calendar th,
-.oj-datepicker-calendar td {
-  border: 0;
-  text-align: center;
-  font-weight: bold; }
-
-.oj-datepicker-calendar th {
-  padding: .7em .3em;
-  text-transform: uppercase;
-  font-size: 0.917rem;
-  color: #737373; }
-
-.oj-datepicker-calendar td {
-  padding: 0; }
-
-.oj-datepicker-calendar td span,
-.oj-datepicker-calendar td a {
-  display: block;
-  padding: 5px 0 4px;
-  text-align: center; }
-
-.oj-datepicker-calendar td a.oj-enabled {
-  background: none;
-  border: 1px solid transparent;
-  color: #333333;
-  font-weight: bold; }
-
-.oj-datepicker-calendar td a.oj-hover {
-  text-decoration: underline; }
-
-.oj-datepicker-calendar td a.oj-selected {
-  background: #0572ce;
-  color: white; }
-
-.oj-datepicker-calendar td.oj-disabled span {
-  color: #9e9e9e; }
-
-.oj-datepicker-today {
-  border: 1px solid #0572ce;
-  text-decoration: none; }
-
-.oj-datepicker-buttonpane {
-  margin: 2px 0 0;
-  padding: 0 3px;
-  border: 1px solid #d6dfe6;
-  border-width: 1px 0 0; }
-  html[dir="rtl"] .oj-datepicker-buttonpane {
-    clear: right; }
-
-.oj-datepicker-buttonpane button {
-  margin: 7px 0;
-  padding: 0 7px;
-  width: auto;
-  overflow: visible; }
-
-.oj-datepicker-buttonpane .oj-datepicker-current {
-  float: left; }
-  html[dir="rtl"] .oj-datepicker-buttonpane .oj-datepicker-current {
-    float: right; }
-
-.oj-datepicker-buttonpane .oj-datepicker-close {
-  float: right; }
-  html[dir="rtl"] .oj-datepicker-buttonpane .oj-datepicker-close {
-    float: left; }
-
-/* with multiple calendars, need to override the width */
-.oj-datepicker-content.oj-datepicker-multi {
-  width: auto; }
-
-.oj-datepicker-multi .oj-datepicker-group {
-  float: left; }
-  html[dir="rtl"] .oj-datepicker-multi .oj-datepicker-group {
-    float: right; }
-
-.oj-datepicker-multi .oj-datepicker-group .oj-datepicker-calendar {
-  width: 95%;
-  margin: 0 auto .4em; }
-
-.oj-datepicker-multi-2 .oj-datepicker-group {
-  width: 50%; }
-
-.oj-datepicker-multi-3 .oj-datepicker-group {
-  width: 33.3%; }
-
-.oj-datepicker-multi-4 .oj-datepicker-group {
-  width: 25%; }
-
-html:not([dir="rtl"]) .oj-datepicker-multi .oj-datepicker-group-last .oj-datepicker-header, html:not([dir="rtl"])
-.oj-datepicker-multi .oj-datepicker-group-middle .oj-datepicker-header {
-  border-left-width: 0; }
-html[dir="rtl"] .oj-datepicker-multi .oj-datepicker-group-last .oj-datepicker-header, html[dir="rtl"]
-.oj-datepicker-multi .oj-datepicker-group-middle .oj-datepicker-header {
-  border-right-width: 0; }
-
-.oj-datepicker-multi .oj-datepicker-buttonpane {
-  clear: left; }
-
-.oj-datepicker-row-break {
-  clear: both;
-  width: 100%;
-  font-size: 0; }
-
-.oj-datepicker-unselectable {
-  opacity: 0.35; }
-
-.oj-datepicker-days-cell-over {
-  outline: 1px dotted #145c9e; }
-
-.oj-datepicker-week-col {
-  color: #4f4f4f; }
-
-th.oj-datepicker-week-col {
-  background-color: #FAFAFA; }
-
-td.oj-datepicker-week-col {
-  background-color: #f0f0f0; }
-
-.oj-datepicker-inline {
-  margin-bottom: 6px; }
-
-.oj-datepicker-time {
-  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35);
-  display: none;
-  height: 150px;
-  left: -10000px;
-  overflow: auto;
-  position: absolute;
-  width: 15em;
-  z-index: 100; }
-
-.oj-datepicker-time-list {
-  border: 0 none;
-  list-style: none outside none;
-  margin: 0;
-  position: relative;
-  color: #333333;
-  background: white; }
-  html:not([dir="rtl"]) .oj-datepicker-time-list {
-    padding-left: 0; }
-  html[dir="rtl"] .oj-datepicker-time-list {
-    padding-right: 0; }
-
-.oj-datepicker-time-list-item {
-  border-radius: 2px;
-  line-height: 1.8em;
-  padding: 1px 10px; }
-
-.oj-datepicker-time-list-item.oj-active {
-  background-color: #ebeced; }
-
-.oj-datepicker-time-list-item.oj-checked {
-  background-color: #bfd4e5; }
-
-/* radioset and checkboxset styles */
-/* this styles the radio, checkbox, and their labels */
-/* --------------------------------------------------------------- */
-/* App developer can use this styleclass if they would like to put on a span
-around the input/label */
-.oj-choice-row {
-  display: block;
-  margin: 0;
-  line-height: 1.8; }
-
-.oj-radio,
-.oj-checkbox {
-  display: inline-block;
-  vertical-align: middle; }
-  html:not([dir="rtl"]) .oj-radio, html:not([dir="rtl"])
-  .oj-checkbox {
-    margin: 0 .45em 0 0; }
-  html[dir="rtl"] .oj-radio, html[dir="rtl"]
-  .oj-checkbox {
-    margin: 0 0 0 .45em; }
-
-.oj-radioset {
-  display: inline-block; }
-
-/* Invalid styling for the radioset */
-.oj-radioset.oj-invalid .oj-radio {
-  -moz-outline-radius: 8px 8px 8px 8px;
-  outline: 2px solid #c70000; }
-
-/* Warning styling for the radioset */
-.oj-radioset.oj-warning .oj-radio {
-  -moz-outline-radius: 8px 8px 8px 8px;
-  outline: 2px solid #ffaa2b; }
-
-/* Invalid styling for the checkboxset */
-.oj-checkboxset.oj-invalid .oj-checkbox {
-  outline: 2px solid #c70000; }
-
-/* Warning styling for the checkboxset */
-.oj-checkboxset.oj-warning .oj-checkbox {
-  outline: 2px solid #ffaa2b; }
-
-.oj-radio-label,
-.oj-checkbox-label {
-  color: #333333;
-  display: inline-block;
-  font-size: 1rem;
-  font-weight: normal;
-  vertical-align: middle; }
-
-.oj-radio-label.oj-disabled,
-.oj-checkbox-label.oj-disabled {
-  color: #9e9e9e; }
+.oj-inputnumber .oj-inputnumber-up-icon {
+  margin-bottom: 1px; }
+
+.oj-inputnumber .oj-inputnumber-down-icon {
+  margin-bottom: 0; }
 
 /* combobox */
 /* --------------------------------------------------------------- */
@@ -3954,6 +3751,14 @@ around the input/label */
   position: relative;
   white-space: nowrap;
   background-clip: padding-box; }
+  html.oj-slow-borderradius .oj-combobox .oj-combobox-choice {
+    border-radius: 0; }
+  .oj-combobox .oj-combobox-choice::-webkit-input-placeholder {
+    color: #737373; }
+  .oj-combobox .oj-combobox-choice::-moz-placeholder {
+    color: #737373; }
+  .oj-combobox .oj-combobox-choice:-ms-input-placeholder {
+    color: #737373; }
 
 html:not([dir="rtl"]) .oj-combobox.oj-combobox-allowclear .oj-combobox-choice .oj-combobox-search {
   margin-right: 42px; }
@@ -4134,6 +3939,14 @@ disabled look for disabled choices in the results dropdown
   position: relative;
   cursor: text;
   overflow: hidden; }
+  html.oj-slow-borderradius .oj-combobox-multi .oj-combobox-choices {
+    border-radius: 0; }
+  .oj-combobox-multi .oj-combobox-choices::-webkit-input-placeholder {
+    color: #737373; }
+  .oj-combobox-multi .oj-combobox-choices::-moz-placeholder {
+    color: #737373; }
+  .oj-combobox-multi .oj-combobox-choices:-ms-input-placeholder {
+    color: #737373; }
 
 .oj-combobox-locked {
   padding: 3px 5px 3px 5px; }
@@ -4173,6 +3986,7 @@ disabled look for disabled choices in the results dropdown
   color: #333333;
   cursor: default;
   border-radius: 2px;
+  background-color: #e4e8ea;
   background-image: -webkit-linear-gradient(top, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
   background-image: linear-gradient(to bottom, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
   background-clip: padding-box;
@@ -4181,6 +3995,10 @@ disabled look for disabled choices in the results dropdown
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
+  html.oj-slow-borderradius .oj-combobox-multi .oj-combobox-choices .oj-combobox-search-choice {
+    border-radius: 0; }
+  html.oj-slow-cssgradients .oj-combobox-multi .oj-combobox-choices .oj-combobox-search-choice {
+    background-image: none; }
 
 .oj-combobox-multi .oj-combobox-choices .oj-combobox-search-choice .oj-combobox-chosen {
   cursor: default; }
@@ -4284,6 +4102,722 @@ disabled look for disabled choices in the results dropdown
   height: 100px;
   overflow: scroll; }
 
+/* Class placed on the widget, distinguishes one type to an another */
+.oj-inputdatetime-input-container {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-table;
+  /* use a width of 100% and then max and min width so that when 
+     there's less room for the form control it can automatically 
+     get smaller instead of overflowing its boundaries */
+  max-width: 15em;
+  min-width: 8em;
+  width: 100%;
+  font-size: 1rem; }
+
+.oj-inputdatetime-input {
+  color: #333333;
+  background-color: #fcfdfe;
+  border: 1px solid #dfe4e7;
+  border-radius: 2px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: table-cell;
+  font-family: inherit;
+  font-weight: normal;
+  padding: 0 5px;
+  height: 2.34rem;
+  width: 100%; }
+  html.oj-slow-borderradius .oj-inputdatetime-input {
+    border-radius: 0; }
+  .oj-inputdatetime-input::-webkit-input-placeholder {
+    color: #737373; }
+  .oj-inputdatetime-input::-moz-placeholder {
+    color: #737373; }
+  .oj-inputdatetime-input:-ms-input-placeholder {
+    color: #737373; }
+
+html:not([dir="rtl"]) .oj-inputdatetime-input.oj-has-trigger {
+  border-radius: 2px 0 0 2px; }
+html.oj-slow-borderradius .oj-inputdatetime-input.oj-has-trigger {
+  border-radius: 0; }
+html[dir="rtl"] .oj-inputdatetime-input.oj-has-trigger {
+  border-radius: 0 2px 2px 0; }
+html.oj-slow-borderradius .oj-inputdatetime-input.oj-has-trigger {
+  border-radius: 0; }
+html:not([dir="rtl"]) .oj-inputdatetime-input.oj-has-trigger {
+  border-width: 1px 0 1px 1px; }
+html[dir="rtl"] .oj-inputdatetime-input.oj-has-trigger {
+  border-width: 1px 1px 1px 0; }
+
+.oj-inputdatetime-input-trigger {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #dfe4e7;
+  display: table-cell;
+  background-color: #fcfdfe;
+  height: 2.34rem;
+  padding: 0 3px;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 1px; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input-trigger {
+    border-radius: 0 2px 2px 0; }
+  html.oj-slow-borderradius .oj-inputdatetime-input-trigger {
+    border-radius: 0; }
+  html[dir="rtl"] .oj-inputdatetime-input-trigger {
+    border-radius: 2px 0 0 2px; }
+  html.oj-slow-borderradius .oj-inputdatetime-input-trigger {
+    border-radius: 0; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input-trigger {
+    border-width: 1px 1px 1px 0; }
+  html[dir="rtl"] .oj-inputdatetime-input-trigger {
+    border-width: 1px 0 1px 1px; }
+
+.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input {
+  border-color: #c70000;
+  border-width: 2px; }
+
+html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger, html:not([dir="rtl"])
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input.oj-has-trigger {
+  border-width: 2px 0 2px 2px; }
+html[dir="rtl"] .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger, html[dir="rtl"]
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input.oj-has-trigger {
+  border-width: 2px 2px 2px 0; }
+
+.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
+  border-color: #c70000; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
+    border-width: 2px 2px 2px 0; }
+  html[dir="rtl"] .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
+    border-width: 2px 0 2px 2px; }
+
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input {
+  border-color: #ffaa2b;
+  border-width: 2px; }
+
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
+  border-color: #ffaa2b; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
+    border-width: 2px 2px 2px 0; }
+  html[dir="rtl"] .oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
+    border-width: 2px 0 2px 2px; }
+
+.oj-inputdatetime-date-time.oj-disabled .oj-inputdatetime-input,
+.oj-inputdatetime-date-only.oj-disabled .oj-inputdatetime-input,
+.oj-inputdatetime-time-only.oj-disabled .oj-inputdatetime-input {
+  color: #9e9e9e;
+  background-color: #efeff1;
+  border: 1px solid #efeff1; }
+
+.oj-inputdatetime-date-time.oj-disabled .oj-inputdatetime-input-trigger,
+.oj-inputdatetime-date-only.oj-disabled .oj-inputdatetime-input-trigger,
+.oj-inputdatetime-time-only.oj-disabled .oj-inputdatetime-input-trigger {
+  background-color: #efeff1;
+  border-color: #efeff1; }
+
+.oj-inputdatetime-input-container.oj-read-only,
+.oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input {
+  color: #333333;
+  background-color: transparent;
+  border: 0;
+  padding: 0; }
+
+.oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input-trigger {
+  display: none; }
+
+html:not([dir="rtl"]) .oj-inputdatetime-date-time .oj-datepicker-calendar-icon {
+  margin-right: 5px; }
+html[dir="rtl"] .oj-inputdatetime-date-time .oj-datepicker-calendar-icon {
+  margin-left: 5px; }
+
+.oj-datepicker-calendar-icon,
+.oj-datepicker-time-icon {
+  display: inline-block;
+  vertical-align: middle; }
+
+.oj-datepicker-calendar-icon.oj-disabled,
+.oj-datepicker-time-icon.oj-disabled {
+  background-color: #efeff1;
+  cursor: default; }
+
+/* Class for the root node that contains the floating calendar */
+.oj-datepicker-content {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: white;
+  border: 1px solid #d6dfe6;
+  display: none;
+  padding: 5px 3px 0 4px;
+  z-index: 1000;
+  width: 15em; }
+  html[dir="rtl"] .oj-datepicker-content {
+    direction: rtl; }
+
+.oj-datepicker-header {
+  position: relative;
+  padding: 1px 0;
+  background: none;
+  border: 0;
+  color: #252525;
+  font-weight: bold; }
+
+.oj-datepicker-prev-icon,
+.oj-datepicker-next-icon {
+  position: absolute;
+  top: 2px; }
+
+html:not([dir="rtl"]) .oj-datepicker-prev-icon {
+  left: 2px; }
+html[dir="rtl"] .oj-datepicker-prev-icon {
+  right: 2px; }
+
+html:not([dir="rtl"]) .oj-datepicker-next-icon {
+  right: 2px; }
+html[dir="rtl"] .oj-datepicker-next-icon {
+  left: 2px; }
+
+.oj-datepicker-title {
+  margin: 0 2.3em;
+  line-height: 1.8em;
+  text-align: center; }
+
+.oj-datepicker-title select {
+  font-size: 1rem;
+  margin: 1px 0; }
+
+.oj-datepicker-month-year {
+  width: 100%; }
+
+.oj-datepicker-month {
+  margin-right: 3px; }
+
+.oj-datepicker-month,
+.oj-datepicker-year {
+  width: 48%;
+  min-width: 0; }
+
+.oj-datepicker-calendar {
+  width: 100%;
+  font-size: 1rem;
+  border-collapse: collapse;
+  margin: 0 0 4px;
+  outline: 0 none; }
+
+.oj-datepicker-calendar th,
+.oj-datepicker-calendar td {
+  border: 0;
+  text-align: center;
+  font-weight: bold; }
+
+.oj-datepicker-calendar th {
+  padding: .7em .3em;
+  text-transform: uppercase;
+  font-size: 0.917rem;
+  color: #737373; }
+
+.oj-datepicker-calendar td {
+  padding: 0; }
+
+.oj-datepicker-calendar td span,
+.oj-datepicker-calendar td a {
+  display: block;
+  padding: 5px 0 4px;
+  text-align: center; }
+
+.oj-datepicker-calendar td a.oj-enabled {
+  background: none;
+  border: 1px solid transparent;
+  color: #333333;
+  font-weight: bold; }
+
+.oj-datepicker-calendar td a.oj-hover {
+  text-decoration: underline; }
+
+.oj-datepicker-calendar td a.oj-selected {
+  background: #0572ce;
+  color: white; }
+
+.oj-datepicker-calendar td.oj-disabled span {
+  color: #9e9e9e; }
+
+.oj-datepicker-today {
+  border: 1px solid #0572ce;
+  text-decoration: none; }
+
+.oj-datepicker-buttonpane {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 2px 0 0;
+  padding: 0 3px;
+  border: 1px solid #d6dfe6;
+  border-width: 1px 0 0;
+  display: inline-block;
+  width: 100%; }
+  html[dir="rtl"] .oj-datepicker-buttonpane {
+    clear: right; }
+
+.oj-datepicker-buttonpane button {
+  margin: 7px 0;
+  padding: 0 7px;
+  width: auto;
+  overflow: visible; }
+
+.oj-datepicker-current {
+  float: left; }
+  html[dir="rtl"] .oj-datepicker-current {
+    float: right; }
+
+.oj-datepicker-close {
+  float: right; }
+  html[dir="rtl"] .oj-datepicker-close {
+    float: left; }
+
+/* with multiple calendars, need to override the width */
+.oj-datepicker-content.oj-datepicker-multi {
+  width: auto; }
+
+.oj-datepicker-multi .oj-datepicker-group {
+  float: left; }
+  html[dir="rtl"] .oj-datepicker-multi .oj-datepicker-group {
+    float: right; }
+
+.oj-datepicker-multi .oj-datepicker-group .oj-datepicker-calendar {
+  width: 95%;
+  margin: 0 auto .4em; }
+
+.oj-datepicker-multi-2 .oj-datepicker-group {
+  width: 50%; }
+
+.oj-datepicker-multi-3 .oj-datepicker-group {
+  width: 33.3%; }
+
+.oj-datepicker-multi-4 .oj-datepicker-group {
+  width: 25%; }
+
+html:not([dir="rtl"]) .oj-datepicker-multi .oj-datepicker-group-last .oj-datepicker-header, html:not([dir="rtl"])
+.oj-datepicker-multi .oj-datepicker-group-middle .oj-datepicker-header {
+  border-left-width: 0; }
+html[dir="rtl"] .oj-datepicker-multi .oj-datepicker-group-last .oj-datepicker-header, html[dir="rtl"]
+.oj-datepicker-multi .oj-datepicker-group-middle .oj-datepicker-header {
+  border-right-width: 0; }
+
+.oj-datepicker-multi .oj-datepicker-buttonpane {
+  clear: left; }
+
+.oj-datepicker-row-break {
+  clear: both;
+  width: 100%;
+  font-size: 0; }
+
+.oj-datepicker-unselectable {
+  opacity: 0.35; }
+
+.oj-datepicker-days-cell-over {
+  outline: 1px dotted #145c9e; }
+
+.oj-datepicker-week-col {
+  color: #4f4f4f; }
+
+th.oj-datepicker-week-col {
+  background-color: #fafafa; }
+
+td.oj-datepicker-week-col {
+  background-color: #f0f0f0; }
+
+.oj-datepicker-inline {
+  margin-bottom: 6px; }
+
+/* radioset and checkboxset styles */
+/* this styles the radio, checkbox, and their labels */
+/* --------------------------------------------------------------- */
+/* App developer can use this styleclass if they would like to put on a span
+around the input/label */
+.oj-choice-row {
+  display: block;
+  margin: 0;
+  margin-bottom: .6em; }
+
+.oj-radio,
+.oj-checkbox {
+  display: inline-block;
+  vertical-align: middle; }
+  html:not([dir="rtl"]) .oj-radio, html:not([dir="rtl"])
+  .oj-checkbox {
+    margin: 0 .45em 0 0; }
+  html[dir="rtl"] .oj-radio, html[dir="rtl"]
+  .oj-checkbox {
+    margin: 0 0 0 .45em; }
+
+.oj-radioset {
+  display: inline-block; }
+
+/* Invalid styling for the radioset */
+.oj-radioset.oj-invalid .oj-radio {
+  -moz-outline-radius: 8px 8px 8px 8px;
+  outline: 2px solid #c70000; }
+
+/* Warning styling for the radioset */
+.oj-radioset.oj-warning .oj-radio {
+  -moz-outline-radius: 8px 8px 8px 8px;
+  outline: 2px solid #ffaa2b; }
+
+/* Invalid styling for the checkboxset */
+.oj-checkboxset.oj-invalid .oj-checkbox {
+  outline: 2px solid #c70000; }
+
+/* Warning styling for the checkboxset */
+.oj-checkboxset.oj-warning .oj-checkbox {
+  outline: 2px solid #ffaa2b; }
+
+.oj-radio-label,
+.oj-checkbox-label {
+  color: #333333;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: normal;
+  vertical-align: middle; }
+
+.oj-radio-label.oj-disabled,
+.oj-checkbox-label.oj-disabled {
+  color: #9e9e9e; }
+
+/* listbox */
+/* --------------------------------------------------------------- */
+.oj-listbox {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 18em;
+  min-width: 8em;
+  width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.oj-listbox .oj-listbox-choice {
+  color: #333333;
+  background-color: #fcfdfe;
+  border: 1px solid #dfe4e7;
+  border-radius: 2px;
+  display: block;
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+  background-clip: padding-box;
+  text-overflow: ellipsis;
+  line-height: 26px; }
+  html.oj-slow-borderradius .oj-listbox .oj-listbox-choice {
+    border-radius: 0; }
+  .oj-listbox .oj-listbox-choice::-webkit-input-placeholder {
+    color: #737373; }
+  .oj-listbox .oj-listbox-choice::-moz-placeholder {
+    color: #737373; }
+  .oj-listbox .oj-listbox-choice:-ms-input-placeholder {
+    color: #737373; }
+  html:not([dir="rtl"]) .oj-listbox .oj-listbox-choice {
+    padding-left: 5px; }
+  html[dir="rtl"] .oj-listbox .oj-listbox-choice {
+    padding-right: 5px; }
+
+.oj-listbox .oj-listbox-choice .oj-listbox-search {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; }
+  html:not([dir="rtl"]) .oj-listbox .oj-listbox-choice .oj-listbox-search {
+    margin-right: 5px; }
+  html[dir="rtl"] .oj-listbox .oj-listbox-choice .oj-listbox-search {
+    margin-left: 5px; }
+
+.oj-listbox .oj-listbox-choice abbr {
+  display: none;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 6px;
+  font-size: 1px;
+  border: 0;
+  cursor: pointer;
+  outline: 0; }
+  html:not([dir="rtl"]) .oj-listbox .oj-listbox-choice abbr {
+    right: 34px; }
+  html[dir="rtl"] .oj-listbox .oj-listbox-choice abbr {
+    left: 34px; }
+
+.oj-listbox .oj-listbox-choice abbr:hover {
+  cursor: pointer; }
+
+/* suppress all browser decorations of anchors in the listbox */
+/* --------------------------------------------------------- */
+.oj-listbox a,
+.oj-listbox a:active,
+.oj-listbox a:visited,
+.oj-listbox a:hover,
+.oj-listbox a:focus {
+  text-decoration: none; }
+
+.oj-listbox.oj-listbox-allowclear .oj-listbox-choice abbr {
+  display: inline-block; }
+
+html:not([dir="rtl"]) .oj-listbox.oj-listbox-allowclear .oj-listbox-choice .oj-listbox-search {
+  margin-right: 42px; }
+html[dir="rtl"] .oj-listbox.oj-listbox-allowclear .oj-listbox-choice .oj-listbox-search {
+  margin-left: 42px; }
+
+.oj-listbox-drop {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 9999;
+  top: 100%;
+  background: white;
+  border: 1px solid #c4ced7;
+  border-top: 0;
+  box-shadow: 1px 3px 3px 0 rgba(0, 0, 0, 0.35); }
+
+.oj-listbox-drop-auto-width {
+  border-top: 1px solid #c4ced7;
+  width: auto; }
+
+.oj-listbox-drop.oj-listbox-drop-above {
+  border-top: 1px solid #c4ced7;
+  border-bottom: 0;
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
+
+/* results */
+.oj-listbox-results {
+  max-height: 200px;
+  padding: 0;
+  margin: 1px 0 2px 0;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-tap-highlight-color: transparent; }
+
+.oj-listbox-results ul.oj-listbox-result-sub {
+  margin: 0;
+  padding-left: 0; }
+
+.oj-listbox-results ul.oj-listbox-result-sub > li .oj-listbox-result-label {
+  padding-left: 20px; }
+
+.oj-listbox-results ul.oj-listbox-result-sub ul.oj-listbox-result-sub > li .oj-listbox-result-label {
+  padding-left: 40px; }
+
+.oj-listbox-results ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub > li .oj-listbox-result-label {
+  padding-left: 60px; }
+
+.oj-listbox-results ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub > li .oj-listbox-result-label {
+  padding-left: 80px; }
+
+.oj-listbox-results ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub > li .oj-listbox-result-label {
+  padding-left: 100px; }
+
+.oj-listbox-results ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub > li .oj-listbox-result-label {
+  padding-left: 110px; }
+
+.oj-listbox-results ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub ul.oj-listbox-result-sub > li .oj-listbox-result-label {
+  padding-left: 120px; }
+
+.oj-listbox-results li {
+  list-style: none;
+  display: list-item;
+  background-image: none; }
+
+.oj-listbox-results li.oj-listbox-result-with-children > .oj-listbox-result-label {
+  font-weight: bold; }
+
+.oj-listbox-results .oj-listbox-result-label {
+  padding-left: 5px;
+  line-height: 24px;
+  margin: 0;
+  cursor: pointer;
+  min-height: 1em;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.oj-listbox-results .oj-listbox-highlighted {
+  background: #ebeced; }
+
+.oj-listbox-results .oj-listbox-highlighted:active {
+  background: #bfd4e5; }
+
+.oj-listbox-results li em {
+  background: #feffde;
+  font-style: normal; }
+
+.oj-listbox-results .oj-listbox-highlighted em {
+  background: transparent; }
+
+/*
+disabled look for disabled choices in the results dropdown
+*/
+.oj-listbox-results .oj-disabled {
+  color: #9e9e9e;
+  display: list-item;
+  cursor: default; }
+
+.oj-listbox-results .oj-listbox-selected {
+  display: none; }
+
+/* disabled styles */
+.oj-listbox.oj-disabled .oj-listbox-choice,
+.oj-listbox.oj-disabled .oj-listbox-choice input {
+  color: #9e9e9e;
+  background-color: #efeff1;
+  border: 1px solid #efeff1; }
+
+.oj-listbox-search-field .oj-listbox-input {
+  padding: 5px;
+  margin: 1px 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  color: #333333;
+  background-color: #fcfdfe;
+  outline: 0;
+  border: 0; }
+
+.oj-listbox-chosen.oj-listbox-default {
+  color: #737373; }
+
+/* Invalid styling for the widget */
+.oj-listbox.oj-invalid .oj-listbox-choice {
+  border: 2px solid #c70000; }
+
+/* Warning styling for the widget */
+.oj-listbox.oj-warning .oj-listbox-choice {
+  border: 2px solid #ffaa2b; }
+
+.oj-listbox-offscreen, .oj-listbox-offscreen:focus {
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: absolute;
+  outline: 0;
+  left: 0;
+  top: 0; }
+
+.oj-listbox-drop-mask {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-height: 100%;
+  min-width: 100%;
+  height: auto;
+  width: auto;
+  opacity: 0;
+  z-index: 9998;
+  /* styles required for IE to work */
+  background-color: white;
+  filter: alpha(opacity=0); }
+
+.oj-listbox-display-none {
+  display: none; }
+
+.oj-listbox-measure-scrollbar {
+  position: absolute;
+  top: -10000px;
+  left: -10000px;
+  width: 100px;
+  height: 100px;
+  overflow: scroll; }
+
+.oj-listbox-chosen {
+  width: 100%;
+  border: 0;
+  box-shadow: none;
+  outline: 0; }
+
+/* icon */
+/* -----------------------------*/
+/* open icon for listbox */
+.oj-listbox-open-icon {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.75em;
+  padding: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  position: absolute; }
+  html:not([dir="rtl"]) .oj-listbox-open-icon {
+    right: 0; }
+  html[dir="rtl"] .oj-listbox-open-icon {
+    left: 0; }
+
+/* Tablet/Mobile: clear entry icon for listbox */
+.oj-listbox-search-clear-entry-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  right: 5px;
+  top: 3px;
+  font-size: 1px;
+  outline: none; }
+
+/* search icon for listbox */
+.oj-listbox-search-icon {
+  text-align: center;
+  overflow: hidden;
+  vertical-align: text-bottom;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #878c90; }
+
+.oj-listbox-search {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  display: inline-table;
+  background-color: #fcfdfe;
+  border: 1px solid #dfe4e7;
+  border-radius: 2px; }
+  html.oj-slow-borderradius .oj-listbox-search {
+    border-radius: 0; }
+
+.oj-listbox-search .oj-listbox-input {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  color: #333333;
+  padding: 6px 5px 5px 5px;
+  display: table-cell;
+  border: 0;
+  box-shadow: none;
+  outline: 0; }
+
+.oj-listbox-spyglass-box {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: white;
+  display: table-cell;
+  line-height: 26px;
+  width: 28px;
+  text-align: center;
+  vertical-align: middle;
+  border: 0;
+  box-shadow: none; }
+
+.oj-listbox-search-wrapper {
+  border: 0;
+  padding: 5px;
+  background-color: #fcfdfe; }
+
+html:not([dir="rtl"]) .oj-listbox-no-results {
+  padding-left: 5px; }
+html[dir="rtl"] .oj-listbox-no-results {
+  padding-right: 5px; }
+
 /* select */
 /* --------------------------------------------------------------- */
 .oj-select {
@@ -4312,24 +4846,18 @@ disabled look for disabled choices in the results dropdown
   background-clip: padding-box;
   text-overflow: ellipsis;
   line-height: 26px; }
+  html.oj-slow-borderradius .oj-select .oj-select-choice {
+    border-radius: 0; }
+  .oj-select .oj-select-choice::-webkit-input-placeholder {
+    color: #737373; }
+  .oj-select .oj-select-choice::-moz-placeholder {
+    color: #737373; }
+  .oj-select .oj-select-choice:-ms-input-placeholder {
+    color: #737373; }
   html:not([dir="rtl"]) .oj-select .oj-select-choice {
     padding-left: 5px; }
   html[dir="rtl"] .oj-select .oj-select-choice {
     padding-right: 5px; }
-
-/* suppress all browser decorations of anchors in the select */
-/* --------------------------------------------------------- */
-.oj-select a,
-.oj-select a:active,
-.oj-select a:visited,
-.oj-select a:hover,
-.oj-select a:focus {
-  text-decoration: none; }
-
-html:not([dir="rtl"]) .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
-  margin-right: 42px; }
-html[dir="rtl"] .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
-  margin-left: 42px; }
 
 .oj-select .oj-select-choice .oj-select-search {
   display: block;
@@ -4357,11 +4885,25 @@ html[dir="rtl"] .oj-select.oj-select-allowclear .oj-select-choice .oj-select-sea
   html[dir="rtl"] .oj-select .oj-select-choice abbr {
     left: 34px; }
 
+.oj-select .oj-select-choice abbr:hover {
+  cursor: pointer; }
+
+/* suppress all browser decorations of anchors in the select */
+/* --------------------------------------------------------- */
+.oj-select a,
+.oj-select a:active,
+.oj-select a:visited,
+.oj-select a:hover,
+.oj-select a:focus {
+  text-decoration: none; }
+
 .oj-select.oj-select-allowclear .oj-select-choice abbr {
   display: inline-block; }
 
-.oj-select .oj-select-choice abbr:hover {
-  cursor: pointer; }
+html:not([dir="rtl"]) .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
+  margin-right: 42px; }
+html[dir="rtl"] .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
+  margin-left: 42px; }
 
 .oj-select-drop {
   position: absolute;
@@ -4482,6 +5024,14 @@ disabled look for disabled choices in the results dropdown
   position: relative;
   cursor: text;
   overflow: hidden; }
+  html.oj-slow-borderradius .oj-select-multi .oj-select-choices {
+    border-radius: 0; }
+  .oj-select-multi .oj-select-choices::-webkit-input-placeholder {
+    color: #737373; }
+  .oj-select-multi .oj-select-choices::-moz-placeholder {
+    color: #737373; }
+  .oj-select-multi .oj-select-choices:-ms-input-placeholder {
+    color: #737373; }
 
 .oj-select-locked {
   padding: 3px 5px 3px 5px; }
@@ -4522,6 +5072,7 @@ disabled look for disabled choices in the results dropdown
   color: #333333;
   cursor: default;
   border-radius: 2px;
+  background-color: #e4e8ea;
   background-image: -webkit-linear-gradient(top, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
   background-image: linear-gradient(to bottom, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
   background-clip: padding-box;
@@ -4530,6 +5081,10 @@ disabled look for disabled choices in the results dropdown
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
+  html.oj-slow-borderradius .oj-select-multi .oj-select-choices .oj-select-search-choice {
+    border-radius: 0; }
+  html.oj-slow-cssgradients .oj-select-multi .oj-select-choices .oj-select-search-choice {
+    background-image: none; }
 
 .oj-select-multi .oj-select-choices .oj-select-search-choice .oj-select-chosen {
   cursor: default; }
@@ -4661,15 +5216,14 @@ disabled look for disabled choices in the results dropdown
   display: inline-table;
   background-color: #fcfdfe;
   border: 1px solid #dfe4e7;
-  border-radius: 2px;
-  /* wrapper
-        margin: 5px 5px 4px 5px;
-   */ }
+  border-radius: 2px; }
+  html.oj-slow-borderradius .oj-select-search {
+    border-radius: 0; }
 
 .oj-select-search .oj-select-input {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  width: 98%;
+  width: 100%;
   color: #333333;
   padding: 6px 5px 5px 5px;
   display: table-cell;
@@ -4682,8 +5236,10 @@ disabled look for disabled choices in the results dropdown
   box-sizing: border-box;
   background-color: white;
   display: table-cell;
-  vertical-align: middle;
   line-height: 26px;
+  width: 28px;
+  text-align: center;
+  vertical-align: middle;
   border: 0;
   box-shadow: none; }
 
@@ -4691,6 +5247,11 @@ disabled look for disabled choices in the results dropdown
   border: 0;
   padding: 5px;
   background-color: #fcfdfe; }
+
+html:not([dir="rtl"]) .oj-select-no-results {
+  padding-left: 5px; }
+html[dir="rtl"] .oj-select-no-results {
+  padding-right: 5px; }
 
 /* Grid HTML Classes */
 .oj-row {
@@ -5845,15 +6406,14 @@ disabled look for disabled choices in the results dropdown
   .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-sm-label-inline .oj-label-help-icon,
   .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-sm-label-inline.oj-label,
+  .oj-sm-label-inline.oj-label label,
   .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-sm-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-sm-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-sm-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-sm-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -5861,7 +6421,7 @@ disabled look for disabled choices in the results dropdown
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-sm-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-sm-label-inline.oj-label, html[dir="rtl"]
+    .oj-sm-label-inline.oj-label label, html[dir="rtl"]
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }
@@ -5910,15 +6470,14 @@ disabled look for disabled choices in the results dropdown
   .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-md-label-inline .oj-label-help-icon,
   .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-md-label-inline.oj-label,
+  .oj-md-label-inline.oj-label label,
   .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-md-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-md-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-md-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-md-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -5926,7 +6485,7 @@ disabled look for disabled choices in the results dropdown
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-md-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-md-label-inline.oj-label, html[dir="rtl"]
+    .oj-md-label-inline.oj-label label, html[dir="rtl"]
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }
@@ -5975,15 +6534,14 @@ disabled look for disabled choices in the results dropdown
   .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-lg-label-inline .oj-label-help-icon,
   .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-lg-label-inline.oj-label,
+  .oj-lg-label-inline.oj-label label,
   .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-lg-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-lg-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-lg-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-lg-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -5991,7 +6549,7 @@ disabled look for disabled choices in the results dropdown
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-lg-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-lg-label-inline.oj-label, html[dir="rtl"]
+    .oj-lg-label-inline.oj-label label, html[dir="rtl"]
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }
@@ -6040,15 +6598,14 @@ disabled look for disabled choices in the results dropdown
   .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-xl-label-inline .oj-label-help-icon,
   .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-xl-label-inline.oj-label,
+  .oj-xl-label-inline.oj-label label,
   .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-xl-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-xl-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-xl-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-xl-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -6056,7 +6613,7 @@ disabled look for disabled choices in the results dropdown
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-xl-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-xl-label-inline.oj-label, html[dir="rtl"]
+    .oj-xl-label-inline.oj-label label, html[dir="rtl"]
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }

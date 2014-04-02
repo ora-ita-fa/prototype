@@ -20,10 +20,10 @@
     .oj-choice-row {
         display: block;
         margin: 0;
-        // alta spec says 24 between radio buttons when vertical. 1.8 
-        // accomplishes this when browser is default font size. our
-        // html is set to .75 (of 16px) = 12px.
-        line-height: 1.8;
+        // alta spec says 24 between radio buttons when vertical. 
+        // line-height doesn't work because it affects top and bottom margins
+        // making it so that the inline label and first radio do not line up.
+        margin-bottom: .6em;
     }
 
     // These are the styleclasses rendered on the input type=radio|checkbox.

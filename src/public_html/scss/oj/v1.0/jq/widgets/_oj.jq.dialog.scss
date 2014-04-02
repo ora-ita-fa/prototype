@@ -8,7 +8,7 @@ $includeDialogClasses:  $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.jq.core.icons";
+@import "oj.jq.icons";
 
 
 @if $includeDialogClasses != false {
@@ -17,10 +17,8 @@ $includeDialogClasses:  $includeAllClasses !default;
 		/* dialog */
 		/* --------------------------------------------------------------- */
 
-    // todo: this used to be .oj-front, but moving this to oj-dialog-front for now,
-    // however zindexes should all be using variables
     .oj-dialog-front {
-     z-index: 100;
+       z-index: $dialogZindex;
     }
     
 		.oj-dialog {

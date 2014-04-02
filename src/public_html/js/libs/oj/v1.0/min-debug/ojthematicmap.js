@@ -1,34 +1,34 @@
-define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/internal-deps/dvt/DvtThematicMap"], function($oj$$11$$, $$$$11$$) {
-  $oj$$11$$.$ThematicMapMarker$ = $JSCompiler_set$$("$_data$");
-  $goog$exportPath_$$("ThematicMapMarker", $oj$$11$$.$ThematicMapMarker$, $oj$$11$$);
-  $oj$$11$$.$ThematicMapMarker$.prototype.$getColor$ = function $$oj$$11$$$$ThematicMapMarker$$$$getColor$$() {
+define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/internal-deps/dvt/DvtThematicMap"], function($oj$$12$$, $$$$12$$) {
+  $oj$$12$$.$ThematicMapMarker$ = $JSCompiler_set$$("$_data$");
+  $goog$exportPath_$$("ThematicMapMarker", $oj$$12$$.$ThematicMapMarker$, $oj$$12$$);
+  $oj$$12$$.$ThematicMapMarker$.prototype.$getColor$ = function $$oj$$12$$$$ThematicMapMarker$$$$getColor$$() {
     return this.$_data$ ? this.$_data$.color : null
   };
-  $oj$$11$$.$Object$.$exportPrototypeSymbol$("ThematicMapMarker.prototype.getColor", {$getColor$:$oj$$11$$.$ThematicMapMarker$.prototype.$getColor$});
-  $oj$$11$$.$ThematicMapMarker$.prototype.$getTooltip$ = function $$oj$$11$$$$ThematicMapMarker$$$$getTooltip$$() {
+  $oj$$12$$.$Object$.$exportPrototypeSymbol$("ThematicMapMarker.prototype.getColor", {$getColor$:$oj$$12$$.$ThematicMapMarker$.prototype.$getColor$});
+  $oj$$12$$.$ThematicMapMarker$.prototype.$getTooltip$ = function $$oj$$12$$$$ThematicMapMarker$$$$getTooltip$$() {
     return this.$_data$ ? this.$_data$.tooltip : null
   };
-  $oj$$11$$.$Object$.$exportPrototypeSymbol$("ThematicMapMarker.prototype.getTooltip", {$getTooltip$:$oj$$11$$.$ThematicMapMarker$.prototype.$getTooltip$});
-  $oj$$11$$.$ThematicMapMarker$.prototype.$getLabel$ = function $$oj$$11$$$$ThematicMapMarker$$$$getLabel$$() {
+  $oj$$12$$.$Object$.$exportPrototypeSymbol$("ThematicMapMarker.prototype.getTooltip", {$getTooltip$:$oj$$12$$.$ThematicMapMarker$.prototype.$getTooltip$});
+  $oj$$12$$.$ThematicMapMarker$.prototype.$getLabel$ = function $$oj$$12$$$$ThematicMapMarker$$$$getLabel$$() {
     return this.$_data$ ? this.$_data$.label : null
   };
-  $oj$$11$$.$Object$.$exportPrototypeSymbol$("ThematicMapMarker.prototype.getLabel", {$getLabel$:$oj$$11$$.$ThematicMapMarker$.prototype.$getLabel$});
-  $oj$$11$$.$ThematicMapArea$ = $JSCompiler_set$$("$_data$");
-  $goog$exportPath_$$("ThematicMapArea", $oj$$11$$.$ThematicMapArea$, $oj$$11$$);
-  $oj$$11$$.$ThematicMapArea$.prototype.$getColor$ = function $$oj$$11$$$$ThematicMapArea$$$$getColor$$() {
+  $oj$$12$$.$Object$.$exportPrototypeSymbol$("ThematicMapMarker.prototype.getLabel", {$getLabel$:$oj$$12$$.$ThematicMapMarker$.prototype.$getLabel$});
+  $oj$$12$$.$ThematicMapArea$ = $JSCompiler_set$$("$_data$");
+  $goog$exportPath_$$("ThematicMapArea", $oj$$12$$.$ThematicMapArea$, $oj$$12$$);
+  $oj$$12$$.$ThematicMapArea$.prototype.$getColor$ = function $$oj$$12$$$$ThematicMapArea$$$$getColor$$() {
     return this.$_data$ ? this.$_data$.color : null
   };
-  $oj$$11$$.$Object$.$exportPrototypeSymbol$("ThematicMapArea.prototype.getColor", {$getColor$:$oj$$11$$.$ThematicMapArea$.prototype.$getColor$});
-  $oj$$11$$.$ThematicMapArea$.prototype.$getTooltip$ = function $$oj$$11$$$$ThematicMapArea$$$$getTooltip$$() {
+  $oj$$12$$.$Object$.$exportPrototypeSymbol$("ThematicMapArea.prototype.getColor", {$getColor$:$oj$$12$$.$ThematicMapArea$.prototype.$getColor$});
+  $oj$$12$$.$ThematicMapArea$.prototype.$getTooltip$ = function $$oj$$12$$$$ThematicMapArea$$$$getTooltip$$() {
     return this.$_data$ ? this.$_data$.tooltip : null
   };
-  $oj$$11$$.$Object$.$exportPrototypeSymbol$("ThematicMapArea.prototype.getTooltip", {$getTooltip$:$oj$$11$$.$ThematicMapArea$.prototype.$getTooltip$});
-  $oj$$11$$.$ThematicMapArea$.prototype.$getLabel$ = function $$oj$$11$$$$ThematicMapArea$$$$getLabel$$() {
+  $oj$$12$$.$Object$.$exportPrototypeSymbol$("ThematicMapArea.prototype.getTooltip", {$getTooltip$:$oj$$12$$.$ThematicMapArea$.prototype.$getTooltip$});
+  $oj$$12$$.$ThematicMapArea$.prototype.$getLabel$ = function $$oj$$12$$$$ThematicMapArea$$$$getLabel$$() {
     return this.$_data$ ? this.$_data$.label : null
   };
-  $oj$$11$$.$Object$.$exportPrototypeSymbol$("ThematicMapArea.prototype.getLabel", {$getLabel$:$oj$$11$$.$ThematicMapArea$.prototype.$getLabel$});
-  $oj$$11$$.$__registerWidget$("oj.ojThematicMap", $$$$11$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{select:null}, $_loadedBasemaps$:[], $_checkBasemaps$:[], $_createComponent$:function($context$$38$$, $callback$$81$$, $callbackObj$$2$$) {
-    return DvtThematicMap.newInstance($context$$38$$, $callback$$81$$, $callbackObj$$2$$)
+  $oj$$12$$.$Object$.$exportPrototypeSymbol$("ThematicMapArea.prototype.getLabel", {$getLabel$:$oj$$12$$.$ThematicMapArea$.prototype.$getLabel$});
+  $oj$$12$$.$__registerWidget$("oj.ojThematicMap", $$$$12$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{select:null}, $_loadedBasemaps$:[], $_checkBasemaps$:[], $_createComponent$:function($context$$38$$, $callback$$84$$, $callbackObj$$2$$) {
+    return DvtThematicMap.newInstance($context$$38$$, $callback$$84$$, $callbackObj$$2$$)
   }, $_getComponentStyleClasses$:function() {
     var $styleClasses$$3$$ = this._super();
     $styleClasses$$3$$.push("oj-thematicmap");
@@ -46,8 +46,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/in
   }, $_loadResources$:function() {
     this.$_loadBasemap$()
   }, $_render$:function() {
-    for(var $i$$187$$ = 0;$i$$187$$ < this.$_checkBasemaps$.length;$i$$187$$++) {
-      if(!this.$_loadedBasemaps$[this.$_checkBasemaps$[$i$$187$$]]) {
+    for(var $i$$192$$ = 0;$i$$192$$ < this.$_checkBasemaps$.length;$i$$192$$++) {
+      if(!this.$_loadedBasemaps$[this.$_checkBasemaps$[$i$$192$$]]) {
         return
       }
     }
@@ -56,45 +56,45 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/in
   }, $_loadBasemap$:function() {
     var $basemap$$ = this.options.basemap;
     if($basemap$$) {
-      var $locale$$23$$ = $oj$$11$$.$Config$.$getLocale$(), $basemap$$ = $basemap$$.charAt(0).toUpperCase() + $basemap$$.slice(1), $areaLayers_pointDataLayers$$ = this.options.areaLayers;
+      var $locale$$23$$ = $oj$$12$$.$Config$.$getLocale$(), $basemap$$ = $basemap$$.charAt(0).toUpperCase() + $basemap$$.slice(1), $areaLayers_pointDataLayers$$ = this.options.areaLayers;
       if($areaLayers_pointDataLayers$$) {
-        for(var $i$$188$$ = 0;$i$$188$$ < $areaLayers_pointDataLayers$$.length;$i$$188$$++) {
-          var $layer$$ = $areaLayers_pointDataLayers$$[$i$$188$$].layer;
+        for(var $i$$193$$ = 0;$i$$193$$ < $areaLayers_pointDataLayers$$.length;$i$$193$$++) {
+          var $layer$$ = $areaLayers_pointDataLayers$$[$i$$193$$].layer;
           $layer$$ && ($layer$$ = $layer$$.charAt(0).toUpperCase() + $layer$$.slice(1), this.$_loadBasemapHelper$($basemap$$, $layer$$, $locale$$23$$))
         }
       }
       ($areaLayers_pointDataLayers$$ = this.options.pointDataLayers) && 0 < $areaLayers_pointDataLayers$$.length && this.$_loadBasemapHelper$($basemap$$, "Cities", $locale$$23$$)
     }
   }, $_loadBasemapHelper$:function($basemap$$1$$, $layer$$1$$, $locale$$24$$) {
-    var $relativeUrl$$ = "resources/internal-deps/dvt/thematicMap/basemaps/DvtBaseMap" + $basemap$$1$$ + $layer$$1$$ + ".js", $resolvedUrl$$1$$ = $oj$$11$$.$Config$.$getResourceUrl$($relativeUrl$$), $loadedBasemaps$$ = this.$_loadedBasemaps$;
+    var $relativeUrl$$ = "resources/internal-deps/dvt/thematicMap/basemaps/DvtBaseMap" + $basemap$$1$$ + $layer$$1$$ + ".js", $resolvedUrl$$1$$ = $oj$$12$$.$Config$.$getResourceUrl$($relativeUrl$$), $loadedBasemaps$$ = this.$_loadedBasemaps$;
     if(!$loadedBasemaps$$[$relativeUrl$$]) {
       this.$_checkBasemaps$.push($relativeUrl$$);
       var $thisRef$$1$$ = this;
-      $$$$11$$.getScript($resolvedUrl$$1$$, function() {
+      $$$$12$$.getScript($resolvedUrl$$1$$, function() {
         $loadedBasemaps$$[$relativeUrl$$] = !0;
         $thisRef$$1$$.$_render$()
       });
       -1 === $locale$$24$$.indexOf("en") && this.$_loadResourceBundle$("resources/internal-deps/dvt/thematicMap/resourceBundles/" + ($basemap$$1$$ + $layer$$1$$ + "Bundle"))
     }
-  }, $_handleEvent$:function($event$$119_selection$$2$$) {
-    var $selectedItems$$1$$, $i$$189$$, $selectedItem$$1$$;
-    if(($event$$119_selection$$2$$ && $event$$119_selection$$2$$.getType ? $event$$119_selection$$2$$.getType() : null) === DvtSelectionEvent.TYPE) {
+  }, $_handleEvent$:function($event$$132_selection$$2$$) {
+    var $selectedItems$$1$$, $i$$194$$, $selectedItem$$1$$;
+    if(($event$$132_selection$$2$$ && $event$$132_selection$$2$$.getType ? $event$$132_selection$$2$$.getType() : null) === DvtSelectionEvent.TYPE) {
       $selectedItems$$1$$ = [];
-      $event$$119_selection$$2$$ = $event$$119_selection$$2$$.getSelection();
-      for($i$$189$$ = 0;$i$$189$$ < $event$$119_selection$$2$$.length;$i$$189$$++) {
-        $selectedItem$$1$$ = {id:$event$$119_selection$$2$$[$i$$189$$], dataLayerId:null}, $selectedItems$$1$$.push($selectedItem$$1$$)
+      $event$$132_selection$$2$$ = $event$$132_selection$$2$$.getSelection();
+      for($i$$194$$ = 0;$i$$194$$ < $event$$132_selection$$2$$.length;$i$$194$$++) {
+        $selectedItem$$1$$ = {id:$event$$132_selection$$2$$[$i$$194$$], dataLayerId:null}, $selectedItems$$1$$.push($selectedItem$$1$$)
       }
       this._trigger("select", null, {items:$selectedItems$$1$$})
     }else {
-      this._super($event$$119_selection$$2$$)
+      this._super($event$$132_selection$$2$$)
     }
   }, getNodeBySubId:function($locator$$8$$) {
     this._super($locator$$8$$)
-  }, $getArea$:function($dataLayerId$$1$$, $id$$15$$) {
+  }, $getArea$:function($dataLayerId$$1$$, $id$$20$$) {
     var $auto$$ = this.$_component$.getAutomation();
-    return new $oj$$11$$.$ThematicMapArea$($auto$$.getData($dataLayerId$$1$$, "area", $id$$15$$))
-  }, $getMarker$:function($dataLayerId$$2$$, $id$$16$$) {
+    return new $oj$$12$$.$ThematicMapArea$($auto$$.getData($dataLayerId$$1$$, "area", $id$$20$$))
+  }, $getMarker$:function($dataLayerId$$2$$, $id$$21$$) {
     var $auto$$1$$ = this.$_component$.getAutomation();
-    return new $oj$$11$$.$ThematicMapMarker$($auto$$1$$.getData($dataLayerId$$2$$, "marker", $id$$16$$))
+    return new $oj$$12$$.$ThematicMapMarker$($auto$$1$$.getData($dataLayerId$$2$$, "marker", $id$$21$$))
   }})
 });

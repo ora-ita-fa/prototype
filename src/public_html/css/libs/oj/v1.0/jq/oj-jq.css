@@ -364,6 +364,16 @@ table {
   min-height: 0;
   /* support: IE7 */ }
 
+/* Used by the framework's support for detecting resize */
+.oj-helper-detect-resize {
+  position: absolute;
+  overflow: hidden;
+  visibility: hidden;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+
 /* html */
 /* --------------------------------------------------------------- */
 html {
@@ -453,7 +463,8 @@ a:visited.oj-clickable-icon,
 .oj-enabled .oj-clickable-icon,
 .oj-enabled.oj-clickable-icon {
   color: #555555;
-  font-weight: normal; }
+  font-weight: normal;
+  cursor: pointer; }
 
 a:hover .oj-clickable-icon,
 a:hover.oj-clickable-icon,
@@ -478,7 +489,8 @@ a.oj-disabled.oj-clickable-icon,
 .oj-disabled .oj-clickable-icon,
 .oj-disabled.oj-clickable-icon {
   color: #555555;
-  opacity: 0.35; }
+  opacity: 0.35;
+  cursor: default; }
 
 .oj-fwk-icon, .oj-widget-icon {
   display: inline-block;
@@ -536,7 +548,7 @@ a:active .oj-widget-icon:before {
 .oj-fwk-icon-caret-ne:before {
   margin: 0 0 0 -16px; }
 
-.oj-fwk-icon-caret-e:before, html[dir="rtl"] .oj-fwk-icon-caret-start:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-end:before, html[dir="rtl"] .oj-conveyorbelt-start-overflow-icon:before, html:not([dir="rtl"]) .oj-conveyorbelt-end-overflow-icon:before, html:not([dir="rtl"]) .oj-menu-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-first-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-previous-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-next-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-last-icon:before {
+.oj-fwk-icon-caret-e:before, html[dir="rtl"] .oj-fwk-icon-caret-start:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-end:before, html[dir="rtl"] .oj-conveyorbelt-start-overflow-icon:before, html:not([dir="rtl"]) .oj-conveyorbelt-end-overflow-icon:before, html:not([dir="rtl"]) .oj-menu-submenu-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-first-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-previous-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-next-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-last-icon:before {
   margin: 0 0 0 -32px; }
 
 .oj-fwk-icon-caret-se:before {
@@ -548,7 +560,7 @@ a:active .oj-widget-icon:before {
 .oj-fwk-icon-caret-sw:before {
   margin: 0 0 0 -80px; }
 
-.oj-fwk-icon-caret-w:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-start:before, html[dir="rtl"] .oj-fwk-icon-caret-end:before, html:not([dir="rtl"]) .oj-conveyorbelt-start-overflow-icon:before, html[dir="rtl"] .oj-conveyorbelt-end-overflow-icon:before, html[dir="rtl"] .oj-menu-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-first-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-previous-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-next-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-last-icon:before {
+.oj-fwk-icon-caret-w:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-start:before, html[dir="rtl"] .oj-fwk-icon-caret-end:before, html:not([dir="rtl"]) .oj-conveyorbelt-start-overflow-icon:before, html[dir="rtl"] .oj-conveyorbelt-end-overflow-icon:before, html[dir="rtl"] .oj-menu-submenu-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-first-icon:before, html:not([dir="rtl"]) .oj-pagingcontrol-nav-previous-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-next-icon:before, html[dir="rtl"] .oj-pagingcontrol-nav-last-icon:before {
   margin: 0 0 0 -96px; }
 
 .oj-fwk-icon-caret-nw:before {
@@ -1218,6 +1230,8 @@ a:active .oj-widget-icon:before {
   opacity: .3;
   filter: Alpha(Opacity=30);
   border-radius: 8px; }
+  html.oj-slow-borderradius .oj-widget-shadow {
+    border-radius: 0; }
 
 /* Overlays */
 .ui-widget-overlay {
@@ -1237,6 +1251,8 @@ a:active .oj-widget-icon:before {
   opacity: .3;
   filter: Alpha(Opacity=30);
   border-radius: 8px; }
+  html.oj-slow-borderradius .ui-widget-shadow {
+    border-radius: 0; }
 
 /* messaging */
 /* --------------------------------------------------------------- */
@@ -1322,10 +1338,7 @@ a:active .oj-widget-icon:before {
   background-image: linear-gradient(to top, #e3e3e3 0%, #e3e3e3 0%);
   color: #222222;
   font-weight: bold;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   display: block;
   cursor: pointer;
   position: relative;
@@ -1333,6 +1346,12 @@ a:active .oj-widget-icon:before {
   padding: .5em .5em .5em .7em;
   min-height: 0;
   /* support: IE7 */ }
+  html.oj-slow-cssgradients .oj-collapsible-header, html.oj-slow-cssgradients
+  .oj-accordion-collapsible > .oj-collapsible-header {
+    background-image: none; }
+  html.oj-slow-borderradius .oj-collapsible-header, html.oj-slow-borderradius
+  .oj-accordion-collapsible > .oj-collapsible-header {
+    border-radius: 0; }
 
 .oj-collapsible-header.oj-enabled {
   border: 1px solid lightgray;
@@ -1341,6 +1360,8 @@ a:active .oj-widget-icon:before {
   background-image: linear-gradient(to top, #eeeeee 0%, #eeeeee 50%, #e6e6e6 50%, #f2f2f2 54%, #f2f2f2 100%);
   font-weight: normal;
   color: #555555; }
+  html.oj-slow-cssgradients .oj-collapsible-header.oj-enabled {
+    background-image: none; }
 
 .oj-collapsible-header a.oj-enabled {
   color: #555555;
@@ -1353,6 +1374,8 @@ a:active .oj-widget-icon:before {
   background-image: linear-gradient(to top, #e5e5e5 0%, #e5e5e5 50%, #dadada 50%, #ebebeb 54%, #ebebeb 100%);
   font-weight: normal;
   color: #212121; }
+  html.oj-slow-cssgradients .oj-collapsible-header.oj-hover {
+    background-image: none; }
 
 .oj-collapsible-header a.oj-hover {
   color: #212121;
@@ -1390,13 +1413,18 @@ a:active .oj-widget-icon:before {
 .oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible-content {
   border: 1px solid #aaaaaa;
   background-color: white;
-  background-image: none;
   color: #222222;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   padding: 1em 2.2em;
   border-top: 0;
   overflow: auto; }
+  html.oj-slow-borderradius .oj-collapsible-content, html.oj-slow-borderradius
+  .oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible-content {
+    border-bottom-left-radius: 0; }
+  html.oj-slow-borderradius .oj-collapsible-content, html.oj-slow-borderradius
+  .oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible-content {
+    border-bottom-right-radius: 0; }
 
 /* conveyorbelt */
 /* --------------------------------------------------------------- */
@@ -1407,10 +1435,7 @@ a:active .oj-widget-icon:before {
 .oj-conveyorbelt-overflow-indicator {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   border: 1px solid lightgray;
   background-color: #e6e6e6;
   background-image: -webkit-linear-gradient(bottom, #eeeeee 0%, #eeeeee 50%, #e6e6e6 50%, #f2f2f2 54%, #f2f2f2 100%);
@@ -1419,6 +1444,10 @@ a:active .oj-widget-icon:before {
   color: #555555;
   cursor: default;
   text-align: center; }
+  html.oj-slow-borderradius .oj-conveyorbelt-overflow-indicator {
+    border-radius: 0; }
+  html.oj-slow-cssgradients .oj-conveyorbelt-overflow-indicator {
+    background-image: none; }
 
 .oj-conveyorbelt-overflow-indicator.oj-hover {
   border: 1px solid #999999;
@@ -1427,6 +1456,8 @@ a:active .oj-widget-icon:before {
   background-image: linear-gradient(to top, #e5e5e5 0%, #e5e5e5 50%, #dadada 50%, #ebebeb 54%, #ebebeb 100%);
   font-weight: normal;
   color: #212121; }
+  html.oj-slow-cssgradients .oj-conveyorbelt-overflow-indicator.oj-hover {
+    background-image: none; }
 
 .oj-conveyorbelt-overflow-indicator.oj-active {
   border: 1px solid #aaaaaa;
@@ -1455,15 +1486,13 @@ a:active .oj-widget-icon:before {
 .oj-tabs {
   border: 1px solid #aaaaaa;
   background-color: white;
-  background-image: none;
   color: #222222;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   position: relative;
   /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
   padding: .2em; }
+  html.oj-slow-borderradius .oj-tabs {
+    border-radius: 0; }
 
 .oj-tabs-nav {
   border: 1px solid #aaaaaa;
@@ -1472,12 +1501,13 @@ a:active .oj-widget-icon:before {
   background-image: linear-gradient(to top, #e3e3e3 0%, #e3e3e3 0%);
   color: #222222;
   font-weight: bold;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   margin: 0;
   padding: .2em .2em 0; }
+  html.oj-slow-cssgradients .oj-tabs-nav {
+    background-image: none; }
+  html.oj-slow-borderradius .oj-tabs-nav {
+    border-radius: 0; }
 
 .oj-tabs-nav li {
   border-top-left-radius: 4px;
@@ -1490,6 +1520,10 @@ a:active .oj-widget-icon:before {
   border-bottom: 0;
   padding: 0;
   white-space: nowrap; }
+  html.oj-slow-borderradius .oj-tabs-nav li {
+    border-top-left-radius: 0; }
+  html.oj-slow-borderradius .oj-tabs-nav li {
+    border-top-right-radius: 0; }
 
 .oj-tabs-nav li a {
   float: left;
@@ -1508,6 +1542,8 @@ a:active .oj-widget-icon:before {
   font-weight: normal;
   color: #555555;
   border-bottom: 0; }
+  html.oj-slow-cssgradients .oj-tabs-nav li.oj-enabled {
+    background-image: none; }
 
 .oj-tabs-nav li.oj-hover {
   border: 1px solid #999999;
@@ -1517,6 +1553,8 @@ a:active .oj-widget-icon:before {
   font-weight: normal;
   color: #212121;
   border-bottom: 0; }
+  html.oj-slow-cssgradients .oj-tabs-nav li.oj-hover {
+    background-image: none; }
 
 .oj-tabs-nav li.oj-tabs-active {
   border: 1px solid #aaaaaa;
@@ -1555,22 +1593,20 @@ a:active .oj-widget-icon:before {
 /* dialog */
 /* --------------------------------------------------------------- */
 .oj-dialog-front {
-  z-index: 100; }
+  z-index: 1050; }
 
 .oj-dialog {
   border: 1px solid #aaaaaa;
   background-color: white;
-  background-image: none;
   color: #222222;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   position: absolute;
   top: 0;
   left: 0;
   padding: .2em;
   outline: 0; }
+  html.oj-slow-borderradius .oj-dialog {
+    border-radius: 0; }
 
 .oj-dialog .oj-dialog-titlebar {
   border: 1px solid #aaaaaa;
@@ -1579,12 +1615,13 @@ a:active .oj-widget-icon:before {
   background-image: linear-gradient(to top, #e3e3e3 0%, #e3e3e3 0%);
   color: #222222;
   font-weight: bold;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   padding: .4em 1em;
   position: relative; }
+  html.oj-slow-cssgradients .oj-dialog .oj-dialog-titlebar {
+    background-image: none; }
+  html.oj-slow-borderradius .oj-dialog .oj-dialog-titlebar {
+    border-radius: 0; }
 
 .oj-dialog .oj-dialog-title {
   float: left;
@@ -1641,20 +1678,95 @@ a:active .oj-widget-icon:before {
 .ui-tooltip {
   border: 1px solid #aaaaaa;
   background-color: white;
-  background-image: none;
   color: #222222;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   padding: 8px;
   position: absolute;
   z-index: 9999;
   max-width: 300px;
   box-shadow: 0 0 5px #aaa; }
+  html.oj-slow-borderradius .ui-tooltip {
+    border-radius: 0; }
 
 body .ui-tooltip {
   border-width: 2px; }
+
+/* popup */
+/* --------------------------------------------------------------- */
+.oj-popup {
+  border: 1px solid #aaaaaa;
+  z-index: 98;
+  position: absolute;
+  border-radius: 4px;
+  background-color: #f7f7f7;
+  box-shadow: 0 0 5px #aaa; }
+  html.oj-slow-borderradius .oj-popup {
+    border-radius: 0; }
+
+.oj-popup.oj-popup-tail-simple {
+  z-index: 200;
+  border-radius: 0;
+  box-shadow: 0 0 10px #aaa; }
+
+.oj-popup-no-chrome {
+  border-width: 0;
+  box-shadow: none;
+  border-radius: 0; }
+
+.oj-popup-content {
+  padding: 8px; }
+
+.oj-popup-tail {
+  position: absolute;
+  pointer-events: none;
+  z-index: 99; }
+
+.oj-popup-tail-simple > .oj-popup-tail {
+  height: 0;
+  width: 0;
+  z-index: 201; }
+
+.oj-popup-tail-simple-start-top, .oj-popup-tail-simple-end-top {
+  top: 2px; }
+
+.oj-popup-tail-simple-start-top, .oj-popup-tail-simple-start-middle, .oj-popup-tail-simple-start-bottom {
+  left: -14px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 0 solid transparent;
+  border-right: 14px solid #aaaaaa; }
+
+.oj-popup-tail-simple-center-top {
+  left: 50%;
+  top: -14px;
+  border-top: 0 solid transparent;
+  border-bottom: 14px solid #aaaaaa;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent; }
+
+.oj-popup-tail-simple-start-middle {
+  top: 50%; }
+
+.oj-popup-tail-simple-end-top, .oj-popup-tail-simple-end-middle, .oj-popup-tail-simple-end-bottom {
+  right: -14px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 14px solid #aaaaaa;
+  border-right: 0 solid transparent; }
+
+.oj-popup-tail-simple-center-bottom {
+  left: 50%;
+  bottom: -14px;
+  border-top: 14px solid #aaaaaa;
+  border-bottom: 0 solid transparent;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent; }
+
+.oj-popup-tail-simple-end-middle {
+  top: 50%; }
+
+.oj-popup-tail-simple-end-bottom, .oj-popup-tail-simple-start-bottom {
+  bottom: 2px; }
 
 /* progressbar */
 /* --------------------------------------------------------------- */
@@ -1667,7 +1779,9 @@ body .ui-tooltip {
   background: #fcfdfe;
   background-image: linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%);
   border: 1px solid #dfe4e7;
-  border-radius: 2px; }
+  border-radius: 4px; }
+  html.oj-slow-borderradius .oj-progressbar {
+    border-radius: 0; }
 
 .oj-progressbar .oj-progressbar-value {
   margin: 0;
@@ -1703,6 +1817,8 @@ body .ui-tooltip {
   line-height: 2rem;
   font-size: inherit;
   font-family: inherit; }
+  html.oj-slow-borderradius .oj-button {
+    border-radius: 0; }
 
 /* The label of radio and checkbox buttons */
 .oj-button-label {
@@ -1727,6 +1843,8 @@ body .ui-tooltip {
   border: 1px solid lightgray;
   color: #555555;
   font-weight: normal; }
+  html.oj-slow-cssgradients .oj-button.oj-enabled {
+    background-image: none; }
 
 .oj-button.oj-enabled .oj-button-icon-start,
 .oj-button.oj-enabled .oj-button-icon-end {
@@ -1743,6 +1861,11 @@ body .ui-tooltip {
   box-shadow: none;
   color: #212121;
   text-shadow: none; }
+  html.oj-slow-cssgradients .oj-button.oj-hover, html.oj-slow-cssgradients
+  .oj-button.oj-focus, html.oj-slow-cssgradients
+  .oj-button.oj-hover.oj-button-half-chrome, html.oj-slow-cssgradients
+  .oj-button.oj-focus.oj-button-half-chrome {
+    background-image: none; }
 
 .oj-button.oj-hover .oj-button-icon-start,
 .oj-button.oj-focus .oj-button-icon-start,
@@ -1877,7 +2000,7 @@ html[dir="rtl"] .oj-button-text-icons .oj-button-icon-end {
 /* The left icon of buttons with 2 icons and no text */
 html:not([dir="rtl"]) .oj-button-icons-only .oj-button-icon-start,
 html[dir="rtl"] .oj-button-icons-only .oj-button-icon-end {
-  margin-right: 0.5em;
+  margin-right: 0.267em;
   margin-left: 0.5em; }
 
 /* The icon of buttons with with 1 icon (whether start or end) and no text */
@@ -1912,13 +2035,26 @@ html[dir="rtl"] .oj-button-icons-only .oj-button-icon-start {
 .oj-buttonset .oj-button.oj-button-half-chrome {
   border-right-width: 1px; }
 
-html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-start,
+html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 4px 0 0 4px; }
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 0; }
+html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 0 4px 4px 0; }
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-radius: 0; }
+html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-start {
+  border-right-width: 1px; }
+
+html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-end {
+  border-radius: 0 4px 4px 0; }
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-end {
+  border-radius: 0; }
 html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-end {
   border-radius: 4px 0 0 4px; }
-
-html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-end,
-html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-start {
-  border-radius: 0 4px 4px 0;
+html.oj-slow-borderradius .oj-buttonset .oj-button.oj-buttonset-corner-end {
+  border-radius: 0; }
+html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-end {
   border-right-width: 1px; }
 
 /* workarounds */
@@ -1933,17 +2069,15 @@ button.oj-button::-moz-focus-inner {
 .oj-menu {
   border: 1px solid #aaaaaa;
   background-color: white;
-  background-image: none;
   color: #222222;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   list-style: none;
   padding: 2px;
   margin: 0;
-  display: block;
+  display: inline-block;
   outline: none; }
+  html.oj-slow-borderradius .oj-menu {
+    border-radius: 0; }
 
 .oj-menu a {
   color: #222222; }
@@ -1964,10 +2098,11 @@ button.oj-button::-moz-focus-inner {
   background-image: linear-gradient(to top, #e5e5e5 0%, #e5e5e5 50%, #dadada 50%, #ebebeb 54%, #ebebeb 100%);
   font-weight: normal;
   color: #212121;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px; }
+  border-radius: 4px; }
+  html.oj-slow-cssgradients .oj-menu .oj-menu-item a.oj-focus {
+    background-image: none; }
+  html.oj-slow-borderradius .oj-menu .oj-menu-item a.oj-focus {
+    border-radius: 0; }
 
 .oj-menu .oj-menu-divider {
   margin: 5px -2px 5px -2px;
@@ -2008,7 +2143,7 @@ button.oj-button::-moz-focus-inner {
   padding-left: 2em; }
 
 /* right-aligned */
-.oj-menu .oj-menu-icon {
+.oj-menu .oj-menu-submenu-icon {
   position: static;
   float: right; }
 
@@ -2020,6 +2155,8 @@ button.oj-button::-moz-focus-inner {
   border: 1px solid #aaaaaa;
   border-radius: 4px;
   background-color: #cccccc; }
+  html.oj-slow-borderradius .oj-toolbar {
+    border-radius: 0; }
 
 .oj-toolbar .oj-button {
   margin-bottom: 0; }
@@ -2034,6 +2171,27 @@ button.oj-button::-moz-focus-inner {
   vertical-align: middle;
   margin-left: 0.167em;
   margin-right: 0.167em; }
+
+.oj-toolbars {
+  border-radius: 4px;
+  border: 1px solid #aaaaaa;
+  background-color: #cccccc; }
+  html.oj-slow-borderradius .oj-toolbars {
+    border-radius: 0; }
+
+.oj-toolbar-row .oj-toolbar {
+  display: inline-block;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0; }
+
+html:not([dir="rtl"]) .oj-toolbar-row .oj-toolbar + .oj-toolbar {
+  border-left: 1px solid #aaaaaa; }
+html[dir="rtl"] .oj-toolbar-row .oj-toolbar + .oj-toolbar {
+  border-right: 1px solid #aaaaaa; }
+
+.oj-toolbar-row + .oj-toolbar-row {
+  border-top: 1px solid #aaaaaa; }
 
 /* can be applied to the toolbar to remove the chrome (background and border) */
 .oj-toolbar-no-chrome {
@@ -2087,10 +2245,18 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
     padding-left: 5px; }
+    html.oj-slow-borderradius html:not([dir="rtl"]) .oj-pagingcontrol-nav-arrow-section {
+      border-top-left-radius: 0; }
+    html.oj-slow-borderradius html:not([dir="rtl"]) .oj-pagingcontrol-nav-arrow-section {
+      border-bottom-left-radius: 0; }
   html[dir="rtl"] .oj-pagingcontrol-nav-arrow-section {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     padding-right: 5px; }
+    html.oj-slow-borderradius html[dir="rtl"] .oj-pagingcontrol-nav-arrow-section {
+      border-top-right-radius: 0; }
+    html.oj-slow-borderradius html[dir="rtl"] .oj-pagingcontrol-nav-arrow-section {
+      border-bottom-right-radius: 0; }
 
 /* Styling for the page mode page links section. */
 .oj-pagingcontrol-nav-pages-section {
@@ -2106,11 +2272,10 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
 
 /* Styling for the page mode page link when selected. */
 .oj-pagingcontrol-nav-page.oj-checked {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   display: inline; }
+  html.oj-slow-borderradius .oj-pagingcontrol-nav-page.oj-checked {
+    border-radius: 0; }
 
 /* Styling for the page mode page link when disabled. */
 .oj-pagingcontrol-nav-page.oj-disabled {
@@ -2329,6 +2494,9 @@ html[dir="rtl"] .oj-table-body-row-selector {
   border: 1px solid #aaaaaa;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
+
+.oj-datagrid:focus, .oj-datagrid-cell:focus, .oj-datagrid-headercell:focus {
+  outline: none; }
 
 .oj-datagrid-cell {
   position: absolute;
@@ -2664,32 +2832,97 @@ html[dir="rtl"] .oj-datagrid-colheadercell {
   color: silver;
   cursor: default; }
 
+.ojtreeu-dragged {
+  display: block;
+  margin: 0 0 0 0;
+  padding: 4px 4px 4px 24px;
+  position: absolute;
+  top: -2000px;
+  line-height: 16px;
+  z-index: 10000; }
+
+.ojtreeu-dragged ins {
+  display: block;
+  text-decoration: none;
+  width: 16px;
+  height: 16px;
+  margin: 0 0 0 0;
+  padding: 0;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border-radius: 4px; }
+  html.oj-slow-borderradius .ojtreeu-dragged ins {
+    border-radius: 0; }
+
+.ojtreeu-dragged ins.oj-tree-ok {
+  background: url("images/d.png") -2px -53px no-repeat; }
+
+.ojtreeu-dragged ins.oj-tree-invalid {
+  background: url("images/d.png") -18px -53px no-repeat; }
+
+.oj-tree-marker {
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  overflow: hidden;
+  height: 12px;
+  width: 8px;
+  position: absolute;
+  top: -30px;
+  z-index: 10001;
+  background-repeat: no-repeat;
+  display: none;
+  background-color: transparent;
+  text-shadow: 1px 1px 1px white;
+  color: black;
+  line-height: 10px;
+  background: url("images/d.png") -41px -57px no-repeat;
+  text-indent: -100px; }
+
+.oj-tree-marker-line {
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  font-size: 1px;
+  overflow: hidden;
+  height: 1px;
+  width: 100px;
+  position: absolute;
+  top: -30px;
+  z-index: 10000;
+  background-repeat: no-repeat;
+  display: none;
+  background-color: #456c43;
+  cursor: pointer;
+  border-left: 0;
+  -moz-box-shadow: 0 0 2px #666;
+  -webkit-box-shadow: 0 0 2px #666;
+  box-shadow: 0 0 2px #666;
+  border-radius: 1px; }
+  html.oj-slow-borderradius .oj-tree-marker-line {
+    border-radius: 0; }
+
 .oj-rowexpander {
   width: 14px;
   height: 14px;
   display: inline-block;
-  position: relative; }
+  vertical-align: top; }
 
-.oj-rowexpander-expand-icon {
-  position: absolute; }
-  html:not([dir="rtl"]) .oj-rowexpander-expand-icon {
-    right: 0; }
-  html[dir="rtl"] .oj-rowexpander-expand-icon {
-    left: 0; }
+html:not([dir="rtl"]) .oj-rowexpander-expand-icon {
+  float: right; }
+html[dir="rtl"] .oj-rowexpander-expand-icon {
+  float: left; }
 
-.oj-rowexpander-collapse-icon {
-  position: absolute; }
-  html:not([dir="rtl"]) .oj-rowexpander-collapse-icon {
-    right: 0; }
-  html[dir="rtl"] .oj-rowexpander-collapse-icon {
-    left: 0; }
+html:not([dir="rtl"]) .oj-rowexpander-collapse-icon {
+  float: right; }
+html[dir="rtl"] .oj-rowexpander-collapse-icon {
+  float: left; }
 
-.oj-rowexpander-leaf-icon {
-  position: absolute; }
-  html:not([dir="rtl"]) .oj-rowexpander-leaf-icon {
-    right: 0; }
-  html[dir="rtl"] .oj-rowexpander-leaf-icon {
-    left: 0; }
+html:not([dir="rtl"]) .oj-rowexpander-leaf-icon {
+  float: right; }
+html[dir="rtl"] .oj-rowexpander-leaf-icon {
+  float: left; }
 
 .oj-label {
   display: block;
@@ -2795,16 +3028,10 @@ html .oj-form-control {
 .oj-inputtext,
 .oj-inputpassword,
 .oj-textarea {
-  color: #222222;
-  background-color: white;
-  border: 1px solid #aaaaaa;
-  border-radius: 2px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
-  font-family: inherit;
   font-size: 1rem;
-  font-weight: normal;
   /* use a width of 100% and then max and min width so that when 
      there's less room for the form control it can automatically 
      get smaller instead of overflowing its boundaries */
@@ -2812,48 +3039,65 @@ html .oj-form-control {
   min-width: 8em;
   width: 100%; }
 
-.oj-inputtext,
-.oj-inputpassword {
+.oj-inputtext-input,
+.oj-inputpassword-input,
+.oj-textarea-input {
+  color: #222222;
+  background-color: white;
+  border: 1px solid #aaaaaa;
+  border-radius: 2px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-weight: normal;
+  width: 100%; }
+  html.oj-slow-borderradius .oj-inputtext-input, html.oj-slow-borderradius
+  .oj-inputpassword-input, html.oj-slow-borderradius
+  .oj-textarea-input {
+    border-radius: 0; }
+
+.oj-inputtext-input[size],
+.oj-inputpassword-input[size],
+.oj-textarea-input[size] {
+  width: auto; }
+
+.oj-inputtext-input,
+.oj-inputpassword-input {
   height: 2rem;
   padding: 0 5px; }
 
-.oj-textarea {
+.oj-textarea-input {
   height: auto;
   padding: 5px;
   resize: none; }
 
-.oj-inputtext.oj-invalid,
-.oj-inputpassword.oj-invalid,
-.oj-textarea.oj-invalid {
+.oj-inputtext.oj-invalid .oj-inputtext-input,
+.oj-inputpassword.oj-invalid .oj-inputpassword-input,
+.oj-textarea.oj-invalid .oj-textarea-input {
   border: 2px solid #cd0a0a; }
 
-.oj-inputtext.oj-warning,
-.oj-inputpassword.oj-warning,
-.oj-textarea.oj-warning {
+.oj-inputtext.oj-warning .oj-inputtext-input,
+.oj-inputpassword.oj-warning .oj-inputpassword-input,
+.oj-textarea.oj-warning .oj-textarea-input {
   border: 2px solid #fcefa1; }
 
-.oj-inputtext[size],
-.oj-inputpassword[size],
-.oj-textarea[size] {
-  width: auto; }
-
-.oj-inputtext.oj-disabled,
-.oj-inputpassword.oj-disabled,
-.oj-textarea.oj-disabled {
+.oj-inputtext.oj-disabled .oj-inputtext-input,
+.oj-inputpassword.oj-disabled .oj-inputpassword-input,
+.oj-textarea.oj-disabled .oj-textarea-input {
   color: #222222;
   background-color: white;
   border: 1px solid #aaaaaa;
   opacity: 0.35; }
 
-.oj-inputtext.oj-read-only,
-.oj-inputpassword.oj-read-only,
-.oj-textarea.oj-read-only {
+.oj-inputtext.oj-read-only .oj-inputtext-input,
+.oj-inputpassword.oj-read-only .oj-inputpassword-input,
+.oj-textarea.oj-read-only .oj-textarea-input {
   color: #222222;
   background-color: transparent;
   border: 1px;
   padding: 0; }
 
-.oj-textarea.oj-read-only {
+.oj-textarea.oj-read-only .oj-textarea-input {
   padding-top: 6px; }
 
 /* inputnumber */
@@ -2882,19 +3126,37 @@ html .oj-form-control {
   padding: 0 5px;
   height: 2rem;
   width: 100%;
-  display: table-cell; }
+  display: table-cell;
+  font-family: inherit;
+  font-size: 100%; }
+  html.oj-slow-borderradius .oj-inputnumber-input {
+    border-radius: 0; }
   html:not([dir="rtl"]) .oj-inputnumber-input {
     border-radius: 2px 0 0 2px; }
+  html.oj-slow-borderradius .oj-inputnumber-input {
+    border-radius: 0; }
   html[dir="rtl"] .oj-inputnumber-input {
     border-radius: 0 2px 2px 0; }
+  html.oj-slow-borderradius .oj-inputnumber-input {
+    border-radius: 0; }
 
-/* Invalid styling for the widget */
+/* Invalid styling for the widget. Spec calls for border around entire
+ component, not just input. */
 .oj-inputnumber.oj-invalid .oj-inputnumber-input {
   border: 2px solid #cd0a0a; }
+  html:not([dir="rtl"]) .oj-inputnumber.oj-invalid .oj-inputnumber-input {
+    border-right: none; }
+  html[dir="rtl"] .oj-inputnumber.oj-invalid .oj-inputnumber-input {
+    border-left: none; }
 
-/* Warning styling for the widget */
+/* Warning styling for the widget.  Spec calls for border around entire
+ component, not just input. */
 .oj-inputnumber.oj-warning .oj-inputnumber-input {
   border: 2px solid #fcefa1; }
+  html:not([dir="rtl"]) .oj-inputnumber.oj-warning .oj-inputnumber-input {
+    border-right: none; }
+  html[dir="rtl"] .oj-inputnumber.oj-warning .oj-inputnumber-input {
+    border-left: none; }
 
 /* Disabled styling for the widget */
 .oj-inputnumber.oj-disabled .oj-inputnumber-input {
@@ -2926,6 +3188,7 @@ html .oj-form-control {
 
 /* more specificity is required here to overide default button borders */
 .oj-inputnumber-button.oj-button {
+  margin-bottom: 0;
   border-color: #aaaaaa;
   line-height: normal; }
   html:not([dir="rtl"]) .oj-inputnumber-button.oj-button {
@@ -2933,34 +3196,57 @@ html .oj-form-control {
   html[dir="rtl"] .oj-inputnumber-button.oj-button {
     border-right: none; }
 
+/* Error border  for the widget. */
+.oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button {
+  border: 2px solid #cd0a0a; }
+
+/* Warning border color for the widget.  */
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button {
+  border: 2px solid #fcefa1; }
+
+/* Warning/error styling for the widget.  Spec calls for border around entire
+ component, not just input. We make sure the border is only on the outside
+ of the buttons by setting border-left/right to none as appropriate.
+ The 'down' button is the outside button.
+*/
+html:not([dir="rtl"]) .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down, html:not([dir="rtl"])
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+  border-left: none; }
+html[dir="rtl"] .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down, html[dir="rtl"]
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+  border-right: none; }
+
+.oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up,
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up {
+  border-left: none;
+  border-right: none; }
+
 .oj-inputnumber-up.oj-button {
   border-radius: 0; }
 
 html:not([dir="rtl"]) .oj-inputnumber-down.oj-button {
   border-radius: 0 2px 2px 0; }
+html.oj-slow-borderradius .oj-inputnumber-down.oj-button {
+  border-radius: 0; }
 html[dir="rtl"] .oj-inputnumber-down.oj-button {
   border-radius: 2px 0 0 2px; }
+html.oj-slow-borderradius .oj-inputnumber-down.oj-button {
+  border-radius: 0; }
 
 .oj-inputnumber .oj-inputnumber-up-icon,
 .oj-inputnumber .oj-inputnumber-down-icon {
-  font-size: 1rem;
+  font-size: 1rem; }
+
+.oj-inputnumber .oj-inputnumber-up-icon {
+  margin-bottom: 1px; }
+
+.oj-inputnumber .oj-inputnumber-down-icon {
   margin-bottom: 0; }
 
-/* datepicker */
-/* --------------------------------------------------------------- */
-/* Main widget classes */
-/* Class that wraps the input element */
-.oj-inputdate-input-container,
-.oj-inputtime-input-container,
+/* Class placed on the widget, distinguishes one type to an another */
 .oj-inputdatetime-input-container {
-  color: #222222;
-  background-color: white;
-  border: 1px solid #aaaaaa;
-  border-radius: 2px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border-width: 0;
-  padding: 0 1px;
   display: inline-table;
   /* use a width of 100% and then max and min width so that when 
      there's less room for the form control it can automatically 
@@ -2970,33 +3256,36 @@ html[dir="rtl"] .oj-inputnumber-down.oj-button {
   width: 100%;
   font-size: 1rem; }
 
-.oj-inputdate-input,
-.oj-inputdatetime-input,
-.oj-inputtime-input {
+.oj-inputdatetime-input {
+  color: #222222;
+  background-color: white;
+  border: 1px solid #aaaaaa;
+  border-radius: 2px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background: none;
-  color: #222222;
-  border: 1px solid #aaaaaa;
   display: table-cell;
   font-family: inherit;
   font-weight: normal;
   padding: 0 5px;
   height: 2rem;
   width: 100%; }
+  html.oj-slow-borderradius .oj-inputdatetime-input {
+    border-radius: 0; }
 
-html:not([dir="rtl"]) .oj-inputdate-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputdatetime-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputtime-input.oj-has-trigger {
-  border-width: 1px 0 1px 1px;
+html:not([dir="rtl"]) .oj-inputdatetime-input.oj-has-trigger {
   border-radius: 2px 0 0 2px; }
-html[dir="rtl"] .oj-inputdate-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputdatetime-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputtime-input.oj-has-trigger {
-  border-width: 1px 1px 1px 0;
+html.oj-slow-borderradius .oj-inputdatetime-input.oj-has-trigger {
+  border-radius: 0; }
+html[dir="rtl"] .oj-inputdatetime-input.oj-has-trigger {
   border-radius: 0 2px 2px 0; }
+html.oj-slow-borderradius .oj-inputdatetime-input.oj-has-trigger {
+  border-radius: 0; }
+html:not([dir="rtl"]) .oj-inputdatetime-input.oj-has-trigger {
+  border-width: 1px 0 1px 1px; }
+html[dir="rtl"] .oj-inputdatetime-input.oj-has-trigger {
+  border-width: 1px 1px 1px 0; }
 
-.oj-datepicker-trigger {
+.oj-inputdatetime-input-trigger {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   border: 1px solid #aaaaaa;
@@ -3007,83 +3296,79 @@ html[dir="rtl"] .oj-inputdate-input.oj-has-trigger, html[dir="rtl"]
   vertical-align: middle;
   white-space: nowrap;
   width: 1px; }
-  html:not([dir="rtl"]) .oj-datepicker-trigger {
-    border-width: 1px 1px 1px 0;
+  html:not([dir="rtl"]) .oj-inputdatetime-input-trigger {
     border-radius: 0 2px 2px 0; }
-  html[dir="rtl"] .oj-datepicker-trigger {
-    border-width: 1px 0 1px 1px;
+  html.oj-slow-borderradius .oj-inputdatetime-input-trigger {
+    border-radius: 0; }
+  html[dir="rtl"] .oj-inputdatetime-input-trigger {
     border-radius: 2px 0 0 2px; }
+  html.oj-slow-borderradius .oj-inputdatetime-input-trigger {
+    border-radius: 0; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input-trigger {
+    border-width: 1px 1px 1px 0; }
+  html[dir="rtl"] .oj-inputdatetime-input-trigger {
+    border-width: 1px 0 1px 1px; }
 
-.oj-inputdate-input-container.oj-invalid .oj-inputdate-input,
-.oj-inputtime-input-container.oj-invalid .oj-inputtime-input,
 .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input {
   border-color: #cd0a0a;
   border-width: 2px; }
 
-html:not([dir="rtl"]) .oj-inputdate-input-container.oj-invalid .oj-inputdate-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputtime-input-container.oj-invalid .oj-inputtime-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger {
+html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger, html:not([dir="rtl"])
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input.oj-has-trigger {
   border-width: 2px 0 2px 2px; }
-html[dir="rtl"] .oj-inputdate-input-container.oj-invalid .oj-inputdate-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputtime-input-container.oj-invalid .oj-inputtime-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger {
+html[dir="rtl"] .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger, html[dir="rtl"]
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input.oj-has-trigger {
   border-width: 2px 2px 2px 0; }
 
-.oj-inputdate-input-container.oj-invalid .oj-datepicker-trigger,
-.oj-inputtime-input-container.oj-invalid .oj-datepicker-trigger,
-.oj-inputdatetime-input-container.oj-invalid .oj-datepicker-trigger {
+.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
   border-color: #cd0a0a; }
-  html:not([dir="rtl"]) .oj-inputdate-input-container.oj-invalid .oj-datepicker-trigger, html:not([dir="rtl"])
-  .oj-inputtime-input-container.oj-invalid .oj-datepicker-trigger, html:not([dir="rtl"])
-  .oj-inputdatetime-input-container.oj-invalid .oj-datepicker-trigger {
+  html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
     border-width: 2px 2px 2px 0; }
-  html[dir="rtl"] .oj-inputdate-input-container.oj-invalid .oj-datepicker-trigger, html[dir="rtl"]
-  .oj-inputtime-input-container.oj-invalid .oj-datepicker-trigger, html[dir="rtl"]
-  .oj-inputdatetime-input-container.oj-invalid .oj-datepicker-trigger {
+  html[dir="rtl"] .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
     border-width: 2px 0 2px 2px; }
 
-.oj-inputdate-input-container.oj-disabled,
-.oj-inputtime-input-container.oj-disabled,
-.oj-inputdatetime-input-container.oj-disabled {
-  background-color: white; }
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input {
+  border-color: #fcefa1;
+  border-width: 2px; }
 
-.oj-inputdate-input-container.oj-disabled .oj-inputdate-input,
-.oj-inputtime-input-container.oj-disabled .oj-inputtime-input,
-.oj-inputdatetime-input-container.oj-disabled .oj-inputdatetime-input {
+.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
+  border-color: #fcefa1; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
+    border-width: 2px 2px 2px 0; }
+  html[dir="rtl"] .oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
+    border-width: 2px 0 2px 2px; }
+
+.oj-inputdatetime-date-time.oj-disabled .oj-inputdatetime-input,
+.oj-inputdatetime-date-only.oj-disabled .oj-inputdatetime-input,
+.oj-inputdatetime-time-only.oj-disabled .oj-inputdatetime-input {
   color: #222222;
   background-color: white;
   border: 1px solid #aaaaaa;
   opacity: 0.35; }
 
-.oj-inputdate-input-container.oj-disabled .oj-datepicker-trigger,
-.oj-inputtime-input-container.oj-disabled .oj-datepicker-trigger,
-.oj-inputdatetime-input-container.oj-disabled .oj-datepicker-trigger {
+.oj-inputdatetime-date-time.oj-disabled .oj-inputdatetime-input-trigger,
+.oj-inputdatetime-date-only.oj-disabled .oj-inputdatetime-input-trigger,
+.oj-inputdatetime-time-only.oj-disabled .oj-inputdatetime-input-trigger {
   background-color: white;
   border-color: #aaaaaa; }
 
-.oj-inputdate-input-container.oj-read-only,
-.oj-inputdate-input-container.oj-read-only .oj-inputdate-input,
-.oj-inputtime-input-container.oj-read-only,
-.oj-inputtime-input-container.oj-read-only .oj-inputtime-input,
 .oj-inputdatetime-input-container.oj-read-only,
 .oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input {
   color: #222222;
   background-color: transparent;
-  border: 1px; }
+  border: 1px;
+  padding: 0; }
 
-.oj-inputdate-input-container.oj-read-only .oj-datepicker-trigger,
-.oj-inputtime-input-container.oj-read-only .oj-datepicker-trigger,
-.oj-inputdatetime-input-container.oj-read-only .oj-datepicker-trigger {
+.oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input-trigger {
   display: none; }
 
-html:not([dir="rtl"]) .oj-inputdatetime-input-container .oj-datepicker-calendar-icon {
+html:not([dir="rtl"]) .oj-inputdatetime-date-time .oj-datepicker-calendar-icon {
   margin-right: 5px; }
-html[dir="rtl"] .oj-inputdatetime-input-container .oj-datepicker-calendar-icon {
+html[dir="rtl"] .oj-inputdatetime-date-time .oj-datepicker-calendar-icon {
   margin-left: 5px; }
 
 .oj-datepicker-calendar-icon,
 .oj-datepicker-time-icon {
-  cursor: pointer;
   display: inline-block;
   vertical-align: middle; }
 
@@ -3096,16 +3381,14 @@ html[dir="rtl"] .oj-inputdatetime-input-container .oj-datepicker-calendar-icon {
 .oj-datepicker-content {
   border: 1px solid #aaaaaa;
   background-color: white;
-  background-image: none;
   color: #222222;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   box-sizing: content-box;
   display: none;
   padding: .2em .2em 0;
-  width: 16em; }
+  width: 15em; }
+  html.oj-slow-borderradius .oj-datepicker-content {
+    border-radius: 0; }
   html[dir="rtl"] .oj-datepicker-content {
     direction: rtl; }
 
@@ -3116,23 +3399,22 @@ html[dir="rtl"] .oj-inputdatetime-input-container .oj-datepicker-calendar-icon {
   background-image: linear-gradient(to top, #e3e3e3 0%, #e3e3e3 0%);
   color: #222222;
   font-weight: bold;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
   position: relative;
   padding: .2em 0; }
+  html.oj-slow-cssgradients .oj-datepicker-header {
+    background-image: none; }
+  html.oj-slow-borderradius .oj-datepicker-header {
+    border-radius: 0; }
 
 .oj-datepicker-prev-icon,
 .oj-datepicker-next-icon {
   position: absolute;
   top: 2px;
-  width: 1.8em;
-  height: 1.8em;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px; }
+  border-radius: 4px; }
+  html.oj-slow-borderradius .oj-datepicker-prev-icon, html.oj-slow-borderradius
+  .oj-datepicker-next-icon {
+    border-radius: 0; }
 
 html:not([dir="rtl"]) .oj-datepicker-prev-icon {
   left: 2px; }
@@ -3146,34 +3428,15 @@ html[dir="rtl"] .oj-datepicker-next-icon {
 
 .oj-datepicker-prev-icon.oj-hover,
 .oj-datepicker-next-icon.oj-hover {
-  top: 1px;
   border: 1px solid #999999;
   background-color: #dadada;
   background-image: -webkit-linear-gradient(bottom, #e5e5e5 0%, #e5e5e5 50%, #dadada 50%, #ebebeb 54%, #ebebeb 100%);
   background-image: linear-gradient(to top, #e5e5e5 0%, #e5e5e5 50%, #dadada 50%, #ebebeb 54%, #ebebeb 100%);
   font-weight: normal;
   color: #212121; }
-
-html:not([dir="rtl"]) .oj-datepicker-prev-icon.oj-hover {
-  left: 1px; }
-html[dir="rtl"] .oj-datepicker-prev-icon.oj-hover {
-  right: 1px; }
-
-html:not([dir="rtl"]) .oj-datepicker-next-icon.oj-hover {
-  right: 1px; }
-html[dir="rtl"] .oj-datepicker-next-icon.oj-hover {
-  left: 1px; }
-
-.oj-datepicker-prev-icon span,
-.oj-datepicker-next-icon span {
-  display: block;
-  position: absolute;
-  left: 50%;
-  margin-left: -8px;
-  top: 50%;
-  margin-top: -8px;
-  width: 16px;
-  height: 16px; }
+  html.oj-slow-cssgradients .oj-datepicker-prev-icon.oj-hover, html.oj-slow-cssgradients
+  .oj-datepicker-next-icon.oj-hover {
+    background-image: none; }
 
 .oj-datepicker-title {
   margin: 0 2.3em;
@@ -3209,6 +3472,12 @@ html[dir="rtl"] .oj-datepicker-next-icon.oj-hover {
   border: 0;
   padding: 1px; }
 
+.oj-datepicker-calendar td span,
+.oj-datepicker-calendar td a {
+  display: block;
+  padding: .2em;
+  text-align: right; }
+
 .oj-datepicker-calendar td a.oj-enabled {
   border: 1px solid lightgray;
   background-color: #e6e6e6;
@@ -3216,6 +3485,8 @@ html[dir="rtl"] .oj-datepicker-next-icon.oj-hover {
   background-image: linear-gradient(to top, #eeeeee 0%, #eeeeee 50%, #e6e6e6 50%, #f2f2f2 54%, #f2f2f2 100%);
   font-weight: normal;
   color: #555555; }
+  html.oj-slow-cssgradients .oj-datepicker-calendar td a.oj-enabled {
+    background-image: none; }
 
 .oj-datepicker-calendar td a.oj-hover {
   border: 1px solid #999999;
@@ -3224,6 +3495,8 @@ html[dir="rtl"] .oj-datepicker-next-icon.oj-hover {
   background-image: linear-gradient(to top, #e5e5e5 0%, #e5e5e5 50%, #dadada 50%, #ebebeb 54%, #ebebeb 100%);
   font-weight: normal;
   color: #212121; }
+  html.oj-slow-cssgradients .oj-datepicker-calendar td a.oj-hover {
+    background-image: none; }
 
 .oj-datepicker-calendar td a.oj-active {
   border: 1px solid #aaaaaa;
@@ -3238,19 +3511,17 @@ html[dir="rtl"] .oj-datepicker-next-icon.oj-hover {
   background-image: none;
   color: #363636; }
 
-.oj-datepicker-calendar td span,
-.oj-datepicker-calendar td a {
-  display: block;
-  padding: .2em;
-  text-align: right; }
-
 .oj-datepicker-buttonpane {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   background-image: none;
   margin: .7em 0 0 0;
   padding: 0 .2em;
   border-left: 0;
   border-right: 0;
-  border-bottom: 0; }
+  border-bottom: 0;
+  display: inline-block;
+  width: 100%; }
   html[dir="rtl"] .oj-datepicker-buttonpane {
     clear: right; }
 
@@ -3319,47 +3590,14 @@ html[dir="rtl"] .oj-datepicker-multi .oj-datepicker-group-last .oj-datepicker-he
 .oj-datepicker-inline {
   margin-bottom: 6px; }
 
-.oj-datepicker-time {
-  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35);
-  display: none;
-  height: 150px;
-  left: -10000px;
-  overflow: auto;
-  position: absolute;
-  width: 15em;
-  z-index: 100; }
-
-.oj-datepicker-time-list {
-  border: 0 none;
-  list-style: none outside none;
-  margin: 0;
-  position: relative;
-  color: #222222;
-  background: white; }
-  html:not([dir="rtl"]) .oj-datepicker-time-list {
-    padding-left: 0; }
-  html[dir="rtl"] .oj-datepicker-time-list {
-    padding-right: 0; }
-
-.oj-datepicker-time-list-item {
-  border-radius: 2px;
-  line-height: 1.8em;
-  padding: 1px 10px; }
-
-.oj-datepicker-time-list-item.oj-active {
-  background-color: #ebeced; }
-
-.oj-datepicker-time-list-item.oj-checked {
-  background-color: #bfd4e5; }
-
-html:not([dir="rtl"]) .oj-datepicker-prev-icon span:before {
+html:not([dir="rtl"]) .oj-datepicker-prev-icon:before {
   margin: -192px 0 0 -80px; }
-html[dir="rtl"] .oj-datepicker-prev-icon span:before {
+html[dir="rtl"] .oj-datepicker-prev-icon:before {
   margin: -192px 0 0 -48px; }
 
-html:not([dir="rtl"]) .oj-datepicker-next-icon span:before {
+html:not([dir="rtl"]) .oj-datepicker-next-icon:before {
   margin: -192px 0 0 -48px; }
-html[dir="rtl"] .oj-datepicker-next-icon span:before {
+html[dir="rtl"] .oj-datepicker-next-icon:before {
   margin: -192px 0 0 -80px; }
 
 /* radioset and checkboxset styles */
@@ -3370,7 +3608,7 @@ around the input/label */
 .oj-choice-row {
   display: block;
   margin: 0;
-  line-height: 1.8; }
+  margin-bottom: .6em; }
 
 .oj-radio,
 .oj-checkbox {
@@ -3491,13 +3729,15 @@ around the input/label */
   color: #333333;
   border-style: solid;
   border-color: black;
-  border-radius: 1px;
+  border-radius: 4px;
   border-width: 2px;
   padding: 2px;
   position: absolute;
   z-index: 2147483647;
   font-size: 12px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  html.oj-slow-borderradius .OraDVTDatatipPopup {
+    border-radius: 0; }
 
 .OraDVTUnstyledPopup {
   /* For internal use only. Needs renaming */
@@ -3709,11 +3949,13 @@ around the input/label */
   height: 400px;
   border-style: solid;
   border-width: 1px;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 11px;
   border-color: #aaaaaa;
   background-color: white;
   color: #222222; }
+  html.oj-slow-borderradius .oj-treemap {
+    border-radius: 0; }
 
 html:not([dir="rtl"]) .oj-treemap-isolate-icon {
   content: url("../common/images/dvt/treemap/s_max_ena.png"); }
@@ -4947,15 +5189,14 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
   .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-sm-label-inline .oj-label-help-icon,
   .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-sm-label-inline.oj-label,
+  .oj-sm-label-inline.oj-label label,
   .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-sm-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-sm-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-sm-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-sm-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -4963,7 +5204,7 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-sm-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-sm-label-inline.oj-label, html[dir="rtl"]
+    .oj-sm-label-inline.oj-label label, html[dir="rtl"]
     .oj-sm-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }
@@ -5012,15 +5253,14 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
   .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-md-label-inline .oj-label-help-icon,
   .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-md-label-inline.oj-label,
+  .oj-md-label-inline.oj-label label,
   .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-md-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-md-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-md-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-md-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -5028,7 +5268,7 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-md-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-md-label-inline.oj-label, html[dir="rtl"]
+    .oj-md-label-inline.oj-label label, html[dir="rtl"]
     .oj-md-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }
@@ -5077,15 +5317,14 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
   .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-lg-label-inline .oj-label-help-icon,
   .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-lg-label-inline.oj-label,
+  .oj-lg-label-inline.oj-label label,
   .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-lg-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-lg-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-lg-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-lg-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -5093,7 +5332,7 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-lg-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-lg-label-inline.oj-label, html[dir="rtl"]
+    .oj-lg-label-inline.oj-label label, html[dir="rtl"]
     .oj-lg-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }
@@ -5142,15 +5381,14 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
   .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .oj-xl-label-inline .oj-label-help-icon,
   .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .oj-xl-label-inline.oj-label,
+  .oj-xl-label-inline.oj-label label,
   .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
-    float: none;
-    display: inline-block; }
+    float: none; }
     html:not([dir="rtl"]) .oj-xl-label-inline .oj-label-required-icon, html:not([dir="rtl"])
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html:not([dir="rtl"])
     .oj-xl-label-inline .oj-label-help-icon, html:not([dir="rtl"])
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html:not([dir="rtl"])
-    .oj-xl-label-inline.oj-label, html:not([dir="rtl"])
+    .oj-xl-label-inline.oj-label label, html:not([dir="rtl"])
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-left: 0;
       margin-right: 6px; }
@@ -5158,7 +5396,7 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon, html[dir="rtl"]
     .oj-xl-label-inline .oj-label-help-icon, html[dir="rtl"]
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon, html[dir="rtl"]
-    .oj-xl-label-inline.oj-label, html[dir="rtl"]
+    .oj-xl-label-inline.oj-label label, html[dir="rtl"]
     .oj-xl-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
       margin-right: 0;
       margin-left: 6px; }

@@ -8,7 +8,7 @@ $includeConveyerBeltClasses:  $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.jq.core.icons";
+@import "oj.jq.icons";
 
 
 @if $includeConveyerBeltClasses != false {
@@ -88,7 +88,7 @@ $includeConveyerBeltClasses:  $includeAllClasses !default;
     }
     .oj-conveyorbelt-top-overflow-icon:before {
         //there is no .oj-fwk-icon-caret-n:before defined in 
-        //_oj.jq.core.icons.scss, because it doesn't require an offset into the 
+        //_oj.jq.icons.scss, because it doesn't require an offset into the 
         //image sheet
         //@extend .oj-fwk-icon-caret-n:before;
     }

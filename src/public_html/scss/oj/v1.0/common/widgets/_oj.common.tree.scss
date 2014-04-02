@@ -103,5 +103,75 @@
        color:silver;
        cursor:default;
     }
+
+    .ojtreeu-dragged {
+         display:block;
+         margin:0 0 0 0;
+         padding:4px 4px 4px 24px;
+         position:absolute;
+         top:-2000px;
+         line-height:16px;
+         z-index:10000;
+    }
+    .ojtreeu-dragged ins {
+          display:block;
+          text-decoration:none;
+          width:16px;
+          height:16px;
+          margin:0 0 0 0;
+          padding:0;
+          position:absolute;
+          top:4px; left:4px;
+    
+          // todo: we have border radius variables
+          @include oj-border-radius(4px);
+    }
+    .ojtreeu-dragged ins.oj-tree-ok {
+          background: oj-image-url("d.png") -2px -53px no-repeat;
+    }
+    .ojtreeu-dragged ins.oj-tree-invalid {
+          background: oj-image-url("d.png") -18px -53px no-repeat;
+    }
+    .oj-tree-marker {
+      padding:0;
+      margin:0;
+      font-size:12px;
+      overflow:hidden;
+      height:12px;
+      width:8px;
+      position:absolute;
+      top:-30px;
+      z-index:10001;
+      background-repeat:no-repeat;
+      display:none;
+      background-color:transparent;
+      text-shadow:1px 1px 1px white;
+      color:black;
+      line-height:10px;
+      background:oj-image-url("d.png") -41px -57px no-repeat;
+      text-indent:-100px;
+    }
+    .oj-tree-marker-line {
+       padding:0;
+       margin:0;
+       line-height:0;
+       font-size:1px;
+       overflow:hidden;
+       height:1px;
+       width:100px;
+       position:absolute;
+       top:-30px;
+       z-index:10000;
+       background-repeat:no-repeat;
+       display:none;
+       background-color:#456c43;
+       cursor:pointer;
+       border-left:0;
+       -moz-box-shadow:0 0 2px #666;
+       -webkit-box-shadow: 0 0 2px #666;
+       box-shadow: 0 0 2px #666;
+       // todo: we have border radius variables
+       @include oj-border-radius(1px);
+     }
   }
 }

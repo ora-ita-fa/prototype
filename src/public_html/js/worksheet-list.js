@@ -39,8 +39,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                             if (element.Name.indexOf(self.filteredWorksheetName()) === -1)
                                 return false;
                         if ( self.selectedAppType()[0] != null) {
-                            if (element.ApplicationTypeID !== self.selectedAppType()[0])
+                            if (element.ApplicationTypeID !== self.selectedAppType()[0])                               
                                 return false;
+
                         }
                         return true; // retain appropriate elements
                     });

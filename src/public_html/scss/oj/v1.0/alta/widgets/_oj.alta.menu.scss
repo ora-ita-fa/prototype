@@ -8,7 +8,7 @@ $includeMenuClasses: $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 
 
 @if $includeMenuClasses != false  {
@@ -19,12 +19,13 @@ $includeMenuClasses: $includeAllClasses !default;
     
     .oj-menu {
         color: $textColor; 
+        // todo: we have $window vars available, should menu use those?
         border: 1px solid $border3Color;
         background: $background1Color;
         list-style: none;
         padding: 1px 0;
         margin: 0;
-        display: block; 
+        display: inline-block; 
         box-shadow: $smallBoxShadow;
         font-size: $fontSize;
         white-space: nowrap;
@@ -102,8 +103,7 @@ $includeMenuClasses: $includeAllClasses !default;
 
 
     /* submenu icon*/
-    // TODO: call it oj-submenu-icon instead
-    .oj-menu-icon { 
+    .oj-menu-submenu-icon { 
         position: absolute; 
         line-height: 2.5;
         height: auto;
@@ -114,17 +114,17 @@ $includeMenuClasses: $includeAllClasses !default;
         // desired.  Without this line the icon subjectively looks huge.
         font-size: 1rem; // override oj-widget-icon's 1.34rem, making the icon 12px not 16.  
     }
-    html:not([dir="rtl"]) .oj-menu-icon { 
+    html:not([dir="rtl"]) .oj-menu-submenu-icon { 
         right: 0; // end-aligned per spec
     }
-    html[dir="rtl"] .oj-menu-icon { 
+    html[dir="rtl"] .oj-menu-submenu-icon { 
         left: 0;
     }
 
-    html:not([dir="rtl"]) .oj-menu-icon:before {
+    html:not([dir="rtl"]) .oj-menu-submenu-icon:before {
       @extend .oj-fwk-icon-arrow-e:before; // icon font
     }
-    html[dir="rtl"] .oj-menu-icon:before {
+    html[dir="rtl"] .oj-menu-submenu-icon:before {
       @extend .oj-fwk-icon-arrow-w:before; // icon font
     }
   }

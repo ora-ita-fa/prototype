@@ -1,8 +1,5 @@
 // todo: search through all the code for ms-, webkit-, etc and create a mixin. No prefixes should be anywhere but in the mixins.
 
-// todo temporarily false
-$removeSlowBorderRadius: false !default;
-
 // NOTE: The mixins defined in these files are needed 
 // based on our current supported browsers. Mixins in this 
 // file will be removed when we no longer need to use vendor 
@@ -30,24 +27,6 @@ $removeSlowBorderRadius: false !default;
     box-sizing: $boxSizingValue;
 }
 
-  // todo: look for slow radius, can't use this in rtl mixin cause you get 
-  //"html[dir='rtl'] .oj-slow-borderradius" but both are on the html element
-// todo:where to put border radius mixin?
-@mixin oj-border-radius ($borderRadiusValue)
-{
-  @content;
-
-  @if ($removeSlowBorderRadius) {
-
-    // only override the border radius if the value isn't already 0 or null
-    @if ($borderRadiusValue and $borderRadiusValue != 0)
-    {
-      .oj-slow-borderradius & {
-        border-radius: 0;
-      }
-    }
-  }
-}
 
 //*****************************************************************************
 //

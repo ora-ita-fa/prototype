@@ -10,11 +10,11 @@
 @import "widgets/oj.jq.tags.typography";
 
 // shared
-@import "widgets/oj.jq.core.icons";
-@import "widgets/oj.jq.core.resizable";
-@import "widgets/oj.jq.core.selectable";
-@import "widgets/oj.jq.core.windows";
-@import "widgets/oj.jq.core.messaging";
+@import "widgets/oj.jq.icons";
+@import "widgets/oj.jq.resizable";
+@import "widgets/oj.jq.selectable";
+@import "widgets/oj.jq.windows";
+@import "widgets/oj.jq.messaging";
 
 
 // layout
@@ -25,6 +25,7 @@
 // secondary windows
 @import "widgets/oj.jq.dialog";
 @import "widgets/oj.jq.tooltip";
+@import "widgets/oj.jq.popup";
 
 // behavior
 @import "widgets/oj.jq.progressbar";

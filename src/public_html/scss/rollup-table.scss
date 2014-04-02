@@ -7,9 +7,10 @@ and open the template in the editor.
     Created on : 2014-3-27, 16:12:37
     Author     : danfjian
 */
-@import "common.less"; 
+@import "common.scss"; 
 
 .rollup-main {
+
     ul {
         padding-left:10px;
         
@@ -22,7 +23,7 @@ and open the template in the editor.
                 height: 16px;
                 width: 16px;
                 vertical-align: middle;
-                background: url("@{img-path}/sortnumberascending_ena.png") no-repeat;
+                background: url("#{$img-path}/sortnumberascending_ena.png") no-repeat;
                 cursor: pointer;
             }
             

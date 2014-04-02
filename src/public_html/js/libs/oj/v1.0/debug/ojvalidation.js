@@ -694,10 +694,16 @@ var OraDateTimeConverter;
         if(options['maximumFractionDigits'] !== undefined) {
           nb = parseInt(options['maximumFractionDigits'], 10);
           numberSettings['maximumFractionDigits'] = nb;
+          if(numberSettings['maximumFractionDigits'] < numberSettings['minimumFractionDigits']) {
+            numberSettings['minimumFractionDigits'] = numberSettings['maximumFractionDigits'];
+          }
         }
         if(options['minimumFractionDigits'] !== undefined) {
           nb = parseInt(options['minimumFractionDigits'], 10);
           numberSettings['minimumFractionDigits'] = nb;
+        }
+        if(numberSettings['maximumFractionDigits'] < numberSettings['minimumFractionDigits']) {
+          numberSettings['maximumFractionDigits'] = numberSettings['minimumFractionDigits'];
         }
         if(options['minimumIntegerDigits'] !== undefined) {
           nb = parseInt(options['minimumIntegerDigits'], 10);
@@ -725,7 +731,7 @@ var OraDateTimeConverter;
     
     _validateNumberOptions = function(options, caller) {
       var getOption = _getGetOption(options, caller);
-      var s = getOption('style', 'string', ['currency', 'decimal', 'percent'],
+      var s = getOption('style', 'string', ['currency', 'decimal', 'percent', 'perMill'],
         'decimal');
       var c =getOption('currency', 'string');
       if(s === 'currency' && c === undefined) {
@@ -4361,10 +4367,10 @@ var OraDateTimeConverter;
             }
             result['two-digit-year-start'] = _get2DigitYearStart(options);
             if(!ecma) {
-              var format = _expandPredefinedStylesFormat(options, 
-                localeElements, OraDateTimeConverter.resolvedOptions);
-              result = _getResolvedOptionsFromPattern(locale, 
-                numberingSystemKey, format);
+              //var format = _expandPredefinedStylesFormat(options, 
+                //localeElements, OraDateTimeConverter.resolvedOptions);
+              //result = _getResolvedOptionsFromPattern(locale, 
+                //numberingSystemKey, format);
               var fmtType = getOption('formatType', 'string', 
                 ['date', 'time', 'datetime'], 'date');
               var dStyle = getOption('dateFormat', 'string', 
@@ -5313,19 +5319,25 @@ oj.Object.createSubclass(oj.Message, oj.Object, "oj.Message");
  */
 oj.Message.prototype.Init = function(summary, detail, severity) 
 {
+  this['summary'] = summary;
+  this['detail'] = detail;
+  this['severity'] = severity || oj.Message.SEVERITY_TYPE.ERROR; // defaults to ERROR
+  
+  /*
   // once initialized proeperties of the oj.Message instance cannot be altered.
   Object.defineProperty(oj.Message.prototype, "summary", {value: summary,  
-                                                          writable : true,
+                                                          writable : false,
                                                           enumerable : true,
                                                           configurable : true});
   Object.defineProperty(oj.Message.prototype, "detail", {value: detail,  
-                                                          writable : true,
+                                                          writable : false,
                                                           enumerable : true,
                                                           configurable : true});
   Object.defineProperty(oj.Message.prototype, "severity", {value: severity,  
-                                                          writable : true,
+                                                          writable : false,
                                                           enumerable : true,
                                                           configurable : true});
+  */
   oj.Message.superclass.Init.call(this);
 };
 
@@ -5339,7 +5351,7 @@ oj.Message.prototype.Init = function(summary, detail, severity)
 oj.Message.prototype.equals = function (msg)
 {
   if (msg)
-  { 
+  {
     if ((oj.Message.getSeverityLevel(this['severity']) === 
             oj.Message.getSeverityLevel(msg['severity'])) && 
         this['summary'] === msg['summary'] && 
@@ -5356,7 +5368,7 @@ oj.Message.prototype.equals = function (msg)
  * A convenience method that returns the severity level when given either a severity level of type 
  * number or a severity type of string. 
  * If severity level is not provided or is not valid this return a severity error.
- * @param {string|number} severity 
+ * @param {string|number|undefined} severity 
  * @return {number}
  * @export
  */
@@ -5388,6 +5400,44 @@ oj.Message.getSeverityLevel = function (severity)
 };
 
 /**
+ * A convenience method that returns the severity type when given either a severity level of type 
+ * number or a severity type of string. 
+ * If severity level is not provided or is not valid this return a severity error.
+ * @param {string|number|undefined} level 
+ * @return {string}
+ * @export
+ */
+oj.Message.getSeverityType = function (level) 
+{
+  var index;
+  if (level)
+  {
+    if (typeof level === "string")
+    {
+      index = oj.Message._LEVEL_TO_TYPE.indexOf(level, 1);
+      if (index === -1)
+      {
+        // when given an unrecognized type return "error"
+        level = oj.Message.SEVERITY_TYPE['ERROR'];
+      }
+    }
+    else if (typeof level === "number")
+    {
+      if (level < oj.Message.SEVERITY_LEVEL['CONFIRMATION'] && 
+          level > oj.Message.SEVERITY_LEVEL['FATAL'])
+      {
+        level = oj.Message.SEVERITY_TYPE['ERROR'];
+      }
+      else
+      {
+        level = oj.Message._LEVEL_TO_TYPE[level];
+      }
+    }
+  }
+  return level || oj.Message.SEVERITY_TYPE['ERROR'];
+};
+
+/**
  * A convenience method that returns the max severity level in a array of message objects.  
  * @param {Array} messages an array of message instances
  * @returns {number} -1 if none can be determined; otherwise a severity level as defined by 
@@ -5401,11 +5451,10 @@ oj.Message.getMaxSeverity = function (messages)
   {
     $.each(messages, function (i, message)
       {
-        if (message && message['severity'])
+        if (message)
         {
           currLevel = oj.Message.getSeverityLevel(message['severity']);
         }
-
         maxLevel = maxLevel < currLevel ? currLevel : maxLevel;
       });
     
@@ -5463,7 +5512,7 @@ oj.Message._LEVEL_TO_TYPE = ['none', // this can never be set
  * </ul>
  * <p>
  * 
- * The converter provides leniency when pasrsing user input value to a number in the following ways:<br/>
+ * The converter provides leniency when parsing user input value to a number in the following ways:<br/>
  * 
  * <ul>
  * <li>Prefix and suffix that do not match the pattern, are removed. E.g., when pattern is 
@@ -5709,16 +5758,19 @@ oj.IntlNumberConverter.prototype.parse = function (value)
  */
 oj.IntlNumberConverter.prototype.resolvedOptions = function()
 {
-  var localeElements = oj.LocaleData.__getBundle(), locale = oj.Config.getLocale(), converterError;
-  // options are resolved and cached 
-  if (!this._resolvedOptions)
+  var localeElements, locale = oj.Config.getLocale(), converterError;
+  // options are resolved and cached for the current locale. when locale changes resolvedOptions 
+  // is reevaluated as it contains locale specific info.
+  if ((locale !== this._locale) || !this._resolvedOptions)
   {
+    localeElements = oj.LocaleData.__getBundle();
     try
     {
       // cache if successfully resolved
       this._resolvedOptions = this._getWrapped().resolvedOptions(localeElements, 
                                                                  this.getOptions(), 
                                                                  locale);
+      this._locale = locale;
     }
     catch (e)
     {
@@ -6123,8 +6175,8 @@ oj.RegExpValidator.prototype._getDetailKey = function ()
  * <li>Supports auto-correction of value, for the short and long types of weekday and month names. 
  * So they can are used anywhere in the value. E.g., if the expected pattern is E, MMM, d, y, all 
  * these values are acceptable - Tue, Nov 26 2013 or Nov, Tue 2013 26 or 2013 Tue 26 Nov. <br/>
- * NOTE: Lenient parsing of narrow weekday or month name is not supported because of ambiguity in 
- * choosing the right value. So we expect for narrow month and weekday option that values be 
+ * NOTE: Lenient parsing of narrow era, weekday or month name is not supported because of ambiguity in 
+ * choosing the right value. So we expect for narrow era, weekday or month option that values be 
  * provided either in their short or long forms. E.g., Sat, March 02, 2013.
  * </li>
  * <li>Specifying the weekday is optional. E.g., if the expected pattern is E, MMM, d, y; then 
@@ -6386,17 +6438,18 @@ oj.IntlDateTimeConverter.prototype.getOptions = function ()
  */
 oj.IntlDateTimeConverter.prototype.resolvedOptions = function ()
 {
-  var localeElements = oj.LocaleData.__getBundle(), locale = oj.Config.getLocale(), converterError, 
-          options = this.getOptions();
-  // options are resolved and cached 
-  if (!this._resolvedOptions)
+  var localeElements, locale = oj.Config.getLocale(), converterError, options = this.getOptions();
+  // options are resolved and cached for a locale
+  if ((locale !== this._locale) || !this._resolvedOptions)
   {
+    localeElements = oj.LocaleData.__getBundle();
     try
     {
       // cache if successfully resolved
       this._resolvedOptions = this._getWrapped().resolvedOptions(localeElements, 
                                                                  options, 
                                                                  locale);
+      this._locale = locale;
     }
     catch (e)
     {
@@ -6673,8 +6726,8 @@ oj.IntlDateTimeConverter.prototype._isOptionSet = function (optionName)
  * Constructs a DateTimeRangeValidator that ensures the value provided is within a given range
  * @param {Object=} options an object literal used to provide:<p>
  * <ul>
- *   <li><b>minimum</b>: The minimum datetime value of the entered value.<p>
- *   <li><b>maximum</b>: The maximum datetime value of the entered value.<p>
+ *   <li><b>min</b>: The minimum datetime value of the entered value.<p>
+ *   <li><b>max</b>: The maximum datetime value of the entered value.<p>
  *   <li><b>hint</b>: an optional object literal of hint text to be used. There is no default hint 
  *   provided by this validator.<p>
  *    <ul>     
@@ -6872,9 +6925,22 @@ oj.DateTimeRangeValidator.prototype.getHint = function ()
  * Constructs a RequiredValidator that ensures that the value provided is not empty
  * @param {Object=} options an object literal used to provide an optional hint and error message.<p>
  * <ul>
- * <li><b>hint</b>:  an optional hint text. There is no default hint provided by this validator.</li>
- * <li><b>message</b>: a custom error message to be used, for creating detail part of message, when 
- * the value provided is empty</li>
+ * <li><b>hint</b>: an optional hint text. There is no default hint provided by this validator.</li>
+ * <li>
+ * <b>messageSummary</b>: a custom error message summarizing the error <p>
+ * Parameters: <p>
+ * {label} - label of the component for which this message applies. The label may not always be 
+ * available depending on the usage of the validator. <p>
+ * Examples:<p>
+ * "'{label}' Required" 
+ * </li>
+ * <li><b>messageDetail</b>: a custom error message to be used for creating detail part of message, 
+ * when the value provided is empty. NOTE: the parameter 'message' has been deprecated.<p>
+ * Parameters:<p>
+ * {label} - label text of the component for which this message applies. 
+ * Examples:<p>
+ * "A value is required for the field '{label}'.<br/>
+ * </li>
  * </ul>
  * @export
  * @constructor
@@ -6905,7 +6971,7 @@ oj.RequiredValidator.prototype.Init = function(options)
 /**
  * Validates value to be non-empty
  * 
- * @param {Object} value that is being validated 
+ * @param {Object|string|number} value that is being validated 
  * @returns {boolean} true if validation was was successful the value is non-empty
  * 
  * @throws {Error} when fails required-ness check
@@ -6913,21 +6979,32 @@ oj.RequiredValidator.prototype.Init = function(options)
  */
 oj.RequiredValidator.prototype.validate = function(value)
 {
-  var localizedDetail, localizedSummary, 
-          message = (this._options && this._options['message']) || null;
-  
-  // checks for empty arrays and objects
-  if (value && value.length !== 0)
+  var localizedDetail, localizedSummary, detail, summary, params = {}, label = "";
+  // checks for empty arrays and String. Objects are considered non-null.
+  // Need to specifically test for if value is 0 first if number is passed on.
+  if ((typeof value === "number" && value === 0) || (value && value.length !== 0))
   {
     return true;
   }
-  
-  localizedSummary = oj.Translations.getTranslatedString(this._getSummaryKey());
-  localizedDetail = (message) ? 
-  oj.Translations.applyParameters(message, []) : 
-  oj.Translations.getTranslatedString(this._getDetailKey(), "");
+  else
+  {
+    if (this._options)
+    {
+      // we have deprecated support for message param and instead use messageDetail.
+      detail = this._options['messageDetail'] || this._options['message'] || null;
+      summary = this._options['messageSummary'] || null;
+      label = this._options['label'] || "";
+    }
+    params = {'label': label};
+    localizedSummary = (summary) ? oj.Translations.applyParameters(summary, params) :
+            oj.Translations.getTranslatedString(this._getSummaryKey(), params);
+    localizedDetail = (detail) ? 
+    oj.Translations.applyParameters(detail, params) : 
+    oj.Translations.getTranslatedString(this._getDetailKey(), params);
+    
+    throw new oj.ValidatorError(localizedSummary, localizedDetail);
+  }
 
-  throw new oj.ValidatorError(localizedSummary, localizedDetail);
 };
 
 /**
@@ -6942,7 +7019,7 @@ oj.RequiredValidator.prototype.getHint = function()
   var hint = "";
   if (this._options && (this._options['hint']))
   {
-    hint = oj.Translations.getTranslatedString(hint);
+    hint = oj.Translations.getTranslatedString(this._options['hint']);
   }
   
   return hint;

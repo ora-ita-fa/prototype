@@ -994,11 +994,14 @@ function _getTableColumnTemplateRenderer(bindingContext, columnId, type, templat
     (function(template, type) {
         rendererOption['renderer'] = function(params) {
                 var childContext = null;
+                var parentElement = null;
                 if (type == 'header')
                 {
                     // calling bindingContext.extend() creates a context with 
                     // new properties without adding extra level to the parent hierarchy
-                    childContext = bindingContext['extend']({'$column': params['column']});
+                    childContext = bindingContext['extend']({'$column': params['column'], 
+                                                             '$headerContext': params['headerContext']});
+                    parentElement = params['headerContext']['parentElement'];
                 }
                 else if (type == 'cell') 
                 {
@@ -1007,12 +1010,12 @@ function _getTableColumnTemplateRenderer(bindingContext, columnId, type, templat
                                             function(binding)
                                             {
                                                 binding['$column'] = params['column'];
-                                                binding['$status'] = params['status'];
+                                                binding['$cellContext'] = params['cellContext'];
                                             }
                                        );
-                    
+                    parentElement = params['cellContext']['parentElement'];
                 }
-                ko['renderTemplate'](template, childContext, null, params['parentElement'], 'replaceNode');
+                ko['renderTemplate'](template, childContext, null, parentElement, 'replaceNode');
             };
     }(template, type));
     rendererOption['type'] = type;
@@ -1031,7 +1034,7 @@ function _getTableColumnTemplateRenderer(bindingContext, columnId, type, templat
 function _getTableFooterTemplateRenderer(bindingContext, template)
 {
     return function(params) {
-        ko['renderTemplate'](template, bindingContext, null, params['parentElement'], 'replaceNode');
+        ko['renderTemplate'](template, bindingContext, null, params['footerContext']['parentElement'], 'replaceNode');
     };
 }
 
@@ -1049,11 +1052,10 @@ function _getTableRowTemplateRenderer(bindingContext, template)
         var childContext = bindingContext['createChildContext'](childData, null, 
                                 function(binding)
                                 {
-                                    binding['$column'] = params['column'];
-                                    binding['$status'] = params['status'];
+                                    binding['$rowContext'] = params['rowContext'];
                                 }
                            );
-        ko['renderTemplate'](template, childContext, null, params['parentElement'], 'replaceNode');
+        ko['renderTemplate'](template, childContext, null, params['rowContext']['parentElement'], 'replaceNode');
     };
 }
 

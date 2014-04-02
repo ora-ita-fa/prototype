@@ -23,9 +23,7 @@
         white-space: nowrap; // needed on some flavors of ojButton to keep the text from wrapping and overflowing the button.
                              // Could probably make specific to those flavors of Button if desired.  
         //overflow: visible; /* removes extra width in IE */
-        @include oj-border-radius( $buttonBorderRadius) {
-          border-radius: $buttonBorderRadius;
-        }
+        @include oj-border-radius( $buttonBorderRadius );
         @include oj-box-sizing-property(border-box);
         height: $buttonHeight;
         // the line-height is needed for the case where 
@@ -62,7 +60,7 @@
 
     .oj-button.oj-enabled {
         background-color: $buttonBgColor; 
-        @include oj-linear-gradient($buttonGradientStops, $buttonGradientDirection);
+        @include oj-background-image($buttonBgImage);
         border: 1px solid $buttonBorderColor;    
         box-shadow: $buttonBoxShadow;
         color: $buttonTextColor;    
@@ -80,7 +78,7 @@
     .oj-button.oj-hover.oj-button-half-chrome, 
     .oj-button.oj-focus.oj-button-half-chrome {
         background-color: $buttonBgColorHover;
-        @include oj-linear-gradient($buttonGradientStopsHover, $buttonGradientDirectionHover);
+        @include oj-background-image($buttonBgImageHover);
         border-color: $buttonBorderHoverColor; // same as enabled color so not needed for .ob.oh, but needed for .ob.oh.obhc
         box-shadow: none;
         color: $buttonTextColorHover;
@@ -106,7 +104,7 @@
     .oj-button.oj-active,
     .oj-button.oj-active.oj-button-half-chrome {
         background-color: $buttonBgColorActive;
-        @include oj-linear-gradient($buttonGradientStopsActive, $buttonGradientDirectionActive);
+        @include oj-background-image($buttonBgImageActive);
         border-color: $buttonBorderColorActive;
         color: $buttonTextColorActive;
     }
@@ -114,7 +112,7 @@
     .oj-button.oj-checked, 
     .oj-button.oj-checked.oj-button-half-chrome {
         background-color: $buttonBgColorSelected;
-        @include oj-linear-gradient($buttonGradientStopsSelected, $buttonGradientDirectionSelected);
+        @include oj-background-image($buttonBgImageSelected);
         border-color: $buttonBorderColorSelected;
         color: $buttonTextColorSelected;
     }
@@ -264,7 +262,7 @@
         // so using margin-right: and margin-left: instead of margin: so that
         // it's easy for people to add some margins at the top/bottom
         // to center images 
-        margin-right: $buttonIconToIconPadding;
+        margin-right: $buttonIconToTextPadding;
         margin-left:  $buttonIconToEdgePadding; // between-icon padding lives on left icon
     }
 
@@ -324,17 +322,20 @@
                                  // at a time has its chrome (including border) visible.
     }
 
-    html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-start,
-    html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-end {
-      // todo: slow radius
-      border-radius: $buttonBorderRadius 0 0 $buttonBorderRadius;
+    .oj-buttonset .oj-button.oj-buttonset-corner-start {
+        @include oj-border-radius($buttonBorderRadius 0 0 $buttonBorderRadius, $textDirection: ltr);
+        @include oj-border-radius(0 $buttonBorderRadius $buttonBorderRadius 0, $textDirection: rtl);
+        @include oj-rtl() {
+          border-right-width: 1px; // restore the last button's right border
+        }
     }
 
-    html:not([dir="rtl"]) .oj-buttonset .oj-button.oj-buttonset-corner-end,
-    html[dir="rtl"] .oj-buttonset .oj-button.oj-buttonset-corner-start { 
-        // todo: slow radius
-        border-radius: 0 $buttonBorderRadius $buttonBorderRadius 0;
-        border-right-width: 1px; // restore the last button's right border
+    .oj-buttonset .oj-button.oj-buttonset-corner-end {
+        @include oj-border-radius(0 $buttonBorderRadius $buttonBorderRadius 0, $textDirection: ltr);
+        @include oj-border-radius($buttonBorderRadius 0 0 $buttonBorderRadius, $textDirection: rtl); 
+        @include oj-ltr() {
+          border-right-width: 1px; // restore the last button's right border
+        }
     }
 
     /* workarounds */

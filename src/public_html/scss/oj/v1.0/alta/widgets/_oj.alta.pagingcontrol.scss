@@ -9,7 +9,7 @@ $includePagingControlClasses: $includeAllClasses !default;
 
 @import "../../common/helpers/oj.common.helpers"; 
 //todo: temporarily comment
-//@import "oj.alta.core.icons";
+//@import "oj.alta.icons";
 
 
 // todo: these should be named paging control specific names. 
@@ -228,6 +228,16 @@ $navArrowPadding: 5px !default;
       @include oj-rtl() {    
         @extend .oj-fwk-icon-caret02end-w;
       }
+    }
+    
+    /* Styling which can be used when paging control is paired with ojTable. */
+    .oj-pagingcontrol-table-border {
+       border: $borderWidth solid $dataGridBorderColor;
+    }
+    
+    /* Styling which can be used when paging control is paired with ojDataGrid. */
+    .oj-pagingcontrol-datagrid-border {
+       border: $dataGridBorderWidth solid $dataGridBorderColor;
     }
   }
 }

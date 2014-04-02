@@ -8,7 +8,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 
 //--------------------------------------------------------
 
@@ -77,7 +77,6 @@ $includeAccordionClasses:  $includeAllClasses !default;
 
     }
 
-
     /* collapsible with "accordion" style */
     /* -----------------------------------*/
     /*
@@ -89,7 +88,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
       font-size: $mediumFontSize;
       border: $borderWidth solid $headerBorderColor;
       background-color: $headerBgColor;
-      @include oj-linear-gradient($headerGradientStops, $headerGradientDirection);
+      @include oj-background-image($headerBgImage);
 
     }
 
@@ -280,10 +279,8 @@ $includeAccordionClasses:  $includeAllClasses !default;
      */
     .oj-accordion > .oj-accordion-collapsible:first-child > .oj-collapsible-header {
       border: $borderWidth solid $headerBorderColor;
-      @include oj-border-radius( $smallBorderRadius) {
-        border-top-left-radius: $smallBorderRadius; 
-        border-top-right-radius: $smallBorderRadius;
-      }
+      @include oj-border-top-left-radius($smallBorderRadius); 
+      @include oj-border-top-right-radius($smallBorderRadius);
     }
 
     /*
@@ -301,10 +298,8 @@ $includeAccordionClasses:  $includeAllClasses !default;
      * display right, bottom and left borders and put radius on bottom border
      */
     .oj-accordion > .oj-accordion-collapsible:last-child > .oj-collapsible-header {
-      @include oj-border-radius($smallBorderRadius) {
-        border-bottom-left-radius: $smallBorderRadius; 
-        border-bottom-right-radius: $smallBorderRadius;
-      }
+      @include oj-border-bottom-left-radius($smallBorderRadius); 
+      @include oj-border-bottom-right-radius($smallBorderRadius);
     }
   }
 }

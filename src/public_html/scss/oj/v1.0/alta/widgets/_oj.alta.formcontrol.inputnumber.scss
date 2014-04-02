@@ -13,10 +13,10 @@ $includeInputNumberClasses:   $includeFormControlClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 @import "oj.alta.tooltip";
 @import "oj.alta.button";
-@import "oj.alta.core.messaging";
+@import "oj.alta.messaging";
 @import "oj.alta.formcontrol.label";
 @import "oj.alta.formcontrol.common";
 

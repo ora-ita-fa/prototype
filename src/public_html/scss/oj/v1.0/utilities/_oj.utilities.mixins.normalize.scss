@@ -21,7 +21,10 @@
 
 @mixin oj-normalize-html {
   @include oj-normalize-content {
-    font-family: sans-serif; 
+    // not including the font-family, we are setting the 
+    // font-family in oj-html and it's creating a duplicate 
+    // property css lint error
+    // font-family: sans-serif; 
     -ms-text-size-adjust: 100%; 
     -webkit-text-size-adjust: 100%; 
   }

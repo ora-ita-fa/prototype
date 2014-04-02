@@ -1,0 +1,115 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// WARNING: do not directly import this file, instead import the 
+//          version in your base theme's directory, 
+//          for example alta/widgets/_oj.alta.messaging.scss
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@import "../../utilities/oj.utilities";
+
+@if $includeMessagingClasses != false {
+  @include exports("common.messaging") {
+
+    /* messaging */
+    /* --------------------------------------------------------------- */
+
+    /* wraps a message block */
+    .oj-message {
+      padding-top: 4px; 
+      padding-bottom: 4px; 
+      display: table;
+    }
+
+    /* wraps the message summary and detail parts */
+    .oj-message-content {
+      display: table-cell;
+    }
+
+    /* message summary text */
+    .oj-message-summary {
+      font-weight: $headerFontWeight;
+      color: $headerTextColor;
+      vertical-align: top;
+      @include oj-ltr() {
+        padding: 0 0 0 4px;
+      }
+      @include oj-rtl() { 
+        padding: 0 4px 0 0; 
+      } 
+    }
+
+    /* message detail text */
+    .oj-message-detail { 
+      color: $textColor;
+      @include oj-ltr() {
+        padding: 8px 0 0 4px;
+      }
+      @include oj-rtl() { 
+        padding: 8px 4px 0 0; 
+      } 
+    }
+
+
+    //------------------------------------------
+    // icons
+    //------------------------------------------
+
+    .oj-message-error-icon {
+      display: table-cell;
+      width:16px;
+      height:16px;
+      vertical-align:top;
+    }
+
+    .oj-message-error-icon {
+      @include oj-icon-content(
+      	$icon:           oj-image-url("error_status.png"), 
+        // todo: why the same icon twice? just leave off if same
+      	$iconHiContrast: oj-image-url("error_status.png")
+      );
+    }
+
+    .oj-message-warning-icon {
+      display: table-cell;
+      vertical-align: top;
+      width:16px;
+      height:16px;
+    }
+
+    .oj-message-warning-icon {
+      @include oj-icon-content(
+        $icon:           oj-image-url("warning_status.png"), 
+        $iconHiContrast: oj-image-url("warning_status.png")
+      );
+    }
+
+    .oj-message-info-icon {
+      display: table-cell;
+      vertical-align: top;
+      width:16px;
+      height:16px;
+    }
+
+
+    .oj-message-info-icon {
+      @include oj-icon-content(
+        $icon:           oj-image-url("info_status.png"), 
+        $iconHiContrast: oj-image-url("info_status.png")
+      );
+    }
+
+    .oj-message-confirmation-icon {
+      vertical-align: top;
+      display: table-cell;
+      width:16px;
+      height:16px;
+    }
+
+
+    .oj-message-confirmation-icon {
+      @include oj-icon-content(
+        $icon:           oj-image-url("confirmation_status.png"), 
+        $iconHiContrast: oj-image-url("confirmation_status.png")
+      );
+    }
+  }
+}

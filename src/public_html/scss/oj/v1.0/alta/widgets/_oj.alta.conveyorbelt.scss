@@ -8,7 +8,7 @@ $includeConveyerBeltClasses:  $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 
 
 @if $includeConveyerBeltClasses != false  {
@@ -33,7 +33,7 @@ $includeConveyerBeltClasses:  $includeAllClasses !default;
         height: $buttonHeight;//28px;
         text-align: center; 
         cursor: default;
-        border-radius: $buttonBorderRadius;
+        @include oj-border-radius($buttonBorderRadius);
 
         //from .oj-button.oj-enabled
         border: 1px solid $buttonBorderColor; //fallback before rgba color
@@ -67,6 +67,10 @@ $includeConveyerBeltClasses:  $includeAllClasses !default;
     .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-bottom-overflow-icon {
         //from .oj-button.oj-enabled .oj-button-icon-start
         color: $buttonIconColor;
+        //.oj-clickable-icon will make the cursor a pointer, which we want to
+        //undo here so that the cursor is uniform across the whole overflow 
+        //indicator (the normal arrow by default)
+        cursor: inherit;
     }
     .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-start-overflow-icon,
     .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-end-overflow-icon,

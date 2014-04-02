@@ -16,11 +16,9 @@ $includeToolbarClasses: $includeAllClasses !default;
     .oj-toolbar {
         display: inline-block;
         padding: 0.333em;
-        border: 1px solid #aaaaaa;
-        border-radius: 4px;
-        background-color: #cccccc;
-        // TODO: JQUI demo has this bg gradient.  Should we do the same?  What's the best way to do so?:
-        // url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
+        border: 1px solid $headerBorderColor;
+        @include oj-border-radius($mediumBorderRadius);
+        background-color: $headerBgColor;
     }
 
     .oj-toolbar .oj-button {
@@ -39,7 +37,38 @@ $includeToolbarClasses: $includeAllClasses !default;
         margin-right: 0.167em; // equals 2px
     }
 
-    // keep oj-toolbar-no-chrome definition after oj-toolbar definition
+
+    .oj-toolbars {
+
+      @include oj-border-radius($mediumBorderRadius);
+      border: 1px solid $headerBorderColor;
+      background-color: $headerBgColor;
+    }
+
+    .oj-toolbar-row .oj-toolbar {
+      display: inline-block;
+      background-color: transparent;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .oj-toolbar-row .oj-toolbar + .oj-toolbar {
+      @include oj-ltr()
+      {
+        border-left: 1px solid $headerBorderColor;
+      }
+      @include oj-rtl()
+      {
+        border-right: 1px solid $headerBorderColor;
+      }
+    }
+
+    .oj-toolbar-row + .oj-toolbar-row {
+      border-top: 1px solid $headerBorderColor;
+    }
+
+
+    // keep oj-toolbar-no-chrome definition after oj-toolbar and oj-toolbars definitions
     // so that it has a higher specificity
     /* can be applied to the toolbar to remove the chrome (background and border) */
     .oj-toolbar-no-chrome {

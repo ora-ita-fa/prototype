@@ -7,26 +7,22 @@
 @import "../../utilities/oj.utilities";
 @import "oj.common.formcontrol.mixins";
 
-
-// todo: talk to Pavitra about inline messages and whether she thinks we should have 
-//       wrapper dom to support that case
-
-
 @if $includeInputTextareaClasses != false {
   @include exports("common.inputtextarea") {
-
-    // general css styles between the components
+    
+    // general css styles between the wrapper components
     .oj-inputtext,
     .oj-inputpassword,
-    .oj-textarea {
-      @include oj-form-control-content;
+    .oj-textarea 
+    {
       @include oj-box-sizing-property(border-box);
       
       display: inline-block;
-      font-family: inherit;
-      font-size: $fontSize;
-      font-weight: normal;
       
+      // because max/min width is in em the font size needs to be on this element 
+      // and not on the selector that goes on the input.
+      font-size: $fontSize;
+	  
       /* use a width of 100% and then max and min width so that when 
          there's less room for the form control it can automatically 
          get smaller instead of overflowing its boundaries */
@@ -34,18 +30,42 @@
       min-width: $formControlMinWidth;
       width: 100%;
     }
+	
+    // general css input styles between the components
+    .oj-inputtext-input,
+    .oj-inputpassword-input,
+    .oj-textarea-input
+    {
+      @include oj-form-control-content;
+      @include oj-box-sizing-property(border-box);
 
-    // specific css for inputtext + inputpassword
-    .oj-inputtext,
-    .oj-inputpassword {
+      font-family: inherit;
+      font-weight: normal;
+
+      width: 100%;
+    }
+	
+    // When size is provided, set width to auto to allow proper sizing
+    .oj-inputtext-input[size],
+    .oj-inputpassword-input[size],
+    .oj-textarea-input[size] 
+    {
+      width: auto;
+    }
+
+    // specific css for inputtext-input + inputpassword-input
+    .oj-inputtext-input,
+    .oj-inputpassword-input
+    {
       @include oj-normalize-text-input;
       
       height: $formControlHeight;
       padding: 0 $formControlPadding;
     }
 
-    // specific css for textarea
-    .oj-textarea {
+    // specific css for textarea-input
+    .oj-textarea-input
+    {
       @include oj-normalize-textarea;
       
       height: auto;
@@ -54,52 +74,42 @@
     }
 
     // Styling for invalid state
-    .oj-inputtext.oj-invalid,
-    .oj-inputpassword.oj-invalid,
-    .oj-textarea.oj-invalid {
+    .oj-inputtext.oj-invalid .oj-inputtext-input,
+    .oj-inputpassword.oj-invalid .oj-inputpassword-input,
+    .oj-textarea.oj-invalid .oj-textarea-input
+    {
       border: $formControlMessagingBorderWidth solid $borderColorError; 
     }
 
     // Styling for warning state
-    .oj-inputtext.oj-warning,
-    .oj-inputpassword.oj-warning,
-    .oj-textarea.oj-warning {
+    .oj-inputtext.oj-warning .oj-inputtext-input,
+    .oj-inputpassword.oj-warning .oj-inputpassword-input,
+    .oj-textarea.oj-warning .oj-textarea-input
+    {
       border: $formControlMessagingBorderWidth solid $borderColorWarning; 
     }
 
-    // When size is provided, set width to auto to allow proper sizing
-    .oj-inputtext[size],
-    .oj-inputpassword[size],
-    .oj-textarea[size] {
-      width: auto;
-    }
-
-    .oj-inputtext, .oj-inputpassword, .oj-textarea
-    {
-      @include oj-placeholder()
-      {
-        color: $formControlPlaceholderColor;
-      }
-    }
-
     // Styling for disabled state
-    .oj-inputtext.oj-disabled,
-    .oj-inputpassword.oj-disabled,
-    .oj-textarea.oj-disabled {
+    .oj-inputtext.oj-disabled .oj-inputtext-input,
+    .oj-inputpassword.oj-disabled .oj-inputpassword-input,
+    .oj-textarea.oj-disabled .oj-textarea-input
+    {
       @include oj-form-control-content-disabled;
     }
 
     // Styling for readonly state, if supported in the future
-    .oj-inputtext.oj-read-only,
-    .oj-inputpassword.oj-read-only,
-    .oj-textarea.oj-read-only {
+    .oj-inputtext.oj-read-only .oj-inputtext-input,
+    .oj-inputpassword.oj-read-only .oj-inputpassword-input,
+    .oj-textarea.oj-read-only .oj-textarea-input
+    {
       @include oj-form-control-content-readonly;
-	  
-	  padding: 0;
+      
+      padding: 0;
     }
 	
-	.oj-textarea.oj-read-only {
-	  padding-top: 6px;
-	}
+    .oj-textarea.oj-read-only .oj-textarea-input
+    {
+      padding-top: 6px;
+    }
   }
 }

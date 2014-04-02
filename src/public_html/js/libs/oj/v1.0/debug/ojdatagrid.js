@@ -7,7 +7,7 @@ define(['ojs/ojcore', 'jquery','ojs/internal-deps/datagrid/DvtDataGrid', 'ojs/oj
  * @param {string=} options.rowHeader the key to the header designated as the row header.
  * @export
  * @constructor
- * @extends oj.DataSource
+ * @extends oj.DataGridDataSource
  */
 oj.ArrayDataGridDataSource = function(data, options)
 {
@@ -1131,71 +1131,71 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                     */    
                     template:null
                 },
-				
-				/**
-				 * Triggered when a portion of the data grid is selected
-				 *
-				 * @expose 
-				 * @event 
-				 * @memberof! oj.ojDataGrid
-				 * @instance
-				 * @property {Event} event <code class="prettyprint">jQuery</code> event object
-				 * @property {Object} ui Parameters
-				 * @property {Array} ui.selection the datagrid selection object
-				 * 
-				 * @example <caption>Initialize the data grid with the <code class="prettyprint">select</code> callback specified:</caption>
-				 * $( ".selector" ).ojDataGrid({
-				 *     "select": function( event, ui ) {}
-				 * });
-				 *
-				 * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-				 * $( ".selector" ).on( "ojselect", function( event, ui ) {} );
-				 */
-				select: null,
 
-				/**
-				 * Triggered when a portion of the data grid is resized
-				 *
-				 * @expose 
-				 * @event 
-				 * @memberof! oj.ojDataGrid
-				 * @instance
-				 * @property {Event} event <code class="prettyprint">jQuery</code> event object
-				 * @property {Object} ui Parameters
-				 * @property {Element} ui.header the header Element which was resized
-				 * @property {string} ui.size the new pixel size string (ex: '75px')
-				 *
-				 * @example <caption>Initialize the data grid with the <code class="prettyprint">resize</code> callback specified:</caption>
-				 * $( ".selector" ).ojDataGrid({
-				 *     "resize": function( event, ui ) {}
-				 * });
-				 *
-				 * @example <caption>Bind an event listener to the <code class="prettyprint">ojresize</code> event:</caption>
-				 * $( ".selector" ).on( "ojresize", function( event, ui ) {} );
-				 */
-				resize: null,				
+                /**
+                 * Triggered when a portion of the data grid is selected
+                 *
+                 * @expose 
+                 * @event 
+                 * @memberof! oj.ojDataGrid
+                 * @instance
+                 * @property {Event} event <code class="prettyprint">jQuery</code> event object
+                 * @property {Object} ui Parameters
+                 * @property {Array} ui.selection the datagrid selection object
+                 * 
+                 * @example <caption>Initialize the data grid with the <code class="prettyprint">select</code> callback specified:</caption>
+                 * $( ".selector" ).ojDataGrid({
+                 *     "select": function( event, ui ) {}
+                 * });
+                 *
+                 * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
+                 * $( ".selector" ).on( "ojselect", function( event, ui ) {} );
+                 */
+                select: null,
 
-				/**
-				 * Triggered when a sort is performed on the data grid
-				 *
-				 * @expose 
-				 * @event 
-				 * @memberof! oj.ojDataGrid
-				 * @instance
-				 * @property {Event} event <code class="prettyprint">jQuery</code> event object
-				 * @property {Object} ui Parameters
-				 * @property {Element} ui.header the header Element which was sorted on				 
-				 * @property {string} ui.direction the direction of the sort ascending/descending
-				 * 
-				 * @example <caption>Initialize the data grid with the <code class="prettyprint">sort</code> callback specified:</caption>
-				 * $( ".selector" ).ojDataGrid({
-				 *     "sort": function( event, ui ) {}
-				 * });
-				 *
-				 * @example <caption>Bind an event listener to the <code class="prettyprint">ojsort</code> event:</caption>
-				 * $( ".selector" ).on( "ojsort", function( event, ui ) {} );
-				 */
-				sort: null				
+                /**
+                 * Triggered when a portion of the data grid is resized
+                 *
+                 * @expose 
+                 * @event 
+                 * @memberof! oj.ojDataGrid
+                 * @instance
+                 * @property {Event} event <code class="prettyprint">jQuery</code> event object
+                 * @property {Object} ui Parameters
+                 * @property {Element} ui.header the header Element which was resized
+                 * @property {string} ui.size the new pixel size string (ex: '75px')
+                 *
+                 * @example <caption>Initialize the data grid with the <code class="prettyprint">resize</code> callback specified:</caption>
+                 * $( ".selector" ).ojDataGrid({
+                 *     "resize": function( event, ui ) {}
+                 * });
+                 *
+                 * @example <caption>Bind an event listener to the <code class="prettyprint">ojresize</code> event:</caption>
+                 * $( ".selector" ).on( "ojresize", function( event, ui ) {} );
+                 */
+                resize: null,				
+
+                /**
+                 * Triggered when a sort is performed on the data grid
+                 *
+                 * @expose 
+                 * @event 
+                 * @memberof! oj.ojDataGrid
+                 * @instance
+                 * @property {Event} event <code class="prettyprint">jQuery</code> event object
+                 * @property {Object} ui Parameters
+                 * @property {Element} ui.header the header Element which was sorted on				 
+                 * @property {string} ui.direction the direction of the sort ascending/descending
+                 * 
+                 * @example <caption>Initialize the data grid with the <code class="prettyprint">sort</code> callback specified:</caption>
+                 * $( ".selector" ).ojDataGrid({
+                 *     "sort": function( event, ui ) {}
+                 * });
+                 *
+                 * @example <caption>Bind an event listener to the <code class="prettyprint">ojsort</code> event:</caption>
+                 * $( ".selector" ).on( "ojsort", function( event, ui ) {} );
+                 */
+                sort: null	
             },
     /**
      * Create the grid
@@ -1223,6 +1223,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         this.resources = new oj.DataGridResources(this._GetReadingDirection(), this._getTranslation.bind(self));
         this._setDataSource();
         this._registerDataSourceListeners();
+
         this._addContextMenu();    
         if (this.datasource != null)
         {
@@ -1348,6 +1349,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     {
         var self, menuContainer, rootId, resizeMenu = null, sortMenu = null, moveMenu = null, listItems, temp;
         self = this;
+
         if (this.options["contextMenu"]['menu'] == null)
         {
             if (this.datasource != null) {
@@ -1357,21 +1359,21 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                 if (this._isResizeEnabled('column', 'width') || this._isResizeEnabled('column', 'height') ||
                         this._isResizeEnabled('row', 'width') || this._isResizeEnabled('row', 'height'))
                 {
-                    resizeMenu = $(this._buildContextMenuListItem('resize')).append($('<ul></ul>').append($(this._buildContextMenuListItem('resizeWidth'))).append($(this._buildContextMenuListItem('resizeHeight'))));
+                    resizeMenu = this._buildContextMenuItem('resize');
                 }
                 switch (this.datasource.getCapability('sort'))
                 {
                     case 'none':
                         break;
                     case 'column':
-                        sortMenu = $(this._buildContextMenuListItem('sortCol')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortColAsc'))).append($(this._buildContextMenuListItem('sortColDsc'))));
+                        sortMenu = this._buildContextMenuItem('sortCol');
                         break;
                     case 'row':
-                        sortMenu = $(this._buildContextMenuListItem('sortRow')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortRowAsc'))).append($(this._buildContextMenuListItem('sortRowDsc'))));
+                        sortMenu = this._buildContextMenuItem('sortRow');
                         break;
                     default:
-                        temp = $(this._buildContextMenuListItem('sortCol')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortColAsc'))).append($(this._buildContextMenuListItem('sortColDsc'))));
-                        sortMenu = temp.add($(this._buildContextMenuListItem('sortRow')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortRowAsc'))).append($(this._buildContextMenuListItem('sortRowDsc')))));
+                        temp = this._buildContextMenuItem('sortCol');
+                        sortMenu = temp.add(this._buildContextMenuItem('sortRow'));
                 }
                 switch (this.datasource.getCapability('move'))
                 {
@@ -1396,12 +1398,36 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                 if ($(this).children('a').length === 0)
                 {
                     command = $(this).attr('data-oj-command').split("-");
-                    $(this).prepend(self._buildContextMenuLabel(command[command.length-1]));
+                    $(this).replaceWith(self._buildContextMenuItem(command[command.length-1]));
                 }
             });
             menuContainer.ojMenu('refresh');
             menuContainer.on("ojbeforeshow", this._handleContextMenuBeforeShow.bind(this));
             menuContainer.on("ojselect", this._handleContextMenuSelect.bind(this));
+        }
+    },
+            
+    /**
+     * Builds a menu for a command, takes care of submenus where appropriate
+     * @private	 
+     */            
+    _buildContextMenuItem: function(command)
+    {
+        if (command === 'resize')
+        {
+            return $(this._buildContextMenuListItem('resize')).append($('<ul></ul>').append($(this._buildContextMenuListItem('resizeWidth'))).append($(this._buildContextMenuListItem('resizeHeight'))));
+        }
+        else if(command === 'sortCol')
+        {
+            return $(this._buildContextMenuListItem('sortCol')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortColAsc'))).append($(this._buildContextMenuListItem('sortColDsc'))));
+        }
+        else if(command === 'sortRow')
+        {
+            return $(this._buildContextMenuListItem('sortRow')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortRowAsc'))).append($(this._buildContextMenuListItem('sortRowDsc'))));
+        }        
+        else if (Object.keys(this.resources.commands).indexOf(command) != -1)
+        {
+            return $(this._buildContextMenuListItem(command));         
         }
     },
             
@@ -1734,32 +1760,9 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
      */   			
     _setDataSource: function()
     {
-        var self = this, data, rowHeader;
-        if (self.options['data'] != null)
+        if (this.options['data'] != null)
         {
-            data = self.options['data']['data'];
-            rowHeader = self.options['data']['rowHeader'];
-            if (data === undefined)
-            {
-                data = self.options['data'];
-            }
-
-            if (data instanceof Array)
-            {
-                this.datasource = new oj.ArrayDataGridDataSource(data, {'rowHeader': rowHeader});
-            }
-            else if (data.constructor.prototype instanceof oj.Collection)
-            {
-                this.datasource = new oj.CollectionDataGridDataSource(data, {'rowHeader': rowHeader});
-            }
-            else if (data instanceof oj.TreeDataSource)
-            {
-                this.datasource = new oj.FlattenedTreeDataGridDataSource(data);
-            }
-            else
-            {
-                this.datasource = data;
-            }
+			this.datasource = this.options['data'];
         }
         else
         {
@@ -1770,7 +1773,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     /**
      * Modify the header and cell context before passing to the renderer.
      * @param {Object} context the header or cell context.
-	 * @private
+     * @private
      */
     _modifyContext: function(context)
     {
@@ -1779,7 +1782,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     /**
      * Register a row expander widget.
      * @param {Object} rowExpander the row expander widget.
-	 * @private
+     * @private
      */
     _registerRowExpander: function(rowExpander)
     {
@@ -1789,22 +1792,8 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
             // the datagrid should update internal state for screenreader
             self.grid.registerRowExpander(rowExpander.element[0]);
         }
-        rowExpander._parseMetadata = self._parseMetadata;
     },
-    /**
-     * parse grid metadata to return an object {leaf:x, depth:y}
-     * @param {Object} metadata the cell metadata
-	 * @private
-     */
-    _parseMetadata: function(metadata)
-    {
-        var parsed = {};
-        parsed['state'] = metadata['row']['state'];
-        parsed['depth'] = metadata['row']['depth'];
-        parsed['key'] = metadata['row']['key'];
-        return parsed;
-    },            
-    
+
     /**
      * If no arguments are passed in, gets the current selections in the Grid. 
      * Returns an empty array if there's no selection. Returns "all" if everything 
@@ -1948,11 +1937,10 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
  * @param {number} endColumn the end column index of the cell set
  * @param {Object} nodeSet the node set in which this cell set wraps around
  * @param {Array|null} columns the set of column keys
- * @param {function(Object, Object)} metadataCallback callback to inject additional metadata information
  * @constructor
  * @export
  */
-oj.FlattenedTreeCellSet = function(startRow, endRow, startColumn, endColumn, nodeSet, columns, metadataCallback)
+oj.FlattenedTreeCellSet = function(startRow, endRow, startColumn, endColumn, nodeSet, columns)
 {
     // assert startRow/startColumn are number
     oj.Assert.assertNumber(startRow, null);
@@ -1967,7 +1955,6 @@ oj.FlattenedTreeCellSet = function(startRow, endRow, startColumn, endColumn, nod
     this.m_endColumn = endColumn;
     this.m_nodeSet = nodeSet;
     this.m_columns = columns;
-    this.m_callback = metadataCallback;
 };
 
 /**
@@ -2024,7 +2011,7 @@ oj.FlattenedTreeCellSet.prototype.getData = function(indexes)
  */
 oj.FlattenedTreeCellSet.prototype.getMetadata = function(indexes)
 {
-    var relIndex, row, column, keys;
+    var relIndex, row, column, columnKey, metadata, rowKey;
 
     // convert to relative index
     relIndex = this._getRelIndexes(indexes);
@@ -2039,23 +2026,12 @@ oj.FlattenedTreeCellSet.prototype.getMetadata = function(indexes)
     // make sure index are valid
     oj.Assert.assert(row < this.m_nodeSet.getStart()+this.m_nodeSet.getCount() && column < this.m_columns.length);
 
-    var columnKey = this.m_columns[column];
+    columnKey = this.m_columns[column];
 
-    var rowMetadata = this.m_nodeSet.getMetadata(row);
-    var rowKey = rowMetadata['key'];
+    metadata = this.m_nodeSet.getMetadata(row);
+    rowKey = metadata['key'];
 
-    keys = {"row": rowKey, "column": columnKey};
-
-    // inject additional metadata, such as expanded state, if callback is present
-    if (this.m_callback != null)
-    {
-        this.m_callback.call(null, rowKey, rowMetadata);    
-    }
-
-    // merge in row metadata
-    var metadata = {};
-    metadata['row'] = rowMetadata;
-    metadata['keys'] = keys;
+    metadata['keys'] = {"row": rowKey, "column": columnKey};
 
     return metadata;
 };
@@ -2346,14 +2322,15 @@ oj.ArrayCellSet.prototype.getStartColumn = function()
 };
 /**
  * The DataGrid specific implementation of the FlattenedTreeDataSource class.
- * @param {Object} options the options set on this data source.  See documentation for a list
+ * @param {Object} treeDataSource the instance of TreeDataSource to flattened
+ * @param {Object=} options the options set on this data source.  See documentation for a list
  *        of supported options.
  * @constructor
  * @export
  */
-oj.FlattenedTreeDataGridDataSource = function(options)
+oj.FlattenedTreeDataGridDataSource = function(treeDataSource, options)
 {
-    oj.FlattenedTreeDataGridDataSource.superclass.constructor.call(this, options);
+    oj.FlattenedTreeDataGridDataSource.superclass.constructor.call(this, treeDataSource, options);
 };
 
 // Subclass from oj.FlattenedTreeDataSource
@@ -2689,7 +2666,7 @@ oj.FlattenedTreeDataGridDataSource.prototype._handleFetchRowsSuccess = function(
     }
 
     // create wrapper
-    cellSet = new oj.FlattenedTreeCellSet(rowStart, rowStart+rowCount, columnStart, columnStart+columnCount, nodeSet, this.m_columns, this.insertMetadata.bind(this));
+    cellSet = new oj.FlattenedTreeCellSet(rowStart, rowStart+rowCount, columnStart, columnStart+columnCount, nodeSet, this.m_columns);
     // invoke success callback
     if (callbacks['success'])
     {
@@ -2797,7 +2774,7 @@ oj.FlattenedTreeDataGridDataSource.prototype.insertRows = function(insertAtIndex
     var cellSet, event;
 
     // create a CellSet that wraps around a RowSet 
-    cellSet = new oj.FlattenedTreeCellSet(insertAtIndex, insertAtIndex+nodeSet.getCount(), 0, this.m_columns.length, nodeSet, this.m_columns, this.insertMetadata.bind(this));
+    cellSet = new oj.FlattenedTreeCellSet(insertAtIndex, insertAtIndex+nodeSet.getCount(), 0, this.m_columns.length, nodeSet, this.m_columns);
 
     // construct model insert event with a set of rows to insert
     event = {};
@@ -3094,6 +3071,10 @@ oj.PagingDataGridDataSource.prototype.off = function(eventType, eventHandler)
  */
 oj.PagingDataGridDataSource.prototype.getCapability = function(feature)
 {
+  if (feature === 'move')
+  {
+      return "none"
+  }
   return this.dataSource.getCapability(feature);
 };
 
