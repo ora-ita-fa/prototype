@@ -28,7 +28,8 @@ oj.Components = {};
  *   'editableValue': // properties for editableValue components 
  *   {
  *     'option1': 'somevalue1',
- *     'option2': function(context){return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : 'normalValue'}
+ *     'option2': oj.Components.createDynamicPropertyGetter(function(context){
+ *                                 return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : 'normalValue'})
  *   },
  *   'ojText': // properties for instances of ojText 
  *   {
@@ -36,13 +37,9 @@ oj.Components = {};
  *   }
  * }
  * </pre>
- * If the property value is specified as a function, it will be used as a dynamic getter for the property. The function
- * will receive a context object as a parameter.The following properties are currently supported on the context
- * object:
- * <ul>
- * <li>containers - an array of component names of the current component's containers that require special behavior from
- * their children</li>
- * </ul>
+ * To specify a dynamic getter for the property, pass your callback to oj.Components.createDynamicPropertyGetter(). Note
+ * that dynamic getters nested within a complex property value are not supported
+ * @see oj.Components.createDynamicPropertyGetter
  * @export
  */
 oj.Components.setDefaultOptions = function(options)
@@ -59,6 +56,26 @@ oj.Components.setDefaultOptions = function(options)
 oj.Components.getDefaultOptions = function()
 {
   return (oj.Components._defaultProperties || {});
+};
+
+
+/**
+ * Creates a dynamic getter that can be used as a property value in oj.Components.setDefaultOptions()
+ * @param {!Function} callback - dynamic property callback. The callback will receive a context object as a parameter.
+ * The following properties are currently supported on the context object:
+ * <ul>
+ * <li>containers - an array of component names of the current component's containers that require special behavior from
+ * their children</li>
+ * </ul>
+ * The callback should return the computed property value
+ * 
+ * @return {Object} - dynamic property getter
+ * @see oj.Components.setDefaultOptions
+ * @export
+ */
+oj.Components.createDynamicPropertyGetter = function(callback)
+{
+  return new __ojDynamicGetter(callback, true);
 };
 
 /**
@@ -99,6 +116,25 @@ oj.Components.getWidgetConstructor = function(element, widgetName)
   
   return null;
 };
+
+/**
+ * @constructor
+ * @param {Function} callback
+ * @param {boolean=} needsDynamicContext
+ * @private
+ */
+function __ojDynamicGetter(callback, needsDynamicContext)
+{
+  this.getCallback = function()
+  {
+    return callback;
+  }
+  this.isDynamicContextNeeded = function()
+  {
+    return needsDynamicContext;
+  }
+};
+
 
 /**
  * @private
@@ -178,17 +214,6 @@ $.widget('oj.baseComponent',
   {
     this._propertyContext = null;
   },
-  
-  /*
-   * Override _createWidget to initialize variables before create.
-   */
-  _createWidget: function( options, element ) {
-    this['activeable'] = $();
-    this._super(options, element);
-    
-    // Store widget name, so that oj.Components.getWidgetConstructor() can get widget from the element
-    _storeWidgetName(this.element, this.widgetName);
-  },
 
   /*
    * Unlike JQUI, all subclasses must call this._super() when overriding this method, since we override it here.
@@ -197,16 +222,92 @@ $.widget('oj.baseComponent',
    */
   _create : function()
   {
-    this._setDefaultProperties();
-        
-    // namespace facilitates removing contextMenu handlers separately, if app clears the "contextMenu" option
-    this.contextMenuEventNamespace = this.eventNamespace + "contextMenu";
-    this._setupContextMenu();
-	
-	this._savedAttributes = [];
-	this._SaveAttributes(this.element);
+    this._savedAttributes = [];
+    this._SaveAttributes(this.element);
+    this._CreateComponent();
+    this._AfterCreateComponent();
+
   },
   
+  /**
+   * Overridden to return component-specific translations and default options specified with oj.Components.setDefaultOptions()
+   * @private
+   */
+  _getCreateOptions: function()
+  {
+    var defaults = {};
+    
+    // Load component translations
+    var getters = {};
+    this._RegisterTranslatedOptionGetters(getters);
+    
+    // wrap translation getters in the __ojDynamicGetter wrapper do distinguish them
+    // from regular functions
+    for (var prop in getters)
+    {
+      defaults[prop] = new __ojDynamicGetter(getters[prop]);
+    }
+    
+    // Load options specified with oj.Components.setDefaultOptions()
+    var widgetHierNames = [];
+    var proto = this.constructor.prototype;
+    while (proto != null && proto.widgetName)
+    {
+      widgetHierNames.push(proto.widgetName);
+      proto = Object.getPrototypeOf(proto);
+    }
+    
+    widgetHierNames.push('default');
+    
+    var allProperties = oj.Components.getDefaultOptions();
+    
+    // merge properties applicable to this component
+    for (var i= widgetHierNames.length; i>=0; i--)
+    {
+      var name = widgetHierNames[i];
+      var props = allProperties[name];
+      if (props !== undefined)
+      {
+        defaults = $.widget.extend(defaults, props);
+      }
+    }
+    
+    return defaults;
+  },
+  
+  
+    /**
+   * This is where we create components. You have access to the options, and 
+   * that's about it. Use _AfterCreateComponent if you want to do things
+   * after the component is created, like add styles to the root dom element.
+   * this._super should be call first.
+   * 
+   * @memberof! oj.baseComponent
+   * @instance
+   * @protected
+   */
+  _CreateComponent : function ()
+  {
+    this['activeable'] = $();
+    this._setupDynamicProperties();
+    
+    // Store widget name, so that oj.Components.getWidgetConstructor() can get widget from the element
+    _storeWidgetName(this.element, this.widgetName);
+  },
+  /**
+   * This is where we do things right after the component was created.
+   * this._super should be call first.
+   *
+   * @memberof! oj.baseComponent
+   * @instance
+   * @protected
+   */
+  _AfterCreateComponent : function ()
+  { 
+    // namespace facilitates removing contextMenu handlers separately, if app clears the "contextMenu" option
+    this.contextMenuEventNamespace = this.eventNamespace + "contextMenu";
+    this._setupContextMenu(); 
+  },
   /**
    * Saves the element's attributes within an internal variable to be reset during the destroy function
    *
@@ -220,8 +321,7 @@ $.widget('oj.baseComponent',
    *     }
    *   }
    * ]
-   * 
-   * @expose
+   *
    * @param {Object} element - jQuery selection to save attributes for
    * @memberof! oj.baseComponent
    * @instance
@@ -261,7 +361,6 @@ $.widget('oj.baseComponent',
   /**
    * Gets the saved attributes for the provided element
    *
-   * @expose
    * @param {Object} element - jQuery selection, should be a single entry
    * @return {Object} savedAttributes - attributes that were saved for this element
    * @memberof! oj.baseComponent
@@ -290,7 +389,6 @@ $.widget('oj.baseComponent',
   /**
    * Restores the saved element's attributes
    *
-   * @expose
    * @memberof! oj.baseComponent
    * @instance
    * @protected
@@ -560,6 +658,12 @@ $.widget('oj.baseComponent',
       {
           this['hoverable'].removeClass( "oj-hover" );
           this['focusable'].removeClass( "oj-focus" );
+          // TODO: when we have worked out the 'create' super code change,
+          // this this check should not be necessary. Right now, this gets
+          // called before _create for radioset (and possibly others) when
+          // we create a component like ojRadioset({disabled: true});
+          if (!this['activeable'])
+            this['activeable'] = $(); 
           this['activeable'].removeClass( "oj-active" );
       }
     }
@@ -763,7 +867,6 @@ $.widget('oj.baseComponent',
    *   (This provides a hook for component housekeeping, and allows caching.)</li>
    * </ul>
    * 
-   * @expose
    * @memberof! oj.baseComponent
    * @instance
    * @protected
@@ -792,74 +895,34 @@ $.widget('oj.baseComponent',
   /**
    * @private
    */
-  _setDefaultProperties: function()
+  _setupDynamicProperties: function()
   {
-    var widgetHierNames = [];
-    var proto = this.constructor.prototype;
-    while (proto != null && proto.widgetName)
-    {
-      widgetHierNames.push(proto.widgetName);
-      proto = Object.getPrototypeOf(proto);
-    }
-    
-    widgetHierNames.push('default');
-    
-    var defaults = {};
-    
-    var allProperties = oj.Components.getDefaultOptions();
-    
-    // merge properties applicable to this component
-    for (var i= widgetHierNames.length; i>=0; i--)
-    {
-      var name = widgetHierNames[i];
-      var props = allProperties[name];
-      if (props !== undefined)
-      {
-        defaults = $.widget.extend(defaults, props);
-      }
-    }
-    
     var self = this;
     
     var contextCallback = function()
     {
       return self._getDynamicPropertyContext();
-    }
+    };
     
-    for (var prop in defaults)
+    var options = this.options;
+    
+    for (var prop in options)
     {
-      var val = defaults[prop];
-
-      var current = this.options[prop];
+      var val = options[prop];
       
-      if (current === undefined || $.isPlainObject(current))
+      if (typeof val !== 'undefined' && val instanceof __ojDynamicGetter)
       {
-        if ($.isFunction(val))
+        var callback = val.getCallback();
+        if ($.isFunction(callback))
         {
-          _defineDynamicProperty(this, this.options, prop, val, contextCallback);
+          delete options[prop];
+          _defineDynamicProperty(this, options, prop, callback, val.isDynamicContextNeeded() ? contextCallback : undefined);
         }
         else 
         {
-          // Callback is not specified, merging default properties 'under' the current value in this.options
-          if ($.isPlainObject(val))
-          {
-            this.options[prop] = $.widget.extend({}, val, current || {});
-          }
-          else if (current === undefined)
-          {
-            this.options[prop] = val;
-          }
+          oj.Logger.error("Dynamic getter for property %s is not a function", prop);
         }
       }
-    }
-    
-    // Load translated properties
-    var getters = {};
-    this._RegisterTranslatedOptionGetters(getters);
-    
-    for (var prp in getters)
-    {
-      _defineDynamicProperty(this, this.options, prp, getters[prp]);
     }
     
   }
@@ -914,7 +977,7 @@ oj.__registerWidget = function( name, base, prototype )
 
 /**
  * @param {Object} self
- * @param {Object} options
+ * @param {Object!} options
  * @param {string} prop
  * @param {Function} getter
  * @param {Function=} contextCallback
@@ -922,7 +985,7 @@ oj.__registerWidget = function( name, base, prototype )
  */
  function _defineDynamicProperty(self, options, prop, getter, contextCallback)
  {
-   var override = options[prop];
+   var override = undefined;
    
    Object.defineProperty(options, prop,
      {
@@ -1109,6 +1172,12 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
      * whether the component is disabled. The element's disabled property is used as its initial 
      * value if it exists, when the option is not explicitly set. When neither is set, disabled 
      * defaults to false.
+     *  
+     * <p>The 2-way <code class="prettyprint">disabled</code> binding offered by 
+     * the <code class="prettyprint">ojComponent</code> binding 
+     * should be used instead of Knockout's built-in <code class="prettyprint">disable</code> 
+     * and <code class="prettyprint">enable</code> bindings, 
+     * as the former sets the API, while the latter sets the underlying DOM attribute.
      * 
      * @example <caption>Initialize component with <code class="prettyprint">disabled</code> option:</caption>
      * $(".selector").ojInputText({"disabled": true});
@@ -1173,20 +1242,32 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     messages : null,
 
     /**
-     * an Object literal that allows a widget to specify how it wants the various 'messaging 
-     * artifacts' to be displayed in relation to itself. <br/>
-     * Accepted values for messaging artifacts are * 'messages', 'converterHint', 'validatorHint', 
-     * 'title'. NOTE: In the future additional types like 'help' might be supported. <br/>
-     * Each messaging artifact accepts a string display option which can be one of 'notewindow', 
-     * 'none'. NOTE: In the future additional display options like 'inline' might be supported. 
+     * an Object literal containing the following property-value pairs, that allows a widget to specify 
+     * how it wants the various 'messaging artifacts' to be displayed in relation to itself. <br/>
+     * Accepted values for the key is a string type of the messaging artifact and they include 
+     * 'messages', 'converterHint', 'validatorHint', 'title'. NOTE: In the future additional types 
+     * like 'help' might be supported. <br/>
+     * The value is either an array of display options or a string display option. When an array of 
+     * display options is specified the first display option is used first and then the second as 
+     * fallback and so on. NOTE: In the future we plan to support additional display options like 
+     * 'inline'. 
+     * <br/>
+     * By default components that support messaging define default values for all messaging 
+     * artifacts. Page authors will update this option when overriding defaults.
      * 
-     * @example <caption>Initialize component with the default set of <code class="prettyprint">messagingDisplayOptions</code> for the component:</caption>
+     * @property {string=} converterHint - supported values are 'placeholder', 'notewindow', 'none'. 
+     * E.g. {'converterHint': ['placeholder', 'notewindow']}
+     * @property {string=} validatorHint - supported values are 'notewindow', 'none'. 
+     * E.g. {'validatorHint': ['notewindow']}
+     * @property {string=} messages - supported values are 'notewindow', 'none'. 
+     * E.g. {'messages': 'notewindow'}
+     * @property {string=} title - supported values are 'notewindow', 'none'. 
+     * E.g. {'title': 'notewindow'}
+     * 
+     * @example <caption>Initialize component and override default for converterHint using <code class="prettyprint">messagingDisplayOptions</code>:</caption>
      * // Only messages will get shown in the notewindow associated to this component
      * $(".selector").ojInputText("option", "messagingDisplayOptions", {
-     *   'messages': 'notewindow', 
-     *   'converterHint': 'none', 
-     *   'validatorHint': 'none', 
-     *   'title': 'none'
+     *   'converterHint': ['notewindow'] // the default is ['placeholder', 'notewindow']
      * });
      * 
      * @expose 
@@ -1217,14 +1298,16 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
      * @type {string}
      */    
     pattern: "",
+    
     /** 
      * whether the component is required. The element's required property is used as its initial 
      * value if it exists, when the option is not explicitly set. Allowed values for required are 
-     * 'required' and 'optional', 'optional' being the default.
+     * 'required' and 'optional', 'optional' being the default. <br/>
      * 
-     * When required is set on the input component, the input's label will 
-     * render a required icon.
-     * 
+     * When required option is set, the input's label will render a required icon. <br/>
+     * When required option is set, a required validator - (@link oj.RequiredValidator) - is 
+     * implicitly used. If an explicit required validator is set using the validators option then 
+     * that gets used instead.
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">required</code> option:</caption>
      * $(".selector").ojInputNumber({required: 'required'});<br/>
@@ -1233,6 +1316,13 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
      * // reading the required option will return "required"
      * $(".selector").ojInputNumber("option", "required");<br/>
      * 
+     * @example <caption>Using <code class="prettyprint">required</code> option and setting an explicit required validator:</caption>
+     * &lt;input type="text" value="foobar" required data-bind="ojComponent: {
+     *   component: 'ojInputText', 
+     *   value: password, 
+     *   validators: [{type: 'required', options : {
+                               messageSummary: '\'{label}\' Required', 
+                               messageDetail: 'A value is required for this field'}}]}"/>
      * @expose 
      * @access public
      * @instance
@@ -1433,10 +1523,12 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
           break;
           
         case "messagingDisplayOptions":
-          
           previousMsgDisplay = $.extend({}, this.options['messagingDisplayOptions']);
-          // value = $.extend(previousMsgDisplay, value);
           break;
+          
+        case "placeholder" :
+          placeholderOptionSet = true;
+          break;           
       }
     }
     // an object literal of key...values is passed in - ('option', {key: value, key2: value2})
@@ -1506,14 +1598,22 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       }
     }
     
-    if (placeholderOptionSet && refreshMessagingOptions)
+    if (placeholderOptionSet)
     {
-      // if placeholder is set and it's not from messaging code, then the messaging preferences will 
-      // need to re-evaluated. E.g., if default display for 
-      // converterHint: ['placeholder', 'notewindow'] is 'placeholder', and if user were to set a 
-      // custom placeholder, this overrides the default display for convererHint from 'placeholder'
-      // to 'notewindow'. 
-      this._initComponentMessaging();
+      if (refreshMessagingOptions)
+      {
+        // if placeholder was set and it's not from messaging code, then the messaging preferences 
+        // will need to re-evaluated. E.g., the default display for 
+        // converterHint: ['placeholder', 'notewindow'] is 'placeholder', and if user were to set a 
+        // custom placeholder, this overrides the default display for convererHint from 'placeholder'
+        // to 'notewindow'. 
+        this.__customPlaceholderSet = true;
+        this._initComponentMessaging();
+      }
+      else
+      {
+        this.__customPlaceholderSet = false;
+      }
     }
     
     return retVal;
@@ -1536,9 +1636,14 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   },
   
   /**
-   * Refreshes the component display value to the option value. When the component is invalid 
-   * because the user entered a value that failed validation, the user entered value will be cleared 
-   * when calling this method, but it is still important to clear the messages explicitly.
+   * Called typically when the DOM underneath the component has changed requiring a re-render 
+   * of the component, but also when some external condition impacts the rendering of the component,
+   * e.g., when the locale for the page change, a component using a converter or translations will 
+   * need to be refreshed. <br/>
+   * This method override refreshes the component display value to the option value. When the 
+   * component was previously invalid it is important to clear the messages explicitly., before 
+   * calling refresh.
+   * 
    * @example <caption>Clear messages and refresh component.</caption>
    * $(selector).ojInputText("option", "messages", []); <br/>
    * $(selector).ojInputText("refresh");
@@ -1551,11 +1656,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   refresh : function ()
   {
     this._super();
-    this._Refresh("value", this.options['value']);
-    this._refreshAria("required", this.options.required);
-    this._refreshTheming("required", this.options.required);
-    if (this.$label !== null)
-      this.$label._ojLabel("refresh");
+    this._doRefresh(true);
   },
   
   /**
@@ -1613,21 +1714,32 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _VALIDATION_MODE : {FULL : 1, VALIDATORS_ONLY : 2, REQUIRED_VALIDATOR_ONLY : 3, NONE : 4},
 
   /**
-   * Initializes the value for component options that correspond to the html5 attributes. E.g., 
-   * required, pattern, value etc.
+   * This is where we create components. You have access to the options, and 
+   * that's about it. Use _AfterCreateComponent if you want to do things
+   * after the component is created, like add styles to the root dom element.
+   * this._super should be call first.
    * 
    * @expose
    * @memberof! oj.editableValue
    * @instance
    * @protected
    */
-  _create : function () 
+  _CreateComponent : function ()
   {
-    var propValue, attrValue, validator;
     this._super();
-    
-    this.widget().addClass("oj-form-control");
-	
+  },
+  /**
+   * This is where we do things right after the component was created.
+   * this._super should be call first.
+   * 
+   * @expose
+   * @memberof! oj.editableValue
+   * @instance
+   * @protected
+   */
+  _AfterCreateComponent : function ()
+  {
+    this._super();
     // VALUE: 
     // if options doesn't have a value property look for the element value
     if (!this.options['value'])
@@ -1648,10 +1760,24 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     {
       this.element.prop( "disabled", this.options.disabled );
     }  
-
     // decorate the label
     this._createOjLabel();
     
+    // refresh value, theming and aria attributes
+    this._doRefresh(false);
+
+    // initialize component messaging
+    this._initComponentMessaging();
+   
+    // trigger a optionChange event to push current set of messages into invalidComponentTracker at 
+    // creation time.
+    if (!this.options['messages'])
+    {
+      this.options['messages'] = [];
+    }
+    this._TriggerOptionChange('messages', [], null);   
+           
+    this.widget().addClass("oj-form-control");
   },
   
   /**
@@ -1696,11 +1822,21 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     // register a default RegExp validator if we have a valid pattern
     if (this.options['pattern'])
     {
-      // add validator to the a special _internalValidators list. These are validators created by 
+      // add validator to the special internalValidators list. These are validators created by 
       // the framework. We don't want these cleared using the option - 'validators'
       this._GetDefaultValidators()['regExp'] = this._getDefaultRegExpValidator();
     }
   
+    // PLACEHOLDER:
+    // if options.placeholder is not set, use placeholder attribute on element
+    if (!this.options['placeholder'])
+    {
+      this.options['placeholder'] = "placeholder" in savedAttributes ? 
+        savedAttributes["placeholder"]["prop"] || "" : "";
+      this.__customPlaceholderSet = true;
+    }
+    
+    // remove html5 validation attributes 
     $.each(attrToRemove, function (index, value)
     {
       if (value in savedAttributes)
@@ -1711,47 +1847,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   
     return ret;
   },
-
-  /**
-   * Called at widget creation time. This method sets up default options for the component. 
-   * 
-   * @return {Object} option name and value pairs of default options.
-   * 
-   * @expose
-   * @memberof! oj.editableValue
-   * @instance
-   * @protected
-   */
-  _getCreateOptions : function ()
-  {
-    var allDefaults = this._super();
-    // set the default messagingOption callback that determines the default values for the 
-    // messagingDisplayOptions dynamically based on the context.
-    this._setDefaultMessagingOptions();
-    
-    return allDefaults;
-  },
-  
-  /**
-   * (Re)Initializes the editable value component - activates messaging strategies, clears messages 
-   * and refreshes component.
-   * 
-   * @expose
-   * @memberof! oj.editableValue
-   * @instance
-   * @protected
-   */
-  _init : function ()
-  {
-    this._super();
-    
-    this._initComponentMessaging();    
-    this._clearMessages();
-    // If a converter is set then get the formatted value and set that as the widget's displayValue. 
-    // Widgets subclasses can override setDiplayValue() to provide custom rendering behavior, e.g., 
-    // re-positioning the slider tabs. 
-    this.refresh();
-  },
+          
   
   /**
    * Detaches the widget from the element and restores element exactly like it was before the widget 
@@ -1771,9 +1867,10 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     widget.removeClass("oj-form-control");
     // remove all aria attributes added to the element  
     this.element.removeAttr("aria-required");
-    if (this.$label !== null)
+    if (this.$label)
+    {
       this.$label._ojLabel( "destroy" );
-    
+    }
     return this._super();
   },
           
@@ -1807,7 +1904,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       
       case "validators":
         // Clear the cached normalized list of all validator instances
-		this._ResetAllValidators();
+        this._ResetAllValidators();
         
         // update messagingstrategy as hints associated with validators could have changed
         this._getComponentMessaging().update(this._getMessagingContent(this.__MESSAGING_CONTENT_UPDATE_TYPE.VALIDATOR_HINTS));
@@ -1865,7 +1962,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
         break;
       
       case "required":
-        // do nothing
+        // shouldRefresh=true because hints and label should refresh to show new state
         break;
         
       case "title":
@@ -1961,24 +2058,6 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
 
   },
   
-  /**
-   * Returns the default values for 'messagingDisplayOptions' based on the context this component is 
-   * in. E.g. an editableValue component can change the display options for its messaging 
-   * based on whether it's rendered inside a table or in a form. <p>
-   * 
-   * In addition subclassed components can change the defaults if they choose to.
-   * @param {Object} context
-   * 
-   * @protected
-   */
-  _GetDefaultMessagingDisplayOptions: function (context)
-  {
-    // return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : baseDefaults;}
-    // Future: this method will return defaults based on the context.
-    
-    // we want to merge the instance options with the defaults
-    return $.extend({}, this.__DEFAULT_MESSAGING_OPTIONS);
-  },
   
   /**
    * Returns the element's value. Normally, this is a call to this.element.val(), but for some 
@@ -2129,10 +2208,11 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
                 vType = oj.Validation.validatorFactory(vTypeStr);
                 if (vType)
                 {
-                  vOptions = validator['options'] || {};
+                  vOptions = $.extend({}, validator['options']) || {};
                   // we push converter into the options if not provided explicitly. This is to allow
                   // validators to format values shown in the hint and messages
-                  vOptions['converter'] = vOptions['converter'] || this._GetConverter();                  
+                  vOptions['converter'] = vOptions['converter'] || this._GetConverter();
+                  vOptions['label'] = vOptions['label'] || this._getLabelText();
                   validator = vType.createValidator(vOptions);
                 }
                 else
@@ -2160,7 +2240,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   },
   
   /**
-   * EditableValue caches the validators to be ran within this.__allValidators variable.
+   * EditableValue caches the validators to be run within this.__allValidators variable.
    * This is great; however when the default validators need to be reset [i.e. min + max changing] 
    * then the cached this.__allValidators needs to be cleared out]
    * 
@@ -2171,9 +2251,13 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    */
   _ResetAllValidators : function () 
   {
+    if (this.__allValidators)
+    {
+      this.__allValidators.length = 0;
+    }
     this.__allValidators = null;
   },
-          
+
   /**
    * Whether the component is required.
    * 
@@ -2216,44 +2300,42 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    * 
    * @param {String=} name the name of the option that was changed
    * @param {Object=} value the current value of the option
+   * @param {boolean=} fullRefresh false is the default; true means always refresh component 
+   * display value
    * @expose
    * @memberof! oj.editableValue
    * @instance
    * @protected
    */
-  _Refresh : function (name, value)
+  _Refresh : function (name, value, fullRefresh)
   {
     switch (name)
     {
-       case "converter":
-         value = this.options['value'];
-         // when converter changes format of value could change
-         this._refreshComponentDisplayValue(value, true);
-         break;
-         
-       case "value":
-        // until formatting is supported the value is set on the element 
-        
-        this._refreshComponentDisplayValue(value);
-        // var displayVal = value;
-        // this._SetDisplayValue(displayVal);
-        
-        // we save off the last display value 
-        // this.__setLastDisplayValue(displayVal);
-
+      case "converter":
+        value = this.options['value'];
+        // when converter changes format of value could change
+        this._refreshComponentDisplayValue(value, true);
         break;
+         
+      case "value":
+        this._refreshComponentDisplayValue(value, fullRefresh);
+        break;
+
       case "required":
         // need to keep the label in sync with the input
-        if (this.$label !== null)
+        if (this.$label)
+        {
           this.$label._ojLabel("option", "required", value);
+        }
         break;
+        
       case "help":
         // refresh the help - need to keep the label in sync with the input.
         var helpDef = this.options.help["definition"];
         var helpSource = this.options.help["source"];
         var labelHelpIconWrapper = this._ariaDescribedByHelpIconWrapper(helpSource);
 
-        if (this.$label !== null)
+        if (this.$label)
         {
           // Calling option this way calls _setOption in _ojLabel.
           // order matters here. When _ojLabel's help is changed, it removes
@@ -2596,18 +2678,6 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   },
   
   /**
-   * Default Messaging Options for base editableValue
-   * @private
-   * @const
-   * @type {Object}
-   */
-  __DEFAULT_MESSAGING_OPTIONS : {
-      'messages': ['notewindow'], 
-      'converterHint': ['placeholder', 'notewindow'], 
-      'validatorHint': ['notewindow'], 
-      'title': ['notewindow']}, 
-  
-  /**
    * Types of messaging content to update.
    * <ul>
    * <li>'ALL' - builds all messaging content</li>
@@ -2653,6 +2723,42 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       // if we are destroying widget don't bother setting option
       this.options['messages'] = [];
     }
+  },
+  /**
+   * Refreshes the component to respond to DOM changes, in which case fullRefresh=true. This 
+   * internal method is also called when the component's theme or accessibility attributes need to 
+   * be refreshed.
+   * @param {boolean} fullRefresh true if a full refresh of the component is desired.
+   * @private
+   */
+  _doRefresh : function (fullRefresh)
+  {
+    // we decided not to clear messages on refresh because the user intends to refresh the component 
+    // using the latest DOM and latest option values. Page Authors will need to clear messages and 
+    // generally ensure component state is accurate and as expected before calling refresh().
+    
+    fullRefresh = fullRefresh || false;
+    if (fullRefresh)
+    {
+      // the DOM for the label and its text could have changed. 
+      if (this.$label)
+      {
+        this.$label._ojLabel("refresh");
+      }
+      
+      // also clear out anything that relies on the label 
+      this._refreshLabelDependents();
+      
+      // also re-initialize component messaging, since refresh() can be called when the locale 
+      // changes, requiring component to show messaging artifacts for current locale. 
+      // E.g., hints, placeholder, messages are all retrieved for the current locale. Typically when 
+      // switching locales user should have cleared messages.
+      this._initComponentMessaging();
+    }
+        
+    this._Refresh("value", this.options['value'], fullRefresh);
+    this._refreshAria("required", this.options.required);
+    this._refreshTheming("required", this.options.required);
   },
 
   /**
@@ -2701,7 +2807,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _createOjLabel : function ()
   {
     this.$label = this._GetLabelElement();
-    if (this.$label !== null)
+    if (this.$label)
     {
       var helpDef = this.options['help']['definition'];
       var helpSource = this.options['help']['source'];
@@ -2759,6 +2865,15 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     }
     return labelHelpIconWrapperId;  
   },
+          
+  // helper method to retrieve the label text.          
+  _getLabelText : function ()
+  {
+    if (this.$label)
+    {
+      return this.$label.text();
+    }
+  },
   /**        
    * For the current list of messages this method returns the current severity.
    * @return {number} See oj.Message.SEVERITY_LEVEL or -1 if 
@@ -2804,6 +2919,19 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     var compMessaging = this._getComponentMessaging(), 
             messagingTrigger = this._GetMessagingTriggerElement(), 
             messagingContent = this._getMessagingContent(this.__MESSAGING_CONTENT_UPDATE_TYPE.ALL);
+    
+    // if default placeholder is currently set then it needs to be cleared here. This is needed for 
+    // the following reasons
+    // i. a component is reinitialized when the locale changed, requiring the converter hint for 
+    // new locale to be set as placeholder.
+    // ii. or a component's placeholder option or messagingDisplayOptions option, could have changed 
+    // requiring the placeholder to be reset if it's currently set to the default.
+    // 
+    if (!this.__customPlaceholderSet)
+    {
+      this.options['placeholder'] = "";
+    }
+    
     compMessaging.activate(messagingTrigger, messagingContent);
   },
   
@@ -2822,10 +2950,9 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
  * Adds a message to this element
  * @param {Object} message a Message object. TODO: contract needs to exposed
  * @param {Event=} event
- * @returns {undefined}
  * @private
  */
-  _updateMessagesOption : function(message, event) 
+  _updateMessages: function(message, event) 
   {
     var msgs = this.options['messages'].slice(), messagesHash = {};
     oj.Assert.assertPrototype(message, oj.Message);
@@ -2950,16 +3077,13 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _getDefaultRequiredValidator : function ()
   {
     var vf;
-    // TODO: Should we cache the same instance of required validator for all components?
-    if (!this.__requiredValidator)
-    {
-      vf = oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_REQUIRED);
-      this.__requiredValidator = vf ? vf.createValidator() : null;
-    }
     
-    return this.__requiredValidator;
+    // TODO: Should we cache the same instance of required validator for all components?
+    this.__defaultReqValOptions = {'label': this._getLabelText()};    
+    vf = oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_REQUIRED);
+    return vf ? vf.createValidator(this.__defaultReqValOptions) : null;
   },
-          
+
   /**
    * Returns the regexp validator instance or creates it if needed and caches it.
    * @private
@@ -2967,10 +3091,58 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _getDefaultRegExpValidator : function ()
   {
     var vf;
-    this.__defaultRegExpOptions = {'pattern': this.options['pattern']};
+    this.__defaultRegExpOptions = {'pattern': this.options['pattern'], 
+                                   'label': this._getLabelText()};
 
     vf = oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_REGEXP);
     return vf ? vf.createValidator(this.__defaultRegExpOptions) : null;
+  },
+  
+  /**
+   * Returns an array of validator hints.
+   * @param {Array} allValidators
+   * @private
+   */        
+  _getHintsForAllValidators : function(allValidators)
+  {
+    var validator, validatorHints = [], vHint = "", i;
+    if (this._IsRequired())
+    {
+      validator = this._hasRequiredInValidators(allValidators);
+      if (!validator)
+      {
+        // get the hint for the default required validator and push into array if it's not already 
+        // present in the validators array
+        validator = this._getDefaultRequiredValidator();
+        if (validator['getHint'] && typeof validator['getHint'] === "function")
+        {
+          vHint = validator['getHint']();
+          if (vHint)
+          {
+            validatorHints.push(vHint);
+          }
+        }
+      }
+    }
+
+    // loop through all remaining validators
+    for (i = 0; i < allValidators.length; i++)
+    {
+      validator = allValidators[i], vHint = "";
+      if (typeof validator === "object") 
+      {
+        if (validator['getHint'] && typeof validator['getHint'] === "function")
+        {
+          vHint = validator['getHint']();
+          if (vHint)
+          {
+            validatorHints.push(vHint);
+          }
+        }
+      }
+    }
+
+    return validatorHints;
   },
   
   /**
@@ -2984,7 +3156,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _getMessagingContent : function (updateType)
   {
     var messagingContent = {}, converter = this._GetConverter(), converterHint, allValidators, 
-            validator, validatorHints = [], vHint, i;
+            validatorHints = [];
     updateType = updateType || this.__MESSAGING_CONTENT_UPDATE_TYPE.VALIDITY_STATE;
     
     // Add validityState which includes messages, valid and severity
@@ -3019,23 +3191,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
         updateType === this.__MESSAGING_CONTENT_UPDATE_TYPE.VALIDATOR_HINTS)
     {
       allValidators = this._GetAllValidators();
-
-      for (i = 0; i < allValidators.length; i++)
-      {
-        validator = allValidators[i], vHint = "";
-        if (typeof validator === "object") 
-        {
-          // validators : [required, numberRange]
-          if (validator['getHint'] && typeof validator['getHint'] === "function")
-          {
-            vHint = validator['getHint']();
-            if (vHint)
-            {
-              validatorHints.push(vHint);
-            }
-          }
-        }
-      }
+      validatorHints = this._getHintsForAllValidators(allValidators);
       
       if (validatorHints.length > 0)
       {
@@ -3053,6 +3209,28 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     }
     
     return messagingContent;
+  },
+          
+  /**
+   * Checks if a required validator is set explicitly on the validators array and return it.
+   * @param {Array} allValidators
+   * @return {Object|null} required validator instance
+   * @private
+   */
+  _hasRequiredInValidators : function (allValidators)
+  {
+    var validator = null, i, required = null;
+    for (i = 0; i < allValidators.length; i++)
+    {
+      validator = allValidators[i];
+      if (validator instanceof oj.RequiredValidator)
+      {
+        required = validator;
+        break;
+      }
+    }
+
+    return required;
   },
   
   /**
@@ -3124,7 +3302,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     newMsg['summary'] = summary;
     newMsg['severity'] = severity;
     newMsg['detail'] = detail;
-    this._updateMessagesOption(newMsg, event);
+    this._updateMessages(newMsg, event);
   },
 
   /**
@@ -3151,16 +3329,16 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    * invalidElementTracker.
    * 
    * @param {Object|undefined} value the changed value that needs to be updated on UI
-   * @param {boolean=} forceRefresh false is the default; true means always refresh component 
+   * @param {boolean=} fullRefresh false is the default; true means always refresh component 
    * display value
    * @private
    */        
-  _refreshComponentDisplayValue : function (value, forceRefresh)
+  _refreshComponentDisplayValue : function (value, fullRefresh)
   {
     var modelValue = value || this.options['value'], lastModelValue, elementValueUpdated;
     
     lastModelValue = this._getLastModelValue();
-    elementValueUpdated = forceRefresh || (modelValue !== lastModelValue);
+    elementValueUpdated = fullRefresh || (modelValue !== lastModelValue);
 
     // If instance (value) changes, we clear the element value and reset errors. 
     // But if the modelValue is the same as the element's _lastModelValue, then the element value 
@@ -3179,6 +3357,19 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     {
       this._updateElementDisplayValue(modelValue);
     }
+  },
+  
+  /**
+   * Called anytime the label DOM changes requiring a reset of any dependent feature that caches the 
+   * label.
+   * @private
+   */        
+  _refreshLabelDependents : function ()
+  {
+    // for now reset all validators
+    this.__defaultRegExpOptions = {};
+    this.__defaultReqValOptions = {};
+    this._ResetAllValidators();
   },
 
   /**
@@ -3202,67 +3393,6 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     }
   },
 
-  /**
-   * Sets the default messagingDisplayOptions for the component. This method is called from 
-   * _getCreateOptions() at widget creation time.
-   * 
-   * @expose
-   * @memberof! oj.editableValue
-   * @instance
-   * @private
-   */
-  _setDefaultMessagingOptions : function ()
-  {
-    var self = this, contextualDefaults, instanceValue, merged = {}, finalMerged = {}, newValue,
-            artifact, displayType;
-    oj.Components.setDefaultOptions(
-      {
-        'editableValue': // properties for all editableValue components 
-        {
-          'messagingDisplayOptions': function(context) 
-          {
-            return self._GetDefaultMessagingDisplayOptions(context);
-          }
-          // we merge value set on component instance with the contextual defaults and cache this 
-          // instance. if option mutates we clear the cache.
-          /*
-          if (!self.__messagingDisplayOptions)
-          {
-            contextualDefaults = self._GetDefaultMessagingDisplayOptions(context);
-
-
-            // Can't get the option value because this calls the getter that causes a recursion
-            instanceValue = self.options['messagingDisplayOptions'];
-
-            merged = $.extend({}, contextualDefaults, instanceValue);
-            // in order to ensure that string values for artifacts are not allowed 
-            $.each(merged, function(artifact, displayType) {
-              newValue = [];
-              if (typeof displayType === "string")
-              {
-                newValue = [];
-                newValue.push(displayType);
-              }
-              else if (Array.isArray(displayType))
-              {
-                newValue = displayType;
-              }
-
-              finalMerged[artifact] = newValue;
-            });
-
-            self.__messagingDisplayOptions = finalMerged;
-          }
-
-          return self.__messagingDisplayOptions;
-        }
-        */
-
-        }
-      }
-    );
-  },
-  
   _updateElementDisplayValue : function (modelValue, event)
   {
     var displayValue;
@@ -3320,20 +3450,24 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       return;
     }
     
-    var allValidators = [], validator, i;
+    var allValidators = this._GetAllValidators(), validator, i, reqValRun = false;
 
-    // run required validation before anything else 
+    // run required validation before anything else; 
     if (this._IsRequired())
     {
-      this._getDefaultRequiredValidator().validate(value);
+      validator = this._hasRequiredInValidators(allValidators);
+      if (!validator)
+      {
+        validator = this._getDefaultRequiredValidator();
+      }
+      validator.validate(value);
+      reqValRun = true;
     }
 
     // Only run other validators when required validation passes and only if all validators are 
     // requested to be run
     if (!requiredOnly)
     {
-      allValidators = this._GetAllValidators();
-
       for (i = 0; i < allValidators.length; i++)
       {
         validator = allValidators[i];
@@ -3342,6 +3476,11 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
           // validators : [required, numberRange]
           if (validator['validate'] && typeof validator['validate'] === "function")
           {
+            if (validator instanceof oj.RequiredValidator && reqValRun)
+            {
+              // skip running required validation again
+              continue;
+            }
             validator['validate'](value);
           }
           else
@@ -3358,17 +3497,26 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   }     
 });
 
-/***
- * This is an example of setting context-sensitive dynamic default properties
 oj.Components.setDefaultOptions(
   {
     'editableValue': // properties for all editableValue components 
     {
-      'exampleOption': function(context){return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : 'normalValue'}
+      'messagingDisplayOptions': oj.Components.createDynamicPropertyGetter(
+        function(context) 
+        {
+          // var inTable = context['containers'].indexOf('ojTable') >= 0;
+          return  {
+                    'messages': ['notewindow'], 
+                    'converterHint': ['placeholder', 'notewindow'], 
+                    'validatorHint': ['notewindow'], 
+                    'title': ['notewindow']
+                  };
+        }
+      )
     }
   }
 );
-*/
+
 /**
  * @class
  * @name oj.inputBase
@@ -3406,12 +3554,22 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   _ATTR_CHECK : [],
   
   /** 
-   * Class names to be applied to this.widget()
+   * Class names to be applied to this.element()
    * 
    * @expose
    * @private
    */
   _CLASS_NAMES : "",
+  
+  /** 
+   * Class names to be applied to this.widget()
+   * 
+   * Note that if this value is defined then the this.element will be wrapped
+   * 
+   * @expose
+   * @private
+   */
+  _WIDGET_CLASS_NAMES : "",
   
   /**
    * Below JSON content is a helper to manage events for the input widgets
@@ -3518,16 +3676,37 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   {
     return this._GetReadingDirection() === "rtl";
   },
+  
+  /**
+   * Whether the this.element should be wrapped. Function so that additional conditions can be placed
+   * 
+   * @ignore
+   * @expose
+   * @protected
+   * @return {boolean}
+   */
+  _DoWrapElement : function ()
+  {
+    return this._WIDGET_CLASS_NAMES;
+  },
 
   _create : function __create()
   {
+    
+    if(this._DoWrapElement())
+    {
+      this._wrapElement();
+    }
     
     // todo: where should this be called from
     this._SetRootAttributes();
     
     var ret = this._superApply(arguments);
     
-    this.widget().addClass(this._CLASS_NAMES);
+    if(this._CLASS_NAMES) 
+    {
+      this.element.addClass(this._CLASS_NAMES);
+    }
     
     this._processEventList();
     this._processAttrCheck();
@@ -3547,6 +3726,12 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     }
 
     return ret;
+  },
+  
+  _wrapElement : function __wrapElement() 
+  {
+    $(this.element).wrap( $("<div>").addClass(this._WIDGET_CLASS_NAMES) );
+    this._wrapper = this.element.parent();
   },
   
   _processEventList : function __processEventList()
@@ -3670,7 +3855,12 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
       case "removeAttr" : this.element.removeAttr(attr); break;
       }
     }
-
+    
+    if(this._DoWrapElement())
+    {
+      this.element.unwrap();
+    }
+    
     return ret;
   },
   
@@ -3694,6 +3884,11 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
       this.element.prop("readonly", !!value);
     }
     
+  },
+  
+  widget : function _widget() 
+  {
+    return this._DoWrapElement() ? this._wrapper : this.element;
   }
 
 });
@@ -3947,7 +4142,7 @@ oj.ComponentMessaging.prototype._getResolvedMessagingDisplayOptions = function (
     var artifactsByDisplayType = {}, index, artifactDisplayTypeResolved = false, messagingStrategies = {}, 
       compPH = this._component.options['placeholder'], artifact, key,
       messagingPreferences = this._component.options['messagingDisplayOptions'] || {},
-      $messagingPreferences = {};
+      $messagingPreferences = {}, self = this;
       
     // first resolve primary display options for each artifact.
     // E.g. at the end of this loop you should have something like this
@@ -3958,57 +4153,27 @@ oj.ComponentMessaging.prototype._getResolvedMessagingDisplayOptions = function (
         // artifacts are 'messages', 'converterHint', 'validatorHint', 'title'
         artifactDisplayTypeResolved = false;
         artifact = key + "";
-        $.each(displayTypes, function(index, displayType)
+        // we take either array or string values for messagingDisplayOptions.
+        if (Array.isArray(displayTypes))
         {
-          switch (displayType)
+          $.each(displayTypes, function(index, displayType)
           {
-            // placeholder display is special in that it's only supported on 'converterHint'.
-            case oj.ComponentMessaging._DISPLAY_TYPE.PLACEHOLDER :
-
-              if (artifact === "converterHint")
-              {
-                // if placeholder is the first preference for converterHint, it's used under certain 
-                // conditions
-                // if options.placeholder is not set then use 'converterHint' as the default 
-                // 'placeholder'
-                // alternately if (options.placeholder), i.e., a custom placeholder is set, then 
-                // ignore the placeholder displayType and use the next display type as the default 
-                // for the artifact. We may have a fallback displayType in which case we use it, 
-                // otherwise we use 'none'. E.g., 
-                // {'converterHint': ['placeholder', 'notewindow']} // use notewindow
-                // {'converterHint': ['placeholder']}               // use none
-
-                if (!artifactDisplayTypeResolved)
-                {
-                  if (!compPH)
-                  {
-                    $messagingPreferences[artifact] = displayType;
-                    artifactDisplayTypeResolved = true;
-                    return; // skip processing rest of the displayTypes
-                  }
-                }
-              }
-              else
-              {
-                // displayType 'placeholder' is not supported on other artifacts
-                // ignore if present
-                // TODO: In the future we may want to support configuring validatorHint ot title as 
-                // placeholder as well.
-              }
-
-              break;
-
-            default:
-              if (!artifactDisplayTypeResolved)
-              {
-                $messagingPreferences[artifact] = displayType;
-                artifactDisplayTypeResolved = true;
-                return; // skip processing rest of the displayTypes
-              }
-              break;
+            if (!artifactDisplayTypeResolved)
+            {
+              artifactDisplayTypeResolved = 
+                self._resolveDisplayTypeForArtifact(artifact, displayType, compPH, $messagingPreferences);
+            }
+          });
+        }
+        else if (typeof displayTypes === "string")
+        {
+          if (!artifactDisplayTypeResolved)
+          {
+            artifactDisplayTypeResolved = 
+              self._resolveDisplayTypeForArtifact(artifact, displayTypes, compPH, $messagingPreferences);
           }
-        });
-
+        }
+        
         // if we couldn't resolve then use "none" as the default. E.g., validationHint: ['placeholder']
         if (!artifactDisplayTypeResolved)
         {
@@ -4028,6 +4193,64 @@ oj.ComponentMessaging.prototype._getResolvedMessagingDisplayOptions = function (
     });
     
     return artifactsByDisplayType;
+},
+        
+oj.ComponentMessaging.prototype._resolveDisplayTypeForArtifact = function(
+  artifact, 
+  displayType, 
+  compPH,
+  $messagingPreferences)
+{
+  var artifactDisplayTypeResolved = false;
+  switch (displayType)
+  {
+    // placeholder display is special in that it's only supported on 'converterHint'.
+    case oj.ComponentMessaging._DISPLAY_TYPE.PLACEHOLDER :
+
+      if (artifact === "converterHint")
+      {
+        // if placeholder is the first preference for converterHint, it's used under certain 
+        // conditions
+        // if options.placeholder is not set then use 'converterHint' as the default 
+        // 'placeholder'
+        // alternately if (options.placeholder), i.e., a custom placeholder is set, then 
+        // ignore the placeholder displayType and use the next display type as the default 
+        // for the artifact. We may have a fallback displayType in which case we use it, 
+        // otherwise we use 'none'. E.g., 
+        // {'converterHint': ['placeholder', 'notewindow']} // use notewindow
+        // {'converterHint': ['placeholder']}               // use none
+
+        if (!artifactDisplayTypeResolved)
+        {
+          if (!compPH)
+          {
+            $messagingPreferences[artifact] = displayType;
+            artifactDisplayTypeResolved = true;
+            
+          }
+        }
+      }
+      else
+      {
+        // displayType 'placeholder' is not supported on other artifacts
+        // ignore if present
+        // TODO: In the future we may want to support configuring validatorHint ot title as 
+        // placeholder as well.
+      }
+
+      break;
+
+    default:
+      if (!artifactDisplayTypeResolved)
+      {
+        $messagingPreferences[artifact] = displayType;
+        artifactDisplayTypeResolved = true;
+      }
+      break;
+  }
+  
+  return artifactDisplayTypeResolved;
+  
 },
 
 /**
@@ -4094,7 +4317,7 @@ oj.ComponentMessaging.prototype._reactivate = function (target, content)
       {
         // update the note window strategy with the latest displayOptions if already present. we don;t 
         // want to remove it once activated.
-        strategy.reinitialize(artifactsForType);
+        strategy.reactivate(artifactsForType, content);
       }
     }
     else
@@ -4196,7 +4419,7 @@ oj.MessagingStrategy.prototype.update = function (content)
   else
   {
     // TODO: add warning or other severity state
-    if (this.HasMessages() && maxSeverity === oj.Message.SEVERITY_LEVEL.WARNING)
+    if (this.HasMessages() && maxSeverity === oj.Message.SEVERITY_LEVEL['WARNING'])
     {
       removeClasses.push(oj.MessagingStrategy._SELECTOR_STATE_INVALID);
       addClasses.push(oj.MessagingStrategy._SELECTOR_STATE_WARNING);
@@ -4234,15 +4457,18 @@ oj.MessagingStrategy.prototype.deactivate = function (content)
 };
 
 /**
- * Reinitializes the display options.
+ * Reinitializes with the new display options and updates component messaging using the new content. 
  * 
  * @param {Array} newDisplayOptions
+ * @param {Object} content
  * @private
  */
-oj.MessagingStrategy.prototype.reinitialize = function (newDisplayOptions)
+oj.MessagingStrategy.prototype.reactivate = function (newDisplayOptions, content)
 {
   this.Init(newDisplayOptions);
+  this.update(content);
 };
+
 // P R O T E C T E D  M E T H O D S 
 /**
  * Gets the target element for which the messaging is applied.
@@ -4399,7 +4625,7 @@ oj.PlaceholderMessagingStrategy = function(displayOptions)
 oj.Object.createSubclass(oj.PlaceholderMessagingStrategy, oj.MessagingStrategy, "oj.PlaceholderMessagingStrategy");
 
 /**
- * Initializes the tooltip.
+ * Initializer
  *  
  * @param {Array} displayOptions an array of messaging artifacts displayed in the notewindow.
  * @private
@@ -4410,7 +4636,7 @@ oj.PlaceholderMessagingStrategy.prototype.Init = function (displayOptions)
 };
 
 /**
- * Sets up a tooltip for the component instance using the messaging content provided. 
+ * Sets up a placeholder for the component instance using the converter hint.
  * 
  * @param {Object} component widget instance
  * @param {Object} target element for which the messaging applies. 
@@ -4427,7 +4653,7 @@ oj.PlaceholderMessagingStrategy.prototype.activate = function (component, target
 oj.PlaceholderMessagingStrategy.prototype.update = function (content)
 {
   oj.PlaceholderMessagingStrategy.superclass.update.call(this, content);
-  // this._refreshPlaceholder();
+  this._refreshPlaceholder();
 };
 
 oj.PlaceholderMessagingStrategy.prototype.deactivate = function (content)
@@ -4435,6 +4661,7 @@ oj.PlaceholderMessagingStrategy.prototype.deactivate = function (content)
   oj.PlaceholderMessagingStrategy.superclass.deactivate.call(this, content);
 };
 
+// a default placeholder is set on the component, and that is typically the converter hint
 oj.PlaceholderMessagingStrategy.prototype._refreshPlaceholder = function()
 {
   var target = this.GetTarget(), jqRoot = this.GetComponent().widget(), content, hints;
@@ -4447,7 +4674,8 @@ oj.PlaceholderMessagingStrategy.prototype._refreshPlaceholder = function()
     {
       var values = {};
       values['placeholder'] = content;
-      values['_oj_messaging_update'] = true;
+      values['_oj_messaging_update'] = true; // to indicate to component that placeholder is being 
+                                             // set from messaging module 
 
       this.GetComponent().option(values);
     }
@@ -4911,7 +5139,6 @@ oj.NoteWindowMessagingStrategy.prototype._isTooltipInitialized = function ()
 */
 /**
  * String utilities.
- * @export
  * @ignore
  */
 oj.DomUtils = {};
@@ -4925,7 +5152,6 @@ oj.DomUtils._LEGAL_ATTRIBUTES = {"class":1, "style":1, "href":1};
  * 
  * @param {string|null} content
  * @return {boolean} true if the string is wrapped in <html> tag.
- * @export
  */        
 oj.DomUtils.isHTMLContent = function(content)
 {    
@@ -4990,8 +5216,9 @@ oj.DomUtils._cleanElementHtml = function(node)
 /**
 * Checks to see if the "ancestorNode" is a ancestor of "node".
 *
-* @param {Element} ancestorNode dom subtree to check to see if the target node exists
-* @param {Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode 
+* @param {!Element} ancestorNode dom subtree to check to see if the target node exists
+* @param {!Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode
+* @return {boolean} <code>true</code> if the "ancestorNode" is a ancestor of "node".
 */
 oj.DomUtils.isAncestor = function (ancestorNode, node) 
 {
@@ -5013,8 +5240,9 @@ oj.DomUtils.isAncestor = function (ancestorNode, node)
 /**
 * Checks to see if the "ancestorNode" is a ancestor of "node" or if they are the same.
 *
-* @param {Element} ancestorNode dom subtree to check to see if the target node exists
-* @param {Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode 
+* @param {!Element} ancestorNode dom subtree to check to see if the target node exists
+* @param {!Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode
+* @return {boolean} <code>true</code> if the "ancestorNode" is a ancestor of "node" or if they are the same 
 */
 oj.DomUtils.isAncestorOrSelf = function (ancestorNode, node) 
 {
@@ -5025,6 +5253,146 @@ oj.DomUtils.isAncestorOrSelf = function (ancestorNode, node)
           true :
           oj.DomUtils.isAncestor(ancestorNode, node);
 };
+
+
+/**
+ * Adds a resize listener for a block or inline-block element
+ * @param {!Element} elem - node where the listener should be added
+ * @param {!Function} listener - listener to be added. The listener will receive
+ * two parameters: 1) the new width in pixels; 2) the new height in pixels
+ */
+oj.DomUtils.addResizeListener = function(elem, listener)
+{
+  var jelem = $(elem);
+  var tracker = jelem.data(oj.DomUtils._RESIZE_TRACKER_KEY);
+  if (tracker == null)
+  {
+    tracker = new oj.DomUtils._ResizeTracker(elem);
+    jelem.data(oj.DomUtils._RESIZE_TRACKER_KEY, tracker);
+    tracker.start();
+  }
+  tracker.addListener(listener);
+}
+
+/**
+ * Removes a resize listener
+ * @param {!Element} elem - node whose listener should be removed
+ * @param {!Function} listener - listener to be removed
+ */
+oj.DomUtils.removeResizeListener = function(elem, listener)
+{
+  var jelem = $(elem);
+  var tracker = jelem.data(oj.DomUtils._RESIZE_TRACKER_KEY);
+  if (tracker != null)
+  {
+    tracker.removeListener(listener);
+    if (tracker.isEmpty())
+    {
+      tracker.stop();
+      jelem.removeData(oj.DomUtils._RESIZE_TRACKER_KEY);
+    }
+  }
+};
+
+
+/**
+ * Utility class for tracking resize events for a given element and  sispatching them
+ * to listeners
+ * @constructor
+ */
+oj.DomUtils._ResizeTracker = function(div)
+{
+  this._listeners = jQuery.Callbacks();
+  
+  this.addListener = function(listener)
+  {
+    this._listeners.add(listener);    
+  };
+  
+  this.removeListener = function(listener)
+  {
+    this._listeners.remove(listener);    
+  };
+  
+  this.isEmpty = function()
+  {
+    return this._listeners.empty();
+  };
+  
+  this.start = function()
+  {
+    var firstChild = div.childNodes[0]; // could be undefined, but insertBefore() will deal with it
+    
+    // This child DIV will track expansion events. It is meant to be 1px taller and wider than the DIV
+    // whose resize events we are tracking. After we set its scrollTop and scrollLeft to 1, any increate in size
+    // will fire a scroll event
+    this._detectExpansion = document.createElement("div");
+    this._detectExpansion.className = "oj-helper-detect-resize";
+    var expansionChild = document.createElement("div");
+    this._detectExpansion.appendChild(expansionChild);
+    div.insertBefore(this._detectExpansion, firstChild);
+    
+    this._scrollListener = this._handleScroll.bind(this); 
+    this._detectExpansion.addEventListener("scroll", this._scrollListener, false);
+      
+      
+    // This child DIV will track contraction events. Its height and width are set to 200%. After we set its scrollTop and 
+    // scrollLeft to the current height and width of its parent, any decrease in size will fire a scroll event
+    this._detectContraction = document.createElement("div");
+    this._detectContraction.className = "oj-helper-detect-resize";
+    
+    var contractionChild = document.createElement("div");
+    contractionChild.style.width = "200%";
+    contractionChild.style.height = "200%";
+    this._detectContraction.appendChild(contractionChild);
+    div.insertBefore(this._detectContraction, firstChild);
+     
+    this._detectContraction.addEventListener("scroll", this._scrollListener, false);
+    
+    //Size child DIVs adn recored the current size of the tracked DIV
+    this._adjust(this._detectExpansion.offsetWidth, this._detectExpansion.offsetHeight);
+  };
+  
+  this.stop = function()
+  {
+    this._detectExpansion.removeEventListener("scroll", this._scrollListener);
+    this._detectContraction.removeEventListener("scroll", this._scrollListener);
+    div.removeChild(this._detectExpansion);
+    div.removeChild(this._detectContraction);
+  };
+  
+  
+  this._handleScroll = function(evt)
+  {
+    evt.stopPropagation();
+    
+    var newWidth = this._detectExpansion.offsetWidth;
+    var newHeight = this._detectExpansion.offsetHeight;
+    if (this._oldWidth != newWidth || this._oldHeight != newHeight)
+    {
+      this._adjust(newWidth, newHeight);
+      this._listeners.fire(newWidth, newHeight);
+    }
+  };
+  
+  this._adjust = function(width, height)
+  { 
+    this._oldWidth = width;
+    this._oldHeight = height;
+    
+    var expansionChild = this._detectExpansion.firstChild;
+    expansionChild.style.width = width + 1 + 'px';
+    expansionChild.style.height = height + 1 + 'px';
+    
+    this._detectExpansion.scrollLeft = 1;
+    this._detectExpansion.scrollTop = 1;
+    
+    this._detectContraction.scrollLeft = width;
+    this._detectContraction.scrollTop = height;
+  };
+}
+
+oj.DomUtils._RESIZE_TRACKER_KEY = "_ojResizeTracker";
 // Copyright (c) 2013, Oracle and/or its affiliates. 
 // All rights reserved.
 
@@ -5049,7 +5417,7 @@ oj.Test.ready = false;
 /**
  * @export
  * Return the node found given the locator
- * @param {Object|string} locator A locator which is either a JSON string (to be parsed using eval()), or an Object with the following properties:
+ * @param {Object|string} locator A locator which is either a JSON string (to be parsed using $.parseJSON), or an Object with the following properties:
  *                                             element: the component's selector, determined by the test author when laying out the page
  *                                             component: optional - in the future there may be more than one component contained within a page element
  *                                             subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
@@ -5121,5 +5489,21 @@ function _ojHighContrast()
 
 $(document).ready(function() {
   _ojHighContrast();
+});
+/*jslint browser: true*/
+/**
+ * @private
+ */
+function _ojSlowCSS()
+{
+  if (navigator.appName == 'Microsoft Internet Explorer')
+  {
+    $('html').addClass("oj-slow-borderradius oj-slow-cssgradients oj-slow-boxshadow");
+  }
+
+}
+
+$(document).ready(function() {
+  _ojSlowCSS();
 });
 });

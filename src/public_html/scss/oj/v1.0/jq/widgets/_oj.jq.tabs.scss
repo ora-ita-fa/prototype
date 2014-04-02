@@ -8,7 +8,7 @@ $includeTabsClasses: $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.jq.core.icons";
+@import "oj.jq.icons";
 
 @if $includeTabsClasses != false {
   @include exports("tabs") {

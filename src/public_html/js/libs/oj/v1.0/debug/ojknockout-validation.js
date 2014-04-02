@@ -14,7 +14,7 @@ define(['ojs/ojcore', 'jquery', 'knockout', 'jqueryui', 'ojs/ojknockout'], funct
  * @see oj.ComponentBinding
  * @see oj.editableValue
  */
-oj.ValueBinding = {};
+oj.ValueBinding = function(){};
 
 
 /** 
@@ -292,6 +292,15 @@ oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
 oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
 {
   'for': 'ojCombobox',
+  'use': 'ojValue'
+});
+
+/**
+ * Default declaration for ojSelect
+ */
+oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
+{
+  'for': 'ojSelect',
   'use': 'ojValue'
 });
 });

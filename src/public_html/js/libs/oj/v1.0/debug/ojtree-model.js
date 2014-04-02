@@ -166,7 +166,7 @@ oj.CollectionTreeDataSource.prototype._putModelInRowset = function(model) {
     rows.push(model.attributes);
     var options = {};
     options['idAttribute'] = model['idAttribute'];    
-    var rowset = new oj.RowSet(rows, options);
+    var rowset = new oj.ArrayRowSet(rows, options);
     rowset.fetch();
     return rowset;
 };

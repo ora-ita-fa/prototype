@@ -10,19 +10,21 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
   $includeLabelClasses:             true !global;
   $includeMessagingClasses:         true !global;
   $includeFormControlCommonClasses: true !global;
+  $includeComboboxClasses:			true !global;
 }
 
-
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.jq.core.icons";
+@import "oj.jq.icons";
 @import "oj.jq.tooltip";
 @import "oj.jq.button";
-@import "oj.jq.core.messaging";
+@import "oj.jq.messaging";
 @import "oj.jq.formcontrol.label";
 @import "oj.jq.formcontrol.common";
 
+//Need to look similar to combobox, so share the CSS, add when is included
+//@import "oj.jq.formcontrol.combobox";
 
-// most of the styling in common file
+// most of the styling for the field in common file
 @import "../../common/widgets/oj.common.formcontrol.inputdatetime";
 
 @if $includeInputDateTimeClasses != false  {
@@ -37,7 +39,8 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
       box-sizing: content-box;
       display: none;
       padding: .2em .2em 0;
-      width: 16em;
+
+      width: $formControlMediumMaxWidth;
       @include oj-rtl()
       {
         direction: rtl;
@@ -56,11 +59,9 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     {
       position: absolute;
       top: 2px;
-      width: 1.8em;
-      height: 1.8em;
-	  @include ui-corner-all;
+      @include ui-corner-all;
     }
-	.oj-datepicker-prev-icon 
+    .oj-datepicker-prev-icon 
     {
       @include oj-ltr()
       {
@@ -85,44 +86,9 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     .oj-datepicker-prev-icon.oj-hover, 
     .oj-datepicker-next-icon.oj-hover 
     {
-      top: 1px;
       @include ui-state-hover;
     }
-    .oj-datepicker-prev-icon.oj-hover 
-    {
-      @include oj-ltr()
-      {
-        left: 1px;
-      }
-      @include oj-rtl()
-      {
-        right: 1px;
-      }
-    }
-    .oj-datepicker-next-icon.oj-hover 
-    {
-      @include oj-ltr()
-      {
-        right: 1px;
-      }
-      @include oj-rtl()
-      {
-        left: 1px;
-      }
-    }
-    .oj-datepicker-prev-icon span,
-    .oj-datepicker-next-icon span 
-    {
-      display: block;
-      position: absolute;
-      left: 50%;
-      margin-left: -8px;
-      top: 50%;
-      margin-top: -8px;
-      width: 16px;
-      height: 16px;
-    }
-
+	
     .oj-datepicker-title 
     {
       margin: 0 2.3em;
@@ -164,6 +130,13 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
       border: 0;
       padding: 1px;
     }
+    .oj-datepicker-calendar td span,
+    .oj-datepicker-calendar td a 
+    {
+      display: block;
+      padding: .2em;
+      text-align: right;
+    }
 
     .oj-datepicker-calendar td a.oj-enabled 
     {
@@ -182,21 +155,18 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
       @include ui-state-highlight;
     }
 
-    .oj-datepicker-calendar td span,
-    .oj-datepicker-calendar td a 
-    {
-      display: block;
-      padding: .2em;
-      text-align: right;
-    }
     .oj-datepicker-buttonpane 
     {
+      @include oj-box-sizing-property(border-box);
+      
       background-image: none;
       margin: .7em 0 0 0;
       padding: 0 .2em;
       border-left: 0;
       border-right: 0;
       border-bottom: 0;
+      display: inline-block;
+      width: 100%;
       @include oj-rtl()
       { 
         clear: right; 
@@ -219,8 +189,8 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     .oj-datepicker-buttonpane .oj-datepicker-close 
     {
       @include ui-priority-primary;
-	  
-	  @include oj-bidi-property($property: 'float', $startOrEnd: end);
+
+      @include oj-bidi-property($property: 'float', $startOrEnd: end);
     }
 
     /* with multiple calendars */
@@ -286,55 +256,10 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     {
       margin-bottom: 6px;
     }
-
-    .oj-datepicker-time 
-    {
-      box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, .35); 
-      display: none;
-      height: 150px;
-      left: -10000px;
-      overflow: auto;
-      position: absolute;
-      width: 15em;
-      z-index: 100;
-    }
-
-    .oj-datepicker-time-list 
-    {
-      border: 0 none;
-      list-style: none outside none;
-      margin: 0;
-      position: relative;
-	  color: $textColor;
-	  background: $background1Color;
-	  @include oj-ltr()
-      {
-        padding-left: 0;
-      }
-      @include oj-rtl()
-      {
-        padding-right: 0;
-      }
-    }
-
-    .oj-datepicker-time-list-item 
-    {
-      border-radius: 2px;
-      line-height: 1.8em;
-      padding: 1px 10px;
-    }
-    .oj-datepicker-time-list-item.oj-active 
-    {
-      background-color: #ebeced;
-    }
-    .oj-datepicker-time-list-item.oj-checked 
-    {
-      background-color: #bfd4e5;
-    }
 	
     // icons
     //------------------------------------------
-    .oj-datepicker-prev-icon span:before 
+    .oj-datepicker-prev-icon:before 
     {
       @include oj-ltr()
       {
@@ -347,7 +272,7 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
       }
     }
 
-    .oj-datepicker-next-icon span:before 
+    .oj-datepicker-next-icon:before 
     {
       @include oj-ltr()
       {

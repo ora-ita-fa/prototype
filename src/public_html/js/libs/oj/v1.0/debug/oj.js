@@ -40,8 +40,8 @@ var _oldVal = _scope['oj'];
 var oj = _scope['oj'] =
 {
   'version': "1.0",
-  'build' : "2029",
-  'revision': "5688",
+  'build' : "2163",
+  'revision': "6153",
           
   // This function is only meant to be used outside the library, so quoting the name
   // to avoid renaming is appropriate
@@ -4028,7 +4028,7 @@ oj.Model.prototype._attrUnion = function(attrs) {
     return attrReturn;
 };
 
-oj.Model.isArray = function(obj) {
+oj.Model.IsArray = function(obj) {
     return obj.constructor === Array;
 };
 
@@ -4036,6 +4036,10 @@ oj.Model.IsFunction = function(obj) {
     return obj instanceof Function;
 };
 
+oj.Model.IsComplexValue = function(val) {
+    return val && val.hasOwnProperty("value") && val.hasOwnProperty("comparator");
+};
+    
 // Does this model contain all of the given attribute/value pairs?
 oj.Model.prototype._hasAttrs = function(attrs) {
     var prop;
@@ -4045,15 +4049,30 @@ oj.Model.prototype._hasAttrs = function(attrs) {
                 return false;
             }
 
-            if (attrs[prop] !== this.attributes[prop]) {
-                return false;
+            var val = oj.Model.IsArray(attrs[prop]) ? attrs[prop] : [attrs[prop]];
+            for (var i = 0; i < val.length; i++) {
+                if (oj.Model.IsComplexValue(val[i])) {
+                    var comparator = val[i]['comparator'];
+                    var value = val[i]['value'];
+                    if (oj.StringUtils.isString(comparator)) {
+                        throw new Error("String comparator invalid for local where/findWhere");
+                    }
+                    if (!comparator(this, prop, value)) {
+                        return false;
+                    }
+                } else {
+                    // Array case meaningless here.  Model can't be == value1 and value2
+                    if (attrs[prop] !== this.attributes[prop]) {
+                        return false;
+                    }
+                }
             }
         }
     }    
     return true;
 };
 
-// See if this model contains all of the given attribute/value pairs 
+// See if this model contains any of the given attribute/value pairs 
 oj.Model.prototype.Contains = function(attrs) {
     var attrList = (attrs.constructor === Array) ? attrs : [attrs], i;
     
@@ -4413,6 +4432,8 @@ oj.Collection.prototype.url = null;
  * until: Retrieve records with timestamps up to the given timestamp.  Default is "until"<p>
  * sort:  field(s) by which to sort, if set<p>
  * sortDir: sort ascending or descending (asc/dsc) <p>
+ * query: a set of attributes indicating filtering that should be done on the server.  @see (@link where) for complete documentation of query values<p>
+ * all: true (along with 'query', above) indicates that this is a findWhere or where type call that is expecting all models meeting the query condition to be returned<p>
  * 
  * @return {(function(string,Object,Object):(string|Object|null))|null} customURL callbacks should return either: null, in which case the default will be used; a string, which will be used with the standard
  * HTTP method for the type of operation, or an Object with any ajax attributes.  This must at minimum include the URL:<p>
@@ -4839,6 +4860,10 @@ oj.Collection.prototype._manageLRU = function(incoming) {
  * @return {Object} copy of the Collection
  */
 oj.Collection.prototype.clone = function() {
+    return this._cloneInternal(true);
+};
+
+oj.Collection.prototype._cloneInternal = function(withProperties) {
     var c = new this.constructor(), i;
 
     // Only copy locally if virtual
@@ -4848,16 +4873,18 @@ oj.Collection.prototype.clone = function() {
         c._resetModelsToFullLength();
     }
         
-    for (i = 0; i < this._getLength(); i=i+1) {
-        model = this._atInternal(i, null, true, false);
-        if (model) {
-            c._addInternal(model.clone(), {'at':i}, true, false);
+    if (withProperties) {
+        // Try to copy models only if told to--we may only need the shell of the collection with properties
+        for (i = 0; i < this._getLength(); i=i+1) {
+            model = this._atInternal(i, null, true, false);
+            if (model) {
+                c._addInternal(model.clone(), {'at':i}, true, false);
+            }
         }
     }
-
     return c;
 };
-
+    
 // Copy critical properties in clone
 oj.Collection.prototype._copyProperties = function(collection) {
     var props = ['totalResults', 'hasMore', oj.Collection._FETCH_SIZE_PROP], prop, i;
@@ -6337,21 +6364,51 @@ oj.Collection.prototype.pluck = function(attr) {
 
 /**
  * @export
- * Return an array of models that contain the given attribute/value pairs
+ * Return an array of models that contain the given attribute/value pairs.  Note that this function, along with findWhere, expects server-resolved
+ * filtering to return *all* models that meet the criteria, even in virtual cases.  The fetchSize will be set to the value of totalResults for this call to indicate that
+ * all should be returned.
  * 
- * @param {Object|Array} attrs attribute/value pairs to find.  If there are multiple attribute/value pairs in an array, then these are ORed together
- * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not
+ * @param {Object|Array} attrs attribute/value pairs to find.  The attribute/value pairs are ANDed together.  If attrs is an array of attribute/value pairs, then these are ORed together
+ *                             If the value is an object (or an array of objects, in which case the single attribute must meet all of the value/comparator conditions), then if it has both 'value' and 'comparator' parameters these will be interpreted as
+ *                             expressions needing custom commparisons.  The comparator value may either be a string or a comparator callback function.
+ *                             Strings are only valid where the filtering is sent back to the data service (virtual collections).  In the case of a comparator
+ *                             function, the function always takes the signature function(model, attr, value), and for non-virtual collections, is called for each 
+ *                             Model in the collection with the associated attribute and value.  The function should return true if the model meets the attribute/value
+ *                             condition, and false if not.  For cases where the filtering is to be done on the server, the function will be called once per attr/value pair
+ *                             with a null model, and the function should return the string to pass as the comparison in the expression for the filtering parameter
+ *                             in the URL sent back to the server.  Note that the array of value object case is really only meaningful for server-evaluated filters where
+ *                             a complex construction on a single attribute might be needed (e.g., x>v1 && x <=v2)
+ *                             For example:<p>
+ *                             {Dept:53,Name:'Smith'}<p>
+ *                             will return an array of models that have a Dept=53 and a Name=Smith, or, for server-filtered
+ *                             collections, a ?q=Dept=53+Name=Smith parameter will be sent with the URL.<p>
+ *                             [{Dept:53},{Dept:90}]<p>
+ *                             will return all models that have a Dept of 53 or 90.  Or, ?q=Dept=53,Dept=90 will be sent to the server.<p>
+ *                             {Dept:{value:53,comparator:function(model, attr, value) { return model.get(attr) !== value;}}}<p>
+ *                             will return all models that do not have a Dept of 53.<p>
+ *                             {Dept:{value:53,comparator:'<>'}}<p>
+ *                             For server-evaluated filters, a parameter ?q=Dept<>53 will be sent with the URL.  This form is an
+ *                             error on locally-evaluated colleection filters<p>
+ *                             {Dept:{value:53,comparator:function(model, attr, value) { return "<>";}}}<p>
+ *                             expresses the same thing for server-evaluated filters<p>
+ *                             {Dept:[{value:53,comparator:'<'},{value:90,comparator:'<'}]}<p>
+ *                             For server-evaluated filters, a parameter ?q=Dept>53+Dept<93 will be sent to the server<p>
+ * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not<p>
  * 
  * @return {Object} array of models.  If virtual or deferred, a promise that calls with the returned array from the server
  */
 oj.Collection.prototype.where = function(attrs, options) {
+    options = options || {};
     var deferred = this._getDeferred(options);
     if (this._isVirtual()) {
         var defer = $.Deferred();
         var success = function(collection, fetchedModels, options) {
             defer.resolve(fetchedModels);
         };
-        var opt = {'query':attrs,
+        // Send the attributes for a server-based filter; also indicate that we need *all* the attributes.  In the standard
+        // REST URL construction this is accomplished by leaving off fetchSize/start indices, etc.
+        var opt = {'query':attrs,  
+                   'all': true,
                    'success': success};
         this._fetchOnly(opt);
         return defer.promise();
@@ -6370,6 +6427,44 @@ oj.Collection.prototype.where = function(attrs, options) {
     return arr;
 };
 
+/**
+ * @export
+ * Return a collection only containing models that contain the given attribute/value pairs
+ * Note that this returns a non-virtual collection with all the models returned by the server
+ * even if the original collection is virtual.  Virtual collections doing filtering on the server should return all models that meet
+ * the critera.  @see (@link where)
+ * @see (@link where) for complete documentation of the parameters
+ *
+ * @return {Object} A collection, or if virtual or deferred, a promise that calls with the Collection
+ */
+oj.Collection.prototype.whereToCollection = function(attrs, options) {
+    options = options || {};
+    var deferred = this._getDeferred(options);
+    var self = this;
+    if (this._isVirtual() || deferred) {
+        var defer = $.Deferred();
+        this.where(attrs, options).done(function (models) {
+                                            var collection = self._makeNewCollection(models);
+                                            defer.resolve(collection);
+                                        });
+        return defer.promise();
+    }
+    else {
+        var models = this.where(attrs, options);
+        var newCollection = this._makeNewCollection(models);
+        newCollection[oj.Collection._FETCH_SIZE_PROP] = -1;
+        newCollection._setLength();
+        return newCollection;
+    }
+};
+    
+oj.Collection.prototype._makeNewCollection = function(models) {
+    var collection = this._cloneInternal(false);
+    collection._setModels(models);
+    collection._resetLRU();
+    collection._setLength();
+    return collection;
+};
 
 oj.Collection.prototype._throwErrIfVirtual = function(func) {
     if (this._isVirtual()) {
@@ -6649,8 +6744,9 @@ oj.Collection.prototype.any = function(iterator, context) {
  * @export
  * A version of where that only returns the first element found
  * 
- * @param {Object|Array} attrs attribute/value pairs to find.  If there are multiple attribute/value pairs in an array, then these are ORed together
- * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not
+ * @param {Object|Array} attrs attribute/value pairs to find.  
+ * @see (@link where) for more details and examples.
+ * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not<p>
  * 
  * @returns {Object} first model found with the attribute/value pairs.  If virtual or deferred, a promise that calls with the returned array from the server
  */
@@ -6751,7 +6847,7 @@ oj.Collection.prototype._setInternal = function(models, options, deferred) {
         models = this['parse'](models);
     }
 
-    modelList = oj.Model.isArray(models) ? models : [models];
+    modelList = oj.Model.IsArray(models) ? models : [models];
 
     if (this._isVirtual() || deferred) {
         return this._deferredSet(modelList, options, remove, add, merge);
@@ -7024,18 +7120,35 @@ oj.Collection.prototype._getSortAttrs = function(sortStr) {
 
 // Return a URL query string based on an array of or a single attr/value pair set
 oj.Collection._getQueryString = function(q) {
-    function expression(left, right) {
-        return left + "=" + right;
+    function expression(left, right, compare) {
+        return left + compare + right;
     }
     
-    var queries = oj.Model.isArray(q) ? q : [q];
+    var queries = oj.Model.IsArray(q) ? q : [q];
     var str = "", query, exp, i, prop;
     for (i = 0; i < queries.length; i++) {
         query = queries[i];
         for (prop in query) {
             if (query.hasOwnProperty(prop)) {
-                exp = expression(prop, query[prop]);
-                str += exp + "+";
+                var val = oj.Model.IsArray(query[prop]) ? query[prop] : [query[prop]];
+                for (var j = 0; j < val.length; j++) {
+                    if (oj.Model.IsComplexValue(val[j])) {
+                        var value = val[j]['value'];
+                        var compare = null;
+                        var comparator = val[j]['comparator'];
+                        if (oj.Model.IsFunction(comparator)) {
+                            compare = comparator(null, prop, value);
+                        }
+                        else {
+                            compare = comparator;
+                        }
+                        exp = expression(prop, value, compare);
+                    }
+                    else {
+                        exp = expression(prop, query[prop], "=");
+                    }
+                    str += exp + "+";
+                }
             }
         }
         // Remove trailing '+'
@@ -7081,20 +7194,32 @@ oj.Collection.prototype.GetCollectionFetchUrl = function(options) {
     
     // Adorn it with options, if any
     if (this._isVirtual()) {
+        var all = options['all'];
+        
         // Put in page size
-        url += "?limit=" + this._getFetchSize(options);
-                
-        if (options['startIndex']) {
-            url += "&offset=" + options['startIndex'];
+        var limit = null;
+        if (all) {
+            var totalResults = this['totalResults'];
+            limit = totalResults ? totalResults : this._getFetchSize(options);
         }
-        if (options['startID']) {
-            url += "&fromID=" + options['startID'];
+        else {
+            limit = this._getFetchSize(options);
         }
-        if (options['since']) {
-            url += "&since=" + options['since'];
-        }
-        if (options['until']) {
-            url += "&until=" + options['until'];
+        url += "?limit=" + limit;
+
+        if (!all) {
+            if (options['startIndex']) {
+                url += "&offset=" + options['startIndex'];
+            }
+            if (options['startID']) {
+                url += "&fromID=" + options['startID'];
+            }
+            if (options['since']) {
+                url += "&since=" + options['since'];
+            }
+            if (options['until']) {
+                url += "&until=" + options['until'];
+            }
         }
         // Query
         if (options['query']) {
@@ -7614,7 +7739,8 @@ oj.Components = {};
  *   'editableValue': // properties for editableValue components 
  *   {
  *     'option1': 'somevalue1',
- *     'option2': function(context){return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : 'normalValue'}
+ *     'option2': oj.Components.createDynamicPropertyGetter(function(context){
+ *                                 return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : 'normalValue'})
  *   },
  *   'ojText': // properties for instances of ojText 
  *   {
@@ -7622,13 +7748,9 @@ oj.Components = {};
  *   }
  * }
  * </pre>
- * If the property value is specified as a function, it will be used as a dynamic getter for the property. The function
- * will receive a context object as a parameter.The following properties are currently supported on the context
- * object:
- * <ul>
- * <li>containers - an array of component names of the current component's containers that require special behavior from
- * their children</li>
- * </ul>
+ * To specify a dynamic getter for the property, pass your callback to oj.Components.createDynamicPropertyGetter(). Note
+ * that dynamic getters nested within a complex property value are not supported
+ * @see oj.Components.createDynamicPropertyGetter
  * @export
  */
 oj.Components.setDefaultOptions = function(options)
@@ -7645,6 +7767,26 @@ oj.Components.setDefaultOptions = function(options)
 oj.Components.getDefaultOptions = function()
 {
   return (oj.Components._defaultProperties || {});
+};
+
+
+/**
+ * Creates a dynamic getter that can be used as a property value in oj.Components.setDefaultOptions()
+ * @param {!Function} callback - dynamic property callback. The callback will receive a context object as a parameter.
+ * The following properties are currently supported on the context object:
+ * <ul>
+ * <li>containers - an array of component names of the current component's containers that require special behavior from
+ * their children</li>
+ * </ul>
+ * The callback should return the computed property value
+ * 
+ * @return {Object} - dynamic property getter
+ * @see oj.Components.setDefaultOptions
+ * @export
+ */
+oj.Components.createDynamicPropertyGetter = function(callback)
+{
+  return new __ojDynamicGetter(callback, true);
 };
 
 /**
@@ -7685,6 +7827,25 @@ oj.Components.getWidgetConstructor = function(element, widgetName)
   
   return null;
 };
+
+/**
+ * @constructor
+ * @param {Function} callback
+ * @param {boolean=} needsDynamicContext
+ * @private
+ */
+function __ojDynamicGetter(callback, needsDynamicContext)
+{
+  this.getCallback = function()
+  {
+    return callback;
+  }
+  this.isDynamicContextNeeded = function()
+  {
+    return needsDynamicContext;
+  }
+};
+
 
 /**
  * @private
@@ -7764,17 +7925,6 @@ $.widget('oj.baseComponent',
   {
     this._propertyContext = null;
   },
-  
-  /*
-   * Override _createWidget to initialize variables before create.
-   */
-  _createWidget: function( options, element ) {
-    this['activeable'] = $();
-    this._super(options, element);
-    
-    // Store widget name, so that oj.Components.getWidgetConstructor() can get widget from the element
-    _storeWidgetName(this.element, this.widgetName);
-  },
 
   /*
    * Unlike JQUI, all subclasses must call this._super() when overriding this method, since we override it here.
@@ -7783,16 +7933,92 @@ $.widget('oj.baseComponent',
    */
   _create : function()
   {
-    this._setDefaultProperties();
-        
-    // namespace facilitates removing contextMenu handlers separately, if app clears the "contextMenu" option
-    this.contextMenuEventNamespace = this.eventNamespace + "contextMenu";
-    this._setupContextMenu();
-	
-	this._savedAttributes = [];
-	this._SaveAttributes(this.element);
+    this._savedAttributes = [];
+    this._SaveAttributes(this.element);
+    this._CreateComponent();
+    this._AfterCreateComponent();
+
   },
   
+  /**
+   * Overridden to return component-specific translations and default options specified with oj.Components.setDefaultOptions()
+   * @private
+   */
+  _getCreateOptions: function()
+  {
+    var defaults = {};
+    
+    // Load component translations
+    var getters = {};
+    this._RegisterTranslatedOptionGetters(getters);
+    
+    // wrap translation getters in the __ojDynamicGetter wrapper do distinguish them
+    // from regular functions
+    for (var prop in getters)
+    {
+      defaults[prop] = new __ojDynamicGetter(getters[prop]);
+    }
+    
+    // Load options specified with oj.Components.setDefaultOptions()
+    var widgetHierNames = [];
+    var proto = this.constructor.prototype;
+    while (proto != null && proto.widgetName)
+    {
+      widgetHierNames.push(proto.widgetName);
+      proto = Object.getPrototypeOf(proto);
+    }
+    
+    widgetHierNames.push('default');
+    
+    var allProperties = oj.Components.getDefaultOptions();
+    
+    // merge properties applicable to this component
+    for (var i= widgetHierNames.length; i>=0; i--)
+    {
+      var name = widgetHierNames[i];
+      var props = allProperties[name];
+      if (props !== undefined)
+      {
+        defaults = $.widget.extend(defaults, props);
+      }
+    }
+    
+    return defaults;
+  },
+  
+  
+    /**
+   * This is where we create components. You have access to the options, and 
+   * that's about it. Use _AfterCreateComponent if you want to do things
+   * after the component is created, like add styles to the root dom element.
+   * this._super should be call first.
+   * 
+   * @memberof! oj.baseComponent
+   * @instance
+   * @protected
+   */
+  _CreateComponent : function ()
+  {
+    this['activeable'] = $();
+    this._setupDynamicProperties();
+    
+    // Store widget name, so that oj.Components.getWidgetConstructor() can get widget from the element
+    _storeWidgetName(this.element, this.widgetName);
+  },
+  /**
+   * This is where we do things right after the component was created.
+   * this._super should be call first.
+   *
+   * @memberof! oj.baseComponent
+   * @instance
+   * @protected
+   */
+  _AfterCreateComponent : function ()
+  { 
+    // namespace facilitates removing contextMenu handlers separately, if app clears the "contextMenu" option
+    this.contextMenuEventNamespace = this.eventNamespace + "contextMenu";
+    this._setupContextMenu(); 
+  },
   /**
    * Saves the element's attributes within an internal variable to be reset during the destroy function
    *
@@ -7806,8 +8032,7 @@ $.widget('oj.baseComponent',
    *     }
    *   }
    * ]
-   * 
-   * @expose
+   *
    * @param {Object} element - jQuery selection to save attributes for
    * @memberof! oj.baseComponent
    * @instance
@@ -7847,7 +8072,6 @@ $.widget('oj.baseComponent',
   /**
    * Gets the saved attributes for the provided element
    *
-   * @expose
    * @param {Object} element - jQuery selection, should be a single entry
    * @return {Object} savedAttributes - attributes that were saved for this element
    * @memberof! oj.baseComponent
@@ -7876,7 +8100,6 @@ $.widget('oj.baseComponent',
   /**
    * Restores the saved element's attributes
    *
-   * @expose
    * @memberof! oj.baseComponent
    * @instance
    * @protected
@@ -8146,6 +8369,12 @@ $.widget('oj.baseComponent',
       {
           this['hoverable'].removeClass( "oj-hover" );
           this['focusable'].removeClass( "oj-focus" );
+          // TODO: when we have worked out the 'create' super code change,
+          // this this check should not be necessary. Right now, this gets
+          // called before _create for radioset (and possibly others) when
+          // we create a component like ojRadioset({disabled: true});
+          if (!this['activeable'])
+            this['activeable'] = $(); 
           this['activeable'].removeClass( "oj-active" );
       }
     }
@@ -8349,7 +8578,6 @@ $.widget('oj.baseComponent',
    *   (This provides a hook for component housekeeping, and allows caching.)</li>
    * </ul>
    * 
-   * @expose
    * @memberof! oj.baseComponent
    * @instance
    * @protected
@@ -8378,74 +8606,34 @@ $.widget('oj.baseComponent',
   /**
    * @private
    */
-  _setDefaultProperties: function()
+  _setupDynamicProperties: function()
   {
-    var widgetHierNames = [];
-    var proto = this.constructor.prototype;
-    while (proto != null && proto.widgetName)
-    {
-      widgetHierNames.push(proto.widgetName);
-      proto = Object.getPrototypeOf(proto);
-    }
-    
-    widgetHierNames.push('default');
-    
-    var defaults = {};
-    
-    var allProperties = oj.Components.getDefaultOptions();
-    
-    // merge properties applicable to this component
-    for (var i= widgetHierNames.length; i>=0; i--)
-    {
-      var name = widgetHierNames[i];
-      var props = allProperties[name];
-      if (props !== undefined)
-      {
-        defaults = $.widget.extend(defaults, props);
-      }
-    }
-    
     var self = this;
     
     var contextCallback = function()
     {
       return self._getDynamicPropertyContext();
-    }
+    };
     
-    for (var prop in defaults)
+    var options = this.options;
+    
+    for (var prop in options)
     {
-      var val = defaults[prop];
-
-      var current = this.options[prop];
+      var val = options[prop];
       
-      if (current === undefined || $.isPlainObject(current))
+      if (typeof val !== 'undefined' && val instanceof __ojDynamicGetter)
       {
-        if ($.isFunction(val))
+        var callback = val.getCallback();
+        if ($.isFunction(callback))
         {
-          _defineDynamicProperty(this, this.options, prop, val, contextCallback);
+          delete options[prop];
+          _defineDynamicProperty(this, options, prop, callback, val.isDynamicContextNeeded() ? contextCallback : undefined);
         }
         else 
         {
-          // Callback is not specified, merging default properties 'under' the current value in this.options
-          if ($.isPlainObject(val))
-          {
-            this.options[prop] = $.widget.extend({}, val, current || {});
-          }
-          else if (current === undefined)
-          {
-            this.options[prop] = val;
-          }
+          oj.Logger.error("Dynamic getter for property %s is not a function", prop);
         }
       }
-    }
-    
-    // Load translated properties
-    var getters = {};
-    this._RegisterTranslatedOptionGetters(getters);
-    
-    for (var prp in getters)
-    {
-      _defineDynamicProperty(this, this.options, prp, getters[prp]);
     }
     
   }
@@ -8500,7 +8688,7 @@ oj.__registerWidget = function( name, base, prototype )
 
 /**
  * @param {Object} self
- * @param {Object} options
+ * @param {Object!} options
  * @param {string} prop
  * @param {Function} getter
  * @param {Function=} contextCallback
@@ -8508,7 +8696,7 @@ oj.__registerWidget = function( name, base, prototype )
  */
  function _defineDynamicProperty(self, options, prop, getter, contextCallback)
  {
-   var override = options[prop];
+   var override = undefined;
    
    Object.defineProperty(options, prop,
      {
@@ -8695,6 +8883,12 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
      * whether the component is disabled. The element's disabled property is used as its initial 
      * value if it exists, when the option is not explicitly set. When neither is set, disabled 
      * defaults to false.
+     *  
+     * <p>The 2-way <code class="prettyprint">disabled</code> binding offered by 
+     * the <code class="prettyprint">ojComponent</code> binding 
+     * should be used instead of Knockout's built-in <code class="prettyprint">disable</code> 
+     * and <code class="prettyprint">enable</code> bindings, 
+     * as the former sets the API, while the latter sets the underlying DOM attribute.
      * 
      * @example <caption>Initialize component with <code class="prettyprint">disabled</code> option:</caption>
      * $(".selector").ojInputText({"disabled": true});
@@ -8759,20 +8953,32 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     messages : null,
 
     /**
-     * an Object literal that allows a widget to specify how it wants the various 'messaging 
-     * artifacts' to be displayed in relation to itself. <br/>
-     * Accepted values for messaging artifacts are * 'messages', 'converterHint', 'validatorHint', 
-     * 'title'. NOTE: In the future additional types like 'help' might be supported. <br/>
-     * Each messaging artifact accepts a string display option which can be one of 'notewindow', 
-     * 'none'. NOTE: In the future additional display options like 'inline' might be supported. 
+     * an Object literal containing the following property-value pairs, that allows a widget to specify 
+     * how it wants the various 'messaging artifacts' to be displayed in relation to itself. <br/>
+     * Accepted values for the key is a string type of the messaging artifact and they include 
+     * 'messages', 'converterHint', 'validatorHint', 'title'. NOTE: In the future additional types 
+     * like 'help' might be supported. <br/>
+     * The value is either an array of display options or a string display option. When an array of 
+     * display options is specified the first display option is used first and then the second as 
+     * fallback and so on. NOTE: In the future we plan to support additional display options like 
+     * 'inline'. 
+     * <br/>
+     * By default components that support messaging define default values for all messaging 
+     * artifacts. Page authors will update this option when overriding defaults.
      * 
-     * @example <caption>Initialize component with the default set of <code class="prettyprint">messagingDisplayOptions</code> for the component:</caption>
+     * @property {string=} converterHint - supported values are 'placeholder', 'notewindow', 'none'. 
+     * E.g. {'converterHint': ['placeholder', 'notewindow']}
+     * @property {string=} validatorHint - supported values are 'notewindow', 'none'. 
+     * E.g. {'validatorHint': ['notewindow']}
+     * @property {string=} messages - supported values are 'notewindow', 'none'. 
+     * E.g. {'messages': 'notewindow'}
+     * @property {string=} title - supported values are 'notewindow', 'none'. 
+     * E.g. {'title': 'notewindow'}
+     * 
+     * @example <caption>Initialize component and override default for converterHint using <code class="prettyprint">messagingDisplayOptions</code>:</caption>
      * // Only messages will get shown in the notewindow associated to this component
      * $(".selector").ojInputText("option", "messagingDisplayOptions", {
-     *   'messages': 'notewindow', 
-     *   'converterHint': 'none', 
-     *   'validatorHint': 'none', 
-     *   'title': 'none'
+     *   'converterHint': ['notewindow'] // the default is ['placeholder', 'notewindow']
      * });
      * 
      * @expose 
@@ -8803,14 +9009,16 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
      * @type {string}
      */    
     pattern: "",
+    
     /** 
      * whether the component is required. The element's required property is used as its initial 
      * value if it exists, when the option is not explicitly set. Allowed values for required are 
-     * 'required' and 'optional', 'optional' being the default.
+     * 'required' and 'optional', 'optional' being the default. <br/>
      * 
-     * When required is set on the input component, the input's label will 
-     * render a required icon.
-     * 
+     * When required option is set, the input's label will render a required icon. <br/>
+     * When required option is set, a required validator - (@link oj.RequiredValidator) - is 
+     * implicitly used. If an explicit required validator is set using the validators option then 
+     * that gets used instead.
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">required</code> option:</caption>
      * $(".selector").ojInputNumber({required: 'required'});<br/>
@@ -8819,6 +9027,13 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
      * // reading the required option will return "required"
      * $(".selector").ojInputNumber("option", "required");<br/>
      * 
+     * @example <caption>Using <code class="prettyprint">required</code> option and setting an explicit required validator:</caption>
+     * &lt;input type="text" value="foobar" required data-bind="ojComponent: {
+     *   component: 'ojInputText', 
+     *   value: password, 
+     *   validators: [{type: 'required', options : {
+                               messageSummary: '\'{label}\' Required', 
+                               messageDetail: 'A value is required for this field'}}]}"/>
      * @expose 
      * @access public
      * @instance
@@ -9019,10 +9234,12 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
           break;
           
         case "messagingDisplayOptions":
-          
           previousMsgDisplay = $.extend({}, this.options['messagingDisplayOptions']);
-          // value = $.extend(previousMsgDisplay, value);
           break;
+          
+        case "placeholder" :
+          placeholderOptionSet = true;
+          break;           
       }
     }
     // an object literal of key...values is passed in - ('option', {key: value, key2: value2})
@@ -9092,14 +9309,22 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       }
     }
     
-    if (placeholderOptionSet && refreshMessagingOptions)
+    if (placeholderOptionSet)
     {
-      // if placeholder is set and it's not from messaging code, then the messaging preferences will 
-      // need to re-evaluated. E.g., if default display for 
-      // converterHint: ['placeholder', 'notewindow'] is 'placeholder', and if user were to set a 
-      // custom placeholder, this overrides the default display for convererHint from 'placeholder'
-      // to 'notewindow'. 
-      this._initComponentMessaging();
+      if (refreshMessagingOptions)
+      {
+        // if placeholder was set and it's not from messaging code, then the messaging preferences 
+        // will need to re-evaluated. E.g., the default display for 
+        // converterHint: ['placeholder', 'notewindow'] is 'placeholder', and if user were to set a 
+        // custom placeholder, this overrides the default display for convererHint from 'placeholder'
+        // to 'notewindow'. 
+        this.__customPlaceholderSet = true;
+        this._initComponentMessaging();
+      }
+      else
+      {
+        this.__customPlaceholderSet = false;
+      }
     }
     
     return retVal;
@@ -9122,9 +9347,14 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   },
   
   /**
-   * Refreshes the component display value to the option value. When the component is invalid 
-   * because the user entered a value that failed validation, the user entered value will be cleared 
-   * when calling this method, but it is still important to clear the messages explicitly.
+   * Called typically when the DOM underneath the component has changed requiring a re-render 
+   * of the component, but also when some external condition impacts the rendering of the component,
+   * e.g., when the locale for the page change, a component using a converter or translations will 
+   * need to be refreshed. <br/>
+   * This method override refreshes the component display value to the option value. When the 
+   * component was previously invalid it is important to clear the messages explicitly., before 
+   * calling refresh.
+   * 
    * @example <caption>Clear messages and refresh component.</caption>
    * $(selector).ojInputText("option", "messages", []); <br/>
    * $(selector).ojInputText("refresh");
@@ -9137,11 +9367,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   refresh : function ()
   {
     this._super();
-    this._Refresh("value", this.options['value']);
-    this._refreshAria("required", this.options.required);
-    this._refreshTheming("required", this.options.required);
-    if (this.$label !== null)
-      this.$label._ojLabel("refresh");
+    this._doRefresh(true);
   },
   
   /**
@@ -9199,21 +9425,32 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _VALIDATION_MODE : {FULL : 1, VALIDATORS_ONLY : 2, REQUIRED_VALIDATOR_ONLY : 3, NONE : 4},
 
   /**
-   * Initializes the value for component options that correspond to the html5 attributes. E.g., 
-   * required, pattern, value etc.
+   * This is where we create components. You have access to the options, and 
+   * that's about it. Use _AfterCreateComponent if you want to do things
+   * after the component is created, like add styles to the root dom element.
+   * this._super should be call first.
    * 
    * @expose
    * @memberof! oj.editableValue
    * @instance
    * @protected
    */
-  _create : function () 
+  _CreateComponent : function ()
   {
-    var propValue, attrValue, validator;
     this._super();
-    
-    this.widget().addClass("oj-form-control");
-	
+  },
+  /**
+   * This is where we do things right after the component was created.
+   * this._super should be call first.
+   * 
+   * @expose
+   * @memberof! oj.editableValue
+   * @instance
+   * @protected
+   */
+  _AfterCreateComponent : function ()
+  {
+    this._super();
     // VALUE: 
     // if options doesn't have a value property look for the element value
     if (!this.options['value'])
@@ -9234,10 +9471,24 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     {
       this.element.prop( "disabled", this.options.disabled );
     }  
-
     // decorate the label
     this._createOjLabel();
     
+    // refresh value, theming and aria attributes
+    this._doRefresh(false);
+
+    // initialize component messaging
+    this._initComponentMessaging();
+   
+    // trigger a optionChange event to push current set of messages into invalidComponentTracker at 
+    // creation time.
+    if (!this.options['messages'])
+    {
+      this.options['messages'] = [];
+    }
+    this._TriggerOptionChange('messages', [], null);   
+           
+    this.widget().addClass("oj-form-control");
   },
   
   /**
@@ -9282,11 +9533,21 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     // register a default RegExp validator if we have a valid pattern
     if (this.options['pattern'])
     {
-      // add validator to the a special _internalValidators list. These are validators created by 
+      // add validator to the special internalValidators list. These are validators created by 
       // the framework. We don't want these cleared using the option - 'validators'
       this._GetDefaultValidators()['regExp'] = this._getDefaultRegExpValidator();
     }
   
+    // PLACEHOLDER:
+    // if options.placeholder is not set, use placeholder attribute on element
+    if (!this.options['placeholder'])
+    {
+      this.options['placeholder'] = "placeholder" in savedAttributes ? 
+        savedAttributes["placeholder"]["prop"] || "" : "";
+      this.__customPlaceholderSet = true;
+    }
+    
+    // remove html5 validation attributes 
     $.each(attrToRemove, function (index, value)
     {
       if (value in savedAttributes)
@@ -9297,47 +9558,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   
     return ret;
   },
-
-  /**
-   * Called at widget creation time. This method sets up default options for the component. 
-   * 
-   * @return {Object} option name and value pairs of default options.
-   * 
-   * @expose
-   * @memberof! oj.editableValue
-   * @instance
-   * @protected
-   */
-  _getCreateOptions : function ()
-  {
-    var allDefaults = this._super();
-    // set the default messagingOption callback that determines the default values for the 
-    // messagingDisplayOptions dynamically based on the context.
-    this._setDefaultMessagingOptions();
-    
-    return allDefaults;
-  },
-  
-  /**
-   * (Re)Initializes the editable value component - activates messaging strategies, clears messages 
-   * and refreshes component.
-   * 
-   * @expose
-   * @memberof! oj.editableValue
-   * @instance
-   * @protected
-   */
-  _init : function ()
-  {
-    this._super();
-    
-    this._initComponentMessaging();    
-    this._clearMessages();
-    // If a converter is set then get the formatted value and set that as the widget's displayValue. 
-    // Widgets subclasses can override setDiplayValue() to provide custom rendering behavior, e.g., 
-    // re-positioning the slider tabs. 
-    this.refresh();
-  },
+          
   
   /**
    * Detaches the widget from the element and restores element exactly like it was before the widget 
@@ -9357,9 +9578,10 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     widget.removeClass("oj-form-control");
     // remove all aria attributes added to the element  
     this.element.removeAttr("aria-required");
-    if (this.$label !== null)
+    if (this.$label)
+    {
       this.$label._ojLabel( "destroy" );
-    
+    }
     return this._super();
   },
           
@@ -9393,7 +9615,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       
       case "validators":
         // Clear the cached normalized list of all validator instances
-		this._ResetAllValidators();
+        this._ResetAllValidators();
         
         // update messagingstrategy as hints associated with validators could have changed
         this._getComponentMessaging().update(this._getMessagingContent(this.__MESSAGING_CONTENT_UPDATE_TYPE.VALIDATOR_HINTS));
@@ -9451,7 +9673,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
         break;
       
       case "required":
-        // do nothing
+        // shouldRefresh=true because hints and label should refresh to show new state
         break;
         
       case "title":
@@ -9547,24 +9769,6 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
 
   },
   
-  /**
-   * Returns the default values for 'messagingDisplayOptions' based on the context this component is 
-   * in. E.g. an editableValue component can change the display options for its messaging 
-   * based on whether it's rendered inside a table or in a form. <p>
-   * 
-   * In addition subclassed components can change the defaults if they choose to.
-   * @param {Object} context
-   * 
-   * @protected
-   */
-  _GetDefaultMessagingDisplayOptions: function (context)
-  {
-    // return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : baseDefaults;}
-    // Future: this method will return defaults based on the context.
-    
-    // we want to merge the instance options with the defaults
-    return $.extend({}, this.__DEFAULT_MESSAGING_OPTIONS);
-  },
   
   /**
    * Returns the element's value. Normally, this is a call to this.element.val(), but for some 
@@ -9715,10 +9919,11 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
                 vType = oj.Validation.validatorFactory(vTypeStr);
                 if (vType)
                 {
-                  vOptions = validator['options'] || {};
+                  vOptions = $.extend({}, validator['options']) || {};
                   // we push converter into the options if not provided explicitly. This is to allow
                   // validators to format values shown in the hint and messages
-                  vOptions['converter'] = vOptions['converter'] || this._GetConverter();                  
+                  vOptions['converter'] = vOptions['converter'] || this._GetConverter();
+                  vOptions['label'] = vOptions['label'] || this._getLabelText();
                   validator = vType.createValidator(vOptions);
                 }
                 else
@@ -9746,7 +9951,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   },
   
   /**
-   * EditableValue caches the validators to be ran within this.__allValidators variable.
+   * EditableValue caches the validators to be run within this.__allValidators variable.
    * This is great; however when the default validators need to be reset [i.e. min + max changing] 
    * then the cached this.__allValidators needs to be cleared out]
    * 
@@ -9757,9 +9962,13 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    */
   _ResetAllValidators : function () 
   {
+    if (this.__allValidators)
+    {
+      this.__allValidators.length = 0;
+    }
     this.__allValidators = null;
   },
-          
+
   /**
    * Whether the component is required.
    * 
@@ -9802,44 +10011,42 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    * 
    * @param {String=} name the name of the option that was changed
    * @param {Object=} value the current value of the option
+   * @param {boolean=} fullRefresh false is the default; true means always refresh component 
+   * display value
    * @expose
    * @memberof! oj.editableValue
    * @instance
    * @protected
    */
-  _Refresh : function (name, value)
+  _Refresh : function (name, value, fullRefresh)
   {
     switch (name)
     {
-       case "converter":
-         value = this.options['value'];
-         // when converter changes format of value could change
-         this._refreshComponentDisplayValue(value, true);
-         break;
-         
-       case "value":
-        // until formatting is supported the value is set on the element 
-        
-        this._refreshComponentDisplayValue(value);
-        // var displayVal = value;
-        // this._SetDisplayValue(displayVal);
-        
-        // we save off the last display value 
-        // this.__setLastDisplayValue(displayVal);
-
+      case "converter":
+        value = this.options['value'];
+        // when converter changes format of value could change
+        this._refreshComponentDisplayValue(value, true);
         break;
+         
+      case "value":
+        this._refreshComponentDisplayValue(value, fullRefresh);
+        break;
+
       case "required":
         // need to keep the label in sync with the input
-        if (this.$label !== null)
+        if (this.$label)
+        {
           this.$label._ojLabel("option", "required", value);
+        }
         break;
+        
       case "help":
         // refresh the help - need to keep the label in sync with the input.
         var helpDef = this.options.help["definition"];
         var helpSource = this.options.help["source"];
         var labelHelpIconWrapper = this._ariaDescribedByHelpIconWrapper(helpSource);
 
-        if (this.$label !== null)
+        if (this.$label)
         {
           // Calling option this way calls _setOption in _ojLabel.
           // order matters here. When _ojLabel's help is changed, it removes
@@ -10182,18 +10389,6 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   },
   
   /**
-   * Default Messaging Options for base editableValue
-   * @private
-   * @const
-   * @type {Object}
-   */
-  __DEFAULT_MESSAGING_OPTIONS : {
-      'messages': ['notewindow'], 
-      'converterHint': ['placeholder', 'notewindow'], 
-      'validatorHint': ['notewindow'], 
-      'title': ['notewindow']}, 
-  
-  /**
    * Types of messaging content to update.
    * <ul>
    * <li>'ALL' - builds all messaging content</li>
@@ -10239,6 +10434,42 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       // if we are destroying widget don't bother setting option
       this.options['messages'] = [];
     }
+  },
+  /**
+   * Refreshes the component to respond to DOM changes, in which case fullRefresh=true. This 
+   * internal method is also called when the component's theme or accessibility attributes need to 
+   * be refreshed.
+   * @param {boolean} fullRefresh true if a full refresh of the component is desired.
+   * @private
+   */
+  _doRefresh : function (fullRefresh)
+  {
+    // we decided not to clear messages on refresh because the user intends to refresh the component 
+    // using the latest DOM and latest option values. Page Authors will need to clear messages and 
+    // generally ensure component state is accurate and as expected before calling refresh().
+    
+    fullRefresh = fullRefresh || false;
+    if (fullRefresh)
+    {
+      // the DOM for the label and its text could have changed. 
+      if (this.$label)
+      {
+        this.$label._ojLabel("refresh");
+      }
+      
+      // also clear out anything that relies on the label 
+      this._refreshLabelDependents();
+      
+      // also re-initialize component messaging, since refresh() can be called when the locale 
+      // changes, requiring component to show messaging artifacts for current locale. 
+      // E.g., hints, placeholder, messages are all retrieved for the current locale. Typically when 
+      // switching locales user should have cleared messages.
+      this._initComponentMessaging();
+    }
+        
+    this._Refresh("value", this.options['value'], fullRefresh);
+    this._refreshAria("required", this.options.required);
+    this._refreshTheming("required", this.options.required);
   },
 
   /**
@@ -10287,7 +10518,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _createOjLabel : function ()
   {
     this.$label = this._GetLabelElement();
-    if (this.$label !== null)
+    if (this.$label)
     {
       var helpDef = this.options['help']['definition'];
       var helpSource = this.options['help']['source'];
@@ -10345,6 +10576,15 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     }
     return labelHelpIconWrapperId;  
   },
+          
+  // helper method to retrieve the label text.          
+  _getLabelText : function ()
+  {
+    if (this.$label)
+    {
+      return this.$label.text();
+    }
+  },
   /**        
    * For the current list of messages this method returns the current severity.
    * @return {number} See oj.Message.SEVERITY_LEVEL or -1 if 
@@ -10390,6 +10630,19 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     var compMessaging = this._getComponentMessaging(), 
             messagingTrigger = this._GetMessagingTriggerElement(), 
             messagingContent = this._getMessagingContent(this.__MESSAGING_CONTENT_UPDATE_TYPE.ALL);
+    
+    // if default placeholder is currently set then it needs to be cleared here. This is needed for 
+    // the following reasons
+    // i. a component is reinitialized when the locale changed, requiring the converter hint for 
+    // new locale to be set as placeholder.
+    // ii. or a component's placeholder option or messagingDisplayOptions option, could have changed 
+    // requiring the placeholder to be reset if it's currently set to the default.
+    // 
+    if (!this.__customPlaceholderSet)
+    {
+      this.options['placeholder'] = "";
+    }
+    
     compMessaging.activate(messagingTrigger, messagingContent);
   },
   
@@ -10408,10 +10661,9 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
  * Adds a message to this element
  * @param {Object} message a Message object. TODO: contract needs to exposed
  * @param {Event=} event
- * @returns {undefined}
  * @private
  */
-  _updateMessagesOption : function(message, event) 
+  _updateMessages: function(message, event) 
   {
     var msgs = this.options['messages'].slice(), messagesHash = {};
     oj.Assert.assertPrototype(message, oj.Message);
@@ -10536,16 +10788,13 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _getDefaultRequiredValidator : function ()
   {
     var vf;
-    // TODO: Should we cache the same instance of required validator for all components?
-    if (!this.__requiredValidator)
-    {
-      vf = oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_REQUIRED);
-      this.__requiredValidator = vf ? vf.createValidator() : null;
-    }
     
-    return this.__requiredValidator;
+    // TODO: Should we cache the same instance of required validator for all components?
+    this.__defaultReqValOptions = {'label': this._getLabelText()};    
+    vf = oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_REQUIRED);
+    return vf ? vf.createValidator(this.__defaultReqValOptions) : null;
   },
-          
+
   /**
    * Returns the regexp validator instance or creates it if needed and caches it.
    * @private
@@ -10553,10 +10802,58 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _getDefaultRegExpValidator : function ()
   {
     var vf;
-    this.__defaultRegExpOptions = {'pattern': this.options['pattern']};
+    this.__defaultRegExpOptions = {'pattern': this.options['pattern'], 
+                                   'label': this._getLabelText()};
 
     vf = oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_REGEXP);
     return vf ? vf.createValidator(this.__defaultRegExpOptions) : null;
+  },
+  
+  /**
+   * Returns an array of validator hints.
+   * @param {Array} allValidators
+   * @private
+   */        
+  _getHintsForAllValidators : function(allValidators)
+  {
+    var validator, validatorHints = [], vHint = "", i;
+    if (this._IsRequired())
+    {
+      validator = this._hasRequiredInValidators(allValidators);
+      if (!validator)
+      {
+        // get the hint for the default required validator and push into array if it's not already 
+        // present in the validators array
+        validator = this._getDefaultRequiredValidator();
+        if (validator['getHint'] && typeof validator['getHint'] === "function")
+        {
+          vHint = validator['getHint']();
+          if (vHint)
+          {
+            validatorHints.push(vHint);
+          }
+        }
+      }
+    }
+
+    // loop through all remaining validators
+    for (i = 0; i < allValidators.length; i++)
+    {
+      validator = allValidators[i], vHint = "";
+      if (typeof validator === "object") 
+      {
+        if (validator['getHint'] && typeof validator['getHint'] === "function")
+        {
+          vHint = validator['getHint']();
+          if (vHint)
+          {
+            validatorHints.push(vHint);
+          }
+        }
+      }
+    }
+
+    return validatorHints;
   },
   
   /**
@@ -10570,7 +10867,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _getMessagingContent : function (updateType)
   {
     var messagingContent = {}, converter = this._GetConverter(), converterHint, allValidators, 
-            validator, validatorHints = [], vHint, i;
+            validatorHints = [];
     updateType = updateType || this.__MESSAGING_CONTENT_UPDATE_TYPE.VALIDITY_STATE;
     
     // Add validityState which includes messages, valid and severity
@@ -10605,23 +10902,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
         updateType === this.__MESSAGING_CONTENT_UPDATE_TYPE.VALIDATOR_HINTS)
     {
       allValidators = this._GetAllValidators();
-
-      for (i = 0; i < allValidators.length; i++)
-      {
-        validator = allValidators[i], vHint = "";
-        if (typeof validator === "object") 
-        {
-          // validators : [required, numberRange]
-          if (validator['getHint'] && typeof validator['getHint'] === "function")
-          {
-            vHint = validator['getHint']();
-            if (vHint)
-            {
-              validatorHints.push(vHint);
-            }
-          }
-        }
-      }
+      validatorHints = this._getHintsForAllValidators(allValidators);
       
       if (validatorHints.length > 0)
       {
@@ -10639,6 +10920,28 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     }
     
     return messagingContent;
+  },
+          
+  /**
+   * Checks if a required validator is set explicitly on the validators array and return it.
+   * @param {Array} allValidators
+   * @return {Object|null} required validator instance
+   * @private
+   */
+  _hasRequiredInValidators : function (allValidators)
+  {
+    var validator = null, i, required = null;
+    for (i = 0; i < allValidators.length; i++)
+    {
+      validator = allValidators[i];
+      if (validator instanceof oj.RequiredValidator)
+      {
+        required = validator;
+        break;
+      }
+    }
+
+    return required;
   },
   
   /**
@@ -10710,7 +11013,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     newMsg['summary'] = summary;
     newMsg['severity'] = severity;
     newMsg['detail'] = detail;
-    this._updateMessagesOption(newMsg, event);
+    this._updateMessages(newMsg, event);
   },
 
   /**
@@ -10737,16 +11040,16 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    * invalidElementTracker.
    * 
    * @param {Object|undefined} value the changed value that needs to be updated on UI
-   * @param {boolean=} forceRefresh false is the default; true means always refresh component 
+   * @param {boolean=} fullRefresh false is the default; true means always refresh component 
    * display value
    * @private
    */        
-  _refreshComponentDisplayValue : function (value, forceRefresh)
+  _refreshComponentDisplayValue : function (value, fullRefresh)
   {
     var modelValue = value || this.options['value'], lastModelValue, elementValueUpdated;
     
     lastModelValue = this._getLastModelValue();
-    elementValueUpdated = forceRefresh || (modelValue !== lastModelValue);
+    elementValueUpdated = fullRefresh || (modelValue !== lastModelValue);
 
     // If instance (value) changes, we clear the element value and reset errors. 
     // But if the modelValue is the same as the element's _lastModelValue, then the element value 
@@ -10765,6 +11068,19 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     {
       this._updateElementDisplayValue(modelValue);
     }
+  },
+  
+  /**
+   * Called anytime the label DOM changes requiring a reset of any dependent feature that caches the 
+   * label.
+   * @private
+   */        
+  _refreshLabelDependents : function ()
+  {
+    // for now reset all validators
+    this.__defaultRegExpOptions = {};
+    this.__defaultReqValOptions = {};
+    this._ResetAllValidators();
   },
 
   /**
@@ -10788,67 +11104,6 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     }
   },
 
-  /**
-   * Sets the default messagingDisplayOptions for the component. This method is called from 
-   * _getCreateOptions() at widget creation time.
-   * 
-   * @expose
-   * @memberof! oj.editableValue
-   * @instance
-   * @private
-   */
-  _setDefaultMessagingOptions : function ()
-  {
-    var self = this, contextualDefaults, instanceValue, merged = {}, finalMerged = {}, newValue,
-            artifact, displayType;
-    oj.Components.setDefaultOptions(
-      {
-        'editableValue': // properties for all editableValue components 
-        {
-          'messagingDisplayOptions': function(context) 
-          {
-            return self._GetDefaultMessagingDisplayOptions(context);
-          }
-          // we merge value set on component instance with the contextual defaults and cache this 
-          // instance. if option mutates we clear the cache.
-          /*
-          if (!self.__messagingDisplayOptions)
-          {
-            contextualDefaults = self._GetDefaultMessagingDisplayOptions(context);
-
-
-            // Can't get the option value because this calls the getter that causes a recursion
-            instanceValue = self.options['messagingDisplayOptions'];
-
-            merged = $.extend({}, contextualDefaults, instanceValue);
-            // in order to ensure that string values for artifacts are not allowed 
-            $.each(merged, function(artifact, displayType) {
-              newValue = [];
-              if (typeof displayType === "string")
-              {
-                newValue = [];
-                newValue.push(displayType);
-              }
-              else if (Array.isArray(displayType))
-              {
-                newValue = displayType;
-              }
-
-              finalMerged[artifact] = newValue;
-            });
-
-            self.__messagingDisplayOptions = finalMerged;
-          }
-
-          return self.__messagingDisplayOptions;
-        }
-        */
-
-        }
-      }
-    );
-  },
-  
   _updateElementDisplayValue : function (modelValue, event)
   {
     var displayValue;
@@ -10906,20 +11161,24 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
       return;
     }
     
-    var allValidators = [], validator, i;
+    var allValidators = this._GetAllValidators(), validator, i, reqValRun = false;
 
-    // run required validation before anything else 
+    // run required validation before anything else; 
     if (this._IsRequired())
     {
-      this._getDefaultRequiredValidator().validate(value);
+      validator = this._hasRequiredInValidators(allValidators);
+      if (!validator)
+      {
+        validator = this._getDefaultRequiredValidator();
+      }
+      validator.validate(value);
+      reqValRun = true;
     }
 
     // Only run other validators when required validation passes and only if all validators are 
     // requested to be run
     if (!requiredOnly)
     {
-      allValidators = this._GetAllValidators();
-
       for (i = 0; i < allValidators.length; i++)
       {
         validator = allValidators[i];
@@ -10928,6 +11187,11 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
           // validators : [required, numberRange]
           if (validator['validate'] && typeof validator['validate'] === "function")
           {
+            if (validator instanceof oj.RequiredValidator && reqValRun)
+            {
+              // skip running required validation again
+              continue;
+            }
             validator['validate'](value);
           }
           else
@@ -10944,17 +11208,26 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   }     
 });
 
-/***
- * This is an example of setting context-sensitive dynamic default properties
 oj.Components.setDefaultOptions(
   {
     'editableValue': // properties for all editableValue components 
     {
-      'exampleOption': function(context){return context['containers'].indexOf('ojTable') >= 0 ? 'tableValue' : 'normalValue'}
+      'messagingDisplayOptions': oj.Components.createDynamicPropertyGetter(
+        function(context) 
+        {
+          // var inTable = context['containers'].indexOf('ojTable') >= 0;
+          return  {
+                    'messages': ['notewindow'], 
+                    'converterHint': ['placeholder', 'notewindow'], 
+                    'validatorHint': ['notewindow'], 
+                    'title': ['notewindow']
+                  };
+        }
+      )
     }
   }
 );
-*/
+
 /**
  * @class
  * @name oj.inputBase
@@ -10992,12 +11265,22 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   _ATTR_CHECK : [],
   
   /** 
-   * Class names to be applied to this.widget()
+   * Class names to be applied to this.element()
    * 
    * @expose
    * @private
    */
   _CLASS_NAMES : "",
+  
+  /** 
+   * Class names to be applied to this.widget()
+   * 
+   * Note that if this value is defined then the this.element will be wrapped
+   * 
+   * @expose
+   * @private
+   */
+  _WIDGET_CLASS_NAMES : "",
   
   /**
    * Below JSON content is a helper to manage events for the input widgets
@@ -11104,16 +11387,37 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   {
     return this._GetReadingDirection() === "rtl";
   },
+  
+  /**
+   * Whether the this.element should be wrapped. Function so that additional conditions can be placed
+   * 
+   * @ignore
+   * @expose
+   * @protected
+   * @return {boolean}
+   */
+  _DoWrapElement : function ()
+  {
+    return this._WIDGET_CLASS_NAMES;
+  },
 
   _create : function __create()
   {
+    
+    if(this._DoWrapElement())
+    {
+      this._wrapElement();
+    }
     
     // todo: where should this be called from
     this._SetRootAttributes();
     
     var ret = this._superApply(arguments);
     
-    this.widget().addClass(this._CLASS_NAMES);
+    if(this._CLASS_NAMES) 
+    {
+      this.element.addClass(this._CLASS_NAMES);
+    }
     
     this._processEventList();
     this._processAttrCheck();
@@ -11133,6 +11437,12 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     }
 
     return ret;
+  },
+  
+  _wrapElement : function __wrapElement() 
+  {
+    $(this.element).wrap( $("<div>").addClass(this._WIDGET_CLASS_NAMES) );
+    this._wrapper = this.element.parent();
   },
   
   _processEventList : function __processEventList()
@@ -11256,7 +11566,12 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
       case "removeAttr" : this.element.removeAttr(attr); break;
       }
     }
-
+    
+    if(this._DoWrapElement())
+    {
+      this.element.unwrap();
+    }
+    
     return ret;
   },
   
@@ -11280,6 +11595,11 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
       this.element.prop("readonly", !!value);
     }
     
+  },
+  
+  widget : function _widget() 
+  {
+    return this._DoWrapElement() ? this._wrapper : this.element;
   }
 
 });
@@ -11533,7 +11853,7 @@ oj.ComponentMessaging.prototype._getResolvedMessagingDisplayOptions = function (
     var artifactsByDisplayType = {}, index, artifactDisplayTypeResolved = false, messagingStrategies = {}, 
       compPH = this._component.options['placeholder'], artifact, key,
       messagingPreferences = this._component.options['messagingDisplayOptions'] || {},
-      $messagingPreferences = {};
+      $messagingPreferences = {}, self = this;
       
     // first resolve primary display options for each artifact.
     // E.g. at the end of this loop you should have something like this
@@ -11544,57 +11864,27 @@ oj.ComponentMessaging.prototype._getResolvedMessagingDisplayOptions = function (
         // artifacts are 'messages', 'converterHint', 'validatorHint', 'title'
         artifactDisplayTypeResolved = false;
         artifact = key + "";
-        $.each(displayTypes, function(index, displayType)
+        // we take either array or string values for messagingDisplayOptions.
+        if (Array.isArray(displayTypes))
         {
-          switch (displayType)
+          $.each(displayTypes, function(index, displayType)
           {
-            // placeholder display is special in that it's only supported on 'converterHint'.
-            case oj.ComponentMessaging._DISPLAY_TYPE.PLACEHOLDER :
-
-              if (artifact === "converterHint")
-              {
-                // if placeholder is the first preference for converterHint, it's used under certain 
-                // conditions
-                // if options.placeholder is not set then use 'converterHint' as the default 
-                // 'placeholder'
-                // alternately if (options.placeholder), i.e., a custom placeholder is set, then 
-                // ignore the placeholder displayType and use the next display type as the default 
-                // for the artifact. We may have a fallback displayType in which case we use it, 
-                // otherwise we use 'none'. E.g., 
-                // {'converterHint': ['placeholder', 'notewindow']} // use notewindow
-                // {'converterHint': ['placeholder']}               // use none
-
-                if (!artifactDisplayTypeResolved)
-                {
-                  if (!compPH)
-                  {
-                    $messagingPreferences[artifact] = displayType;
-                    artifactDisplayTypeResolved = true;
-                    return; // skip processing rest of the displayTypes
-                  }
-                }
-              }
-              else
-              {
-                // displayType 'placeholder' is not supported on other artifacts
-                // ignore if present
-                // TODO: In the future we may want to support configuring validatorHint ot title as 
-                // placeholder as well.
-              }
-
-              break;
-
-            default:
-              if (!artifactDisplayTypeResolved)
-              {
-                $messagingPreferences[artifact] = displayType;
-                artifactDisplayTypeResolved = true;
-                return; // skip processing rest of the displayTypes
-              }
-              break;
+            if (!artifactDisplayTypeResolved)
+            {
+              artifactDisplayTypeResolved = 
+                self._resolveDisplayTypeForArtifact(artifact, displayType, compPH, $messagingPreferences);
+            }
+          });
+        }
+        else if (typeof displayTypes === "string")
+        {
+          if (!artifactDisplayTypeResolved)
+          {
+            artifactDisplayTypeResolved = 
+              self._resolveDisplayTypeForArtifact(artifact, displayTypes, compPH, $messagingPreferences);
           }
-        });
-
+        }
+        
         // if we couldn't resolve then use "none" as the default. E.g., validationHint: ['placeholder']
         if (!artifactDisplayTypeResolved)
         {
@@ -11614,6 +11904,64 @@ oj.ComponentMessaging.prototype._getResolvedMessagingDisplayOptions = function (
     });
     
     return artifactsByDisplayType;
+},
+        
+oj.ComponentMessaging.prototype._resolveDisplayTypeForArtifact = function(
+  artifact, 
+  displayType, 
+  compPH,
+  $messagingPreferences)
+{
+  var artifactDisplayTypeResolved = false;
+  switch (displayType)
+  {
+    // placeholder display is special in that it's only supported on 'converterHint'.
+    case oj.ComponentMessaging._DISPLAY_TYPE.PLACEHOLDER :
+
+      if (artifact === "converterHint")
+      {
+        // if placeholder is the first preference for converterHint, it's used under certain 
+        // conditions
+        // if options.placeholder is not set then use 'converterHint' as the default 
+        // 'placeholder'
+        // alternately if (options.placeholder), i.e., a custom placeholder is set, then 
+        // ignore the placeholder displayType and use the next display type as the default 
+        // for the artifact. We may have a fallback displayType in which case we use it, 
+        // otherwise we use 'none'. E.g., 
+        // {'converterHint': ['placeholder', 'notewindow']} // use notewindow
+        // {'converterHint': ['placeholder']}               // use none
+
+        if (!artifactDisplayTypeResolved)
+        {
+          if (!compPH)
+          {
+            $messagingPreferences[artifact] = displayType;
+            artifactDisplayTypeResolved = true;
+            
+          }
+        }
+      }
+      else
+      {
+        // displayType 'placeholder' is not supported on other artifacts
+        // ignore if present
+        // TODO: In the future we may want to support configuring validatorHint ot title as 
+        // placeholder as well.
+      }
+
+      break;
+
+    default:
+      if (!artifactDisplayTypeResolved)
+      {
+        $messagingPreferences[artifact] = displayType;
+        artifactDisplayTypeResolved = true;
+      }
+      break;
+  }
+  
+  return artifactDisplayTypeResolved;
+  
 },
 
 /**
@@ -11680,7 +12028,7 @@ oj.ComponentMessaging.prototype._reactivate = function (target, content)
       {
         // update the note window strategy with the latest displayOptions if already present. we don;t 
         // want to remove it once activated.
-        strategy.reinitialize(artifactsForType);
+        strategy.reactivate(artifactsForType, content);
       }
     }
     else
@@ -11782,7 +12130,7 @@ oj.MessagingStrategy.prototype.update = function (content)
   else
   {
     // TODO: add warning or other severity state
-    if (this.HasMessages() && maxSeverity === oj.Message.SEVERITY_LEVEL.WARNING)
+    if (this.HasMessages() && maxSeverity === oj.Message.SEVERITY_LEVEL['WARNING'])
     {
       removeClasses.push(oj.MessagingStrategy._SELECTOR_STATE_INVALID);
       addClasses.push(oj.MessagingStrategy._SELECTOR_STATE_WARNING);
@@ -11820,15 +12168,18 @@ oj.MessagingStrategy.prototype.deactivate = function (content)
 };
 
 /**
- * Reinitializes the display options.
+ * Reinitializes with the new display options and updates component messaging using the new content. 
  * 
  * @param {Array} newDisplayOptions
+ * @param {Object} content
  * @private
  */
-oj.MessagingStrategy.prototype.reinitialize = function (newDisplayOptions)
+oj.MessagingStrategy.prototype.reactivate = function (newDisplayOptions, content)
 {
   this.Init(newDisplayOptions);
+  this.update(content);
 };
+
 // P R O T E C T E D  M E T H O D S 
 /**
  * Gets the target element for which the messaging is applied.
@@ -11985,7 +12336,7 @@ oj.PlaceholderMessagingStrategy = function(displayOptions)
 oj.Object.createSubclass(oj.PlaceholderMessagingStrategy, oj.MessagingStrategy, "oj.PlaceholderMessagingStrategy");
 
 /**
- * Initializes the tooltip.
+ * Initializer
  *  
  * @param {Array} displayOptions an array of messaging artifacts displayed in the notewindow.
  * @private
@@ -11996,7 +12347,7 @@ oj.PlaceholderMessagingStrategy.prototype.Init = function (displayOptions)
 };
 
 /**
- * Sets up a tooltip for the component instance using the messaging content provided. 
+ * Sets up a placeholder for the component instance using the converter hint.
  * 
  * @param {Object} component widget instance
  * @param {Object} target element for which the messaging applies. 
@@ -12013,7 +12364,7 @@ oj.PlaceholderMessagingStrategy.prototype.activate = function (component, target
 oj.PlaceholderMessagingStrategy.prototype.update = function (content)
 {
   oj.PlaceholderMessagingStrategy.superclass.update.call(this, content);
-  // this._refreshPlaceholder();
+  this._refreshPlaceholder();
 };
 
 oj.PlaceholderMessagingStrategy.prototype.deactivate = function (content)
@@ -12021,6 +12372,7 @@ oj.PlaceholderMessagingStrategy.prototype.deactivate = function (content)
   oj.PlaceholderMessagingStrategy.superclass.deactivate.call(this, content);
 };
 
+// a default placeholder is set on the component, and that is typically the converter hint
 oj.PlaceholderMessagingStrategy.prototype._refreshPlaceholder = function()
 {
   var target = this.GetTarget(), jqRoot = this.GetComponent().widget(), content, hints;
@@ -12033,7 +12385,8 @@ oj.PlaceholderMessagingStrategy.prototype._refreshPlaceholder = function()
     {
       var values = {};
       values['placeholder'] = content;
-      values['_oj_messaging_update'] = true;
+      values['_oj_messaging_update'] = true; // to indicate to component that placeholder is being 
+                                             // set from messaging module 
 
       this.GetComponent().option(values);
     }
@@ -12497,7 +12850,6 @@ oj.NoteWindowMessagingStrategy.prototype._isTooltipInitialized = function ()
 */
 /**
  * String utilities.
- * @export
  * @ignore
  */
 oj.DomUtils = {};
@@ -12511,7 +12863,6 @@ oj.DomUtils._LEGAL_ATTRIBUTES = {"class":1, "style":1, "href":1};
  * 
  * @param {string|null} content
  * @return {boolean} true if the string is wrapped in <html> tag.
- * @export
  */        
 oj.DomUtils.isHTMLContent = function(content)
 {    
@@ -12576,8 +12927,9 @@ oj.DomUtils._cleanElementHtml = function(node)
 /**
 * Checks to see if the "ancestorNode" is a ancestor of "node".
 *
-* @param {Element} ancestorNode dom subtree to check to see if the target node exists
-* @param {Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode 
+* @param {!Element} ancestorNode dom subtree to check to see if the target node exists
+* @param {!Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode
+* @return {boolean} <code>true</code> if the "ancestorNode" is a ancestor of "node".
 */
 oj.DomUtils.isAncestor = function (ancestorNode, node) 
 {
@@ -12599,8 +12951,9 @@ oj.DomUtils.isAncestor = function (ancestorNode, node)
 /**
 * Checks to see if the "ancestorNode" is a ancestor of "node" or if they are the same.
 *
-* @param {Element} ancestorNode dom subtree to check to see if the target node exists
-* @param {Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode 
+* @param {!Element} ancestorNode dom subtree to check to see if the target node exists
+* @param {!Element} node target node to check to see if it exists within a subtree rooted at the ancestorNode
+* @return {boolean} <code>true</code> if the "ancestorNode" is a ancestor of "node" or if they are the same 
 */
 oj.DomUtils.isAncestorOrSelf = function (ancestorNode, node) 
 {
@@ -12611,6 +12964,146 @@ oj.DomUtils.isAncestorOrSelf = function (ancestorNode, node)
           true :
           oj.DomUtils.isAncestor(ancestorNode, node);
 };
+
+
+/**
+ * Adds a resize listener for a block or inline-block element
+ * @param {!Element} elem - node where the listener should be added
+ * @param {!Function} listener - listener to be added. The listener will receive
+ * two parameters: 1) the new width in pixels; 2) the new height in pixels
+ */
+oj.DomUtils.addResizeListener = function(elem, listener)
+{
+  var jelem = $(elem);
+  var tracker = jelem.data(oj.DomUtils._RESIZE_TRACKER_KEY);
+  if (tracker == null)
+  {
+    tracker = new oj.DomUtils._ResizeTracker(elem);
+    jelem.data(oj.DomUtils._RESIZE_TRACKER_KEY, tracker);
+    tracker.start();
+  }
+  tracker.addListener(listener);
+}
+
+/**
+ * Removes a resize listener
+ * @param {!Element} elem - node whose listener should be removed
+ * @param {!Function} listener - listener to be removed
+ */
+oj.DomUtils.removeResizeListener = function(elem, listener)
+{
+  var jelem = $(elem);
+  var tracker = jelem.data(oj.DomUtils._RESIZE_TRACKER_KEY);
+  if (tracker != null)
+  {
+    tracker.removeListener(listener);
+    if (tracker.isEmpty())
+    {
+      tracker.stop();
+      jelem.removeData(oj.DomUtils._RESIZE_TRACKER_KEY);
+    }
+  }
+};
+
+
+/**
+ * Utility class for tracking resize events for a given element and  sispatching them
+ * to listeners
+ * @constructor
+ */
+oj.DomUtils._ResizeTracker = function(div)
+{
+  this._listeners = jQuery.Callbacks();
+  
+  this.addListener = function(listener)
+  {
+    this._listeners.add(listener);    
+  };
+  
+  this.removeListener = function(listener)
+  {
+    this._listeners.remove(listener);    
+  };
+  
+  this.isEmpty = function()
+  {
+    return this._listeners.empty();
+  };
+  
+  this.start = function()
+  {
+    var firstChild = div.childNodes[0]; // could be undefined, but insertBefore() will deal with it
+    
+    // This child DIV will track expansion events. It is meant to be 1px taller and wider than the DIV
+    // whose resize events we are tracking. After we set its scrollTop and scrollLeft to 1, any increate in size
+    // will fire a scroll event
+    this._detectExpansion = document.createElement("div");
+    this._detectExpansion.className = "oj-helper-detect-resize";
+    var expansionChild = document.createElement("div");
+    this._detectExpansion.appendChild(expansionChild);
+    div.insertBefore(this._detectExpansion, firstChild);
+    
+    this._scrollListener = this._handleScroll.bind(this); 
+    this._detectExpansion.addEventListener("scroll", this._scrollListener, false);
+      
+      
+    // This child DIV will track contraction events. Its height and width are set to 200%. After we set its scrollTop and 
+    // scrollLeft to the current height and width of its parent, any decrease in size will fire a scroll event
+    this._detectContraction = document.createElement("div");
+    this._detectContraction.className = "oj-helper-detect-resize";
+    
+    var contractionChild = document.createElement("div");
+    contractionChild.style.width = "200%";
+    contractionChild.style.height = "200%";
+    this._detectContraction.appendChild(contractionChild);
+    div.insertBefore(this._detectContraction, firstChild);
+     
+    this._detectContraction.addEventListener("scroll", this._scrollListener, false);
+    
+    //Size child DIVs adn recored the current size of the tracked DIV
+    this._adjust(this._detectExpansion.offsetWidth, this._detectExpansion.offsetHeight);
+  };
+  
+  this.stop = function()
+  {
+    this._detectExpansion.removeEventListener("scroll", this._scrollListener);
+    this._detectContraction.removeEventListener("scroll", this._scrollListener);
+    div.removeChild(this._detectExpansion);
+    div.removeChild(this._detectContraction);
+  };
+  
+  
+  this._handleScroll = function(evt)
+  {
+    evt.stopPropagation();
+    
+    var newWidth = this._detectExpansion.offsetWidth;
+    var newHeight = this._detectExpansion.offsetHeight;
+    if (this._oldWidth != newWidth || this._oldHeight != newHeight)
+    {
+      this._adjust(newWidth, newHeight);
+      this._listeners.fire(newWidth, newHeight);
+    }
+  };
+  
+  this._adjust = function(width, height)
+  { 
+    this._oldWidth = width;
+    this._oldHeight = height;
+    
+    var expansionChild = this._detectExpansion.firstChild;
+    expansionChild.style.width = width + 1 + 'px';
+    expansionChild.style.height = height + 1 + 'px';
+    
+    this._detectExpansion.scrollLeft = 1;
+    this._detectExpansion.scrollTop = 1;
+    
+    this._detectContraction.scrollLeft = width;
+    this._detectContraction.scrollTop = height;
+  };
+}
+
+oj.DomUtils._RESIZE_TRACKER_KEY = "_ojResizeTracker";
 // Copyright (c) 2013, Oracle and/or its affiliates. 
 // All rights reserved.
 
@@ -12635,7 +13128,7 @@ oj.Test.ready = false;
 /**
  * @export
  * Return the node found given the locator
- * @param {Object|string} locator A locator which is either a JSON string (to be parsed using eval()), or an Object with the following properties:
+ * @param {Object|string} locator A locator which is either a JSON string (to be parsed using $.parseJSON), or an Object with the following properties:
  *                                             element: the component's selector, determined by the test author when laying out the page
  *                                             component: optional - in the future there may be more than one component contained within a page element
  *                                             subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
@@ -12707,6 +13200,22 @@ function _ojHighContrast()
 
 $(document).ready(function() {
   _ojHighContrast();
+});
+/*jslint browser: true*/
+/**
+ * @private
+ */
+function _ojSlowCSS()
+{
+  if (navigator.appName == 'Microsoft Internet Explorer')
+  {
+    $('html').addClass("oj-slow-borderradius oj-slow-cssgradients oj-slow-boxshadow");
+  }
+
+}
+
+$(document).ready(function() {
+  _ojSlowCSS();
 });
 /*
 ** Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
@@ -13402,10 +13911,16 @@ var OraDateTimeConverter;
         if(options['maximumFractionDigits'] !== undefined) {
           nb = parseInt(options['maximumFractionDigits'], 10);
           numberSettings['maximumFractionDigits'] = nb;
+          if(numberSettings['maximumFractionDigits'] < numberSettings['minimumFractionDigits']) {
+            numberSettings['minimumFractionDigits'] = numberSettings['maximumFractionDigits'];
+          }
         }
         if(options['minimumFractionDigits'] !== undefined) {
           nb = parseInt(options['minimumFractionDigits'], 10);
           numberSettings['minimumFractionDigits'] = nb;
+        }
+        if(numberSettings['maximumFractionDigits'] < numberSettings['minimumFractionDigits']) {
+          numberSettings['maximumFractionDigits'] = numberSettings['minimumFractionDigits'];
         }
         if(options['minimumIntegerDigits'] !== undefined) {
           nb = parseInt(options['minimumIntegerDigits'], 10);
@@ -13433,7 +13948,7 @@ var OraDateTimeConverter;
     
     _validateNumberOptions = function(options, caller) {
       var getOption = _getGetOption(options, caller);
-      var s = getOption('style', 'string', ['currency', 'decimal', 'percent'],
+      var s = getOption('style', 'string', ['currency', 'decimal', 'percent', 'perMill'],
         'decimal');
       var c =getOption('currency', 'string');
       if(s === 'currency' && c === undefined) {
@@ -17069,10 +17584,10 @@ var OraDateTimeConverter;
             }
             result['two-digit-year-start'] = _get2DigitYearStart(options);
             if(!ecma) {
-              var format = _expandPredefinedStylesFormat(options, 
-                localeElements, OraDateTimeConverter.resolvedOptions);
-              result = _getResolvedOptionsFromPattern(locale, 
-                numberingSystemKey, format);
+              //var format = _expandPredefinedStylesFormat(options, 
+                //localeElements, OraDateTimeConverter.resolvedOptions);
+              //result = _getResolvedOptionsFromPattern(locale, 
+                //numberingSystemKey, format);
               var fmtType = getOption('formatType', 'string', 
                 ['date', 'time', 'datetime'], 'date');
               var dStyle = getOption('dateFormat', 'string', 
@@ -18021,19 +18536,25 @@ oj.Object.createSubclass(oj.Message, oj.Object, "oj.Message");
  */
 oj.Message.prototype.Init = function(summary, detail, severity) 
 {
+  this['summary'] = summary;
+  this['detail'] = detail;
+  this['severity'] = severity || oj.Message.SEVERITY_TYPE.ERROR; // defaults to ERROR
+  
+  /*
   // once initialized proeperties of the oj.Message instance cannot be altered.
   Object.defineProperty(oj.Message.prototype, "summary", {value: summary,  
-                                                          writable : true,
+                                                          writable : false,
                                                           enumerable : true,
                                                           configurable : true});
   Object.defineProperty(oj.Message.prototype, "detail", {value: detail,  
-                                                          writable : true,
+                                                          writable : false,
                                                           enumerable : true,
                                                           configurable : true});
   Object.defineProperty(oj.Message.prototype, "severity", {value: severity,  
-                                                          writable : true,
+                                                          writable : false,
                                                           enumerable : true,
                                                           configurable : true});
+  */
   oj.Message.superclass.Init.call(this);
 };
 
@@ -18047,7 +18568,7 @@ oj.Message.prototype.Init = function(summary, detail, severity)
 oj.Message.prototype.equals = function (msg)
 {
   if (msg)
-  { 
+  {
     if ((oj.Message.getSeverityLevel(this['severity']) === 
             oj.Message.getSeverityLevel(msg['severity'])) && 
         this['summary'] === msg['summary'] && 
@@ -18064,7 +18585,7 @@ oj.Message.prototype.equals = function (msg)
  * A convenience method that returns the severity level when given either a severity level of type 
  * number or a severity type of string. 
  * If severity level is not provided or is not valid this return a severity error.
- * @param {string|number} severity 
+ * @param {string|number|undefined} severity 
  * @return {number}
  * @export
  */
@@ -18096,6 +18617,44 @@ oj.Message.getSeverityLevel = function (severity)
 };
 
 /**
+ * A convenience method that returns the severity type when given either a severity level of type 
+ * number or a severity type of string. 
+ * If severity level is not provided or is not valid this return a severity error.
+ * @param {string|number|undefined} level 
+ * @return {string}
+ * @export
+ */
+oj.Message.getSeverityType = function (level) 
+{
+  var index;
+  if (level)
+  {
+    if (typeof level === "string")
+    {
+      index = oj.Message._LEVEL_TO_TYPE.indexOf(level, 1);
+      if (index === -1)
+      {
+        // when given an unrecognized type return "error"
+        level = oj.Message.SEVERITY_TYPE['ERROR'];
+      }
+    }
+    else if (typeof level === "number")
+    {
+      if (level < oj.Message.SEVERITY_LEVEL['CONFIRMATION'] && 
+          level > oj.Message.SEVERITY_LEVEL['FATAL'])
+      {
+        level = oj.Message.SEVERITY_TYPE['ERROR'];
+      }
+      else
+      {
+        level = oj.Message._LEVEL_TO_TYPE[level];
+      }
+    }
+  }
+  return level || oj.Message.SEVERITY_TYPE['ERROR'];
+};
+
+/**
  * A convenience method that returns the max severity level in a array of message objects.  
  * @param {Array} messages an array of message instances
  * @returns {number} -1 if none can be determined; otherwise a severity level as defined by 
@@ -18109,11 +18668,10 @@ oj.Message.getMaxSeverity = function (messages)
   {
     $.each(messages, function (i, message)
       {
-        if (message && message['severity'])
+        if (message)
         {
           currLevel = oj.Message.getSeverityLevel(message['severity']);
         }
-
         maxLevel = maxLevel < currLevel ? currLevel : maxLevel;
       });
     
@@ -18171,7 +18729,7 @@ oj.Message._LEVEL_TO_TYPE = ['none', // this can never be set
  * </ul>
  * <p>
  * 
- * The converter provides leniency when pasrsing user input value to a number in the following ways:<br/>
+ * The converter provides leniency when parsing user input value to a number in the following ways:<br/>
  * 
  * <ul>
  * <li>Prefix and suffix that do not match the pattern, are removed. E.g., when pattern is 
@@ -18417,16 +18975,19 @@ oj.IntlNumberConverter.prototype.parse = function (value)
  */
 oj.IntlNumberConverter.prototype.resolvedOptions = function()
 {
-  var localeElements = oj.LocaleData.__getBundle(), locale = oj.Config.getLocale(), converterError;
-  // options are resolved and cached 
-  if (!this._resolvedOptions)
+  var localeElements, locale = oj.Config.getLocale(), converterError;
+  // options are resolved and cached for the current locale. when locale changes resolvedOptions 
+  // is reevaluated as it contains locale specific info.
+  if ((locale !== this._locale) || !this._resolvedOptions)
   {
+    localeElements = oj.LocaleData.__getBundle();
     try
     {
       // cache if successfully resolved
       this._resolvedOptions = this._getWrapped().resolvedOptions(localeElements, 
                                                                  this.getOptions(), 
                                                                  locale);
+      this._locale = locale;
     }
     catch (e)
     {
@@ -18831,8 +19392,8 @@ oj.RegExpValidator.prototype._getDetailKey = function ()
  * <li>Supports auto-correction of value, for the short and long types of weekday and month names. 
  * So they can are used anywhere in the value. E.g., if the expected pattern is E, MMM, d, y, all 
  * these values are acceptable - Tue, Nov 26 2013 or Nov, Tue 2013 26 or 2013 Tue 26 Nov. <br/>
- * NOTE: Lenient parsing of narrow weekday or month name is not supported because of ambiguity in 
- * choosing the right value. So we expect for narrow month and weekday option that values be 
+ * NOTE: Lenient parsing of narrow era, weekday or month name is not supported because of ambiguity in 
+ * choosing the right value. So we expect for narrow era, weekday or month option that values be 
  * provided either in their short or long forms. E.g., Sat, March 02, 2013.
  * </li>
  * <li>Specifying the weekday is optional. E.g., if the expected pattern is E, MMM, d, y; then 
@@ -19094,17 +19655,18 @@ oj.IntlDateTimeConverter.prototype.getOptions = function ()
  */
 oj.IntlDateTimeConverter.prototype.resolvedOptions = function ()
 {
-  var localeElements = oj.LocaleData.__getBundle(), locale = oj.Config.getLocale(), converterError, 
-          options = this.getOptions();
-  // options are resolved and cached 
-  if (!this._resolvedOptions)
+  var localeElements, locale = oj.Config.getLocale(), converterError, options = this.getOptions();
+  // options are resolved and cached for a locale
+  if ((locale !== this._locale) || !this._resolvedOptions)
   {
+    localeElements = oj.LocaleData.__getBundle();
     try
     {
       // cache if successfully resolved
       this._resolvedOptions = this._getWrapped().resolvedOptions(localeElements, 
                                                                  options, 
                                                                  locale);
+      this._locale = locale;
     }
     catch (e)
     {
@@ -19381,8 +19943,8 @@ oj.IntlDateTimeConverter.prototype._isOptionSet = function (optionName)
  * Constructs a DateTimeRangeValidator that ensures the value provided is within a given range
  * @param {Object=} options an object literal used to provide:<p>
  * <ul>
- *   <li><b>minimum</b>: The minimum datetime value of the entered value.<p>
- *   <li><b>maximum</b>: The maximum datetime value of the entered value.<p>
+ *   <li><b>min</b>: The minimum datetime value of the entered value.<p>
+ *   <li><b>max</b>: The maximum datetime value of the entered value.<p>
  *   <li><b>hint</b>: an optional object literal of hint text to be used. There is no default hint 
  *   provided by this validator.<p>
  *    <ul>     
@@ -19580,9 +20142,22 @@ oj.DateTimeRangeValidator.prototype.getHint = function ()
  * Constructs a RequiredValidator that ensures that the value provided is not empty
  * @param {Object=} options an object literal used to provide an optional hint and error message.<p>
  * <ul>
- * <li><b>hint</b>:  an optional hint text. There is no default hint provided by this validator.</li>
- * <li><b>message</b>: a custom error message to be used, for creating detail part of message, when 
- * the value provided is empty</li>
+ * <li><b>hint</b>: an optional hint text. There is no default hint provided by this validator.</li>
+ * <li>
+ * <b>messageSummary</b>: a custom error message summarizing the error <p>
+ * Parameters: <p>
+ * {label} - label of the component for which this message applies. The label may not always be 
+ * available depending on the usage of the validator. <p>
+ * Examples:<p>
+ * "'{label}' Required" 
+ * </li>
+ * <li><b>messageDetail</b>: a custom error message to be used for creating detail part of message, 
+ * when the value provided is empty. NOTE: the parameter 'message' has been deprecated.<p>
+ * Parameters:<p>
+ * {label} - label text of the component for which this message applies. 
+ * Examples:<p>
+ * "A value is required for the field '{label}'.<br/>
+ * </li>
  * </ul>
  * @export
  * @constructor
@@ -19613,7 +20188,7 @@ oj.RequiredValidator.prototype.Init = function(options)
 /**
  * Validates value to be non-empty
  * 
- * @param {Object} value that is being validated 
+ * @param {Object|string|number} value that is being validated 
  * @returns {boolean} true if validation was was successful the value is non-empty
  * 
  * @throws {Error} when fails required-ness check
@@ -19621,21 +20196,32 @@ oj.RequiredValidator.prototype.Init = function(options)
  */
 oj.RequiredValidator.prototype.validate = function(value)
 {
-  var localizedDetail, localizedSummary, 
-          message = (this._options && this._options['message']) || null;
-  
-  // checks for empty arrays and objects
-  if (value && value.length !== 0)
+  var localizedDetail, localizedSummary, detail, summary, params = {}, label = "";
+  // checks for empty arrays and String. Objects are considered non-null.
+  // Need to specifically test for if value is 0 first if number is passed on.
+  if ((typeof value === "number" && value === 0) || (value && value.length !== 0))
   {
     return true;
   }
-  
-  localizedSummary = oj.Translations.getTranslatedString(this._getSummaryKey());
-  localizedDetail = (message) ? 
-  oj.Translations.applyParameters(message, []) : 
-  oj.Translations.getTranslatedString(this._getDetailKey(), "");
+  else
+  {
+    if (this._options)
+    {
+      // we have deprecated support for message param and instead use messageDetail.
+      detail = this._options['messageDetail'] || this._options['message'] || null;
+      summary = this._options['messageSummary'] || null;
+      label = this._options['label'] || "";
+    }
+    params = {'label': label};
+    localizedSummary = (summary) ? oj.Translations.applyParameters(summary, params) :
+            oj.Translations.getTranslatedString(this._getSummaryKey(), params);
+    localizedDetail = (detail) ? 
+    oj.Translations.applyParameters(detail, params) : 
+    oj.Translations.getTranslatedString(this._getDetailKey(), params);
+    
+    throw new oj.ValidatorError(localizedSummary, localizedDetail);
+  }
 
-  throw new oj.ValidatorError(localizedSummary, localizedDetail);
 };
 
 /**
@@ -19650,7 +20236,7 @@ oj.RequiredValidator.prototype.getHint = function()
   var hint = "";
   if (this._options && (this._options['hint']))
   {
-    hint = oj.Translations.getTranslatedString(hint);
+    hint = oj.Translations.getTranslatedString(this._options['hint']);
   }
   
   return hint;
@@ -21584,11 +22170,14 @@ function _getTableColumnTemplateRenderer(bindingContext, columnId, type, templat
     (function(template, type) {
         rendererOption['renderer'] = function(params) {
                 var childContext = null;
+                var parentElement = null;
                 if (type == 'header')
                 {
                     // calling bindingContext.extend() creates a context with 
                     // new properties without adding extra level to the parent hierarchy
-                    childContext = bindingContext['extend']({'$column': params['column']});
+                    childContext = bindingContext['extend']({'$column': params['column'], 
+                                                             '$headerContext': params['headerContext']});
+                    parentElement = params['headerContext']['parentElement'];
                 }
                 else if (type == 'cell') 
                 {
@@ -21597,12 +22186,12 @@ function _getTableColumnTemplateRenderer(bindingContext, columnId, type, templat
                                             function(binding)
                                             {
                                                 binding['$column'] = params['column'];
-                                                binding['$status'] = params['status'];
+                                                binding['$cellContext'] = params['cellContext'];
                                             }
                                        );
-                    
+                    parentElement = params['cellContext']['parentElement'];
                 }
-                ko['renderTemplate'](template, childContext, null, params['parentElement'], 'replaceNode');
+                ko['renderTemplate'](template, childContext, null, parentElement, 'replaceNode');
             };
     }(template, type));
     rendererOption['type'] = type;
@@ -21621,7 +22210,7 @@ function _getTableColumnTemplateRenderer(bindingContext, columnId, type, templat
 function _getTableFooterTemplateRenderer(bindingContext, template)
 {
     return function(params) {
-        ko['renderTemplate'](template, bindingContext, null, params['parentElement'], 'replaceNode');
+        ko['renderTemplate'](template, bindingContext, null, params['footerContext']['parentElement'], 'replaceNode');
     };
 }
 
@@ -21639,11 +22228,10 @@ function _getTableRowTemplateRenderer(bindingContext, template)
         var childContext = bindingContext['createChildContext'](childData, null, 
                                 function(binding)
                                 {
-                                    binding['$column'] = params['column'];
-                                    binding['$status'] = params['status'];
+                                    binding['$rowContext'] = params['rowContext'];
                                 }
                            );
-        ko['renderTemplate'](template, childContext, null, params['parentElement'], 'replaceNode');
+        ko['renderTemplate'](template, childContext, null, params['rowContext']['parentElement'], 'replaceNode');
     };
 }
 
@@ -22258,12 +22846,14 @@ oj.TreeDataSource.prototype.getCapability = function(feature)
 };
 /**
  * Base class for FlattenedTreeDataGridDataSource and FlattenedTreeTableDataSource
- * @param {Object} options the options set on the FlattenedDataSource
+ * @param {Object} treeDataSource the instance of TreeDataSource to flattened
+ * @param {Object=} options the options set on the FlattenedDataSource
  * @constructor
  * @export
  */
-oj.FlattenedTreeDataSource = function(options)
+oj.FlattenedTreeDataSource = function(treeDataSource, options)
 {
+    this.m_wrapped = treeDataSource;
     this.m_options = options;
     oj.FlattenedTreeDataSource.superclass.constructor.call(this);
 };
@@ -22281,9 +22871,6 @@ oj.FlattenedTreeDataSource.prototype.Init = function()
 
     // super
     oj.FlattenedTreeDataSource.superclass.Init.call(this);
-
-    // retrieves the TreeDataSource.  Mandatory option.
-    this.m_wrapped = this.m_options['dataSource'];
 
     // we have to react if the underlying TreeDataSource has changed
     this.m_wrapped.on('change', this._handleModelEvent.bind(this));
@@ -22433,11 +23020,11 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
 
     // this condition should always be true since in high watermark scrolling we are
     // always asking for rows after the current last row
-    if (range['start'] >= this.m_cache.length)
+    if (range['start'] > this._getLastIndex())
     {
-        maxFetchSize = this.m_maxCount - this.m_cache.length;
+        maxFetchSize = this._getMaxFetchSize();
         // initial fetch
-        if (this.m_cache.length == 0)
+        if (this._getLastIndex() < 0)
         {
             // adjust fetch count if neccessary
             range['count'] = Math.min(maxFetchSize, range['count']);
@@ -22447,7 +23034,7 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
         }
         else if (maxFetchSize > 0)
         {
-            lastEntry = this.m_cache[this.m_cache.length-1];
+            lastEntry = this._getLastEntry();
             parent = lastEntry['parent'];
             count = this.m_wrapped.getChildCount(parent);
             index = lastEntry['index'];
@@ -22466,6 +23053,16 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
                     range['count'] = Math.min(maxFetchSize, Math.min(this.m_fetchSize, count - range['start']));
                 }
                 this.m_wrapped.fetchChildren(parent, range, {"success": function(nodeSet){this._handleFetchSuccess(nodeSet, parent, depth, range, count, callbacks);}.bind(this)});
+            }
+            else if (index === count-1)
+            {
+                // if this is the last child within the parent, then we are done
+                nodeSet = new oj.EmptyNodeSet(null, range['start']);
+                // invoke original success callback
+                if (callbacks != null && callbacks['success'] != null)
+                {
+                    callbacks['success'].call(null, nodeSet);
+                }
             }
             else
             {
@@ -22494,6 +23091,16 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
 };
 
 /**
+ * Determine the maximum possible fetch size.
+ * @return {number} the maximum fetch size
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getMaxFetchSize = function()
+{
+    return this.m_maxCount - (this._getLastIndex()+1);
+};
+
+/**
  * Process success callback for fetchChildren operation before handing it back to original caller.
  * @param {Object} nodeSet the set of fetched nodes
  * @param {Object} parent the parent key of the fetch operation
@@ -22509,6 +23116,8 @@ oj.FlattenedTreeDataSource.prototype._handleFetchSuccess = function(nodeSet, par
 
     // handle result nodeSet
     toExpand = [];
+    // wrap it to inject additional metadata
+    nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this));
     this._processNodeSet(nodeSet, parent, depth, toExpand);
 
     // if child count is unknown and the result fetched from parent is less than what we asked for 
@@ -22553,7 +23162,7 @@ oj.FlattenedTreeDataSource.prototype._fetchFromAncestors = function(parent, dept
 
     if (maxFetchSize === undefined)
     {
-        maxFetchSize = this.m_maxCount - this.m_cache.length;
+        maxFetchSize = this._getMaxFetchSize();
     }
 
     // fetch size is greater than the number of children remaining to fetch
@@ -22565,10 +23174,10 @@ oj.FlattenedTreeDataSource.prototype._fetchFromAncestors = function(parent, dept
     }
 
     remainToFetch = this.m_fetchSize;
-    current = this.m_cache.length-1;
+    current = this._getLastIndex();
     for (i=current-1; i>=0; i--)
     {
-        currEntry = this.m_cache[i];
+        currEntry = this._getEntry(i);
         currDepth = currEntry['depth'];
         if (currDepth < depth)
         {
@@ -22636,7 +23245,7 @@ oj.FlattenedTreeDataSource.prototype._fetchFromAncestors = function(parent, dept
  */
 oj.FlattenedTreeDataSource.prototype._processNodeSet = function(nodeSet, parent, depth, toExpand)
 {
-    var nodeStart, nodeCount, i, rowData, metadata, key;
+    var nodeStart, nodeCount, i, metadata, key;
 
     nodeStart = nodeSet.getStart();
     nodeCount = nodeSet.getCount();
@@ -22647,13 +23256,7 @@ oj.FlattenedTreeDataSource.prototype._processNodeSet = function(nodeSet, parent,
         metadata = nodeSet.getMetadata(nodeStart+i);
         key = metadata['key'];
 
-        rowData = new Object();
-        rowData['key'] = key;
-        rowData['depth'] = depth;
-        rowData['index'] = nodeStart+i;
-        rowData['parent'] = parent;
-
-        this.m_cache.push(rowData);
+        this._addEntry(key, depth, nodeStart+i, parent);
 
         if (this._isExpanded(key))
         {
@@ -22671,7 +23274,7 @@ oj.FlattenedTreeDataSource.prototype._processNodeSet = function(nodeSet, parent,
  */
 oj.FlattenedTreeDataSource.prototype.insertMetadata = function(key, metadata)
 {
-    if (this._isExpanded(key))
+    if (this._isExpanded(key) && !metadata['leaf'])
     {
         // also update metadata with state info
         metadata['state'] = 'expanded';
@@ -22702,13 +23305,13 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromDescendents = function(range,
     var options = {'maxCount': this.m_maxCount};
 
     // give implementation a hint of where to start, implementation can choose to ignore it
-    if (this.m_cache.length > 0)
+    if (this._getLastIndex() >= 0)
     {
-        options['start'] = this.m_cache[this.m_cache.length-1]['key'];
+        options['start'] = this._getEntry(this._getLastIndex())['key'];
     }
 
     // invoke method on TreeDataSource
-    this.m_wrapped.fetchDescendents(null, {"success": function(nodeSet){this._handleFetchDescendentsSuccess(nodeSet, range, callbacks);}.bind(this)}, options);
+    this.m_wrapped.fetchDescendents(null, null, {"success": function(nodeSet){this._handleFetchDescendentsSuccess(nodeSet, range, callbacks);}.bind(this)}, options);
 };
 
 /**
@@ -22724,12 +23327,15 @@ oj.FlattenedTreeDataSource.prototype._handleFetchDescendentsSuccess = function(n
 
     // this condition should always be true since in high watermark scrolling we are
     // always asking for rows after the current last row
-    if (range['start'] >= this.m_cache.length)
+    if (range['start'] > this._getLastIndex())
     {
-        maxFetchSize = this.m_maxCount - this.m_cache.length;
+        maxFetchSize = this._getMaxFetchSize();
         count = Math.min(maxFetchSize, range['count']);
 
-        if (this.m_cache.length > 0)
+        // wrap it to inject additional metadata
+        nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this));
+
+        if (this._getLastIndex() >= 0)
         {
             // in fetchDescendents case, the result node set would probably contains more than what
             // we would return.  The issue is we can't really use range to filter the set since the 
@@ -22737,7 +23343,7 @@ oj.FlattenedTreeDataSource.prototype._handleFetchDescendentsSuccess = function(n
             // node might have been collapsed before the fetch.
             // the solution is to use the last cached entry to find where new data starts in the
             // result node set, and use range count to limit what to return
-            lastEntry = this.m_cache[this.m_cache.length-1];
+            lastEntry = this._getLastEntry();
             options = {'index': 0, 'found': false, 'count': 0};
             this._processDescendentsNodeSet(nodeSet, null, 0, lastEntry, count, options);
             actualStart = options['index'] + 1;
@@ -22793,7 +23399,7 @@ oj.FlattenedTreeDataSource.prototype._handleFetchDescendentsSuccess = function(n
  */
 oj.FlattenedTreeDataSource.prototype._processDescendentsNodeSet = function(nodeSet, parent, depth, lastEntry, maxCount, options)
 {
-    var nodeStart, nodeCount, i, rowData, metadata, key, childNodeSet;
+    var nodeStart, nodeCount, i, metadata, key, childNodeSet;
 
     nodeStart = nodeSet.getStart();
     nodeCount = nodeSet.getCount();
@@ -22822,13 +23428,7 @@ oj.FlattenedTreeDataSource.prototype._processDescendentsNodeSet = function(nodeS
 
         if (lastEntry == null || options['found'])
         {
-            rowData = new Object();
-            rowData['key'] = key;
-            rowData['depth'] = depth;
-            rowData['index'] = nodeStart+i;
-            rowData['parent'] = parent;
-
-            this.m_cache.push(rowData);
+            this._addEntry(key, depth, nodeStart+i, parent);
 
             options['count'] = options['count'] + 1;
 
@@ -22907,7 +23507,7 @@ oj.FlattenedTreeDataSource.prototype._expand = function(rowKey, options)
 
     // if cache is full, check if the rowKey is the last row, if it's
     // the last row do nothing
-    if (this.m_cache.length == this.m_maxCount)
+    if (this._getLastIndex()+1 === this.m_maxCount)
     {
        refIndex = this.getIndex(rowKey);
        if (refIndex == this.m_maxCount-1)
@@ -22933,18 +23533,19 @@ oj.FlattenedTreeDataSource.prototype._expand = function(rowKey, options)
  */
 oj.FlattenedTreeDataSource.prototype.collapse = function(rowKey)
 {
-    var rowIndex, parent, count, i, keys;
+    var rowIndex, parent, count, depth, lastIndex, i, j, keys;
 
     rowIndex = this.getIndex(rowKey) + 1;
-    parent = this.m_cache[rowIndex-1];
+    parent = this._getEntry(rowIndex-1);
 
     // keeping track of how many rows to remove
     count = 0;
 
-    var depth = parent['depth'];
-    for (var j=rowIndex; j<this.m_cache.length; j++)
+    depth = parent['depth'];
+    lastIndex = this._getLastIndex();
+    for (j=rowIndex; j<lastIndex+1; j++)
     {
-        var rowData = this.m_cache[j];
+        var rowData = this._getEntry(j);
         var rowDepth = rowData['depth'];
         if (rowDepth > depth)
         {
@@ -22976,12 +23577,12 @@ oj.FlattenedTreeDataSource.prototype.collapse = function(rowKey)
     keys = [];
     for (i=0; i<count; i++)
     {
-        keys.push({"row": this.m_cache[rowIndex+i]['key']});
+        keys.push({"row": this._getEntry(rowIndex+i)['key']});
     }
 
     // remove from cache.  Note this has to be done before firing row remove event
     // since it could cause a fetch which relies on the internal cache being up to date.
-    this.m_cache.splice(rowIndex, count);    
+    this._removeEntry(rowIndex, count);    
 
     // (firing of event to view)
     this.removeRows(keys);
@@ -23113,13 +23714,16 @@ oj.FlattenedTreeDataSource.prototype.handleExpandSuccess = function(rowKey, node
 {
     var refIndex, rangeStart, rowStart, rowCount, parent, depth, metadata, key, toExpand, i;
 
+    // wrap it to inject additional metadata
+    nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this));
+
     refIndex = this.getIndex(rowKey) + 1;
     rangeStart = refIndex;
 
     rowStart = nodeSet.getStart();
     rowCount = nodeSet.getCount();
 
-    parent = this.m_cache[refIndex-1];
+    parent = this._getEntry(refIndex-1);
     depth = parent['depth']+1;
 
     toExpand = [];
@@ -23150,7 +23754,12 @@ oj.FlattenedTreeDataSource.prototype.handleExpandSuccess = function(rowKey, node
     }
     else
     {
-        this.m_expandedKeys.push(rowKey);
+        // check whether it's already in expanded keys, which is the case
+        // if it is expanded by initial expansion
+        if (this.m_expandedKeys.indexOf(rowKey) === -1)
+        {
+            this.m_expandedKeys.push(rowKey);
+        }
     }
 
     // fire event to insert the expanded rows
@@ -23163,7 +23772,7 @@ oj.FlattenedTreeDataSource.prototype.handleExpandSuccess = function(rowKey, node
     {
         this._deleteAllRowsBelow(refIndex);
     }
-    else if (this.m_cache.length > this.m_maxCount)
+    else if (this._getLastIndex() >= this.m_maxCount)
     {
         // also clean up rows that goes beyond max row count after expand
         this._deleteAllRowsBelow(this.m_maxCount);
@@ -23218,19 +23827,13 @@ oj.FlattenedTreeDataSource.prototype._insertRow = function(index, metadata, pare
 
     key = metadata['key'];
 
-    rowData = new Object();
-    rowData['key'] = key;
-    rowData['depth'] = depth;
-    rowData['index'] = childIndex;  // can figure out index by walking up until depth change
-    rowData['parent'] = parentKey; // can figure out parent by walking up until depth change
-
-    if (index < this.m_cache.length)    
+    if (index <= this._getLastIndex())    
     {
-        this.m_cache.splice(index, 0, rowData);
+        this._addEntry(key, depth, childIndex, parentKey, index);
     }
     else
     {
-        this.m_cache.push(rowData);
+        this._addEntry(key, depth, childIndex, parentKey);
     }
 };
 
@@ -23246,17 +23849,17 @@ oj.FlattenedTreeDataSource.prototype._deleteAllRowsBelow = function(index, count
 
     if (count == undefined)
     {
-        count = this.m_cache.length - index;
+        count = this._getLastIndex()+1 - index;
     }
 
     keys = [];
     for (var i=0; i<count; i++)
     {
-        keys.push({"row": this.m_cache[index+i]['key']});
+        keys.push({"row": this._getEntry(index+i)['key']});
     }
 
     // update internal cache
-    this.m_cache.splice(index, count);    
+    this._removeEntry(index, count);    
 
     // fire event to remove rows from view
     this.removeRows(keys);
@@ -23311,7 +23914,7 @@ oj.FlattenedTreeDataSource.prototype._handleInsertEvent = function(parentKey, in
     var parentIndex, parent, depth, insertIndex, metadata;
 
     parentIndex = this.getIndex(parentKey);
-    parent = this.m_cache[parentIndex];
+    parent = this._getEntry(parentIndex);
     depth = parent['depth']+1;
     insertIndex = parentIndex + index + 1;
 
@@ -23330,13 +23933,13 @@ oj.FlattenedTreeDataSource.prototype._handleInsertEvent = function(parentKey, in
  */
 oj.FlattenedTreeDataSource.prototype._handleDeleteEvent = function(parentKey, index)
 {
-    var parentIndex, parent, startIndex, start, count, currentIndex, current;
+    var parentIndex, parent, startIndex, start, count, currentIndex, lastIndex, current;
 
     parentIndex = this.getIndex(parentKey);
-    parent = this.m_cache[parentIndex];
+    parent = this._getEntry(parentIndex);
 
     startIndex = parentIndex + index;
-    start = this.m_cache[startIndex];
+    start = this._getEntry(startIndex);
 
     // make sure the child data is valid
     oj.Assert.assert(start['parent'] === parent && start['depth'] === parent['depth']+1); 
@@ -23344,9 +23947,10 @@ oj.FlattenedTreeDataSource.prototype._handleDeleteEvent = function(parentKey, in
     // remove the entry and all of its children from cache
     count = 1;
     currentIndex = startIndex + 1;
-    while (currentIndex < this.m_cache.length)
+    lastIndex = this._getLastIndex();
+    while (currentIndex <= lastIndex)
     {
-        current = this.m_cache[currentIndex];
+        current = this._getEntry(currentIndex);
         // check if we have reached the last child of the deleted node
         if (current['depth'] != start['depth'])
         {
@@ -23404,7 +24008,7 @@ oj.FlattenedTreeDataSource.prototype._isBatchFetching = function()
 oj.FlattenedTreeDataSource.prototype.refresh = function()
 {
     // clear the cache
-    this.m_cache.length = 0;
+    this._clearAll();
 
     // todo: more work here to force fetch (remove then insert)
 };
@@ -23418,11 +24022,12 @@ oj.FlattenedTreeDataSource.prototype.refresh = function()
  */
 oj.FlattenedTreeDataSource.prototype.getIndex = function(rowKey)
 {
-    var rowData;
+    var lastIndex, i, rowData;
 
-    for (var i=0; i<this.m_cache.length; i++)
+    lastIndex = this._getLastIndex();
+    for (i=0; i<=lastIndex; i++)
     {
-        rowData = this.m_cache[i];
+        rowData = this._getEntry(i);
         if (rowData['key'] == rowKey)
         {
             return i;
@@ -23443,13 +24048,13 @@ oj.FlattenedTreeDataSource.prototype.getIndex = function(rowKey)
 oj.FlattenedTreeDataSource.prototype.getKey = function(index)
 {
     // ensure the index is valid and in range
-    if (index < 0 || index >= this.m_cache.length)
+    if (index < 0 || index > this._getLastIndex())
     {
         return null;
     }
 
     // just return from internal cache
-    return this.m_cache[index]['key'];
+    return this._getEntry(index)['key'];
 };
 
 /**
@@ -23459,7 +24064,7 @@ oj.FlattenedTreeDataSource.prototype.getKey = function(index)
  */
 oj.FlattenedTreeDataSource.prototype.getFetchedRange = function()
 {
-    return {'start': 0, 'end': this.m_cache.length};
+    return {'start': 0, 'end': this._getLastIndex()+1};
 };
 
 ///////////////////////////////////// methods subclass must override ////////////////////////////////////////////////////////
@@ -23499,6 +24104,85 @@ oj.FlattenedTreeDataSource.prototype.removeRows = function(rowKeys)
 {
     oj.Assert.failedInAbstractFunction();
 };
+
+///////////////////////////////// methods that manipulates the internal cache ///////////////////////////////////
+/**
+ * Retrieve the flattened index of the last entry fetched so far
+ * @return {number} the flattened index of the last entry
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getLastIndex = function()
+{
+    return this.m_cache.length-1;
+};
+
+/**
+ * Retrieve the metadata for the last entry fetched so far
+ * @return {Object} the metadata for the last entry
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getLastEntry = function()
+{
+    return this.m_cache[this._getLastIndex()];
+};
+
+/**
+ * Retrieve metadata info for the specified index.
+ * @param {number} index the flattened index 
+ * @return {Object} the metadata info
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getEntry = function(index)
+{
+    return this.m_cache[index];
+};
+
+/**
+ * Add or insert entry to the cache
+ * @param {Object} key the key
+ * @param {number} depth the depth 
+ * @param {number} index the index relative to its parent
+ * @param {Object} parent the parent
+ * @param {number=} insertAt insert the metadata entry at this flattened index
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._addEntry = function(key, depth, index, parent, insertAt)
+{
+    var rowData = new Object();
+    rowData['key'] = key;
+    rowData['depth'] = depth;
+    rowData['index'] = index;
+    rowData['parent'] = parent;
+
+    if (insertAt === undefined)
+    {
+        this.m_cache.push(rowData);
+    }
+    else
+    {
+        this.m_cache.splice(insertAt, 0, rowData);
+    }
+};
+
+/**
+ * Remove entry from cache
+ * @param {number} index the flattened index to start remove entry
+ * @param {number} count how many entries to remove starting from the flattened index
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._removeEntry = function(index, count)
+{
+    this.m_cache.splice(index, count);
+};
+
+/**
+ * Clears the internal cache
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._clearAll = function()
+{
+    this.m_cache.length = 0;
+};
 //////////////////// _JsonTreeNodeDataSource ///////////////////////////////////
 
 /**
@@ -23514,6 +24198,7 @@ oj._JsonTreeNodeDataSource = function()
     this.children = [];
     this.title = null;
     this.attr = null;
+    this.leaf = null;
 };
 
 /**
@@ -23568,13 +24253,10 @@ oj._JsonTreeNodeDataSource.prototype._sortRecursive = function(criteria)
     {
         this.children.sort(this._ascending(key));
     }
-    else
-    {
-        if (criteria['direction'] === 'descending')
-        {
-            this.children.sort(this._descending(key));
-        }
-    }
+    else if (criteria['direction'] === 'descending')
+	{
+		this.children.sort(this._descending(key));
+	}
     for (var i = 0, l = this.children.length; i < l; i++)
     {
         this.children[i]._sortRecursive(criteria);
@@ -23737,7 +24419,7 @@ oj.JsonTreeDataSource.prototype.getChildCount = function(parentKey)
  */
 oj.JsonTreeDataSource.prototype.fetchChildren = function(parentKey, range, callbacks, options)
 {
-    var i, childStart, childEnd, nodeSet, results, parent;
+    var i, childStart, childEnd, nodeSet, results, parent, node;
 
     childStart = 0;
     childEnd = 0;
@@ -23773,7 +24455,36 @@ oj.JsonTreeDataSource.prototype.fetchChildren = function(parentKey, range, callb
     // now populate results from data array
     for (i = childStart; i < childEnd; i += 1)
     {
-        results.push(parent.children[i]);
+        node = new oj._JsonTreeNodeDataSource();
+        if(parent.children[i].attr)
+        {
+            node.attr = parent.children[i].attr;
+        }
+        if(parent.children[i].id)
+        {
+            node.id = parent.children[i].id;
+        }
+        if(parent.children[i].depth)
+        {
+            node.depth = parent.children[i].depth;
+        }
+        if(parent.children[i].title)
+        {
+            node.title = parent.children[i].title;
+        }
+        if(parent.children[i].parent)
+        {
+            node.parent = parent.children[i].parent;
+        }
+        if(parent.children[i].children.length > 0)
+        {
+            node.leaf = false;
+        }
+        else 
+        {
+            node.leaf = true;
+        }
+        results.push(node);
     }
 
     // invoke callback
@@ -23797,9 +24508,13 @@ oj.JsonTreeDataSource.prototype.fetchChildren = function(parentKey, range, callb
  *        there is no maximum fetch count.
  * @export
  */
-oj.JsonTreeDataSource.prototype.fetchDescendents = function(parentKey, callbacks, maxCount)
+oj.JsonTreeDataSource.prototype.fetchDescendents = function(parentKey, range, callbacks, maxCount)
 {
-    var parent, results, nodeSet;
+    var i, childStart, childEnd, nodeSet, results, parent;
+
+    childStart = 0;
+    childEnd = 0;
+    results = [];
 
     if (!parentKey)
     {
@@ -23807,7 +24522,40 @@ oj.JsonTreeDataSource.prototype.fetchDescendents = function(parentKey, callbacks
     }
 
     parent = this._searchTreeById(this.data, parentKey);
-    results = this._traverseTree(parent, maxCount, []);
+
+    if (!range)
+    {
+        range = [];
+        range['start'] = 0;
+        range['count'] = parent.children.length;
+    }
+
+    if (!range['count'])
+    {
+        range['count'] = parent.children.length;
+    }
+
+    if (!range['start'])
+    {
+        range['start'] = 0;
+    }
+
+    childStart = range['start'];
+    childEnd = Math.min(parent.children.length, childStart + range['count']);
+
+    // now populate results from data array
+    for (i = childStart; i < childEnd; i += 1)
+    {       
+	if(parent.children[i].children.length > 0)
+        {
+            parent.children[i].leaf = false;
+        }
+        else 
+        {
+            parent.children[i].leaf = true;
+        }
+        results.push(parent.children[i]); 
+    }
 
     // invoke callback
     nodeSet = new oj.JsonNodeSet(0, results.length, results, parentKey, parent.depth);
@@ -24123,13 +24871,201 @@ oj.JsonTreeDataSource.prototype._traverseTree = function(currChild, maxCount, re
                     break;
                 }
             }
-            results.push(currChild.children[i]);
+	    results.push(currChild.children[i]);
             this._traverseTree(currChild.children[i], maxCount, results);
         }
         return results;
     }
     return null;
 };
+
+/**
+ * Determines whether this TreeDataSource supports the specified feature.
+ * @param {string} feature the feature in which its capabilities is inquired.  Currently the valid features "sort", 
+ *        "move", "fetchDescendents", "batchFetch"
+ * @return {string|null} the name of the feature.  Returns null if the feature is not recognized.
+ *         For "sort", the valid return values are: "default", "none".  
+ *         For "fetchDescendents", the valid return values are: "enable", "disable", "suboptimal".  
+ *         For "move", the valid return values are: "default", "none".  
+ *         For "batchFetch", the valid return values are: "enable", "disable".  
+ * @export
+ */
+oj.JsonTreeDataSource.prototype.getCapability = function(feature)
+{
+    if (feature === 'fetchDescendents')
+    {
+        return "enable";
+    }
+    else if (feature === 'sort')
+    {
+        return "default";
+    }
+    else if (feature === 'batchFetch')
+    {
+        return "disable";
+    }
+    else
+    {
+        return null;
+    }
+};
+/*jslint browser: true*/
+
+/**
+ * @export
+ * @class oj.Row
+ * @classdesc Object representing name/value pairs for a row of data
+ *
+ * @param {Object=} attributes Initial set of attribute/value pairs with which to seed this Row object 
+ * @param {Object=} options 
+ *                  rowSet: rowSet for this row
+ *                  context: context for this row
+ * @constructor
+ */
+oj.Row = function(attributes, options)
+{
+  oj.Row._init(this, attributes, options, null);
+};
+
+
+// Subclass from oj.Object 
+oj.Object.createSubclass(oj.Row, oj.Object, "Row.Row");
+
+oj.Row.prototype.Init = function()
+{
+  oj.Row.superclass.Init.call(this);
+};
+
+/**
+ * 
+ * @export
+ * @desc Attribute/value pairs held by the Row.
+ * 
+ * @type Object
+ */
+oj.Row.prototype.attributes = {};
+
+/**
+ * 
+ * @export
+ * @desc Attribute/value pairs for context held by the Row.
+ * 
+ * @type Object
+ */
+oj.Row.prototype.context = {};
+
+/**
+ * @export
+ * @desc The Row's unique ID. 
+ * 
+ * @type String
+ */
+oj.Row.prototype.id = null;
+
+/**
+ * @export
+ * @desc The name of the row property to be used as the unique ID. See property id. This defaults to a value of "id".
+ *  
+ * @type String
+ */
+oj.Row.prototype.idAttribute = null;
+
+oj.Row._init = function(row, attributes, options, properties)
+{
+  var prop = null, attrCopy;
+
+  row.Init();
+
+  row.index = -1;
+
+  options = options || {};
+  row.attributes = {};
+
+  // First, copy all properties passed in
+  for (prop in properties)
+  {
+    if (properties.hasOwnProperty(prop))
+    {
+      row[prop] = properties[prop];
+    }
+  }
+  
+  row['rowSet'] = options['rowSet'];
+  row['context'] = options['context'];
+};
+
+/**
+ * @export
+ * Return a copy of the Row with identical attributes and settings
+ */
+oj.Row.prototype.clone = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Returns the value of the property from the Row.
+ * @param {string} property Property to get from row
+ * @return {Object} value of property
+ * @export
+ */
+oj.Row.prototype.get = function(property)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Set the value(s) of one or more attributes of the row
+ * @param {string||Object} property Property attribute name to set, or an Object containing attribute/value pairs
+ * @param {Object=} value Value for property if property is not an Object containing attribute/value pairs
+ * @param {Object=} options Options may be passed in
+ * @returns {Object||boolean} the row itself, false if failed
+ * @export
+ */
+oj.Row.prototype.set = function(property, value, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes as an array
+ * 
+ * @returns {Array} array of all the Row's attributes
+ */
+oj.Row.prototype.keys = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes values as an array
+ * 
+ * @returns {Array} array of all the Row's attributes values
+ */
+oj.Row.prototype.values = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return an array of attributes/value pairs found in the Row 
+ * 
+ * @returns {Object} returns the Row's attribute/value pairs as an array
+ */
+oj.Row.prototype.pairs = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
 /*jslint browser: true*/
 
 /**
@@ -24186,8 +25122,6 @@ oj.RowSet._init = function(rowSet, rows, options, properties)
 {
   var prop;
   rowSet._eventHandlers = [];
-  rowSet._startIndex = 0;
-  
   rowSet.Init();
 
   // First, copy all properties passed in
@@ -24201,86 +25135,6 @@ oj.RowSet._init = function(rowSet, rows, options, properties)
       }
     }
   }
-
-  // Check options
-  options = options || {};
-
-  rowSet._rows = [];
-
-  if (rows != null && rows !== undefined)
-  {
-    rowSet._data = (rows instanceof Array) ? rows : rows();
-
-    if (!(rows instanceof Array))
-    {
-      // subscribe to observableArray
-      (/** @type {{subscribe: Function}} */(rows)).subscribe(function(values) {
-        var rowArray = rowSet._getRowArray(values, null, null);
-        rowSet.reset(rowArray);
-        rowSet._handleEvent.call(rowSet, 'change', null);
-      }, null, 'change');
-    }
-    
-    rowSet._totalSize = rowSet._data.length;
-
-    rowSet._idAttribute = 'id';
-    if (options != null && options['idAttribute'] != null)
-    {
-      rowSet._idAttribute = options['idAttribute'];
-    }
-  }
-};
-
-/**
- * Add an instance of this RowSet's Row(s) to the end of the RowSet.
- * @param {Object|Array} m Row object (or array of Rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add() using the rowSet's row.
- * @param {Object=} options at: splice the new Row into the RowSet at the value given (at:index) <p>
- *                          deferred: if true, return a promise as though this RowSet were virtual whether it is or not
- * 
- * @returns {Object} if deferred or virtual, return a promise when the set has completed
- * @export
- */
-oj.RowSet.prototype.add = function(m, options)
-{
-  options = options || {};
-  var rowArray = [];
-  var index = options['at'];
-  var deferred = options['deferred'];
-  var i;
-  var self = this;
-
-  if (m instanceof Array)
-  {
-    rowArray = m;
-  }
-  else
-  {
-    rowArray.push(m);
-  }
-
-  if (deferred)
-  {
-    var doTask = function(rowIdx)
-    {
-      var defer = $.Deferred();
-      self._addToRowSet(rowArray[rowIdx], index);
-      return defer.resolve().promise();
-    };
-
-    var currentStep = doTask(0);
-
-    for (i = 1; i < rowArray.length; i++)
-    {
-      currentStep = currentStep.then(doTask(i));
-    }
-    return $.when(currentStep).promise();
-  }
-  for (i = 0; i < rowArray.length; i++)
-  {
-    this._addToRowSet(rowArray[i], index);
-  }
-
-  return null;
 };
 
 /**
@@ -24299,42 +25153,8 @@ oj.RowSet.prototype.add = function(m, options)
  */
 oj.RowSet.prototype.at = function(index, options)
 {
-  options = options || {};
-  var deferred = options['deferred'];
-
-  if (index < 0 || index >= this._rows.length)
-  {
-    return null;
-  }
-  var row = this._rows[index];
-
-  if (deferred)
-  {
-    return $.Deferred().resolve(row).promise();
-  }
-  return row;
-};
-
-/**
- * @export
- * Return a copy of the RowSet
- * @return {Object} copy of the RowSet
- */
-oj.RowSet.prototype.clone = function()
-{
-  var rs = new this.constructor(), i;
-
-  var row;
-  for (i = 0; i < this._rows.length; i = i + 1)
-  {
-    row = this.at(i, null);
-    if (row)
-    {
-      rs.add(row.clone(), {'at': i});
-    }
-  }
-
-  return rs;
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -24348,27 +25168,7 @@ oj.RowSet.prototype.clone = function()
  */
 oj.RowSet.prototype.fetch = function(options)
 {
-  options = options || {};
-  if (this._canFetch()) {
-    this._startFetch();
-    var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
-    var origStartIndex = this._startIndex;
-    this._startIndex = options != null ? (options['startIndex'] != null ? options['startIndex'] : 0) : 0;
-    var origRowArray = null;
-
-    if (this._rows != null)
-    {
-      origRowArray = this._rows;
-    }
-    this._rows = this._getRowArray(this._data, this._idAttribute, this._startIndex, pageSize);
-
-    if (origRowArray != null)
-    {
-      var updates = this._compareRowArray(origRowArray, this._rows, origStartIndex, this._startIndex, pageSize);
-      this._processUpdates(updates, origRowArray);
-    }
-    this._endFetch(true);
-  }
+  oj.Assert.failedInAbstractFunction();
 }
 
 /**
@@ -24384,23 +25184,8 @@ oj.RowSet.prototype.fetch = function(options)
  */
 oj.RowSet.prototype.get = function(id, options)
 {
-  options = options || {};
-  var deferred = options['deferred'];
-  var i;
-  var row = null;
-  for (i = 0; i < this._rows.length; i = i + 1)
-  {
-    row = this._rows[i];
-    if (row !== undefined && row['id'] == id)
-    {
-      if (deferred)
-      {
-        return $.Deferred().resolve(row);
-      }
-      return row;
-    }
-  }
-  return row;
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -24410,6 +25195,7 @@ oj.RowSet.prototype.get = function(id, options)
  */
 oj.RowSet.prototype.hasMore = function()
 {
+  oj.Assert.failedInAbstractFunction();
   return false;
 };
 
@@ -24424,19 +25210,8 @@ oj.RowSet.prototype.hasMore = function()
  */
 oj.RowSet.prototype.indexOf = function(row, options)
 {
-  var location;
-  options = options || {};
-  var deferred = options['deferred'];
-
-  if (deferred)
-  {
-    return this.get(row, null).then(function(loc) {
-      return loc.index;
-    });
-  }
-  location = this.get(row);
-
-  return location.index;
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -24447,82 +25222,8 @@ oj.RowSet.prototype.indexOf = function(row, options)
  */
 oj.RowSet.prototype.isEmpty = function()
 {
-  return this._rows.length === 0;
-};
-
-/**
- * Remove a Row from the RowSet, if found.
- * @param {Object|Array} r Row object or array of Rows to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @export
- */
-oj.RowSet.prototype.remove = function(r, options)
-{
-  options = options || {};
-  var rowArray = [], i;
-
-  if (r instanceof Array)
-  {
-    rowArray = r;
-  }
-  else
-  {
-    rowArray.push(r);
-  }
-
-  for (i = rowArray.length - 1; i >= 0; i = i - 1)
-  {
-    this._removeInternal(rowArray[i], -1, options);
-  }
-};
-
-/**
- * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
- * @param {Object=} data Array of Row objects or attribute/value pair objects with which to replace the RowSet's data. 
- * @param {Object=} options user options, passed to event
- * @export
- */
-oj.RowSet.prototype.reset = function(data, options)
-{
-  var i;
-
-  options = options || {};
-  options['previousRows'] = this._rows;
-
-  if (data === undefined || data == null || (data instanceof Array && data.length == 0))
-  {
-    for (i = 0; i < this._rows.length; i = i + 1)
-    {
-      if (this._rows[i])
-      {
-        this._rows[i]['rowSet'] = null;
-      }
-    }
-    this._rows = [];
-  }
-  else
-  {
-    this._rows = [];
-
-    // Parse RowSet
-    if (options['parse'])
-    {
-      data = this['parse'](data);
-    }
-
-    if (data instanceof Array)
-    {
-      for (i = 0; i < data.length; i = i + 1)
-      {
-        this.add(data[i], options);
-      }
-    }
-    else
-    {
-      this.add(data, options);
-    }
-  }
-  this._handleEvent(oj.RowSet.EventType['ADD'], null);
+  oj.Assert.failedInAbstractFunction();
+  return true;
 };
 
 /**
@@ -24532,7 +25233,8 @@ oj.RowSet.prototype.reset = function(data, options)
  */
 oj.RowSet.prototype.size = function()
 {
-  return this._rows.length;
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -24543,22 +25245,7 @@ oj.RowSet.prototype.size = function()
  */
 oj.RowSet.prototype.sort = function(options)
 {
-  options = options || {};
-  var comparator = this['comparator'], self;
-
-  // Check for comparator
-  if (!this._hasComparator())
-  {
-    return;
-  }
-
-  self = this;
-  this._rows.sort(function(a, b)
-  {
-    return oj.RowSet._sortFunc(a, b, comparator, self, self);
-  });
-  this._realignRowIndices(0);
-  this._handleEvent.call(this, oj.RowSet.EventType['SORT'], null);
+  oj.Assert.failedInAbstractFunction();
 };
 
 /**
@@ -24568,7 +25255,8 @@ oj.RowSet.prototype.sort = function(options)
  */
 oj.RowSet.prototype.totalSize = function()
 {
-  return this._totalSize;
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -24615,25 +25303,6 @@ oj.RowSet.prototype.off = function(eventType, eventHandler)
 };
 
 /**
- * @param {Object} row Row instance
- * @param {number} index Index value
- */
-oj.RowSet.prototype._addToRowSet = function (row, index)
-{
-  if (index === undefined)
-  {
-    this._rows.push(row);
-  }
-  else
-  {
-    this._rows[index] = row;
-  }
-  row['rowSet'] = this;
-  row['index'] = this._rows.length;
-  this._handleEvent(oj.RowSet.EventType['ADD'], row);
-}
-
-/**
  * Handle the event
  * @param {string} eventType  event type
  * @param {?} event  event
@@ -24652,7 +25321,800 @@ oj.RowSet.prototype._handleEvent = function(eventType, event)
   }
 };
 
-oj.RowSet._compareKeys = function(keyA, keyB, sortDirection)
+/**
+ * @export
+ * Event types
+ * @enum {string}
+ */
+oj.RowSet.EventType =
+  {
+    /** Triggered when a Row is added to a RowSet */
+    'ADD': "add",
+    /** Triggered when a Row is removed from a RowSet */
+    'REMOVE': "remove",
+    /** Triggered when a RowSet is reset (see oj.RowSet.reset) */
+    'RESET': "reset",
+    /** Triggered when a RowSet is sorted */
+    'SORT': "sort",
+    /** Triggered when a Row's attributes are changed */
+    'CHANGE': "change",
+    /** Triggered when a Row is deleted from the data service (and thus from its RowSet) */
+    'DESTROY': "destroy",
+    /** Triggered when a Row or RowSet has sent a request to the data service */
+    'REQUEST': "request",
+    /** Triggered when a Row or RowSet has been updated from the data service */
+    'SYNC': "sync",
+    /** Triggered when a Row has failed to update on the data service */
+    'ERROR': "error",
+    /** Triggered when a Row being saved has been invalidated by the caller */
+    'INVALID': "invalid",
+    /** Triggered for any of the above events */
+    'ALL': "all"
+  };
+
+/**
+ * @export
+ * Event types
+ * @enum {string}
+ */
+oj.RowSet._ROW_STATUSES =
+  {
+    _ADDED: 'added',
+    _DELETED: 'deleted',
+    _UPDATED: 'updated',
+    _NONE: 'none'
+  };
+/*jslint browser: true*/
+
+/**
+ * @export
+ * @class oj.Row
+ * @classdesc Object representing name/value pairs for a row of data
+ *
+ * @param {Object=} attributes Initial set of attribute/value pairs with which to seed this Row object 
+ * @param {Object=} options 
+ *                  rowSet: rowSet for this row
+ * @constructor
+ */
+oj.ArrayRow = function(attributes, options)
+{
+  oj.ArrayRow._init(this, attributes, options, null);
+};
+
+
+// Subclass from oj.Object 
+oj.Object.createSubclass(oj.ArrayRow, oj.Row, "ArrayRow.ArrayRow");
+
+oj.ArrayRow.prototype.Init = function()
+{
+  oj.ArrayRow.superclass.Init.call(this);
+};
+
+/**
+ * 
+ * @export
+ * @desc Attribute/value pairs held by the Model.
+ * 
+ * @type Object
+ */
+oj.ArrayRow.prototype.attributes = {};
+
+/**
+ * @export
+ * @desc The Row's unique ID. 
+ * 
+ * @type String
+ */
+oj.ArrayRow.prototype.id = null;
+
+/**
+ * @export
+ * @desc The name of the row property to be used as the unique ID. See property id. This defaults to a value of "id".
+ *  
+ * @type String
+ */
+oj.ArrayRow.prototype.idAttribute = null;
+
+oj.ArrayRow._init = function(row, attributes, options, properties)
+{
+  var prop = null, attrCopy;
+
+  row.Init();
+
+  row.index = -1;
+
+  options = options || {};
+  row.attributes = attributes;
+
+  // First, copy all properties passed in
+  for (prop in properties)
+  {
+    if (properties.hasOwnProperty(prop))
+    {
+      row[prop] = properties[prop];
+    }
+  }
+  
+  row['idAttribute'] = options['idAttribute'];
+  row['context'] = options['context'];
+  row._setupId();
+};
+
+/**
+ * @export
+ * Return a copy of the Row with identical attributes and settings
+ */
+oj.ArrayRow.prototype.clone = function()
+{
+  var c = new this.constructor(), prop;
+
+  for (prop in this)
+  {
+    // Shallow copy all but data
+    if (this.hasOwnProperty(prop) && this[prop] !== this.attributes)
+    {
+      c[prop] = this[prop];
+    }
+  }
+  // Deep copy data
+  c.attributes = oj.ArrayRow._cloneAttributes(this.attributes, null);
+
+  c._setupId();
+
+  return c;
+};
+
+/**
+ * Returns the value of the property from the Row.
+ * @param {string} property Property to get from row
+ * @return {Object} value of property
+ * @export
+ */
+oj.ArrayRow.prototype.get = function(property)
+{
+  return this.attributes[property];
+};
+
+/**
+ * Set the value(s) of one or more attributes of the row
+ * @param {string||Object} property Property attribute name to set, or an Object containing attribute/value pairs
+ * @param {Object=} value Value for property if property is not an Object containing attribute/value pairs
+ * @param {Object=} options Options may be passed in
+ * @returns {Object||boolean} the row itself, false if failed
+ * @export
+ */
+oj.ArrayRow.prototype.set = function(property, value, options)
+{
+  var opts = {}, ignoreLastArg = false, prop, i, valid = true;
+
+  if (arguments)
+  {
+    if (arguments.length > 0)
+    {
+      // Check if the last argument is not the first argument
+      if (arguments.length > 1)
+      {
+        if (arguments[arguments.length - 1])
+        {
+          // Last arg is options: ignore later
+          ignoreLastArg = true;
+          opts = arguments[arguments.length - 1] || {};
+        }
+      }
+      // Check if first arg is property bag
+      if (oj.ArrayRow._hasProperties(property))
+      {
+        this._setProp(property, opts);
+      }
+      else
+      {
+        // Not a property bag?  We assume it's a series of property/value arguments
+        for (i = 0; i < arguments.length; i += 2)
+        {
+          // Process the arg as long as its: defined, and isn't the last argument where we're supposed to ignore the last argument
+          // due to it being 'options'
+          if (arguments[i] !== undefined || i < arguments.length - 1 || (!ignoreLastArg && i === arguments.length - 1))
+          {
+            this._setProp(arguments[i], arguments[i + 1]);
+          }
+        }
+      }
+    }
+  }
+  return this;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes as an array
+ * 
+ * @returns {Array} array of all the Row's attributes
+ */
+oj.ArrayRow.prototype.keys = function()
+{
+  var prop, retArray = [];
+
+  for (prop in this.attributes)
+  {
+    if (this.attributes.hasOwnProperty(prop))
+    {
+      retArray.push(prop);
+    }
+  }
+  return retArray;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes values as an array
+ * 
+ * @returns {Array} array of all the Row's attributes values
+ */
+oj.ArrayRow.prototype.values = function()
+{
+  var prop, retArray = [];
+
+  for (prop in this.attributes)
+  {
+    if (this.attributes.hasOwnProperty(prop))
+    {
+      retArray.push(this.get(prop));
+    }
+  }
+  return retArray;
+};
+
+/**
+ * @export
+ * Return an array of attributes/value pairs found in the Row 
+ * 
+ * @returns {Object} returns the Row's attribute/value pairs as an array
+ */
+oj.ArrayRow.prototype.pairs = function()
+{
+  var prop, retObj = {};
+  for (prop in this.attributes)
+  {
+    if (this.attributes.hasOwnProperty(prop))
+    {
+      retObj[prop] = this.get(prop);
+    }
+  }
+  return retObj;
+};
+
+oj.ArrayRow.prototype._getIdAttr = function()
+{
+  return this['idAttribute'] || 'id';
+};
+
+// Might be a property value or a function
+oj.ArrayRow.prototype._getProp = function(prop)
+{
+  if (this[prop] instanceof Function)
+  {
+    return this[prop]();
+  }
+  return this[prop];
+};
+
+oj.ArrayRow._hasProperties = function(object)
+{
+  var prop;
+  if (object && object instanceof Object)
+  {
+    for (prop in object)
+    {
+      if (object.hasOwnProperty(prop))
+      {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+oj.ArrayRow.prototype._setupId = function()
+{
+  var idAttr = this._getIdAttr();
+  this['id'] = this.attributes[idAttr];
+};
+
+oj.ArrayRow.prototype._setPropInternal = function(prop, value)
+{
+  if (!oj.Object.innerEquals(this.attributes[prop], value))
+  {
+    this.attributes[prop] = value;
+    this._setupId();
+    return true;
+  }
+  return false;
+};
+
+/**
+ * @param {Object||string} prop
+ * @param {Object} value
+ * @returns {boolean}
+ */
+oj.ArrayRow.prototype._setProp = function(prop, value)
+{
+  if (prop == null)
+  {
+    return true;
+  }
+
+  var attrs = {}, p;
+
+  if (arguments.length > 1)
+  {
+    attrs[prop] = value;
+  }
+  else
+  {
+    for (p in prop)
+    {
+      if (prop.hasOwnProperty(p))
+      {
+        attrs[p] = prop[p];
+      }
+    }
+  }
+
+  for (p in attrs)
+  {
+    if (attrs.hasOwnProperty(p))
+    {
+      this._setPropInternal(p, attrs[p]);
+    }
+  }
+  return true;
+};
+
+oj.ArrayRow._cloneAttributes = function(oldData, newData)
+{
+  var prop;
+  newData = newData || {};
+  for (prop in oldData)
+  {
+    if (oldData.hasOwnProperty(prop)) {// && oldData[prop] !== undefined) {
+      if (typeof (oldData[prop]) !== 'object')
+      {
+        // Only overwrite if not undefined
+        if (newData.hasOwnProperty(prop))
+        {
+          if (oldData[prop] !== undefined)
+          {
+            newData[prop] = oldData[prop];
+          }
+        }
+        else
+        {
+          newData[prop] = oldData[prop];
+        }
+      }
+      else
+      {
+        newData[prop] = oj.ArrayRow._cloneAttributes(oldData[prop], null);
+      }
+    }
+  }
+  return newData;
+};
+
+
+/*jslint browser: true*/
+
+/**
+ * @export
+ * @class oj.ArrayRowSet
+ * @classdesc RowSet of Row objects 
+ * 
+ * @param {Array=} rows Set of row objects or JS array of data to put into rowSet at construction time 
+ * @param {Object=} options Passed through to the user's initialize routine, if any, upon construction 
+ * @constructor
+ */
+oj.ArrayRowSet = function(rows, options)
+{
+  // Initialize
+  oj.ArrayRowSet._init(this, rows, options, null);
+};
+
+/**
+ * @export
+ * @desc Sort direction for string-based field comparators.  A value of 1 (the default), indicates ascending sorts, -1 indicates descending
+ * 
+ * @type number
+ */
+oj.ArrayRowSet.prototype.sortDirection = 1;
+
+/**
+ * @export
+ * @desc If set, sort the rowSet using the given attribute of a row (if string); function(Row) returning a string attribute
+ * by which the sort should take place; function(Row1, Row2) if a user-defined function comparing Row1 and Row2 (see the
+ * JavaScript array.sort() for details)
+ * 
+ * @type {String|function(Object)|function(Object,Object)}
+ */
+oj.ArrayRowSet.prototype.comparator = null;
+
+/**
+ * @export
+ * @desc Set to true if sort is supported.
+ * 
+ * @type boolean
+ */
+oj.ArrayRowSet.prototype.sortSupported = true;
+
+
+// Subclass from oj.Object 
+oj.Object.createSubclass(oj.ArrayRowSet, oj.RowSet, "ArrayRowSet.ArrayRowSet");
+
+oj.ArrayRowSet.prototype.Init = function()
+{
+  oj.ArrayRowSet.superclass.Init.call(this);
+};
+
+oj.ArrayRowSet._init = function(rowSet, rows, options, properties)
+{
+  var prop;
+  rowSet._eventHandlers = [];
+  rowSet._startIndex = 0;
+
+  rowSet.Init();
+
+  // First, copy all properties passed in
+  if (properties)
+  {
+    for (prop in properties)
+    {
+      if (properties.hasOwnProperty(prop))
+      {
+        rowSet[prop] = properties[prop];
+      }
+    }
+  }
+
+  // Check options
+  options = options || {};
+
+  rowSet._rows = [];
+
+  if (rows != null && rows !== undefined)
+  {
+    rowSet._data = (rows instanceof Array) ? rows : rows();
+
+    if (!(rows instanceof Array))
+    {
+      // subscribe to observableArray
+      (/** @type {{subscribe: Function}} */(rows)).subscribe(function(values) {
+        var rowArray = rowSet._getRowArray(values, null, null);
+        rowSet.reset(rowArray);
+        rowSet.superclass._handleEvent.call(rowSet, 'change', null);
+      }, null, 'change');
+    }
+
+    rowSet._totalSize = rowSet._data.length;
+
+    rowSet._idAttribute = 'id';
+    if (options != null && options['idAttribute'] != null)
+    {
+      rowSet._idAttribute = options['idAttribute'];
+    }
+  }
+};
+
+/**
+ * Add an instance of this RowSet's Row(s) to the end of the RowSet.
+ * @param {Object} row Row object
+ * @param {Object=} options at: splice the new Row into the RowSet at the value given (at:index) <p>
+ *                          deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * 
+ * @returns {Object} if deferred or virtual, return a promise when the set has completed
+ * @export
+ */
+oj.ArrayRowSet.prototype.add = function(row, options)
+{
+  options = options || {};
+  var index = options['at'];
+  var deferred = options['deferred'];
+
+  this._addToRowSet(row, index);
+
+  if (deferred)
+  {
+    return $.Deferred().resolve().promise();
+  }
+  return null;
+};
+
+/**
+ * Return the Row object found at the given index of the RowSet, or a promise object that will return the Row to a function
+ * in the done() call.
+ * 
+ * @param {number} index Index for which to return the Row object. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting <p>
+ *                  deferred: if true, return a deferred/promise object as described below.  If not specified, the return value will
+ *                   be determined by whether or not the RowSet is virtual
+ * @return {Object} Row object located at index. If index is out of range, returns null.  If this is a paging/virtual RowSet or
+ *                  if deferred is specified and true, at will return a jQuery promise object which will call its done function,
+ *                  passing the value at(index) 
+ * @export
+ */
+oj.ArrayRowSet.prototype.at = function(index, options)
+{
+  options = options || {};
+  var deferred = options['deferred'];
+
+  if (index < 0 || index >= this._rows.length)
+  {
+    return null;
+  }
+  var row = this._rows[index];
+
+  if (deferred)
+  {
+    return $.Deferred().resolve(row).promise();
+  }
+  return row;
+};
+
+/**
+ * @export
+ * Return a copy of the RowSet
+ * @return {Object} copy of the RowSet
+ */
+oj.ArrayRowSet.prototype.clone = function()
+{
+  var rs = new this.constructor(), i;
+
+  var row;
+  for (i = 0; i < this._rows.length; i = i + 1)
+  {
+    row = this.at(i, null);
+    if (row)
+    {
+      rs.add(row.clone(), {'at': i});
+    }
+  }
+
+  return rs;
+};
+
+/**
+ * Loads the data into the RowSet
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.RowSet
+ * @instance
+ */
+oj.ArrayRowSet.prototype.fetch = function(options)
+{
+  options = options || {};
+  if (this._canFetch()) {
+    this._startFetch();
+    var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
+    var origStartIndex = this._startIndex;
+    this._startIndex = options != null ? (options['startIndex'] != null ? options['startIndex'] : 0) : 0;
+    var origRowArray = null;
+
+    if (this._rows != null)
+    {
+      origRowArray = this._rows;
+    }
+    this._rows = this._getRowArray(this._data, this._idAttribute, this._startIndex, pageSize);
+
+    if (origRowArray != null)
+    {
+      var updates = this._compareRowArray(origRowArray, this._rows, origStartIndex, this._startIndex, pageSize);
+      this._processUpdates(updates, origRowArray);
+    }
+    this._endFetch(true);
+  }
+}
+
+/**
+ * Return the first Row object from the RowSet whose Row id value is the given id
+ * Note this method will not function as expected if the id is not set
+ * @param {string} id ID for which to return the Row object, if found. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting<p>
+ *                  deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * @return {Object} First Row object in the RowSet where Row.id = id. If none are found, returns null.
+ *                  If deferred or virtual, return a promise passing the Row when done
+ * @export
+ */
+oj.ArrayRowSet.prototype.get = function(id, options)
+{
+  options = options || {};
+  var deferred = options['deferred'];
+  var i;
+  var row = null;
+  for (i = 0; i < this._rows.length; i = i + 1)
+  {
+    row = this._rows[i];
+    if (row !== undefined && row['id'] == id)
+    {
+      if (deferred)
+      {
+        return $.Deferred().resolve(row);
+      }
+      return row;
+    }
+  }
+  return row;
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @return {boolean} whether there is more data
+ */
+oj.ArrayRowSet.prototype.hasMore = function()
+{
+  return false;
+};
+
+/**
+ * Return the array index location of the given Row object.
+ * @param {Object} row Row object to locate 
+ * @param {Object=} options deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ 
+ * @return {number} The index of the given Row object, or a promise that will call with the index when complete.
+ *                  If the object is not found, returns -1.
+ * @export
+ */
+oj.ArrayRowSet.prototype.indexOf = function(row, options)
+{
+  var location;
+  options = options || {};
+  var deferred = options['deferred'];
+
+  if (deferred)
+  {
+    return this.get(row['id'], null).then(function(loc) {
+      return loc.index;
+    });
+  }
+  location = this.get(row['id']);
+
+  return location.index;
+};
+
+/**
+ * @export
+ * Determine if the RowSet has any Rows
+ * 
+ * @returns {boolean} true if RowSet is empty
+ */
+oj.ArrayRowSet.prototype.isEmpty = function()
+{
+  return this._rows.length === 0;
+};
+
+/**
+ * Remove a Row from the RowSet, if found.
+ * @param {Object} row Row object
+ * @param {Object=} options silent: if set, do not fire a remove event 
+ * @export
+ */
+oj.ArrayRowSet.prototype.remove = function(row, options)
+{
+  options = options || {};
+  this._removeInternal(row, -1, options);
+};
+
+/**
+ * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
+ * @param {Object=} data Array of Row objects with which to replace the RowSet's data. 
+ * @param {Object=} options user options, passed to event
+ * @export
+ */
+oj.ArrayRowSet.prototype.reset = function(data, options)
+{
+  var i;
+
+  options = options || {};
+  options['previousRows'] = this._rows;
+
+  if (data === undefined || data == null || (data instanceof Array && data.length == 0))
+  {
+    for (i = 0; i < this._rows.length; i = i + 1)
+    {
+      if (this._rows[i])
+      {
+        this._rows[i]['rowSet'] = null;
+      }
+    }
+    this._rows = [];
+  }
+  else
+  {
+    this._rows = [];
+
+    if (data instanceof Array)
+    {
+      for (i = 0; i < data.length; i = i + 1)
+      {
+        this.add(/** @type oj.Row */ (data[i]), options);
+      }
+    }
+    else
+    {
+      this.add(/** @type oj.Row */ (data), options);
+    }
+  }
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['RESET'], null);
+};
+
+/**
+ * @export
+ * Return the length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.ArrayRowSet.prototype.size = function()
+{
+  return this._rows.length;
+};
+
+/**
+ * @export
+ * Sort the Rows in the RowSet
+ * 
+ * @param {Object=} options
+ */
+oj.ArrayRowSet.prototype.sort = function(options)
+{
+  options = options || {};
+  var comparator = this['comparator'], self;
+
+  // Check for comparator
+  if (!this._hasComparator())
+  {
+    return;
+  }
+
+  self = this;
+  this._rows.sort(function(a, b)
+  {
+    return oj.ArrayRowSet._sortFunc(a, b, comparator, self, self);
+  });
+  this._realignRowIndices(0);
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['SORT'], null);
+};
+
+/**
+ * @export
+ * Return the total length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.ArrayRowSet.prototype.totalSize = function()
+{
+  return this._totalSize;
+};
+
+/**
+ * @param {Object} row Row instance
+ * @param {number} index Index value
+ */
+oj.ArrayRowSet.prototype._addToRowSet = function(row, index)
+{
+  if (index === undefined)
+  {
+    this._rows.push(row);
+  }
+  else
+  {
+    this._rows[index] = row;
+  }
+  row['rowSet'] = this;
+  row['index'] = this._rows.length;
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': index, 'row': row});
+}
+
+oj.ArrayRowSet._compareKeys = function(keyA, keyB, sortDirection)
 {
   if (sortDirection === -1)
   {
@@ -24679,7 +26141,7 @@ oj.RowSet._compareKeys = function(keyA, keyB, sortDirection)
   return 0;
 };
 
-oj.RowSet.prototype._compareRowArray = function(origRowArray, updRowArray, origStartIndex, startIndex, pageSize)
+oj.ArrayRowSet.prototype._compareRowArray = function(origRowArray, updRowArray, origStartIndex, startIndex, pageSize)
 {
   var updates = [];
 
@@ -24757,17 +26219,17 @@ oj.RowSet.prototype._compareRowArray = function(origRowArray, updRowArray, origS
   return updates;
 };
 
-oj.RowSet._getKey = function(val, attr) {
-    if (val instanceof oj.Row) {
-        return val.get(attr);
-    }
-    if ($.isFunction(val[attr])) {
-        return val[attr]();
-    }
-    return val[attr];
+oj.ArrayRowSet._getKey = function(val, attr) {
+  if (val instanceof oj.Row) {
+    return val.get(attr);
+  }
+  if ($.isFunction(val[attr])) {
+    return val[attr]();
+  }
+  return val[attr];
 };
 
-oj.RowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pageSize)
+oj.ArrayRowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pageSize)
 {
   var endIndex = values.length - 1;
   if (pageSize > 0)
@@ -24804,7 +26266,7 @@ oj.RowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pag
         clonedRowValues[prop] = rowValues[prop];
       }
     }
-    var row = new oj.Row(clonedRowValues, {'idAttribute': idAttribute});
+    var row = new oj.ArrayRow(clonedRowValues, {'idAttribute': idAttribute});
     row['index'] = i;
     rowArray[i] = row;
   }
@@ -24812,7 +26274,7 @@ oj.RowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pag
   return rowArray;
 };
 
-oj.RowSet.prototype._getSortAttrs = function(sortStr)
+oj.ArrayRowSet.prototype._getSortAttrs = function(sortStr)
 {
   if (sortStr === undefined)
   {
@@ -24821,7 +26283,7 @@ oj.RowSet.prototype._getSortAttrs = function(sortStr)
   return sortStr.split(",");
 };
 
-oj.RowSet.prototype._getSortDirStr = function()
+oj.ArrayRowSet.prototype._getSortDirStr = function()
 {
   if (this['sortDirection'] === -1)
   {
@@ -24830,7 +26292,7 @@ oj.RowSet.prototype._getSortDirStr = function()
   return "asc";
 };
 
-oj.RowSet.prototype._hasComparator = function()
+oj.ArrayRowSet.prototype._hasComparator = function()
 {
   var comparator = this['comparator'];
   return comparator !== undefined && comparator !== null;
@@ -24842,7 +26304,7 @@ oj.RowSet.prototype._hasComparator = function()
  * @param {Object} origRowArray  Original row array
  * @private
  */
-oj.RowSet.prototype._processUpdates = function(updates, origRowArray)
+oj.ArrayRowSet.prototype._processUpdates = function(updates, origRowArray)
 {
   // if all the rows are not updated then call end fetch without refresh
   var noneUpdated = true;
@@ -24883,22 +26345,22 @@ oj.RowSet.prototype._processUpdates = function(updates, origRowArray)
     var rowIdx = updates[i]['rowIdx'];
     if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._ADDED)
     {
-      this._handleEvent.call(this, oj.RowSet.EventType['ADD'], this._rows[rowIdx]);
+      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': rowIdx, 'row': this._rows[rowIdx]});
     }
     else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._DELETED)
     {
-      this._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], origRowArray[rowIdx]);
+      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], {'rowIdx': rowIdx, 'row': origRowArray[rowIdx]});
     }
     else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._UPDATED)
     {
-      this._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], this._rows[rowIdx]);
+      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], {'rowIdx': rowIdx, 'row': this._rows[rowIdx]});
     }
   }
   this._endFetch(false);
 };
 
 // Realign all the indices of the rows (after sort for example)
-oj.RowSet.prototype._realignRowIndices = function(start)
+oj.ArrayRowSet.prototype._realignRowIndices = function(start)
 {
   var row;
   for (var i = start; i < this._rows.length; i++)
@@ -24911,7 +26373,7 @@ oj.RowSet.prototype._realignRowIndices = function(start)
   }
 };
 
-oj.RowSet.prototype._removeInternal = function(row, index, options)
+oj.ArrayRowSet.prototype._removeInternal = function(row, index, options)
 {
   options = options || {};
   index = index == -1 ? this.get(row).index : index;
@@ -24931,20 +26393,20 @@ oj.RowSet.prototype._removeInternal = function(row, index, options)
       options['index'] = index;
       if (row !== undefined)
       {
-        this._handleEvent(oj.RowSet.EventType['REMOVE'], row);
+        oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], {'rowIdx': index, 'row': row});
       }
     }
   }
   return row;
 };
 
-oj.RowSet.prototype._setRow = function(index, row)
+oj.ArrayRowSet.prototype._setRow = function(index, row)
 {
   this._rows[index] = row;
   row['index'] = index;
 };
 
-oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
+oj.ArrayRowSet._sortFunc = function(a, b, comparator, rowSet, self)
 {
   var keyA, keyB, i, retVal;
 
@@ -24960,7 +26422,7 @@ oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
       var attrs2 = oj.StringUtils.isString(keyB) ? keyB.split(",") : [keyB];
       for (i = 0; i < attrs1.length; i++)
       {
-        retVal = oj.RowSet._compareKeys(attrs1[i], attrs2[i], rowSet['sortDirection']);
+        retVal = oj.ArrayRowSet._compareKeys(attrs1[i], attrs2[i], rowSet['sortDirection']);
         if (retVal !== 0)
         {
           return retVal;
@@ -24977,9 +26439,9 @@ oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
 
     for (i = 0; i < attrs.length; i++)
     {
-      keyA = oj.RowSet._getKey(a, attrs[i]);
-      keyB = oj.RowSet._getKey(b, attrs[i]);
-      retVal = oj.RowSet._compareKeys(keyA, keyB, rowSet['sortDirection']);
+      keyA = oj.ArrayRowSet._getKey(a, attrs[i]);
+      keyB = oj.ArrayRowSet._getKey(b, attrs[i]);
+      retVal = oj.ArrayRowSet._compareKeys(keyA, keyB, rowSet['sortDirection']);
       if (retVal !== 0)
       {
         return retVal;
@@ -24993,7 +26455,7 @@ oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
  * Indicate whether we can start a fetch
  * @private
  */
-oj.RowSet.prototype._canFetch = function()
+oj.ArrayRowSet.prototype._canFetch = function()
 {
   return !this._isFetching;
 };
@@ -25002,10 +26464,10 @@ oj.RowSet.prototype._canFetch = function()
  * Indicate starting fetch
  * @private
  */
-oj.RowSet.prototype._startFetch = function()
+oj.ArrayRowSet.prototype._startFetch = function()
 {
   this._isFetching = true;
-  this._handleEvent.call(this, oj.RowSet.EventType['REQUEST'], null);
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REQUEST'], null);
 };
 
 /**
@@ -25013,55 +26475,11 @@ oj.RowSet.prototype._startFetch = function()
  * @param {boolean} refresh whether the listener should refresh based on the fetched data
  * @private
  */
-oj.RowSet.prototype._endFetch = function(refresh)
+oj.ArrayRowSet.prototype._endFetch = function(refresh)
 {
   this._isFetching = false;
-  this._handleEvent.call(this, oj.RowSet.EventType['SYNC'], refresh);
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['SYNC'], refresh);
 };
-
-/**
- * @export
- * Event types
- * @enum {string}
- */
-oj.RowSet.EventType =
-  {
-    /** Triggered when a Row is added to a RowSet */
-    'ADD': "add",
-    /** Triggered when a Row is removed from a RowSet */
-    'REMOVE': "remove",
-    /** Triggered when a RowSet is reset (see oj.RowSet.reset) */
-    'RESET': "reset",
-    /** Triggered when a RowSet is sorted */
-    'SORT': "sort",
-    /** Triggered when a Row's attributes are changed */
-    'CHANGE': "change",
-    /** Triggered when a Row is deleted from the data service (and thus from its RowSet) */
-    'DESTROY': "destroy",
-    /** Triggered when a Row or RowSet has sent a request to the data service */
-    'REQUEST': "request",
-    /** Triggered when a Row or RowSet has been updated from the data service */
-    'SYNC': "sync",
-    /** Triggered when a Row has failed to update on the data service */
-    'ERROR': "error",
-    /** Triggered when a Row being saved has been invalidated by the caller */
-    'INVALID': "invalid",
-    /** Triggered for any of the above events */
-    'ALL': "all"
-  };
-
-/**
- * @export
- * Event types
- * @enum {string}
- */
-oj.RowSet._ROW_STATUSES =
-  {
-    _ADDED: 'added',
-    _DELETED: 'deleted',
-    _UPDATED: 'updated',
-    _NONE: 'none'
-  };
 /**
  * Convenient class that represents an empty node set
  * @param {Object} parent the parent key
@@ -25133,6 +26551,105 @@ oj.EmptyNodeSet.prototype.getMetadata = function(index)
     return null;
 };
 /**
+ * Wraps around the NodeSet to provide additional metadata
+ * @param {Object} nodeSet the node set to wrap
+ * @param {function(Object, Object)} metadataCallback callback to inject additional metadata information
+ * @constructor
+ * @export
+ */
+oj.NodeSetWrapper = function(nodeSet, metadataCallback)
+{
+    this.m_nodeSet = nodeSet;
+    this.m_callback = metadataCallback;
+};
+
+/**
+ * Gets the parent
+ * @return {Object} the key of the parent.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getParent = function()
+{
+    return this.m_nodeSet.getParent();
+};
+
+/**
+ * Gets the start index of the result set.  
+ * @return {number} the start index of the result set.  
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getStart = function()
+{
+    return this.m_nodeSet.getStart();
+};
+
+/**
+ * Gets the actual count of the result set.  
+ * @return {number} the actual count of the result set.  
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getCount = function()
+{
+    return this.m_nodeSet.getCount();
+};
+
+/**
+ * Gets the data of the specified index.  An error is throw when 1) the range is not yet available and
+ * 2) the index specified is out of bounds. 
+ * @param {number} index the index of the node/row in which we want to retrieve the data from.  
+ * @return {Object} the data for the specified index.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getData = function(index)
+{
+    return this.m_nodeSet.getData(index);
+};
+
+/**
+ * Gets the metadata of the specified index.  An error is throw when 1) the range is not yet available and 
+ * 2) the index specified is out of bounds. 
+ * The metadata that the data source must return are:
+ *  1) key - Object, the key of the node/row.
+ *  2) state - state of the node, valid values are 'expanded', 'collapsed', 'leaf'. 
+ *  3) depth - number, the depth of the node/row. 
+ * @param {number} index the index of the node/row in which we want to retrieve the metadata from.  
+ * @return {Object} the metadata object for the specific index.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getMetadata = function(index)
+{
+    var metadata, rowKey;
+
+    metadata = this.m_nodeSet.getMetadata(index);
+    rowKey = metadata['key'];
+
+    // inject additional metadata
+    this.m_callback.call(null, rowKey, metadata);
+
+    return metadata;
+};
+
+/**
+ * Gets the node set child of the specified index.
+ * @param {number} index the index of the node/row in which we want to retrieve the child node set
+ * @return {Object|null} the child node set representing the child tree data.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getChildNodeSet = function(index) 
+{
+    var result;
+    if (this.m_nodeSet.getChildNodeSet)
+    {
+        result = this.m_nodeSet.getChildNodeSet(index);
+        if (result != null)
+        {
+            // wraps the child nodeset too
+            return new oj.NodeSetWrapper(result, this.m_callback);
+        }
+    }
+    return null;
+};
+/**
  * A JsonNodeSet represents a collection of nodes.  The JsonNodeSet is an object returned by the success callback
  * of the fetchChildren method on TreeDataSource.  
  * @constructor
@@ -25197,26 +26714,6 @@ oj.JsonNodeSet.prototype.getData = function(index)
         return this.m_nodes[index].attr;
     else
         return null;
-
-};
-
-/**
- * Gets the data of the specified index.  An error is throw when 1) the range is not yet available and
- * 2) the index specified is out of bounds. 
- * @param {number} index the index of the node/row in which we want to retrieve the data from.  
- * @return {Object} the data for the specified index.  oj.RowData should be returned for data that represents a row
- *         with a number of columns.
- * @export
- */
-oj.JsonNodeSet.prototype.getData = function(index)
-{
-    // make sure index are valid
-    oj.Assert.assert(index <= this.m_endNode && index >= this.m_startNode);
-    if (this.m_nodes[index])
-        return this.m_nodes[index];
-    else
-        return null;
-
 };
 
 /**
@@ -25238,318 +26735,70 @@ oj.JsonNodeSet.prototype.getMetadata = function(index)
     oj.Assert.assert(index <= this.m_endNode && index >= this.m_startNode);
 
     metadata["key"] = this.m_nodes[index].id ? this.m_nodes[index].id : this.m_nodes[index].attr.id;
-    metadata["leaf"] = true;
+    metadata["leaf"] = this.m_nodes[index].leaf;
     metadata["depth"] = this.m_nodes[index].depth;
 
-    if (this.m_nodes[index].children && this.m_nodes[index].children.length > 0)
-        metadata["leaf"] = false;
+    if(metadata["leaf"] == null)
+    {
+        if (this.m_nodes[index].children && this.m_nodes[index].children.length > 0)
+        {
+            metadata["leaf"] = false;
+        }
+        else
+        {
+            metadata["leaf"] = true;
+        }
+    }
 
     return metadata;
 };
-/*jslint browser: true*/
 
 /**
- * @export
- * @class oj.Row
- * @classdesc Object representing name/value pairs for a row of data
- *
- * @param {Object=} attributes Initial set of attribute/value pairs with which to seed this Row object 
- * @param {Object=} options 
- *                  rowSet: rowSet for this row
- * @constructor
+ * Helper method to update the node's depth recursively with its children.
+ * @param {Object} currChild the node to update.
+ * @param {number} offset the difference between current and updated depth values.
+ * @private
  */
-oj.Row = function (attributes, options) {
-    oj.Row._init(this, attributes, options, null);
-};
-
-
-// Subclass from oj.Object 
-oj.Object.createSubclass(oj.Row, oj.Object, "Row.Row");
-  
-oj.Row.prototype.Init = function()
+oj.JsonNodeSet.prototype._updateDepth = function (currChild, offset)
 {
-    oj.Row.superclass.Init.call(this);
+    var i;
+
+    offset++;
+    currChild.depth = offset;
+
+    if (currChild.children && currChild.children.length != 0)
+    {
+        for (i = 0; i < currChild.children.length; i++)
+	{
+            this._updateDepth(currChild.children[i], offset);
+	}
+    }
 };
 
 /**
- * 
- * @export
- * @desc Attribute/value pairs held by the Model.
- * 
- * @type Object
- */
-oj.Row.prototype.attributes = {};
-
-/**
- * @export
- * @desc The Row's unique ID. 
- * 
- * @type String
- */
-oj.Row.prototype.id = null;
-
-/**
- * @export
- * @desc The name of the row property to be used as the unique ID. See property id. This defaults to a value of "id".
- *  
- * @type String
- */
-oj.Row.prototype.idAttribute = null;
-
-oj.Row._init = function(row, attributes, options, properties) {
-    var prop = null, attrCopy;
-
-    row.Init();
-    
-    row.index = -1;
-
-    options = options || {};
-    row.attributes = {};
-  
-    // First, copy all properties passed in
-    for (prop in properties) {
-        if (properties.hasOwnProperty(prop)) {
-            row[prop] = properties[prop]; 
-        }
-    }
-
-    if (attributes) {
-        attrCopy = oj.Row._cloneAttributes(attributes, row.attributes);
-        
-        if (attrCopy == null || attrCopy === undefined) {
-            // Reset it
-            row.attributes = {};
-        }
-        else {
-            // Move them in
-            for (prop in attrCopy) {
-                if (attrCopy.hasOwnProperty(prop)) {
-                    row._setProp(prop, attrCopy[prop]);
-                }
-            }
-        }
-    }
-
-    row['rowSet'] = options['rowSet'];
-    row['idAttribute'] = options['idAttribute'];
-    row._setupId();
-};
-
-/**
- * @export
- * Return a copy of the Row with identical attributes and settings
- */
-oj.Row.prototype.clone = function() {
-    var c = new this.constructor(), prop;
-    
-    for (prop in this) {
-        // Shallow copy all but data
-        if (this.hasOwnProperty(prop) && this[prop] !== this.attributes) {
-            c[prop] = this[prop];
-        }
-    }
-    // Deep copy data
-    c.attributes = oj.Row._cloneAttributes(this.attributes, null);
-
-    c._setupId();
-    
-    return c;
-};
-
-/**
- * Returns the value of the property from the Row.
- * @param {string} property Property to get from row
- * @return {Object} value of property
+ * Gets the node set child of the specified index.
+ * @param {number} index the index of the node/row in which we want to retrieve the child node set
+ * @return {oj.JsonNodeSet|null} the child node set representing the child tree data.
  * @export
  */
-oj.Row.prototype.get = function (property) {
-    return this.attributes[property];
-};
+oj.JsonNodeSet.prototype.getChildNodeSet = function(index) {
 
-/**
- * Set the value(s) of one or more attributes of the row
- * @param {string||Object} property Property attribute name to set, or an Object containing attribute/value pairs
- * @param {Object=} value Value for property if property is not an Object containing attribute/value pairs
- * @param {Object=} options Options may be passed in
- * @returns {Object||boolean} the row itself, false if failed
- * @export
- */
-oj.Row.prototype.set = function (property, value, options) {
-    var opts = {}, ignoreLastArg = false, prop, i, valid = true;
-    
-    if (arguments) {
-        if (arguments.length > 0) {
-            // Check if the last argument is not the first argument
-            if (arguments.length > 1) {
-                if (arguments[arguments.length-1]) {
-                    // Last arg is options: ignore later
-                    ignoreLastArg = true;
-                    opts = arguments[arguments.length-1] || {};
-                }
-            }
-            // Check if first arg is property bag
-            if (oj.Row._hasProperties(property)) {
-               this._setProp(property, opts);
-            }
-            else {
-                // Not a property bag?  We assume it's a series of property/value arguments
-                for (i = 0; i < arguments.length; i+=2) {
-                    // Process the arg as long as its: defined, and isn't the last argument where we're supposed to ignore the last argument
-                    // due to it being 'options'
-                    if (arguments[i] !== undefined || i < arguments.length-1 || (!ignoreLastArg && i === arguments.length-1)) {
-                        this._setProp(arguments[i], arguments[i+1]);
-                    }
-                }
-            }
-        }
+    var results, key, depth, i;
+
+    depth = this.m_nodes[index].depth;
+    results = this.m_nodes[index].children;
+    if(results.length == 0)
+    {
+        return null;
     }
-    return this;
-};
-
-/**
- * @export
- * Return all of the Row's attributes as an array
- * 
- * @returns {Array} array of all the Row's attributes
- */
-oj.Row.prototype.keys = function() {
-    var prop, retArray = [];
-    
-    for (prop in this.attributes) {
-        if (this.attributes.hasOwnProperty(prop)) {
-            retArray.push(prop);
-        }
-    }
-    return retArray;
-};
-
-/**
- * @export
- * Return all of the Row's attributes values as an array
- * 
- * @returns {Array} array of all the Row's attributes values
- */
-oj.Row.prototype.values = function() {
-    var prop, retArray = [];
-    
-    for (prop in this.attributes) {
-        if (this.attributes.hasOwnProperty(prop)) {
-            retArray.push(this.get(prop));
-        }
-    }
-    return retArray;
-};
-
-/**
- * @export
- * Return an array of attributes/value pairs found in the Row 
- * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
- */
-oj.Row.prototype.pairs = function() {
-    var prop, retObj = {};
-    for (prop in this.attributes) {
-        if (this.attributes.hasOwnProperty(prop)) {
-            retObj[prop] = this.get(prop);
-        }
-    }
-    return retObj;
-};
-
-oj.Row.prototype._getIdAttr = function () {
-    return this['idAttribute'] || 'id';
-};
-
-// Might be a property value or a function
-oj.Row.prototype._getProp = function(prop) {
-    if (this[prop] instanceof Function) {        
-        return this[prop]();
-    }
-    return this[prop];
-};
-
-oj.Row._hasProperties = function(object) {
-    var prop;
-    if (object && object instanceof Object) {
-        for (prop in object) {
-            if (object.hasOwnProperty(prop)) {
-                return true;
-            }
-        }
-    }
-    return false;
-};
-
-oj.Row.prototype._setupId = function() {
-    var idAttr = this._getIdAttr();
-    this['id'] = this.attributes[idAttr];
-};
-
-oj.Row.prototype._setPropInternal = function(prop, value) {
-    if (!oj.Object.innerEquals(this.attributes[prop], value)) {
-        this.attributes[prop] = value;
-        this._setupId();
-        return true;
-    }
-    return false;
-};
-
-/**
- * @param {Object||string} prop
- * @param {Object} value
- * @returns {boolean}
- */
-oj.Row.prototype._setProp = function(prop, value) {
-    if (prop == null) {
-        return true;
-    }
-    
-    var attrs = {}, p;
-
-    if (arguments.length > 2) {
-        attrs[prop] = value;
-    }
-    else {
-        for (p in prop) {
-            if (prop.hasOwnProperty(p)) {
-                attrs[p] = prop[p];
-            }
-        }
+    key = this.m_nodes[index].id ? this.m_nodes[index].id : this.m_nodes[index].attr.id;
+    for(i = 0; i < results.length; i++)
+    {
+        this._updateDepth(results[i], depth);
     }
 
-    for (p in attrs) {
-        if (attrs.hasOwnProperty(p)) {
-            this._setPropInternal(p, attrs[p]);
-        }
-    }
-    return true;
+    return new oj.JsonNodeSet(0, results.length, results, key, 0);
 };
-
-oj.Row._cloneAttributes = function(oldData, newData) {    
-    var prop;
-    newData = newData || {};
-    for (prop in oldData) { 
-        if (oldData.hasOwnProperty(prop)){// && oldData[prop] !== undefined) {
-            if (typeof(oldData[prop]) !== 'object') {
-                // Only overwrite if not undefined
-                if (newData.hasOwnProperty(prop)) {
-                    if (oldData[prop] !== undefined) {
-                        newData[prop] = oldData[prop];
-                    }
-                }
-                else {
-                    newData[prop] = oldData[prop];
-                }
-            }
-            else {
-                newData[prop] = oj.Row._cloneAttributes(oldData[prop], null);
-            }
-        }
-    }
-    return newData;
-};
-
-
 /**
  * Flattens a hierarchical node set, which can happen in node set returned from
  * fetchDescendents call.
@@ -25742,7 +26991,7 @@ oj.FlattenedNodeSet.prototype._getDataOrMetadata = function(nodeSet, index, curr
 /**
  * The base class for DataGridDataSource.  
  * @export
- * @augments oj.DataSource
+ * @extends oj.DataSource
  * @constructor
  */
 oj.DataGridDataSource = function(data)
@@ -25885,7 +27134,7 @@ oj.DataGridDataSource.prototype.getCapability = function(feature)
  * @param {string=} options.rowHeader the key to the header designated as the row header.
  * @export
  * @constructor
- * @extends oj.DataSource
+ * @extends oj.DataGridDataSource
  */
 oj.ArrayDataGridDataSource = function(data, options)
 {
@@ -27009,71 +28258,71 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                     */    
                     template:null
                 },
-				
-				/**
-				 * Triggered when a portion of the data grid is selected
-				 *
-				 * @expose 
-				 * @event 
-				 * @memberof! oj.ojDataGrid
-				 * @instance
-				 * @property {Event} event <code class="prettyprint">jQuery</code> event object
-				 * @property {Object} ui Parameters
-				 * @property {Array} ui.selection the datagrid selection object
-				 * 
-				 * @example <caption>Initialize the data grid with the <code class="prettyprint">select</code> callback specified:</caption>
-				 * $( ".selector" ).ojDataGrid({
-				 *     "select": function( event, ui ) {}
-				 * });
-				 *
-				 * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-				 * $( ".selector" ).on( "ojselect", function( event, ui ) {} );
-				 */
-				select: null,
 
-				/**
-				 * Triggered when a portion of the data grid is resized
-				 *
-				 * @expose 
-				 * @event 
-				 * @memberof! oj.ojDataGrid
-				 * @instance
-				 * @property {Event} event <code class="prettyprint">jQuery</code> event object
-				 * @property {Object} ui Parameters
-				 * @property {Element} ui.header the header Element which was resized
-				 * @property {string} ui.size the new pixel size string (ex: '75px')
-				 *
-				 * @example <caption>Initialize the data grid with the <code class="prettyprint">resize</code> callback specified:</caption>
-				 * $( ".selector" ).ojDataGrid({
-				 *     "resize": function( event, ui ) {}
-				 * });
-				 *
-				 * @example <caption>Bind an event listener to the <code class="prettyprint">ojresize</code> event:</caption>
-				 * $( ".selector" ).on( "ojresize", function( event, ui ) {} );
-				 */
-				resize: null,				
+                /**
+                 * Triggered when a portion of the data grid is selected
+                 *
+                 * @expose 
+                 * @event 
+                 * @memberof! oj.ojDataGrid
+                 * @instance
+                 * @property {Event} event <code class="prettyprint">jQuery</code> event object
+                 * @property {Object} ui Parameters
+                 * @property {Array} ui.selection the datagrid selection object
+                 * 
+                 * @example <caption>Initialize the data grid with the <code class="prettyprint">select</code> callback specified:</caption>
+                 * $( ".selector" ).ojDataGrid({
+                 *     "select": function( event, ui ) {}
+                 * });
+                 *
+                 * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
+                 * $( ".selector" ).on( "ojselect", function( event, ui ) {} );
+                 */
+                select: null,
 
-				/**
-				 * Triggered when a sort is performed on the data grid
-				 *
-				 * @expose 
-				 * @event 
-				 * @memberof! oj.ojDataGrid
-				 * @instance
-				 * @property {Event} event <code class="prettyprint">jQuery</code> event object
-				 * @property {Object} ui Parameters
-				 * @property {Element} ui.header the header Element which was sorted on				 
-				 * @property {string} ui.direction the direction of the sort ascending/descending
-				 * 
-				 * @example <caption>Initialize the data grid with the <code class="prettyprint">sort</code> callback specified:</caption>
-				 * $( ".selector" ).ojDataGrid({
-				 *     "sort": function( event, ui ) {}
-				 * });
-				 *
-				 * @example <caption>Bind an event listener to the <code class="prettyprint">ojsort</code> event:</caption>
-				 * $( ".selector" ).on( "ojsort", function( event, ui ) {} );
-				 */
-				sort: null				
+                /**
+                 * Triggered when a portion of the data grid is resized
+                 *
+                 * @expose 
+                 * @event 
+                 * @memberof! oj.ojDataGrid
+                 * @instance
+                 * @property {Event} event <code class="prettyprint">jQuery</code> event object
+                 * @property {Object} ui Parameters
+                 * @property {Element} ui.header the header Element which was resized
+                 * @property {string} ui.size the new pixel size string (ex: '75px')
+                 *
+                 * @example <caption>Initialize the data grid with the <code class="prettyprint">resize</code> callback specified:</caption>
+                 * $( ".selector" ).ojDataGrid({
+                 *     "resize": function( event, ui ) {}
+                 * });
+                 *
+                 * @example <caption>Bind an event listener to the <code class="prettyprint">ojresize</code> event:</caption>
+                 * $( ".selector" ).on( "ojresize", function( event, ui ) {} );
+                 */
+                resize: null,				
+
+                /**
+                 * Triggered when a sort is performed on the data grid
+                 *
+                 * @expose 
+                 * @event 
+                 * @memberof! oj.ojDataGrid
+                 * @instance
+                 * @property {Event} event <code class="prettyprint">jQuery</code> event object
+                 * @property {Object} ui Parameters
+                 * @property {Element} ui.header the header Element which was sorted on				 
+                 * @property {string} ui.direction the direction of the sort ascending/descending
+                 * 
+                 * @example <caption>Initialize the data grid with the <code class="prettyprint">sort</code> callback specified:</caption>
+                 * $( ".selector" ).ojDataGrid({
+                 *     "sort": function( event, ui ) {}
+                 * });
+                 *
+                 * @example <caption>Bind an event listener to the <code class="prettyprint">ojsort</code> event:</caption>
+                 * $( ".selector" ).on( "ojsort", function( event, ui ) {} );
+                 */
+                sort: null	
             },
     /**
      * Create the grid
@@ -27101,6 +28350,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         this.resources = new oj.DataGridResources(this._GetReadingDirection(), this._getTranslation.bind(self));
         this._setDataSource();
         this._registerDataSourceListeners();
+
         this._addContextMenu();    
         if (this.datasource != null)
         {
@@ -27226,6 +28476,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     {
         var self, menuContainer, rootId, resizeMenu = null, sortMenu = null, moveMenu = null, listItems, temp;
         self = this;
+
         if (this.options["contextMenu"]['menu'] == null)
         {
             if (this.datasource != null) {
@@ -27235,21 +28486,21 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                 if (this._isResizeEnabled('column', 'width') || this._isResizeEnabled('column', 'height') ||
                         this._isResizeEnabled('row', 'width') || this._isResizeEnabled('row', 'height'))
                 {
-                    resizeMenu = $(this._buildContextMenuListItem('resize')).append($('<ul></ul>').append($(this._buildContextMenuListItem('resizeWidth'))).append($(this._buildContextMenuListItem('resizeHeight'))));
+                    resizeMenu = this._buildContextMenuItem('resize');
                 }
                 switch (this.datasource.getCapability('sort'))
                 {
                     case 'none':
                         break;
                     case 'column':
-                        sortMenu = $(this._buildContextMenuListItem('sortCol')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortColAsc'))).append($(this._buildContextMenuListItem('sortColDsc'))));
+                        sortMenu = this._buildContextMenuItem('sortCol');
                         break;
                     case 'row':
-                        sortMenu = $(this._buildContextMenuListItem('sortRow')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortRowAsc'))).append($(this._buildContextMenuListItem('sortRowDsc'))));
+                        sortMenu = this._buildContextMenuItem('sortRow');
                         break;
                     default:
-                        temp = $(this._buildContextMenuListItem('sortCol')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortColAsc'))).append($(this._buildContextMenuListItem('sortColDsc'))));
-                        sortMenu = temp.add($(this._buildContextMenuListItem('sortRow')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortRowAsc'))).append($(this._buildContextMenuListItem('sortRowDsc')))));
+                        temp = this._buildContextMenuItem('sortCol');
+                        sortMenu = temp.add(this._buildContextMenuItem('sortRow'));
                 }
                 switch (this.datasource.getCapability('move'))
                 {
@@ -27274,12 +28525,36 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                 if ($(this).children('a').length === 0)
                 {
                     command = $(this).attr('data-oj-command').split("-");
-                    $(this).prepend(self._buildContextMenuLabel(command[command.length-1]));
+                    $(this).replaceWith(self._buildContextMenuItem(command[command.length-1]));
                 }
             });
             menuContainer.ojMenu('refresh');
             menuContainer.on("ojbeforeshow", this._handleContextMenuBeforeShow.bind(this));
             menuContainer.on("ojselect", this._handleContextMenuSelect.bind(this));
+        }
+    },
+            
+    /**
+     * Builds a menu for a command, takes care of submenus where appropriate
+     * @private	 
+     */            
+    _buildContextMenuItem: function(command)
+    {
+        if (command === 'resize')
+        {
+            return $(this._buildContextMenuListItem('resize')).append($('<ul></ul>').append($(this._buildContextMenuListItem('resizeWidth'))).append($(this._buildContextMenuListItem('resizeHeight'))));
+        }
+        else if(command === 'sortCol')
+        {
+            return $(this._buildContextMenuListItem('sortCol')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortColAsc'))).append($(this._buildContextMenuListItem('sortColDsc'))));
+        }
+        else if(command === 'sortRow')
+        {
+            return $(this._buildContextMenuListItem('sortRow')).append($('<ul></ul>').append($(this._buildContextMenuListItem('sortRowAsc'))).append($(this._buildContextMenuListItem('sortRowDsc'))));
+        }        
+        else if (Object.keys(this.resources.commands).indexOf(command) != -1)
+        {
+            return $(this._buildContextMenuListItem(command));         
         }
     },
             
@@ -27612,32 +28887,9 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
      */   			
     _setDataSource: function()
     {
-        var self = this, data, rowHeader;
-        if (self.options['data'] != null)
+        if (this.options['data'] != null)
         {
-            data = self.options['data']['data'];
-            rowHeader = self.options['data']['rowHeader'];
-            if (data === undefined)
-            {
-                data = self.options['data'];
-            }
-
-            if (data instanceof Array)
-            {
-                this.datasource = new oj.ArrayDataGridDataSource(data, {'rowHeader': rowHeader});
-            }
-            else if (data.constructor.prototype instanceof oj.Collection)
-            {
-                this.datasource = new oj.CollectionDataGridDataSource(data, {'rowHeader': rowHeader});
-            }
-            else if (data instanceof oj.TreeDataSource)
-            {
-                this.datasource = new oj.FlattenedTreeDataGridDataSource(data);
-            }
-            else
-            {
-                this.datasource = data;
-            }
+			this.datasource = this.options['data'];
         }
         else
         {
@@ -27648,7 +28900,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     /**
      * Modify the header and cell context before passing to the renderer.
      * @param {Object} context the header or cell context.
-	 * @private
+     * @private
      */
     _modifyContext: function(context)
     {
@@ -27657,7 +28909,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     /**
      * Register a row expander widget.
      * @param {Object} rowExpander the row expander widget.
-	 * @private
+     * @private
      */
     _registerRowExpander: function(rowExpander)
     {
@@ -27667,22 +28919,8 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
             // the datagrid should update internal state for screenreader
             self.grid.registerRowExpander(rowExpander.element[0]);
         }
-        rowExpander._parseMetadata = self._parseMetadata;
     },
-    /**
-     * parse grid metadata to return an object {leaf:x, depth:y}
-     * @param {Object} metadata the cell metadata
-	 * @private
-     */
-    _parseMetadata: function(metadata)
-    {
-        var parsed = {};
-        parsed['state'] = metadata['row']['state'];
-        parsed['depth'] = metadata['row']['depth'];
-        parsed['key'] = metadata['row']['key'];
-        return parsed;
-    },            
-    
+
     /**
      * If no arguments are passed in, gets the current selections in the Grid. 
      * Returns an empty array if there's no selection. Returns "all" if everything 
@@ -27826,11 +29064,10 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
  * @param {number} endColumn the end column index of the cell set
  * @param {Object} nodeSet the node set in which this cell set wraps around
  * @param {Array|null} columns the set of column keys
- * @param {function(Object, Object)} metadataCallback callback to inject additional metadata information
  * @constructor
  * @export
  */
-oj.FlattenedTreeCellSet = function(startRow, endRow, startColumn, endColumn, nodeSet, columns, metadataCallback)
+oj.FlattenedTreeCellSet = function(startRow, endRow, startColumn, endColumn, nodeSet, columns)
 {
     // assert startRow/startColumn are number
     oj.Assert.assertNumber(startRow, null);
@@ -27845,7 +29082,6 @@ oj.FlattenedTreeCellSet = function(startRow, endRow, startColumn, endColumn, nod
     this.m_endColumn = endColumn;
     this.m_nodeSet = nodeSet;
     this.m_columns = columns;
-    this.m_callback = metadataCallback;
 };
 
 /**
@@ -27902,7 +29138,7 @@ oj.FlattenedTreeCellSet.prototype.getData = function(indexes)
  */
 oj.FlattenedTreeCellSet.prototype.getMetadata = function(indexes)
 {
-    var relIndex, row, column, keys;
+    var relIndex, row, column, columnKey, metadata, rowKey;
 
     // convert to relative index
     relIndex = this._getRelIndexes(indexes);
@@ -27917,23 +29153,12 @@ oj.FlattenedTreeCellSet.prototype.getMetadata = function(indexes)
     // make sure index are valid
     oj.Assert.assert(row < this.m_nodeSet.getStart()+this.m_nodeSet.getCount() && column < this.m_columns.length);
 
-    var columnKey = this.m_columns[column];
+    columnKey = this.m_columns[column];
 
-    var rowMetadata = this.m_nodeSet.getMetadata(row);
-    var rowKey = rowMetadata['key'];
+    metadata = this.m_nodeSet.getMetadata(row);
+    rowKey = metadata['key'];
 
-    keys = {"row": rowKey, "column": columnKey};
-
-    // inject additional metadata, such as expanded state, if callback is present
-    if (this.m_callback != null)
-    {
-        this.m_callback.call(null, rowKey, rowMetadata);    
-    }
-
-    // merge in row metadata
-    var metadata = {};
-    metadata['row'] = rowMetadata;
-    metadata['keys'] = keys;
+    metadata['keys'] = {"row": rowKey, "column": columnKey};
 
     return metadata;
 };
@@ -28224,14 +29449,15 @@ oj.ArrayCellSet.prototype.getStartColumn = function()
 };
 /**
  * The DataGrid specific implementation of the FlattenedTreeDataSource class.
- * @param {Object} options the options set on this data source.  See documentation for a list
+ * @param {Object} treeDataSource the instance of TreeDataSource to flattened
+ * @param {Object=} options the options set on this data source.  See documentation for a list
  *        of supported options.
  * @constructor
  * @export
  */
-oj.FlattenedTreeDataGridDataSource = function(options)
+oj.FlattenedTreeDataGridDataSource = function(treeDataSource, options)
 {
-    oj.FlattenedTreeDataGridDataSource.superclass.constructor.call(this, options);
+    oj.FlattenedTreeDataGridDataSource.superclass.constructor.call(this, treeDataSource, options);
 };
 
 // Subclass from oj.FlattenedTreeDataSource
@@ -28567,7 +29793,7 @@ oj.FlattenedTreeDataGridDataSource.prototype._handleFetchRowsSuccess = function(
     }
 
     // create wrapper
-    cellSet = new oj.FlattenedTreeCellSet(rowStart, rowStart+rowCount, columnStart, columnStart+columnCount, nodeSet, this.m_columns, this.insertMetadata.bind(this));
+    cellSet = new oj.FlattenedTreeCellSet(rowStart, rowStart+rowCount, columnStart, columnStart+columnCount, nodeSet, this.m_columns);
     // invoke success callback
     if (callbacks['success'])
     {
@@ -28675,7 +29901,7 @@ oj.FlattenedTreeDataGridDataSource.prototype.insertRows = function(insertAtIndex
     var cellSet, event;
 
     // create a CellSet that wraps around a RowSet 
-    cellSet = new oj.FlattenedTreeCellSet(insertAtIndex, insertAtIndex+nodeSet.getCount(), 0, this.m_columns.length, nodeSet, this.m_columns, this.insertMetadata.bind(this));
+    cellSet = new oj.FlattenedTreeCellSet(insertAtIndex, insertAtIndex+nodeSet.getCount(), 0, this.m_columns.length, nodeSet, this.m_columns);
 
     // construct model insert event with a set of rows to insert
     event = {};
@@ -28972,6 +30198,10 @@ oj.PagingDataGridDataSource.prototype.off = function(eventType, eventHandler)
  */
 oj.PagingDataGridDataSource.prototype.getCapability = function(feature)
 {
+  if (feature === 'move')
+  {
+      return "none"
+  }
   return this.dataSource.getCapability(feature);
 };
 
@@ -29278,10 +30508,10 @@ var yearDisplay = oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_T
  *       <td><kbd>Alt + PageDown</kbd></td>
  *       <td>Switch to next year.</tr>
  *     <tr>
- *       <td><kbd>Ctrl + PageUp</kbd></td>
+ *       <td><kbd>Ctrl + Alt + PageUp</kbd></td>
  *       <td>Switch to previous by stepBigMonths.</tr>
  *     <tr>
- *       <td><kbd>Ctrl + PageDown</kbd></td>
+ *       <td><kbd>Ctrl + Alt + PageDown</kbd></td>
  *       <td>Switch to next by stepBigMonths.</tr>
  *     <tr>
  *       <td><kbd>Ctrl + Alt + T</kbd></td>
@@ -29330,7 +30560,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   version : "1.0.0", 
   widgetEventPrefix : "oj", 
   APPEND_CLASS : "oj-datepicker-append",
-  TRIGGER_CLASS : "oj-datepicker-trigger", 
+  TRIGGER_CLASS : "oj-inputdatetime-input-trigger", 
   TRIGGER_CALENDAR_CLASS : "oj-datepicker-calendar-icon", 
   
   CURRENT_CLASS : "oj-datepicker-current-day", 
@@ -29342,11 +30572,11 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   MAIN_DIV_ID : "oj-datepicker-div", 
   
   INPUT_LABELED_BY_ID : "oj-inputdate-input-description",
-  DATE_INPUT_CLASS : "oj-inputdate-input", 
+  INPUT_CLASS : "oj-inputdatetime-input", 
   HAS_TRIGGER_CLASS : "oj-has-trigger",
   INLINE_CLASS : "oj-datepicker-inline",
-  WIDGET_CLASS : "oj-inputdate oj-widget",
-  INPUT_CONTAINER_CLASS : "oj-inputdate-input-container",
+  WIDGET_CLASS : "oj-inputdatetime-date-only oj-widget",
+  INPUT_CONTAINER_CLASS : "oj-inputdatetime-input-container",
   
   /** 
    * @expose
@@ -29561,18 +30791,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     converter : oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter(
     {
       "day" : "2-digit", "month" : "2-digit", "year" : "2-digit"
-    }), 
-    
-    /**
-     * Handler for datepicker closure
-     * 
-     * @expose
-     * @event
-     * @memberof! oj.ojInputDate
-     * @instance
-     * @default <code class="prettyprint">null</code>
-     */
-    close : null
+    })
   },
   
   /**
@@ -29738,7 +30957,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     
     $(document).on("mousedown", $.proxy(this._checkExternalClick, this));
     
-    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this.MAIN_DIV_ID) + "' role='region' aria-labelledby='" + this._GetSubId(this.DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content ui-helper-clearfix ui-corner-all'></div>"));
+    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this.MAIN_DIV_ID) + "' role='region' aria-labelledby='" + this._GetSubId(this.DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content'></div>"));
     $("body").append(this._dpDiv);
     
     //request to always wrap the element under a single root
@@ -29847,7 +31066,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   
   _inputDatepicker : function __inputDatepicker()
   {
-    this.element.addClass(this.DATE_INPUT_CLASS);
+    this.element.addClass(this.INPUT_CLASS);
     
     this._AppendInputDetail(this.element);
     
@@ -29863,7 +31082,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     var detailId = this._GetSubId(this.INPUT_LABELED_BY_ID);
     
     element.attr("aria-labelledby", detailId);
-    this._inputDetail = $("<div style='display:none;' id='" + detailId + "'>" + this.options["inputDetail"] + "</div>");
+    this._inputDetail = $("<div class='oj-helper-hidden-accessible' id='" + detailId + "'>" + this.options["inputDetail"] + "</div>");
     this.widget().append(this._inputDetail);
   },
   
@@ -29987,24 +31206,32 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
           handled = true;
           break;// hide on escape
         case kc.PAGE_UP:
-          if (event.altKey)
+          if(event.ctrlKey && event.altKey)
+          {
+            this._adjustDate(- this.options["stepBigMonths"], "M", true);
+          }
+          else if (event.altKey)
           {
             this._adjustDate( - 1, "Y", true);
           }
           else 
           {
-            this._adjustDate((event.ctrlKey ?  - this.options["stepBigMonths"] :  - this._getStepMonths()), "M", true);
+            this._adjustDate(- this._getStepMonths(), "M", true);
           }
           handled = true;
           break;// previous month/year on page up/+ ctrl
         case kc.PAGE_DOWN:
-          if (event.altKey)
+          if(event.ctrlKey && event.altKey)
+          {
+            this._adjustDate(+ this.options["stepBigMonths"], "M", true);
+          }
+          else if (event.altKey)
           {
             this._adjustDate(1, "Y", true);
           }
           else 
           {
-            this._adjustDate((event.ctrlKey ?  + this.options["stepBigMonths"] :  + this._getStepMonths()), "M", true);
+            this._adjustDate(+ this._getStepMonths(), "M", true);
           }
           handled = true;
           break;// next month/year on page down/+ ctrl
@@ -30342,7 +31569,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     {
       value = new Date(this._currentYear, this._currentMonth, this._currentDay);
     }
-
+    
+    this._SetDisplayValue( this._GetConverter()["format"](value) );
     this._SetValue(value, null, 
     {
       validationMode : this._VALIDATION_MODE.VALIDATORS_ONLY
@@ -30508,7 +31736,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
         buttonPanel, weekDisplay, dayNames = this.options["dayWide"], dayNamesMin = this.options["dayNarrow"], 
         monthNames = this.options["monthWide"], monthNamesShort = this.options["monthAbbreviated"], 
         firstDay = this.options["firstDayOfWeek"], daysOutsideMonth, html, dow, row, group, col, selected, rowCellId, 
-        dayOverClass, dayOverId = "", cornerClass, calender, thead, day, daysInMonth, leadDays, curRows, numRows, 
+        dayOverClass, dayOverId = "", calender, thead, day, daysInMonth, leadDays, curRows, numRows, 
         printDate, dRow, tbody, daySettings, otherMonth, unselectable, tempDate = new Date(), 
         today = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate()), // clear time
         isRTL = this._IsRTL(), buttonPanelDisplay = this.options["buttonPanel"], numMonths = this._getNumberOfMonths(), 
@@ -30547,31 +31775,32 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 
     prevText = this.options["prevText"];
 
-    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-prev-icon ui-corner-all oj-enabled' data-handler='prev' data-event='click'" + " title='" + prevText + "'><span class='oj-widget-icon oj-clickable-icon'></span></a>" : "<a class='oj-datepicker-prev-icon ui-corner-all oj-disabled' title='" + prevText + "'><span class='oj-widget-icon oj-clickable-icon'></span></a>");
+    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-prev-icon oj-enabled oj-widget-icon oj-clickable-icon' data-handler='prev' data-event='click'" + " title='" + prevText + "'></a>" : "<a class='oj-datepicker-prev-icon oj-disabled oj-widget-icon oj-clickable-icon' title='" + prevText + "'></a>");
 
     nextText = this.options["nextText"];
 
-    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-next-icon ui-corner-all oj-enabled' data-handler='next' data-event='click'" + " title='" + nextText + "'><span class='oj-widget-icon oj-clickable-icon'></span></a>" : "<a class='oj-datepicker-next-icon ui-corner-all oj-disabled' title='" + nextText + "'><span class='oj-widget-icon oj-clickable-icon'></span></a>");
+    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-next-icon oj-enabled oj-widget-icon oj-clickable-icon' data-handler='next' data-event='click'" + " title='" + nextText + "'></a>" : "<a class='oj-datepicker-next-icon oj-disabled oj-widget-icon oj-clickable-icon' title='" + nextText + "'></a>");
 
     currentText = this.options["currentText"];
     gotoDate = today;
 
-    controls = (!this.isInLine() ? "<button type='button' class='oj-datepicker-close oj-enabled ui-priority-primary ui-corner-all' data-handler='hide' data-event='click keyup'>" + this.options["closeText"] + "</button>" : "");
+    controls = (!this.isInLine() ? "<button type='button' class='oj-datepicker-close oj-enabled oj-priority-primary' data-handler='hide' data-event='click keyup'>" + this.options["closeText"] + "</button>" : "");
 
-    buttonPanel = (buttonPanelDisplay === "default") ? "<div class='oj-datepicker-buttonpane ui-widget-content'>" + (isRTL ? controls : "") + (this._isInRange(gotoDate) ? "<button type='button' class='oj-datepicker-current oj-enabled ui-priority-secondary ui-corner-all' data-handler='today' data-event='click keyup'" + ">" + currentText + "</button>" : "") + (isRTL ? "" : controls) + "</div>" : "";
+    buttonPanel = (buttonPanelDisplay === "default") ? "<div class='oj-datepicker-buttonpane'>" + (isRTL ? controls : "") + (this._isInRange(gotoDate) ? "<button type='button' class='oj-datepicker-current oj-enabled oj-priority-secondary' data-handler='today' data-event='click keyup'" + ">" + currentText + "</button>" : "") + (isRTL ? "" : controls) + "</div>" : "";
 
     weekDisplay = this.options["weekDisplay"];
 
     daysOutsideMonth = this.options["daysOutsideMonth"];
     html = "";
-
+    
+    var monthControl = "all";
     for (row = 0;row < numMonths[0];row++)
     {
       group = "";
       this._maxRows = 4;
       for (col = 0;col < numMonths[1];col++)
       {
-        cornerClass = " ui-corner-all";
+        monthControl = "all";
         calender = "";
         if (isMultiMonth)
         {
@@ -30582,21 +31811,21 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
             {
               case 0:
                 calender += " oj-datepicker-group-first";
-                cornerClass = " ui-corner-" + (isRTL ? "right" : "left");
+                monthControl = (isRTL ? "right" : "left");
                 break;
               case numMonths[1] - 1:
                 calender += " oj-datepicker-group-last";
-                cornerClass = " ui-corner-" + (isRTL ? "left" : "right");
+                monthControl = (isRTL ? "left" : "right");
                 break;
               default :
                 calender += " oj-datepicker-group-middle";
-                cornerClass = "";
+                monthControl = "";
                 break;
             }
           }
           calender += "'>";
         }
-        calender += "<div class='oj-datepicker-header ui-widget-header ui-helper-clearfix" + cornerClass + (wDisabled ? " oj-disabled " : " oj-enabled ") + "'>" + (/all|left/.test(cornerClass) && row === 0 ? (isRTL ? next : prev) : "") + (/all|right/.test(cornerClass) && row === 0 ? (isRTL ? prev : next) : "") + this._generateMonthYearHeader(drawMonth, drawYear, minDate, maxDate, row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
+        calender += "<div class='oj-datepicker-header" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "'>" + (/all|left/.test(monthControl) && row === 0 ? (isRTL ? next : prev) : "") + (/all|right/.test(monthControl) && row === 0 ? (isRTL ? prev : next) : "") + this._generateMonthYearHeader(drawMonth, drawYear, minDate, maxDate, row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
 "</div><table class='oj-datepicker-calendar" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "' tabindex=-1 data-handler='calendarKey' data-event='keydown' aria-readonly='true' role='grid' " + "aria-labelledby='" + this._GetSubId(this.GRID_LABEL_ID) + "'><thead role='presentation'>" + "<tr role='row'>";
         thead = (weekDisplay === "number" ? "<th class='oj-datepicker-week-col'>" + this.options["weekHeader"] + "</th>" : "");
         for (dow = 0;dow < 7;dow++)
@@ -30671,7 +31900,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 (unselectable ? "" : " data-handler='selectDay' data-event='click' data-month='" + printDate.getMonth() + "' data-year='" + printDate.getFullYear() + "'") + ">" + // actions
 (otherMonth && daysOutsideMonth === "hidden" ? "&#xa0;" : // display for other months
 (unselectable || wDisabled ? "<span class='oj-disabled'>" + printDate.getDate() + "</span>" : "<a class='oj-enabled" + (printDate.getTime() === valueDate.getTime() ? " oj-selected" : "") + // highlight selected day
-(otherMonth ? " ui-priority-secondary" : "") + // distinguish dates from other months
+(otherMonth ? " oj-priority-secondary" : "") + // distinguish dates from other months
 "' href='#'>" + printDate.getDate() + "</a>")) + "</td>";// display selectable date
             printDate.setDate(printDate.getDate() + 1);
           }
@@ -30954,7 +32183,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     //need to unwrap always, since was wrapped with a root node [whether it be inline or not]
     this.element.unwrap();
     
-    this.element.removeClass(this.DATE_INPUT_CLASS).removeClass(this.HAS_TRIGGER_CLASS).removeClass(this.INLINE_CLASS).removeClass("oj-disabled");
+    this.element.removeClass(this.INPUT_CLASS).removeClass(this.HAS_TRIGGER_CLASS).removeClass(this.INLINE_CLASS).removeClass("oj-disabled");
     this._dpDiv.remove();
     return retVal;
   },
@@ -31005,7 +32234,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
       my : rtl ? "right top" : "left top", at : rtl ? "right bottom" : "left bottom", of : this.element, collision : "fit"
     });
 
-    this._dpDiv.zIndex(this.element.zIndex() + 1);
     this._datepickerShowing = true;
     this._dpDiv.show();
     this._dpDiv.find(".oj-datepicker-calendar").focus();
@@ -31048,11 +32276,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
       this._dpDiv.hide();
 
       this._datepickerShowing = false;
-
-      this._trigger("close", 
-      {
-        date : this.options['value']
-      });
     }
 
     return this;
@@ -31082,6 +32305,11 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
         }
       }
     }
+    
+    if(this._datepickerShowing) 
+    {
+      this._updateDatepicker();
+    }
   },
   
   _setOption : function __setOption(key, value)
@@ -31091,7 +32319,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     
     if (key === "value")
     {
-      //When a null, undefined, or "" value is passed in set to Today's value unless input element has value
+      //When a null, undefined, or "" value is passed in set to Today's value if element does not have val [otherwise will be resetting due to 
+      //how the framework works]
       if(!value && this.element.val())
       {
         var temp = this._getTodayDate();
@@ -31228,16 +32457,16 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   version : "1.0.0", 
   widgetEventPrefix : "oj", 
   
-  TRIGGER_CLASS : "oj-datepicker-trigger",
+  TRIGGER_CLASS : "oj-inputdatetime-input-trigger",
   TRIGGER_TIME_CLASS : "oj-datepicker-time-icon",
   
   TIME_PICKER_ID : "ojInputTime", 
   
   INPUT_LABELED_BY_ID : "oj-inputtime-input-description",
-  TIME_INPUT_CLASS : "oj-inputtime-input",
+  INPUT_CLASS : "oj-inputdatetime-input",
   HAS_TRIGGER_CLASS : "oj-has-trigger", 
-  WIDGET_CLASS: "oj-inputtime oj-widget",
-  INPUT_CONTAINER_CLASS : "oj-inputtime-input-container",
+  INPUT_CONTAINER_CLASS : "oj-inputdatetime-input-container",
+  WIDGET_CLASS: "oj-inputdatetime-time-only oj-widget",
   
   /** 
    * @private
@@ -31272,17 +32501,6 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
      * @default <code class="prettyprint">"T00:30:00:00"</code>
      */
     timeIncrement : "T00:30:00:00", 
-
-    /**
-     * Handler for timepicker closure
-     * 
-     * @expose
-     * @event
-     * @memberof! oj.ojInputTime
-     * @instance
-     * @default <code class="prettyprint">null</code>
-     */
-    close : null, 
     
     /**
      * Passed when the widget is of ojInputDateTime
@@ -31307,7 +32525,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
    *   </thead>
    *   <tbody>
    *     <tr>
-   *       <td>oj-datepicker-time</td>
+   *       <td>oj-combobox-drop</td>
    *       <td>Time drop down div container</td>
    *     </tr>
    *     <tr>
@@ -31335,7 +32553,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     }
     
     var subId = locator['subId'];
-    if(subId === "oj-datepicker-time")
+    if(subId === "oj-combobox-drop")
     {
       return this._timePickerDisplay;
     }
@@ -31376,6 +32594,9 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     {
       top : "", left : ""
     });
+    
+    //Need to set the width as that is what combobox does
+    this._timePickerDisplay.width(this.element.parent().width());
 
     var rtl = this._IsRTL();
 
@@ -31411,29 +32632,9 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     {
       this._timePickerDisplay.hide();
       this._timepickerShowing = false;
-
-      this._trigger("close", 
-      {
-        date : this.options['value']
-      });
     }
   },
 
-  /** 
-   * Redraws the time drop down
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputTime
-   * @instance
-   */
-  refresh : function __refresh()
-  {
-    this._superApply(arguments);
-    this._generateTime();
-    return this;
-  },
-  
   /** 
    * Returns the time display node
    * 
@@ -31458,6 +32659,21 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   widget : function __widget()
   {
     return !this._containedInDateTimePicker() ? this._rootNode : this._datePicker["widget"].widget();
+  },
+  
+  /** 
+   * Redraws the time drop down
+   * 
+   * @public
+   * @expose 
+   * @memberof! oj.ojInputTime
+   * @instance
+   */
+  refresh : function __refresh()
+  {
+    this._superApply(arguments);
+    this._generateTime();
+    return this;
   },
   
   /**
@@ -31520,7 +32736,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     
     this._datePicker = this.options["datePicker"];
     
-    this._timePickerDisplay = $("<div id='" + this._GetSubId(this.TIME_PICKER_ID) + "' class='oj-datepicker-time oj-widget'></div>");
+    this._timePickerDisplay = $("<div id='" + this._GetSubId(this.TIME_PICKER_ID) + "' class='oj-combobox-drop oj-combobox-display-none'></div>");
     $("body").append(this._timePickerDisplay);
     
     $(document).on("mousedown", $.proxy(this._checkExternalClick, this));
@@ -31557,7 +32773,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       $(this.element).wrap( $( $("<div>").addClass(this.WIDGET_CLASS) ).addClass(this.INPUT_CONTAINER_CLASS) );
       this._rootNode = this.element.parent();
       
-      this.element.addClass(this.TIME_INPUT_CLASS);
+      this.element.addClass(this.INPUT_CLASS);
       
       this._AppendInputDetail(this.element);
     }
@@ -31644,7 +32860,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     {
       $(this).addClass("oj-hover");
     }).on("mousedown", function() 
-        {
+    {
       $(this).addClass("oj-active");
     }).on("mouseleave", function() 
     {
@@ -31753,7 +32969,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   {
 
     var processDate = this._getProcessDate(), 
-        timeNode = $("<ul class='oj-datepicker-time-list' tabindex='-1' role='listbox'></ul>"), 
+        timeNode = $("<ul class='oj-combobox-results' tabindex='-1' role='listbox'></ul>"), 
         selectedDateFormat = this._getFormattedValue(), source = [], i, j;
 
     processDate.setHours(0);
@@ -31768,24 +32984,30 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
 
     for (i = 0, j = source.length;i < j;i++)
     {
-      var value = source[i].value, node = $("<li tabindex='1' class='oj-datepicker-time-list-item' data-value='" + value + "' role='option' id='" + i + "'>" + source[i].label + "</li>");
+      var value = source[i].value,
+          liNode = $("<li class='oj-combobox-result' role='presentation'>"),
+          node = $("<div class='oj-combobox-result-label' data-value='" + value + "' role='option' id='" + this["uuid"] + "_sel" + i + "'>" + source[i].label + "</li>");
 
       if (selectedDateFormat === value)
       {
-        node.attr("aria-selected", "true").addClass("oj-checked oj-active");
+        node.attr("aria-selected", "true");
+        liNode.addClass("oj-combobox-highlighted"); //TODO When combo box changes it's CSS to Jet specific [i.e. oj-checked or something else] make the same change
       }
-
-      timeNode.append(node);
+      
+      liNode.append(node);
+      timeNode.append(liNode);
     }
 
     this._timePickerDisplay.append(timeNode);
 
-    $(".oj-datepicker-time-list-item", timeNode).on("mousemove", function ()
+    $(".oj-combobox-result", timeNode).on("mousemove", function ()
     {
-      $(".oj-active", timeNode).removeClass("oj-active");
-      $(this).addClass("oj-active");
+      $(".oj-combobox-highlighted", timeNode).removeClass("oj-combobox-highlighted"); //TODO When combo box changes it's CSS to Jet specific [i.e. oj-checked or something else] make the same change
       
-      timeNode.attr("aria-activedescendant", this.id);
+      var ref = $(this);
+      ref.addClass("oj-combobox-highlighted");
+      
+      timeNode.attr("aria-activedescendant", ref.first()[0].id);
     });
 
     var self = this;
@@ -31952,16 +33174,17 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   {
     var top = node.position().top, 
         height = this._timePickerDisplay.height(), 
-        scrollTop = this._timePickerDisplay.scrollTop();
+        results = $(".oj-combobox-results", this._timePickerDisplay),
+        scrollTop = results.scrollTop();
 
     if ((height + scrollTop) < top || top < scrollTop)
     {
-      this._timePickerDisplay.scrollTop(top);
+      results.scrollTop(top);
     }
   },
   
   /**
-   * This function will set the oj-active to the next or previous sibling due to key down or key up stroke
+   * This function will set the oj-combobox-highlighted to the next or previous sibling due to key down or key up stroke
    * 
    * @private
    * @param {Event} event
@@ -31969,7 +33192,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
    */
   _processNextPrevSibling : function __processNextPrevSibling(event, prevOrNext)
   {
-    var prevActive = $(".oj-active", this._timePickerDisplay),
+    var prevActive = $(".oj-combobox-highlighted", this._timePickerDisplay),
         ulElement = $("ul", this._timePickerDisplay);
     
     if (prevActive.length === 1)
@@ -31978,9 +33201,9 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       var node = $(prevActive)[prevOrNext]();
       if (node.length === 1)
       {
-        prevActive.removeClass("oj-active");
-        node.addClass("oj-active");
-        ulElement.attr("aria-activedescendant", node[0].id);
+        prevActive.removeClass("oj-combobox-highlighted");
+        node.addClass("oj-combobox-highlighted");
+        ulElement.attr("aria-activedescendant", node.first()[0].id);
         this._checkScrollTop(node);
       }
     }
@@ -31998,16 +33221,23 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     var timePickerDisplay = this._timePickerDisplay, 
         prevSelected = $("[aria-selected]", timePickerDisplay), 
         ulElement = $("ul", timePickerDisplay), 
-        selected = $(".oj-active", timePickerDisplay);
+        selected = $(".oj-combobox-highlighted div", timePickerDisplay);
 
-    if (prevSelected.length !== 1 || selected.length !== 1)
+    if (selected.length !== 1)
     {
       return;
     }
-
-    prevSelected.removeAttr("aria-selected").removeClass("oj-checked");
-    selected.attr("aria-selected", "true").addClass("oj-checked");
-
+    
+    if(prevSelected.length === 1)
+    {
+      prevSelected.removeAttr("aria-selected");
+      prevSelected.parent().removeClass("oj-combobox-highlighted");
+    }
+    
+    selected.attr("aria-selected", "true");
+    selected.parent().addClass("oj-combobox-highlighted");
+    
+    this._SetDisplayValue(selected.attr("data-value"));
     this._SetValue(selected.attr("data-value"));
     ulElement.attr("aria-activedescendant", selected[0].id);
     
@@ -32060,7 +33290,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       this._inputDetail.remove();
     }
 
-    this.element.removeClass(this.TIME_INPUT_CLASS).removeClass(this.HAS_TRIGGER_CLASS).removeClass("oj-disabled");
+    this.element.removeClass(this.INPUT_CLASS).removeClass(this.HAS_TRIGGER_CLASS).removeClass("oj-disabled");
     
     return retVal;
   },
@@ -32096,6 +33326,11 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       {
         filteredChildren.removeClass("oj-disabled").addClass("oj-enabled");
       }
+    }
+    else if(key === "timeIncrement") 
+    {
+      //changing back to original code of invoking _generateTime per discussion
+      this._generateTime();
     }
  
     return retVal;
@@ -32187,9 +33422,7 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
   widgetEventPrefix : "oj",
   
   INPUT_LABELED_BY_ID : "oj-inputdatetime-input-description",
-  DATE_INPUT_CLASS : "oj-inputdatetime-input",
-  WIDGET_CLASS: "oj-inputdatetime oj-widget",
-  INPUT_CONTAINER_CLASS : "oj-inputdatetime-input-container",
+  WIDGET_CLASS: "oj-inputdatetime-date-time oj-widget",
   
   options : 
   {
@@ -32255,6 +33488,21 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
   },
   
   /**
+   * 
+   * @return {Object} jquery object 
+   * 
+   * @override
+   * @expose
+   * @memberof! oj.ojInputDateTime
+   * @instance
+   * @protected
+   */
+  _GetMessagingTriggerElement : function ()
+  {
+    return !this.isInLine() ? this._super() : this._timePickerElement;
+  },
+  
+  /**
    * @override
    * @protected
    * @return {string}
@@ -32308,7 +33556,7 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
     
     //Now need to reset this.element to the newly created input element as the time trigger addition is based upon this.element
     this._timePickerElement = input;
-    input.addClass(this.DATE_INPUT_CLASS);
+    input.addClass(this.INPUT_CLASS);
     
     //Need to wrap the newly created input element
     this._wrapInputElement();
@@ -32513,77 +33761,294 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
   
   _setOption : function __setOption(key, value)
   {
-
-    if (key === "timeIncrement")
+    
+    if(this._timePicker) 
     {
-      this._timePicker.ojInputTime("option", key, value);
+      if (key === "timeIncrement" || key === "disabled")
+      {
+        this._timePicker.ojInputTime("option", key, value);
+      }
+      else if (key === "converter")
+      {
+        this._timePicker.ojInputTime("option", key, this._getTimePickerConverter(value));
+      }
     }
-    else if (key === "converter")
-    {
-      this._timePicker.ojInputTime("option", key, this._getTimePickerConverter(value));
-    }
-
+    
     return this._superApply(arguments);
   }
 
 });
+/**
+ * @export
+ * @class oj.FlattenedTreeRowSet
+ * @classdesc RowSet wrapper for FlattenedTreeDataSource
+ * 
+ * @param {oj.FlattenedTreeDataSource} data oj.FlattenedTreeDataSource
+ * @param {Object=} options Passed through to the user's initialize routine, if any, upon construction 
+ * @constructor
+ */
+oj.FlattenedTreeRowSet = function(data, options) 
+{
+  // Initialize
+  oj.FlattenedTreeRowSet._init(this, data, options);
+};
+
+// Subclass from oj.FlattenedTreeDataSource
+oj.Object.createSubclass(oj.FlattenedTreeRowSet, oj.RowSet, "oj.FlattenedTreeRowSet");
+
+/**
+ * Initializes the data source.
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.Init = function()
+{
+    oj.FlattenedTreeRowSet.superclass.Init.call(this);
+};
+
+oj.FlattenedTreeRowSet._init = function(rowSet, data, options) 
+{
+  rowSet._eventHandlers = [];
+  rowSet._startIndex = 0;
+  
+  rowSet.Init();
+  rowSet._data = data;
+  //rowSet._addCollectionEventListeners();
+};
+
+/**
+ * Add an instance of this RowSet's Row(s) to the end of the RowSet.
+ * @param {oj.Row} row Row object
+ * @param {Object=} options at: splice the new Row into the RowSet at the value given (at:index) <p>
+ *                          deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * 
+ * @returns {Object} if deferred or virtual, return a promise when the set has completed
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.add = function(row, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Return the Row object found at the given index of the RowSet, or a promise object that will return the Row to a function
+ * in the done() call.
+ * 
+ * @param {number} index Index for which to return the Row object. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting <p>
+ *                  deferred: if true, return a deferred/promise object as described below.  If not specified, the return value will
+ *                   be determined by whether or not the RowSet is virtual
+ * @return {Object} Row object located at index. If index is out of range, returns null.  If this is a paging/virtual RowSet or
+ *                  if deferred is specified and true, at will return a jQuery promise object which will call its done function,
+ *                  passing the value at(index) 
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.at = function(index, options)
+{
+  var nodeSet = this._currentNodeSet;
+  var startIndex = nodeSet.getStart();
+  return new oj.ArrayRow(nodeSet.getData(startIndex + index));
+};
+
+/**
+ * @export
+ * Return a copy of the RowSet
+ * @return {Object} copy of the RowSet
+ */
+oj.FlattenedTreeRowSet.prototype.clone = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Fetch the RowSet data.
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeRowSet
+ * @instance
+ */
+oj.FlattenedTreeRowSet.prototype.fetch = function(options)
+{
+  options = options || {};
+  if (options['startIndex'] != null)
+  {
+    this._startIndex = options['startIndex'];
+  }
+  var rangeOption = {'start': this._startIndex, 'count':  30};
+  this._data.fetchRows(rangeOption,
+    {
+      "success": function(nodeSet)
+      {
+        this._handleFetchRowsSuccess(nodeSet);
+      }.bind(this),
+      "error": function(status)
+      {
+        //this._handleFetchRowsError(status, {'start': rowStart, 'count': rowCount}, callbacks, callbackObjects);
+      }.bind(this)
+    }
+  ); 
+};
+
+/**
+ * Return the first Row object from the RowSet whose Row id value is the given id
+ * Note this method will not function as expected if the id is not set
+ * @param {Object|string} id ID for which to return the Row object, if found. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting<p>
+ *                  deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * @return {Object} First Row object in the RowSet where Row.id = id. If none are found, returns null.
+ *                  If deferred or virtual, return a promise passing the Row when done
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.get = function(id, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @return {boolean} whether there is more data
+ */
+oj.FlattenedTreeRowSet.prototype.hasMore = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return false;
+};
+
+/**
+ * Return the array index location of the given Row object.
+ * @param {Object} row Row object to locate 
+ * @param {Object=} options deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ 
+ * @return {number} The index of the given Row object, or a promise that will call with the index when complete.
+ *                  If the object is not found, returns -1.
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.indexOf = function(row, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return 0;
+};
+
+/**
+ * @export
+ * Determine if the RowSet has any Rows
+ * 
+ * @returns {boolean} true if RowSet is empty
+ */
+oj.FlattenedTreeRowSet.prototype.isEmpty = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return true;
+};
+
+/**
+ * Remove a Row from the RowSet, if found.
+ * @param {oj.Row} row Row object
+ * @param {Object=} options silent: if set, do not fire a remove event 
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.remove = function(row, options)
+{
+  oj.Assert.failedInAbstractFunction();
+};
+
+/**
+ * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
+ * @param {Object=} data Array of Row objects with which to replace the RowSet's data. 
+ * @param {Object=} options user options, passed to event
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.reset = function(data, options)
+{
+  oj.Assert.failedInAbstractFunction();
+};
+
+/**
+ * @export
+ * Return the length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.FlattenedTreeRowSet.prototype.size = function()
+{ 
+  return this._currentNodeSet == null ? 0 : this._currentNodeSet.getCount();
+};
+
+/**
+ * @export
+ * Sort the Rows in the RowSet
+ * 
+ * @param {Object=} options
+ */
+oj.FlattenedTreeRowSet.prototype.sort = function(options)
+{
+  oj.Assert.failedInAbstractFunction();
+};
+
+/**
+ * @export
+ * Return current start index.
+ * @returns {number} start index
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeRowSet.prototype.startIndex = function() {
+  return 0;
+};
+
+/**
+ * @export
+ * Return the total length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.FlattenedTreeRowSet.prototype.totalSize = function()
+{
+  return -1;
+};
+
+oj.FlattenedTreeRowSet.prototype._handleFetchRowsSuccess = function(nodeSet)
+{
+  this._currentNodeSet = nodeSet;
+  var i;
+  var nodeCount = nodeSet.getCount();
+  var startIndex = nodeSet.getStart();
+  for (i = 0; i < nodeCount; i++)
+  {
+    oj.FlattenedTreeRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'row': new oj.ArrayRow(nodeSet.getData(i), {'context': nodeSet.getMetadata(i)}), 'rowIdx': startIndex + i});
+  }
+};
 /*jslint browser: true,devel:true*/
 /**
  * @export
  * @class oj.TableDataSource
- * @classdesc Object representing data used by table component
- * @param {Array|Object|function():Array} data data supported by the components
+ * @classdesc Abstract object representing data used by table component
+ * @param {Object} data data supported by the components
  * @param {Object|null} options Array of options for the TableDataSource
  * @constructor
  */
 oj.TableDataSource = function(data, options)
 {
-  // Initialize
-  if (!(data instanceof Array) &&
-      !(data instanceof oj.RowSet) &&
-      !(data instanceof oj.Collection) &&
-      (typeof (data) != 'function' &&
-       typeof (data.subscribe) != 'function'))
+  if (this.constructor == oj.TableDataSource)
   {
-    // we only support Array, oj.Collection, oj.RowSet, or ko.observableArray. To
-    // check for observableArray, we can't do instanceof check because it's
-    // a function. So we just check if it contains a subscribe function.
-    var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
-    var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
+    // This should only be called by the constructors of the subclasses. If you need
+    // to initialize a new TableDataSource then call the constructors of the subclasses such
+    // as oj.ArrayTableDataSource or oj.CollectionTableDataSource.
+    var errSummary = oj.Translations.getTranslatedString('oj-ojTable.tableDataSourceInstantiated.summary');
+    var errDetail = oj.Translations.getTranslatedString('oj-ojTable.tableDataSourceInstantiated.detail');
     throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
   }
+  // Initialize
   this.data = data;
-  this._options = options;
+  this.options = options;
   this._startIndex = 0;
-
-  if (data instanceof oj.Collection)
-  {
-    this._rowSet = new oj.CollectionRowSet(data, this._options);
-    this._addRowSetEventListeners();
-  }
-  else if (data instanceof oj.RowSet)
-  {
-    this._rowSet = data;
-    this._addRowSetEventListeners();
-  }
-  else
-  {
-    this._rowSet = new oj.RowSet(/** @type Array */ (data), this._options);
-    this._addRowSetEventListeners();
-  }
-
   this.Init();
-
-  if ((options != null && (options['startFetch'] == 'enabled' || options['startFetch'] == null))
-    || options == null)
-  {
-    // do an initial fetch
-    var self = this;
-    setTimeout(function()
-    {
-      self.fetch({'startFetch': 'enabled'});
-    }, 0);
-  }
 };
 
 // Subclass from oj.DataSource 
@@ -32599,22 +34064,6 @@ oj.TableDataSource.prototype.Init = function()
 };
 
 /**
- * Add an instance of oj.Row to the end of the RowSet.
- * @param {Object|Array} m Row object (or array of rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add().
- * @param {Object=} options silent: if set, do not fire an add event<p>
- *                          at: splice the new Row into the RowSet at the value given (at:index) <p>
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.TableDataSource
- * @instance
- */
-oj.TableDataSource.prototype.add = function(m, options)
-{
-  this._rowSet.add(m, options);
-};
-
-/**
  * Return the oj.Row object found at the given index of the RowSet.
  * 
  * @param {number} index Index for which to return the Row object. 
@@ -32627,7 +34076,8 @@ oj.TableDataSource.prototype.add = function(m, options)
  */
 oj.TableDataSource.prototype.at = function(index)
 {
-  return this._rowSet.at(index);
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -32641,26 +34091,7 @@ oj.TableDataSource.prototype.at = function(index)
  */
 oj.TableDataSource.prototype.fetch = function(options)
 {
-  options = options || {};
-  if (options['startIndex'] != null)
-  {
-    this._startIndex = options['startIndex'];
-  }
-  var data = this.data;
-
-  if (options['startFetch'] == 'enabled')
-  {
-    // only do an initial fetch if collection is empty
-    if (this._rowSet.isEmpty() ||
-      (typeof this._rowSet.size() === 'undefined'))
-    {
-      this._rowSet.fetch(options);
-    }
-  }
-  else
-  {
-    this._rowSet.fetch(options);
-  }
+  oj.Assert.failedInAbstractFunction();
 };
 
 /**
@@ -32675,7 +34106,8 @@ oj.TableDataSource.prototype.fetch = function(options)
  */
 oj.TableDataSource.prototype.get = function(id)
 {
-  return this._rowSet.get(id);
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -32688,10 +34120,7 @@ oj.TableDataSource.prototype.get = function(id)
  */
 oj.TableDataSource.prototype.hasMore = function()
 {
-  if (this._rowSet != null)
-  {
-    return this._rowSet.hasMore();
-  }
+  oj.Assert.failedInAbstractFunction();
   return false;
 };
 
@@ -32707,37 +34136,8 @@ oj.TableDataSource.prototype.hasMore = function()
  */
 oj.TableDataSource.prototype.indexOf = function(row)
 {
-  return this._rowSet.indexOf(row);
-};
-
-/**
- * Remove a Row from the RowSet, if found.
- * @param {Object|Array} m oj.Row object or array of Rows to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.TableDataSource
- * @instance
- */
-oj.TableDataSource.prototype.remove = function(m, options)
-{
-  this._rowSet.remove(m, options);
-};
-
-/**
- * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
- * @param {Object=} data Array of Row objects or attribute/value pair objects with which to replace the RowSet's data. 
- * @param {Object=} options user options, passed to event
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.TableDataSource
- * @instance
- */
-oj.TableDataSource.prototype.reset = function(data, options)
-{
-  this._rowSet.reset(data, options);
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -32751,7 +34151,8 @@ oj.TableDataSource.prototype.reset = function(data, options)
  */
 oj.TableDataSource.prototype.size = function()
 {
-  return this._rowSet.size();
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -32766,19 +34167,24 @@ oj.TableDataSource.prototype.size = function()
  */
 oj.TableDataSource.prototype.sort = function(comparator, options)
 {
-  this._rowSet['comparator'] = comparator;
-  this._rowSet.sort(options);
+  oj.Assert.failedInAbstractFunction();
 };
 
 /**
  * @export
- * Return current start index.
+ * Get or set the current start index.
+ * @param {number} startIndex start index
  * @returns {number} start index
  * @expose
  * @memberof! oj.TableDataSource
  * @instance
  */
-oj.TableDataSource.prototype.startIndex = function() {
+oj.TableDataSource.prototype.startIndex = function(startIndex) 
+{
+  if (startIndex != null)
+  {
+    this._startIndex = startIndex;
+  }
   return this._startIndex;
 };
 
@@ -32792,42 +34198,9 @@ oj.TableDataSource.prototype.startIndex = function() {
  */
 oj.TableDataSource.prototype.totalSize = function()
 {
-  return this._rowSet.totalSize();
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
-
-/**
- * Add event listeners to the RowSet
- * @private
- */
-oj.TableDataSource.prototype._addRowSetEventListeners = function()
-{
-  var self = this;
-  this._rowSet.on(oj.RowSet.EventType['ADD'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['REMOVE'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['RESET'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['SORT'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['CHANGE'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['DESTROY'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['SYNC'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SYNC'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['ERROR'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
-  });
-};
-
 /*jslint browser: true,devel:true*/
 /**
  * @export
@@ -32841,11 +34214,8 @@ oj.PagingTableDataSource = function(dataSource, options)
 {
   // Initialize
   options = options || {};
-  if (!(dataSource instanceof oj.TableDataSource) &&
-    !(dataSource instanceof Array) &&
-    !(dataSource instanceof oj.Collection) &&
-    (typeof (dataSource) != 'function' &&
-      typeof (dataSource.subscribe) != 'function'))
+  
+  if (!(dataSource instanceof oj.TableDataSource))
   {
     // we only support Array, oj.Collection, or ko.observableArray. To
     // check for observableArray, we can't do instanceof check because it's
@@ -32853,11 +34223,6 @@ oj.PagingTableDataSource = function(dataSource, options)
     var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
     var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
     throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
-  }
-  if (!(dataSource instanceof oj.TableDataSource))
-  {
-    options['startFetch'] = 'disabled';
-    dataSource = new oj.TableDataSource(dataSource, options);
   }
   this.dataSource = dataSource;
   this._startIndex = 0;
@@ -32959,24 +34324,6 @@ oj.PagingTableDataSource.prototype.startIndex = function() {
 /**** start delegated functions ****/
 
 /**
- * Add an instance of this collection's model(s) to the end of the collection.
- * @param {Object|Array} m Model object (or array of models) to add. These can be already-created instance of the oj.Model object, or sets of attribute/values, which will be wrapped by add() using the collection's model.
- * @param {Object=} options silent: if set, do not fire an add event<p>
- *                          at: splice the new model into the collection at the value given (at:index) <p>
- *                          merge: if set, and if the given model already exists in the collection (matched by id), then merge the attribute/value sets, firing change events<p>
- *                          sort: if set, do not re-sort the collection even if the comparator is set. 
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.PagingTableDataSource
- * @instance
- */
-oj.PagingTableDataSource.prototype.add = function(m, options)
-{
-  return this.dataSource.add(m, options);
-};
-
-/**
  * Return the model object found at the given index of the collection.
  * 
  * @param {number} index Index for which to return the model object. 
@@ -33060,36 +34407,6 @@ oj.PagingTableDataSource.prototype.off = function(eventType, eventHandler)
 };
 
 /**
- * Remove a model from the collection, if found.
- * @param {Object|Array} m Model object or array of Models to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.PagingTableDataSource
- * @instance
- */
-oj.PagingTableDataSource.prototype.remove = function(m, options)
-{
-  this.dataSource.remove(m, options);
-};
-
-/**
- * Remove and replace the collection's entire list of models with a new set of models, if provided. Otherwise, empty the collection.
- * @param {Object=} data Array of model objects or attribute/value pair objects with which to replace the collection's data. 
- * @param {Object=} options user options, passed to event
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.PagingTableDataSource
- * @instance
- */
-oj.PagingTableDataSource.prototype.reset = function(data, options)
-{
-  this.dataSource.reset(data, options);
-};
-
-/**
  * @export
  * Return the size of the data locally in the dataSource. -1 if an initial fetch has not been
  * done yet.
@@ -33140,6 +34457,276 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
 /**** end delegated functions ****/
 
+/*jslint browser: true,devel:true*/
+/**
+ * @export
+ * @class oj.ArrayTableDataSource
+ * @classdesc Object representing data used by table component
+ * @param {Array|Object|function():Array} data data supported by the components
+ * @param {Object|null} options Array of options for the TableDataSource
+ * @constructor
+ */
+oj.ArrayTableDataSource = function(data, options)
+{
+  // Initialize
+  if (!(data instanceof Array) &&
+      (typeof (data) != 'function' &&
+       typeof (data.subscribe) != 'function'))
+  {
+    // we only support Array or ko.observableArray. To
+    // check for observableArray, we can't do instanceof check because it's
+    // a function. So we just check if it contains a subscribe function.
+    var errSummary = oj.Translations.getTranslatedString('oj-ojTable.dataInvalidType.summary');
+    var errDetail = oj.Translations.getTranslatedString('oj-ojTable.dataInvalidType.detail');
+    throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
+  }
+
+  oj.ArrayTableDataSource.superclass.constructor.call(this, data, options);
+
+  this._rowSet = new oj.ArrayRowSet(/** @type Array */ (data), this.options);
+  this._addRowSetEventListeners();
+
+  if ((options != null && (options['startFetch'] == 'enabled' || options['startFetch'] == null))
+    || options == null)
+  {
+    // do an initial fetch
+    var self = this;
+    setTimeout(function()
+    {
+      self.fetch({'startFetch': 'enabled'});
+    }, 0);
+  }
+};
+
+// Subclass from oj.DataSource 
+oj.Object.createSubclass(oj.ArrayTableDataSource, oj.TableDataSource, "oj.ArrayTableDataSource");
+
+/**
+ * Initializes the instance.
+ * @export
+ */
+oj.ArrayTableDataSource.prototype.Init = function()
+{
+  oj.ArrayTableDataSource.superclass.Init.call(this);
+};
+
+/**
+ * Add an instance of oj.Row to the end of the RowSet.
+ * @param {Object} m Row object (or array of rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add().
+ * @param {Object=} options silent: if set, do not fire an add event<p>
+ *                          at: splice the new Row into the RowSet at the value given (at:index) <p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.add = function(m, options)
+{
+  this._rowSet.add(m, options);
+};
+
+/**
+ * Return the oj.Row object found at the given index of the RowSet.
+ * 
+ * @param {number} index Index for which to return the Row object. 
+ * @return {Object} oj.Row object located at index. If index is out of range, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.at = function(index)
+{
+  return this._rowSet.at(index);
+};
+
+/**
+ * Fetch the RowSet data.
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.fetch = function(options)
+{
+  options = options || {};
+  if (options['startIndex'] != null)
+  {
+    oj.ArrayTableDataSource.superclass.startIndex.call(this, options['startIndex']);
+  }
+  var data = this.data;
+
+  if (options['startFetch'] == 'enabled')
+  {
+    // only do an initial fetch if collection is empty
+    if (this._rowSet.isEmpty() ||
+      (typeof this._rowSet.size() === 'undefined'))
+    {
+      this._rowSet.fetch(options);
+    }
+  }
+  else
+  {
+    this._rowSet.fetch(options);
+  }
+};
+
+/**
+ * Return the first oj.Row object from the RowSet whose Row id value is the given id
+ * @param {string} id ID for which to return the Row object, if found. 
+ * @return {Object} First Row object in the RowSet where Row.id = id. If none are found, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.get = function(id)
+{
+  return this._rowSet.get(id);
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @returns {boolean} whether there is more data
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.hasMore = function()
+{
+  if (this._rowSet != null)
+  {
+    return this._rowSet.hasMore();
+  }
+  return false;
+};
+
+/**
+ * Return the array index location of the given Row object.
+ * @param {Object} row oj.Row object to locate 
+ * @return {number} The index of the given Row object. If the object is not found, returns -1.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.indexOf = function(row)
+{
+  return this._rowSet.indexOf(row);
+};
+
+/**
+ * Remove a Row from the RowSet, if found.
+ * @param {Object} m oj.Row object or array of Rows to remove. 
+ * @param {Object=} options silent: if set, do not fire a remove event 
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.remove = function(m, options)
+{
+  this._rowSet.remove(m, options);
+};
+
+/**
+ * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
+ * @param {Object=} data Array of Row objects or attribute/value pair objects with which to replace the RowSet's data. 
+ * @param {Object=} options user options, passed to event
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.reset = function(data, options)
+{
+  this._rowSet.reset(data, options);
+};
+
+/**
+ * @export
+ * Get the length of the RowSet.
+ * limit it.
+ * @returns {number} length of the RowSet
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.size = function()
+{
+  return this._rowSet.size();
+};
+
+/**
+ * Sort the Rows in the RowSet
+ * @param {Object=} comparator
+ * @param {Object=} options silent: if true, do not fire the sort event
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.sort = function(comparator, options)
+{
+  this._rowSet['comparator'] = comparator;
+  this._rowSet.sort(options);
+};
+
+/**
+ * @export
+ * Return the total size of data available, including server side if not local.
+ * @returns {number} total size of data
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.totalSize = function()
+{
+  return this._rowSet.totalSize();
+};
+
+/**
+ * Add event listeners to the RowSet
+ * @private
+ */
+oj.ArrayTableDataSource.prototype._addRowSetEventListeners = function()
+{
+  var self = this;
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ADD'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['REMOVE'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['RESET'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SORT'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['CHANGE'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['DESTROY'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SYNC'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SYNC'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ERROR'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
+  });
+};
 /**
  * The ojTable component enhances a HTML table element into one that supports all
  * the features in JET Table.
@@ -33399,7 +34986,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            *   <li>data: The cell data</li>
            *   <li>column: The column object</li>
            *   <li>component: Instance of the component</li>
-           *   <li>dataSource: Instance of the dataSource used by the table </li>
+           *   <li>datasource: Instance of the datasource used by the table </li>
            *   <li>row: Key/value pairs of the row</li>
            *   <li>status: Contains the rowIndex, rowKey, and activeRow</li>
            *   <li>parentElement: Empty rendered <td> element</li>
@@ -33443,8 +35030,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           /** 
            * The data to bind to the component. 
            * <p>
-           * Can be of type oj.TableDataSource {@link oj.TableDataSource} 
-           * or oj.Collection {@link oj.Collection}.
+           * Must be of type oj.TableDataSource {@link oj.TableDataSource}
            * @expose 
            * @public 
            * @instance
@@ -33459,7 +35045,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            * <ul>
            *   <li>component: Instance of the component</li>
            *   <li>parentElement: Empty rendered TFOOT element</li>
-           *   <li>dataSource: Instance of the dataSource used by the table </li>
+           *   <li>datasource: Instance of the datasource used by the table </li>
            * </ul>
            * The function returns either a String or 
            * a DOM element of the content inside the footer. If the developer chooses 
@@ -33765,7 +35351,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           _TABLE_DATA_CELL_HGRID_LINES_CLASS:             'oj-table-data-cell-hgrid-lines',
           _TABLE_STATUS_MESSAGE_CLASS:                    'oj-table-status-message',
           _TABLE_NO_DATA_MESSAGE_CLASS:                   'oj-table-no-data-message',
-          _WIDGET_ICON_CLASS:                             'oj-widget-icon'
+          _WIDGET_ICON_CLASS:                             'oj-widget-icon',
+          _HIDDEN_CONTENT_ACC_CLASS:                      'oj-helper-hidden-accessible'
         },
       /**
        * @private
@@ -33846,49 +35433,31 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         if (index != null)
         {
-          var m = null;
-          // we need to set the active row
-          if (index != -1)
+          if (this._activeRowIndex != index)
           {
-            m = data.at(index);
-          }
-
-          if ((index == -1) || (m != null))
-          {
-            if (this._activeRow != m)
+            // if new active row is different from the existing one then trigger
+            // an event
+            var oldIndex = this._activeRowIndex;
+            try
             {
-              // if new active row is different from the existing one then trigger
-              // an event
-              var oldActiveRow = this._activeRow;
-              var oldIndex = oldActiveRow == null ? -1 : this._getData().indexOf(oldActiveRow);
-              try
-              {
-                this._trigger('preactiverow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
-              }
-              catch (err)
-              {
-                // caught an error. Do not change active row
-                var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_SUMMARY);
-                var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_DETAIL, err.toString());
-                throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
-              }
-              this._activeRow = m;
-              this._trigger('activerow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
-              this._setRowFocus(index, true, null);
+              this._trigger('preactiverow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
             }
-            return index;
+            catch (err)
+            {
+              // caught an error. Do not change active row
+              var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_SUMMARY);
+              var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_DETAIL, err.toString());
+              throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
+            }
+            this._activeRowIndex = index;
+            this._trigger('activerow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
+            this._setRowFocus(index, true, null);
           }
-          else
-          {
-            // index is unavailable
-            var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_ACTIVEROW_UNAVAILABLE_INDEX_SUMMARY);
-            var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_ACTIVEROW_UNAVAILABLE_INDEX_DETAIL, index.toString());
-            throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
-          }
+          return index;
         }
-        else if (this._activeRow != null)
+        else if (this._activeRowIndex != null)
         {
-          return data.indexOf(this._activeRow);
+          return this._activeRowIndex;
         }
 
         return -1;
@@ -34298,6 +35867,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         // create all of our DOM. These _create* calls create skeleton DOM elements
         // the content is populated later.
         this._createTableContainer();
+        // create the context menu
+        this._createContextMenu();
         // we only need a scroller div if we are using fallback scrolling
         if (this._useFallbackScrolling)
         {
@@ -34308,7 +35879,10 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         {
           this._createTableHeader();
         }
-        this._createTableFooter();
+        if (!this._isTableFooterless())
+        {
+          this._createTableFooter();
+        }
         this._createTableBody();
         this._createTableNoDataMessage();
         this._createTableStatusMessage();
@@ -34510,7 +36084,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           /**
            * invoke a sort on the column data when the mouse clicks the ascending link
            */
-          'mousedown .oj-table-column-header-asc-link': function(event)
+          'click .oj-table-column-header-asc-link': function(event)
           {
             this._checkFocus();
             var columnIdx = this._getElementColumnIdx($(event.target));
@@ -34521,7 +36095,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           /**
            * invoke a sort on the column data when the mouse clicks the descending link
            */
-          'mousedown .oj-table-column-header-dsc-link': function(event)
+          'click .oj-table-column-header-dsc-link': function(event)
           {
             this._checkFocus();
             var columnIdx = this._getElementColumnIdx($(event.target));
@@ -34534,7 +36108,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            * Ctrl + click results in selection and focus. Plain click results in focus.
            * Plain click on a selected row removes the selection.
            */
-          'mousedown .oj-table-data-cell': function(event)
+          'click .oj-table-data-cell': function(event)
           {
             this._checkFocus();
             // get the row index of the cell element
@@ -34580,7 +36154,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            * set the column header selection and focus. Plain click results in
            * focus and selection. If Ctrl is not pressed then we have single column selection.
            */
-          'mousedown .oj-table-column-header': function(event)
+          'click .oj-table-column-header': function(event)
           {
             this._checkFocus();
             // get the column index
@@ -34630,24 +36204,11 @@ oj.PagingTableDataSource.prototype.totalSize = function()
        */
       _refresh: function()
       {
-        if (this._isColumnMetadataUpdated())
+        var self = this;
+        setTimeout(function()
         {
-          this._clearCachedMetadata();
-          this._refreshTableHeader();
-        }
-        this._refreshTableFooter();
-        var dataMetadataUpdated = false;
-        if (this._isDataMetadataUpdated())
-        {
-          dataMetadataUpdated = true;
-          this._clearCachedDataMetadata();
-        }
-        this._refreshTableBody();
-        this._refreshTableDimensions();
-        if (dataMetadataUpdated)
-        {
-          this._registerDataSourceEventListeners();
-        }
+          self._refreshAll()
+        }, 0);
       },
       /**
        * @override
@@ -35039,19 +36600,16 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         if (!this._data && this.options.data != null)
         {
           var data = this.options.data;
-          if (data instanceof oj.Collection)
-          {
-            this._data = new oj.TableDataSource(data, null);
-          }
-          else if (data instanceof oj.TableDataSource ||
-                   data instanceof oj.PagingTableDataSource)
+          if (data instanceof oj.TableDataSource ||
+              data instanceof oj.PagingTableDataSource)
           {
             this._data = data;
           }
           else
           {
-            var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_DATA_INVALID_TYPE_SUMMARY);
-            var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_DATA_INVALID_TYPE_DETAIL);
+            // we only support TableDataSource
+            var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
+            var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
             throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
           }
           this._dataMetadata = this.options.data;
@@ -35113,6 +36671,27 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         {
           return null;
         }
+      },
+      /**
+       * Find the first ancestor of an element with a specific class name
+       * @param {jQuery} element the element to find the nearest class name to
+       * @param {string} className the class name to look for
+       * @return {jQuery|null} the element with the className, if there is none returns null 
+       * @private	 
+       */
+      _getFirstAncestor: function(element, className) {
+        var parents;
+        
+        if (element.hasClass(className))
+        {
+          return element;
+        }
+        parents = element.parents('.' + className);
+        if (parents.length != 0)
+        {
+          return parents.eq(0);
+        }
+        return null;
       },
       /**
        * Get the focused column header index
@@ -35405,6 +36984,35 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return null;
       },
       /**
+       * Get the context object to pass into the renderer
+       * @param {Object} row  oj.Row instance
+       * @param {Object} parentElement element
+       * @private
+       */
+      _getRendererContextObject: function(row, parentElement)
+      {
+        var context = [];
+        context['component'] = this;
+        context['datasource'] = this._getData();
+        context['parentElement'] = parentElement;
+      
+        if (row != null)
+        {
+          context['status'] = this._getRendererStatusObject(row);
+          var rowContext = row.context;
+          var i;
+          for (i in rowContext)
+          {
+            if (rowContext.hasOwnProperty(i))
+            {
+              context[i] = rowContext[i];
+            }
+          }
+        }
+        
+        return context;
+      },
+      /**
        * Get the status object to pass into the renderer
        * @param {Object} row  oj.Row instance
        * @return {Object} status object
@@ -35413,7 +37021,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       _getRendererStatusObject: function(row)
       {
         return {'rowIndex': this._getData().indexOf(row),
-          'rowKey': row.id,
+          'rowKey': row['id'],
           'activeRow': this['activeRow']()};
       },
       /**
@@ -35474,6 +37082,73 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return 0;
       },
       /**
+       * Handle an ojbeforeshow event on the context menu. Set the position correctly for keyboard events and store the Keyboard/Mouse event that called the context menu
+       * @private	 
+       */
+      _handleContextMenuBeforeShow: function(event, ui)
+      {
+        var contextMenu = this._getContextMenu();
+
+        this._contextMenuEvent = event['originalEvent']['originalEvent'];
+        if (this._contextMenuEvent['type'] === 'keydown')
+        {
+          contextMenu.ojMenu("option", "menuPosition", {"my": "left top", "at": "left bottom", "of": this.contextMenuEvent['target']});
+        }
+        else
+        {
+          contextMenu.ojMenu("option", "menuPosition", {"my": "left top", "at": "left bottom"});
+        }
+        
+        var headerColumn = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-column-header');
+        var tableBodyCell = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-data-cell');
+        
+        if (tableBodyCell != null)
+        {
+          var columnIdx = this._getElementColumnIdx(tableBodyCell);
+          headerColumn = this._getTableHeaderColumn(columnIdx);
+        }
+
+        if (headerColumn.attr('data-oj-sortable') == this._OPTION_ENABLED)
+        {
+          this._getContextMenu().find('[data-oj-command=oj-table-sortAsc]').removeClass('oj-disabled');
+          this._getContextMenu().find('[data-oj-command=oj-table-sortDsc]').removeClass('oj-disabled');
+        }
+        else
+        {
+          this._getContextMenu().find('[data-oj-command=oj-table-sortAsc]').addClass('oj-disabled');
+          this._getContextMenu().find('[data-oj-command=oj-table-sortDsc]').addClass('oj-disabled');
+        }
+      },
+      /**
+       * Handle an ojselect event on a menu item, if sort call the handler on the core.
+       * If resize prompt the user with a dialog box
+       * @private	 
+       */
+      _handleContextMenuSelect: function(event, ui)
+      {
+        var menuItemCommand = ui.item.attr('data-oj-command');
+        var headerColumn = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-column-header');
+        var tableBodyCell = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-data-cell');
+        var columnIdx = null;
+        
+        if (headerColumn != null)
+        {
+          columnIdx = this._getElementColumnIdx(headerColumn);
+        }
+        if (tableBodyCell != null)
+        {
+          columnIdx = this._getElementColumnIdx(tableBodyCell);
+        }
+        if (menuItemCommand == 'oj-table-sortAsc')
+        {
+          this._handleSortTableHeaderColumn(columnIdx, true);
+        }
+        else if (menuItemCommand == 'oj-table-sortDsc')
+        {
+          this._handleSortTableHeaderColumn(columnIdx, false);
+        }
+      },
+      /**
        * Callback handler for data error.
        * @param {Object} error 
        * @private
@@ -35525,13 +37200,19 @@ oj.PagingTableDataSource.prototype.totalSize = function()
        * Callback handler for rows added into the datasource. Refresh the DOM
        * at the row index and refresh the table dimensions to accomodate the new
        * row
-       * @param {Object} row  oj.Row instance
+       * @param {Object} event
        * @private
        */
-      _handleDataRowAdd: function(row)
+      _handleDataRowAdd: function(event)
       {
+        var rowIdx = event['rowIdx'];
+        var row = event['row'];
+        
+        if (rowIdx == null)
+        {
+          rowIdx = this._getData().indexOf(row);
+        }
         this._hideStatusMessage();
-        var rowIdx = this._getData().indexOf(row);
         this._refreshTableBodyRow(rowIdx, row);
         // refresh the rowIdx of all remaining rows
         this._refreshTableBodyRowIdxs();
@@ -35541,13 +37222,19 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       /**
        * Callback handler for row change in the datasource. Refresh the changed
        * row.
-       * @param {Object} row  oj.Row instance 
+       * @param {Object} event
        * @private
        */
-      _handleDataRowChange: function(row)
+      _handleDataRowChange: function(event)
       {
+        var rowIdx = event['rowIdx'];
+        var row = event['row'];
+        
+        if (rowIdx == null)
+        {
+          rowIdx = this._getData().indexOf(row);
+        }
         this._hideStatusMessage();
-        var rowIdx = this._getData().indexOf(row);
         this._refreshTableBodyRow(rowIdx, row);
         this._refreshTableDimensions();
       },
@@ -35556,11 +37243,12 @@ oj.PagingTableDataSource.prototype.totalSize = function()
        * table body by searching for the matching rowKey. New rows will have null rowKey.
        * After removing the row, refresh all the remaining row indexes since
        * they will have shifted. Lastly, refresh the table dimensions
-       * @param {Object} row  oj.Row instance
+       * @param {Object} event
        * @private
        */
-      _handleDataRowRemove: function(row)
+      _handleDataRowRemove: function(event)
       {
+        var row = event['row'];
         this._hideStatusMessage();
         var rowKey = row.id;
 
@@ -36145,6 +37833,21 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return false;
       },
       /**
+       * Returns whether the table is footerless
+       * @return {boolean} true or false
+       * @private
+       */
+      _isTableFooterless: function()
+      {
+        var footerRenderer = this.options['footerRenderer'];
+
+        if (footerRenderer)
+        {
+          return false;
+        }
+        return true;
+      },
+      /**
        * Return whether styling has been applied to set the table height
        * @return {boolean} true or false
        * @private
@@ -36202,6 +37905,15 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return true;
       },
       /**
+       * Returns whether the table header columns were rendered
+       * @return {boolean} true or false
+       * @private
+       */
+      _isTableHeaderColumnsRendered: function()
+      {
+        return this._renderedTableHeaderColumns == true;
+      },
+      /**
        * Return whether the component is in table navigation mode
        * @return {boolean} true or false
        * @private
@@ -36209,6 +37921,33 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       _isTableNavigationMode: function()
       {
         return this._tableNavMode;
+      },
+      /**
+       * @override
+       * @private
+       */
+      _refreshAll: function()
+      {
+        if (this._isColumnMetadataUpdated() ||
+            (!this._isTableHeaderColumnsRendered() &&
+            !this._isTableHeaderless()))
+        {
+          this._clearCachedMetadata();
+          this._refreshTableHeader();
+        }
+        this._refreshTableFooter();
+        var dataMetadataUpdated = false;
+        if (this._isDataMetadataUpdated())
+        {
+          dataMetadataUpdated = true;
+          this._clearCachedDataMetadata();
+        }
+        this._refreshTableBody();
+        this._refreshTableDimensions();
+        if (dataMetadataUpdated)
+        {
+          this._registerDataSourceEventListeners();
+        }
       },
       /**
        * Fix up the table header padding to accommodate the sort links
@@ -36317,11 +38056,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           this._insertTableBodyRow(rowIdx, tableBodyRow, row, docFrag);
           var tableBody = tableBodyRow.parent();
 
-          var rowContent = rowRenderer({'component': this, 
-            'row': row.pairs(),
-            'dataSource': this._getData(),
-            'status': this._getRendererStatusObject(row),
-            'parentElement': tableBodyRow[0]});
+          var rowContent = rowRenderer({'rowContext': this._getRendererContextObject(row, tableBodyRow[0]), 
+                                        'row': row.pairs()});
 
           if (rowContent != null)
           {
@@ -36669,8 +38405,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         if (footerRenderer)
         {
-          var footerContent = footerRenderer({'component': this,
-            'parentElement': tableFooter[0], 'dataSource': this._getData()});
+          var footerContent = footerRenderer({'footerContext': this._getRendererContextObject(null, tableFooter[0])});
            
           if (footerContent != null)
           {
@@ -36711,9 +38446,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         // remove all the existing column headers
         tableHeaderRow.empty();
 
-        if (columns)
+        if (columns && columns.length > 0)
         {
-
           var tableHeaderAccSelectRowColumn = this._createTableHeaderAccSelectRowColumn();
           tableHeaderRow.append(tableHeaderAccSelectRowColumn);
           // first validate column renderer metadata
@@ -36731,9 +38465,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
             if (headerRenderer)
             {
               // if headerRenderer is defined then call that
-              headerColumnContent = headerRenderer({'component': this,
-                'column': column,
-                'parentElement': headerColumn[0]});
+              headerColumnContent = headerRenderer({'headerContext': this._getRendererContextObject(null, headerColumn[0]),
+                                                    'column': column});
               
               if (headerColumnContent != null)
               {
@@ -36756,6 +38489,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
             // set the acc column selection checkbox
             this._createTableHeaderColumnAccSelect(i);
           }
+          this._renderedTableHeaderColumns = true;
         }
       },
       /**
@@ -36928,6 +38662,23 @@ oj.PagingTableDataSource.prototype.totalSize = function()
             // // component will be notified that the table was scrolled.
             this._trigger('scroll', event, {'scrollLeft': $(event.target).scrollLeft(), 'scrollTop': scrollTop});
           }).bind(this));
+        }
+      },
+      /**
+       * Register event listeners for resize the container DOM element.
+       * @param {jQuery} element  DOM element
+       * @private
+       */
+      _registerResizeListener: function(element)
+      {         
+        if (!this._isResizeListenerAdded)
+        {
+          var self = this;
+          oj.DomUtils.addResizeListener(element[0], function(width, height)
+                                                    {
+                                                      self._refreshTableDimensions();
+                                                    });
+          this._isResizeListenerAdded = true;
         }
       },
        /**
@@ -37620,6 +39371,110 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       /**** start internal DOM functions ****/
 
       /**
+       * Add a default context menu to the table container if there is none. If there is
+       * a context menu set on the table options we use that one. Add listeners
+       * for context menu before show and select.
+       * @return {jQuery} jQuery ul DOM element
+       * @private	 
+       */
+      _createContextMenu: function()
+      {
+        var menuContainer = null;
+        var sortMenu = null, listItems;
+        var self = this;
+
+        if (this._getData() != null)
+        {
+          if (this.options["contextMenu"]['menu'] == null)
+          {
+            menuContainer = $(document.createElement('ul'));
+            menuContainer.css('display', 'none');
+            menuContainer.attr('id', this._getTable().id + 'contextmenu');
+            this._getTableContainer().append(menuContainer);
+            sortMenu = this._createContextMenuItem('sort');
+            menuContainer.append(sortMenu);
+            menuContainer.ojMenu();
+            this._setOption("contextMenu", {menu: menuContainer.attr('id')});
+          }
+          else
+          {
+            menuContainer = $('#' + this.options["contextMenu"]['menu']);
+            listItems = menuContainer.find('[data-oj-command]');
+            listItems.each(function() {
+              var command;
+              if ($(this).children('a').length === 0)
+              {
+                command = $(this).attr('data-oj-command').split("-");
+                $(this).replaceWith(self._createContextMenuItem(command[command.length - 1]));
+              }
+            });
+            menuContainer.ojMenu('refresh');
+          }
+          menuContainer.on("ojbeforeshow", this._handleContextMenuBeforeShow.bind(this));
+          menuContainer.on("ojselect", this._handleContextMenuSelect.bind(this));
+          this._menuContainer = menuContainer;
+        }
+        return menuContainer;
+      },
+      /**
+       * Builds a menu for a command, takes care of submenus where appropriate
+       * @return {jQuery} jQuery li DOM element
+       * @private	 
+       */
+      _createContextMenuItem: function(command)
+      {
+        if (command === 'sort')
+        {
+          return $(this._createContextMenuListItem(command)).append($('<ul></ul>').append($(this._createContextMenuListItem('sortAsc'))).append($(this._createContextMenuListItem('sortDsc'))));
+        }
+        else if (Object.keys(this.resources.commands).indexOf(command) != -1)
+        {
+          return $(this._createContextMenuListItem(command));
+        }
+        return null;
+      },
+      /**
+       * Builds a context menu list item from a command
+       * @param {string} command the string to look up command value for as well as translation
+       * @return {jQuery} jQuery li DOM element
+       * @private	 
+       */
+      _createContextMenuListItem: function(command)
+      {
+        var contextMenuListItem = $(document.createElement('li'));
+        contextMenuListItem.attr('data-oj-command', 'oj-table-' + command);
+        contextMenuListItem.append(this._createContextMenuLabel(command));
+        
+        return contextMenuListItem;
+      },
+      /**
+       * Builds a context menu label by looking up command translation
+       * @param {string} command the string to look up translation for
+       * @return {jQuery} jQuery a DOM element
+       * @private	 
+       */
+      _createContextMenuLabel: function(command)
+      {
+        var contextMenuLabel = $(document.createElement('a'));
+        contextMenuLabel.attr('href', '#');
+        var commandString = null;
+        if (command == 'sort')
+        {
+           commandString = this.getTranslatedString('labelSort');
+        }
+        else if (command == 'sortAsc')
+        {
+          commandString = this.getTranslatedString('labelSortAsc');
+        }
+        else if (command == 'sortDsc')
+        {
+          commandString = this.getTranslatedString('labelSortDsc');
+        }
+        contextMenuLabel.append(commandString);
+        
+        return contextMenuLabel;
+      },
+      /**
        * Create an empty tbody element with appropriate styling
        * @return {jQuery} jQuery tbody DOM element
        * @private
@@ -37668,18 +39523,10 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         accSelectionCell = $(document.createElement('td'));
         accSelectionCell.addClass(this._CSS_CLASSES._TABLE_DATA_CELL_ACC_SELECT_CLASS);
+        accSelectionCell.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         if (!this._isTableHeaderless())
         {
           accSelectionCell.attr('headers', this._COLUMN_HEADER_ROW_SELECT_ID);
-        }
-        accSelectionCell.css('position', 'absolute');
-        if (this._GetReadingDirection() === "rtl")
-        {
-          accSelectionCell.css('right', '-999em');
-        }
-        else
-        {
-          accSelectionCell.css('left', '-999em');
         }
         var accSelectCheckbox = $(document.createElement('input'));
         // set the row index on the element
@@ -37717,10 +39564,9 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         var options = this.options;
         // need to enclose the table in a div to provide horizontal scrolling
         var tableContainer = $(document.createElement('div'));
-        this._styleTableContainer(tableContainer);
-
         this.element.parent()[0].replaceChild(tableContainer[0], this.element[0]);
         tableContainer.prepend(this.element);
+        this._styleTableContainer(tableContainer);
 
         return tableContainer;
       },
@@ -37766,12 +39612,11 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       {
         var headerColumn = $(document.createElement('th'));
         headerColumn.addClass(this._CSS_CLASSES._COLUMN_HEADER_ACC_SELECT_ROW_CLASS);
+        headerColumn.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         headerColumn.attr('id', this._COLUMN_HEADER_ROW_SELECT_ID);
         var selectRowTitle = this.getTranslatedString(this._BUNDLE_KEY._LABEL_SELECT_ROW);
         headerColumn.attr('title', selectRowTitle);
         headerColumn.append(selectRowTitle);
-        headerColumn.css('position', 'absolute');
-        headerColumn.css('left', '-999em');
 
         return headerColumn;
       },
@@ -37833,6 +39678,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           this._hoverable(headerColumnAscLink);
           this._setElementColumnIdx(columnIdx, headerColumnAscLink);
           headerColumnAscDiv.append(headerColumnAscLink);
+          headerColumn.attr('data-oj-sortable', this._OPTION_ENABLED);
         }
         //sort descending link
         var headerColumnDscDiv = $(document.createElement('div'));
@@ -37876,15 +39722,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         accSelectionHeaderColumn = $(document.createElement('div'));
         accSelectionHeaderColumn.addClass(this._CSS_CLASSES._COLUMN_HEADER_ACC_SELECT_COLUMN_CLASS);
-        accSelectionHeaderColumn.css('position', 'absolute');
-        if (this._GetReadingDirection() === "rtl")
-        {
-          accSelectionHeaderColumn.css('right', '-999em');
-        }
-        else
-        {
-          accSelectionHeaderColumn.css('left', '-999em');
-        }
+        accSelectionHeaderColumn.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         var accSelectCheckbox = $(document.createElement('input'));
         // set the column index on the element
         this._setElementColumnIdx(columnIdx, accSelectCheckbox);
@@ -37951,6 +39789,15 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         tableContainer.append(statusMessage);
 
         return statusMessage;
+      },
+      /**
+       * Get the context menu
+       * @return  {jQuery} jQuery table DOM element
+       * @private	 
+       */
+      _getContextMenu: function()
+      {
+        return this._menuContainer;
       },
       /**
        * Return the table element
@@ -38261,11 +40108,15 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       _getTableHeaderColumns: function()
       {
         var tableHeaderRow = this._getTableHeaderRow();
-        var headerColumnElements = tableHeaderRow.children('.' + this._CSS_CLASSES._COLUMN_HEADER_CLASS);
-
-        if (headerColumnElements != null && headerColumnElements.length > 0)
+        
+        if (tableHeaderRow != null)
         {
-          return headerColumnElements;
+          var headerColumnElements = tableHeaderRow.children('.' + this._CSS_CLASSES._COLUMN_HEADER_CLASS);
+
+          if (headerColumnElements != null && headerColumnElements.length > 0)
+          {
+            return headerColumnElements;
+          }
         }
 
         return null;
@@ -38570,13 +40421,10 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           
         if (cellRenderer)
         {
-          var cellColumnContent = cellRenderer({'component': this, 
-            'data': data,
-            'dataSource': this._getData(), 
-            'row': row.pairs(),
-            'column': column,
-            'status': this._getRendererStatusObject(row),
-            'parentElement': tableBodyCell[0]});
+          var cellColumnContent = cellRenderer({'cellContext': this._getRendererContextObject(row, tableBodyCell[0]), 
+                                                'column': column,                                    
+                                                'data': data,
+                                                'row': row.pairs()});
           
           if (cellColumnContent != null)
           {
@@ -38667,7 +40515,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       {
         // set the row index on the element
         this._setElementRowIdx(rowIdx, tableBodyRow);
-        this._setElementRowKey(row.id, tableBodyRow);
+        this._setElementRowKey(row['id'], tableBodyRow);
       },
       /**
        * Set the attributes on the header like columndx, etc
@@ -38702,7 +40550,22 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         {
           tableContainer.addClass(options['containerClassName']);
         }
-         tableContainer.css('overflow', 'hidden');
+        tableContainer.css('overflow', 'hidden');
+        
+        if (this._isTableHeightSet() || this._isTableWidthSet())
+        {
+          // propagate the dimensions to the container. Also register
+          // resize listeners in case percentage dimensions were specified
+          if (this._isTableHeightSet())
+          {
+            tableContainer.css('height', this._getTable()[0].style.height);
+          }
+          if (this._isTableWidthSet())
+          {
+            tableContainer.css('width', this._getTable()[0].style.width);
+          }
+          this._registerResizeListener(tableContainer);
+        }
       },
       /**
        * Style the td element
@@ -38786,6 +40649,340 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       /**** end internal DOM functions ****/
     })
 }());
+/*jslint browser: true,devel:true*/
+/**
+ * @export
+ * @class oj.FlattenedTreeTableDataSource
+ * @classdesc Object representing data used by the rowexpander component
+ * @param {Object} data
+ * @param {Object|null} options Array of options for the TreeTableDataSource
+ * @constructor
+ */
+oj.FlattenedTreeTableDataSource = function(data, options)
+{
+  // Initialize
+  options = options || {};
+
+  if (!(data instanceof oj.FlattenedTreeDataSource))
+  {
+    var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
+    var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
+    throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
+  }
+
+  this._rowSet = new oj.FlattenedTreeRowSet(data, options);
+  this.Init();
+  
+  if ((options != null && (options['startFetch'] == 'enabled' || options['startFetch'] == null))
+    || options == null)
+  {
+    // do an initial fetch
+    var self = this;
+    setTimeout(function()
+    {
+      self.fetch({'startFetch': 'enabled'});
+    }, 0);
+  }
+};
+
+// Subclass from oj.DataSource 
+oj.Object.createSubclass(oj.FlattenedTreeTableDataSource, oj.TableDataSource, "oj.FlattenedTreeTableDataSource");
+
+/**
+ * Initializes the instance.
+ * @export
+ */
+oj.FlattenedTreeTableDataSource.prototype.Init = function()
+{
+  oj.FlattenedTreeTableDataSource.superclass.Init.call(this);
+};
+
+/**
+ * Calls fetch on the datasource.
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.fetch = function(options)
+{
+  this._rowSet.fetch(options);
+};
+
+
+
+
+/**** start delegated functions ****/
+
+/**
+ * Return the model object found at the given index of the collection.
+ * 
+ * @param {number} index Index for which to return the model object. 
+ * @return {Object} Model object located at index. If index is out of range, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.at = function(index)
+{
+  return this._rowSet.at(index);
+};
+
+/**
+ * Return the first model object from the collection whose model id value is the given id or cid, or the id or cid from a passed in model
+ * @param {Object|string} id ID, cid, or Model (see Model id or cid) for which to return the model object, if found. 
+ * @return {Object} First model object in the collection where model.id = id or model.cid = id. If none are found, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.get = function(id)
+{
+  return this._rowSet.get(id);
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @returns {boolean} whether there is more data
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.hasMore = function()
+{
+  return this._rowSet.hasMore();
+};
+
+/**
+ * Return the array index location of the given model object.
+ * @param {Object} model Model object to locate 
+ * @return {number} The index of the given model object. If the object is not found, returns -1.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.indexOf = function(model)
+{
+  return this._rowSet.indexOf(model);
+};
+
+/**
+ * @export
+ * Return the size of the data locally in the dataSource. -1 if an initial fetch has not been
+ * done yet.
+ * @returns {number} size of data
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.size = function()
+{
+  return this._rowSet.size();
+};
+
+/**
+ * Sort the models in the collection
+ * @param {Object=} comparator
+ * @param {Object=} options silent: if true, do not fire the sort event
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.sort = function(comparator, options)
+{
+  this._rowSet.sort(options);
+};
+
+/**
+ * @export
+ * Return current start index.
+ * @returns {number} start index
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.startIndex = function() {
+  return this._rowSet.startIndex();
+};
+
+/**
+ * @export
+ * Return the total size of data available, including server side if not local.
+ * @returns {number} total size of data
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.totalSize = function()
+{
+  return this._rowSet.totalSize();
+};
+
+/**** end delegated functions ****/
+
+/*jslint browser: true*/
+
+/**
+ * @export
+ * @class oj.ModelRow
+ * @classdesc Object representing name/value pairs for a row of data
+ *
+ * @param {oj.Model} model oj.Model object 
+ * @param {Object=} options 
+ *                  rowSet: rowSet for this row
+ * @constructor
+ */
+oj.ModelRow = function(model, options)
+{
+  oj.ModelRow._init(this, model, options, null);
+};
+
+
+// Subclass from oj.Object 
+oj.Object.createSubclass(oj.ModelRow, oj.Row, "ModelRow.ModelRow");
+
+oj.ModelRow.prototype.Init = function()
+{
+  oj.Row.superclass.Init.call(this);
+};
+
+/**
+ * 
+ * @export
+ * @desc Attribute/value pairs held by the Row.
+ * 
+ * @type Object
+ */
+oj.ModelRow.prototype.attributes = {};
+
+/**
+ * @export
+ * @desc The Row's unique ID. 
+ * 
+ * @type String
+ */
+oj.ModelRow.prototype.id = null;
+
+/**
+ * @export
+ * @desc The name of the row property to be used as the unique ID. See property id. This defaults to a value of "id".
+ *  
+ * @type String
+ */
+oj.ModelRow.prototype.idAttribute = null;
+
+oj.ModelRow._init = function(row, model, options, properties)
+{
+  var prop = null, attrCopy;
+
+  row.Init();
+
+  row._model = model;
+  row.id = model.id;
+  row.idAttribute = model.idAttribute;
+  row.attributes = model.attributes;
+
+  options = options || {};
+
+  // First, copy all properties passed in
+  for (prop in properties)
+  {
+    if (properties.hasOwnProperty(prop))
+    {
+      row[prop] = properties[prop];
+    }
+  }
+  row['context'] = options['context'];
+};
+
+/**
+ * @export
+ * Return a copy of the Row with identical attributes and settings
+ */
+oj.ModelRow.prototype.clone = function()
+{
+  return this._model.clone();
+};
+
+/**
+ * Returns the value of the property from the Row.
+ * @param {string} property Property to get from row
+ * @return {Object} value of property
+ * @export
+ */
+oj.ModelRow.prototype.get = function(property)
+{
+  return this._model.get(property);
+};
+
+/**
+ * Return the oj.Model object which was wrapped
+ * @return {oj.Model} oj.Model object
+ * 
+ * @export
+ */
+oj.ModelRow.prototype.getModel = function()
+{
+  return this._model;
+};
+
+/**
+ * Set the value(s) of one or more attributes of the row
+ * @param {string||Object} property Property attribute name to set, or an Object containing attribute/value pairs
+ * @param {Object=} value Value for property if property is not an Object containing attribute/value pairs
+ * @param {Object=} options Options may be passed in
+ * @returns {Object||boolean} the row itself, false if failed
+ * @export
+ */
+oj.ModelRow.prototype.set = function(property, value, options)
+{
+  return this._model.set(property, value, options);
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes as an array
+ * 
+ * @returns {Array} array of all the Row's attributes
+ */
+oj.ModelRow.prototype.keys = function()
+{
+  return this._model.keys();
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes values as an array
+ * 
+ * @returns {Array} array of all the Row's attributes values
+ */
+oj.ModelRow.prototype.values = function()
+{
+  return this._model.values();
+};
+
+/**
+ * @export
+ * Return an array of attributes/value pairs found in the Row 
+ * 
+ * @returns {Object} returns the Row's attribute/value pairs as an array
+ */
+oj.ModelRow.prototype.pairs = function()
+{
+  return this._model.pairs();
+};
+
 /*jslint browser: true*/
 
 /**
@@ -38862,20 +41059,6 @@ oj.CollectionRowSet._init = function(rowSet, collection, options, properties)
 };
 
 /**
- * Add an instance of this rowSet's row(s) to the end of the rowSet.
- * @param {Object|Array} m Row object (or array of rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add() using the rowSet's row.
- * @param {Object=} options at: splice the new row into the rowSet at the value given (at:index) <p>
- *                          deferred: if true, return a promise as though this collection were virtual whether it is or not
- * 
- * @returns {Object} if deferred or virtual, return a promise when the set has completed
- * @export
- */
-oj.CollectionRowSet.prototype.add = function(m, options) 
-{
-  return this._collection.add(m, options);
-};
-
-/**
  * Return the row object found at the given index of the collection, or a promise object that will return the row to a function
  * in the done() call.
  * 
@@ -38891,19 +41074,12 @@ oj.CollectionRowSet.prototype.add = function(m, options)
  */
 oj.CollectionRowSet.prototype.at = function(index, options)
 {
-  return this._collection.at(index, options);
-};
-
-/**
- * @export
- * Return a copy of the RowSet
- * @return {Object} copy of the RowSet
- */
-oj.CollectionRowSet.prototype.clone = function() 
-{
-  var rs = new this.constructor(this._collection.clone());
-  
-  return rs;
+  var model = this._collection.at(index, options);
+  if (model != null)
+  {
+    return new oj.ModelRow(model);
+  }
+  return null;
 };
 
 /**
@@ -38917,9 +41093,9 @@ oj.CollectionRowSet.prototype.clone = function()
  */
 oj.CollectionRowSet.prototype.fetch = function(options)
 {
-  if (oj.CollectionRowSet.superclass._canFetch.call(this))
+  if (this._canFetch.call(this))
   {
-    oj.CollectionRowSet.superclass._startFetch.call(this);
+    this._startFetch.call(this);
 
     options = options || {};
     var self = this;
@@ -38936,7 +41112,7 @@ oj.CollectionRowSet.prototype.fetch = function(options)
           var updates = self._compareCollection(origCollection, self._collection, origStartIndex, self._startIndex, pageSize);
           self._addCollectionEventListeners.call(self);
           self._processUpdates.call(self, updates, origCollection);
-          oj.CollectionRowSet.superclass._endFetch.call(self, true);
+          self._endFetch.call(self, true);
         });
     }
     else
@@ -38947,7 +41123,7 @@ oj.CollectionRowSet.prototype.fetch = function(options)
           var updates = self._compareCollection(origCollection, collection, origStartIndex, self._startIndex, pageSize);
           self._addCollectionEventListeners.call(self);
           self._processUpdates.call(self, updates, origCollection);
-          oj.CollectionRowSet.superclass._endFetch.call(self, true);
+          self._endFetch.call(self, true);
         }
       });
     }
@@ -38967,7 +41143,18 @@ oj.CollectionRowSet.prototype.fetch = function(options)
  */
 oj.CollectionRowSet.prototype.get = function(id, options)
 {
-  return this._collection.get(id, options);
+  return new oj.ModelRow(this._collection.get(id, options));
+};
+
+/**
+ * Return the oj.Collection object which was wrapped
+ * @return {oj.Collection} oj.Collection object
+ * 
+ * @export
+ */
+oj.CollectionRowSet.prototype.getCollection = function()
+{
+  return this._collection;
 };
 
 /**
@@ -38991,7 +41178,7 @@ oj.CollectionRowSet.prototype.hasMore = function()
  */
 oj.CollectionRowSet.prototype.indexOf = function(row, options) 
 {
-  return this._collection.indexOf(row, options);
+  return this._collection.indexOf(row.getModel(), options);
 };
 
 /**
@@ -39003,28 +41190,6 @@ oj.CollectionRowSet.prototype.indexOf = function(row, options)
 oj.CollectionRowSet.prototype.isEmpty = function() 
 {
   return this._collection.isEmpty();
-};
-
-/**
- * Remove a row from the collection, if found.
- * @param {Object|Array} r Row object or array of Rows to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @export
- */
-oj.CollectionRowSet.prototype.remove = function(r, options)
-{
-  return this._collection.remove(r, options);
-};
-
-/**
- * Remove and replace the rowset's entire list of rows with a new set of rows, if provided. Otherwise, empty the rowset.
- * @param {Object=} data Array of row objects or attribute/value pair objects with which to replace the collection's data. 
- * @param {Object=} options user options, passed to event
- * @export
- */
-oj.CollectionRowSet.prototype.reset = function(data, options)
-{
-  return this._collection.reset(data, options);
 };
 
 /**
@@ -39062,10 +41227,10 @@ oj.CollectionRowSet.prototype._addCollectionEventListeners = function()
 {
   var self = this;
   this._collection.on(oj.Events.EventType['ADD'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
+    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['ADD'], {'rowIdx': self._collection.indexOf(event), 'row': new oj.ModelRow(event)});
   });
   this._collection.on(oj.Events.EventType['REMOVE'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
+    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['REMOVE'], {'rowIdx': self._collection.indexOf(event), 'row': new oj.ModelRow(event)});
   });
   this._collection.on(oj.Events.EventType['RESET'], function(event) {
     oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
@@ -39074,7 +41239,7 @@ oj.CollectionRowSet.prototype._addCollectionEventListeners = function()
     oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
   });
   this._collection.on(oj.Events.EventType['CHANGE'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
+    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['CHANGE'], {'rowIdx': self._collection.indexOf(event), 'row': new oj.ModelRow(event)});
   });
   this._collection.on(oj.Events.EventType['DESTROY'], function(event) {
     oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
@@ -39085,7 +41250,7 @@ oj.CollectionRowSet.prototype._addCollectionEventListeners = function()
   this._collection.on(oj.Events.EventType['ERROR'], function(event) {
     oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
     // call endfetch in case a fetch caused the error
-    oj.CollectionRowSet.superclass._endFetch.call(self, false);
+    self._endFetch.call(self, false);
   });
 };
 
@@ -39201,7 +41366,7 @@ oj.CollectionRowSet.prototype._processUpdates = function(updates, origCollection
   }
   if (noneUpdated)
   {
-    oj.CollectionRowSet.superclass._endFetch.call(this, false);
+    this._endFetch.call(this, false);
     return;
   }
 
@@ -39217,7 +41382,7 @@ oj.CollectionRowSet.prototype._processUpdates = function(updates, origCollection
   }
   if (allAdded)
   {
-    oj.CollectionRowSet.superclass._endFetch.call(this, true);
+    this._endFetch.call(this, true);
     return;
   }
 
@@ -39227,18 +41392,272 @@ oj.CollectionRowSet.prototype._processUpdates = function(updates, origCollection
     var rowIdx = updates[i]['rowIdx'];
     if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._ADDED)
     {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], this._collection.at(rowIdx));
+      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': rowIdx, 'row':  this._collection.at(rowIdx)});
     }
     else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._DELETED)
     {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], origCollection.at(rowIdx));
+      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], {'rowIdx': rowIdx, 'row':  origCollection.at(rowIdx)});
     }
     else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._UPDATED)
     {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], this._collection.at(rowIdx));
+      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], {'rowIdx': rowIdx, 'row':  this._collection.at(rowIdx)});
     }
   }
-  oj.CollectionRowSet.superclass._endFetch.call(this, false);
+  this._endFetch.call(this, false);
+};
+
+/**
+ * Indicate whether we can start a fetch
+ * @private
+ */
+oj.CollectionRowSet.prototype._canFetch = function()
+{
+  return !this._isFetching;
+};
+
+/**
+ * Indicate starting fetch
+ * @private
+ */
+oj.CollectionRowSet.prototype._startFetch = function()
+{
+  this._isFetching = true;
+  oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REQUEST'], null);
+};
+
+/**
+ * Indicate ending fetch
+ * @param {boolean} refresh whether the listener should refresh based on the fetched data
+ * @private
+ */
+oj.CollectionRowSet.prototype._endFetch = function(refresh)
+{
+  this._isFetching = false;
+  oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['SYNC'], refresh);
+};
+/*jslint browser: true,devel:true*/
+/**
+ * @export
+ * @class oj.CollectionTableDataSource
+ * @classdesc Object representing data used by table component
+ * @param {Object} data data supported by the components
+ * @param {Object|null} options Array of options for the TableDataSource
+ * @constructor
+ */
+oj.CollectionTableDataSource = function(data, options)
+{
+  // Initialize
+  if (!(data instanceof oj.Collection))
+  {
+    // we only support Array, oj.Collection, oj.RowSet, or ko.observableArray. To
+    // check for observableArray, we can't do instanceof check because it's
+    // a function. So we just check if it contains a subscribe function.
+    var errSummary = oj.Translations.getTranslatedString('oj-ojTable.dataInvalidType.summary');
+    var errDetail = oj.Translations.getTranslatedString('oj-ojTable.dataInvalidType.detail');
+    throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
+  }
+  
+  oj.CollectionTableDataSource.superclass.constructor.call(this, data, options);
+
+  this._rowSet = new oj.CollectionRowSet(data, this.options);
+  this._addRowSetEventListeners();
+  
+  this.Init();
+
+  if ((options != null && (options['startFetch'] == 'enabled' || options['startFetch'] == null))
+    || options == null)
+  {
+    // do an initial fetch
+    var self = this;
+    setTimeout(function()
+    {
+      self.fetch({'startFetch': 'enabled'});
+    }, 0);
+  }
+};
+
+// Subclass from oj.DataSource 
+oj.Object.createSubclass(oj.CollectionTableDataSource, oj.TableDataSource, "oj.CollectionTableDataSource");
+
+/**
+ * Initializes the instance.
+ * @export
+ */
+oj.CollectionTableDataSource.prototype.Init = function()
+{
+  oj.CollectionTableDataSource.superclass.Init.call(this);
+};
+
+/**
+ * Return the oj.Row object found at the given index of the RowSet.
+ * 
+ * @param {number} index Index for which to return the Row object. 
+ * @return {Object} oj.Row object located at index. If index is out of range, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.at = function(index)
+{
+  return this._rowSet.at(index);
+};
+
+/**
+ * Fetch the RowSet data.
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.fetch = function(options)
+{
+  options = options || {};
+  if (options['startIndex'] != null)
+  {
+    oj.CollectionTableDataSource.superclass.startIndex.call(this, options['startIndex']);
+  }
+  var data = this.data;
+
+  if (options['startFetch'] == 'enabled')
+  {
+    // only do an initial fetch if collection is empty
+    if (this._rowSet.isEmpty() ||
+      (typeof this._rowSet.size() === 'undefined'))
+    {
+      this._rowSet.fetch(options);
+    }
+  }
+  else
+  {
+    this._rowSet.fetch(options);
+  }
+};
+
+/**
+ * Return the first oj.Row object from the RowSet whose Row id value is the given id
+ * @param {Object|string} id ID for which to return the Row object, if found. 
+ * @return {Object} First Row object in the RowSet where Row.id = id. If none are found, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.get = function(id)
+{
+  return this._rowSet.get(id);
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @returns {boolean} whether there is more data
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.hasMore = function()
+{
+  if (this._rowSet != null)
+  {
+    return this._rowSet.hasMore();
+  }
+  return false;
+};
+
+/**
+ * Return the array index location of the given Row object.
+ * @param {Object} row oj.Row object to locate 
+ * @return {number} The index of the given Row object. If the object is not found, returns -1.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.indexOf = function(row)
+{
+  return this._rowSet.indexOf(row);
+};
+
+/**
+ * @export
+ * Get the length of the RowSet.
+ * limit it.
+ * @returns {number} length of the RowSet
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.size = function()
+{
+  return this._rowSet.size();
+};
+
+/**
+ * Sort the Rows in the RowSet
+ * @param {Object=} comparator
+ * @param {Object=} options silent: if true, do not fire the sort event
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.sort = function(comparator, options)
+{
+  this._rowSet['comparator'] = comparator;
+  this._rowSet.sort(options);
+};
+
+/**
+ * @export
+ * Return the total size of data available, including server side if not local.
+ * @returns {number} total size of data
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
+ */
+oj.CollectionTableDataSource.prototype.totalSize = function()
+{
+  return this._rowSet.totalSize();
+};
+
+/**
+ * Add event listeners to the RowSet
+ * @private
+ */
+oj.CollectionTableDataSource.prototype._addRowSetEventListeners = function()
+{
+  var self = this;
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ADD'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['REMOVE'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['RESET'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SORT'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['CHANGE'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['DESTROY'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SYNC'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SYNC'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ERROR'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
+  });
 };
 /**
  * Creates an attribute group handler that will generate stylistic attribute values such as colors or shapes based on data set categories.
@@ -39505,6 +41924,9 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
 
     // Render the component
     this._render();
+    
+    // Add resize listener
+    oj.DomUtils.addResizeListener(this.element[0], $.proxy(this._handleResize, this));
   },
   
   // add options object to a hidden div for debugging
@@ -39663,6 +42085,21 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
   },
   
   // Protected function.
+  // Called when the component is resized. 
+  _handleResize : function(width, height) {
+    // Render the component at the new size if it changed enough
+    var newWidth = this.element.width();
+    var newHeight = this.element.height();
+    if(Math.abs(newWidth - this._width) + Math.abs(newHeight - this._height) >= 5) {    
+      this._component.render(null, newWidth, newHeight);
+      
+      // Update the rendered size
+      this._width = newWidth;
+      this._height = newHeight;
+    }
+  },
+  
+  // Protected function.
   // Called by our implementation to load component resources like images, 
   // resource bundles, or basemaps.
   _loadResources : function() {
@@ -39722,11 +42159,10 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
         return;
     }
     
-    // Uncomment for testing only
-//    console.log(JSON.stringify(this.options));
-    
     // Render the component
-    this._component.render(this.options, this.element.width(), this.element.height());
+    this._width = this.element.width();
+    this._height = this.element.height();
+    this._component.render(this.options, this._width, this._height);
   },
   
   // Override of public function in base component.
@@ -39960,11 +42396,11 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">rotate</code> callback specified:</caption>
      * $(".selector").ojSunburst({
-     *   "rotate": function(event){}
+     *   "rotate": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojrotate</code> event:</caption>
-     * $(".selector").on("ojrotate", function(event){});
+     * $(".selector").on("ojrotate", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -39981,11 +42417,11 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">rotateInput</code> callback specified:</caption>
      * $(".selector").ojSunburst({
-     *   "rotateInput": function(event){}
+     *   "rotateInput": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojrotateinput</code> event:</caption>
-     * $(".selector").on("ojrotateinput", function(event){});
+     * $(".selector").on("ojrotateinput", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -40003,11 +42439,11 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">select</code> callback specified:</caption>
      * $(".selector").ojSunburst({
-     *   "select": function(event){}
+     *   "select": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-     * $(".selector").on("ojselect", function(event){});
+     * $(".selector").on("ojselect", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -40246,11 +42682,11 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">select</code> callback specified:</caption>
      * $(".selector").ojThematicMap({
-     *   "select": function(event){}
+     *   "select": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-     * $(".selector").on("ojselect", function(event){});
+     * $(".selector").on("ojselect", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -40480,11 +42916,11 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">isolate</code> callback specified:</caption>
      * $(".selector").ojTreemap({
-     *   "isolate": function(event){}
+     *   "isolate": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojisolate</code> event:</caption>
-     * $(".selector").on("ojisolate", function(event){});
+     * $(".selector").on("ojisolate", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -40502,11 +42938,11 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">select</code> callback specified:</caption>
      * $(".selector").ojTreemap({
-     *   "select": function(event){}
+     *   "select": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-     * $(".selector").on("ojselect", function(event){});
+     * $(".selector").on("ojselect", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -40638,7 +43074,7 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
  * @see oj.ComponentBinding
  * @see oj.editableValue
  */
-oj.ValueBinding = {};
+oj.ValueBinding = function(){};
 
 
 /** 
@@ -40918,6 +43354,15 @@ oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
   'for': 'ojCombobox',
   'use': 'ojValue'
 });
+
+/**
+ * Default declaration for ojSelect
+ */
+oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
+{
+  'for': 'ojSelect',
+  'use': 'ojValue'
+});
 /**
  * @class 
  * @name oj.ojChart
@@ -40978,11 +43423,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryFilter</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "categoryFilter": function(event){}
+     *   "categoryFilter": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryfilter</code> event:</caption>
-     * $(".selector").on("ojcategoryfilter", function(event){});
+     * $(".selector").on("ojcategoryfilter", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -41000,11 +43445,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryHighlight</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "categoryHighlight": function(event){}
+     *   "categoryHighlight": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryhighlight</code> event:</caption>
-     * $(".selector").on("ojcategoryhighlight", function(event){});
+     * $(".selector").on("ojcategoryhighlight", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -41030,11 +43475,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">select</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "select": function(event){}
+     *   "select": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-     * $(".selector").on("ojselect", function(event){});
+     * $(".selector").on("ojselect", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -41056,11 +43501,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">viewportChange</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "viewportChange": function(event){}
+     *   "viewportChange": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojviewportchange</code> event:</caption>
-     * $(".selector").on("ojviewportchange", function(event){});
+     * $(".selector").on("ojviewportchange", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -41151,6 +43596,8 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
                               'group': selection[i].getGroup()};
           selectedItems.push(selectedItem);  
         }
+        
+        // TODO PANGUS: ADD THE MARQUEE SELECT CONTEXT
         
         this._trigger('select', null, {'items': selectedItems});
       }
@@ -41422,7 +43869,7 @@ oj.CollectionTreeDataSource.prototype._putModelInRowset = function(model) {
     rows.push(model.attributes);
     var options = {};
     options['idAttribute'] = model['idAttribute'];    
-    var rowset = new oj.RowSet(rows, options);
+    var rowset = new oj.ArrayRowSet(rows, options);
     rowset.fetch();
     return rowset;
 };
@@ -42146,10 +44593,6 @@ oj.CollectionCellSet.prototype._getModel = function(indexes)
 
     // extract row and column index
     row = indexes['row'];
-    if (this.m_collection.offset != null)
-    {
-        row += this.m_collection.offset;
-    }      
     column = indexes['column'];
 
     // make sure index are valid
@@ -42274,10 +44717,6 @@ oj.CollectionHeaderSet.prototype.getData = function(index)
     // row or column header
     if (this.m_rowHeader != null && this.m_collection != null)
     {
-        if (this.m_collection.offset != null)
-        {
-            index += this.m_collection.offset;
-        }  
         this.m_collection.at(index, {'deferred':true}).done(function (model) { self.model = model });
         return self.model.get(this.m_rowHeader);
     }
@@ -42386,7 +44825,7 @@ oj.CollectionHeaderSet.prototype.getCollection = function()
  *        what order.  These columns must be a subset of attributes from Model. * @constructor
  * @export
  * @constructor
- * @extends oj.DataSource
+ * @extends oj.DataGridDataSource
  */
 oj.CollectionDataGridDataSource = function(collection, options)
 {
@@ -42422,7 +44861,7 @@ oj.CollectionDataGridDataSource.prototype.Init = function()
     if (this._isRemote())
     {
         this.initialSync = true;
-        this.collection.fetch({success:this._handleCollectionFetched.bind(this, true)});        
+//        this.collection.fetch({success:this._handleCollectionFetched.bind(this, true)});        
     }
     else
     {
@@ -42462,6 +44901,11 @@ oj.CollectionDataGridDataSource.prototype._isRemote = function()
     return (this.collection['url'] != null);
 };
 
+/**
+ * Determines if data is locally available.
+ * @return {boolean} true if data is locally available, false otherwise.
+ * @private
+ */
 oj.CollectionDataGridDataSource.prototype._isDataAvailable = function()
 {
     if (this._isRemote())
@@ -42535,7 +44979,7 @@ oj.CollectionDataGridDataSource.prototype.getCount = function(axis)
     if (!this._isDataAvailable())
     {
         this.precision = "estimate";
-        return 100;  // arbitrary number, should be large enough to cover viewport
+        return -1;
     }
 
     this.precision = "exact";
@@ -42587,52 +45031,13 @@ oj.CollectionDataGridDataSource.prototype.getCountPrecision = function(axis)
  */
 oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, callbacks, callbackObjects)
 {
-    var axis, start, count, end, callback, headerSet;
+    var axis, callback;
 
     axis = headerRange.axis;
     if (this._isDataAvailable())
     {
-        start = headerRange.start;
-        count = headerRange.count;	            
-
-        oj.Assert.assert(axis === 'row' || axis === 'column');
-        oj.Assert.assert(start < this.getCount(axis));
-        oj.Assert.assert(count > 0);
-		
-        if (axis === "column")
-        {  
-            end = Math.min(this.columns.length, start+count);
-            headerSet = new oj.CollectionHeaderSet(start, end, this.columns);
-        }
-        else if (axis === "row")
-        {
-            if (this.rowHeader != null)
-            {
-                end = Math.min(this.size(), start+count);
-                if (this._pageSize > 0)
-                {
-                    end = Math.min(end, this._startIndex + this._pageSize);
-                    end = Math.min(end, this.totalSize() - this._startIndex);                    
-                }                    
-                headerSet = new oj.CollectionHeaderSet(start, end, this.columns, this.collection, this.rowHeader);
-            }
-            else
-            {
-                // no row header, return empty result set
-                headerSet = new oj.ArrayHeaderSet(start, start, axis, null);
-            }
-        }
-
-        if (callbacks != null && callbacks['success'] != null)
-        {
-            if (callbackObjects == null)
-            {
-                callbackObjects = {};
-            }	            
-            callbacks['success'].call(callbackObjects['success'], headerSet, headerRange);
-        }
-        // clear any pending callback
-        this.pendingHeaderCallback[axis] = null;
+        // headers are locally available
+        this._handleHeaderFetchSuccess(headerRange, callbacks, callbackObjects);
     }
     else
     {
@@ -42646,6 +45051,156 @@ oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, c
             this.pendingHeaderCallback[axis] = callback;
         }
     }
+};
+
+/**
+ * Handle success fetchHeaders request
+ * @param {Object} headerRange information about the header range, it must contain the following properties:
+ *        axis, start, count.
+ * @param {string} headerRange.axis the axis of the header that are fetched.  Valid values are "row" and "column".
+ * @param {number} headerRange.start the start index of the range in which the header data are fetched.
+ * @param {number} headerRange.count the size of the range in which the header data are fetched.  
+ * @param {Object} callbacks the callbacks to be invoke when fetch headers operation is completed.  The valid callback
+ *        types are "success" and "error".
+ * @param {function(HeaderSet)} callbacks.success the callback to invoke when fetch headers completed successfully.
+ * @param {function({status: Object})} callbacks.error the callback to invoke when fetch cells failed.
+ * @param {Object=} callbackObjects the object in which the callback function is invoked on.  This is optional.  
+ *        You can specify the callback object for each callbacks using the "success" and "error" keys.
+ */
+oj.CollectionDataGridDataSource.prototype._handleHeaderFetchSuccess = function(headerRange, callbacks, callbackObjects)
+{
+    var axis, start, count, end, callback, headerSet;
+
+    axis = headerRange.axis;
+    start = headerRange.start;
+    count = headerRange.count;	            
+
+    oj.Assert.assert(axis === 'row' || axis === 'column');
+    oj.Assert.assert(count > 0);
+		
+    if (axis === "column")
+    {  
+         // column headers, this.columns should be populated by now
+        if (this.columns != null)
+        {
+            end = Math.min(this.columns.length, start+count);
+            headerSet = new oj.CollectionHeaderSet(start, end, this.columns);
+        }
+        else
+        {
+            // no row header, return empty result set
+            headerSet = new oj.ArrayHeaderSet(start, start, axis, null);
+        }
+    }
+    else if (axis === "row")
+    {
+        // row headers, return non-empty header set if row header is specified
+        if (this.rowHeader != null)
+        {
+            end = Math.min(this.size(), start+count);
+            if (this._pageSize > 0)
+            {
+                end = Math.min(end, this._startIndex + this._pageSize);
+                end = Math.min(end, this.totalSize() - this._startIndex);                    
+            }                    
+            headerSet = new oj.CollectionHeaderSet(start, end, this.columns, this.collection, this.rowHeader);
+        }
+        else
+        {
+            // no row header, return empty result set
+            headerSet = new oj.ArrayHeaderSet(start, start, axis, null);
+        }
+    }
+
+    // invoke callback
+    if (callbacks != null && callbacks['success'])
+    {
+        callbacks['success'].call(callbackObjects['success'], headerSet, headerRange);
+    }
+
+    // clear any pending callback
+    this.pendingHeaderCallback[axis] = null;
+};
+
+/**
+ * Helper method to extract range information from cellRanges
+ * @param {Array.<Object>} cellRanges Information about the cell range.  A cell range is defined by an array 
+ *        of range info for each axis, where each range contains three properties: axis, start, count.
+ * @param {string} cellRanges.axis the axis associated with this range where cells are fetched.  Valid 
+ *        values are "row" and "column".
+ * @param {number} cellRanges.start the start index of the range for this axis in which the cells are fetched.
+ * @param {number} cellRanges.count the size of the range for this axis in which the cells are fetched. 
+ * @return {Object} an object containing rowStart, rowCount, colStart, colCount
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._getRanges = function(cellRanges)
+{
+    var i, cellRange, rowStart, rowCount, colStart, colCount;
+
+    // extract the start and end row/column info from cellRanges (there should only be two, one for each axis)
+    for (i=0; i<cellRanges.length; i+=1)
+    {
+        cellRange = cellRanges[i];   
+        oj.Assert.assert(cellRange['axis'] === 'row' || cellRange['axis'] === 'column');
+        oj.Assert.assert(cellRange['count'] > 0);
+        if (cellRange['axis'] === "row")
+        {
+            rowStart = cellRange['start'];
+            rowCount = cellRange['count'];
+        }
+        else if (cellRange['axis'] === "column")
+        {
+            colStart = cellRange['start'];
+            colCount = cellRange['count'];
+        }
+    }			
+
+    // return object containing the ranges
+    return {'rowStart': rowStart, 'rowCount': rowCount, 'colStart': colStart, 'colCount': colCount};
+};
+
+/**
+ * Handle success fetchCells request
+ * @param {Array.<Object>} cellRanges Information about the cell range.  A cell range is defined by an array 
+ *        of range info for each axis, where each range contains three properties: axis, start, count.
+ * @param {string} cellRanges.axis the axis associated with this range where cells are fetched.  Valid 
+ *        values are "row" and "column".
+ * @param {number} cellRanges.start the start index of the range for this axis in which the cells are fetched.
+ * @param {number} cellRanges.count the size of the range for this axis in which the cells are fetched. 
+ * @param {Object} callbacks the callbacks to be invoke when fetch cells operation is completed.  The valid callback
+ *        types are "success" and "error".
+ * @param {function(CellSet)} callbacks.success the callback to invoke when fetch cells completed successfully.
+ * @param {function({status: Object})} callbacks.error the callback to invoke when fetch cells failed.
+ * @param {Object=} callbackObjects the object in which the callback function is invoked on.  This is optional.  
+ *        You can specify the callback object for each callbacks using the "success" and "error" keys.
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._handleCellFetchSuccess = function(cellRanges, callbacks, callbackObjects)
+{
+    var ranges, rowStart, rowEnd, colStart, colEnd, cellSet;
+
+    // extract the start and end row/column info from cellRanges (there should only be two, one for each axis)
+    ranges = this._getRanges(cellRanges);
+    rowStart = ranges['rowStart'];
+    rowEnd = Math.min(this.size(), rowStart + ranges['rowCount']);
+    colStart = ranges['colStart'];
+    colEnd = Math.min(this.columns.length, colStart + ranges['colCount']);       
+
+    // create CellSet and invoke callback
+    cellSet = new oj.CollectionCellSet(rowStart, rowEnd, colStart, colEnd, this.collection, this.columns);
+        
+    if (callbacks != null && callbacks['success'] != null)
+    {
+        if (callbacks != null && callbackObjects == null)
+        {
+            callbackObjects = {};
+        }
+        callbacks['success'].call(callbackObjects['success'], cellSet, cellRanges);
+        this._fetchCalls = 0;
+    }
+
+    // clear any pending callback
+    this.pendingCellCallback = null;
 };
 
 /**
@@ -42666,54 +45221,15 @@ oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, c
  */
 oj.CollectionDataGridDataSource.prototype.fetchCells = function(cellRanges, callbacks, callbackObjects)
 {
-    var i, cellRange, rowStart, rowEnd, cellSet, colStart, colEnd;
+    var ranges, rowStart, rowEnd, colStart, colEnd, cellSet;
 
     rowEnd = 0;
     colEnd = 0;
 
-    // checks if data is available
+    // checks if data is locally available
     if (this._isDataAvailable())
     {
-
-        // extract the start and end row/column info from cellRanges (there should only be two, one for each axis)
-        for (i=0; i<cellRanges.length; i+=1)
-        {
-            cellRange = cellRanges[i];   
-            oj.Assert.assert(cellRange['axis'] === 'row' || cellRange['axis'] === 'column');
-            oj.Assert.assert(cellRange['start'] < this.getCount(cellRange['axis']));
-            oj.Assert.assert(cellRange['count'] > 0);
-            if (cellRange['axis'] === "row")
-            {
-                rowStart = cellRange['start'];
-                rowEnd = Math.min(this.size(), rowStart + cellRange['count']);
-                if (this._pageSize > 0)
-                {
-                    rowEnd = Math.min(rowEnd, this._startIndex + this._pageSize);
-                    rowEnd = Math.min(rowEnd, this.totalSize() - this._startIndex);                    
-                }    
-            }
-            else if (cellRange['axis'] === "column")
-            {
-                colStart = cellRange['start'];
-                colEnd = Math.min(this.columns.length, colStart + cellRange['count']);
-            }
-        }			
-
-        // create CellSet and invoke callback
-        cellSet = new oj.CollectionCellSet(rowStart, rowEnd, colStart, colEnd, this.collection, this.columns);
-        
-        if (callbacks != null && callbacks['success'] != null)
-        {
-            if (callbacks != null && callbackObjects == null)
-            {
-                callbackObjects = {};
-            }
-            callbacks['success'].call(callbackObjects['success'], cellSet, cellRanges);
-            this._fetchCalls = 0;
-        }
-        // clear any pending callback
-        this.pendingCellCallback = null;
-        
+        this._handleCellFetchSuccess(cellRanges, callbacks, callbackObjects);
     }
     else
     {
@@ -42725,7 +45241,99 @@ oj.CollectionDataGridDataSource.prototype.fetchCells = function(cellRanges, call
             this.pendingCellCallback.callbacks = callbacks;
             this.pendingCellCallback.callbackObjects = callbackObjects;
         }
+
+        // kick start a setRangeLocal call on the collection
+        this._fetchCells(cellRanges);
     }
+};
+
+/**
+ * Processing pending header callbacks.
+ * @param {string} axis the axis to check for pending header callbacks.
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._processPendingHeaderCallbacks = function(axis)
+{
+    var pendingCallback, headerRange, callbacks, callbackObjects;
+
+    // check if there's callback remaining for the axis
+    pendingCallback = this.pendingHeaderCallback[axis];
+    if (pendingCallback != null)
+    {
+        // todo: check whether pending header range matches result
+        headerRange = pendingCallback.headerRange;
+        callbacks = pendingCallback.callbacks;
+        callbackObjects = pendingCallback.callbackObjects;
+
+        this._handleHeaderFetchSuccess(headerRange, callbacks, callbackObjects);
+    }
+};
+
+/**
+ * Processing pending cell callbacks.
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._processPendingCellCallbacks = function()
+{
+    var cellRanges, callbacks, callbackObjects;
+
+    cellRanges = this.pendingCellCallback.cellRanges;
+    callbacks = this.pendingCellCallback.callbacks;
+    callbackObjects = this.pendingCellCallback.callbackObjects;
+
+    // handles success cell fetch
+    this._handleCellFetchSuccess(cellRanges, callbacks, callbackObjects);
+};
+
+/**
+ * Internal method to handle fetching of cells for virtualized collection.
+ * @param {Array.<Object>} cellRanges Information about the cell range.  A cell range is defined by an array 
+ *        of range info for each axis, where each range contains three properties: axis, start, count.
+ * @param {string} cellRanges.axis the axis associated with this range where cells are fetched.  Valid 
+ *        values are "row" and "column".
+ * @param {number} cellRanges.start the start index of the range for this axis in which the cells are fetched.
+ * @param {number} cellRanges.count the size of the range for this axis in which the cells are fetched. 
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._fetchCells = function(cellRanges)
+{
+    var ranges, rowStart, rowCount;
+
+    ranges = this._getRanges(cellRanges);
+    rowStart = ranges['rowStart'];
+    rowCount = ranges['rowCount'];
+
+    // set the range local for the requested range
+    this.collection.setRangeLocal(rowStart, rowCount).done(function (deferred)
+    {
+        var first = this.collection.at(rowStart, {'deferred':true});
+
+        // check if we need to poach columns from row
+        if (first != null && this.columns === undefined)
+        {
+            first.done(function(model) 
+            {
+                this.columns = model.keys();
+                if (this.columns.indexOf(this.rowHeader) != -1)
+                {
+                    this.columns.splice(this.columns.indexOf(this.rowHeader),1);
+                }
+            }.bind(this));
+        }
+
+        // check outstanding header calls
+        if (this.pendingHeaderCallback != null)
+        {
+            this._processPendingHeaderCallbacks('column');
+            this._processPendingHeaderCallbacks('row');
+        }        
+
+        // finally process outstanding cell calls
+        if (this.pendingCellCallback != null)
+        {
+            this._processPendingCellCallbacks();
+        }        
+    }.bind(this));
 };
 
 /**
@@ -43744,7 +46352,7 @@ oj.KnockoutUtils._augment = function(len, getCallback) {
         //aria
         .attr("role", "group");
 
-      this.refresh();
+      this._refresh();
     },
 
   /* 
@@ -43824,6 +46432,11 @@ oj.KnockoutUtils._augment = function(len, getCallback) {
     refresh : function ()
     {
       this._super();
+      this._refresh();
+    },
+
+    _refresh : function ()
+    {
       this._makeCollapsible();
       this._setOption("disabled", this.options.disabled);
 
@@ -43872,7 +46485,8 @@ oj.KnockoutUtils._augment = function(len, getCallback) {
 //TODO:
 //      if ($(event.target).parentsUntil(event.currentTarget)[0] !== 
 //          $(event.currentTarget).children()[0])
-      if (! ($(event.target).hasClass("oj-collapsible-header")))
+      if (! ($(event.target).hasClass("oj-collapsible-header")) &&
+          ! ($(event.target).hasClass("oj-collapsible-header-icon")))
         return;
 
       //TODO: add "showDisclsoure"?
@@ -43977,7 +46591,7 @@ oj.KnockoutUtils._augment = function(len, getCallback) {
       var siblings = this._findTargetSiblings(event);
       siblings.each(function ()
       {
-        this.collapse(false, event);
+        this._Collapse(false, event);
       });
     }
 
@@ -44008,6 +46622,7 @@ oj.KnockoutUtils._augment = function(len, getCallback) {
  * </ul>
  * 
  * @class
+ * @private
  * @constructor
  * @name oj._ojRadioCheckbox
  * @augments oj.baseComponent TODO: Should I extend this? 
@@ -44291,6 +46906,53 @@ oj.__registerWidget("oj._ojRadioCheckbox", $['oj']['baseComponent'],
     return labelClosestParent.add($(labelForQuery)); 
   },
   /**
+   * Return the subcomponent node represented by the documented locator attribute values.
+   * Test authors should target spinner sub elements using the following names:
+   * <ul>
+   * <li><b>oj-radiocheckbox-input</b>: the radio/checkbox's input</li>
+   * <li><b>oj-radiocheckbox-label</b>: the radio/checkbox's label</li>
+   * </ul>
+   * 
+   * @expose
+   * @override
+   * @memberof! oj._ojRadioCheckbox
+   * @instance
+   * @param {Object} locator An Object containing at minimum a subId property 
+   * whose value is a string, documented by the component, that allows the component to 
+   * look up the subcomponent associated with that string.  It contains:
+   * <ul>
+   * <li>
+   * component: optional - in the future there may be more than one component 
+   *   contained within a page element
+   * </li>
+   * <li>
+   * subId: the string, documented by the component, that the component expects 
+   * in getNodeBySubId to locate a particular subcomponent 
+   * </li>
+   * </ul>  
+   * @returns {Element|null} the subcomponent located by the subId string 
+   * passed in locator, if found.
+   */
+  getNodeBySubId: function(locator)
+  {
+    if (locator == null)
+    {
+      return this.element ? this.element[0] : null;
+    }
+    
+    var subId = locator['subId'];
+    if (subId === "oj-radiocheckbox-input") {
+      return this.element[0];
+    }
+    if (subId === "oj-radiocheckbox-label") {
+      // this.label() returns a jquery object. we want to return a dom element
+      return this.label()[0];
+    }
+    
+    // Non-null locators have to be handled by the component subclasses
+    return null;
+  },  
+  /**
    * TODO Do I need to save off the html attributes and restore later? like disabled? name (if they change it with the option?) YES
    * @override
    * @private
@@ -44352,7 +47014,7 @@ var lastActive,
     // this.eventNamespace, used for individual button instances, is .ojButtonX, whereX = 0, 1, 2, etc.
     BUTTON_EVENT_NAMESPACE = ".ojButton",
     
-    BASE_CLASSES = "oj-button oj-widget oj-enabled", // oj-enabled is a state class, but convenient to include in this var instead
+    BASE_CLASSES = "oj-button oj-widget oj-enabled oj-default", // oj-enabled is a state class, but convenient to include in this var instead
     STATE_CLASSES = "oj-hover oj-active oj-checked", // TBD: oj-hover doesn't really need to be listed here since this var is only used to remove classes from rootElement at destroy time, which already happens because we register rootElement as a hoverable.  Same might apply to oj-active if we switch to an activeable paradigm.
     TYPE_CLASSES = "oj-button-icons-only oj-button-icon-only oj-button-text-icons oj-button-text-icon-start oj-button-text-icon-end oj-button-text-only",
     
@@ -44493,9 +47155,6 @@ var lastActive,
  * <p>In lieu of a shared listener on an ancestor, syntax like <code class="prettyprint">$( "#ancestor :oj-button" ).click( myFunc );</code> can be used to set a handler on many 
  * buttons at once. 
  * 
- * <p>Also, the Knockout <code class="prettyprint">click</code> binding doesn't reliably work for <kbd>Spacebar</kbd>-generated clicks on anchor-based buttons, which are fired by the component, not natively.
- * In this case, register the click listener via jQuery's <code class="prettyprint">click()</code> method.  
- * 
  * 
  * <h3 id="pseudos-section">
  *   Pseudo-selectors
@@ -44517,8 +47176,8 @@ var lastActive,
  * 
  * <p>In JET, when setting component state after create time, the correct approach depends on whether the component has a JS API for that state.
  * 
- * <p>State with a JS API, such as Button's disabled state, checked state, and label, should be set via that API (which in those examples is 
- * <code class="prettyprint">option()</code>), not by manipulating the DOM directly.  This can be done by calling that JS API directly, or by binding 
+ * <p>State with a JS API, such as Button's disabled state, checked state, and label, should be set after creation via that API (which in those examples is 
+ * <code class="prettyprint">option()</code>), not by directly manipulating the DOM after creation.  This can be done by calling that JS API directly, or by binding 
  * a component option like <code class="prettyprint">disabled</code> to an observable using the <code class="prettyprint">ojComponent</code> binding.  
  * 
  * <p>Built-in KO bindings, like KO's <code class="prettyprint">disable</code> binding, should not be used in this case, since that is tatamount to 
@@ -44605,6 +47264,12 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
         /**
          * Disables the button if set to <code class="prettyprint">true</code>.
          * 
+         * <p>After create time, the <code class="prettyprint">disabled</code> state should be set via this API, not by setting the underlying DOM attribute.
+         * 
+         * <p>The 2-way <code class="prettyprint">disabled</code> binding offered by the <code class="prettyprint">ojComponent</code> binding 
+         * should be used instead of Knockout's built-in <code class="prettyprint">disable</code> and <code class="prettyprint">enable</code> bindings, 
+         * as the former sets the API, while the latter sets the underlying DOM attribute.
+         * 
          * @expose
          * @memberof! oj.ojButton
          * @instance
@@ -44648,9 +47313,17 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
         display: "all",
         
         /**
-         * Text to show in the button. When not specified (<code class="prettyprint">null</code>), the element's HTML content is used, or its <code class="prettyprint">value</code> 
-         * attribute if the element is an input element of type button, submit, or reset, or the HTML content of the associated 
-         * label element if the element is an input of type radio or checkbox.
+         * Text to show in the button. 
+         * 
+         * <p>When not specified (<code class="prettyprint">null</code>) at create time, the element's HTML content is used, or its 
+         * <code class="prettyprint">value</code> attribute if the element is an input element of type button, submit, or reset, or 
+         * the HTML content of the associated label element if the element is an input of type radio or checkbox.
+         * 
+         * <p>After create time, the label should be set via this API, not by setting the underlying DOM attribute.
+         * 
+         * <p>The 2-way <code class="prettyprint">label</code> binding offered by the <code class="prettyprint">ojComponent</code> 
+         * binding should be used instead of Knockout's built-in <code class="prettyprint">text</code> binding, as the former 
+         * sets the API, while the latter sets the underlying DOM attribute.
          * 
          * @expose
          * @memberof! oj.ojButton
@@ -44822,8 +47495,6 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
             activeClass = !toggleButton ? "oj-active" : "",
             focusClass = "oj-focus";
 
-        this._hoverable( this.rootElement );
-
         this.rootElement.addClass( BASE_CLASSES );
     
         this.buttonElement
@@ -44832,11 +47503,17 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
                     return;
                 if ( this === lastActive ) 
                     self.rootElement.addClass( "oj-active" );
+
+                self.rootElement.addClass( "oj-hover" )
+                                .removeClass( "oj-default" );
             })
             .bind( "mouseleave" + this.eventNamespace, function() {
+                self.rootElement.removeClass( "oj-hover" );
+
                 if ( options.disabled )
                     return;
                 self.rootElement.removeClass( activeClass );
+                self._addOJDefaultClass();
             })
             .bind( "click" + this.eventNamespace, function( event ) {
                 if ( options.disabled )
@@ -44850,10 +47527,12 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
             .attr( "role", "button" )
             .bind( "focus" + this.eventNamespace, function() {
                 // no need to check disabled, focus won't be triggered anyway
-                self.rootElement.addClass( focusClass );
+                self.rootElement.addClass( focusClass )
+                                .removeClass( "oj-default" );
             })
             .bind( "blur" + this.eventNamespace, function() {
                 self.rootElement.removeClass( focusClass );
+                self._addOJDefaultClass();
             });
 
         if ( toggleButton )
@@ -44972,7 +47651,8 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
                     }
                     if ( event.which === 1 ) // don't show active/pressed-down state unless left mouse button, since only that button will click the button after mouseup
                     { 
-                        $( this ).addClass( "oj-active" );
+                        $( this ).addClass( "oj-active" )
+                                 .removeClass( "oj-default" );
                         lastActive = this;
                         self.document.one( "mouseup", function() {
                             lastActive = null;
@@ -44983,12 +47663,15 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
                     if ( options.disabled ) 
                         return false;
                     $( this ).removeClass( "oj-active" );
+                    self._addOJDefaultClass();
                 })
                 .bind( "keydown" + this.eventNamespace, function(event) {
                     if ( options.disabled ) 
                         return false;
-                    if ( event.keyCode === $.ui.keyCode.SPACE || event.keyCode === $.ui.keyCode.ENTER )
-                        $( this ).addClass( "oj-active" );
+                    if ( event.keyCode === $.ui.keyCode.SPACE || event.keyCode === $.ui.keyCode.ENTER ) {
+                        $( this ).addClass( "oj-active" )
+                                 .removeClass( "oj-default" );
+                    }
                 })
                 // see #8559, we bind to blur here in case the button element loses
                 // focus between keydown and keyup, it would be left in an "active" state
@@ -44999,6 +47682,7 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
                 // The oj-active class clears on any subsequent keypress on the Button.  Is there some creative solution to this browser limitation.
                 .bind( "keyup" + this.eventNamespace + " blur" + this.eventNamespace, function() {
                     $( this ).removeClass( "oj-active" );
+                    self._addOJDefaultClass();
                 });
 
             if ( this.buttonElement.is("a") ) 
@@ -45058,8 +47742,10 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
             this.rootElement = this.element.parent(); // the new root
             
             checked = this.element[0].checked;
-            if ( checked )
-                this.rootElement.addClass( "oj-checked" );
+            if ( checked ) {
+                this.rootElement.addClass( "oj-checked" )
+                                .removeClass( "oj-default");
+            }
             // else no need to removeClass since this code runs only at _create time
             
             // must be set for toggle buttons even if false, since presence of this attr conveys to AT's 
@@ -45150,11 +47836,16 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
                 if (value)
                 {
                     // TBD: when the handling of oj-active in baseComponent._setOption("disabled") is finalized, review whether this should be handled there instead.
-                    this.widget().removeClass("oj-active");
+                    this.widget().removeClass("oj-active oj-default");
                     
                     // when disabling a menu button, dismiss the menu if open
                     this._dismissMenu(null, null, true);
                 }
+                else
+                {
+                    this._addOJDefaultClass();
+                }
+
                 break;
             case "label":
                 this._setLabelOption();
@@ -45207,11 +47898,13 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
                 
                 if ( this.checked )
                 {
-                    $radioWidget.rootElement.addClass( "oj-checked" );
+                    $radioWidget.rootElement.addClass( "oj-checked" )
+                                            .removeClass( "oj-default" );
                     $radioWidget.element.attr( "aria-pressed", "true" );
                 } else 
                 {
                     $radioWidget.rootElement.removeClass( "oj-checked" );
+                    $radioWidget._addOJDefaultClass();
                     $radioWidget.element.attr( "aria-pressed", "false" );
                 }
             });
@@ -45219,11 +47912,13 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
         {
             if ( this.element[0].checked ) 
             {
-                this.rootElement.addClass( "oj-checked" );
+                this.rootElement.addClass( "oj-checked" )
+                                .removeClass( "oj-default" );
                 this.element.attr( "aria-pressed", "true" );
             } else 
             {
                 this.rootElement.removeClass( "oj-checked" );
+                this._addOJDefaultClass();
                 this.element.attr( "aria-pressed", "false" );
             }
         }
@@ -45581,7 +48276,8 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
             //       would just confuse things, and that the visual pressed-in look was just eye candy in this case, not semantics that we need to show to AT users. 
             // - If checkbox menuButtons were supported, obviously we'd toggle the pressed look by checking/unchecking the button, which in turn would toggle oj-checked.
             //   In that case, we'd fire DOM checked event (right?) and if wrapped in Buttonset, update its checked option and fire optionChange event.
-            this.rootElement.addClass( "oj-checked" );
+            this.rootElement.addClass( "oj-checked" )
+                            .removeClass( "oj-default" );
             
             // No need to fire click event, since not appropriate for DownArrow, and already fired for user click.
             
@@ -45622,12 +48318,15 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
     _menuDismissHandler: function(event) // Private, not an override (not in base class).  Method name unquoted so will be safely optimized (renamed) by GCC as desired.
     {
         //console.log(this.options.label + ": button._menuDismissHandler called");
-        if ( this.type === "button" )
+        if ( this.type === "button" ) {
             // then only reason for .oj-checked to be present is if it's an open menu button, 
             // in which case remove the class since the menu is being dismissed
             this.rootElement.removeClass( "oj-checked" );
+            this._addOJDefaultClass();
+        }
         // else it's not a menu button.  Probably never called in that case, but if it is, there's no need to 
         // clear oj-checked.  If this is a toggle button, doing so w/b harmful.
+
         
         this._menuVisible = false;
     },
@@ -45649,6 +48348,18 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
             //console.log(this.options.label + ": _toggleMenu showing");
             this._showMenu(event, "none", menu);
         }
+    },
+
+    /*
+    * Adds the <code class="prettyprint">oj-default</code> marker to the component element if it is not already marked with any one these state markers: 
+    *  <code class="prettyprint">oj-active, oj-disabled, oj-checked, oj-hover, .oj-focus</code>
+    *
+    * @private
+    */
+    _addOJDefaultClass: function()
+    {
+        if ( ! this.rootElement.is( ".oj-active, .oj-disabled, .oj-checked, .oj-hover, .oj-focus" ))
+            this.rootElement.addClass( "oj-default" );
     }
     
     // API doc for inherited methods with no JS in this file:
@@ -45729,8 +48440,8 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
  * <p>A sentence like the first is appropriate for a buttonset consisting of a radio group, in order to convey the "select one" semantics 
  * to AT users.  It should be omitted for checkboxes and push buttons.
  * 
- * <p>The second sentence lets the user know how to navigate.  It should be omitted if the buttonset's focus management is overridden 
- * by another component such as a containing Toolbar. (Note that Buttonsets inside Toolbars are not yet supported in v0.5.)
+ * <p>The second sentence lets the user know how to navigate.  It should be omitted if the buttonset's focus management is turned off via 
+ * the <code class="prettyprint">focusManagement</code> option.
  * 
  * <p>The <code class="prettyprint">aria-controls</code> attribute is appropriate if the buttonset is controlling something else on the page, e.g. 
  * bold/italic/underline buttons controlling a rich text editor.  
@@ -45767,12 +48478,12 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
  * virtual element as follows:
  * 
  * <pre class="prettyprint">
- * <code>&lt;div id="radioButtonset" data-bind="ojComponent: {component: 'ojButtonset'}"
+ * <code>&lt;div id="drinkset" data-bind="ojComponent: {component: 'ojButtonset', checked: drink}"
  *      aria-label="Choose only one beverage.  Use left and right arrow keys to navigate.">
  *     &lt;!-- ko foreach: drinkRadios -->
  *         &lt;label data-bind="attr: {for: id}, text: label">&lt;/label>
  *         &lt;input type="radio" name="beverage"
- *                data-bind="value: id, click: $parent.offerAdvice, attr: {id: id, checked: id === $parent.initialDrink}"/>
+ *                data-bind="value: id, attr: {id: id}"/>
  *     &lt;!-- /ko -->
  * &lt;/div>
  * </code></pre>
@@ -45859,9 +48570,19 @@ oj.__registerWidget("oj.ojButtonset", $['oj']['baseComponent'],
          * 
          * <p>In all other cases, <code class="prettyprint">checked</code> is <code class="prettyprint">null</code>.
          * 
+         * <p>After create time, the <code class="prettyprint">checked</code> state should be set via this API, not by setting the underlying DOM attribute.
+         * 
+         * <p>The 2-way <code class="prettyprint">checked</code> binding offered by the <code class="prettyprint">ojComponent</code> binding 
+         * should be used instead of Knockout's built-in <code class="prettyprint">checked</code> binding,
+         * as the former sets the API, while the latter sets the underlying DOM attribute.
+         * 
          * <p>An <code class="prettyprint">optionChange</code> event is fired whenever this option changes, whether due to user interaction 
          * or programmatic intervention.  If the value is the same as the previous value (using order-independent "set" equality for 
          * checkboxes), no event will be fired.
+         * 
+         * <p>Often there is no need to listen for this event, since the <code class="prettyprint">ojComponent</code> 
+         * <code class="prettyprint">checked</code> binding, discussed above, will update the bound 
+         * observable whenever the <code class="prettyprint">checked</code> state changes.  
          * 
          * @expose
          * @memberof! oj.ojButtonset
@@ -45949,6 +48670,10 @@ oj.__registerWidget("oj.ojButtonset", $['oj']['baseComponent'],
          * <p>Currently there is one supported option, <code class="prettyprint">checked</code>.  Additional 
          * options may be supported in the future, so listeners should verify which option is changing 
          * before taking any action.
+         * 
+         * <p>Often there is no need to listen for this event, since the 2-way <code class="prettyprint">checked</code> 
+         * binding offered by the <code class="prettyprint">ojComponent</code> binding will update the bound 
+         * observable whenever the <code class="prettyprint">checked</code> state changes.
          * 
          * @expose 
          * @event 
@@ -46850,11 +49575,11 @@ the specific language governing permissions and limitations under the Apache Lic
        *
        * @example <caption>Initialize the Combobox with the <code class="prettyprint">expand</code> callback specified:</caption>
        * $( ".selector" ).ojCombobox({
-       *     "expand": function( event ) {}
+       *     "expand": function( event, ui ) {}
        * });
        *
        * @example <caption>Bind an event listener to the <code class="prettyprint">ojexpand</code> event:</caption>
-       * $( ".selector" ).on( "ojexpand", function( event ) {} );
+       * $( ".selector" ).on( "ojexpand", function( event, ui ) {} );
        */
       expand : null
 
@@ -46908,6 +49633,23 @@ the specific language governing permissions and limitations under the Apache Lic
     {
       this.combobox._destroy();
     },
+    
+    /**
+     * Refreshes the combobox.
+     *
+     * <p>This method does not accept any arguments.
+     * 
+     * @expose 
+     * @memberof! oj.ojCombobox
+     * @instance
+     */
+    refresh : function ()
+    {
+      this._super();
+
+      this.combobox._destroy();
+      this._setup();
+    },
 
     /**
      * Expands the drop down list.
@@ -46955,6 +49697,10 @@ the specific language governing permissions and limitations under the Apache Lic
         else
           this.combobox._enable();
       }
+      else if (key === "data")
+      {
+        this.refresh();
+      }
     },
 
     /**
@@ -46967,6 +49713,69 @@ the specific language governing permissions and limitations under the Apache Lic
     _GetMessagingTriggerElement : function ()
     {
       return this.combobox.container;
+    },
+    
+    /**
+     * Returns the default styleclass for the component.
+     * 
+     * @return {string}
+     * @expose
+     * @memberof! oj.ojCombobox
+     * @override
+     * @protected
+     */
+    _GetDefaultStyleClass : function ()
+    {
+    return "oj-combobox";
+    },
+    
+    /**
+     * Return the subcomponent node represented by the documented locator 
+     * attribute values.
+     * Test authors should target sub elements using the following names:
+     * <ul>
+     * <li><b>oj-combobox-input</b>: the input field </li>
+     * <li><b>oj-combobox-arrow</b>: the drop down arrow for single-select combobox </li>
+     * <li><b>oj-listbox-drop</b>: the drop down box </li>
+     * <li><b>oj-listbox-results</b>: the filtered result list </li>
+     * </ul>
+     * @expose
+     * @memberof! oj.ojCombobox
+     * @instance
+     * @override
+     * @param {Object} locator An Object containing at minimum a subId property 
+     *        whose value is a string, documented by the component, that allows 
+     *        the component to look up the subcomponent associated with that 
+     *        string.  It contains:<p>
+     *        component: optional - in the future there may be more than one 
+     *        component contained within a page element<p>
+     *        subId: the string, documented by the component, that the component 
+     *        expects in getNodeBySubId to locate a particular subcomponent
+     * @returns {Element|null} the subcomponent located by the subId string passed
+     *          in locator, if found.<p>
+     */
+    getNodeBySubId: function(locator)
+    {
+	    if (locator == null)
+	    {
+        return this.combobox.container ? this.combobox.container : null;
+	    }
+	    
+	    var subId = locator['subId'];
+
+	    switch (subId) {
+
+        case "oj-combobox-input":
+        case "oj-combobox-arrow":
+        case "oj-listbox-drop":
+        case "oj-combobox-results":
+          return this.widget().find(subId)[0];
+          break;
+
+	    }
+
+	    // Non-null locators have to be handled by the component subclasses
+	    return null;
     }
 
   }
@@ -47214,7 +50023,7 @@ the specific language governing permissions and limitations under the Apache Lic
      * @expose 
      * @memberof! oj.ojSelect
      * @instance
-
+     */
     refresh : function ()
     {
       this._super();
@@ -47223,7 +50032,7 @@ the specific language governing permissions and limitations under the Apache Lic
       this._setup();
       //TODO: apply value in options for the selected value
     },
-     */
+
     /**
      * @override
      * @private
@@ -47278,6 +50087,95 @@ the specific language governing permissions and limitations under the Apache Lic
         else
           this.select._enable();
       }
+      else if (key === "data")
+      {
+        this._setup();
+      }
+      else if (key === "value")
+      {
+        // [pavitra] don't call setVal() here for the following reasons - 
+        // 1. when _setOption() is called for the key === 'value', the value has already been 
+        // written into the component option. So calling this.select.setVal() is incorrect because 
+        // it ends up calling EditableValue._SetValue(). 
+        // 2. EditableValue._SetValue is really intended to be called only when user interacts with 
+        // your component and as a result you need to run converters and validators on the 
+        // value. There are ways to call _SetValue() so it runs in restricted mode. See JSDocs.
+        // 
+        // 3. _setOption() method is called when the component value is updated programmatically. In 
+        // those cases you don't want to run validations by calling _SetValue.
+
+        this.select.setVal(value);
+        this.select._initSelection();
+      }
+
+    },
+
+    /**
+     * Return the subcomponent node represented by the documented locator 
+     * attribute values.
+     * Test authors should target sub elements using the following names:
+     * <ul>
+     * <li><b>oj-select-chosen</b>: the selected text in the select box</li>
+     * <li><b>oj-select-search</b>: the search box. Note the searchbox is not always visible</li>
+     * <li><b>oj-listbox-drop</b>: the drop down box </li>
+     * <li><b>oj-listbox-results</b>: the filtered result list </li>
+     * </ul>
+     * @expose
+     * @memberof! oj.ojSelect
+     * @instance
+     * @override
+     * @param {Object} locator An Object containing at minimum a subId property 
+     *        whose value is a string, documented by the component, that allows 
+     *        the component to look up the subcomponent associated with that 
+     *        string.  It contains:<p>
+     *        component: optional - in the future there may be more than one 
+     *        component contained within a page element<p>
+     *        subId: the string, documented by the component, that the component 
+     *        expects in getNodeBySubId to locate a particular subcomponent
+     * @returns {Element|null} the subcomponent located by the subId string passed
+     *          in locator, if found.<p>
+     */
+    getNodeBySubId: function(locator)
+    {
+      if (locator == null)
+      {
+        return this.select.container ? this.select.container : null;
+      }
+      
+      var subId = locator['subId'];
+
+      switch (subId) {
+      case "oj-select-chosen":
+      case "oj-select-search":
+      case "oj-listbox-drop":
+      case "oj-listbox-results":
+        return this.widget().find("." + subId)[0];
+        break;
+      }
+      
+      // Non-null locators have to be handled by the component subclasses
+      return null;
+    },
+
+    /**
+     * Returns the default styleclass for the component. Currently this is 
+     * used to pass to the _ojLabel component, which will append -label and 
+     * add the style class onto the label. This way we can style the label
+     * specific to the input component. For example, for inline labels, the
+     * radioset/checkboxset components need to have margin-top:0, whereas all the
+     * other inputs need it to be .5em. So we'll have a special margin-top style 
+     * for .oj-label-inline.oj-radioset-label
+     * All input components must override
+     * 
+     * @return {string}
+     * @expose
+     * @memberof! oj.ojSelect
+     * @override
+     * @protected
+     */
+    _GetDefaultStyleClass : function ()
+    {
+      return "oj-select";
     },
 
     /**
@@ -47378,9 +50276,9 @@ the specific language governing permissions and limitations under the Apache Lic
     return list;
   }
 
-  function _measureScrollbar(className)
+  function _measureScrollbar()
   {
-    var $template = $("<div class='" + className + "-measure-scrollbar'></div>");
+    var $template = $("<div class='oj-listbox-measure-scrollbar'></div>");
     $template.appendTo('body');
     var dim =
     {
@@ -47657,12 +50555,14 @@ the specific language governing permissions and limitations under the Apache Lic
     };
   }
 
-  function _checkFormatter(formatter, formatterName)
+  function _checkFormatter(ojContext, formatter, formatterName)
   {
     if ($.isFunction(formatter))
       return true;
     if (!formatter)
       return false;
+
+//    throw new Error(ojContext.getTranslatedString("invalidFormatter", formatterName));
     throw new Error(formatterName + " must be a function or a false value");
   }
 
@@ -47693,7 +50593,7 @@ the specific language governing permissions and limitations under the Apache Lic
         search,
         className = this._classNm,
         elemName = this._elemNm,
-        resultsSelector = "." + className + "-results";
+        resultsSelector = ".oj-listbox-results";
 
         this.ojContext = opts.ojContext;
         this.opts = opts = this._prepareOpts(opts);
@@ -47724,7 +50624,7 @@ the specific language governing permissions and limitations under the Apache Lic
         .attr("tabindex", "-1")
         .before(this.container);
         this.container.data(elemName, this);
-        this.dropdown = this.container.find("." + className + "-drop");
+        this.dropdown = this.container.find(".oj-listbox-drop");
         this.dropdown.data(elemName, this);
         this.dropdown.on("click", _killEvent);
         this.results = results = this.container.find(resultsSelector);
@@ -47763,7 +50663,7 @@ the specific language governing permissions and limitations under the Apache Lic
         );
         this.dropdown.on("mouseup", resultsSelector, this._bind(function (e)
           {
-            if ($(e.target).closest("." + className + "-result-selectable").length > 0)
+            if ($(e.target).closest(".oj-listbox-result-selectable").length > 0)
             {
               this._highlightUnderEvent(e);
               this._selectHighlighted(e);
@@ -47783,6 +50683,10 @@ the specific language governing permissions and limitations under the Apache Lic
           // initialize selection based on the current value of the source element
           if (opts.value)
             this.setVal(opts.value);
+
+          ///ojselect default to 1st option in option list
+          else if (this._classNm === "oj-select" && opts.data && opts.data.length > 0)
+            this.setVal(opts.data[0]);
           this._initSelection();
         }
         var disabled = opts.element.prop("disabled");
@@ -47794,7 +50698,7 @@ the specific language governing permissions and limitations under the Apache Lic
           readonly = false;
         this._readonly(readonly);
         // Calculate size of scrollbar
-        _scrollBarDimensions = _scrollBarDimensions || _measureScrollbar(this._classNm);
+        _scrollBarDimensions = _scrollBarDimensions || _measureScrollbar();
         this.autofocus = opts.element.prop("autofocus");
         opts.element.prop("autofocus", false);
         if (this.autofocus)
@@ -47912,22 +50816,22 @@ the specific language governing permissions and limitations under the Apache Lic
                   compound = result.children && result.children.length > 0;
 
                   node = $("<li></li>");
-                  node.addClass(self._classNm + "-results-dept-" + depth);
-                  node.addClass(self._classNm + "-result");
-                  node.addClass(selectable ? self._classNm + "-result-selectable" : self._classNm + "-result-unselectable");
+                  node.addClass("oj-listbox-results-dept-" + depth);
+                  node.addClass("oj-listbox-result");
+                  node.addClass(selectable ? "oj-listbox-result-selectable" : "oj-listbox-result-unselectable");
                   if (disabled)
                   {
                     node.addClass("oj-disabled");
                   }
                   if (compound)
                   {
-                    node.addClass(self._classNm + "-result-with-children");
+                    node.addClass("oj-listbox-result-with-children");
                   }
                   node.attr("role", "presentation");
 
                   label = $(document.createElement("div"));
-                  label.addClass(self._classNm + "-result-label");
-                  label.attr("id", self._classNm + "-result-label-" + _nextUid());
+                  label.addClass("oj-listbox-result-label");
+                  label.attr("id", "oj-listbox-result-label-" + _nextUid());
                   label.attr("role", "option");
                   if (disabled)
                     label.attr("aria-disabled", "true");
@@ -47943,7 +50847,7 @@ the specific language governing permissions and limitations under the Apache Lic
                   if (compound)
                   {
                     innerContainer = $("<ul></ul>");
-                    innerContainer.addClass(self._classNm + "-result-sub");
+                    innerContainer.addClass("oj-listbox-result-sub");
                     populate(result.children, innerContainer, depth + 1);
                     node.append(innerContainer);
                   }
@@ -48102,7 +51006,7 @@ the specific language governing permissions and limitations under the Apache Lic
       },
       _opened : function ()
       {
-        return this.container.hasClass(this._classNm + "-dropdown-open");
+        return this.container.hasClass("oj-listbox-dropdown-open");
       },
       _positionDropdown : function ()
       {
@@ -48122,7 +51026,7 @@ the specific language governing permissions and limitations under the Apache Lic
         enoughRoomAbove = (offset.top - dropHeight) >= this.body().scrollTop(),
         dropWidth = $dropdown.outerWidth(false),
         enoughRoomOnRight = dropLeft + dropWidth <= viewPortRight,
-        aboveNow = $dropdown.hasClass(this._classNm + "-drop-above"),
+        aboveNow = $dropdown.hasClass("oj-listbox-drop-above"),
         bodyOffset,
         above,
         changeDirection,
@@ -48177,8 +51081,8 @@ the specific language governing permissions and limitations under the Apache Lic
 
         if (this.opts.dropdownAutoWidth)
         {
-          resultsListNode = $("." + this._classNm + "-results", $dropdown)[0];
-          $dropdown.addClass(this._classNm + "-drop-auto-width");
+          resultsListNode = $(".oj-listbox-results", $dropdown)[0];
+          $dropdown.addClass("oj-listbox-drop-auto-width");
           $dropdown.css('width', '');
           // Add scrollbar width to dropdown if vertical scrollbar is present
           dropWidth = $dropdown.outerWidth(false) + (resultsListNode.scrollHeight === resultsListNode.clientHeight ? 0 : _scrollBarDimensions.width);
@@ -48187,7 +51091,7 @@ the specific language governing permissions and limitations under the Apache Lic
         }
         else
         {
-          this.container.removeClass(this._classNm + "-drop-auto-width");
+          this.container.removeClass("oj-listbox-drop-auto-width");
         }
 
         // fix positioning when body has an offset and is not position: static
@@ -48213,15 +51117,15 @@ the specific language governing permissions and limitations under the Apache Lic
         {
           css.bottom = windowHeight - offset.top;
           css.top = 'auto';
-          this.container.addClass(this._classNm + "-drop-above");
-          $dropdown.addClass(this._classNm + "-drop-above");
+          this.container.addClass("oj-listbox-drop-above");
+          $dropdown.addClass("oj-listbox-drop-above");
         }
         else
         {
           css.top = dropTop;
           css.bottom = 'auto';
-          this.container.removeClass(this._classNm + "-drop-above");
-          $dropdown.removeClass(this._classNm + "-drop-above");
+          this.container.removeClass("oj-listbox-drop-above");
+          $dropdown.removeClass("oj-listbox-drop-above");
         }
 
         $dropdown.css(css);
@@ -48242,8 +51146,8 @@ the specific language governing permissions and limitations under the Apache Lic
       _clearDropdownAlignmentPreference : function ()
       {
         // clear the classes used to figure out the preference of where the dropdown should be opened
-        this.container.removeClass(this._classNm + "-drop-above");
-        this.dropdown.removeClass(this._classNm + "-drop-above");
+        this.container.removeClass("oj-listbox-drop-above");
+        this.dropdown.removeClass("oj-listbox-drop-above");
       },
       /*
        * Opens the dropdown
@@ -48276,7 +51180,7 @@ the specific language governing permissions and limitations under the Apache Lic
         mask;
 
         this._clearPlaceholder();
-        this.container.addClass(className + "-dropdown-open");
+        this.container.addClass("oj-listbox-dropdown-open");
 
         this._clearDropdownAlignmentPreference();
 
@@ -48286,17 +51190,17 @@ the specific language governing permissions and limitations under the Apache Lic
         }
 
         // create the dropdown mask if doesnt already exist
-        mask = $("#" + className + "-drop-mask");
+        mask = $("#oj-listbox-drop-mask");
         if (mask.length == 0)
         {
           mask = $(document.createElement("div"));
-          mask.attr("id", className + "-drop-mask").attr("class", className + "-drop-mask");
+          mask.attr("id", "oj-listbox-drop-mask").attr("class", "oj-listbox-drop-mask");
           mask.hide();
           mask.appendTo(this.body());
 
           mask.on("mousedown touchstart click", function (e)
           {
-            var dropdown = $("#" + className + "-drop"),
+            var dropdown = $("#oj-listbox-drop"),
             self;
             if (dropdown.length > 0)
             {
@@ -48324,8 +51228,8 @@ the specific language governing permissions and limitations under the Apache Lic
         }
 
         // move the global id to the correct dropdown
-        $("#" + className + "-drop").removeAttr("id");
-        this.dropdown.attr("id", className + "-drop");
+        $("#oj-listbox-drop").removeAttr("id");
+        this.dropdown.attr("id", "oj-listbox-drop");
 
         // show the elements
         mask.show();
@@ -48369,10 +51273,10 @@ the specific language governing permissions and limitations under the Apache Lic
 
         this._clearDropdownAlignmentPreference();
 
-        $("#" + this._classNm + "-drop-mask").hide();
+        $("#oj-listbox-drop-mask").hide();
         this.dropdown.removeAttr("id");
         this.dropdown.hide();
-        this.container.removeClass(this._classNm + "-dropdown-open");
+        this.container.removeClass("oj-listbox-dropdown-open");
         this.results.empty();
 
         this.search.attr("aria-expanded", false);
@@ -48403,14 +51307,14 @@ the specific language governing permissions and limitations under the Apache Lic
           return;
         }
 
-        children = this._findHighlightableChoices().find("." + this._classNm + "-result-label");
+        children = this._findHighlightableChoices().find(".oj-listbox-result-label");
         child = $(children[index]);
         hb = child.offset().top + child.outerHeight(true);
 
         // if this is the last child lets also make sure oj-combobox-more-results is visible
         if (index === children.length - 1)
         {
-          more = results.find("li." + this._classNm + "-more-results");
+          more = results.find("li.oj-listbox-more-results");
           if (more.length > 0)
           {
             hb = more.offset().top + more.outerHeight(true);
@@ -48432,7 +51336,7 @@ the specific language governing permissions and limitations under the Apache Lic
       },
       _findHighlightableChoices : function ()
       {
-        return this.results.find("." + this._classNm + "-result-selectable:not(.oj-disabled, ." + this._classNm + "-selected)");
+        return this.results.find(".oj-listbox-result-selectable:not(.oj-disabled, .oj-listbox-selected)");
       },
       _moveHighlight : function (delta)
       {
@@ -48442,7 +51346,8 @@ the specific language governing permissions and limitations under the Apache Lic
         {
           index += delta;
           var choice = $(choices[index]);
-          if (choice.hasClass(this._classNm + "-result-selectable") && !choice.hasClass("oj-disabled") && !choice.hasClass(this._classNm + "-selected"))
+          if (choice.hasClass("oj-listbox-result-selectable") && !choice.hasClass("oj-disabled") && 
+              !choice.hasClass("oj-listbox-selected"))
           {
             this._highlight(index);
             break;
@@ -48457,7 +51362,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
         if (arguments.length === 0)
         {
-          return choices.get().indexOf(choices.filter("." + this._classNm + "-highlighted")[0]);
+          return choices.get().indexOf(choices.filter(".oj-listbox-highlighted")[0]);
         }
 
         if (index >= choices.length)
@@ -48468,20 +51373,20 @@ the specific language governing permissions and limitations under the Apache Lic
         this._removeHighlight();
 
         choice = $(choices[index]);
-        choice.addClass(this._classNm + "-highlighted");
+        choice.addClass("oj-listbox-highlighted");
 
         // ensure assistive technology can determine the active choice
-        this.search.attr("aria-activedescendant", choice.find("." + this._classNm + "-result-label").attr("id"));
+        this.search.attr("aria-activedescendant", choice.find(".oj-listbox-result-label").attr("id"));
         this._ensureHighlightVisible();
       },
       _removeHighlight : function ()
       {
-        this.results.find("." + this._classNm + "-highlighted").removeClass(this._classNm + "-highlighted");
+        this.results.find(".oj-listbox-highlighted").removeClass("oj-listbox-highlighted");
       },
       _highlightUnderEvent : function (event)
       {
-        var el = $(event.target).closest("." + this._classNm + "-result-selectable");
-        if (el.length > 0 && !el.is("." + this._classNm + "-highlighted"))
+        var el = $(event.target).closest(".oj-listbox-result-selectable");
+        if (el.length > 0 && !el.is(".oj-listbox-highlighted"))
         {
           var choices = this._findHighlightableChoices();
           this._highlight(choices.index(el));
@@ -48582,9 +51487,9 @@ the specific language governing permissions and limitations under the Apache Lic
               }
             }
 
-            if (data.results.length === 0 && _checkFormatter(opts.formatNoMatches, "formatNoMatches"))
+            if (data.results.length === 0 && _checkFormatter(self.ojContext, opts.formatNoMatches, "formatNoMatches"))
             {
-              render("<li class='" + self._classNm + "-no-results'>" + opts.formatNoMatches(search.val()) + "</li>");
+              render("<li class='" + "oj-listbox-no-results'>" + opts.formatNoMatches(self.ojContext, search.val()) + "</li>");
               return;
             }
 
@@ -48614,8 +51519,8 @@ the specific language governing permissions and limitations under the Apache Lic
       _selectHighlighted : function (options)
       {
         var index = this._highlight(),
-        highlighted = this.results.find("." + this._classNm + "-highlighted"),
-        data = highlighted.closest("." + this._classNm + "-result").data(this._elemNm);
+        highlighted = this.results.find(".oj-listbox-highlighted"),
+        data = highlighted.closest(".oj-listbox-result").data(this._elemNm);
 
         if (data)
         {
@@ -48676,11 +51581,16 @@ the specific language governing permissions and limitations under the Apache Lic
 
       ///ojselect
       getVal: function () {
-        return this.opts.element.val();
+        return this.ojContext.option("value");
       },
 
       ///ojselect
       setVal: function (val) {
+        if (typeof val === "string")
+          this.ojContext._SetValue([val]);
+        else
+          this.ojContext._SetValue(val);
+        // also set on the input element
         this.opts.element.val(val);
       },
 
@@ -48697,7 +51607,7 @@ the specific language governing permissions and limitations under the Apache Lic
   ///ojselect
   _AbstractSingleChoice = _clazz(_AbstractOjChoice,
     {
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _enableInterface : function ()
       {
         if (_AbstractSingleChoice.superclass._enableInterface.apply(this, arguments))
@@ -48706,7 +51616,7 @@ the specific language governing permissions and limitations under the Apache Lic
         }
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _focus : function ()
       {
         if (this._opened())
@@ -48715,13 +51625,13 @@ the specific language governing permissions and limitations under the Apache Lic
         }
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _cancel : function ()
       {
         _AbstractSingleChoice.superclass._cancel.apply(this, arguments);
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _destroy : function ()
       {
         $("label[for='" + this.search.attr('id') + "']")
@@ -48729,28 +51639,27 @@ the specific language governing permissions and limitations under the Apache Lic
         _AbstractSingleChoice.superclass._destroy.apply(this, arguments);
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _clear : function ()
       {
         var data = this.selection.data(this._elemNm);
         if (data)
         { // guard against queued quick consecutive clicks
-          this.opts.element.val("");
+          this.setVal([]);
           this.search.val("");
           this.selection.removeData(this._elemNm);
-          this._triggerChange();
         }
         this._setPlaceholder();
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _initSelection : function ()
       {
         var selected,
         element,
         self = this;
 
-        if (this.datalist || this.getVal() !== "")
+        if (this.datalist || this.getVal())
         {
           if (this.datalist)
             element = this.datalist;
@@ -48763,14 +51672,13 @@ the specific language governing permissions and limitations under the Apache Lic
               self.setVal(self.id(selected));
               self._updateSelection(selected);
               self.close();
-              //self._setPlaceholder();
             }
           }
           );
         }
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _containerKeydownHandler : function (e)
       {
         if (!this._isInterfaceEnabled())
@@ -48783,8 +51691,6 @@ the specific language governing permissions and limitations under the Apache Lic
           return;
         }
 
-        ///ojselect
-        var isSelectTag = (this._elemNm === "ojselect");
         switch (e.which)
         {
         case _KEY.UP:
@@ -48796,9 +51702,6 @@ the specific language governing permissions and limitations under the Apache Lic
           else
           {
             this.open();
-            ///ojselect
-            if (isSelectTag)
-              _focus(this.selection);
           }
           _killEvent(e);
           return;
@@ -48822,15 +51725,14 @@ the specific language governing permissions and limitations under the Apache Lic
           return;
         }
 
-        ///ojselect
-        if (isSelectTag)
-          this._userTyping = true;
+        ///ojselect: used by select
+        this._userTyping = true;
 
         if (!this._opened())
           this.open();
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _containerKeyupHandler : function (e)
       {
         if (this._isInterfaceEnabled())
@@ -48840,7 +51742,7 @@ the specific language governing permissions and limitations under the Apache Lic
         }
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _initContainer : function ()
       {
         var selection,
@@ -48851,13 +51753,14 @@ the specific language governing permissions and limitations under the Apache Lic
 
         this.selection = selection = container.find("." + this._classNm + "-choice");
 
-        elementLabel = $("label[for='" + this.opts.element.attr("id") + "']")
-          .attr('id', this._classNm + "-label-" + idSuffix);
+        elementLabel = $("label[for='" + this.opts.element.attr("id") + "']");
+        if (!elementLabel.attr("id"))
+          elementLabel.attr('id', this._classNm + "-label-" + idSuffix);
 
         // add aria associations
         selection.find("." + this._classNm + "-input").attr("id", this._classNm + "-input-" + idSuffix);
-        this.results.attr("id", this._classNm + "-results-" + idSuffix);
-        this.search.attr("aria-owns", this._classNm + "-results-" + idSuffix);
+        this.results.attr("id", "oj-listbox-results-" + idSuffix);
+        this.search.attr("aria-owns", "oj-listbox-results-" + idSuffix);
         this.search.attr("aria-labelledby", elementLabel.attr("id"));
 
         this.search.on("keydown", this._bind(this._containerKeydownHandler));
@@ -48906,7 +51809,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _opening : function (event)
       {
         var el,
@@ -48931,7 +51834,7 @@ the specific language governing permissions and limitations under the Apache Lic
         this.opts.element.trigger($.Event("ojexpand"));
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _prepareOpts : function ()
       {
         var opts = _AbstractSingleChoice.superclass._prepareOpts.apply(this, arguments),
@@ -48946,11 +51849,11 @@ the specific language governing permissions and limitations under the Apache Lic
           opts.initSelection = function (element, callback)
           {
             var selected;
-            if (self.getVal())
+            if (self.getVal() && self.getVal().length > 0)
             {
               selected = self._optionToData(element.find("option").filter(function ()
                   {
-                    return this.value === self.getVal();
+                    return this.value === self.getVal()[0];
                   }
                   ));
             }
@@ -48965,12 +51868,14 @@ the specific language governing permissions and limitations under the Apache Lic
             callback(selected);
           };
         }
-        else if ("data" in opts || this.getVal())
+        else if ("data" in opts || (this.getVal() && this.getVal().length > 0))
         {
           // install default initSelection when applied to hidden input and data is local
           opts.initSelection = opts.initSelection || function (element, callback)
           {
-            var id = self.getVal();
+            var id = "";
+            if (self.getVal() && self.getVal().length)
+              id = self.getVal()[0];
 
             //search in data by id, storing the actual matching item
             var first = null;
@@ -49007,7 +51912,7 @@ the specific language governing permissions and limitations under the Apache Lic
         return opts;
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _setPlaceholder : function ()
       {
         var placeholder = this._getPlaceholder();
@@ -49018,7 +51923,7 @@ the specific language governing permissions and limitations under the Apache Lic
         this.container.removeClass(this._classNm + "-allowclear");
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _postprocessResults : function (data, initial, noHighlightUpdate)
       {
         var selected = 0,
@@ -49028,7 +51933,7 @@ the specific language governing permissions and limitations under the Apache Lic
         highlightableChoices = this._findHighlightableChoices();
         _each2(highlightableChoices, function (i, elm)
         {
-          if (self.id(elm.data(self._elemNm)) === self.getVal())
+          if (self.id(elm.data(self._elemNm)) === self.getVal()[0])
           {
             selected = i;
             return false;
@@ -49050,7 +51955,7 @@ the specific language governing permissions and limitations under the Apache Lic
         }
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _onSelect : function (data, options)
       {
         if (!this._triggerSelect(data))
@@ -49058,7 +51963,7 @@ the specific language governing permissions and limitations under the Apache Lic
           return;
         }
 
-        var old = this.getVal(),
+        var old = this.getVal()[0],
         oldData = this._data();
         this.setVal(this.id(data));
         this._updateSelection(data);
@@ -49070,7 +51975,7 @@ the specific language governing permissions and limitations under the Apache Lic
         }
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       val : function ()
       {
         var val,
@@ -49106,7 +52011,6 @@ the specific language governing permissions and limitations under the Apache Lic
           this.setVal(val);
           this._updateSelection(data);
           this._setPlaceholder();
-          this._triggerChange();
         }
         else
         {
@@ -49118,27 +52022,27 @@ the specific language governing permissions and limitations under the Apache Lic
           }
           if (this.opts.initSelection === undefined)
           {
+//            throw new Error(this.ojContext.getTranslatedString("initSelectionUndefined"));
             throw new Error("cannot call val() if initSelection() is not defined");
           }
           this.setVal(val);
           this.opts.initSelection(this.opts.element, function (data)
           {
-            self.setVal(!data ? "" : self.id(data));
+            self.setVal(!data ? [] : self.id(data));
             self._updateSelection(data);
             self._setPlaceholder();
-            self._triggerChange();
           }
           );
         }
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _clearSearch : function ()
       {
         this.search.val("");
       },
 
-      //_AbstractSingleChoice single
+      //_AbstractSingleChoice
       _data : function (value)
       {
         var data;
@@ -49159,9 +52063,8 @@ the specific language governing permissions and limitations under the Apache Lic
           else
           {
             data = this._data();
-            this.setVal(!value ? "" : this.id(value));
+            this.setVal(!value ? [] : this.id(value));
             this._updateSelection(value);
-            this._triggerChange();
           }
         }
       }
@@ -49187,8 +52090,8 @@ the specific language governing permissions and limitations under the Apache Lic
               "   </span><abbr class='oj-combobox-search-choice-close' role='presentation'></abbr>",
               "   <a class='oj-combobox-arrow' role='presentation'><b class='oj-combobox-icon oj-widget-icon oj-clickable-icon oj-combobox-open-icon' role='presentation'></b></a>",
               "</div>",
-              "<div class='oj-combobox-drop oj-combobox-display-none' role='presentation'>",
-              "   <ul class='oj-combobox-results' role='listbox'>",
+              "<div class='oj-listbox-drop oj-combobox-display-none' role='presentation'>",
+              "   <ul class='oj-listbox-results' role='listbox'>",
               "   </ul>",
               "</div>"].join(""));
         return container;
@@ -49246,8 +52149,8 @@ the specific language governing permissions and limitations under the Apache Lic
               "  </li>",
               "</ul>",
               "<div class='oj-combobox-description oj-combobox-offscreen'/>",
-              "<div class='oj-combobox-drop oj-combobox-drop-multi oj-combobox-display-none'>",
-              "   <ul class='oj-combobox-results' role='listbox'>",
+              "<div class='oj-listbox-drop oj-listbox-drop-multi oj-combobox-display-none'>",
+              "   <ul class='oj-listbox-results' role='listbox'>",
               "   </ul>",
               "</div>"].join(""));
         return container;
@@ -49393,12 +52296,13 @@ the specific language governing permissions and limitations under the Apache Lic
         }
         );
 
-        elementLabel = $("label[for='" + this.opts.element.attr("id") + "']")
-          .attr('id', this._classNm + "-label-" + idSuffix);
+        elementLabel = $("label[for='" + this.opts.element.attr("id") + "']");
+        if (!elementLabel.attr("id"))
+          elementLabel.attr('id', this._classNm + "-label-" + idSuffix);
 
         // add aria associations
-        this.results.attr("id", this._classNm + "-results-" + idSuffix);
-        this.search.attr("aria-owns", this._classNm + "-results-" + idSuffix);
+        this.results.attr("id", "oj-listbox-results-" + idSuffix);
+        this.search.attr("aria-owns", "oj-listbox-results-" + idSuffix);
         this.search.attr("aria-labelledby", elementLabel.attr("id"));
 
         this.search.on("input paste", this._bind(function ()
@@ -49628,7 +52532,7 @@ the specific language governing permissions and limitations under the Apache Lic
         var placeholder = this._getPlaceholder(),
         maxWidth = this._getMaxSearchWidth();
 
-        if (placeholder !== undefined && this.getVal().length === 0)
+        if (placeholder !== undefined && (!this.getVal() || this.getVal().length === 0))
         {
           this.search.val(placeholder).addClass(this._classNm + "-default");
           // stretch the search box to full width of the container so as much of the placeholder is visible as possible
@@ -49793,6 +52697,7 @@ the specific language governing permissions and limitations under the Apache Lic
         selected = selected.closest("." + this._classNm + "-search-choice");
         if (selected.length === 0)
         {
+//TODO: translation string
           throw "Invalid argument: " + selected + ". Must be ." + this._classNm + "-search-choice";
         }
         data = selected.data(this._elemNm);
@@ -49815,8 +52720,8 @@ the specific language governing permissions and limitations under the Apache Lic
       _postprocessResults : function (data, initial, noHighlightUpdate)
       {
         var val = this.getVal(),
-        choices = this.results.find("." + this._classNm + "-result"),
-        compound = this.results.find("." + this._classNm + "-result-with-children"),
+        choices = this.results.find(".oj-listbox-result"),
+        compound = this.results.find(".oj-listbox-result-with-children"),
         self = this;
 
         _each2(choices, function (i, choice)
@@ -49824,20 +52729,19 @@ the specific language governing permissions and limitations under the Apache Lic
           var id = self.id(choice.data(self._elemNm));
           if (val.indexOf(id) >= 0)
           {
-            choice.addClass(self._classNm + "-selected");
+            choice.addClass("oj-listbox-selected");
             // mark all children of the selected parent as selected
-            choice.find("." + self._classNm + "-result-selectable").addClass(self._classNm + "-selected");
+            choice.find(".oj-listbox-result-selectable").addClass("oj-listbox-selected");
           }
         }
         );
         _each2(compound, function (i, choice)
         {
           // hide an optgroup if it doesnt have any selectable children
-          //".oj-combobox-result-selectable:not(.oj-combobox-selected)"
-          if (!choice.is("." + self._classNm + "-result-selectable")
-             && choice.find("." + self._classNm + "-result-selectable:not(." + self._classNm + "-selected)").length === 0)
+          if (!choice.is(".oj-listbox-result-selectable")
+             && choice.find(".oj-listbox-result-selectable:not(.oj-listbox-selected)").length === 0)
           {
-            choice.addClass(self._classNm + "-selected");
+            choice.addClass("oj-listbox-selected");
           }
         }
         );
@@ -49846,15 +52750,15 @@ the specific language governing permissions and limitations under the Apache Lic
           self._highlight(0);
         }
         //If all results are chosen render formatNoMAtches
-        //".oj-combobox-result:not(.oj-combobox-selected)"
-        if (!this.opts.manageNewEntry && !choices.filter("." + this._classNm + "-result:not(." + this._classNm + "-selected)").length > 0)
+        if (!this.opts.manageNewEntry && 
+            !choices.filter('.oj-listbox-result:not(.oj-listbox-selected)').length > 0)
         {
-          if (!data || data && !data.more && this.results.find("." + this._classNm + "-no-results").length === 0)
+          if (!data || data && !data.more && this.results.find(".oj-listbox-no-results").length === 0)
           {
-            if (_checkFormatter(self.opts.formatNoMatches, "formatNoMatches"))
+            if (_checkFormatter(self.ojContext, self.opts.formatNoMatches, "formatNoMatches"))
             {
-              //"<li class='oj-combobox-no-results'>"
-              this.results.append("<li class='" + this._classNm + "-no-results'>" + self.opts.formatNoMatches(self.search.val()) + "</li>");
+              this.results.append("<li class='oj-listbox-no-results'>" +
+                                  self.opts.formatNoMatches(self.ojContext, self.search.val()) + "</li>");
             }
           }
         }
@@ -49891,6 +52795,7 @@ the specific language governing permissions and limitations under the Apache Lic
         }
         this.search.width(Math.floor(searchWidth));
       },
+      
       getVal : function ()
       {
         var val;
@@ -49902,6 +52807,9 @@ the specific language governing permissions and limitations under the Apache Lic
       {
         var unique;
         unique = [];
+        
+        if (typeof val === "string")
+          val = _splitVal(val, this.opts.separator);
         // filter out duplicates
         $(val).each(function ()
         {
@@ -49909,6 +52817,7 @@ the specific language governing permissions and limitations under the Apache Lic
             unique.push(this);
         }
         );
+
         this.opts.element.val(unique.length === 0 ? "" : unique.join(this.opts.separator));
         this.search.attr("aria-activedescendant", this.opts.element.attr("id"));
       },
@@ -49927,7 +52836,7 @@ the specific language governing permissions and limitations under the Apache Lic
         // val is an id. !val is true for [undefined,null,'',0] - 0 is legal
         if (!val && val !== 0)
         {
-          this.opts.element.val("");
+          this.opts.element.val(null);
           this._updateSelection([]);
           this._clearSearch();
           this._triggerChange();
@@ -49944,7 +52853,8 @@ the specific language governing permissions and limitations under the Apache Lic
         {
           if (this.opts.initSelection === undefined)
           {
-            throw new Error("val() cannot be called if initSelection() is not defined");
+//            throw new Error(this.ojContext.getTranslatedString("initSelectionUndefined"));
+            throw new Error("cannot call val() if initSelection() is not defined");
           }
 
           this.opts.initSelection(this.opts.element, function (data)
@@ -49990,7 +52900,6 @@ the specific language governing permissions and limitations under the Apache Lic
           this.setVal(ids);
           this._updateSelection(values);
           this._clearSearch();
-          this._triggerChange();
         }
       }
     }
@@ -50022,7 +52931,7 @@ the specific language governing permissions and limitations under the Apache Lic
               "  </span>",
               "</div>",
 
-              "<div class='oj-select-drop oj-select-display-none' role='presentation'>",
+              "<div class='oj-listbox-drop oj-select-display-none' role='presentation'>",
 
               "  <div class='oj-select-search-wrapper'>",
 
@@ -50039,7 +52948,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
               "  </div>",
 
-              "   <ul class='oj-select-results' role='listbox'>",
+              "   <ul class='oj-listbox-results' role='listbox'>",
               "   </ul>",
               "</div>"
 
@@ -50064,13 +52973,11 @@ the specific language governing permissions and limitations under the Apache Lic
         _OjSingleSelect.superclass.close.apply(this, arguments);
 
         ///ojselect
-        //if (this.search.val() == "")
         if (this.text.text() == "")
           this._clear();
-        else if (!this._data() && this.search.val !== "")
-          this._clearSearch();
+        //always clear search text when dropdown close
         else
-          this.search.val(this._data().text);
+          this._clearSearch();
       },
 
       //ojselect single
@@ -50194,12 +53101,26 @@ the specific language governing permissions and limitations under the Apache Lic
       //ojselect single
       getVal: function ()
       {
-        return this.opts.element.val() || this.selection.data("selectVal");
+        return _OjSingleSelect.superclass.getVal.call(this);
+/*
+        //return this.opts.element.val() || this.selection.data("selectVal");
+        var elementVal = this.opts.element.val(), 
+            selectVal = this.selection.data("selectVal");
+
+        if (elementVal)
+          return [elementVal];
+        else if (selectVal)
+          return [selectVal];
+        else
+          return [];
+*/
       },
 
       //ojselect single
       setVal: function (val)
       {
+        // see [pavitra] notes on _setOption("value", val)
+///TODO        _OjSingleSelect.superclass.setVal.call(this, val);
         this.opts.element.val(val);
         this.selection.data("selectVal", val);
       },
@@ -50207,6 +53128,7 @@ the specific language governing permissions and limitations under the Apache Lic
       //ojselect single
       _showSearchBox : function ()
       {
+        var focusOnSearchBox = false;
         var searchBox = this.dropdown.find(".oj-select-search");
         if (searchBox)
         {
@@ -50214,18 +53136,22 @@ the specific language governing permissions and limitations under the Apache Lic
           if (this._hasSearchBox())
           {
             this.dropdown.find(".oj-select-search-wrapper")
-            .css("display", "");
+              .removeClass("oj-helper-hidden-accessible");
+
             $(searchBox).removeAttr("aria-hidden")
             .attr(
             {
               "tabIndex" : "0"
             }
             );
+
+            focusOnSearchBox = true;
           }
           else
           {
             this.dropdown.find(".oj-select-search-wrapper")
-            .css("display", "none");
+              .addClass("oj-helper-hidden-accessible");
+
             $(searchBox)
             .removeAttr("tabIndex")
             .attr(
@@ -50235,6 +53161,9 @@ the specific language governing permissions and limitations under the Apache Lic
             );
           }
         }
+
+        //if search box is being displayed, focus on the search box otherwise focus on the select box
+        _focus(focusOnSearchBox ? this.search : this.selection);
       },
 
       //ojselect single
@@ -50260,10 +53189,11 @@ the specific language governing permissions and limitations under the Apache Lic
     },
     formatSelection : function (data, container, escapeMarkup)
     {
-      return data ? escapeMarkup(data.text) : undefined;
+      return (data && data.text) ? escapeMarkup(data.text) : undefined;
     },
-    formatNoMatches : function ()
+    formatNoMatches : function (ojContext, val)
     {
+//      return ojContext.getTranslatedString("noMatchesFound");
       return "No matches found";
     },
     id : function (e)
@@ -50358,17 +53288,16 @@ the specific language governing permissions and limitations under the Apache Lic
  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#icons-section"></a>
  * </h3>
  * 
- * <p>To customize the submenu icon, see the <code class="prettyprint">icons</code> option.
+ * <p>The submenu icon can be customized via theming.
  * 
- * <p>To add other icons to menu items, include them in the markup:
+ * <p>To add other icons to menu items, include them in the markup:  
+ * <!-- TODO: if they're required to include oj-menu-item-icon, should probably call that out.  Is that our rqmt?  Likewise, should we mention the class name they use to set the submenu icon? -->
  * 
  * <pre class="prettyprint">
  * <code>&lt;ul id="menu">
- *   &lt;li>&lt;a href="#">&lt;span class="oj-menu-item-icon demo-icon-sprite demo-icon-disk">&lt;/span>Save&lt;/a>&lt;/li>
+ *   &lt;li id="foo">&lt;a href="#">&lt;span class="oj-menu-item-icon demo-icon-font demo-palette-icon">&lt;/span>Foo&lt;/a>&lt;/li>
  * &lt;/ul>
  * </code></pre>
- * 
- * <p>JET Menu automatically adds the necessary padding to items without icons.
  * 
  * 
  * <h3 id="dividers-section">
@@ -50562,34 +53491,6 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
          * $( ".selector" ).ojMenu( "option", "disabled", true );
          */
         // disabled option declared in superclass, but we still want the above API doc
-        
-        /**
-         * Icon to use for submenus.
-         * 
-         * <p> Note: This API is under review and may be removed, in lieu of using theming to change the submenu icon.  
-         * For the moment, that is how it works; this API has no effect.  
-         * If the API is kept, it may change.  At a minimum, the default value will change.
-         * 
-         * @expose 
-         * @memberof! oj.ojMenu
-         * @instance
-         * @type {Object}
-         * @default <code class="prettyprint">{ submenu: "ui-icon-carat-1-e" }</code>
-         * 
-         * @example <caption>Initialize the menu with the <code class="prettyprint">icons</code> option specified:</caption>
-         * $( ".selector" ).ojMenu({ "icons": { "submenu": "my-style-class" } });
-         * 
-         * @example <caption>Get or set the <code class="prettyprint">icons</code> option, after initialization:</caption>
-         * // getter
-         * var icons = $( ".selector" ).ojMenu( "option", "icons" );
-         * 
-         * // setter
-         * $( ".selector" ).ojMenu( "option", "icons", { "submenu": "my-style-class" } );
-         */
-        icons: {
-            /** @expose */
-            submenu: "ui-icon-carat-1-e"
-        },
         
         /**
          * Identifies the position of this menu when launched via the <code class="prettyprint">show()</code> method or via menu button or 
@@ -50799,6 +53700,8 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
             //   If so, move this line to _setup().
             // - Our "Menu with icons" demo currently indicates that the app specifies icons using "oj-menu-item-icon", but this find() is looking for .oj-widget-icon, 
             //   so that in the demo this line doesn't add the "oj-menu-icons" class.  
+            // - If the app really has to specify "oj-menu-item-icon", seems like the API doc should mention that (but we've avoided mentioning theming specifics in API doc in the past...).
+            // - We're applying oj-widget-icon for *submenu* icons, but not regular icons.  Should we apply it for regular icons too?  (We're adding it *after* this code runs.)
             .toggleClass( "oj-menu-icons", !!this.element.find( ".oj-widget-icon" ).length )
             
             .attr({
@@ -50915,19 +53818,27 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
         this._setup();
 
         // Clicks outside of a menu collapse any open menus, and dismiss the entire menu if it's a popup
-        this._on(true, this.document, {
-            "click": function( event ) {
-                // TODO: file bug for this fix
-                if ( !$( event.target ).closest( this.element ).length ) {
-                    this.collapseAll( event );
-                    if (this._launcher) 
-                        this.__dismiss(event);
+        var self = this;
+        self._clickAwayHandler = function(event) {
+            if (event.type === "click" || event.type === "contextmenu" || (event.which == 121 && event.shiftKey)) {
+                if (!$(event.target).closest(self.element).length) {
+                    self.collapseAll(event);
+                    if (self._launcher)
+                        self.__dismiss(event);
                 }
-
-                // Reset the mouseHandled flag
-                this.mouseHandled = false;
             }
-        });
+
+            if (event.type === "click") {
+                // Reset the mouseHandled flag
+                self.mouseHandled = false;
+            }
+        }
+
+        //Capture the event on document to close the menu popup. Must do this in capture phase so that menu is closed even if something eats the event.
+        this.document[0].addEventListener("contextmenu", self._clickAwayHandler, true);
+        this.document[0].addEventListener("keydown", self._clickAwayHandler, true);
+        this.document[0].addEventListener("click", self._clickAwayHandler, true);
+
         this._super();
     },
     
@@ -50941,7 +53852,6 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
                 .removeAttr( "role" )
                 .removeAttr( "tabIndex" )
                 .removeAttr( "aria-labelledby" )
-                .removeAttr( "aria-expanded" )
                 .removeAttr( "aria-hidden" )
                 .removeAttr( "aria-disabled" )
                 .removeUniqueId()
@@ -50960,15 +53870,25 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
                 .removeAttr( "aria-haspopup" )
                 .children().each( function() {
                     var elem = $( this );
-                    if ( elem.data( "oj-ojMenu-submenu-carat" ) ) {
+                    if ( elem.data( "oj-ojMenu-submenu-icon" ) ) {
                         elem.remove();
                     }
                 });
 
+        // Destroy anchors
+        this.element.find( "a" ).removeAttr( "aria-expanded" );
+        
         // Destroy menu dividers
         this.element.find( ".oj-menu-divider" )
             .removeClass( "oj-menu-divider" )
             .removeAttr( "role" );
+        
+        //Ensure that all listeners removed on document while destroying the menu.   
+        if (this._clickAwayHandler) {
+            this.document[0].removeEventListener("contextmenu", this._clickAwayHandler, true);
+            this.document[0].removeEventListener("keydown", this._clickAwayHandler, true);
+            this.document[0].removeEventListener("click", this._clickAwayHandler, true);
+        }
     },
 
     _keydown: function( event ) { // Private, not an override (not in base class).  Method name unquoted so will be safely optimized (renamed) by GCC as desired.
@@ -51130,8 +54050,8 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
 
     _setup: function() { // Private, not an override (not in base class).  Method name unquoted so will be safely optimized (renamed) by GCC as desired.
         this.isRtl = this._GetReadingDirection() === "rtl";
-        var menus,
-            icon = this.options.icons.submenu,
+        var self=this,
+            menus,
             submenus = this.element.find( this.options.menuSelector );
 
         // Initialize nested menus
@@ -51140,21 +54060,21 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
             .hide()
             .attr({
                 "role": this.role,
-                "aria-hidden": "true",
-                "aria-expanded": "false"
+                "aria-hidden": "true"
             })
             .each(function() {
                 var menu = $( this ),
-                    item = menu.prev( "a" ),
-                    submenuCarat = $( "<span>" );
+                    item = self._getSubmenuItem( menu ),
+                    submenuIcon = $( "<span>" );
                 
-                submenuCarat   // separate stmt rather than chaining, since GCC can't tell that this is the setter overload of .data().
-                    .addClass( "oj-menu-icon oj-widget-icon " + icon )
-                    .data( "oj-ojMenu-submenu-carat", true );
+                submenuIcon   // separate stmt rather than chaining, since GCC can't tell that this is the setter overload of .data().
+                    .addClass( "oj-menu-submenu-icon oj-widget-icon" )
+                    .data( "oj-ojMenu-submenu-icon", true ); // TODO: can't we just look for the class at destroy time rather than adding this data?
 
                 item
                     .attr( "aria-haspopup", "true" )
-                    .prepend( submenuCarat );
+                    .attr( "aria-expanded", "false" ) // per a11y team, live on <a>, not <ul> like JQUI
+                    .prepend( submenuIcon );
                 var itemId = /** @type {string|undefined}  tell GCC is getter, not setter, overload of attr() */
                              (item.attr( "id" ));
                 
@@ -51205,6 +54125,13 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
             this.blur();
         }
     },
+    
+    /*
+     * Given a list of one or more submenus (typically <ul>'s), finds the <a>'s that are their labels.  
+     */
+    _getSubmenuItem: function(submenu) { // Private, not an override (not in base class).  Method name unquoted so will be safely optimized (renamed) by GCC as desired.
+        return submenu.prev( "a" );
+    },
 
     _itemRole: function() { // Private, not an override (not in base class).  Method name unquoted so will be safely optimized (renamed) by GCC as desired.
         return "menuitem"; 
@@ -51212,15 +54139,6 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
 //            "menu": "menuitem",
 //            "listbox": "option"
 //        }[ this.role ];
-    },
-
-    _setOption: function( key, value ) { // Override of protected base class method.  Method name needn't be quoted since is in externs.js.
-        if ( key === "icons" ) {
-            this.element.find( ".oj-menu-icon" )
-                .removeClass( this.options.icons.submenu )
-                .addClass( value.submenu );
-        }
-        this._super( key, value );
     },
 
     /**
@@ -51438,7 +54356,7 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
         clearTimeout( this.timer );
 
         // Don't open if already open fixes a Firefox bug that caused a .5 pixel
-        // shift in the submenu position when mousing over the carat icon
+        // shift in the submenu position when mousing over the submenu icon
         if ( submenu.attr( "aria-hidden" ) !== "true" ) {
             return;
         }
@@ -51462,8 +54380,9 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
         submenu
             .show()
             .removeAttr( "aria-hidden" )
-            .attr( "aria-expanded", "true" )
             .position( position );
+        
+        this._getSubmenuItem(submenu).attr( "aria-expanded", "true" );
     },
 
     /**
@@ -51506,14 +54425,11 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
             startMenu = this.active ? this.active.parent() : this.element;
         }
 
-        startMenu
-            .find( ".oj-menu" )
-                .hide()
-                .attr( "aria-hidden", "true" )
-                .attr( "aria-expanded", "false" )
-            .end()
-            .find( "a.oj-active" )
-                .removeClass( "oj-active" );
+        var menus = startMenu.find( ".oj-menu" );
+        menus.hide()
+             .attr( "aria-hidden", "true" );
+        this._getSubmenuItem( menus ).attr( "aria-expanded", "false" );
+        startMenu.find( "a.oj-active" ).removeClass( "oj-active" );
     },
 
     /**
@@ -51813,7 +54729,7 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
          *
          * @private
          */
-        _stepArray: new Array(),
+        _stepArray: null,
 		
         /**
          * _create contains all actions that are needed fo the initialization of the train and is only called once.
@@ -51900,6 +54816,7 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
          */
         _setupArray: function() {
             var options = this.options;
+			this._stepArray = new Array();
             for (var i = 0; i < this._stepNum; i++) {
                 var step = options.steps[i];
                 this._stepArray[i] = new Array(5);
@@ -52054,8 +54971,16 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
                 }
             }
         },
-		
-        _fireOptionChange: function(key, previousValue, value, originalEvent) // Private, not an override (not in base class).  Method name unquoted so will be safely optimized (renamed) by GCC as desired.
+		/**
+         * Fire optionChange event 
+         * @param {String} key - 'currentStep'
+		 * @param {String} previousValue 
+		 * @param {String} value
+		 * @param {Boolean} originalEvent  
+         *
+         * @private
+         */
+        _fireOptionChange: function(key, previousValue, value, originalEvent) 
         {
 
             var ui = {
@@ -52117,7 +55042,7 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
                 else if (this._stepArray[index][3] === "disabled")
                     label.addClass("oj-disabled");
                 if (this._stepArray[index][2] === "on" && (this.options.disabled == null || !this.options.disabled)) {
-                    label.attr("tabindex", index + 1);
+                    label.attr("href", "#");
                     this._hoverable(label);
                     label.bind("click keydown" + this.eventNamespace, function(e) {
                         if (e.keyCode == 13 || e.type == "click") {
@@ -52211,6 +55136,7 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
                     this._drawLabel(i);
                     this._drawButton(i);
                     this._updateProgressWidth();
+					break;
                 }
             }
             for (var i = 0; i < this._stepNum; i++)
@@ -52247,6 +55173,7 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
                     this._drawLabel(i);
                     this._drawButton(i);
                     this._drawMessageType(i);
+					break;
                 }
             }
         },
@@ -52350,18 +55277,6 @@ oj.__registerWidget("oj.ojMenu", $['oj']['baseComponent'], {
  * <p>As shown in the online demos, the application is responsible for applying 
  * <code class="prettyprint">aria-labelledby</code>
  * to point to the main label element for the group of radios.
- * <h3 id="eventHandling-section">
- *   Event Handling
- *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#eventHandling-section"></a>
- * </h3>
- * <ul>
- *  <li>optionChange(event, ui) - Type: ojoptionchange
- *  <p>
- *   Triggered if the value changes when the user interacts with the component 
- *   (clicking on one of the radio buttons); or if the value has 
- *   changed programmatically via the value option. 
- *  </li>
- * </ul>
  * <h3 id="jqui2jet-section">
  *   JET for jQuery UI developers
  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#jqui2jet-section"></a>
@@ -52498,12 +55413,15 @@ oj.__registerWidget("oj.ojRadioset", $['oj']['editableValue'],
   /**** start internal widget functions ****/   
        
   /**
-   * After _create, the widget should be 100% set up.
+   * After _CreateComponent and _AfterCreateComponent, 
+   * the widget should be 100% set up. this._super should be call first.
+   * @expose
    * @override
-   * @private
+   * @protected
    */
-  _create : function ()
+  _CreateComponent : function ()
   {
+    this._super();
     // turn each radio into ojRadioCheckbox. Do this first, since we need it
     // in calls from 'create'.
     this.$radios = this._findRadiosWithMatchingName()._ojRadioCheckbox();
@@ -52512,7 +55430,6 @@ oj.__registerWidget("oj.ojRadioset", $['oj']['editableValue'],
                                   .attr( "role", "radiogroup" );
     this._on(this._events);
     this._setup();
-    this._super();
     
     // todo: where should this be called from?
     this._SetRootAttributes();
@@ -52755,7 +55672,48 @@ oj.__registerWidget("oj.ojRadioset", $['oj']['editableValue'],
       this.$radios._ojRadioCheckbox( "option", key, value );
     }
   },
-
+  /**
+   * Return the subcomponent node represented by the documented locator attribute values.
+   * Test authors should target spinner sub elements using the following names:
+   * <ul>
+   * <li><b>oj-radioset-inputs</b>: the radioset's input elements</li>
+   * </ul>
+   * 
+   * @expose
+   * @override
+   * @memberof! oj.ojRadioset
+   * @instance
+   * @param {Object} locator An Object containing at minimum a subId property 
+   * whose value is a string, documented by the component, that allows the component to 
+   * look up the subcomponent associated with that string.  It contains:
+   * <ul>
+   * <li>
+   * component: optional - in the future there may be more than one component 
+   *   contained within a page element
+   * </li>
+   * <li>
+   * subId: the string, documented by the component, that the component expects 
+   * in getNodeBySubId to locate a particular subcomponent 
+   * </li>
+   * </ul>  
+   * @returns {Element|null} the subcomponent located by the subId string 
+   * passed in locator, if found.
+   */
+  getNodeBySubId: function(locator)
+  {
+    if (locator == null)
+    {
+      return this.element ? this.element[0] : null;
+    }
+    
+    var subId = locator['subId'];
+    if (subId === "oj-radioset-inputs") {
+      return this.$radios;
+    }
+    
+    // Non-null locators have to be handled by the component subclasses
+    return null;
+  },  
   /**
    * TODO: What is our 'destroy' strategy with regards to html attributes that 
    * they have initially on their dom, but we change? like disabled? Do we store 
@@ -52774,307 +55732,6 @@ oj.__registerWidget("oj.ojRadioset", $['oj']['editableValue'],
       this.$radios._ojRadioCheckbox( "destroy" );
     }
   }
-  /**** end internal widget functions ****/ 
- 
-});
-/*!
- * JET Radio This component is private. @VERSION
- * http://jqueryui.com
- *
- * Copyright 2013 jQuery Foundertion and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- *
- * Depends:
- *  jquery.ui.widget.js
- */
-/**
- * The _ojRadio component enhances a browser input element into one that is 
- * of type=radio. This is a private component used by ojRadioset.
- * 
- * <h3>Events:</h3>
- * <ul>
- *   <li>clicked/checked?<p>
- *   Triggered if the radio is clicked; or if the radio was checked programatically
- *   with the checked option.
- *   </li>
- * </ul>
- * 
- * @class
- * @constructor
- * @name oj._ojRadio
- * @augments oj.baseComponent TODO: Should I extend this? 
- * Pros: it gives me oj-disabled/oj-enabled. (easy to add myself)
- * Cons: It gives me tooltip stuff that I don't want. I want that on the div or on the first radio only.
- * Pro/Con?: it rewrites required for me if it is on the dom node, but then it makes it required??? Should I rewrite required or don't care?
- */
-oj.__registerWidget("oj._ojRadio", $['oj']['baseComponent'],
-{
-  version : "1.0.0",  
-  defaultElement : "<input>", 
-  widgetEventPrefix : "oj", 
-  options : 
-  {
-    
-    /** 
-     * First we look for the disabled option to be explicitly set. If not, then
-     * we look if disabled is on the dom. If null, disabled defaults to false.
-     * @expose 
-     * @type {?boolean}
-     * @default <code class="prettyprint">false</code>
-     * @public
-     * @instance
-     * @memberof! oj._ojRadio
-     */
-    disabled: null,
-    /** 
-     * First we look for the checked option to be explicitly set. If not, then
-     * we look if checked is on the dom. If null, checked defaults to false.
-     * @expose 
-     * @public
-     * @instance
-     * @memberof! oj._ojRadio */
-    checked : null   
-  },
-  /**** start Public APIs ****/
-  /**
-   * 
-   * <p>This method does not accept any arguments.
-   * 
-   * @public
-   * @expose
-   * @memberof! oj.Radio 
-   * @return {jQuery} the label(s) for this radio input
-  */
-  label : function ()
-  {
-    if (this.$label === undefined)
-    {
-      this.$label = this._getLabelsForElement();
-    }
-    return this.$label;
-  },  
-  /*
-   * @expose 
-   * @memberof! oj._ojRadio
-   * @instance
-   * @override
-   * @example <caption>Invoke the <code class="prettyprint">refresh</code> method:</caption>
-   * $( ".selector" )._ojRadio( "refresh" );
-   */
-  refresh: function() 
-  {
-    this._super();
-    
-    var isDisabled = this.element.is( ":disabled" );
-
-    if ( isDisabled !== this.options.disabled ) 
-    {
-      this._setOption( "disabled", isDisabled );
-    }
-    this._setup();
-  },    
-  /**
-   * Returns a jQuery object containing the element visually representing the radio. 
-   * 
-   * <p>This method does not accept any arguments.
-   * 
-   * @expose
-   * @memberof! oj._ojRadio
-   * @instance
-   * @return {jQuery} the radio
-  */
-  widget : function ()
-  {
-    return this.uiRadio;
-  },
-          
-   /**** end Public APIs ****/         
-          
-  /**** start internal widget functions ****/   
-       
-  /**
-   * @override
-   * @private
-   */
-  _create : function ()
-  {
-    this._super();
-    
-    // CHECKED:
-    // if options.checked is not set, or not valid, get it from the element
-    // if options.checked is set to a valid value (boolean), set it on the 
-    // element to keep the two in sync. 
-    if ( typeof this.options.checked !== "boolean" ) 
-    {
-      // !! ensures it is a boolean
-      this.options.checked = !!this.element.prop( "checked" );
-    }
-    
-    // DISABLED:
-    // if options.disabled is not set, or not valid, get it from the element
-    // if options.disabled is set to a valid value (boolean), set it on the 
-    // element to keep the two in sync. 
-    if ( typeof this.options.disabled !== "boolean" ) 
-    {
-      // !! ensures it is a boolean
-      this.options.disabled = !!this.element.prop( "disabled" );
-    }
-
-    this._drawOnCreate();
-    
-    this._on(this._events);
-  },
-  /** Called every time ojRadioset is called without attributes. It's essentially
-   * a hard-reset.
-   * @override
-   * @private
-   */
-  _init : function ()
-  {
-    this._super();
-    this._setup();
-  },
-  _setup : function() 
-  {
-
-    // disable radio dom if component disabled option is true
-    if (this.options.disabled)
-    {
-      // calls _setOption disable is true
-      this.disable();
-    }
-    else
-    { 
-      this.enable();
-    }
-
-    // set checked radio dom if component checked option is true
-    if (this.options.checked)
-    {
-      this._setOption("checked", true);
-    }
-    else
-    {
-      this._setOption("checked", false);
-    }
-  },
-  _events : 
-  {
-
-  },
-  /**
-   * set up styles on create
-   * @private
-   */
-  _drawOnCreate : function ()
-  {
-    this.uiRadio = this.element.addClass("oj-radio oj-widget");
-    this.$label = this._getLabelsForElement();
-    this.$label.addClass("oj-radio-label");
-    // oj-hover/oj-focus/oj-active should be added/removed in code as needed, 
-    // however these should only be added when the item is enabled. 
-    // When the item is disabled these classes should not be added.
-    var self = this;
-    this._hoverable( this.element );
-    this._focusable( this.element );
-    this._activeable( this.element );
-    // loop through each label
-    $.each(self.$label, function ()
-    {
-      self._hoverable(this);
-      self._focusable(this);
-      self._activeable(this);
-    });
-   },
-  /**
-   * @override
-   * @private
-   */
-  _setOption : function (key, value)
-  {
-
-    this._super(key, value);
-
-    if (key === "disabled")
-    {
-      value = !!value;
-      if (value)
-      {
-        // when a dom element supports disabled, use that, and not aria-disabled.
-        // having both is an error.
-        this.element.prop("disabled", true).removeAttr( "aria-disabled")
-        .removeClass("oj-enabled").addClass("oj-disabled");
-
-        this.$label.removeClass("oj-enabled")
-        .addClass("oj-disabled");
-      }
-      else 
-      {
-        // when a dom element supports disabled, use that, and not aria-disabled.
-        // having both is an error.
-        this.element.prop("disabled", false)
-        .removeAttr( "aria-disabled").removeClass("oj-disabled")
-        .addClass("oj-enabled");
-        this.$label.addClass("oj-enabled")
-        .removeClass("oj-disabled");
-      }
-    }
- 
-    if (key === "checked")
-    {
-      if (value)
-      {
-        this.element.prop("checked", true);
-      }
-      else 
-      {
-        this.element.prop("checked", false);
-      }
-      this.element.toggleClass("oj-checked", value);
-    }
-  }, 
-  /**
-   * Returns the list of labels for the element. Most likely this will be 
-   * one label, not multiple labels.
-   * We do not guarantee that the returned list is live
-   * We do not guarantee that the returned list is in document order
-   * We first check if we are nested in a label, and then we check a jquery 
-   * selector query on <label>s with a 'for' id equal to our id.
-   * NOTE: The .labels DOM property does not work on most browsers, so we don't use it.
-   * e.g,
-   * <pre>
-   * <input id="opt3" type="radio" name="rb" value="opt3">
-   * <label class="oj-choice-label" for="opt3">Radio Option 3</label>
-   * </pre>
-   * @private
-   */
-  _getLabelsForElement: function() 
-  {
-    // .closest("label") - For each element in the set, get the first element   
-    // that matches the selector by testing the element itself and traversing up 
-    // through its ancestors in the DOM tree.   
-    var labelClosestParent = this.element.closest("label");
-    var id = this.element.prop("id");
-    var labelForQuery = "label[for='" + id + "']";
-    // combine these two query results to return the label we are nested in
-    //  and/or the label with the for attribute pointing to the radio's id.
-    return labelClosestParent.add($(labelForQuery)); 
-  },
-  /**
-   * TODO Do I need to save off the html attributes and restore later? like disabled? name (if they change it with the option?) YES
-   * @override
-   * @private
-   */
-  _destroy : function ()
-  { 
-    this._super();
-    // base class removes oj-disabled
-    this.element.removeClass("oj-radio oj-checked oj-disabled oj-enabled oj-widget");
-    // label isn't a widget, so remove oj-disabled
-    this.$label.removeClass("oj-enabled oj-disabled oj-radio-label");
-  }
-  
   /**** end internal widget functions ****/ 
  
 });
@@ -53152,7 +55809,13 @@ oj.__registerWidget("oj.ojInputText", $['oj']['inputBase'],
    * @expose
    * @private
    */
-  _CLASS_NAMES : "oj-inputtext oj-form-control oj-widget",
+  _CLASS_NAMES : "oj-inputtext-input",
+  
+  /** 
+   * @expose
+   * @private
+   */
+  _WIDGET_CLASS_NAMES : "oj-inputtext oj-form-control oj-widget",
   
   /**
    * @override
@@ -53187,7 +55850,15 @@ oj.__registerWidget("oj.ojInputText", $['oj']['inputBase'],
  * the label element, then the _ojLabel element will move them onto its root
  * dom element.
  * </p>
+ * <h3 id="keyboard-section">
+ *   Keyboard interaction and Focus management
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
+ * </h3>
+ * <p>You can hover over the help and the required icons for additional information. 
+ * You can also hover over the label to see the help definition text if there is some. 
+ * </p>
  * @class
+ * @private
  * @constructor
  * @name oj._ojLabel
  * @augments oj.baseComponent
@@ -53459,8 +56130,16 @@ oj.__registerWidget("oj._ojLabel", $['oj']['baseComponent'],
     {
       // add oj-label-help-def styleclass to the label.
       // add title to the label.
+      // TODO APPEND title to the label if there is already a title
       this.element.addClass("oj-label-help-def");
-      this.element.attr("title", helpDef);
+      // append helpDef to title. We concatenate in case label already has
+      // title set. Usually the app dev will use title OR helpDef, not both.
+      var title = this.element.attr("title");
+      if (title)
+        this.element.attr("title", title + ' ' + helpDef);
+      else
+        this.element.attr("title", helpDef);
+      
     }
   },
      /** 
@@ -54253,9 +56932,9 @@ oj.__registerWidget("oj._ojLabel", $['oj']['baseComponent'],
         return;
 
       if (this.options.collapsed)
-        this.expand(true, event);
+        this._Expand(true, event);
       else 
-        this.collapse(true, event);
+        this._Collapse(true, event);
 
       event.preventDefault();
       event.stopPropagation();
@@ -54338,6 +57017,9 @@ oj.__registerWidget("oj._ojLabel", $['oj']['baseComponent'],
 //        this.header.attr("aria-activedescendant", "false");
         this._findFirstFocusableInHeader()
           .attr("tabIndex", -1);
+
+        event.preventDefault();
+        event.stopPropagation();
       }
       else if (event.type == "ojfocus")
       {
@@ -54345,6 +57027,8 @@ oj.__registerWidget("oj._ojLabel", $['oj']['baseComponent'],
         this._findFirstFocusableInHeader()
           .attr("tabIndex", 0)
           .focus();
+        event.preventDefault();
+        event.stopPropagation();
       }
     },
 
@@ -54370,12 +57054,12 @@ oj.__registerWidget("oj._ojLabel", $['oj']['baseComponent'],
     /**
      * Expand a collapsible.
      * 
-     * @expose 
+     * @private
      * @memberof! oj.ojCollapsible
      * @instance
      * @param {boolean} vetoable if event is vetoable
      */
-    expand : function (vetoable, event)
+    _Expand : function (vetoable, event)
     {
       if (this._isDisabled())
         return;
@@ -54389,12 +57073,12 @@ oj.__registerWidget("oj._ojLabel", $['oj']['baseComponent'],
     /**
      * Collapse a collapsible.
      * 
-     * @expose 
+     * @private
      * @memberof! oj.ojCollapsible
      * @instance
      * @param {boolean} vetoable if event is vetoable
      */
-    collapse : function (vetoable, event)
+    _Collapse : function (vetoable, event)
     {
       if (this._isDisabled())
         return;
@@ -54590,7 +57274,7 @@ var _radioGroup = function( radio, $elems ) {
  * $myEventTarget.closest( ":oj-toolbar" ) // selects the closest ancestor that is a JET Toolbar
  * </code></pre>
  * 
- * 
+ * <!-- 
  * <h3 id="binding-section">
  *   Declarative Binding
  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#binding-section"></a>
@@ -54600,19 +57284,9 @@ var _radioGroup = function( radio, $elems ) {
  * to stamp out the contents.  This binding cannot live on the same node as the JET <code class="prettyprint">ojComponent</code> binding, and must instead live on a nested 
  * virtual element as follows:
  * 
- * TODO: UPDATE EXAMPLE FROM BUTTONSET
+ * TODO: COPY EXAMPLE FROM BUTTONSET AND UPDATE 
  * 
- * <pre class="prettyprint">
- * <code>&lt;div id="radioButtonset" data-bind="ojComponent: {component: 'ojButtonset'}"
- *      aria-label="Choose only one beverage.  Use left and right arrow keys to navigate.">
- *     &lt;!-- ko foreach: drinkRadios -->
- *         &lt;label data-bind="attr: {for: id}, text: label">&lt;/label>
- *         &lt;input type="radio" name="beverage"
- *                data-bind="value: id, click: $parent.offerAdvice, attr: {id: id, checked: id === $parent.initialDrink}"/>
- *     &lt;!-- /ko -->
- * &lt;/div>
- * </code></pre>
- * 
+ * -->
  * 
  * <h3 id="jqui2jet-section">
  *   JET for jQuery UI developers
@@ -55052,425 +57726,872 @@ oj.__registerWidget("oj.ojToolbar", $['oj']['baseComponent'], {
 
 }() ); // end of Toolbar wrapper function
 
-oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
+/*!
+ * jQuery UI Popup @VERSION
+ * http://jqueryui.com
+ *
+ * Copyright 2013 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/menu/
+ *
+ * Depends:
+ *  jquery.ui.core.js
+ *  jquery.ui.widget.js
+ *  jquery.ui.position.js
+ */
+
+(function() {
+
+  /**
+   * @class 
+   * @name oj.ojPopup
+   * @augments oj.baseComponent
+   * 
+   * @classdesc
+   * <h3 id="popupOverview-section">
+   *   JET Popup Component
+   *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#popupOverview-section"></a></h3>
+   *
+   * <p>Description: Themeable, WAI-ARIA-compliant popup that can display arbitrary content.</p>
+   * 
+   * <p>A JET popup can be created from a block ( <code class="prettyprint">&lt;div></code> ) or inline element 
+   *   ( <code class="prettyprint">&lt;span></code> ).  This element will become the immediate child of the content element.  
+   *   Dynamic content can be inserted under this element.</p>
+   *
+   * <pre class="prettyprint">
+   * <code>&lt;span id="popup">
+   *   Hello World!
+   * &lt;/span>
+   * </code></pre>
+   * 
+   * <p>For WAI-ARIA compliance, JET automatically adds <code class="prettyprint">role="tooltip"</code> and  
+   *  <code class="prettyprint">aria-describedby="launcher"</code> to the root dom element when open.  The 
+   *  launcher element is also updated with <code>hasPopup="true"</code> while the popup is open.
+   * </p>
+   * 
+   * <h3 id="keyboard-section">
+   *   Keyboard interaction
+   *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
+   * </h3>
+   *
+   * <table class="keyboard-table">
+   *   <thead>
+   *     <tr>
+   *       <th>Key</th>
+   *       <th>Use</th>
+   *     </tr>
+   *   </thead>
+   *   <tbody>
+   *     <tr>
+   *       <td><kbd>Tab</kbd></td>
+   *       <td>Forward or backward (shift+tab) tabbing will traverse within the content of the popup.</td>
+   *     </tr>
+   *     <tr>
+   *       <td><kbd>F6</kbd></td>
+   *       <td>Focus can be toggled from the launcher to the popups content and back using the F6 function key.</td>
+   *     </tr>
+   *     <tr>
+   *       <td><kbd>ESC</kbd></td>
+   *       <td>ESC key from within the content of the popup or from the launcher will close the popup.</td>
+   *     </tr>
+   * </tbody></table>
+   * <br/><br/>
+   * <p>There are two general configurations for a ojPopup, basic popup and notewindow.  However, 
+   *    both types share common behaviors.</p>
+   *    
+   * <h3 id="common-popup-behaviors-section">
+   *  Common Popup Behaviors
+   *  <a class="bookmarkable-link" title="Bookmarkable Link" href="#common-popup-behaviors-section"></a>
+   * </h3>
+   * 
+   * The following are behaviors common to both general types of popups:
+   * <ul>
+   *  <li>The popup will auto-dismiss when ESC is pressed and focus is within the content.</li>
+   *  <li>It will auto-dismiss if ESC is pressed when focus is on the launcher node.</li>
+   *  <li>Forward or backward tabbing at the first or last tab stop will cycle back within the content of the popup.</li>
+   *  <li>The popup will always be aligned to the launcher. If a launcher is not provided, the default will be the active element 
+   *      in the document. The fallback will be to the document body.</li>
+   *  <li>At the point when a popup is closed and active focus is within its content, and attempt will be made to establish focus 
+   *      back to the launcher.</li>
+   *  <li>The popup will have a border, shadow, and z-index defined by the active theme.</li>
+   *  <li>After creation, the popup will be hidden. Calling the <code class="prettyprint">open</code> method will show the popup 
+   *      aligned to the provided <code class="prettyprint">position</code> option object.</li>
+   *  <li>Focus can be toggled from the launcher to the popup's content and back using the F6 function key.</li>
+   *  <li>After the component binding with the associated element, the popup's content will be hidden by default.
+   *      The root dom element that defines the popup will be positioned in the document reltative to the binding element.
+   *      This means that the page developer will need to manage the stacking context of the document.</li>
+   * </ul>
+   * 
+   * <h3 id="basic-popup-behaviors-section">
+   *  Basic Popup Behaviors
+   *  <a class="bookmarkable-link" title="Bookmarkable Link" href="#basic-popup-behaviors-section"></a>
+   * </h3>
+   * 
+   * Default options define the following basic popup behaviors:
+   * <ul>
+   *   <li>It will steal focus from the launcher to the first focusable element within its content,
+   *       provided that a focusable element exists. The default <code class="prettyprint">initialFocus</code> 
+   *       option is <code class="prettyprint">firstFocusable</code>.</li>
+   *   <li>The popup will not auto dismiss when focus moves from the popups content or associated launcher.
+   *       The default for the <code class="prettyprint">autoDismiss</code> option is <code class="prettyprint">none</code>.</li>
+   * </ul>
+   * 
+   * <h3 id="notewindow-popup-behaviors-section">
+   *  Notewindow Popup Behaviors
+   *  <a class="bookmarkable-link" title="Bookmarkable Link" href="#notewindow-popup-behaviors-section"></a>
+   * </h3>
+   * 
+   * <ul>
+   *  <li>This type of popup will not initially grab focus when open. The <code class="prettyprint">initialFocus</code> 
+   *       option is <code class="prettyprint">none</code>.</li>
+   *  <li>When focus leaves the content of the popup or the launcher, the popup will auto dismiss. 
+   *      The <code class="prettyprint">autoDismiss</code> option is set to <code class="prettyprint">focusLoss</code></li>
+   *  <li>A tail overlaping the border will point to the launcher the popup is aligned to. The <code class="prettyprint">tail</code> 
+   *      option of <code class="prettyprint">simple</code>.</li>
+   * </ul>
+   *
+   * <h3 id="eventHandling-section">
+   *   Event Handling
+   *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#eventHandling-section"></a>
+   * </h3>
+   * <ul>
+   *  <li>beforeClose(event, ui) - Triggered before a popup closes. Event can prevent closing the popup.</li>
+   *  <li>beforeOpen(event, ui) - Triggered before a popup closes. Event can prevent opening the popup.</li>
+   *  <li>close(event, ui) - Triggered after the popup has closed.</li>
+   *  <li>create(event, ui) - Triggered after the component has been bound to an associated dom element.</li>
+   *  <li>focus(event, ui) - Triggered when initial focus is established on opening or F6 focus toggle from the associated launcher.</li>
+   *  <li>open(event, ui) - Triggered after the popup has been made visible.</li>
+   * </ul>
+   * 
+   * @desc Creates a JET Popup.  If called after the popup is already created, it is equivalent to the 
+   * "set many options" overload of <code class="prettyprint">option()</code>.  
+   * 
+   * @param {Object=} options a map of option-value pairs to set on the component
+   * 
+   * @example <caption>Initialize the popup with no options specified:</caption>
+   * $( ".selector" ).ojPopup();
+   *
+   * @example <caption>Initialize the popup with behaviors of a notewindow:</caption>
+   * $( ".selector" ).ojPopup({initialFocus: 'none', autoDismiss: 'focusLoss', tail: 'simple'});
+   * 
+   * @example <caption>Initialize a popup via the JET <code class="prettyprint">ojComponent</code> binding:</caption>
+   * &lt;div id="popup1" data-bind="ojComponent: {component: 'ojPopup'}">This is a popup!&lt;/div>
+   *
+   */
+  oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
     version: "1.0.0",
     widgetEventPrefix: "oj",
     options: {
-        'autoDismiss': 'none',
-        'chrome': 'default',
-        'initialFocus': 'none',
-        'position': {
-            'my': 'left top',
-            'at': 'left bottom',
-            'collision': 'flip'
-        },
-        'tail': 'none'
+      /**
+       * Defines conditions that will cause an open popup to auto close dismiss.  A value of <code class="prettyprint">focusLoss</code>
+       * defines the dismissal condition where focus has left the content of the popup or from the associated 
+       * launcher.
+       * 
+       * @expose
+       * @memberof! oj.ojPopup
+       * @instance
+       * @type {string}
+       * @default <code class="prettyprint">"none"</code>
+       * 
+       * @example <caption>Initialize the popup with <code class="prettyprint">autoDismiss</code> option specified:</caption>
+       * $( ".selector" ).ojPopup( { "autoDismiss": "focusLoss" } );
+       * 
+       * @example <caption>Get or set the <code class="prettyprint">autoDismiss</code> option, after initialization:</caption>
+       * // getter
+       * var autoDismiss = $( ".selector" ).ojPopup( "option", "autoDismiss" );
+       * 
+       * // setter
+       * $( ".selector" ).ojPopup( "option", "autoDismiss", "none" );
+       */
+      autoDismiss: 'none',
+      /**
+       * Defines the presents of border, shadow and background color of the root popup dom.  Value of 
+       * <code class="prettyprint">none</code> applies the <code class="prettyprint">oj-popup-no-chrome</code>
+       * selector defined by the active theme to the root dom of the popup to remove the default chrome.
+       * 
+       * @expose
+       * @memberof! oj.ojPopup
+       * @instance
+       * @type {string}
+       * @default <code class="prettyprint">"default"</code>
+       *
+       * @example <caption>Initialize the popup with <code class="prettyprint">chrome</code> option specified:</caption>
+       * $( ".selector" ).ojPopup( { "chrome": "none" } );
+       * 
+       * @example <caption>Get or set the <code class="prettyprint">chrome</code> option, after initialization:</caption>
+       * // getter
+       * var chrome = $( ".selector" ).ojPopup( "option", "chrome" );
+       * 
+       * // setter
+       * $( ".selector" ).ojPopup( "option", "chrome", "none" );
+       */
+      chrome: 'default',
+      /**
+       * Determines if the popup should steal focus to its content when initially open. A value of <code class="prettyprint">none</code>
+       * prevents the popup from grabbing focus when open. 
+       * 
+       * @expose
+       * @memberof! oj.ojPopup
+       * @instance
+       * @type {string}
+       * @default <code class="prettyprint">"firstFocusable"</code>
+       * 
+       * @example <caption>Initialize the popup with <code class="prettyprint">initialFocus</code> option specified:</caption>
+       * $( ".selector" ).ojPopup( { "initialFocus": "none" } );
+       * 
+       * @example <caption>Get or set the <code class="prettyprint">initialFocus</code> option, after initialization:</caption>
+       * // getter
+       * var initialFocus = $( ".selector" ).ojPopup( "option", "initialFocus" );
+       * 
+       * // setter
+       * $( ".selector" ).ojPopup( "option", "initialFocus", "none" );
+       */
+      initialFocus: 'firstFocusable',
+      /**
+       * Attributes of the position object are defined by the jquery position API.  The positon
+       * option establishes the strategy for defining the location of the popup when open.
+       *   
+       * @expose 
+       * @memberof! oj.ojPopup
+       * @instance
+       * @type {Object}
+       * @default <code class="prettyprint">{my: "left top", at: "left bottom", collision: "flip"}</code>
+       * 
+       * @example <caption>Initialize the popup with <code class="prettyprint">position</code> option specified:</caption>
+       * $( ".selector" ).ojPopup( { "position": {"my": "left top", "at": "right top"} } );
+       * 
+       * @example <caption>Get or set the <code class="prettyprint">position</code> option, after initialization:</caption>
+       * // getter
+       * var position = $( ".selector" ).ojPopup( "option", "position" );
+       * 
+       * // setter
+       * $( ".selector" ).ojPopup( "option", "position", {"my": "left bottom", "at": "right+14 top" } );
+       */
+      position: {
+        /**
+         * Defines which position on the popup to align with the target ("of") element: "horizontal vertical" alignment. 
+         * A single value such as "right" will be normalized to "right center", "top" will be normalized to "center top" 
+         * (following CSS convention). Acceptable horizontal values: "left", "center", "right". 
+         * Acceptable vertical values: "top", "center", "bottom". Example: "left top" or "center center". 
+         * Each dimension can also contain offsets, in pixels or percent, e.g., "right+10 top-25%". Percentage offsets are relative 
+         * to the popup being positioned.
+         * 
+         * @expose
+         * @memberof! position#
+         * @alias position.my
+         * @type {string}
+         * @default <code class="prettyprint">left top</code>
+         */
+        'my': 'left top',
+        /**
+         * Defines which position on the target element ("of") to align the positioned element against: "horizontal vertical" 
+         * alignment. See the my option for full details on possible values. Percentage offsets are relative to the target element.
+         * 
+         * @expose
+         * @type {string}
+         * @memberof! position#
+         * @alias position.at
+         * @default <code class="prettyprint">left bottom</code>
+         */
+        'at': 'left bottom',
+        /**
+         * Which element to position the popup against.  The default is the <code class="prettyprint">launcher</code> argument
+         * passed to the <code class="prettyprint">open</code> method. If you provide a selector or jQuery object, 
+         * the first matching element will be used. If you provide an event object, the pageX and pageY properties 
+         * will be used. 
+         * 
+         * @expose
+         * @memberof! position#
+         * @alias position.of
+         * @type {string}
+         * @default <code class="prettyprint">''</code>
+         */
+        'of': '',
+        /**
+         *  When the positioned element overflows the window in some direction, move it to an alternative position. Similar to my and 
+         *  at, this accepts a single value or a pair for horizontal/vertical, e.g., "flip", "fit", "fit flip", "fit none".
+         *  
+         *  <ul>
+         *    <li>"flip": Flips the element to the opposite side of the target and the collision detection is run again to see if it 
+         *        will fit. Whichever side allows more of the element to be visible will be used.</li>
+         *    <li>"fit": Shift the element away from the edge of the window.</li>
+         *    <li>"flipfit": First applies the flip logic, placing the element on whichever side allows more of the element to be 
+         *        visible. Then the fit logic is applied to ensure as much of the element is visible as possible.</li>
+         *    <li>"none": Does not apply any collision detection.</li> 
+         *  </ul>
+         * @expose
+         * @memberof! position#
+         * @alias position.collision
+         * @type {string}
+         * @default <code class="prettyprint">flip</code>
+         */
+        'collision': 'flip'
+      },
+      /**
+       * Determines if a decoration will be displayed from the popup that points to the element the popup is aligned to. 
+       * The <code class="prettyprint">simple</code> value enables the tail defined by the current theme.  In addtion,
+       * the <code class="prettyprint">oj-popup-tail-simple</code> selector will be applied to the root dom element.  This
+       * is to allow the box-shadow, z-index and other chrome styling to vary per tail decoration. 
+       *
+       * @expose
+       * @memberof! oj.ojPopup
+       * @instance
+       * @type {string}
+       * @default <code class="prettyprint">"none"</code>
+       * 
+       * @example <caption>Initialize the popup with <code class="prettyprint">tail</code> option specified:</caption>
+       * $( ".selector" ).ojPopup( { "tail": "simple" } );
+       * 
+       * @example <caption>Get or set the <code class="prettyprint">tail</code> option, after initialization:</caption>
+       * // getter
+       * var tail = $( ".selector" ).ojPopup( "option", "tail" );
+       * 
+       * // setter
+       * $( ".selector" ).ojPopup( "option", "tail", "simple" );
+       */
+      tail: 'none'
     },
-    _create: function () {
+    _create: function() {
 
-        var rootStyle = this._GetRootStyle();
-        var rootElement = $("<div>");
-        this._rootElement = rootElement.hide().addClass(rootStyle)
-      .attr("aria-hidden", "true");
-        var content = $("<div>").addClass([rootStyle, "content"].join("-"));
-        content.appendTo(rootElement);
-        this.element.after(rootElement);
-        this.element.appendTo(content);
+      var rootStyle = this._GetRootStyle();
+      var rootElement = $("<div>");
+      this._rootElement = rootElement.hide().addClass(rootStyle)
+        .attr("aria-hidden", "true");
+      var content = $("<div>").addClass([rootStyle, "content"].join("-"));
+      content.appendTo(rootElement);
+      this.element.after(rootElement);
+      this.element.appendTo(content);
+      this.element.show();
 
-        this._createTail();
-        this._setChrome();
+      this._createTail();
+      this._setChrome();
 
-        // callback that overrides the positon['using'] for setting the tail.
-        this._usingCallback = $.proxy(this._usingHandler, this);
+      // callback that overrides the positon['using'] for setting the tail.
+      this._usingCallback = $.proxy(this._usingHandler, this);
 
-        this._super();
+      // auto dismissal callback
+      this._dismissalCallback = $.proxy(this._dismissalHandler, this);
+
+      this._super();
     },
-    _destroy: function () {
-        this._super();
+    _destroy: function() {
+      this._super();
 
+      if (this.isOpen())
+        this.close();
+
+      this._destroyTail();
+      delete this._usingCallback;
+      delete this._dismissalCallback;
+
+      this._rootElement.replaceWith(this.element);
+      this.element.hide();
+    },
+    /**
+     * Returns a <code class="prettyprint">jQuery</code> object containing the generated wrapper.
+     * This method does not accept any arguments.
+     * 
+     * @expose
+     * @name oj.ojpopup#widget
+     * @memberof! oj.ojDialog
+     * @instance
+     * @return {jQuery} the popup
+     * 
+     * @example <caption>Invoke the <code class="prettyprint">widget</code> method:</caption>
+     * var widget = $( ".selector" ).ojPopup( "widget" );
+     */
+    widget: function() {
+      return this._rootElement;
+    },
+    /**
+     * Opens the popup. This method accepts two arguments.
+     * 
+     * @expose
+     * @method
+     * @name oj.ojPopup#open
+     * @memberof! oj.ojPopup
+     * @instance
+     * @param {?(string|jQuery|Element)} launcher of the popup
+     * @param {?Object} position an element relative to another
+     * 
+     * @example <caption>Invoke the <code class="prettyprint">open</code> method:</caption>
+     * var open = $( ".selector" ).ojPopup( "open" );
+     */
+    open: function(launcher, position) {
+
+      if (this.isOpen()) {
+        this.close();
+
+        //if beforeClose handler prevents that action, just bail out.
         if (this.isOpen())
-            this.close();
+          return;
+      }
 
-        this._destroyTail();
-        delete this._usingCallback;
+      if (this._trigger("beforeOpen") === false)
+        return;
 
-        this._rootElement.replaceWith(this.element);
+      var options = this.options;
+      this._setLauncher(launcher);
+      this._setPosition(position);
+
+      // TODO make a generic service that has a single resize listener and
+      //      only publishes to popups that are in the active layer (aka modality).
+      //      
+      // establish a window resize listener to reevaluate best fit for
+      // positioning
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      launcher = this._launcher;
+      oj.Assert.assertPrototype(launcher, jQuery);
+
+      if ("focusLoss" === options["autoDismiss"])
+        this._registerAutoDismiss(true);
+
+      this._on(true, $(window), {'resize': this._resizeHandler});
+      this._on(true, rootElement, {'keydown': this._keydownHandler});
+      this._on(true, launcher, {'keydown': this._keydownHandler});
+
+      var launcherId = launcher.attr("id");
+      if (oj.StringUtils.isEmptyOrUndefined(launcherId)) {
+        launcher.data("id-generated", true);
+        launcherId = launcher.uniqueId().attr("id");
+      }
+      launcher.attr("aria-haspopup", "true");
+
+      rootElement.removeAttr("aria-hidden");
+      rootElement.attr("aria-describedby", launcherId);
+      rootElement.attr("role", "tooltip");
+
+      position = options["position"];
+      rootElement.show().position(position);
+
+      this._trigger("open");
+
+      this._intialFoucs();
     },
-    widget: function () {
-        return this._rootElement;
+    /**
+     * Closes the popup. This method does not accept any arguments.
+     * 
+     * @expose
+     * @method
+     * @name oj.ojPopup#close
+     * @memberof! oj.ojPopup
+     * @instance
+     * 
+     * @example <caption>Invoke the <code class="prettyprint">close</code> method:</caption>
+     * var close = $( ".selector" ).ojPopup( "close" );
+     */
+    close: function() {
+      if (!this.isOpen())
+        return;
+
+      if (this._trigger("beforeClose") === false)
+        return;
+
+      // if the content has focus, restore the the launcher
+      this._restoreFocus();
+
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      rootElement.hide();
+      rootElement.attr("aria-hidden", "true");
+
+      var launcher = this._launcher;
+      oj.Assert.assertPrototype(launcher, jQuery);
+
+      if (launcher.data("id-generated"))
+        launcher.removeUniqueId();
+      launcher.removeAttr("aria-haspopup");
+      rootElement.removeAttr("aria-describedby");
+
+      var options = this.options;
+      if ("focusLoss" === options["autoDismiss"])
+        this._registerAutoDismiss(false);
+
+      this._off($(window), "resize");
+      this._off(rootElement, "keydown");
+      this._off(launcher, "keydown");
+
+      delete this._launcher;
+      var position = options["position"];
+
+      // if the open has set the of because one was not provided by default,
+      // remove the override to the launcher.
+      if (position["_ofo"]) {
+        delete position["_ofo"];
+        delete position["of"];
+      }
+
+      this._trigger("close");
     },
-    open: function (launcher, position) {
+    /**
+     * Returns the state of whether the popup is currently open. This method does not accept any arguments.
+     * 
+     * @expose
+     * @method
+     * @name oj.ojPopup#isOpen
+     * @memberof! oj.ojPopup
+     * @instance
+     * 
+     * @example <caption>Invoke the <code class="prettyprint">isOpen</code> method:</caption>
+     * var isOpen = $( ".selector" ).ojPopup( "isOpen" );
+     */
+    isOpen: function() {
+      return this._rootElement.is(":visible");
+    },
+    _setOption: function(key, value) {
 
-        if (this.isOpen()) {
-            this.close();
+      var options = this.options;
+      switch (key) {
+        case "tail":
+          if (value !== options["tail"]) {
+            this._destroyTail();
+            this._createTail(value);
+          }
+          break;
+        case "chrome":
+          if (value !== options["chrome"])
+            this._setChrome(value);
+          break;
+        case "position":
+          this._setPosition(value);
+          if (this.isOpen())
+            this._resizeHandler();
+          break;
+        case "autoDismiss":
+          if (this.isOpen() && value !== options["autoDismiss"])
+          {
+            if ("none" === value)
+              this._registerAutoDismiss(false);
+            else if ("focusLoss" === value)
+              this._registerAutoDismiss(true);
+          }
+          break;
+      }
 
-            //if beforeClose handler prevents that action, just bail out.
-            if (this.isOpen())
-                return;
-        }
+      this._super(key, value);
+    },
+    _GetRootStyle: function() {
+      return "oj-popup";
+    },
+    _createTail: function(tail) {
+      var tailDecoration = tail ? tail : this.options['tail'];
+      if ("none" === tailDecoration)
+        return null;
 
-        if (this._trigger("beforeOpen") === false)
-            return;
+      var rootStyle = this._GetRootStyle();
+      var tailMarkerStyle = [rootStyle, "tail"].join("-");
+      var tailStyle = [tailMarkerStyle, tailDecoration].join("-");
+      var tailStyleStartTop = [tailStyle, "start-top"].join("-");
+      var tailStyleEndTop = [tailStyle, "end-top"].join("-");
+      var tailStyleStartMiddle = [tailStyle, "start-middle"].join("-");
+      var tailStyleEndMiddle = [tailStyle, "end-middle"].join("-");
+      var tailStyleStartBottom = [tailStyle, "start-bottom"].join("-");
+      var tailStyleEndBottom = [tailStyle, "end-bottom"].join("-");
+      var tailStyleCenterTop = [tailStyle, "center-top"].join("-");
+      var tailStyleCenterBottom = [tailStyle, "center-bottom"].join("-");
 
-        this._setLauncher(launcher);
-        this._setPosition(position);
+      this._TAIL_STYLES = [tailStyleStartTop, tailStyleEndTop, tailStyleStartMiddle,
+        tailStyleEndMiddle, tailStyleStartBottom, tailStyleEndBottom, tailStyleCenterTop, 
+        tailStyleCenterBottom];
 
-        // TODO make a generic service that has a single resize listener and
-        //      only publishes to popups that are in the active layer (aka modality).
-        //      
-        // establish a window resize listener to reevaluate best fit for
-        // positioning
+      //TODO horizontal "center" - don't have top and bottom center images for alta
+      //horizontal-vertical, x-y
+      //horizontal: right, left, center
+      //vertical: top, bottom, middle
+      this._TAIL_ALIGN_RULES = {
+        'right-top': tailStyleEndTop,
+        'right-middle': tailStyleEndMiddle,
+        'right-bottom': tailStyleEndBottom,
+        'left-top': tailStyleStartTop,
+        'left-middle': tailStyleStartMiddle,
+        'left-bottom': tailStyleStartBottom,
+        'center-top': tailStyleCenterTop,
+        'center-middle': tailStyleStartMiddle,
+        'center-bottom': tailStyleCenterBottom
+      };
+
+      var tailDom = $("<div>").hide().addClass(tailMarkerStyle);
+
+
+      // id over "marker style" due to nesting popups in popups
+      this._tailId = "#" + tailDom.uniqueId().attr("id");
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+      tailDom.appendTo(rootElement);
+
+      // tail "value" stile is applied to the root dom
+      rootElement.addClass(tailStyle);
+
+      return tail;
+    },
+    _getTail: function() {
+      var tailId = this._tailId;
+      if (!tailId)
+        return null;
+
+      return $(tailId);
+    },
+    _destroyTail: function() {
+
+      var tail = this._getTail();
+      if (tail)
+        tail.remove();
+
+      delete this._tailId;
+      
+      var tailDecoration = this.options['tail'];
+      var rootStyle = this._GetRootStyle();
+      var tailStyle = [rootStyle, "tail", tailDecoration].join("-");
+      
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+      rootElement.removeClass(tailStyle);
+    },
+    _setChrome: function(chrome) {
+      var chromeDecoration = (chrome ? chrome : this.options["chrome"]);
+      var noChromeStyle = [this._GetRootStyle(), "no-chrome"].join("-");
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      if ("default" === chromeDecoration && rootElement.hasClass(noChromeStyle))
+        rootElement.removeClass(noChromeStyle);
+      else if ("none" === chromeDecoration && !rootElement.hasClass(noChromeStyle))
+        rootElement.addClass(noChromeStyle);
+    },
+    _setLauncher: function(launcher) {
+      if (!launcher)
+        launcher = $(document.activeElement);
+      else if ($.type(launcher) === "string")  //id jquery selector    
+        launcher = $(launcher);
+      else if (launcher.nodeType !== 1)        //dom element
+        launcher = $(launcher);
+
+      // if a jquery collection, select the first dom node not in the popups content
+      if (launcher instanceof jQuery && launcher.length > 1) {
         var rootElement = this._rootElement;
         oj.Assert.assertPrototype(rootElement, jQuery);
 
-        launcher = this._launcher;
-        oj.Assert.assertPrototype(launcher, jQuery);
-
-        this._on(true, $(window), { 'resize': this._resizeHandler });
-        this._on(true, rootElement, { 'keydown': this._keydownHandler });
-        this._on(true, launcher, { 'keydown': this._keydownHandler });
-
-        var launcherId = launcher.attr("id");
-        if (oj.StringUtils.isEmptyOrUndefined(launcherId)) {
-            launcher.data("id-generated", true);
-            launcherId = launcher.uniqueId().attr("id");
+        for (var i = 0; i < launcher.length; i++) {
+          var target = launcher[0];
+          //if (rootElement.has(target).length === 0) {
+          if (!oj.DomUtils.isAncestorOrSelf(rootElement[0], target)) {
+            launcher = $(target);
+            break;
+          }
         }
-        launcher.attr("aria-haspopup", "true");
+      }
+      else if (!(launcher instanceof jQuery) || //object is not a jq
+        ((launcher instanceof jQuery) && launcher.length === 0)) // empty jq collection
+        launcher = $(document.activeElement);
 
-        rootElement.removeAttr("aria-hidden");
-        rootElement.attr("aria-describedby", launcherId);
-        rootElement.attr("role", "tooltip");
-
-        position = this.options["position"];
-        rootElement.show().position(position);
-
-        this._trigger("open");
-        this._intialFoucs();
+      oj.Assert.assertPrototype(launcher, jQuery);
+      this._launcher = launcher;
     },
-    close: function () {
-        if (!this.isOpen())
-            return;
+    _setPosition: function(position) {
 
-        if (this._trigger("beforeClose") === false)
-            return;
+      var options = this.options;
 
-        // if the content has focus, restore the the launcher
-        this._restoreFocus();
+      // new postion extends the existing object
+      if (position)
+        options["position"] = $.extend(options[position], position);
 
-        var rootElement = this._rootElement;
-        oj.Assert.assertPrototype(rootElement, jQuery);
+      // grab the updated postion
+      position = options["position"];
 
-        rootElement.hide();
-        rootElement.attr("aria-hidden", "true");
+      var usingCallback = this._usingCallback;
+      oj.Assert.assertFunction(usingCallback);
 
+      // if they provided a using function that is not our callback, stash it
+      // away so that we can delegate to it in our proxy.
+      if ($.isFunction(position["using"]) && position["using"] !== usingCallback)
+        position["origUsing"] = position["using"];
+
+      // override with our proxy to handle positioning of the tail
+      position["using"] = usingCallback;
+
+      //override "of" alignment node to the launcher if not specified
+      var launcher = this._launcher;
+      oj.Assert.assertPrototype(launcher, jQuery);
+
+      if (!position["of"])
+      {
+        position["of"] = launcher;
+        position["_ofo"] = true;
+      }
+
+    },
+    _usingHandler: function(pos, props) {
+      var rootElement = props["element"]["element"];
+      oj.Assert.assertPrototype(rootElement, jQuery);
+      rootElement.css(pos);
+
+      var tail = this._getTail();
+      if (!tail)
+        return;
+
+      tail.hide();
+
+      for (var i = 0; i < this._TAIL_STYLES.length; i++)
+        tail.removeClass(this._TAIL_STYLES[i]);
+
+      var alignMnemonic = [props["horizontal"], props["vertical"]].join("-");
+      var tailStyle = this._TAIL_ALIGN_RULES[alignMnemonic];
+      oj.Assert.assertString(tailStyle);
+
+      if (tailStyle) {
+        tail.addClass(tailStyle);
+        tail.show();
+      }
+
+      var options = this.options;
+      var origUsing = options["position"]["origUsing"];
+      if (origUsing)
+        origUsing(pos, props);
+    },
+    _resizeHandler: function(event) {
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      var position = this.options["position"];
+      oj.Assert.assertObject(position);
+
+      rootElement.position(position);
+    },
+    _intialFoucs: function() {
+      var options = this.options;
+      if ("none" === options["initialFocus"])
+        return;
+
+      if ("firstFocusable" === options["initialFocus"]) {
+        var nodes = this.element.find(":focusable");
+        if (nodes.length > 0) {
+          var first = nodes[0];
+          oj.Assert.assertDomElement(first);
+          $(first).focus();
+
+          this._trigger("focus");
+        }
+      }
+    },
+    _isFocusInPopup: function(activeElement) {
+      if (!activeElement)
+        activeElement = document.activeElement;
+      oj.Assert.assertDomElement(activeElement);
+
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      // return rootElement.is(activeElement) || rootElement.has(activeElement).length > 0;
+      return oj.DomUtils.isAncestorOrSelf(rootElement[0], activeElement);
+    },
+    _isFocusInLauncher: function(activeElement) {
+      if (!activeElement)
+        activeElement = document.activeElement;
+      oj.Assert.assertDomElement(activeElement);
+
+      var launcher = this._launcher;
+      oj.Assert.assertPrototype(launcher, jQuery);
+
+      // return launcher.is(activeElement) || launcher.has(activeElement).length > 0;
+      return oj.DomUtils.isAncestorOrSelf(launcher[0], activeElement);
+    },
+    _restoreFocus: function() {
+
+      if (this._isFocusInPopup()) {
         var launcher = this._launcher;
         oj.Assert.assertPrototype(launcher, jQuery);
 
-        if (launcher.data("id-generated"))
-            launcher.removeUniqueId();
-        launcher.removeAttr("aria-haspopup");
-        rootElement.removeAttr("aria-describedby");
-
-        this._off($(window), "resize");
-        this._off(rootElement, "keydown");
-        this._off(launcher, "keydown");
-
-        delete this._launcher;
-        this._trigger("close");
+        launcher.focus();
+      }
     },
-    isOpen: function () {
-        return this._rootElement.is(":visible");
-    },
-    _setOption: function (key, value) {
+    _keydownHandler: function(event) {
+      if (event.isDefaultPrevented())
+        return;
 
-        switch (key) {
-            case "tail":
-                if (value !== this.options["tail"]) {
-                    this._destroyTail();
-                    this._createTail(value);
-                }
-                break;
-            case "chrome":
-                if (value !== this.options["chrome"])
-                    this._setChrome(value);
-                break;
-            case "position":
-                this._setPosition(value);
-                if (this.isOpen())
-                    this._resizeHandler();
-                break;
+      var target = event.target;
+      oj.Assert.assertDomElement(target);
+      if (event.keyCode === $.ui.keyCode.ESCAPE) {
+        event.preventDefault();
+        this.close();
+      } else if (event.keyCode === 117) {
+        //F6 - toggle focus to launcher or popup
+        if (this._isFocusInPopup(target)) {
+          event.preventDefault();
+          var launcher = this._launcher;
+          oj.Assert.assertPrototype(launcher, jQuery);
+          launcher.focus();
         }
-
-        this._super(key, value);
-    },
-    _GetRootStyle: function () {
-        return "oj-popup";
-    },
-    _createTail: function (tail) {
-        var tailDecoration = tail ? tail : this.options['tail'];
-        if ("none" === tailDecoration)
-            return null;
-
-        var rootStyle = this._GetRootStyle();
-        var tailMarkerStyle = [rootStyle, "tail"].join("-");
-        var tailStyle = [tailMarkerStyle, tailDecoration].join("-");
-        var tailStyleStartTop = [tailStyle, "start-top"].join("-");
-        var tailStyleEndTop = [tailStyle, "end-top"].join("-");
-        var tailStyleStartMiddle = [tailStyle, "start-middle"].join("-");
-        var tailStyleEndMiddle = [tailStyle, "end-middle"].join("-");
-        var tailStyleStartBottom = [tailStyle, "start-bottom"].join("-");
-        var tailStyleEndBottom = [tailStyle, "end-bottom"].join("-");
-
-        this._TAIL_STYLES = [tailStyleStartTop, tailStyleEndTop, tailStyleStartMiddle,
-      tailStyleEndMiddle, tailStyleStartBottom, tailStyleEndBottom];
-
-        //TODO horizontal "center" - don't have top and bottom center images for alta
-        //horizontal-vertical, x-y
-        //horizontal: right, left, center
-        //vertical: top, bottom, middle
-        this._TAIL_ALIGN_RULES = {
-            'right-top': tailStyleEndTop,
-            'right-middle': tailStyleEndMiddle,
-            'right-bottom': tailStyleEndBottom,
-            'left-top': tailStyleStartTop,
-            'left-middle': tailStyleStartMiddle,
-            'left-bottom': tailStyleStartBottom,
-            'center-top': tailStyleStartTop,
-            'center-middle': tailStyleStartMiddle,
-            'center-bottom': tailStyleEndBottom
-        };
-
-        var tailDom = $("<div>").hide().addClass(tailMarkerStyle).addClass(tailStyle);
-
-        // id over "marker style" due to nesting popups in popups
-        this._tailId = "#" + tailDom.uniqueId().attr("id");
-        var rootElement = this._rootElement;
-        oj.Assert.assertPrototype(rootElement, jQuery);
-        tailDom.appendTo(rootElement);
-
-        return tail;
-    },
-    _getTail: function () {
-        var tailId = this._tailId;
-        if (!tailId)
-            return null;
-
-        return $(tailId);
-    },
-    _destroyTail: function () {
-
-        var tail = this._getTail();
-        if (tail)
-            tail.remove();
-
-        delete this._tailId;
-    },
-    _setChrome: function (chrome) {
-        var chromeDecoration = (chrome ? chrome : this.options["chrome"]);
-        var noChromeStyle = [this._GetRootStyle(), "no-chrome"].join("-");
-        var rootElement = this._rootElement;
-        oj.Assert.assertPrototype(rootElement, jQuery);
-
-        if ("default" === chromeDecoration && rootElement.hasClass(noChromeStyle))
-            rootElement.removeClass(noChromeStyle);
-        else if ("none" === chromeDecoration && !rootElement.hasClass(noChromeStyle))
-            rootElement.addClass(noChromeStyle);
-    },
-    _setLauncher: function (launcher) {
-        if (!launcher)
-            launcher = $(document.activeElement);
-        else if ($.type(launcher) === "string")  //id jquery selector    
-            launcher = $(launcher);
-        else if (launcher.nodeType !== 1)        //dom element
-            launcher = $(launcher);
-
-        // if a jquery collection, select the first dom node not in the popups content
-        if (launcher instanceof jQuery && launcher.length > 1) {
-            var rootElement = this._rootElement;
-            oj.Assert.assertPrototype(rootElement, jQuery);
-
-            for (var i = 0; i < launcher.length; i++) {
-                var target = launcher[0];
-                //if (rootElement.has(target).length === 0) {
-                if (!oj.DomUtils.isAncestorOrSelf(rootElement[0], target)) {
-                    launcher = $(target);
-                    break;
-                }
-            }
+        else if (this._isFocusInLauncher(target)) {
+          event.preventDefault();
+          this._intialFoucs();
         }
-        else if (!(launcher instanceof jQuery) || //object is not a jq
-      ((launcher instanceof jQuery) && launcher.length === 0)) // empty jq collection
-            launcher = $(document.activeElement);
+      } else if (event.keyCode === 9 && this._isFocusInPopup(target)) {
+        // TAB within popup
 
-        oj.Assert.assertPrototype(launcher, jQuery);
-        this._launcher = launcher;
-    },
-    _setPosition: function (position) {
+        var nodes = this.element.find(":tabbable");
+        if (nodes.length > 0) {
+          var firstNode = nodes[0];
+          oj.Assert.assertDomElement(firstNode);
 
-        var options = this.options;
+          var lastNode = nodes[nodes.length - 1];
+          oj.Assert.assertDomElement(lastNode);
 
-        // new postion extends the existing object
-        if (position)
-            options["position"] = $.extend(options[position], position);
-
-        // grab the updated postion
-        position = options["position"];
-
-        var usingCallback = this._usingCallback;
-        oj.Assert.assertFunction(usingCallback);
-
-        // if they provided a using function that is not our callback, stash it
-        // away so that we can delegate to it in our proxy.
-        if ($.isFunction(position["using"]) && position["using"] !== usingCallback)
-            position["origUsing"] = position["using"];
-
-        // override with our proxy to handle positioning of the tail
-        position["using"] = usingCallback;
-
-        //override "of" alignment node to the launcher if not specified
-        var launcher = this._launcher;
-        oj.Assert.assertPrototype(launcher, jQuery);
-
-        if (!position["of"])
-            position["of"] = launcher;
-
-    },
-    _usingHandler: function (pos, props) {
-        var rootElement = props["element"]["element"];
-        oj.Assert.assertPrototype(rootElement, jQuery);
-        rootElement.css(pos);
-
-        var tail = this._getTail();
-        if (!tail)
-            return;
-
-        tail.hide();
-
-        for (var i = 0; i < this._TAIL_STYLES.length; i++)
-            tail.removeClass(this._TAIL_STYLES[i]);
-
-        var alignMnemonic = [props["horizontal"], props["vertical"]].join("-");
-        var tailStyle = this._TAIL_ALIGN_RULES[alignMnemonic];
-        oj.Assert.assertString(tailStyle);
-
-        if (tailStyle) {
-            tail.addClass(tailStyle);
-            tail.show();
-        }
-
-        var options = this.options;
-        var origUsing = options["position"]["origUsing"];
-        if (origUsing)
-            origUsing(pos, props);
-    },
-    _resizeHandler: function (event) {
-        var rootElement = this._rootElement;
-        oj.Assert.assertPrototype(rootElement, jQuery);
-
-        var position = this.options["position"];
-        oj.Assert.assertObject(position);
-
-        rootElement.position(position);
-    },
-    _intialFoucs: function () {
-        var options = this.options;
-        if ("none" === options["initialFocus"])
-            return;
-
-        if ("firstFocusable" === options["initialFocus"]) {
-            var nodes = this.element.find(":focusable");
-            if (nodes.length > 0) {
-                var first = nodes[0];
-                oj.Assert.assertDomElement(first);
-                $(first).focus();
-            }
-        }
-    },
-    _isFocusInPopup: function (activeElement) {
-        if (!activeElement)
-            activeElement = document.activeElement;
-        oj.Assert.assertDomElement(activeElement);
-
-        var rootElement = this._rootElement;
-        oj.Assert.assertPrototype(rootElement, jQuery);
-
-        // return rootElement.is(activeElement) || rootElement.has(activeElement).length > 0;
-        return oj.DomUtils.isAncestorOrSelf(rootElement[0], activeElement);
-    },
-    _isFocusInLauncher: function (activeElement) {
-        if (!activeElement)
-            activeElement = document.activeElement;
-        oj.Assert.assertDomElement(activeElement);
-
-        var launcher = this._launcher;
-        oj.Assert.assertPrototype(launcher, jQuery);
-
-        // return launcher.is(activeElement) || launcher.has(activeElement).length > 0;
-        return oj.DomUtils.isAncestorOrSelf(launcher[0], activeElement);
-    },
-    _restoreFocus: function () {
-
-        if (this._isFocusInPopup()) {
-            var launcher = this._launcher;
-            oj.Assert.assertPrototype(launcher, jQuery);
-
-            launcher.focus();
-        }
-    },
-    _keydownHandler: function (event) {
-        if (event.isDefaultPrevented())
-            return;
-
-        var target = event.target;
-        oj.Assert.assertDomElement(target);
-        if (event.keyCode === $.ui.keyCode.ESCAPE) {
+          if (firstNode === target && event.shiftKey) {
+            //tabbing backwards, cycle focus to last node
             event.preventDefault();
-            this.close();
-        } else if (event.keyCode === 117) {
-            //F6 - toggle focus to launcher or popup
-            if (this._isFocusInPopup(target)) {
-                event.preventDefault();
-                var launcher = this._launcher;
-                oj.Assert.assertPrototype(launcher, jQuery);
-                launcher.focus();
-            }
-            else if (this._isFocusInLauncher(target)) {
-                event.preventDefault();
-                this._intialFoucs();
-            }
-        } else if (event.keyCode === 9 && this._isFocusInPopup(target)) {
-            // TAB within popup
-
-            var nodes = this.element.find(":focusable");
-            if (nodes.length > 0) {
-                var firstNode = nodes[0];
-                oj.Assert.assertDomElement(firstNode);
-
-                var lastNode = nodes[nodes.length - 1];
-                oj.Assert.assertDomElement(lastNode);
-
-                if (firstNode === target && event.shiftKey) {
-                    //tabbing backwards, cycle focus to last node
-                    event.preventDefault();
-                    $(lastNode).focus();
-                }
-                else if (lastNode === target && !event.shiftKey) {
-                    //tabbing forwards, cycle to the first node
-                    event.preventDefault();
-                    $(firstNode).focus();
-                }
-            }
+            $(lastNode).focus();
+          }
+          else if (lastNode === target && !event.shiftKey) {
+            //tabbing forwards, cycle to the first node
+            event.preventDefault();
+            $(firstNode).focus();
+          }
         }
-    }
+      }
+    },
+    _registerAutoDismiss: function(isListening) {
+      var dismissalCallback = this._dismissalCallback;
+      oj.Assert.assertFunction(dismissalCallback);
+      var documentElement = document.documentElement;
+      oj.Assert.assertDomElement(documentElement);
+      if (isListening) {
+        documentElement.addEventListener("mousedown", dismissalCallback, true);
+        documentElement.addEventListener("focus", dismissalCallback, true);
+      }
+      else {
+        documentElement.removeEventListener("mousedown", dismissalCallback, true);
+        documentElement.removeEventListener("focus", dismissalCallback, true);
+      }
+    },
+    _dismissalHandler: function(event) {
+      var launcher = this._launcher;
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(launcher, jQuery);
+      oj.Assert.assertPrototype(rootElement, jQuery);
 
-});
+      var target = event.target;
+      oj.Assert.assertDomElement(target);
+
+      // if event target is not under the laucher or popup root dom subtrees, dismiss
+      if (!oj.DomUtils.isAncestorOrSelf(launcher[0], target) &&
+        !oj.DomUtils.isAncestorOrSelf(rootElement[0], target))
+        this.close();
+    }
+  });
+
+}());
 /*-------------------------------------------------------------------------*/
 /* Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.  */
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
 /* ojTree v1.0                                                             */
 /*                                                                         */
-/* This based on the following version of jsTree                           */
+/* This component is based on a heavily modified version of the following: */
 /* jsTree 1.0-rc3                                                          */
 /* http://jstree.com/                                                      */
 /*                                                                         */
@@ -55481,7 +58602,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 /*   http://www.opensource.org/licenses/mit-license.php                    */
 /*   http://www.gnu.org/licenses/gpl.html                                  */
 /*                                                                         */
-/* $Date: 2011-02-09 01:17:14 +0200 (� р, 09 февр 2011) $             */
+/* $Date: 2011-02-09 01:17:14 +0200                                        */
 /* $Revision: 236 $                                                        */
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
@@ -55497,16 +58618,333 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 /* Original idea by:                                                       */
 /* Binny V A, http://www.openjs.com/scripts/events/keyboard_shortcuts/     */
 /*-------------------------------------------------------------------------*/
+/* Depends:                                                                */
+/*   jquery.ui.core.js                                                     */
+/*   jquery.ui.widget.js                                                   */
+/*-------------------------------------------------------------------------*/
+
+
+(function () 
+{
+  /*
+  function debugObj(o)  {
+    var s ;
+    try { s = JSON.stringify(o) ; }
+    catch (e) { s = "ERROR";}
+    return s ;
+  };
+  */
+
+  //  ojTree class names  
+  var  /** @const */   OJT_OPEN          = "oj-tree-open",
+       /** @const */   OJT_CLOSED        = "oj-tree-closed",
+       /** @const */   OJT_LEAF          = "oj-tree-leaf",
+       /** @const */   OJT_ICON          = "oj-tree-icon",
+       /** @const */   OJT_HOVER         = "oj-tree-hovered",
+       /** @const */   OJT_CLICKED       = "oj-tree-clicked",
+       /** @const */   OJT_LAST          = "oj-tree-last",
+       /** @const */   OJT_LOADING       = "oj-tree-loading",
+       /** @const */   OJT_LAST_SELECTED = "oj-tree-last-selected",
+       /** @const */   OJT_DISABLED      = "oj-disabled",
+       /** @const */   OJT_DRAG_OK       = "oj-tree-ok",
+       /** @const */   OJT_DRAG_INVALID  = "oj-tree-invalid";
+
+
+  //  Data source in use
+  var  /** @const */  DS_TREE = 1,
+       /** @const */  DS_JSON = 2,
+       /** @const */  DS_HTML = 3,
+       /** @const */  DS_NONE = 0;
+
+  /**
+    *  Public event names
+    *  @const
+    */
+  var  _aEvNames = ["select", "deselect", "hover", "dehover", "expand", "collapse", "loaded", "move",
+                    "remove", "deselectAll", "rename", "refresh", "expandAll", "collapseAll", "destroy",
+                    "create", "before",
+                    "remove", "cut", "copy", "paste"] ;     // <-- context menu ops
+
+  /**
+    *  Return sanitized selector
+    *  @private
+    */
+  function  _sanitizeSelector(hash) {
+       return hash ? hash.replace( /[!"$%&'()*+,.\/:;<=>?@\[\]\^`{|}~]/g, "\\$&" ) : "";
+  };
+
+  /**
+    *  Return sanitized html fragment for security
+    *  @private
+    */
+  function  _escapeHtml(s) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(s)) ;
+    return div.innerHTML;
+  };
+
+  /**
+    *  Return true if event name is public. 
+    *  @private
+    */
+  function _isPublicEvent(s) {
+     var  b = ($.inArray(s, _aEvNames) >= 0) ;
+     if ((! b) && (s == "create_node")) {
+       b = true ;
+     }
+     return b ;
+  };
+
+  /**
+    *  Convert event names to ojTree style.
+    *  @private
+    */
+  function _convertEventName(s) {
+    // jsTree uses the same event names as its methods.  This behavior is changed for ojTree
+
+    if      (s === "rename_node") {s = "rename";}
+    else if (s === "set_focus")   {s = "focus";}
+    else if (s === "unset_focus") {s = "unfocus";}
+    else if (s === "delete_node") {s = "remove";}
+    else if (s === "move_node")   {s = "move";}
+    else if (s === "create_node") {s = "create";}
+
+    return s ;
+  };
+
+  //  Default menu
+  var _defaultMenu  = "<ul><li id='ojtreecreate'><a href='#'>{create}</a></li><li id='ojtreerename'><a href='#'>{rename}</a></li><li id='ojtreeremove'><a href='#'>{remove}</a></li><li id='ojtreeedit'><a href='#'>{edit}</a><ul><li id='ojtreecut'><a href='#'>{cut}</a></li><li id='ojtreecopy'><a href='#'>{copy}</a></li><li id='ojtreepaste'><a href='#'>{paste}</a></li></ul></a></li></ul>" ;
+  var _translated   = false ;
+
+  var scrollbar_width, e1, e2;
+  $(function() {
+     if (/msie/.test(navigator.userAgent.toLowerCase())) {
+       e1 = $('<textarea cols="10" rows="2"></textarea>').css({ position: 'absolute', top: -1000, left: 0 }).appendTo('body');
+       e2 = $('<textarea cols="10" rows="2" style="overflow: hidden;"></textarea>').css({ position: 'absolute', top: -1000, left: 0 }).appendTo('body');
+       scrollbar_width = e1.width() - e2.width();
+       e1.add(e2).remove();
+     }
+     else {
+       e1 = $('<div />').css({ width: 100, height: 100, overflow: 'auto', position: 'absolute', top: -1000, left: 0 })
+                        .prependTo('body').append('<div />').find('div').css({ width: '100%', height: 200 });
+       scrollbar_width = 100 - e1.width();
+       e1.parent().remove();
+     }
+  });
+
+
+  /**
+    *  Last remnants of jsTree css stuff.  TO BE REMOVED  TDO
+    *  @param {Object=}  opts  The css data.
+    *  @param {boolean=} bLink  True if opts.url is to be ignored.
+    *  @private
+    */
+  function  _addSheet(opts, bLink)
+  {
+    var tmp    = false,
+        isNew  = true;
+
+    if (opts.str)  {
+      if (opts.title)  {
+        tmp = $("style[id='" + opts.title + "-stylesheet']")[0];
+      }
+      if (tmp)  {
+        isNew = false;
+      }
+      else   {
+        tmp = document.createElement("style");
+        tmp.setAttribute('type',"text/css");
+        if (opts.title) {
+          tmp.setAttribute("id", opts.title + "-stylesheet");
+        }
+      }
+
+      if (tmp.styleSheet)  {
+        if (isNew)  {
+          document.getElementsByTagName("head")[0].appendChild(tmp); 
+          tmp.styleSheet.cssText = opts.str; 
+        }
+        else  {
+          tmp.styleSheet.cssText = tmp.styleSheet.cssText + " " + opts.str;
+        }
+      }
+      else   {
+        tmp.appendChild(document.createTextNode(opts.str));
+        document.getElementsByTagName("head")[0].appendChild(tmp);
+      }
+
+      return tmp.sheet || tmp.styleSheet;
+    }
+
+    if (opts.url) {
+      if (bLink) {
+        if (document.createStyleSheet)  {
+          try  {
+                 tmp = document.createStyleSheet(opts.url);    // IE
+          }
+          catch (e) { }
+
+        }
+        else  {
+          tmp        = document.createElement('link');
+          tmp.rel    = 'stylesheet';
+          tmp.type   = 'text/css';
+          tmp.media  = "all";
+          tmp.href   = opts.url;
+
+          document.getElementsByTagName("head")[0].appendChild(tmp);
+          return tmp.styleSheet;
+        }
+      }
+    }
+  };
+
+
+  /**
+    * @private
+    */
+  var _instance = -1 ;      // Tree instance id
 
 
 /**
-  * The ojTree component allows a user to display the hierarchical relationship between the nodes of a tree.
-  * 
-  * Depends:
-  *  jquery.ui.core.js
-  *  jquery.ui.widget.js
+  * @class
+  * @name oj.ojTree
+  * @augments oj.baseComponent
   *
+  * @classdesc
+  * <h3 id="treeOverview-section">
+  *   JET Tree Component
+  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#treeOverview-section"></a>
+  * </h3>
+  *
+  * The ojTree component allows a user to display the hierarchical relationship between the nodes of a tree.<p>
+  * The tree contents can be specified in JSON format, or by prepopulating the tree's containing &lt;div&gt; with
+  * HTML &lt;ul&gt; list markup.
+  * </p></br>
   * 
+  * <h4 id="treeJSON-section"> JSON Node Format</h4>
+  * </br>
+  * Each node object typically has a <code class="prettyprint">title</code> and an
+  * <code class="prettyprint">attr</code> property. Any node can be defined as a parent by supplying
+  * a <code class="prettyprint">children</code> property, which is an array of more node definitions.
+  * (Note that if a node has a <code class="prettyprint">children</code> property defined, but no children
+  * are actually specified, then ojTree will perform lazy-loading by requesting child node data only
+  * when a node is expanded for the first time - refer to <code class="prettyprint">option</code> property
+  * <code class="prettyprint">data</code>.
+  * <p>Example: Basic JSON Tree definition
+  * <pre class="prettyprint">
+  * <code>
+  *[
+  *   {                                    
+  *     "title": "Home",
+  *     "attr": {"id": "home"},
+  *   },
+  *   { 
+  *     "title": "News",
+  *     "attr": {"id": "news"}
+  *   },
+  *   { 
+  *      "title": "Blogs",
+  *      "attr": {"id": "blogs"},
+  *      "children": [ {
+  *                       "title": "Today",
+  *                       "attr": {"id": "today"}
+  *                    },
+  *                    {
+  *                       "title": "Yesterday",
+  *                       "attr": {"id": "yesterday"}
+  *                    }
+  *                  ]
+  *   }
+  *] 
+  *</code></pre>
+  *</p></br>
+  * Whatever attributes are defined for the <code class="prettyprint">attr</code> property are transferred
+  * to the associated DOM &lt;li&gt; element. A <code class="prettyprint">metadata</code> attribute can also be
+  * defined for arbitrary user-defined data that is to be associated with a node. (This metadata is
+  * maintained within the ojTree instance, and is not represented in the DOM.)  A node's metadata can be retrieved
+  * using the jQuery .data() method.
+  * </p></br>Example: Expanded use of the <code class="prettyprint">attr</code> property
+  * <pre class="prettyprint">
+  * <code>
+  *[
+  *  { 
+  *    "title": "Home",
+  *    "attr": {
+  *               "id": "home",
+  *               "myattr1": "Hello",         &lt;-- additional user-defined attributes
+  *               "myattr2": "World",         &lt;-- additional user-defined attributes 
+  *               "data-bind": "text: myItems.count"
+  *            },
+  *    "metadata": {                          &lt;-- node metadata
+  *                  "type": "T123",
+  *                  "val": 42,
+  *                  "active": true
+  *                }
+  *  },
+  *
+  *  . . .
+  *]
+  *</code></pre>
+  *
+  * </p></br>Example: Retrieving node attributes and data
+  * <pre class="prettyprint">
+  * <code>
+  *$("#mytree).on("ojtreehover", function (ev, ui){
+  *
+  *  // ui.item = node
+  *  // ui.item.attr("id")         -  retrieve a node attribute
+  *  // ui.item.attr("myattr1")    -    ..
+  *  // ui.item.data("active")     -  retrieve the "active" meta-data value from previous example
+  *
+  *});
+  *</code></pre>
+  *</p></br>
+  * For flexibility, attributes can also be applied to the node's &lt;a&gt; element if required, by specifying
+  * the node <code class="prettyprint">data</code> property as an object.
+  * </p>Example: Using the data property
+  * <pre class="prettyprint">
+  * <code>
+  *{
+  *   "attr" : { "id" : "myid" },                    &lt;-- this is set on the &lt;li&gt;
+  *   "data" : {
+  *              "title" : "diff node declaration",
+  *              "attr" : { "top" : "hat" }          &lt;-- this is set on the &lt;a&gt;
+  *            }
+  *}
+  *</code></pre>
+  *</p></br>
+  * <h4 id="treeHTML-section"> HTML Node Format</h4>
+  * </br>
+  * A Tree can be populated via standard HTML markup using a &lt;ul&gt; list structure - refer to
+  * <code class="prettyprint">option</code> property <code class="prettyprint">html_data</code>.  On
+  * startup, the &lt;ul&gt; markup is detached from its containing &lt;div&gt;, saved, and used
+  * as a template to create a new tree structure in its place.  On destroy(), the original markup is restored.
+  * </p></br>Example: Using HTML markup to populate a Tree.
+  * <pre class="prettyprint">
+  * <code>
+  * &lt;div id="mytree"&gt;
+  *    &lt;ul&gt;
+  *       &lt;li id="home"&gt;
+  *          &lt;a href="#"&lt;Home&gt;/a&gt;
+  *       &lt;/li&gt;
+  *       &lt;li id="news"&gt;
+  *          &lt;a href="#"&gt;News&lt;/a&gt;
+  *       &lt;/li&gt;
+  *       &lt;li id="blogs"&gt;
+  *            &lt;a href="#"&gt;Blogs&lt;/a&gt;
+  *            &lt;ul&gt;
+  *              &lt;li id="today"&gt;
+  *                 &lt;a href="#"&gt;Today&lt;/a&gt;
+  *              &lt;/li>
+  *              &lt;li id="yesterday"&gt;
+  *                 &lt;a href="#"&gt;Yesterday&lt;/a&gt;
+  *              &lt;/li&gt;
+  *            &lt;/ul&gt;
+  *       &lt;/li&gt;
+  * &lt;/div&gt;
+  </code></pre>
+  * </p></br>
   * <h3 id="keyboard-section">Keyboard interaction<a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a></h3>
   * <table class="keyboard-table">
   *   <thead>
@@ -55562,173 +59000,92 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
   *     </tr>
   * </tbody></table>
   *
-  * @class
-  * @name oj.ojTree
-  * @augments oj.baseComponent
+  *
+  * @desc Creates a JET Tree.
+  * @param {Object=} options a map of option-value pairs to set on the component
+  * 
+  * @example <caption>Initialize the Tree with options:</caption>
+  * $( ".selector" ).ojTree( {"animDuration": 0, "selectionMode": "single"} );
+  * 
   */
-(function () 
-{
-  /*
-  function debugObj(o)  {
-    var s ;
-    try { s = JSON.stringify(o) ; }
-    catch (e) { s = "ERROR";}
-    return s ;
-  };
-  */
-
-  /* 
-   *  ojTree class names
-   *  @type {string}
-   *  @const
-   */
-  var  OJT_OPEN          = "oj-tree-open",
-       OJT_CLOSED        = "oj-tree-closed",
-       OJT_LEAF          = "oj-tree-leaf",
-       OJT_ICON          = "oj-tree-icon",
-       OJT_HOVER         = "oj-tree-hovered",
-       OJT_CLICKED       = "oj-tree-clicked",
-       OJT_LAST          = "oj-tree-last",
-       OJT_LOADING       = "oj-tree-loading",
-       OJT_LAST_SELECTED = "oj-tree-last-selected",
-       OJT_DISABLED      = "oj-disabled" ;
-
-  /**
-    *  Public event names
-    *  @const
-    */
-  var  _aEvNames = ["select", "deselect", "hover", "dehover", "expand", "collapse", "loaded", "move",
-                    "delete", "deselectall", "rename", "refresh", "expandall", "collapseall", "destroy",
-                    "create",
-                    "remove", "cut", "copy", "paste"] ;     // <-- context menu ops
-
-  /**
-    *  Return true if event name is public. 
-    *  @private
-    */
-  function _isPublicEvent(s) {
-     var  b = ($.inArray(s, _aEvNames) >= 0) ;
-     if ((! b) && (s == "create_node")) {
-       b = true ;
-     }
-     return b ;
-  };
-
-  /**
-    *  Convert event names to ojTree style.
-    *  @private
-    */
-  function _convertEventName(s) {
-    // jsTree uses the same event names as its methods.  This behavior is changed for ojTree
-
-    if      (s === "expandAll")   {s = "expandall";}
-    else if (s === "collapseAll") {s = "collapseall";}
-    else if (s === "deselectAll") {s = "deselectall";}
-    else if (s === "rename_node") {s = "rename";}
-    else if (s === "set_focus")   {s = "focus";}
-    else if (s === "unset_focus") {s = "unfocus";}
-    else if (s === "delete_node") {s = "delete";}
-    else if (s === "move_node")   {s = "move";}
-    else if (s === "create_node") {s = "create";}
-
-    return s ;
-  };
-
-  //  Default menu
-  var _defaultMenu  = "<ul><li id='ojtreecreate'><a href='#'>{create}</a></li><li id='ojtreerename'><a href='#'>{rename}</a></li><li id='ojtreedelete'><a href='#'>{remove}</a></li><li id='ojtreeedit'><a href='#'>{edit}</a><ul><li id='ojtreecut'><a href='#'>{cut}</a></li><li id='ojtreecopy'><a href='#'>{copy}</a></li><li id='ojtreepaste'><a href='#'>{paste}</a></li></ul></a></li></ul>" ;
-  var _translated   = false ;
-
-  var scrollbar_width, e1, e2;
-  $(function() {
-   if (/msie/.test(navigator.userAgent.toLowerCase())) {
-     e1 = $('<textarea cols="10" rows="2"></textarea>').css({ position: 'absolute', top: -1000, left: 0 }).appendTo('body');
-     e2 = $('<textarea cols="10" rows="2" style="overflow: hidden;"></textarea>').css({ position: 'absolute', top: -1000, left: 0 }).appendTo('body');
-     scrollbar_width = e1.width() - e2.width();
-     e1.add(e2).remove();
-   } 
-   else {
-     e1 = $('<div />').css({ width: 100, height: 100, overflow: 'auto', position: 'absolute', top: -1000, left: 0 })
-             .prependTo('body').append('<div />').find('div').css({ width: '100%', height: 200 });
-     scrollbar_width = 100 - e1.width();
-     e1.parent().remove();
-   }
-  });
-
-
-  /**
-    *  Last remnants of jsTree css stuff.  TO BE REMOVED  TDO
-    *  @param {Object=}  opts  The css data.
-    *  @param {boolean=} bLink  True if opts.url is to be ignored.
-    *  @private
-    */
-  function  _addSheet(opts, bLink)                                     
-  {
-     var tmp    = false,
-         isNew  = true;
-
-     if (opts.str)  {
-        if (opts.title)  {
-          tmp = $("style[id='" + opts.title + "-stylesheet']")[0];
-        }
-        if (tmp)  {
-          isNew = false;
-        }
-        else   {
-          tmp = document.createElement("style");
-          tmp.setAttribute('type',"text/css");
-          if (opts.title) {
-            tmp.setAttribute("id", opts.title + "-stylesheet");
-          }
-        }
-        if (tmp.styleSheet)  {
-          if (isNew)  { 
-            document.getElementsByTagName("head")[0].appendChild(tmp); 
-            tmp.styleSheet.cssText = opts.str; 
-          }
-          else  {
-            tmp.styleSheet.cssText = tmp.styleSheet.cssText + " " + opts.str; 
-          }
-        }
-        else   {
-          tmp.appendChild(document.createTextNode(opts.str));
-          document.getElementsByTagName("head")[0].appendChild(tmp);
-        }
-        return tmp.sheet || tmp.styleSheet;
-     }
-
-     if (opts.url) {
-       if (bLink) {
-           if (document.createStyleSheet)  {
-             try  {
-              tmp = document.createStyleSheet(opts.url);    // IE
-             }
-             catch (e) { }
-           }
-           else  {
-             tmp         = document.createElement('link');
-             tmp.rel     = 'stylesheet';
-             tmp.type    = 'text/css';
-             tmp.media   = "all";
-             tmp.href    = opts.url;
-             document.getElementsByTagName("head")[0].appendChild(tmp);
-             return tmp.styleSheet;
-           }
-       }
-     }
-  };
-
-  /**
-    * @private
-    */
-  var _instance = -1 ;      // Tree instance id
-
   oj.__registerWidget("oj.ojTree", $['oj']['baseComponent'], 
   {
-     version : "1.0.0", 
+     version           : "1.0.0", 
      widgetEventPrefix : "oj", 
      defaultElement    : "<div>", 
 
      options: {
+                /** Disables the tree if set to <code class="prettyprint">true</code>.
+                  * 
+                  * @member
+                  * @name disabled
+                  * @memberof! oj.ojTree
+                  * @instance
+                  * @type {boolean}
+                  * @default <code class="prettyprint">false</code>
+                  * 
+                  * @example <caption>Initialize the tree with the <code class="prettyprint">disabled</code> option specified:</caption>
+                  * $( ".selector" ).ojTree( { "disabled": true } );
+                  * 
+                  * @example <caption>Get or set the <code class="prettyprint">disabled</code> option, after initialization:</caption>
+                  * // getter
+                  * var disabled = $( ".selector" ).ojTree( "option", "disabled" );
+                  * 
+                  * // setter
+                  * $( ".selector" ).ojTree( "option", "disabled", true );
+                  */
+                  // disabled option declared in superclass, but we still want the above API doc
+
+
+                /**
+                  * Identifies the JET Menu that the component should launch as a context menu on right-click or
+                  * <kbd>Shift-F10</kbd>. If specified, the browser's native context menu will be replaced by the
+                  * specified JET Menu.
+                  * 
+                  * <p>To specify a JET context menu on a DOM element that is not a JET component, see the
+                  * <code class="prettyprint">ojContextMenu</code> binding.  
+                  * 
+                  * <p>To make the page semantically accurate from the outset, applications are encouraged to specify the
+                  * context menu via the standard HTML5 syntax shown in the below example.  When the component is
+                  * initialized, the context menu thus specified will be set on the component.
+                  *
+                  * <p>When defining a contextMenu, ojTree will provide built-in behavior for "edit" style functionality
+                  *  (e.g. cut/copy/paste) if the following menu item Id's are used:
+                  * <ul><li>"ojtreecut"</li></br>
+                  *     <li>"ojtreecopy"</li></br>
+                  *     <li>"ojtreepaste"</li></br>
+                  *     <li>"ojtreeremove"</li></br>
+                  *     <li>"ojtreerename"</li></br>
+                  * </ul>
+
+                  * <p>The JET Menu should be initialized before any component using it as a context menu.
+                  * 
+                  * @member
+                  * @name contextMenu
+                  * @memberof! oj.ojTree
+                  * @instance
+                  * @type {Object}
+                  * @default <code class="prettyprint">{ menu: null }</code>
+                  * 
+                  * @example <caption>Initialize a JET component with a context menu:</caption>
+                  * // via recommended HTML5 syntax:
+                  * &lt;div id="myComponent" contextmenu="myMenu" data-bind="ojComponent: { ... }>
+                  * 
+                  * // via JET initializer (less preferred) :
+                  * $( ".selector" ).ojFoo({ "contextMenu": { menu: 'myContextMenu' } });
+                  * 
+                  * @example <caption>Get or set the <code class="prettyprint">contextMenu</code> option, after initialization:</caption>
+                  * // getter
+                  * var menu = $( ".selector" ).ojFoo( "option", "contextMenu" );
+                  * 
+                  * // setter
+                  * $( ".selector" ).ojFoo( "option", "contextMenu", { menu: 'myContextMenu'} );
+                  * 
+                  * @example <caption>Set a JET context menu on an ordinary HTML element:</caption>
+                  * &lt;a href="#" id="myAnchor" contextmenu="myMenu" data-bind="ojContextMenu: {}">Some text</a>
+                  */
+
+
                 /**
                   * Specifies an animation duration in milliseconds for expanding or collapsing a node.
                   * Specify zero to inhibit animation.
@@ -55739,6 +59096,26 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   * @memberof! oj.ojTree
                   */
                 animDuration  : 500,
+
+                /**
+                  * Specifies whether the user is permitted to reorder the nodes within the same tree using drag and drop.</br></br>
+                  * Specify an object with the property "reorder" set to <code class="prettyprint">true</code> to enable
+                  * reordering.  Setting the <code class="prettyprint">"reorder"</code> property to <code class="prettyprint">false</code>,
+                  * or setting the <code class="prettyprint">"dnd"</code> property to <code class="prettyprint">false</code> (or omitting
+                  * it), disables reordering support. 
+                  * 
+                  * @example <caption>Example: Enable drag and drop for tree node reordering</caption>
+                  * dnd : (
+                  *         "reorder" : true
+                  *       }
+                  *
+                  * @type {Object | boolean}
+                  * @default <code class="prettyprint">false</code>
+                  * @expose
+                  * @instance
+                  * @memberof! oj.ojTree
+                  */
+                dnd : false,
 
                 /**
                   * Specify <span class="code-caption">true</span> if expanding a node programatically should
@@ -55794,42 +59171,60 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                 selectPrevOnDelete        :  false ,
 
 //              "initSelected"              :  [],         // removed per Design Review
-                selectMultipleModifier    :  "ctrl" ,    // on, or ctrl, shift, alt
+                selectMultipleModifier    :  "ctrl" ,      // on, or ctrl, shift, alt
                 selectRangeModifier       :  "shift" ,
                 disableSelectingChildren  :  false,
 
                 /**
-                  * Specifies that the tree is to be populated from JSON (local or remote).
-                  * json_data contains two properties:
+                  * Specifies the data source used to populate the tree. Currently supported data sources are a <code class="prettyprint">JsonTreeDataSource</code>,
+                  * or json, or html.</br></br> 
+                  * The general format of the <code class="prettyprint">data</code> option is one of the following:
+                  *</br></br>
+                  *<ul>
+                  *   <li>data : oj.JsonTreeDataSource</br></br></li>
+                  *   <li>data : null    (or omit) - ojTree will look at the containing &lt;div&gt;
+                  *                       and use any existing html &lt;ul&gt; markup found</br></br></li>
+                  *   <li>data : "  json string  "</br></br></li>
+                  *   <li>data : [ array of json objects ]</br></br></li>
+                  *   <li>data : "&lt;ul&gt;&lt;li&gt; ...  html markup string  &lt;/ul&gt;"</br></br></li>
+                  *   <li>data : { "data" : &nbsp; &nbsp; ... or &nbsp; &nbsp; "ajax" : &nbsp; &nbsp; . . . &nbsp; &nbsp;}  &nbsp; &nbsp; &nbsp; // retrieve json or html</li>
+                  * </ul>
+                  *</br>
+                  * Use of the <code class="prettyprint">"data"</code> property of the <code class="prettyprint">data</code> option,
+                  * specifies that the tree is to be populated from JSON or HTML (local or remote).
+                  * The <code class="prettyprint">"data"</code> object contains one of two properties:
                   * <ul>
                   *  <li>"data"</li>
                   *  <li>"ajax"</li>
                   * </ul>
+                  *  An optional <code class="prettyprint">"dataType"</code> property may also be specified, which can take the
+                  *  value <code class="prettyprint">"json"</code> or <code class="prettyprint">"html"</code>, and indicates
+                  *  what kind of data is being returned in the <code class="prettyprint">"data"</code> or
+                  *  <code class="prettyprint">"ajax"</code> method (default is "json").
+                  * </ul>
                   *
-                  * "data" - specifies the JSON node data for the tree as an array of node definitions (see
-                  * format below). It may also be specified as a function which receives two arguments,
-                  * <span class="code-caption">node</span>, and <span class="code-caption">fn</span>.
-                  * </br>
-                  * Here is a skeleton outline of a <span class="code-caption">"data"</span> function:
+                  * When <span class="code-caption">"data"</span> is specified as an object, its <span class="code-caption">"data"</span> property may be specified as a function which
+                  * receives two arguments: <span class="code-caption">node</span>, and <span class="code-caption">fn</span>.
+                  * </p></br>
+                  * Example: Skeleton outline of a <code class="prettyprint">"data"</code> function:
                   *</br>
                   *<pre class="prettyprint">
                   *<code>
-                  *json_data = {
-                  *               . . .
-                  *               "data" : function(node, fn) {
-                  *                         // node  -  the jQuery wrapped node to be expanded for a lazy load,
-                  *                         //          or -1 if it is the initial call to load the table.
-                  *                         // fn    -  a function to call with the JSON to be applied.
+                  *data : {
+                  *          "data" : function(node, fn) {
+                  *                    // node  -  the jQuery wrapped node to be expanded for a lazy load,
+                  *                    //          or -1 if it is the initial call to load the tree.
+                  *                    // fn    -  a function to call with the JSON to be applied.
                   *
-                  *                         fn( new_json_node_data ) ;   // return the JSON
-                  *                        },
-                  *               . . .
-                  *}
+                  *                    fn( new_json_node_data ) ;   // return the JSON
+                  *                   }
+                  *        }
                   *</code></pre>
                   * </br>
-                  * <span class="code-caption">"ajax"</span> - allows remote JSON to be retrieved. It may be
-                  * specifed as a boolean or as an object. If specifed as <span class="code-caption">false</span>
-                  * or omitted, no AJAX operations are performed.</br></br>
+                  * The <code class="prettyprint">"ajax"</code> property of the <code class="prettyprint">"data"</code> option
+                  * allows remote JSON to be retrieved. It may be specified as an object (refer to the
+                  * jQuery .ajax() settings object). If may also be specified as <code class="prettyprint">false</code> or
+                  * omitted, if no AJAX operations are performed.</br></br>
                   * When specified as an object, it should contain the following two properties:
                   * <ul>
                   *  <li>type</li>
@@ -55837,22 +59232,25 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   * </ul>
                   *<pre class="prettyprint">
                   *<code>
-                  *{ "type": "GET",
-                  *   "url":   "my_url"
-                  *}
+                  *"ajax" : {
+                  *           "type": "GET",
+                  *           "url":   "my_url"      // some url to the content
+                  *          }
                   *</code></pre>
-                  * If <span class="code-caption">"url"</span> is specified, the following format is used:
+                  * <code class="prettyprint">"url"</code> may also be specified as a function which should return
+                  * a url string:
                   *</br>
                   *<pre class="prettyprint">
                   *<code>
-                  *{ "type" : "GET",
-                  *   "url":   function (node) {
-                  *             ... return a url string ...
-                  *            }
-                  *)
+                  *"ajax" : {
+                  *           "type" : "GET",
+                  *           "url":   function (node) {
+                  *                         ... return a url string ...
+                  *                     }
+                  *          )
                   *</code></pre>
                   * </br>
-                  *  where  <span class="code-caption">node</span> is a parent node (used for lazy loading), or -1 to
+                  *  where  <span class="code-caption">node</span> is a parent node (can be used for lazy loading), or -1 to
                   *  indicate the initial tree load.
                   * </br></br>
                   *  Optionally, <span class="code-caption">success</span> and <span class="code-caption">error</span>
@@ -55862,13 +59260,12 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   * </br></br></br>
                   *
                   * Note: to enable lazy loading of a parent node, specify that it has children but do not define them.
-                  * When it is opened, data() or ajax() will be called with the node id whose JSON is to be returned.</br></br>
-                  * 
-                  *@example <caption>Skeleton outline of success and error functions</caption>
+                  * When it is opened, data() or ajax() will be called with the node whose JSON is to be returned.</br></br>
+                  *@example <caption>Example 1: Skeleton outline of success and error functions</caption>
                   *<code>
                   *"ajax": {
                   *          "type":"GET",
-                  *          "url": myurl    <-- url to full tree JSON
+                  *          "url": myurl    &lt;-- url to full tree JSON
                   *          "success" : function(data, status, obj) {
                   *                        // data   = the JSON data
                   *                        // status = "success"
@@ -55884,96 +59281,100 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   *          },
                   * </code>
                   *
-                  *@example <caption>Example 1:  Load the complete tree from locally defined JSON.</caption>
+                  *@example <caption>Example 2:  Load the complete tree from locally defined JSON.</caption>
                   *<code>
-                  *"json_data": {  
-                  *               "data": [
-                  *                         { 
-                  *                           "title": "Home",
-                  *                           "attr": {"id": "home"},
-                  *                         },
-                  *                         { 
-                  *                           "title": "News",
-                  *                           "attr": {"id": "news"}
-                  *                         },
-                  *                         { 
-                  *                           "title": "Blogs",
-                  *                           "attr": {"id": "blogs"},
-                  *                           "children": [ { 
-                  *                                           "title": "Today",
-                  *                                           "attr": {"id": "today"}
-                  *                                         },
-                  *                                         { 
-                  *                                           "title": "Yesterday",
-                  *                                           "attr": {"id": "yesterday"}
-                  *                                         }
-                  *                                       ]
-                  *                         }
-                  *                       ]
-                  *             }
+                  *"data" :  [
+                  *            { 
+                  *             "title": "Home",
+                  *             "attr": {"id": "home"},
+                  *            },
+                  *            { 
+                  *              "title": "News",
+                  *              "attr": {"id": "news"}
+                  *            },
+                  *            { 
+                  *              "title": "Blogs",
+                  *              "attr": {"id": "blogs"},
+                  *              "children": [ { 
+                  *                             "title": "Today",
+                  *                             "attr": {"id": "today"}
+                  *                            },
+                  *                            { 
+                  *                              "title": "Yesterday",
+                  *                              "attr": {"id": "yesterday"}
+                  *                            }
+                  *                          ]
+                  *            }
+                  *          ]
                   *</code>
                   *
-                  *@example <caption>Example 2:  Load the complete tree with remotely served JSON.</caption>
+                  *@example <caption>Example 3:  Load the complete tree with remotely served JSON.</caption>
                   *<code>
-                  *"json_data": {
-                  *              "ajax": {
-                  *                         "type":"GET",
-                  *                          "url": myurl    <-- url to full tree JSON
-                  *                      }
-                  *             }  
+                  *"data" : {
+                  *            "ajax": {
+                  *                     "type":"GET",
+                  *                     "url": myurl    <-- url to full tree JSON
+                  *                    }
+                  *           
+                  *          }  
                   *</code>
                   *
-                  *@example <caption>Example 3:  Load the complete tree with remotely served JSON via a function.</caption>
+                  *@example <caption>Example 4:  Load the complete tree with remotely served JSON via a function.</caption>
                   *<code>
-                  *"json_data": {
-                  *              "ajax": {
-                  *                         "type":"GET",
-                  *                          "url": function() {
-                  *                                     return (a url) ;
-                  *                                 }
-                  *                      }  
+                  *"data" : {
+                  *           
+                  *           "ajax": {
+                  *                     "type":"GET",
+                  *                     "url": function() {
+                  *                               return (a url) ;
+                  *                            }
+                  *                   }
+                  *           
+                  *          }  
                   * </code>
                   *
-                  *@example <caption>Example 4:  Load a partial tree, and retrieve node data when a parent node is expanded and needs to be populated.</caption>
+                  *@example <caption>Example 5:  Load a partial tree, and retrieve node data when a parent node is expanded and needs to be populated.</caption>
                   *<code>
-                  *"json_data": {
-                  *               "ajax": {
-                  *                         "type":"GET",
-                  *                         "url": function(node) {
-                  *                                  if (node === -1) {                       // -1 indicates initial load
-                  *                                    return (url for for  partial json) ;   // the tree outline with parent nodes empty.
-                  *                                  }
-                  *                                  else {
-                  *                                     var id = node.attr("id") ;
+                  *"data" : {
+                  *           "ajax": {
+                  *                     "type":"GET",
+                  *                     "url": function(node) {
+                  *                             if (node === -1) {                       // -1 indicates initial load
+                  *                               return (url for for  partial json) ;   // the tree outline with parent nodes empty.
+                  *                             }
+                  *                             else {
+                  *                               var id = node.attr("id") ;
                   *
-                  *                                     return (a url based on the node id to retrieve just the node children) ; 
-                  *                                  }
+                  *                               return (a url based on the node id to retrieve just the node children) ; 
+                  *                             }
+                  *                           }
+                  *                   }
+                  *           
+                  *          }
+                  *</code>
+                  *
+                  *@example <caption>Example 6:  Transform data received from server before passing to ojTree.</caption>
+                  *<code>
+                  *"data" : {
+                  *           "ajax": {
+                  *                     "type":"GET",
+                  *                     "url": function(node) {
+                  *                              . . .
+                  *                            },
+                  *                      "success" : function (data)  {
+                  *                                    . . .    // transform the received data into node JSON format
+                  *
+                  *                                    return (transformed data) ;
+                  *                                  },
+                  *                      "error" : function () {
+                  *                                   // ajax call failed.
                   *                                }
-                  *                       }
-                  *             }
+                  *                   } 
+                  *           
+                  *          }
                   *</code>
                   *
-                  *@example <caption>Example 5:  Transform data received from server before passing to ojTree.</caption>
-                  *<code>
-                  *"json_data": {
-                  *               "ajax": {
-                  *                         "type":"GET",
-                  *                         "url": function(node) {
-                  *                                        . . .
-                  *                                },
-                  *                         "success" : function (data)  {
-                  *                                        . . .    // transform the received data into node JSON format
-                  *
-                  *                                        return (transformed data) ;
-                  *                                     },
-                  *                         "error" : function () {
-                  *                                      // ajax call failed, do something here (e.g. tell the user)
-                  *                                   }
-                  *                       } 
-                  *             }
-                  *</code>
-                  *
-                  * @example <caption>Example 6:  Use own mechanism to load a partial tree and retrieve node data when a parent is expanded.</caption>
+                  * @example <caption>Example 7:  Use own mechanism to load a partial tree and retrieve node data when a parent is expanded.</caption>
                   * <code>
                   * // Sample outline of a tree.  Note that the parent nodes "Node2" and "Node3" have
                   * // their "children" property specifed, but no children are actually defined.
@@ -55989,37 +59390,36 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   *},
                   *{
                   *  "title" : Node3",
-                  *  "attr" : {"id" : "n2"},
+                  *  "attr" : {"id" : "n3"},
                   *  "children" : []
                   *},
                   *
                   *
-                  *"json_data": {
-                  *         "data": function(node, fn) {
-                  *                   // node  =  the node whose children are to be retrieved
-                  *                   // fn    =  the function to call with the retrieved node json 
+                  *"data" : {
+                  *           "data": function(node, fn) {
+                  *                     // node  =  the node whose children are to be retrieved
+                  *                     // fn    =  the function to call with the retrieved node json 
                   *
-                  *                   if (node === -1) {                  // initial tree load
-                  *                     fn( acquired node json for the tree) ;
-                  *                   }
-                  *                   else {                              // node lazy load
-                  *                     var id = node.attr("id") ;  // get the node id, will be "n1" 
-                  *                                                 // or "n2", in this example.  
-                  *                     fn( acquired node json for the expanded node ) ;
-                  *                   }
-                  *                 }
-                  *         }
+                  *                     if (node === -1) {             // initial tree load
+                  *                       fn( acquired node json for the tree) ;
+                  *                     }
+                  *                     else {                         // node lazy load
+                  *                       var id = node.attr("id") ;   // get the node id, will be "n2" 
+                  *                                                    // or "n3", in this example.  
+                  *                       fn( acquired node json for the expanded node ) ;
+                  *                     }
+                  *                  }
+                  *           
+                  *          }
                   *}
                   * </code>
+                  * @type {Object | Array | string | null}
+                  * @default <code class="prettyprint">null</code>
                   * @expose
                   * @instance
                   * @memberof! oj.ojTree
                   */
-                json_data  : null,
-
-                //  Html Data
-
-                html_data  : null,
+                 data : null,
 
                 //  Themes
 
@@ -56034,38 +59434,45 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   */
                 icons : true,
 
-                //dots" : false,       // not exposed in V1
+                /*
+                 *  Specifies whether hierarchy lines between nodes are displayed.
+                 *  // not exposed in V1
+                 */
+                //dots" : false,
 
 
                 /**
-                  * <span class="code-caption">'Types'</span> allow nodes to be classified and their appearance
+                  * The <span class="code-caption">'types'</span> option allow nodes to be classified and their appearance
                   * and behavior modified.</br></br>
                   * Typical uses are to define a specific icon for a particular node, or to inhibit certain
                   * operations on a particular type of folder (e.g. the root node cannot be deleted or moved).
                   * <p>
                   * A node <span class="code-caption">type</span> has the following properties:
                   * <ul>
-                  *   <li><span class="code-caption">"image"</span> -  specifies the location of the icon to be used (optional)</br></br></li>
+                  *   <li><span class="code-caption">"image"</span> -  specifies the location of the icon to be used
+                  *         (optional). May also be specified as <span class="code-caption">false</span> to suppress
+                  *         the image.</br></br></li>
                   *   <li><span class="code-caption">"position"</span> - position of sprite in the image in the format 
                   *        <span class="code-caption">"left top"</span>, e.g. "-36px -16px".</br>
                   *        Optional - omit if icon is not contained within a multi-sprite image.</br></br></li>
                   *   <li><span class="code-caption">method name</span> - specify a function or a
                   *         boolean. Optional.</br>  Any node operation method (that
-                  *         is, takes a node as its first argument) can be redefined.  e.g. <span class="code-caption">select</span>,
-                  *         <span class="code-caption">expand</span>, <span class="code-caption">collapse</span>, etc. 
+                  *         is, takes a node as its first argument) can be redefined (e.g. <span class="code-caption">select</span>,
+                  *         <span class="code-caption">expand</span>, <span class="code-caption">collapse</span>, etc). 
                   *         Alternatively, the method can be defined as <span class="code-caption">true</span> or 
                   *         <span class="code-caption">false</span> to permit or inhibit the operation, or a
                   *         function that returns a boolean value. The default value
-                  *         if omitted is <span class="code-caption">true</span> (i.e. the operation is allowed).</li>
+                  *         if omitted is <span class="code-caption">true</span> (i.e. the operation is permitted).</li>
                   * </ul>
-                  * In the following example, 3 node types have been defined: <span class="code-caption">"myroot"</span>,
+                  * In the following example, three node types have been defined: <span class="code-caption">"myroot"</span>,
                   * <span class="code-caption">"myfolder"</span>, and <span class="code-caption">"myleaf"</span>.
                   * Any node that does not have one of these types defaults its behavior to the default type
                   * (whose properties can also be redefined).  The default <span class="code-caption">"default"</span>
                   * node type has no restrictions on the operations that can be performed on the node. In the following
-                  * this example a modification to the default type properties have been made.  Also, for the
+                  * example, a modification to the default type properties have been made.  Also, for the
                   * <span class="code-caption">"myroot"</span> node type, the standard <span class="code-caption">select</span>,
-                  * <span class="code-caption">delete</span> and <span class="code-caption">move</span> oprations have
+                  * <span class="code-caption">remove</span> and <span class="code-caption">move</span> operations return false
+                  * which inhibts those operations.
                   * been redefined to be no-ops.
                   * @example <caption>Example 1:  Add custom appearance and node behavior.</caption>
                   * <code>
@@ -56073,7 +59480,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   *            "myroot" :   {
                   *                            "image"  : baseurl + "/img/root.png",
                   *                            "select" : function() { return false; },
-                  *                            "delete" : function() { return false; },
+                  *                            "remove" : function() { return false; },
                   *                            "move" :   function() { return false; },
                   *                         },
                   *            "myfolder" : {
@@ -56084,19 +59491,16 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   *                         },
                   *            "default" : {   <-- optional redefinition of the default behavior
                   *                           "image" : "baseurl + "/img/leaf.png",
-                  *                           "delete" : function() { return false; }
+                  *                           "remove" : function() { return false; }
                   *                        }
                   *
                   *          }
                   *}
                   *</code>
-                  *
-                  *<p>
-                  * User-defined types are specified as an attribute of the node.  The default node
-                  * type attribute is <span class="code-caption">"type"</span>, but this could be changed
-                  * if desired using the <span class="code-caption">"attr"</span> property. Thus, for
-                  * the node types in example 1 above, the node type attribute values in the node
-                  * definitions could be set as in the example 2:
+                  * User-defined types are specified as an attribute of the node.  The default
+                  * node type attribute is <span class="code-caption">"type"</span>, but this could be changed if desired using
+                  * the <span class="code-caption">"attr"</span> property. Thus, for the node types in example 1 above, the node
+                  * type attribute values in the node definitions could be set as in example 2:
                   * @example <caption>Example 2:  Using node types in the tree JSON.</caption>
                   * <code>
                   *[
@@ -56104,26 +59508,26 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   *     "title": "Root",
                   *     "attr": {
                   *               "id": "root",                       
-                  *               "type": "myroot"                      <----- node type 
+                  *               "type": "myroot"                      &lt;--- node type 
                   *             },
                   *     "children": [
                   *                   {
                   *                     "title": "Home",
                   *                     "attr": {"id": "home",
-                  *                              "type": "myleaf"}       <----- node type
+                  *                              "type": "myleaf"}      &lt;--- node type
                   *                   },
                   *                   { 
                   *                     "title": "News",
                   *                     "attr": {
                   *                               "id": "news",
-                  *                               "type": "myleaf"       <----- node type
+                  *                               "type": "myleaf"      &lt;--- node type
                   *                             }
                   *                   },
                   *                   { 
                   *                     "title": "Blogs",
                   *                     "attr": {
                   *                               "id": "blogs",
-                  *                               "type": "myfolder"     <----- node type
+                  *                               "type": "myfolder"    &lt;--- node type
                   *                             },
                   *                     "children": [ {
                   *                                     "title": "Today",
@@ -56132,7 +59536,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   *                                               "type": "myleaf"
                   *                                             }
                   *                                   },
-                  *                                   {                  <----- default node type
+                  *                                   {                 &lt;--- default node type
                   *                                     "title": "Yesterday",
                   *                                     "attr": {"id": "yesterday"}
                   *                                   }
@@ -56142,19 +59546,19 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                   *  }
                   *]
                   *</code>
-                  * As described above, the node type attribute used on the corresponding tree &lt;li&gt; element
-                  * defaults to <span class="code-caption">"type"</span>, but this can be redefined using the
-                  * <span class="code-caption"> attr</span> as in the following example:
+                  * As described above, the node type attribute used on the corresponding tree
+                  * &lt;li&gt; element defaults to <span class="code-caption">"type"</span>, but this can be redefined using the <span class="code-caption">attr</span>
+                  * property as in the following example:
                   * @example <caption>Example 2:  Using node types in the tree JSON.</caption>
                   * <code>
                   *"types": {
-                  *           "attr" : "mytype",    <---- node element type attribute is now "mytype"
+                  *           "attr" : "mytype",    &lt;--- node type attribute is now "mytype"
                   *           "types": {
                   *                      "myroot" : {
                   *                                   "image" : . . .
                   *                                    . . .
                   *                                 }
-                  *         }
+                  *          }
                   *</code>
                   * @type {Object | null}
                   * @default <code class="prettyprint">true</code>
@@ -56248,7 +59652,8 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 				  * @instance
 				  * @property {Event} event <code class="prettyprint">jQuery</code> event object
 				  * @property {Object} ui Parameters
-				  * @property {Object} ui.item the node that was collapsed, or -1 if the complete tree is collapsed.
+				  * @property {Object} ui.item the node(s) that were collapsed.
+				  * @property {Object} ui.targ the node that was targeted for collapseAll, or -1 if the complete tree is collapsed.
 				  * 
 				  * @example <caption>Initialize the Tree with the <code class="prettyprint">collapseAll</code> callback specified:</caption>
 				  * $( ".selector" ).ojTree({
@@ -56303,7 +59708,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 				dehover : null,
 
 				/**
-				  * Triggered when a tree node has been deleted.
+				  * Triggered when a tree node has been removed.
 				  *
 				  * @expose 
 				  * @event 
@@ -56311,20 +59716,20 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 				  * @instance
 				  * @property {Event} event <code class="prettyprint">jQuery</code> event object
 				  * @property {Object} ui Parameters
-				  * @property {Object} ui.item the node that has been deleted.
-				  * @property {Object} ui.parent the parent of the node that was deleted.
+				  * @property {Object} ui.item the node that has been removed.
+				  * @property {Object} ui.parent the parent of the node that was removed.
 				  * @property {Object} ui.prev the previous sibling, or if ui.item is the first child of
 				  *                    its parent, the parent node.
 				  * 
-				  * @example <caption>Initialize the Tree with the <code class="prettyprint">delete</code> callback specified:</caption>
+				  * @example <caption>Initialize the Tree with the <code class="prettyprint">remove</code> callback specified:</caption>
 				  * $( ".selector" ).ojTree({
-				  *     "delete": function( event, ui ) {. . .}
+				  *     "remove": function( event, ui ) {. . .}
 				  * });
 				  *
-				  * @example <caption>Bind an event listener to the <code class="prettyprint">ojdelete</code> event:</caption>
-				  * $( ".selector" ).on( "ojdelete", function( event, ui ) {. . .} );
+				  * @example <caption>Bind an event listener to the <code class="prettyprint">ojremove</code> event:</caption>
+				  * $( ".selector" ).on( "ojremove", function( event, ui ) {. . .} );
 				  */
-				"delete" : null,
+				remove : null,
 
 				/**
 				  * Triggered when a tree node is deselected.
@@ -56356,7 +59761,8 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 				  * @instance
 				  * @property {Event} event <code class="prettyprint">jQuery</code> event object
 				  * @property {Object} ui Parameters
-				  * @property {Object} ui.item the node that has become de-selected, or -1 if all selected nodes in the tree are deselected. 
+				  * @property {Object} ui.item the node(s) that have become de-selected.
+				  * @property {Object} ui.targ the context node that was targeted for deselectAll, or -1 if the complete tree is deselected.
 				  * 
 				  * @example <caption>Initialize the Tree with the <code class="prettyprint">deselectAll</code> callback specified:</caption>
 				  * $( ".selector" ).ojTree({
@@ -56418,7 +59824,8 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 				  * @instance
 				  * @property {Event} event <code class="prettyprint">jQuery</code> event object
 				  * @property {Object} ui Parameters
-				  * @property {Object} ui.item the node that was completely expanded, -1 is the complete tree is expanded.
+				  * @property {Object} ui.item the node(s) that were expanded.
+				  * @property {Object} ui.targ the node that was targeted for expandAll, or -1 if the complete tree is collapsed.
 				  * 
 				  * @example <caption>Initialize the Tree with the <code class="prettyprint">expandAll</code> callback specified:</caption>
 				  * $( ".selector" ).ojTree({
@@ -56592,7 +59999,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        *
        * @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node, or a selector
        *                        pointing to the element to be collapsed.
-       * @param {boolean} skipAnim - Set to true to suppress node collapse animation (assuming
+       * @param {boolean=} skipAnim - Set to true to suppress node collapse animation (assuming
        *                        option property "animDuration" is defined or defaulted). Default is false.
        * @expose 
        * @public
@@ -56605,20 +60012,28 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
         var s = skipAnim || this.options["animDuration"],
             t = this;
 
-        if (!node.length || !node.hasClass("oj-tree-open"))  {
+        if (!node.length || node === -1 || !node.hasClass("oj-tree-open") ||
+                            this._data.core.locked || node.hasClass("oj-disabled"))  {
           return false;
         }
+
+        var rslt = this._emitEvent({"obj" : node, "func" : "collapse"}, "before") ;
+        if (typeof rslt == "boolean" && (!rslt)) {
+          return ;
+        }
+
         if (s)  {
           node.children("ul").attr("style","display:block !important");
         }
         node.removeClass("oj-tree-open").addClass("oj-tree-closed").attr("aria-expanded", "false");
         if (s) {
           node.children("ul").stop(true, true).slideUp(s, function ()
-                                                         {
-                                                           this.style.display = "";
+                                                          {
+                                                            this.style.display = "";
 //                                                          this["style"]["display"] = "";
-                                                           t["after_close"](node);
-                                                          }); }
+                                                            t["after_close"](node);
+                                                          });
+        }
         else   {
           t["after_close"](node);
         }
@@ -56630,7 +60045,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        * @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node, or a
        *                       selector pointing to the element whose descendants are to be collapsed. 
        *                       If omitted , or set to -1, all nodes in the tree are collapsed.
-       * @param {boolean} anim - Set to true (or omit) if all nodes are to collapsed with animation (assuming
+       * @param {boolean=} anim - Set to true (or omit) if all nodes are to collapsed with animation (assuming
        *                        option property "animDuration" is defined or defaulted). Default is true.
        * @expose 
        * @public
@@ -56642,31 +60057,40 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
         var origTarg = node? node : -1 ;
         var _this = this;
 
-//      if ($.type(node) == "boolean") {            // Handle if node is omitted and just
-//        anim = node ;                             // anim is specified
-//        node = -1 ;
-//      }
+        if (this._data.core.locked) {
+          return ;
+        }
 
         node = node ? this._getNode(node) : this._$container;
-        if (!node || node === -1)  { 
-          node = this._$container_ul;
-        }
-        else {
+        if (node && origTarg !== -1) {
           origTarg = node ;
         }
+        if (!node || origTarg === -1)  {
+          node = this._$container_ul;
+        }
 
-        node.find("li.oj-tree-open").addBack().each(function ()
-                                                    {
-                                                      _this["collapse"](this, !anim);
-                                                    });
-        this._emitEvent({ "obj" : origTarg }, "collapseall");
+        if (node.hasClass("oj-disabled")) {
+          return ;
+        }
+
+        var objs  =  node.find("li.oj-tree-open") ;
+
+        if (objs.length)  {
+          objs.each(function ()  {
+                        _this["collapse"](this, !anim);
+                    });
+          objs.each(function(i, val) {
+                      objs[i] = $(val) ;
+          }) ;
+          this._emitEvent({ "obj" : objs, "targ" : origTarg }, "collapseAll");
+        }
      },
 
 
      /** Expands a collapsed parent node, so that its children are visible. Triggers an "expand" event.
        * @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node, 
        *                        or a selector pointing to the element to be expanded.
-       * @param {boolean} skipAnim - Set to true to suppress node expansion animation (assuming
+       * @param {boolean=} skipAnim - Set to true to suppress node expansion animation (assuming
        *                        option property "animDuration" is defined or defaulted). Default is false.
        * @expose 
        * @public
@@ -56700,10 +60124,15 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
             _this = this;
 
         if (nodes && $.type(nodes) === "array")  {    // setter
+
+          if (this._data.core.locked) {
+            return null ;
+          }
+
           exlen = nodes.length ;
           $.each(nodes, function (i, val) {
-              _this._expand(val, false, skipAnim); 
-            });
+                          _this._expand(val, false, skipAnim); 
+          });
           return null ;
         }
         else  {     // getter
@@ -56723,7 +60152,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        * @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node,
        *                        or a selector pointing to the element whose descendants are to be expanded.
        *                        If omitted , or set to -1, all nodes in the tree are expanded.
-       * @param {boolean} anim - Set to true (or omit) if all nodes are to expanded with animation (assuming
+       * @param {boolean=} anim - Set to true (or omit) if all nodes are to expanded with animation (assuming
        *                        option property "animDuration" is greater than zero). Default is true.
        * @expose 
        * @public
@@ -56746,8 +60175,15 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
      toggleExpand : function (node)
      {
         node = this._getNode(node);
+        if (node === -1) {
+          return ;
+        }
+        if (node.hasClass("oj-disabled") || this._data.core.locked) {
+          return ;
+        }
+
         if (node.hasClass("oj-tree-closed"))  {
-           return this["expand"](node);
+          return this["expand"](node);
         }
         if (node.hasClass("oj-tree-open"))  {
           return this["collapse"](node);
@@ -56769,18 +60205,21 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        if (!node.length)  {
          return false;
        }
+       if (node.hasClass("oj-disabled") || this._data.core.locked) {
+         return ;
+       }
 
        if (this["isSelected"](node))  {
-          node.children("a").removeClass("oj-tree-clicked");
-          node.removeAttr("aria-selected");
-
-          this._data.ui.selected = this._data.ui.selected.not(node);
+         node.children("a").removeClass(OJT_CLICKED);
+         node.removeAttr("aria-selected");
+         this._data.ui.selected = this._data.ui.selected.not(node);
 
 //Wed     if(this.data.ui.last_selected.get(0) === obj.get(0)) { this.data.ui.last_selected = this.data.ui.selected.eq(0); }
 
           if (this._data.ui.last_selected.get(0) === node.get(0))  {
-             this._data.ui.last_selected = this._data.ui.selected.eq(0);
+            this._data.ui.last_selected = this._data.ui.selected.eq(0);
           }
+
           this._emitEvent({ "obj" : node }, "deselect");
        }
 
@@ -56798,14 +60237,29 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        */
      deselectAll : function(context)
      {
-         var ret = context ? $(context).find("a.oj-tree-clicked").parent() : this._$container.find("a.oj-tree-clicked").parent();
+       if (this._data.core.locked) {
+         return ;
+       }
 
-         ret.children("a.oj-tree-clicked").removeClass("oj-tree-clicked");
-         ret.removeAttr("aria-selected");
-         this._data.ui.selected = $([]);
-         this._data.ui.last_selected = false;
+       var origTarg = context? context : -1 ;
+       var ret = context ? $(context).find("a.oj-tree-clicked").parent() :
+                           this._$container.find("a.oj-tree-clicked").parent();
 
-         this._emitEvent({ "obj" : ret }, "deselectall");
+       if (ret.hasClass("oj-disabled")) {
+         return ;
+       }
+
+       ret.children("a.oj-tree-clicked").removeClass(OJT_CLICKED);
+       ret.removeAttr("aria-selected");
+       this._data.ui.selected = $([]);
+       this._data.ui.last_selected = false;
+
+       if (ret.length) {
+         ret.each(function(i, val) {
+                     ret[i] = $(val) ;
+          }) ;
+         this._emitEvent({ "obj" : ret, "targ": origTarg}, "deselectAll");
+       }
      },
 
      /** Selects a node. Triggers a "select" event.
@@ -56822,15 +60276,14 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
      },
 
 
-
      /** May be used as a getter of setter.  If no argument is supplied, the method returns a 
        * jqQery wrapped list of nodes currently selected. If an array or list (that is the argument
        * has a "length" property) of nodes is supplied as an argument, the specified nodes are selected.
        *
-       * @param {Array | Object} nodes - Omit to use as a getter, or specify an array or list of nodes to be
+       * @param {Array | Object=} nodes - Omit to use as a getter, or specify an array or list of nodes to be
        *                 expanded.  Nodes may be defined as elements, jQuery wrapped nodes, or
        *                 selectors pointing to the elements to be expanded.
-       * @return {Array} An array of nodes if used as a getter.
+       * @return {Array | null} An array of nodes if used as a getter.
        * @expose 
        * @public
        * @instance
@@ -56838,6 +60291,10 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        */
      selected : function(nodes)
      {
+        if (this._data.core.locked) {
+          return null ;
+        }
+
         if (nodes === undefined)  {
           return this._getSelected() ;
         }
@@ -56870,13 +60327,16 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
            return false;
         }
 
+        if (node.hasClass("oj-disabled") || this._data.core.locked) {
+          return ;
+        }
+
         if (this["isSelected"](node))  {
-           this["deselect"](node);
+          this["deselect"](node);
         }
         else  {
           this._select(node, true);
         }
-        
      },
 
      /** Returns true if the node is collapsed, else false.
@@ -56923,9 +60383,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        */
      isLeaf : function(node)
      {
-       node = this._getNode(node) ;
-       return node && node !== -1 && node.hasClass("oj-tree-leaf");
-       
+       return this._isLeaf(node) ;
      },
 
      /** Returns true if the node is selected, else false.
@@ -56971,7 +60429,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
         return this._create_node(refnode, position, data);
      },
 
-     /**  Deletes a node. Triggers a "delete" event.
+     /**  Removes a node. Triggers a "remove" event.
        *
        *  @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node, 
        *                        or a selector pointing to the element.
@@ -56982,11 +60440,20 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        *  @memberof! oj.ojTree 
        *
        */ 
-     "delete" : function(node)
+     remove : function(node)
      {
        node = this._getNode(node);
        if (!node.length) {
          return false;
+       }
+
+       if (node.hasClass("oj-disabled") || this._data.core.locked) {
+         return false;
+       }
+
+       var rslt = this._emitEvent({"obj" : node, "func" : "remove"}, "before") ;
+       if (typeof rslt == "boolean" && (!rslt)) {
+         return false ;
        }
 
        this.__rollback();
@@ -57006,7 +60473,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        }
 
        this._clean_node(p);
-       this._emitEvent({ "obj" : node, "prev" : sib, "parent" : p }, "delete");
+       this._emitEvent({ "obj" : node, "prev" : sib, "parent" : p }, "remove");
        return node ;
      },
 
@@ -57028,10 +60495,10 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
           return false;
        }
 
-       var s = this.options["html_titles"];
+       var ht = this._data.core.htmlTitles;
        node = node.children("a:eq(0)");
 
-       if (s)  {
+       if (ht)  {
           node = node.clone();
           node.children("INS").remove();
           return node.html();
@@ -57050,7 +60517,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        *
        * @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node, 
        *                        or a selector pointing to the element.
-       * @param {string} text - The new text string.
+       * @param {string=} text - The new text string.
        * @expose 
        * @public
        * @instance
@@ -57076,12 +60543,22 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        if (! node.length)  {
          return false;
        }
+
+       if (node.hasClass("oj-disabled") || this._data.core.locked) {
+         return ;
+       }
+
+       var rslt = this._emitEvent({"obj" : node, "func" : "hover"}, "before") ;
+       if (typeof rslt == "boolean" && (!rslt)) {
+         return ;
+       }
+
        //if(this.data.ui.hovered && node.get(0) === this.data.ui.hovered.get(0)) { return; }
-       if (! node.hasClass("oj-tree-hovered"))  {
+       if (! node.hasClass(OJT_HOVER))  {
           this["dehover"]();
        }
 
-       this._data.ui.hovered = node.children("a").addClass("oj-tree-hovered").parent();
+       this._data.ui.hovered = node.children("a").addClass(OJT_HOVER).parent();
        this._$container_ul.attr("aria-activedescendant", this._data.ui.hovered.attr("id")) ;
        this._fix_scroll(node);
        this._emitEvent({ "obj" : node }, "hover");
@@ -57103,7 +60580,11 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
          return false;
        }
 
-       p = obj.children("a").removeClass("oj-tree-hovered").parent();
+       if (obj.hasClass("oj-disabled") || this._data.core.locked) {
+         return ;
+       }
+
+       p = obj.children("a").removeClass(OJT_HOVER).parent();
        this._$container_ul.removeAttr("aria-activedescendant") ;
 
        if(this._data.ui.hovered[0] === p[0]) { 
@@ -57172,18 +60653,23 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
      refresh : function(node)
      {
        this._super() ;
+
+        if (this._data.core.locked) {
+          return ;
+        }
+
        this._refresh(node) ;
      },
 
 
      /**  Moves a tree node.
        *
-       *  @param {HTMLElement | Object | string | number=} node  The node to be moved. Can be a DOM element,
+       *  @param {HTMLElement | Object | string | number} node  The node to be moved. Can be a DOM element,
        *            a jQuery wrapped node, or a selector pointing to the element.
-       *  @param {HTMLElement | Object | string | number=} refnode  The reference node for the move. Can be
+       *  @param {HTMLElement | Object | string | number} refnode  The reference node for the move. Can be
        *            a DOM element, a jQuery wrapped node, or a selector pointing to the element. If -1 is 
        *            specified, the container element is used.
-       *  @param {string | number=} position  The position of the moved node relative to the reference node refnode.
+       *  @param {string | number} position  The position of the moved node relative to the reference node refnode.
        *            Can be "before", "after", "inside", "first", "last", or the zero-based index to position the node at a
        *            specific point among the reference node's current children.
        *  @param {boolean=} iscopy  Specify false for a move operation, or true for a copy.
@@ -57195,6 +60681,111 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
      move : function(node, refnode, position, iscopy)
      {
         this._move_node(node, refnode, position, iscopy);
+     },
+
+     /**
+       *  Returns the user classified node type applied to the node in the
+       *  <span class="code-caption">"types"</span> option. 
+       *  @return {string}  The node's type.
+       *  @expose 
+       *  @public
+       *  @instance
+       *  @memberof! oj.ojTree 
+       */
+     getType : function(node)
+     {
+         return this._getType(node) ;
+     },
+
+     /**
+       *  Sets the "type" attribute of the node.
+       *  @return {boolean}  true if the change was successful, else false. 
+       *  @expose 
+       *  @public
+       *  @instance
+       *  @memberof! oj.ojTree 
+       */
+     setType : function(node, str)
+     {
+         return this._setType(node, str) ;
+     },
+
+     /**
+       * Return the subcomponent node element represented by the locator object properties.</br></br>
+       * This is under development!!
+       * 
+       * @expose 
+       * @public
+       * @instance
+       * @memberof! oj.ojTree 
+       * @param {Object} locator An Object containing at minimum a "subId" property whose value is a string.<p>
+       * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee"><th>Property</th><th>Value</th><th>Description</th></tr>
+       *  <tr style="border-collapse:collapse;border:1px solid"><td>subId</td><td><em>"disclosure"</em></td><td>Returns the &lt;ins&gt; element for the disclosure (expand/collapse)
+       *                                           icon of a parent node.</td></tr>
+       *  <tr style="border-collapse:collapse;border:1px solid"><td>node</td><td>String | Object</td><td>Can be a selector
+       *                 for the parent node (e.g. "#mynode"), a DOM element (a node &lt;li&gt; or any element contained within
+       *                 the &lt;li&gt;), a jQuery wrapped node (possibly from an event).  For any other string, an attempt
+       *                 is made to find the node with the specified text value).</td></tr>
+       * </table>
+       * <p>
+       * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee;"><th>Property</th><th>Value</th><th>Description</th></tr>
+       *  <tr><td>subId</td><td><em>"icon"</em></td><td>Returns the &lt;ins&gt; element for the node icon.</td></tr>
+       *  <tr><td>node</td><td>String | Object</td><td>Can be a selector for the node (e.g. "#mynode"), a DOM
+       *                 element (a node &lt;li&gt; or any element contained within the &lt;li&gt;), a jQuery
+       *                 wrapped node (possibly from an event). For any other string, an attempt is made to find
+       *                 the node with the specified text value).</td></tr>
+       </td></tr>
+       * </table>
+       * <p>
+       * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee;"><th>Property</th><th>Value</th><th>Description</th></tr>
+       *  <tr><td>subId</td><td><em>"node"</em></td><td>Returns the &lt;li&gt; element for the node. </td></tr>
+       *  <tr><td>node</td><td>String | Object</td><td>Can be a selector for the node (e.g. "#mynode"), a DOM element (a
+       *                 node &lt;li&gt; or any element contained within the &lt;li&gt;), a jQuery
+       *                 wrapped node (possibly from an event). For any other string, an attempt is made to find
+       *                 the node with the specified text value).</td></tr>
+       * </table>
+       * <p>
+       * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee;"><th>Property</th><th>Value</th><th>Description</th></tr>
+       *  <tr><td>subId</td><td><em>"link"</em></td><td>Returns the &lt;a&gt; element for the node. </td></tr>
+       *  <tr><td>node</td><td>String | Object</td><td>Can be a selector for the node (e.g. "#mynode"), a DOM
+       *                 element (a node &lt;li&gt; or any element contained within the &lt;li&gt;), a jQuery
+       *                 wrapped node (possibly from an event). For any other string, an attempt is made to find
+       *                 the node with the specified text value).</td></tr>
+       * </table>
+       * <p>
+       * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee;"><th>Property</th><th>Value</th><th>Description</th></tr>
+       *  <tr><td>subId</td><td><em>"disclosure"</em> |<em>"icon"</em> | <em>"node"</em> | <em>"link"</em></td><td>Returns
+       *                 the element as described above, based on an attribute of a node &lt;li&gt; element.</td></tr>
+       *  <tr><td>key</td><td>String</td><td>The name of an attribute on the node.</td></tr>
+       *  <tr><td>value</td><td>String</td><td>The value of the attribute specified by "key".</td></tr>
+       * </table>
+       * <p>
+       * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee;"><th>Property</th><th>Value</th><th>Description</th></tr>
+       *  <tr><td>subId</td><td><em>"parent"</em> |<em>"prevSib"</em> | <em>"nextSib"</em> | <em>"firstChild"</em>
+       *                 | <em>"lastChild"<em> | "first"</em> |"last"</em></td><td>Returns a node &lt;li&gt; element
+       *                 based on the "subId" value and the "node" value.
+       *                 <ul><li>"parent" - returns the parent of the node specified by "node"</li></br>
+       *                   <li>"prevSib" - returns the previous sibling of the node specified by "node"</li></br>
+       *                   <li>"nextSib" - returns the next sibling of the node specified by "node"</li></br>
+       *                   <li>"firstChild" - returns the first child of the parent node specified by "node"</li></br>
+       *                   <li>"lastChild" - returns the last child of the parent node specified by "node"</li></br>
+       *                   <li>"first" - returns the top node of the tree ("node" is ignored).</li></br>
+       *                   <li>"last" - returns the bottom node of the tree ("node" is ignored).</li>
+       *                 </ul>
+       *  <tr><td>node</td><td>String | Object</td><td>Can be a selector for the node (e.g. "#mynode"), a DOM
+       *                 element (a node &lt;li&gt; or any element contained within the &lt;li&gt;), a jQuery
+       *                 wrapped node (possibly from an event). For any other string, an attempt
+       *                 is made to find the node with the specified text value).</td></tr>
+       * </table>
+       * @return {Element|null} the subcomponent located by the subId string passed in locator, if found.<p>
+       */
+     getNodeBySubId: function(locator)
+     {
+        if (! locator)  {
+          return this.element ? this.element[0] : null;
+        }
+
+        return this._processSubId(locator)
      },
 
 
@@ -57210,7 +60801,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
      destroy : function ()
      {
         var  n = this._getIndex();
-        
+
         this._$container
             .unbind(".oj-tree")
             .undelegate(".oj-tree")
@@ -57236,74 +60827,113 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 
 
      /**
-       *   Called the first time the widget is called on an element.
+       *  Called the first time the widget is called on an element.
        *  @private
        */
      _create: function ()
      {
         this._super() ;
 
-        this._bCreate       = true ;                            // in _create()
-        this._elemId        = "#" + this.element.attr("id") ;   // tree element id
-        this._$container    = $(this._elemId) ;                 // the containing <div>
-        this._$container_ul = null ;                            // the containing <ul>
-        this._data          = {} ;                              // working data
+        this._bCreate       = true ;                                // in _create()
+        this._elemId        = "#" + this.element.attr("id") ;       // tree element id
+        this._$container    = $(_sanitizeSelector(this._elemId)) ;  // the containing <div>
+        this._$container_ul = null ;                                // the containing <ul>
+        this._data          = {} ;                                  // working data
+        this._tds           = null ;                                // Tree DataSource
         this._index         = this._newIndex() ;
         this._isRtl         = this._GetReadingDirection() === "rtl";
-        this._initWidget() ;
+        this._initTree() ;
         this._bCreate       = false ;
      },
 
 
      /**
        *  Handle an option changes.
-       *  Called by $(selector).ojtree("options", "prop", valua)
+       *  Called by $(selector).ojtree("options", "prop", value)
        *  @private
        */
      _setOption: function (key, newval)
      {
-        if (! this._bCreate) {      // if in _create(), option already in this.options
-          var _this = this ;
-          var prev  = this.options[key] ;
-          var val ;
+        if (this._bCreate) {      // if in _create(), option already in this.options
+          this._super(key, newval);
+          return ;
+        }
 
-          if (key === "selectionMode") {
-            if (newval === "none") {
-              val = 0 ;
-            }
-            else if (newval === "single") {
-              val = 1;
-            }
-            else if (newval === "multiple") {
-              val = -1 ;
+        var _this = this ;
+        var prev  = this.options[key] ;
+        var val ;
+
+        if (key === "selectionMode") {
+          if (newval === "none") {
+            val = 0 ;
+          }
+          else if (newval === "single") {
+            val = 1;
+          }
+          else if (newval === "multiple") {
+            val = -1 ;
+          }
+          else {
+            val = undefined ;
+          }
+          if (val != _this._data.core.selectMode) {
+            _this._data.core.selectMode = val ;
+          }
+        }
+        else if (key === "icons") {
+           if ($.type(newval) == "boolean") {
+             if (newval != _this._data.themes.icons) {
+               _this._data.themes.icons = newval ;
+               _this[newval? "show_icons" : "hide_icons"]() ;
+             }
+           }
+        }                                // end "core/ui" options
+        else if (key === "contextMenu") {
+          if (! this._data.menu.changing) {         // if menu is being reset in applyMenu(), ignore
+              this._clearMenu() ;
+              if (newval["menu"]) {  
+                this._super(key, newval);
+                this._initMenuOpts() ;
+                this._initMenu(true) ;
+                return ;
+              }
+          }
+        }                                // end "contextMenu"
+        else if (key === "disabled")  {
+          var state  = this._$container_ul.hasClass("oj-disabled") ;
+          if (! state) {
+            state = false ;      // in case undefined
+          }
+
+          if (typeof newval === "undefined")  {
+            this._super(key, newval);
+            return state ;
+          }
+
+          if (state != newval) {
+            if (newval) {
+              this._$container_ul.addClass("oj-disabled") ;
+              this._$container_ul.prop("disabled", "disabled");
             }
             else {
-              val = undefined ;
+              this._$container_ul.removeClass("oj-disabled") ;
+              this._$container_ul.removeAttr("disabled");
             }
-            if (val != _this._data.core.selectMode) {
-              _this._data.core.selectMode = val ;
-            }
+            this._lock(newval) ;
           }
-          else if (key === "icons") {
-             if ($.type(newval) == "boolean") {
-               if (newval != _this._data.themes.icons) {
-                 _this._data.themes.icons = newval ;
-                 _this[newval? "show_icons" : "hide_icons"]() ;
-               }
-             }
-          }                                // end "core/ui" options
-          else if (key === "contextMenu") {
-            if (! this._data.menu.changing) {         // if menu is being reset in applyMenu(), ignore
-              if (newval["menu"] != this.options["contextMenu"]["menu"]) {  
-                this._clearMenu() ;
-                this._initMenu(newval) ;
-              }
-            }
-          }                                // end "contextMenu"
+        }                            // end "disabled"
+        else if (key === "data") {    //TDO
+          this._super(key, newval);
+          this._initDSOpts() ;
+          this._initDataSource();
+          this._load_node(-1, function ()  {
+                              this._loaded();
+                              this._reload_nodes();
+                            });
+          return ;
         }
 
         this._super(key, newval);
-
      },
 
 
@@ -57320,13 +60950,13 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
          if ($obj.is(".oj-tree") || obj == -1)  {
             return -1;
          } 
-         $obj = $obj.closest("li", this._$container); 
+         $obj = $obj.closest("li", this._$container);
          return $obj.length ? $obj : false; 
      },
 
      /**
        *  Returns a jQuery wrapped tree node.  obj can be a selector pointing 
-       *  to an element within the tree, a DOM node, or a jQuery wrapped node.  If -1 is used
+       *  to an element within the tree, a DOM node, or a jQuery wrapped node.  If obj is -1
        *  (indicating the whole tree), -1 is returned.
        *  @private
        */
@@ -57338,7 +60968,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 
        var $obj = $(obj, this._getContainer()); 
 
-       if ($obj.is(".oj-tree") || obj == -1) {
+       if ($obj.is(".oj-tree") || obj === -1) {
           return -1;
        } 
 
@@ -57446,6 +61076,12 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
         return obj.children("ul:eq(0)").children("li");
      },
 
+     _isLeaf : function(node)
+     {
+       node = this._getNode(node) ;
+       return node && node !== -1 && node.hasClass("oj-tree-leaf");
+     },
+
      /**
        *  Returns the widget instance for the supplied node.  Not currently used.  TDO
        *  @private
@@ -57456,7 +61092,6 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 
         return this ;
      },
-
 
      /**
        *  Add default values to options, unless already defined in options.
@@ -57471,6 +61106,24 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                                              }  
                                             });
         }
+     },
+
+     /**
+       *  @private
+       */
+     _lock : function (lstate) {                // unpublished per Design Review
+
+        lstate = lstate || false ;
+        if (lstate) {
+          this._data.core.locked = true;
+          this._data.ui.opacity  = this._$container.children("ul").css("opacity") ;
+          this._$container_ul.addClass("oj-tree-locked").css("opacity","0.9");
+        }
+        else {
+          this._data.core.locked = false;
+          this._$container_ul.removeClass("oj-tree-locked").css("opacity", this._data.ui.opacity);
+        }
+//      this.__callback({});
      },
 
      /**
@@ -57625,10 +61278,16 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        this.__rollback();
        t  = this["getText"](node) ;
 
-       if (node && node.length && this._set_text.apply(this, Array.prototype.slice.call(arguments)))
-                    {
-                      this._emitEvent({ "obj" : node, "title" : text, "prevTitle" : t}, "rename");
-                    }
+       if (node && node.length) {
+          var rslt = this._emitEvent({"obj" : node, "func" : "rename", "title" : text, "prevTitle": t}, "before") ;
+          if (typeof rslt == "boolean" && (!rslt)) {
+            return ;
+          }
+       }
+
+       if (node && node.length && this._set_text.apply(this, Array.prototype.slice.call(arguments)))  {
+         this._emitEvent({ "obj" : node, "title" : text, "prevTitle" : t}, "rename");
+       }
      },
 
      /**
@@ -57637,6 +61296,10 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        */ 
      _move_node : function (obj, ref, position, is_copy, is_prepared, skip_check)
      {
+        if ((obj.hasClass && obj.hasClass("oj-disabled")) || this._data.core.locked) {
+          return ;
+        }
+
         if (!is_prepared)  { 
           return this._prepare_move(obj, ref, position, function (p)
                                                         {
@@ -57720,12 +61383,120 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
       },
 
 
+      /**
+        *  Returns the "type" attribute of the node.  If not found, returns "default"
+        *  @private
+        */
       _getType : function (node)
       {
          node = this._getNode(node);
 
          return (!node || !node.length) ? false : node.attr(this.options["types"]["attr"]) || "default";
       },
+
+      /**
+        *  Sets the "type" attribute of the node.
+        *  @return {boolean}  true if the change was successful, else false. 
+        *  @private
+        */
+      _setType : function (str, node)
+      {
+         var  s   = this.options["types"], 
+              ret = false ;
+
+         node = this._getNode(node);
+
+         if (s) {
+           ret = (!node.length || !str) ? false : node.attr(this.options["types"]["attr"], str);
+         }
+         else {
+           ret = false ;
+         }
+
+         if (ret)  {
+           this._emitEvent({ "obj" : node, "type" : str}, "settype"); 
+         }
+         return ret;
+      },
+
+
+      /**
+        *  @private
+        */
+      _check : function (rule, obj, opts)
+      {
+         obj = this._getNode(obj);
+
+         var v     = false,
+             ty    = this._getType(obj),
+             d     = 0,
+             _this = this,
+             s     = this._getOptions()["types"],
+             data  = false;
+
+             if (obj === -1) { 
+               if (!!s[rule])  {
+                 v = s[rule];
+                }
+               else  {
+                 return;
+               }
+             }
+             else   {
+               if (ty === false)  {
+                 return;
+               }
+
+               data = this._data.types.defaults["useData"] ? obj.data("oj-tree") : false;
+               if (data && data["types"] && typeof data["types"][rule] !== "undefined")  {
+                 v = data["types"][rule];
+               }
+               else if(!!s["types"][ty] && typeof s["types"][ty][rule] !== "undefined") {
+                   v = s["types"][ty][rule];
+               }
+               else if(!!s["types"]["default"] && typeof s["types"]["default"][rule] !== "undefined")  {
+                   v = s["types"]["default"][rule]; }
+               }
+
+               if ($.isFunction(v))  {
+                   v = v.call(this, obj);
+               }
+
+               var md = this._data.types.defaults["maxDepth"] ;
+
+               if (rule === "maxDepth" && obj !== -1 && opts !== false && this._data.types.defaults["maxDepth"] !== -2 && v !== 0)  {
+                 // also include the node itself - otherwise if root node it is not checked
+                 obj.children("a:eq(0)").parentsUntil(".oj-tree","li").each(function (i)
+                        {
+                           // check if current depth already exceeds global tree depth
+                           if ((md !== -1) && (md - (i + 1) <= 0))  {
+                             v = 0;
+                             return false;
+                           }
+
+                           d = (i === 0) ? v : _this._check(rule, this, false);
+
+                           // Check if current node max depth is already matched or exceeded
+                           if (d !== -1 && d - (i + 1) <= 0)  {
+                             v = 0; return false;
+                           }
+
+                           // otherwise - set the max depth to the current value minus current depth
+                           if (d >= 0 && (d - (i + 1) < v || v < 0) )  {
+                             v = d - (i + 1);
+                           }
+
+                           // If the global tree depth exists and it minus the nodes calculated
+                           // so far is less than `v` or `v` is unlimited
+                           if ((md >= 0) && (md - (i + 1) < v || v < 0) )  {
+                             v = md - (i + 1);
+                           }
+                        });
+               }
+
+               return v;
+     },
+
 
      /**
        *  @private
@@ -57801,13 +61572,14 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
            js["data"].push(tmp);
          }
 
+         var _this = this ;
          $.each(js["data"], function (i, m) {
              tmp = $("<a />");
              if ($.isFunction(m)) {
                 m = m.call(this, js);
              }
              if (typeof m == "string")  {
-                tmp.attr('href','#')[ s["html_titles"] ? "html" : "text" ](m);
+                tmp.attr('href','#')[ _this._data.core.htmlTitles? "html" : "text" ](m);
              }
              else  {
                if (! m["attr"])  {
@@ -57816,7 +61588,7 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
                if (! m["attr"]["href"])  {
                   m["attr"]["href"] = '#';
                }
-               tmp.attr(m["attr"])[ s["html_titles"] ? "html" : "text" ](m["title"]);
+               tmp.attr(m["attr"])[ _this._data.core.htmlTitles? "html" : "text" ](m["title"]);
                if (m["language"]) {
                  tmp.addClass(m["language"]);
                }
@@ -57911,11 +61683,20 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
            return false;
          }
 
+         if (obj.hasClass("oj-disabled") || this._data.core.locked) {
+           return ;
+         }
+
          if (! obj.hasClass("oj-tree-closed"))  {
            if (callback)  {
              callback.call();
            }
            return false;
+         }
+
+         var rslt = this._emitEvent({"obj" : obj, "func" : "expand"}, "before") ;
+         if (typeof rslt == "boolean" && (!rslt)) {
+           return ;
          }
 
          var s = skip_animation || this.options["animDuration"],
@@ -58007,9 +61788,15 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
 
       // so that callback is fired AFTER all nodes are open
       if (original_obj.find('li.oj-tree-closed').length === 0)  {
-        this._emitEvent({ "obj" : origTarg }, "expandall");
-      }
 
+        if (obj.length) {
+          obj.each(function(i, val) {
+                      obj[i] = $(val) ;
+          }) ;
+
+          this._emitEvent({ "obj" : obj, "targ" : origTarg }, "expandAll");
+        }
+      }
    },
 
 
@@ -58022,6 +61809,15 @@ oj.__registerWidget("oj.ojPopup", $['oj']['baseComponent'], {
        node = this._getNode(node);
        if (node == -1 || !node || !node.length)  {
          return false;
+       }
+
+       if (node.hasClass("oj-disabled") || this._data.core.locked) {
+         return ;
+       }
+
+       var rslt = this._emitEvent({"obj" : node, "func":"select"}, "before") ;
+       if (typeof rslt == "boolean" && (!rslt)) {
+         return ;
        }
 
        var s = this.options,
@@ -58098,7 +61894,7 @@ check = true ;
            if (!is_range)  {
              this._data.ui.last_selected = node;
            }
-           node.children("a").addClass("oj-tree-clicked");
+           node.children("a").addClass(OJT_CLICKED);
            node.attr("aria-selected", "true");
 
            if (s["selectedParentExpand"])  {
@@ -58183,7 +61979,7 @@ check = true ;
 
 
     /**
-      *  Emits an "after_close" event for internal use only.
+      *  Emits an internal "after_close" event for internal use only.
       *  @private
       */
     "after_close" : function (obj)
@@ -58191,7 +61987,10 @@ check = true ;
        this._emitEvent({ "obj" : obj }, "after_close");
     },
 
+
     /**
+      *  Expand any nodes that have been specified to be expanded.
+      *  Emits an internal "reopen" event.
       *  @private
       */
     _reopen : function ()
@@ -58201,7 +62000,7 @@ check = true ;
        if (this._data.core.toExpand.length) {
          $.each(this._data.core.toExpand, function (i, val)
                                           {
-                                              _this._expand(val, false, true); 
+                                             _this._expand(val, false, true); 
                                           });
        }
        this._emitEvent({}, "reopen");
@@ -58230,7 +62029,7 @@ check = true ;
         }
 
         obj = obj.children("a:eq(0)");
-        if (this.options["html_titles"])  {
+        if (this._data.core.htmlTitles)  {
            var tmp = obj.children("INS").clone();
            obj.html(val).prepend(tmp);
            this._emitEvent({ "obj" : obj, "name" : val }, "set_text");
@@ -58248,9 +62047,9 @@ check = true ;
      },
 
 
-    /*
-     *  @private
-     */ 
+    /**
+      *  @private
+      */ 
      _load_node : function(obj, success_callback, error_callback)     // Dummy function overriden by data methods
      {
         this._emitEvent({ "obj" : obj }, "load_node");
@@ -58265,6 +62064,55 @@ check = true ;
      _is_loaded  : function (obj)                 // Dummy function overriden by data methods
      {
        return true;
+     },
+
+
+     /*
+      *  TreeDataSource's _load_node
+      *  @private
+      */
+     _load_node_DS : function (obj, s_call, e_call)
+     {
+        var _this = this;
+        this._load_node_tree(obj, function ()  {
+                                      _this._emitEvent({ "obj" : _this._getNode(obj) }, "load_node");
+                                      s_call.call(this);
+                                  }, e_call);
+     },
+
+
+     /*
+      *   JsonTreeDataSource's _is_loaded()
+      *   @return {boolean}
+      *   @private
+      */
+     _is_loaded_DS : function (obj)
+     { 
+//     var s = this.options["data"]["json"];
+
+       obj = this._getNode(obj); 
+
+//     return (obj === -1 || !obj ) || (!s["ajax"] && !this._data.ds.progressiveRender && !$.isFunction(s["data"]))
+       return (obj === -1 || !obj ) || obj.is(".oj-tree-open, .oj-tree-leaf")
+                                    || obj.children("ul").children("li").length > 0;
+     },
+
+
+     /**
+      *   JsonTreeDataSource's _refreshDS
+       *  @private
+       */
+     _refresh_DS  : function (obj)
+     {
+        obj = this._getNode(obj);
+
+//      var s = this.options["data"]["json"];
+//      if (obj && obj !== -1 && this._data.ds.progressiveUnload && ($.isFunction(s["data"]) || !!s["ajax"]))  {
+        if (obj && obj !== -1)  {
+          obj.removeData("oj-tree-children");
+        }
+//Wed5  return this.__call_old();
+        return this._refresh_ui(obj);
      },
 
 
@@ -58287,10 +62135,10 @@ check = true ;
       */
      _is_loaded_J : function (obj)
      { 
-       var s = this.options["json_data"];
+       var s = this.options["data"];
 
        obj = this._getNode(obj); 
-       return obj == -1 || !obj || (!s["ajax"] && !s["progressive_render"] && !$.isFunction(s["data"]))
+       return obj == -1 || !obj || (!s["ajax"] && !this._data.ds.progressiveRender && !$.isFunction(s["data"]))
                         || obj.is(".oj-tree-open, .oj-tree-leaf")
                         || obj.children("ul").children("li").length > 0;
      },
@@ -58303,11 +62151,9 @@ check = true ;
      _load_node_H : function (obj, s_call, e_call)
      {
        var _this = this;
-       this._load_node_html(obj, function ()
-                                {
+       this._load_node_html(obj, function ()  {
                                    _this._emitEvent({ "obj" : _this._getNode(obj)}, "load_node") ;
                                    s_call.call(this);
-                                   
                                  }, e_call);
      },
 
@@ -58317,13 +62163,20 @@ check = true ;
       */
      _is_loaded_H : function (obj)
      { 
-       var s = this.options["html_data"];
+       var s    = this.options["data"],
+           data = null,
+           ajax = null ;
+
+      if (s) {
+        data  = s["data"] || null ;
+        ajax  = s["ajax"] || null ;
+      }
 
        obj = this._getNode(obj); 
 
-       return obj == -1 || !obj || (!s["ajax"] && !$.isFunction(s["data"])) || obj.is(".oj-tree-open, .oj-tree-leaf") || obj.children("ul").children("li").size() > 0;
+       return obj == -1 || !obj || (!ajax && !$.isFunction(data)) ||
+                           obj.is(".oj-tree-open, .oj-tree-leaf") || obj.children("ul").children("li").size() > 0;
      },
-
 
 
      "reselect" : function ()
@@ -58393,25 +62246,185 @@ check = true ;
            
     "set_rollback" : function (html, data)
     {
-       if (this._$container)   {                   // if added for closure conmpiler
-         this._$container.empty().append(html);
+       if (this._$container && this._$container_ul)   {
+         this._$container_ul.empty().append(html);
        }
 
        this["data"] = data;                       // TDO ???
        this._emitEvent(null, "set_rollback");
     },
-           
 
-     /*
-      *  @private
+
+    /*
+     *  Load json for a particular node (or the whole tree)
+     *  @private
+     */
+    _load_node_tree : function (obj, s_call, e_call)
+    {
+       var rslt = this._JsonDSToJson(obj) ;
+
+       if (! rslt.success) {
+         return ; // TDO
+       }
+
+       if (! rslt.js) {
+         return ;       // TDO
+       }
+
+       var  bTree = ((! obj) || (obj === -1)) ;
+       var  s     = this.options["data"] ;
+       var  d ;
+
+       if ((!!s["data"] && !s["ajax"]) || (!!s["data"] && !!s["ajax"] && bTree))  {
+         if (bTree)  {
+           d = this._parseJson(rslt.js, obj) ;
+           if (d)  {
+             this._$container_ul.empty().append(d.children());
+             this._clean_node();
+           }
+           else  { 
+              if (this._data.ds.correctState) {
+                  this._$container_ul.empty();
+               }
+           }
+         }
+         if (s_call) {
+            s_call.call(this);
+         }
+       }
+       else if  ((!s["data"] && !!s["ajax"]) || (!!s["data"] && !!s["ajax"] && (! bTree))) {
+          d = this._parseJson(rslt.js, obj);
+          if (d)  {
+            if (bTree)  {
+              var $u =  this._$container_ul;
+              $u.empty().append(d.children());
+              $u.attr("role", "tree").attr("tabindex", "0").css("outline", "none") ;
+              if (this._data.core.selectMode === -1)  {
+                $u.attr("aria-multiselectable", true) ;
+              }
+            }
+            else  {
+              obj.append(d).children("a.oj-tree-loading").removeClass("oj-tree-loading");
+              obj.removeData("oj-tree-is-loading");
+            }
+   
+            this._clean_node(obj);
+            if (s_call)  {
+              s_call.call(this);
+            }
+          }
+          else  {
+            if (bTree) {
+              if (this._data.ds.correctState)  { 
+                this._$container_ul.empty(); 
+                if (s_call) {
+                  s_call.call(this);
+                }
+              }
+            }
+            else  {
+               obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+               obj.removeData("oj-tree-is-loading");
+               if (s["correct_state"]) { 
+                 this._correct_state(obj);
+                 if (s_call)  {
+                   s_call.call(this);
+                 } 
+               }
+            }
+          }
+       }
+
+     },
+
+
+    /**
+      * Process a JsonTreeDataSource to a Json array ready for parsing.
+      * This is temporary - it assumes that all nodes are available in the Json;
+      * that is, there is no lazy-loading.   TDO
+      * @private
+      * @return {Object} contains "success" (boolean) and "js" (the json nodes)
       */
+     _JsonDSToJson : function (parentKey, node)
+     {
+        var arJson = [],
+            ds = this._tds,
+            cc,
+            range = {},
+            rslt  = {success : false, js : null} ;
+
+        if (parentKey == -1) {
+          parentKey = null ;
+          range["start"] = 0 ;
+        }
+        else {
+          // TDO
+        }
+
+        cc = ds.getChildCount(parentKey) ;   
+        if (cc > 0) {
+          range["count"] = cc ;
+          ds.fetchChildren(parentKey, range,              // get the JsonNodeSet 
+              {
+                "success" : $.proxy(function(jns) {
+                     var c = jns.getCount(),
+                         attr,
+                         n ;
+
+                     for (var i = 0; i < c; i++) {
+                        node = {} ;
+                        attr = jns.getData(i) ;           // get the attribute list to be applied 
+                        if (attr) {
+                          node["attr"] = attr ;
+                        }
+                       node["title"] = jns.m_nodes[i].title ;         // hack, wait for chadwick
+                       if (attr.metadata) {
+                         node["metadata"] = jns.m_nodes[i].metadata ; // hack, wait for chadwick
+                       }
+
+                       var key  = node["attr"]["id"] ;
+
+                       n = ds.getChildCount(key) ;
+                       if (n > 0) {
+                          var r = this._JsonDSToJson(key, node) ;
+                          node["children"] = r.js ;
+                       }
+
+                       arJson.push(node) ;
+                     }
+  
+                     rslt.success = true ;
+                     rslt.js      = arJson ;
+                   }, this),
+
+                "error" :  function(status) {
+                              rslt.success = false ;
+                           }
+              }) ;
+        }
+        return rslt ;
+     },
+
+
+     /**
+       *  @private
+       */
      _refresh_json  : function (obj)
      {
         obj = this._getNode(obj);
 
-        var s = this.options["json_data"];
+        if (this._data.core.locked) {
+          return ;
+        }
 
-        if (obj && obj !== -1 && s["progressive_unload"] && ($.isFunction(s["data"]) || !!s["ajax"]))  {
+        var bTree = (!obj || obj !== -1 || !obj.length) ;
+        if (!bTree && obj.hasClass("oj-disabled")) {
+          return ;
+        }
+
+        var s = this.options["data"]["json"];
+
+        if (! bTree && this._data.ds.progressiveUnload && ($.isFunction(s["data"]) || !!s["ajax"]))  {
           obj.removeData("oj-tree-children");
         }
 //Wed5  return this.__call_old();
@@ -58425,19 +62438,26 @@ check = true ;
       */
      _load_node_json : function (obj, s_call, e_call)
      {
-       var s = this._getOptions()["json_data"],
-           d,
+       var s = this._getOptions()["data"],        // work on a copy of the options to avoid
+           d,                                     // endless loop in calling success/error funcs
            error_func   = function () {},
-           success_func = function () {};
+           success_func = function () {},
+           data         = (s && s["data"]) || null,
+           ajax         = (s && s["ajax"]) || null;
+
+       if (s && !data && !ajax) {
+         data = s ;                               // we just have data, no data() ajax() methods defined
+       }
 
        obj = this._getNode(obj);
 
-       if (obj && obj !== -1 && (s["progressive_render"] || s["progressive_unload"]) && !obj.is(".oj-tree-open, .oj-tree-leaf") && obj.children("ul").children("li").length === 0 && obj.data("oj-tree-children"))
-       {
+       if (obj && obj !== -1 && (this._data.ds.progressiveRender || this._data.ds.progressiveUnload)
+                             && !obj.is(".oj-tree-open, .oj-tree-leaf")
+                             && obj.children("ul").children("li").length === 0 && obj.data("oj-tree-children")) {
           d = this._parseJson(obj.data("oj-tree-children"), obj);
           if (d)  {
             obj.append(d);
-            if (! s["progressive_unload"]) {
+            if (! this._data.ds.progressiveUnload) {
               obj.removeData("oj-tree-children");
             }
           }
@@ -58460,25 +62480,24 @@ check = true ;
 
        switch (!0)
        {
-          case (! s["data"] && !s["ajax"]) : throw "Neither data nor ajax settings supplied.";
+          case (!data && !ajax) : throw "ojTree - neither data nor ajax settings supplied.";
 
+          // function option added here for easier model integration (also supporting async - see callback)
 
-                   // function option added here for easier model integration (also supporting async - see callback)
-
-          case ($.isFunction(s["data"])):
-                       s["data"].call(this, obj, $.proxy(function (d) {
+          case ($.isFunction(data)):
+                       data.call(this, obj, $.proxy(function (d) {
                            d = this._parseJson(d, obj);
                            if (!d) { 
                               if (obj === -1 || !obj)  {
-                                if (s["correct_state"])  {
-                                  this._$container.children("ul").empty();
+                                if (this._data.ds.correctState)  {
+                                  this._$container_ul.empty();
                                 }
                               }
                               else  {
                                  obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
                                  obj.removeData("oj-tree-is-loading");
 
-                                 if (s["correct_state"]) {
+                                 if (this._data.ds.correctState) {
                                    this._correct_state(obj);
                                  }
                               }
@@ -58488,11 +62507,11 @@ check = true ;
                            }
                            else  {
                               if (obj === -1 || !obj)  {
-                                 this._$container.children("ul").empty().append(d.children());
+                                 this._$container_ul.empty().append(d.children());
                               }
-                              else
-                              {
-                                 obj.append(d).children("a.oj-tree-loading").removeClass("oj-tree-loading"); obj.removeData("oj-tree-is-loading");
+                              else  {
+                                 obj.append(d).children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                                 obj.removeData("oj-tree-is-loading");
                               }
                               this._clean_node(obj);
                               if (s_call)  {
@@ -58502,17 +62521,17 @@ check = true ;
                        }, this));
                        break;
 
-          case (!!s["data"] && !s["ajax"]) || (!!s["data"] && !!s["ajax"] && (!obj || obj === -1)):
+          case (!!data && !ajax) || (!!data && !!ajax && (!obj || obj === -1)):
 
                        if (!obj || obj == -1)  {
-                         d = this._parseJson(s["data"], obj) ;
+                         d = this._parseJson(data, obj) ;
                          if (d)  {
-                           this._$container.children("ul").empty().append(d.children());
+                           this._$container_ul.empty().append(d.children());
                            this._clean_node();
                          }
                          else  { 
-                            if (s["correct_state"]) {
-                                this._$container.children("ul").empty();
+                            if (this._data.ds.correctState) {
+                              this._$container_ul.empty();
                              }
                          }
                        }
@@ -58521,97 +62540,94 @@ check = true ;
                        }
                        break;
 
-          case (!s["data"] && !!s["ajax"]) || (!!s["data"] && !!s["ajax"] && obj && obj !== -1):
+          case (!data && !!ajax) || (!!data && !!ajax && obj && obj !== -1):
 
                        error_func = function (x, t, e)
                        {
-                           var ef = this._getOptions()["json_data"]["ajax"]["error"]; 
-                           if (ef)  {
-                              ef.call(this,  t, e, x);
+                         var ef = this._getOptions()["data"]["ajax"]["error"];  // reget the options       
+                         if (ef) {                                              // without our updated ajax
+                           ef.call(this, t, e, x);                              // changes to avoid forever loop
+                         }
+                         if (obj != -1 && obj.length)  {
+                            obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                            obj.removeData("oj-tree-is-loading");
+                            if (t === "success" && this._data.ds.correctState)  {
+                              this._correct_state(obj);
+                            }
+                         }
+                         else   {
+                           if (t === "success" && this._data.ds.correctState)  {
+                             this._$container_ul.empty();
                            }
-                           if (obj != -1 && obj.length)  {
-                              obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                              obj.removeData("oj-tree-is-loading");
-                              if (t === "success" && s["correct_state"])  {
-                                this._correct_state(obj);
-                              }
-                           }
-                           else   {
-                             if (t === "success" && s["correct_state"])  {
-                               this._$container.children("ul").empty();
-                             }
-                           }
-                           if (e_call)  {
-                             e_call.call(this);
-                           }
+                         }
+                         if (e_call)  {
+                           e_call.call(this);
+                         }
                        };
 
                        success_func = function (d, t, x)
                        {
-                           var sf = this._getOptions()["json_data"]["ajax"]["success"]; 
-                           if (sf) {
-                              d = sf.call(this, d, t, x) || d;
-                           }
+                         var sf = this._getOptions()["data"]["ajax"]["success"];  // reget the options
+                         if (sf) {                                                // without our updated ajax
+                           d = sf.call(this, d, t, x) || d;                       // changes to avoid forever loop
+                         }
 
-                           if (d === "" || (d && d.toString && d.toString().replace(/^[\s\n]+$/,"") === "") || (!$.isArray(d) && !$.isPlainObject(d)))  {
-                             return error_func.call(this, x, t, "");
-                           }
+                         if (d === "" || (d && d.toString && d.toString().replace(/^[\s\n]+$/,"") === "") || (!$.isArray(d) && !$.isPlainObject(d)))  {
+                           return error_func.call(this, x, t, "");
+                         }
 
-                           d = this._parseJson(d, obj);
-                           if (d)  {
-//JRM                         if(obj === -1 || !obj) { this.get_container().children("ul").empty().append(d.children()); }
-                              if (obj === -1 || !obj)
-                              {
-                                 var $u =  this._$container.children("ul");
-                                 $u.empty().append(d.children());
-                                 $u.attr("role", "tree").attr("tabindex", "0").css("outline", "none") ;
-                                 if (this._data.core.selectMode === -1)  {
-                                   $u.attr("aria-multiselectable", true) ;
+                         d = this._parseJson(d, obj);
+                         if (d)  {
+                            if (obj === -1 || !obj)  {
+                               var $u =  this._$container_ul;
+                               $u.empty().append(d.children());
+                               $u.attr("role", "tree").attr("tabindex", "0").css("outline", "none") ;
+                               if (this._data.core.selectMode === -1)  {
+                                 $u.attr("aria-multiselectable", true) ;
+                               }
+                             }
+                             else   {
+                                obj.append(d).children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                                obj.removeData("oj-tree-is-loading");
+                             }
+
+                             this._clean_node(obj);
+                             if (s_call)  {
+                               s_call.call(this);
+                             }
+                         }
+                         else  {
+                           if (obj === -1 || !obj) {
+                              if (this._data.ds.correctState)  { 
+                                 this._$container_ul.empty(); 
+                                 if (s_call) {
+                                   s_call.call(this);
                                  }
-                               }
-                               else   {
-                                  obj.append(d).children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                                  obj.removeData("oj-tree-is-loading");
-                               }
-
-                               this._clean_node(obj);
-                               if (s_call)  {
-                                 s_call.call(this);
-                               }
+                              }
                            }
                            else  {
-                             if (obj === -1 || !obj) {
-                                if (s["correct_state"])
-                                { 
-                                   this._$container.children("ul").empty(); 
-                                   if (s_call) {
-                                     s_call.call(this);
-                                   }
-                                }
-                             }
-                             else  {
-                                obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                                obj.removeData("oj-tree-is-loading");
-                                if (s["correct_state"])
-                                { 
-                                  this._correct_state(obj);
-                                  if (s_call)  {
-                                    s_call.call(this);
-                                  } 
-                                }
-                               }
+                              obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                              obj.removeData("oj-tree-is-loading");
+                              if (this._data.ds.correctState) { 
+                                this._correct_state(obj);
+                                if (s_call)  {
+                                  s_call.call(this);
+                                } 
+                              }
                            }
+                         }
                        };
 
+                       //  Prepare for an ajax op. (note: we are updating a copy of the options)
                        s["ajax"]["context"] = this;
                        s["ajax"]["error"]   = error_func;
                        s["ajax"]["success"] = success_func;
 
-                       if (! s["ajax"]["dataType"])  {
-                          s["ajax"]["dataType"] = "json";
+                       if (! s["dataType"])  {
+                         s["ajax"]["dataType"] = "json";
                        }
                        if ($.isFunction(s["ajax"]["url"]))  {
-                          s["ajax"]["url"] = s["ajax"]["url"].call(this, obj);
+                         s["ajax"]["url"] = s["ajax"]["url"].call(this, obj);
                        }
                        if ($.isFunction(s["ajax"]["data"]))  {
                          s["ajax"]["data"] = s["ajax"]["data"].call(this, obj);
@@ -58630,17 +62646,20 @@ check = true ;
      _parseJson : function (js, obj, isRecurse)
      {
         var d = false, 
-            p = this.options,
-            s = p["json_data"],
-            t = p["html_titles"],
             tmp, i, j, ul1, ul2;
 
         if (!js) {
           return d;
         }
 
-        if (s["progressive_unload"] && obj && obj !== -1)  { 
+        if (this._data.ds.progressiveUnload && obj && obj !== -1)  { 
           obj.data("oj-tree-children", d);
+        }
+
+        if (typeof js == "string")  {
+          try {
+                js = $.parseJSON(js) ;
+              } catch(err) {js = [];}     // have nothing useful to display
         }
 
         if ($.isArray(js))  {
@@ -58659,6 +62678,8 @@ check = true ;
           d = d.children();
         }
         else   {
+           //  We now have an individual node object
+
            if (typeof js == "string")  {
              js = { "data" : js };
            }
@@ -58681,18 +62702,17 @@ check = true ;
            d = $("<li role='treeitem' />");
 
            if (js["attr"])  {
-             d.attr(js["attr"]);
+             d.attr(js["attr"]);       // apply attr's to the <li>
            }
-
-           if (js["metadata"])  {
+           if (js["metadata"])  {      // and any user defined arbitrary data
              d.data(js["metadata"]);
            }
 
            // js.state     // not published - per Design Review
 
-          if (js["state"] || (js["children"] && js["children"].length === 0)) {    // length zero means lazy load
-            d.addClass("oj-tree-" + ((js["state"] === "expanded")? "open" : "closed"));
-         }
+           if (js["state"] || (js["children"] && js["children"].length === 0)) {    // length zero means lazy load
+             d.addClass("oj-tree-" + ((js["state"] === "expanded")? "open" : "closed"));
+           }
 
            if (!$.isArray(js["data"])) {
              tmp = js["data"];
@@ -58700,28 +62720,39 @@ check = true ;
              js["data"].push(tmp);
            }
            
+           var ht = this._data.core.htmlTitles ;
+
            $.each(js["data"], function (i, m)   {
                       tmp = $("<a tabindex='-1' />");
 //                    tmp = $("<a role=presentation tabindex=-1 />");
                       if ($.isFunction(m)) {
-                         m = m.call(this, js);
+                        m = m.call(this, js);
                       }
                       if (typeof m == "string")  {
-                        tmp.attr('href','#')[ t ? "html" : "text" ](m);
+                        tmp.attr('href','#')[ ht? "html" : "text" ](m);
                       }
                       else  {
                         if (!m["attr"]) {
                           m["attr"] = {};
                         }
+
+                        for (var x in m) {
+                           if (x !== "attr") {
+                             m["attr"][x] = m[x] ;
+                           }
+                        }
+
                         if (!m["attr"]["href"]) {
                           m["attr"]["href"] = '#';
                         }
-                        tmp.attr(m["attr"])[ t ? "html" : "text" ](m["title"]);
+
+                       tmp.attr(m["attr"]);                // apply attr's to the <a>
+                       tmp[ ht? "html" : "text" ](m["title"]? m["title"] : js["title"]);
                         if (m["language"]) {
                           tmp.addClass(m["language"]);
                         }
                       }
-           
+
                       tmp.prepend("<ins class='oj-tree-icon'>&#160;</ins>");
                       if (!m["icon"] && js["icon"])  {
                         m["icon"] = js["icon"];
@@ -58731,7 +62762,8 @@ check = true ;
                           tmp.children("ins").addClass(m["icon"]);
                         }
                         else  {
-                          tmp.children("ins").css("background","url('" + m["icon"] + "') center center no-repeat"); }
+                          tmp.children("ins").css("background","url('" + m["icon"] + "') center center no-repeat");
+                        }
                       }
                       d.append(tmp);
            });
@@ -58739,11 +62771,11 @@ check = true ;
            d.prepend("<ins class='oj-tree-icon'>&#160;</ins>");
 
            if (js["children"])  { 
-             if (s["progressive_render"] && js["state"] !== "expanded")  {
+             if (this._data.ds.progressiveRender && js["state"] !== "expanded")  {
                d.addClass("oj-tree-closed").attr("aria-expanded", "false").data("oj-tree-children", js["children"]);
              }
              else  {
-               if (s["progressive_unload"])  {
+               if (this._data.ds.progressiveUnload)  {
                  d.data("oj-tree-children", js["children"]);
                }
                if ($.isArray(js["children"]) && js["children"].length) {
@@ -58790,9 +62822,8 @@ check = true ;
        }
        li_attr = $.isArray(li_attr) ? li_attr : [ "id", "class" ];
 
-//wed  if (!is_callback && this.data.types)
-       if (!is_callback && this["data"]["types"])  {
-         li_attr.push(s["types"]["type_attr"]);
+       if (!is_callback && s["types"])  {
+         li_attr.push(s["types"]["attr"]);
        }
        a_attr = $.isArray(a_attr) ? a_attr : [ ];
 
@@ -58932,9 +62963,11 @@ check = true ;
      _load_node_html : function (obj, s_call, e_call)
      {
        var d,
-           s            = this.options["html_data"],
+           s            = this.options["data"],
            error_func   = function () {},
-           success_func = function () {};
+           success_func = function () {},
+           data         = (s && s["data"]) || null,
+           ajax         = (s && s["ajax"]) || null;
 
        obj = this._getNode(obj);
        if (obj && obj !== -1)  {
@@ -58948,184 +62981,195 @@ check = true ;
 
        switch(!0)
        {
-          case ($.isFunction(s["data"])):
-                     s["data"].call(this, obj, $.proxy(function (d)
-                               {
-                                if (d && d !== "" && d.toString && d.toString().replace(/^[\s\n]+$/,"") !== "") {
-                                  d = $(d);
-                                  if (! d.is("ul")) {
-                                    d = $("<ul />").append(d);
-                                  }
-                                  if (obj == -1 || !obj) {
-                                    this._$container.children("ul").empty().append(d.children())
-                                                                           .find("li, a")
-                                                                           .filter(function () {
-                                                                              return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS"; }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
-                                  }
-                                  else  {
-                                    obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                                    obj.append(d).children("ul").find("li, a").filter(function ()
-                                                     { return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS"; }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon"); obj.removeData("oj-tree-is-loading");
-                                  }
-                                  this._clean_node(obj);
-                                  if (s_call)  {
-                                    s_call.call(this);
-                                  }
-                                }
-                                else  {
-                                  if (obj && obj !== -1)  {
-                                    obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                                    obj.removeData("oj-tree-is-loading");
-                                    if (s["correct_state"]) { 
-                                      this._correct_state(obj);
-                                      if (s_call) {
-                                        s_call.call(this);
-                                      } 
-                                    }
-                                  }
-                                  else  {
-                                    if (s["correct_state"])
-                                    { 
-                                      this._$container.children("ul").empty();
-                                      if (s_call) {
-                                        s_call.call(this);
-                                      } 
-                                    }
-                                  }
-                                }
-                               }, this));
-                     break;
+          case ((!data && !ajax) && (s && (typeof s === "string"))) :
+                    this._loadHtmlString(s, obj, s_call, e_call) ;
+                    break ;
 
-          case (!s["data"] && !s["ajax"]):
-                     if (!obj || obj == -1 )  {
-                       this._$container
-                                .children("ul").empty()
-                                .append(this._data.html.originalContainerHtml)
-                                .find("li, a").filter(function () { return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS"; }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
-                                .filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
-                       this._clean_node();
-                       this._$container_ul.find("ul").attr("role", "group") ;
-                       this._$container_ul.find("li").attr("role", "treeitem") ;
-                       this._$container_ul.find("a").attr("tabindex", -1) ;
-                     }
-                     if (s_call)  {
-                          s_call.call(this);
-                     }
-                     break;
-
-          case (!!s["data"] && !s["ajax"]) || (!!s["data"] && !!s["ajax"] && (!obj || obj === -1)):
-                     if (!obj || obj == -1) {
-                            d = $(s["data"]);
-                            if (!d.is("ul")) {
-                              d = $("<ul />").append(d);
-                            }
-                            this._$container
-                                .children("ul").empty().append(d.children())
-                                .find("li, a").filter(function ()
-                                                 {
-                                                    return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS"; }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
-                                .filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
-
-                            this._clean_node();
-                            this._$container_ul.find("ul").attr("role", "group") ;
-                            this._$container_ul.find("li").attr("role", "treeitem") ;
-                            this._$container_ul.find("a").attr("tabindex", "-1") ;
-                     }
-                     if (s_call)  {
-                          s_call.call(this);
-                     }
-                     break;
-
-          case (!s["data"] && !!s["ajax"]) || (!!s["data"] && !!s["ajax"] && obj && obj !== -1):
-                    obj = this._getNode(obj);
-                    error_func = function (x, t, e)
-                         {
-                            var ef = this._getOptions()["html_data"]["ajax"]["error"]; 
-                            if (ef) {
-                              ef.call(this, x, t, e);
-                            }
-                            if (obj != -1 && obj.length)  {
-                              obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                              obj.removeData("oj-tree-is-loading");
-                              if (t === "success" && s["correct_state"]) {
-                                 this._correct_state(obj);
-                              }
-                            }
-                            else  {
-                              if (t === "success" && s["correct_state"]) {
-                                 this._$container().children("ul").empty();
-                              }
-                            }
-                            if (e_call)  {
-                              e_call.call(this);
-                            }
-                        };
-                    success_func = function (d, t, x)
-                         {
-                            var sf = this._getOptions()["html_data"]["ajax"]["success"]; 
-
-                            if (sf) {
-                              d = sf.call(this,d,t,x) || d;
-                            }
-
-                            if (d === "" || (d && d.toString && d.toString().replace(/^[\s\n]+$/,"") === "")) {
-                              return error_func.call(this, x, t, "");
-                            }
-
-                            if (d)  {
-                              d = $(d);
-                              if (!d.is("ul")) {
-                                d = $("<ul />").append(d);
-                              }
-                              if (obj == -1 || !obj) {
-                                this._$container.children("ul")
-                                                .empty()
-                                                .append(d.children())
-                                                .find("li, a").filter(function ()
-                                                      {
-                                                        return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
-                                                       }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
-                              }
-                              else  {
-                                 obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                                 obj.append(d).children("ul").find("li, a")
-                                                             .filter(function () {
-                                                                        return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
-                                                                     }
-                                                              ).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a")
-                                                                                                                 .children("ins:first-child")
-                                                                                                                 .not(".oj-tree-icon").addClass("oj-tree-icon");
-                                 obj.removeData("oj-tree-is-loading");
-                              }
-                              this._clean_node(obj);
-                              if (s_call)  {
-                                s_call.call(this);
-                              }
-                            }
-                            else  {
-                              if (obj && obj !== -1)  {
-                                 obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                                 obj.removeData("oj-tree-is-loading");
-                                 if (s["correct_state"])  { 
-                                    this._correct_state(obj);
-                                    if (s_call) {
-                                      s_call.call(this);
-                                    } 
+          case $.isFunction(data):
+                    data.call(this, obj, $.proxy(function (d)
+                              {
+                                 this._loadHtmlString(d, obj, s_call, e_call) ;
+/*
+                               if (d && d !== "" && d.toString && d.toString().replace(/^[\s\n]+$/,"") !== "") {
+                                 d = $(d);
+                                 if (! d.is("ul")) {
+                                   d = $("<ul />").append(d);
                                  }
-                                }
-                                else  {
-                                  if (s["correct_state"])  { 
-                                     this._$container.children("ul").empty();
+                                 if (obj == -1 || !obj) {
+                                   this._$container_ul.empty().append(d.children())
+                                                              .find("li, a")
+                                                              .filter(function () {
+                                                                  return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS"; }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
+                                 }
+                                 else  {
+                                   obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                                   obj.append(d).children("ul").find("li, a").filter(function ()
+                                                    { return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS"; }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon"); obj.removeData("oj-tree-is-loading");
+                                 }
+                                 this._clean_node(obj);
+                                 if (s_call)  {
+                                   s_call.call(this);
+                                 }
+                               }
+                               else  {
+                                 if (obj && obj !== -1)  {
+                                   obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                                   obj.removeData("oj-tree-is-loading");
+                                   if (this._data.ds.correctState) { 
+                                     this._correct_state(obj);
                                      if (s_call) {
                                        s_call.call(this);
                                      } 
-                                  }
-                                }
-                                this._$container_ul.find("ul").attr("role", "group") ;
-                                this._$container_ul.find("li").attr("role", "treeitem") ;
+                                   }
+                                 }
+                                 else  {
+                                   if (this._data.ds.correctState)
+                                   { 
+                                     this._$container_ul.empty();
+                                     if (s_call) {
+                                       s_call.call(this);
+                                     } 
+                                   }
+                                 }
+                               }
+*/
+                              }, this));
+                    break;
+
+          case (!data && !ajax):
+                    if (!obj || obj == -1 )  {
+                      this._$container_ul
+                               .empty()
+                               .append(this._data.html.originalContainerHtml)
+                               .find("li, a").filter(function () {
+                                                return !this.firstChild || !this.firstChild.tagName ||
+                                                        this.firstChild.tagName !== "INS";
+                                              }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
+                                                .filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
+                      this._clean_node();
+                      this._$container_ul.find("ul").attr("role", "group") ;
+                      this._$container_ul.find("li").attr("role", "treeitem") ;
+                      this._$container_ul.find("a").attr("tabindex", -1) ;
+                    }
+                    if (s_call)  {
+                         s_call.call(this);
+                    }
+                    break;
+
+          case (!!data && !ajax) || (!!data && !!ajax && (!obj || obj === -1)):
+                    if (!obj || obj == -1) {
+                           d = $(data);
+                           if (!d.is("ul")) {
+                             d = $("<ul />").append(d);
+                           }
+                           this._$container_ul
+                               .empty().append(d.children())
+                               .find("li, a").filter(function ()
+                                                {
+                                                   return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
+                                                }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
+                                                  .filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
+
+                           this._clean_node();
+                           this._$container_ul.find("ul").attr("role", "group") ;
+                           this._$container_ul.find("li").attr("role", "treeitem") ;
+                           this._$container_ul.find("a").attr("tabindex", "-1") ;
+                    }
+                    if (s_call)  {
+                         s_call.call(this);
+                    }
+                    break;
+
+          case (!data && !!ajax) || (!!data && !!ajax && obj && obj !== -1):
+                    obj = this._getNode(obj);
+                    error_func = function (x, t, e)
+                         {
+                           var ef = this._getOptions()["data"]["ajax"]["error"];  // reget the options
+                           if (ef) {                                              // without our updated ajax
+                             ef.call(this, x, t, e);                              // changes to avoid forever loop
+                           }
+
+                           if (obj != -1 && obj.length)  {
+                             obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                             obj.removeData("oj-tree-is-loading");
+                             if (t === "success" && this._data.ds.correctState) {
+                                this._correct_state(obj);
+                             }
+                           }
+                           else  {
+                             if (t === "success" && this._data.ds.correctState) {
+                               this._$container_ul.empty();
+                             }
+                           }
+                           if (e_call)  {
+                             e_call.call(this);
+                           }
+                        };
+                    success_func = function (d, t, x)
+                        {
+                          var sf = this._getOptions()["data"]["ajax"]["success"];  // reget the options
+                          if (sf) {                                                // without our updated ajax
+                            d = sf.call(this, d, t, x) || d;                       // changes to avoid forever loop
+                          }
+
+                          if (d === "" || (d && d.toString && d.toString().replace(/^[\s\n]+$/,"") === "")) {
+                            return error_func.call(this, x, t, "");
+                          }
+
+                          if (d)  {
+                            d = $(d);
+                            if (!d.is("ul")) {
+                              d = $("<ul />").append(d);
                             }
+                            if (obj == -1 || !obj) {
+                              this._$container_ul.empty()
+                                                 .append(d.children())
+                                                 .find("li, a").filter(function ()
+                                                    {
+                                                      return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
+                                                     }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
+                            }
+                            else  {
+                               obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                               obj.append(d).children("ul").find("li, a")
+                                                           .filter(function () {
+                                                                      return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
+                                                                   }
+                                                            ).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a")
+                                                                                                               .children("ins:first-child")
+                                                                                                               .not(".oj-tree-icon").addClass("oj-tree-icon");
+                               obj.removeData("oj-tree-is-loading");
+                            }
+                            this._clean_node(obj);
+                            if (s_call)  {
+                              s_call.call(this);
+                            }
+                          }
+                          else  {
+                            if (obj && obj !== -1)  {
+                               obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+                               obj.removeData("oj-tree-is-loading");
+                               if (this._data.ds.correctState)  { 
+                                  this._correct_state(obj);
+                                  if (s_call) {
+                                    s_call.call(this);
+                                  } 
+                               }
+                              }
+                              else  {
+                                if (this._data.ds.correctState)  { 
+                                   this._$container_ul.empty();
+                                   if (s_call) {
+                                     s_call.call(this);
+                                   } 
+                                }
+                              }
+                              this._$container_ul.find("ul").attr("role", "group") ;
+                              this._$container_ul.find("li").attr("role", "treeitem") ;
+                          }
                         };
 
+                        //  Prepare for an ajax op. (note: we are updating a copy of the options)
                         s["ajax"]["context"] = this;
                         s["ajax"]["error"]   = error_func;
                         s["ajax"]["success"] = success_func;
@@ -59143,6 +63187,63 @@ check = true ;
                         break;
        }
      },
+
+
+     /**
+       *   Load an HTML <ul><li>...</ul> markup string
+       *   @private
+       */
+     _loadHtmlString : function (s, obj, s_call, e_call)
+     {
+
+        if (s && s !== "" && s.toString && s.toString().replace(/^[\s\n]+$/,"") !== "") {
+          s = $(s);
+          if (! s.is("ul")) {
+            s = $("<ul />").append(s);
+          }
+          if (obj == -1 || !obj) {
+//wed26     this._$container.children("ul").empty().append(d.children())
+            this._$container_ul.empty().append(s.children())
+                                       .find("li, a")
+                                       .filter(function () {
+                                                 return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
+                                               }).prepend("<ins class='oj-tree-icon'>&#160;</ins>")
+                                                 .end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon");
+          }
+          else  {
+            obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+            obj.append(s).children("ul").find("li, a").filter(function ()
+                             { return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS"; }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a").children("ins:first-child").not(".oj-tree-icon").addClass("oj-tree-icon"); obj.removeData("oj-tree-is-loading");
+          }
+          this._clean_node(obj);
+          if (s_call)  {
+            s_call.call(this);
+          }
+        }
+        else  {
+          if (obj && obj !== -1)  {
+            obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
+            obj.removeData("oj-tree-is-loading");
+            if (this._data.ds.correctState) { 
+              this._correct_state(obj);
+              if (s_call) {
+                s_call.call(this);
+              } 
+            }
+          }
+          else  {
+            if (this._data.ds.correctState)
+            { 
+//wed26       this._$container.children("ul").empty();
+              this._$container_ul.empty();
+              if (s_call) {
+                s_call.call(this);
+              } 
+            }
+          }
+        }
+     },
+
 
      /*
       *
@@ -59222,14 +63323,14 @@ check = true ;
         $.each(o, $.proxy(function (i, val)
            { 
              if (this._data.dnd[val])  {
-               ctl.helper.children("ins").attr("class","oj-tree-ok");
+               ctl.helper.children("ins").removeClass(OJT_DRAG_INVALID).addClass(OJT_DRAG_OK);
                r = val;
                return false;
              }
         }, this));
 
         if (r === false)  {
-           ctl.helper.children("ins").attr("class","oj-tree-invalid");
+           ctl.helper.children("ins").removeClass(OJT_DRAG_OK).addClass(OJT_DRAG_INVALID);
         }
         
         pos = this._isRtl ? (this._data.dnd.off.right - 18) : (this._data.dnd.off.left + 10);
@@ -59337,7 +63438,7 @@ check = true ;
         dnd["before"]  = false;
         dnd["inside"]  = false;
 
-        this._data.dnd.ctl.helper.children("ins").attr("class","oj-tree-invalid");
+        this._data.dnd.ctl.helper.children("ins").removeClass(OJT_DRAG_OK).addClass(OJT_DRAG_INVALID);
 
         vars.m.hide();
 
@@ -59402,6 +63503,7 @@ check = true ;
 
 
      /**
+       *  Mouse is down on an <a>, prepare for drag and drop
        *  @private
        */
      _start_drag : function (obj, e)
@@ -59410,6 +63512,11 @@ check = true ;
              vars = this._data.dnd.vars ;
 
         vars.o = this._getNode(obj);
+
+        if (vars.o.hasClass("oj-disabled") || this._data.core.locked) {
+          return ;
+        }
+
         if (this._data.ui && this["isSelected"](vars.o))  {
           vars.o = this._getNode(null, true);
         }
@@ -59417,7 +63524,7 @@ check = true ;
         var dt  = vars.o.length > 1 ? this.getTranslatedString("m_multisel") : this["getText"](vars.o),
             cnt = this._getContainer();
 
-        if (!this.options["html_titles"]) {
+        if (!this._data.core.htmlTitles) {
           dt = dt.replace(/</ig,"&lt;").replace(/>/ig,"&gt;");
         }
         this._drag_start(e, { jstree : true,
@@ -59426,9 +63533,9 @@ check = true ;
 
         if (this._data.themes) {
           if (vars.m) {
-             vars.m.attr("class", "oj-tree-" + this._data.themes.theme);
+             vars.m.addClass("oj-tree-" + this._data.themes.theme);
           }
-          dnd.ctl.helper.attr("class", "oj-tree-dnd-helper oj-tree-" + this._data.themes.theme); 
+          dnd.ctl.helper.addClass("oj-tree-dnd-helper oj-tree-" + this._data.themes.theme); 
         }
 
         dnd.cof    = cnt.offset();
@@ -59439,6 +63546,7 @@ check = true ;
 
 
      /**
+       *  Start drag/drop process
        *  @private
        */
      _drag_start : function (e, data, html)
@@ -59461,8 +63569,9 @@ check = true ;
          ctl.init_y    = e.pageY;
          ctl.user_data = data;
          ctl.is_down   = true;
-         ctl.helper    = $("<div id='ojtreeu-dragged' />").html(html); //.fadeTo(10,0.25);
+         ctl.helper    = $("<div class='ojtreeu-dragged' />").html(html); //.fadeTo(10,0.25);
 
+         // Listen for mouse drag and mouse up events
          $(document).bind("mousemove", this._drag.bind(this));
          $(document).bind("mouseup",   this._drag_stop.bind(this));
 
@@ -59471,6 +63580,7 @@ check = true ;
 
 
      /**
+       *  Mouse is down and we are dragging 
        *  @private
        */
      _drag :  function (e)
@@ -59488,10 +63598,10 @@ check = true ;
             $(document).triggerHandler("drag_start.ojtreeu", [{
                                                                  "event" : e,
                                                                  "data" : ctl.user_data
-                                                               }]);
+                                                              }]);
           }
           else  {
-               return;
+            return;
           }
         }
 
@@ -59590,7 +63700,7 @@ check = true ;
         $(document).triggerHandler("drag.ojtreeu", [{
                                                       "event" : e,
                                                       "data"  : ctl.user_data
-                                                     }]);
+                                                    }]);
      },
 
 
@@ -59614,7 +63724,7 @@ check = true ;
         $(document).triggerHandler("drag_stop.ojtreeu", [{
                                                            "event" : e? e: {},
                                                            "data"  : ctl.user_data
-                                                          }]);
+                                                         }]);
         ctl.helper.remove();
         ctl.init_x    = 0;
         ctl.init_y    = 0;
@@ -59928,15 +64038,14 @@ check = true ;
       *   internal data structures.
       *   @private
       */
-     _initWidget : function()
+     _initTree : function()
      {
         this._initData() ;
         this._initCoreOpts() ;
         this._initUIOpts() ;
         this._initCrrmOpts() ;
         this._initThemeOpts()
-        this._initJsonOpts() ;
-        this._initHtmlOpts() ;
+        this._initDSOpts() ;
         this._initTypeOpts()
         this._initDnDOpts() ;
         this._initMenuOpts() ;
@@ -59944,8 +64053,7 @@ check = true ;
         this._initCore() ;
         this._initUI() ;
         this._initThemes() ;
-        this._initJsonData() ;
-        this._initHtmlData() ;
+        this._initDataSource() ;
 //        this._initCrrm() ;
         this._initTypes() ;
         this._initDnD() ;
@@ -59959,7 +64067,9 @@ check = true ;
      /**
        *   Emit events
        *   @param {Object} data an object containing details about the event.
-       *   @param {string} eventname the raw event name (e.g. "select")
+       *   @param {string} eventname the raw event name (e.g. "select", or "expandAll".
+       *                             When the event is fired, it is "ojselect" and "ojexpandall",
+       *                             but also the options "select" and "expandAll" are called.
        *   @private
        */
      _emitEvent : function (data, eventname) 
@@ -59981,14 +64091,12 @@ check = true ;
         if ((this._data.core.locked === true) && (eventname !== "unlock")
                                               && (eventname !== "isLocked")
                                               && (eventname !== "lock")) {
-            return;
+          return;
         }
 
-        if (!isBefore) {
-          evname   =  _convertEventName(eventname) ;
-          isPublic =  _isPublicEvent(evname) ;
-        }
-        if (! isPublic) {
+        evname   =  _convertEventName(eventname) ;
+        isPublic = _isPublicEvent(evname) ;
+        if (! isPublic)  {
           evname = "tree" + evname ;        // internal event
         }
 
@@ -59999,13 +64107,18 @@ check = true ;
 
         //  Trigger the event
 
-        var eventdata = {} ;                     // build the "ui" argument
+        var eventdata = {} ;                       // build the "ui" argument
         eventdata["item"] = item ;
         eventdata["inst"] = inst ;
 
         if (isBefore) {
-          eventdata["func"]  = data["func"] ;      // position relative to the reference node
+          func               = data["func"] ;      // target method
+          eventdata["func"]  = func ;
           eventdata["args"]  = args ;
+          if (func === "rename") {
+            eventdata["title"]     = data["title"] ;
+            eventdata["prevTitle"] = data["prevTitle"] ;
+          }
         }
         else  if (isPublic) {
           if (evname == "move") {
@@ -60014,8 +64127,8 @@ check = true ;
             eventdata["data"]      = data ;        // (req'd internally)
           }
           else if (evname == "rename") {
-            eventdata["title"] = data["name"] ;    // the new node title
-            delete eventdata["name"] ;
+            eventdata["title"]     = data["title"] ;      // the new node title to be
+            eventdata["prevTitle"] = data["prevTitle"] ;  // the current title
           }
           else if (evname == "remove") {            // node was deleted via context menu
             eventdata["parent"]  = data["parent"] ; // parent node
@@ -60025,15 +64138,19 @@ check = true ;
             eventdata["prev"]   = data["prev"] ;    // (req'd internally) - the "previous" node
             eventdata["parent"] = data["parent"] ;  // parent node
           }
+          else if (evname === "expandAll" || evname === "collapseAll" || evname === "deselectAll") {         
+            eventdata["targ"]   = data["targ"] ;    // the target of the op (node or -1)
+          }
         }
 
-        console.log("JRM-> Event (" + eventname + ")  " + evname + " isPublic=" + isPublic +
-                                   (isBefore? (" isBefore=true - " + eventdata["func"]) : ""));
+//      console.log("Event (" + eventname + ")  " + evname + " isPublic=" + isPublic +
+//                                 (isBefore? (" isBefore=true - " + eventdata["func"]) : ""));
 
         if (isPublic) {
           rslt = this._trigger(evname, new $.Event("oj" + evname), eventdata) ;
 
           if (isBefore) {
+//          console.log("Event (" + eventname + ") " + eventdata["func"] + " returned " + rslt);
             if (typeof rslt != "undefined") {
               rslt = rslt? true : false ;         // returns true/false/undefined
             }
@@ -60045,9 +64162,6 @@ check = true ;
         }
         
      },
-
-
-
 
 
      /**
@@ -60071,6 +64185,7 @@ check = true ;
 //       return func.old.apply(this, (replace_arguments ? Array.prototype.slice.call(arguments, 1) : args ) );
      },
 
+
      /*
       *  Initialization complete.  Build and render the tree.
       *  @private
@@ -60083,11 +64198,13 @@ check = true ;
          this._$container.addClass("oj-tree-rtl").css("direction", "rtl");
        }
 
+       //  Create the outer <ul> with a temporary <li> saying "Loading..."
+
        this._$container.html("<ul role='tree' tabindex='0' class='oj-tree-list' style='outline:none'" + 
                     ((this._data.core.selectMode === -1)? " aria-multiselectable='true'" : "") +
                     "><li class='oj-tree-last oj-tree-leaf'><ins>&#160;</ins><a class='oj-tree-loading' href='#'><ins class='oj-tree-icon'>&#160;</ins>" + this.getTranslatedString("m_loading") + "</a></li></ul>");
-       this._$container_ul = this._$container.children("ul:eq(0)");
 
+       this._$container_ul = this._$container.children("ul:eq(0)");
        this._$container.data("oj-tree-instance-id", this._getIndex());
 
        this._data.core.li_height = this._$container_ul.find("li.oj-tree-closed, li.oj-tree-leaf").eq(0).height() || 18;
@@ -60168,14 +64285,19 @@ check = true ;
             }, this));
        }
 
-       this._emitEvent({}, "init");
+       this._emitEvent({}, "init");      // Tree is now init'd (but nodes have not yet been added)
 
-       this._load_node(-1, function ()  {
+       this._load_node(-1, function ()  {                  //  Construct and add the nodes
                              this._loaded();
                              this._reload_nodes();
                            });
-     },
 
+       //  Tree div is now constructed, can now apply the context menu to it
+       if (this._data.menu.usermenu) {
+         this._applyMenu() ;
+       }
+
+     },
 
 
      /*
@@ -60270,7 +64392,7 @@ check = true ;
                                }
                          });
                  }, this))
-             .bind("ojdelete", $.proxy(function (event, ui)         // delete node
+             .bind("ojremove", $.proxy(function (event, ui)         // delete node
                 { 
                    var s     = this.options["selectPrevOnDelete"],
                        obj   = this._getNode(ui["item"]),
@@ -60298,13 +64420,37 @@ check = true ;
                 { 
                    var data = ui["data"] ;
                    if (data["cy"])  { 
-                     data["oc"].find("a.oj-tree-clicked").removeClass("oj-tree-clicked");
+                     data["oc"].find("a.oj-tree-clicked").removeClass(OJT_CLICKED);
                      data["oc"].removeAttr("aria-selected");
                    }
                  }, this));
 
      },
 
+     /*
+      *  Initialize the data source
+      *  @private
+      */
+     _initDataSource : function()
+     {
+        this._initTreeData() ;
+        this._initJsonData() ;
+        this._initHtmlData() ;
+     },
+
+     /*
+      *  Initialize the tree data source
+      *  @private
+      */
+     _initTreeData : function()
+     {
+        if (this._data.ds.type === DS_TREE) {
+          this._tds        = (this.options["data"] || null) ;     // the tree data source
+          this._load_node  = this._load_node_DS ;
+          this._is_loaded  = this._is_loaded_DS ;
+          this._refresh    = this._refresh_DS ;
+       }
+     },
 
      /*
       *  Initialize the json_data section if requested
@@ -60312,20 +64458,17 @@ check = true ;
       */
      _initJsonData : function()
      {
-        var s = this.options["json_data"];
-        if (! s) {
-          return ;
-        }
+        if (this._data.ds.type === DS_JSON) {
+          if (this._data.ds.progressiveUnload)  {
+            this._$container.bind("treeafter_close", function (e, ui)  {
+                                     ui["item"].children("ul").remove();
+                                   });
+          }
 
-        if (s["progressive_unload"])  {
-           this._$container.bind("treeafter_close", function (e, ui)  {
-                                    ui["item"].children("ul").remove();
-                                  });
+          this._load_node  = this._load_node_J ;
+          this._is_loaded  = this._is_loaded_J ;
+          this._refresh    = this._refresh_json ;
         }
-
-        this._load_node  = this._load_node_J ;
-        this._is_loaded  = this._is_loaded_J ;
-        this._refresh    = this._refresh_json ;
      },
 
 
@@ -60335,27 +64478,22 @@ check = true ;
        */
      _initHtmlData : function()
      {
-       var opts =  this.options["html_data"],
-           ot  = $.type(opts) ;
-
-       if (ot == "undefined" || (ot == "boolean" && !opts)) {
+       if (this._data.ds.type !== DS_HTML) {
          return ;
        }
 
-       if (ot == "boolean" || ot =="object") {
-         this._data.html.useExistingMarkup = true ;
-
+       if (this._data.html.useExistingMarkup) {
          // this used to use html() and clean the whitespace, but this way any attached data was lost
-
          this._data.html.originalContainerHtml = this._$container.find(" > ul > li").clone(true);
          // remove white space from LI node - otherwise nodes appear a bit to the right
          this._data.html.originalContainerHtml.find("li").addBack().contents().filter(function()
                                                                { return this.nodeType == 3;
                                                                }).remove();
-         this._load_node = this._load_node_H ;
-         this._is_loaded = this._is_loaded_H ;
-         this._refresh   = this._refresh_ui ;
        }
+
+       this._load_node = this._load_node_H ;
+       this._is_loaded = this._is_loaded_H ;
+       this._refresh   = this._refresh_ui ;
      },
 
 
@@ -60424,8 +64562,8 @@ check = true ;
         this._$container
                .bind("treeinit", $.proxy(function ()
                   { 
-                    var types = s["types"], 
-                        attr  = s["attr"] || this._data.types.defaults["type_attr"],
+                    var types = $.extend(true, {}, s["types"]),
+                        attr  = s["attr"] || this._data.types.defaults["attr"],
                         icons_css = "", 
                         _this = this;
 
@@ -60433,31 +64571,32 @@ check = true ;
                        {
                          $.each(tp, function (k, v)
                             { 
-                              if (!/^(max_depth|max_children|icon|valid_children)$/.test(k))  {
-                                _this._data.types.attach_to.push(k);
+                              if (!/^(maxDepth|maxChildren|icon|validChildren)$/.test(k))  {
+                                _this._data.types.attachTo.push(k);
                               }
                             });
 
-//JRM                    if(!tp.icon) { return true; }
-
                          // For ojTree we allow image and position props to not
-                         // have to be in an icon object
-                         if (! tp["icon"]) {
-                           if ((! tp["image"]) && (! tp["position"])) {
+                         // have to be in an icon object like jsTree.
+                         var ot = (typeof tp["icon"]) ;
+                         if (ot === "undefined") {
+                           ot = (typeof tp["image"]) ;
+                           if ((ot === "boolean") && (!tp["image"])) {
+                             tp["image"] = "ojt$none" ;
+                           }
+                           else if ((! tp["image"]) && (! tp["position"])) {
                              return true;
                            }
-                           else  {
-                             tp["icon"] = {} ;
 
-                             if (tp["image"])  {
-                               tp["icon"]["image"] = tp["image"]; 
-                               delete tp["image"] ;
-                             } 
+                           tp["icon"] = {} ;
+                           if (tp["image"])  {
+                             tp["icon"]["image"] = tp["image"]; 
+                             delete tp["image"] ;
+                           } 
 
-                             if (tp["position"] !== undefined)  {
-                               tp["icon"]["position"] = tp["position"] ;
-                               delete tp["position"] ;
-                             }
+                           if (tp["position"] !== undefined)  {
+                             tp["icon"]["position"] = tp["position"] ;
+                             delete tp["position"] ;
                            }
                          }    
 
@@ -60465,12 +64604,15 @@ check = true ;
                            if (i == "default")  {
                              icons_css += '.oj-tree-' + _this._getIndex() + ' a > .oj-tree-icon { ';
                            }
-                           else  {
+                           else if (tp["icon"]["image"]) {
                               icons_css += '.oj-tree-' + _this._getIndex() + ' li[' + attr + '="' + i + '"] > a > .oj-tree-icon { ';
                            }
 
-                           if (tp["icon"]["image"])  {
+                           if (tp["icon"]["image"] !== "ojt$none")  {
                              icons_css += ' background-image:url(' + tp["icon"]["image"] + '); ';
+                           }
+                           else  {
+                             icons_css += " background-image:none; ";
                            }
 
                            if (tp["icon"]["position"])  {
@@ -60489,32 +64631,29 @@ check = true ;
                    }, this))
                .bind("ojbefore", $.proxy(function (e, data)
                   { 
-                     /** @type {Object} */
-                     var s;
-                     var t, 
-                         o = this.options["types"]["use_data"] ? this._getNode(data["args"][0]) : false, 
-                         d = o && o !== -1 && o.length ? o.data("oj-tree") : false;
+                     var s,
+                         ty, 
+                         func = data["func"],
+                         item = data["item"],
+                         o = this._data.types.defaults["useData"] ? this._getNode(item) : false, 
+                         d = (o && o !== -1 && o.length)? o.data("oj-tree") : false;
 
-                     if (d && d["types"] && d["types"]["data"]["func"] === false)
+                     if (d && d["types"] && d[func] === false)
                      {
                        e.stopImmediatePropagation();
                        return false;
                      }
-                     if ($.inArray(data["func"], this._data.types.attach_to) !== -1)
-                     {
-//wed5                 if (!data.args[0] || (!data.args[0].tagName && !data.args[0].jquery))
-                       if (!data["args"][0] || (!data["args"][0]["tagName"] && !data["args"][0]["jquery"]))  {
-                          return;
-                       }
-                       s = this.options["types"]["types"];
-                       t = this._getType(data["args"][0]);
 
-                       if (( (s[t] && typeof s[t][data["func"]] !== "undefined") || 
-//wed5                        (s["default"] && typeof s["default"][data.func] !== "undefined") 
-                              (s["default"] && typeof s["default"][data["func"]] !== "undefined") 
-//wed5                      ) && this._check(data.func, data.args[0]) === false
-//Fri3                      ) && this._check(data["func"], data["args"][0]) === false)
-                            ) && this["_check"](data["func"], data["args"][0]) === false)  {
+                     if ($.inArray(func, this._data.types.attachTo) !== -1)  {
+                       if (!data["item"] || (!data["item"]["tagName"] && !data["item"]["jquery"]))  {
+                         return;
+                       }
+                       s   = this.options["types"]["types"];
+                       ty  = this._getType(item);             // get "type" attr name for node
+
+                       if (( (s[ty] && typeof s[ty][func] !== "undefined") || 
+                             (s["default"] && typeof s["default"][func] !== "undefined") 
+                            ) && this._check(func, item) === false)  {
                          e.stopImmediatePropagation();
                          return false;
                        }
@@ -60534,24 +64673,9 @@ check = true ;
           return ;                               // of Dnd for reorder within the tree.
         }
   
-        var css_str ;
-        css_str = '#ojtreeu-dragged { display:block; margin:0 0 0 0; padding:4px 4px 4px 24px; position:absolute; top:-2000px; line-height:16px; z-index:10000; } ' +
-        '#ojtreeu-dragged ins { display:block; text-decoration:none; width:16px; height:16px; margin:0 0 0 0; padding:0; position:absolute; top:4px; left:4px; ' + 
-        ' -moz-border-radius:4px; border-radius:4px; -webkit-border-radius:4px; } ' + 
-        '#oj-tree-marker { padding:0; margin:0; font-size:12px; overflow:hidden; height:12px; width:8px; position:absolute; top:-30px; z-index:10001; background-repeat:no-repeat; display:none; background-color:transparent; text-shadow:1px 1px 1px white; color:black; line-height:10px; background:url("css/libs/oj/v1.0/alta/images/d.png") -41px -57px no-repeat !important; text-indent:-100px; } ' + 
-        '#ojtreeu-dragged .oj-tree-ok { background:url("css/libs/oj/v1.0/alta/images/d.png") -2px -53px no-repeat !important; } ' + 
-        '#ojtreeu-dragged .oj-tree-invalid { background:url("css/libs/oj/v1.0/alta/images/d.png") -18px -53px no-repeat !important; } ' + 
-        '#oj-tree-marker-line { padding:0; margin:0; line-height:0%; font-size:1px; overflow:hidden; height:1px; width:100px; position:absolute; top:-30px; z-index:10000; background-repeat:no-repeat; display:none; background-color:#456c43; ' + 
-        ' cursor:pointer; border:1px solid #eeeeee; border-left:0; -moz-box-shadow: 0px 0px 2px #666; -webkit-box-shadow: 0px 0px 2px #666; box-shadow: 0px 0px 2px #666; ' + 
-        ' -moz-border-radius:1px; border-radius:1px; -webkit-border-radius:1px; ' +
-        '}' + 
-        '';
-
-        _addSheet({ str : css_str, title : "oj-tree" }, true);       //TDO REMOVE
-
         var vars = this._data.dnd.vars ;
 
-        vars.m = $("<div />").attr({ id : "oj-tree-marker" }).hide().html("&raquo;")   // dnd marker div
+        vars.m = $("<div />").addClass("oj-tree-marker").hide().html("&raquo;")   // dnd marker div
             .bind("mouseleave mouseenter", $.proxy(function (e) { 
 
                 var vars = this._data.dnd.vars ;
@@ -60563,7 +64687,7 @@ check = true ;
             }, this))
             .appendTo("body");
 
-        vars.ml = $("<div />").attr({ id : "oj-tree-marker-line" }).hide()             // dnd marker line
+        vars.ml = $("<div />").addClass("oj-tree-marker-line").hide()             // dnd marker line
             .bind("mouseup", function (e) { 
 
                var vars = this._data.dnd.vars ;
@@ -60625,11 +64749,11 @@ check = true ;
 
                   if (ctl.is_drag && ctl.user_data.jstree)  {
                     if (this.options["themes"]) {
-                      vars.m.attr("class", "oj-tree-" + this._data.themes.theme); 
+                      vars.m.addClass("oj-tree-" + this._data.themes.theme); 
                       if (vars.ml) {
-                        vars.ml.attr("class", "oj-tree-" + this._data.themes.theme);
+                        vars.ml.addClass("oj-tree-" + this._data.themes.theme);
                       }
-                      ctl.helper.attr("class", "oj-tree-dnd-helper oj-tree-" + this._data.themes.theme);
+                      ctl.helper.addClass("oj-tree-dnd-helper oj-tree-" + this._data.themes.theme);
                     }
                       //if($(e.currentTarget).find("> ul > li").length === 0) {
                     if (e.currentTarget === e.target && ctl.user_data.obj &&
@@ -60642,13 +64766,13 @@ check = true ;
                       if (tr.data.dnd.foreign) {
                         dc = tr.options["dnd"]["drag_check"].call(this, { "o" : vars.o, "r" : tr._getContainer(), "is_root" : true });
                          if (dc === true || dc["inside"] === true || dc["before"] === true || dc["after"] === true)  {
-                           ctl.helper.children("ins").attr("class","oj-tree-ok");
+                           ctl.helper.children("ins").removeClass(OJT_DRAG_INVALID).addClass(OJT_DRAG_OK);
                          }
                       }
                       else {
                          tr._prepare_move(vars.o, tr._getContainer(), "last");
                          if (tr["check_move"]()) {
-                           ctl.helper.children("ins").attr("class","oj-tree-ok");
+                           ctl.helper.children("ins").removeClass(OJT_DRAG_INVALID).addClass(OJT_DRAG_OK);
                          }
                       }
                     }
@@ -60681,7 +64805,7 @@ check = true ;
                {
                   var ctl = this._data.dnd.ctl ;       // jsTree helper class
 
-                  if (e.relatedTarget && e.relatedTarget.id && e.relatedTarget.id === "oj-tree-marker-line")  {
+                  if (e.relatedTarget && $(e.relatedTarget).hasClass("oj-tree-marker-line"))  {
                     return false; 
                   }
                   if (ctl.is_drag && ctl.user_data.jstree)  {
@@ -60697,8 +64821,8 @@ check = true ;
                     if (this._data.dnd.to2) {
                       clearTimeout(this._data.dnd.to2);
                     }
-                    if (ctl.helper.children("ins").hasClass("oj-tree-ok"))  {
-                       ctl.helper.children("ins").attr("class","oj-tree-invalid");
+                    if (ctl.helper.children("ins").hasClass(OJT_DRAG_OK))  {
+                      ctl.helper.children("ins").removeClass(OJT_DRAG_OK).addClass(OJT_DRAG_INVALID);
                     }
                   }
                 }, this))
@@ -60799,7 +64923,6 @@ check = true ;
                      }
 
                      this._data.dnd.w = (e.pageY - (this._data.dnd.off.top || 0)) % this._data.core.li_height ;
-                     this._data.dnd.w = (e.pageY - (this._data.dnd.off.top || 0)) % this._data.core.li_height ;
 
                      if (this._data.dnd.w < 0)   {
                        this._data.dnd.w += this._data.core.li_height;
@@ -60813,8 +64936,7 @@ check = true ;
                       vars = this._data.dnd.vars ;
 
                   if (ctl.is_drag && ctl.user_data.jstree)  {
-                     if (e.relatedTarget && e.relatedTarget.id
-                                         && e.relatedTarget.id === "oj-tree-marker-line")  {
+                     if (e.relatedTarget && $(e.relatedTarget).hasClass("oj-tree-marker-line"))  {
                        return false; 
                      }
                      if (vars.m) {
@@ -60929,18 +65051,15 @@ check = true ;
                                          }, "<ins class='oj-tree-icon'></ins>" + $(e.target).text());
                        if (this._data.themes) { 
                          if (vars.m) {
-                            vars.m.attr("class", "oj-tree-" + this._data.themes.theme);
-                         }
-                         if (vars.m) {
-                            vars.m.attr("class", "oj-tree-" + this._data.themes.theme);
+                            vars.m.addClass("oj-tree-" + this._data.themes.theme);
                          }
                          if (vars.ml) {
-                           vars.ml.attr("class", "oj-tree-" + this._data.themes.theme);
+                           vars.ml.addClass("oj-tree-" + this._data.themes.theme);
                          }
-                         ctl.helper.attr("class", "oj-tree-dnd-helper oj-tree-" + this._data.themes.theme); 
+                         ctl.helper.addClass("oj-tree-dnd-helper oj-tree-" + this._data.themes.theme); 
                        }
 
-                       ctl.helper.children("ins").attr("class","oj-tree-invalid");
+                       ctl.helper.children("ins").removeClass(OJT_DRAG_OK).addClass(OJT_DRAG_INVALID);
 
                        var cnt     = this._getContainer();
                        dnd.cof     = cnt.offset();
@@ -60959,22 +65078,21 @@ check = true ;
                            var dnd  = this._data.dnd,
                                vars = this._data.dnd.vars ;
 
-                           if (dnd.active && this.options["dnd"]["drop_check"].call(this, { "o" : vars.o, "r" : $(e.target), "e" : e }))
-                           {
-                              dnd.ctl.helper.children("ins").attr("class","oj-tree-ok");
+                           if (dnd.active && this.options["dnd"]["drop_check"].call(this, { "o" : vars.o, "r" : $(e.target), "e" : e }))  {
+                              dnd.ctl.helper.children("ins").removeClass(OJT_DRAG_INVALID).addClass(OJT_DRAG_OK);
                             }
                         }, this))
                     .delegate(s["drop_target"], "mouseleave.ojtree-" + this._getIndex(), $.proxy(function (e)
                         {
                            if (this._data.dnd.active)  {
-                             this._data.dnd.ctl.helper.children("ins").attr("class","oj-tree-invalid");
+                             this._data.dnd.ctl.helper.children("ins").removeClass(OJT_DRAG_OK).addClass(OJT_DRAG_INVALID);
                             }
                         }, this))
                     .delegate(s["drop_target"], "mouseup.ojtreex-" + this._getIndex(), $.proxy(function (e)
                        {
                          var vars = this._data.dnd.vars ;
 
-                         if (this._data.dnd.active && this._data.dnd.ctl.helper.children("ins").hasClass("oj-tree-ok"))  {
+                         if (this._data.dnd.active && this._data.dnd.ctl.helper.children("ins").hasClass(OJT_DRAG_OK))  {
                            this.options["dnd"]["drop_finish"].call(this, { "o" : vars.o, "r" : $(e.target), "e" : e });
                          }
                         }, this));
@@ -60991,16 +65109,16 @@ check = true ;
        */
      _initDnDOpts : function()
      {
-        var opts, ot ;
+        var opts = this.options["dnd"],
+            ot   = typeof opts ;
 
-        if (this.options["dnd"] !== "undefined")
-        {
-          opts = this.options["dnd"] ;
-          ot = $.type(this.options["dnd"]) ;        // dnd -> tree reorder only for V1.0   
-
-          if (ot === "object") {
-            if (($.type(opts["reorder"]) === "boolean") && (opts["reorder"]))  {
+        if (ot !== "undefined")  {
+          if (ot === "boolean"  && opts) {
               this._data.dnd.reorder = true ;
+          }
+          else if (ot === "object") {
+            if (typeof opts["reorder"] === "boolean")  {
+              this._data.dnd.reorder = opts["reorder"] ;
             }
           }
           else if (ot == "string" && opts == "reorder") {
@@ -61028,8 +65146,8 @@ check = true ;
                 .bind("ojmove",
                      $.proxy(function (e, data)
                                {
-                                 if (this.options["crrm"]["move"]["openOnMove"])
-                                 {
+                                 //if (this.options["crrm"]["move"]["openOnMove"])
+                                 if (this._data.crrm.defaults["move"]["openOnMove"]) {
                                    var t = this;
 /*  Tue4
                                    data.rslt.np.parentsUntil(".oj-tree").addBack()
@@ -61090,18 +65208,18 @@ check = true ;
 
      /**
        *  Initialize the context menu.  This is called on startup, or on option "contextMenu" change.
-       *  @param {Object=} newVal  previous value if option change.
+       *  @param {boolean=} bNewVal   true if called because of an option change.
        *  @private
        */
-     _initMenu : function(newVal)
+     _initMenu : function(bNewVal)
      {
        var opts, menu, t, html, $html ;
 
-       if ((! this.options["contextMenu"]) && (! newVal)) {
+       if (! this.options["contextMenu"]) {
          return ;
        }
 
-       opts = newVal? newVal : this.options["contextMenu"] ;
+       opts =  this.options["contextMenu"] ;
        t = $.type(opts) ;
        if (t != "object")  {
          return ;
@@ -61119,47 +65237,28 @@ check = true ;
          t = $.type(menu) ;
        }
 
-       if (t == "boolean") {
-         if (!menu) {
-           return ;
-         }
-
-         // Use ojTree default menu
-
-         this._data.menu.menuid      = "ojtreemenu" + this._getIndex();
-         this._data.menu.$container  = $(_defaultMenu) ;
-         this._data.menu.$container.css("display","none") ;
-         this._data.menu.$container.attr("id", this._data.menu.menuid) ;
-         this._data.menu.usermenu   = true ;
-         this._data.menu.$elemPaste = this._data.menu.$container.find("#ojtreepaste") ;   // save for disabling
-       }
-       else if (t === "string") {
+       if (t === "string") {
          //  Handle user-supplied ojMenu  style menu
-
          var $m = $(document.getElementById(menu)) ;   // get the user's <ul> list   
          if ($m) {
-           $m.css("display","none") ;
+           $m.css("display","none") ;                  // ensure it's not visible
            this._data.menu.$container = $m ;
-           this._data.menu.menuid     = menu ;     // user-supplied ojMenu id
-           this._data.menu.usermenu   = true ;     // menu is ojMenu
-           this._data.menu.$container.css("display","none") ;
+           this._data.menu.menuid     = menu ;         // user-supplied ojMenu id
+           this._data.menu.usermenu   = true ;         // menu is ojMenu
+           this._data.menu.$elemPaste = this._data.menu.$container.find("#ojtreepaste") ;  // save for disabling
          }
        }
        else {
          return ;      // unknown
        }
        
-       if (this._data.menu.usermenu) {
-         if (newVal) {
-           this._applyMenu() ;   // complete menu creation/attachnment
-         }
-         else {
-           this._$container.bind("ojloaded", $.proxy(function ()  { 
-                                                 this._applyMenu() ;   // complete menu creation/attachnment
-                                             }, this)
-                             );
+       if (this._data.menu.usermenu) {          // if we have a context menu
+         if (bNewVal) {                         // and it is it being changed
+           this._applyMenu() ;                  // complete menu creation/attachnment
          }
        }
+
+       //  If not a new val from options, Menu will be applied at the end of initialization in _start()
      },
 
 
@@ -61194,7 +65293,7 @@ check = true ;
      },
 
      /**
-       *   Check menu selected to see if it one of our predefined remove/delete/cut/copy/paste id's
+       *   Check menu selected to see if it one of our predefined remove/cut/copy/paste id's
        *   @private
        */
      _handleContextMenuSelect: function(ev, ui)
@@ -61210,7 +65309,7 @@ check = true ;
         else if (id === "ojtreepaste") {
           this._crrm_paste(this._data.menu.node);
         }
-        else if (id === "ojtreedelete") {
+        else if (id === "ojtreeremove") {
           if (this["isSelected"](this._data.menu.node)) {
             this._crrm_remove();
           }
@@ -61266,20 +65365,79 @@ check = true ;
      },
 
      /**
+       *  Process data source options
+       *  @private
+       */
+     _initDSOpts : function()
+     {
+        var s = this.options["data"],
+            dt,
+            ot ;
+
+        this._data.ds.type = DS_NONE ;               // clear in case this is a "data" option change
+        this._data.html.useExistingMarkup = false ;
+
+        if (s) {
+          ot = $.type(s) ;
+          if (ot === "string") {
+           if (this._isHtml(s)) {
+             this._data.ds.type = DS_HTML ;          // we have an non-Tree DS html source
+           }
+           else {
+             this._data.ds.type = DS_JSON ;          // we have a non-tree DS json source
+             this._initJsonOpts() ;
+           }
+          }
+          else if (ot === "array") {
+             //  we have an array of local json objects
+             this._data.ds.type = DS_JSON ;           // we have a non-tree DS json source
+          }
+          else if (ot === "object")  {
+            if (s["getChildCount"]) {
+              this._data.ds.type = DS_TREE ;          // we have a tree DS source
+              this._initTreeDSOpts() ;
+            }
+            else if (s["data"] || s["ajax"])  {
+              dt = s["dataType"] ;
+              if (dt) {
+                if (dt === "json") {
+                  this._data.ds.type = DS_JSON ;      // we have a non-tree DS json source
+                  this._initJsonOpts() ;
+                }
+                else if (dt === "html") {
+                  this._data.ds.type = DS_HTML ;      // we have a non-tree DS html source
+                  this._initHtmlOpts() ;
+                }
+              }
+              else {
+                s["dataType"]      = "json" ;
+                this._data.ds.type = DS_JSON ;        // we have a non-tree DS json source
+                this._initJsonOpts() ;
+              }
+            }
+          }
+        }
+        else  {
+          // No data, attempt to use the html markup in the div
+          this._data.ds.type                = DS_HTML ; // note we have an non-Tree DS html source
+          this._data.html.useExistingMarkup = true ;
+        }
+     },
+
+     /**
+       *  Process Tree DataSource options
+       *  @private
+       */
+     _initTreeDSOpts : function()
+     {
+     },
+
+     /**
        *  Process json_data options
        *  @private
        */
      _initJsonOpts : function()
      {
-        var s = this.options["json_data"] ;
-
-        if (s) {
-          if (this.options["json_data"])  {
-            //  Add our default requirements until these are made public and can be
-            //  defined in options.
-            this._applyDefaults(this.options["json_data"], this._data.json.defaults) ;
-          }
-        }
      },
 
 
@@ -61297,11 +65455,11 @@ check = true ;
        */
      _initCrrmOpts : function()
      {
-       if (this.options["crrm"] == undefined)  {
-         //  Add our default requirements until these are made public and can be
+       //if (this.options["crrm"] == undefined)  {
+         //  Will use our defaults until these are made public and can be
          //  defined in options.
-         this._applyDefaults(this.options["crrm"], this._data.crrm.defaults) ;
-       }
+         //  this._applyDefaults(this.options["crrm"], this._data.crrm.defaults) ;
+       //}
 
      },
 
@@ -61332,10 +65490,14 @@ check = true ;
        var opts ;
        var o = this.options["types"] ;
 
-       if ($.type(o) == "object") {
-         //  Add our default requirements until these are made public and can be
-         //  defined in options.
-         this._applyDefaults(this["options"]["types"], this._data.types.defaults) ;
+//     For V1, there are no default options that we publish
+//     if (typeof o === "object") {
+//       //  Add our default requirements until these are made public and can be
+//       //  defined in options.
+//       this._applyDefaults(this["options"]["types"], this._data.types.defaults) ;
+//     }
+       if (typeof o === "object") {
+         this._applyDefaults(o, {"attr" : this._data.types.defaults["attr"]}) ;
        }
      },
 
@@ -61352,7 +65514,7 @@ check = true ;
          
         //  Core
         data.core  =  {
-                        html_titles    : false,
+                        htmlTitles     : false,      // this option not currently exposed
                         initLoaded     : [],
                         selectMode     : 1,          //  0, 1, 2 ... or -1 for unlimited
                         load_open      : false,
@@ -61368,8 +65530,9 @@ check = true ;
                       selected          :  $(),       // selected node jquery list
                       last_selected     :  false,
                       hovered           :  null,
-                      to_select         :  null       // removed per Design Review
-                 };
+                      to_select         :  null,      // removed per Design Review
+                      opacity           : 1           // used by disable/_lock()
+                   };
 
 
         //  Creating/renaming/removing/moving via context menu
@@ -61389,32 +65552,37 @@ check = true ;
                                                    }
                              };
         data.crrm.prepared_move = {} ;   // for the move node function
-        
+
+        // Data Source
+
+        data.ds = {} ;
+        data.ds.progressiveRender = false ;       // options not currently exposed
+        data.ds.progressiveUnload = false ;
+        data.ds.correctState      = true ;
+
+        data.ds.type              = DS_NONE ;     // type of data source (DS_TREE, DS_JSON, DS_HTML)
+
         //  json_data
 
         data.json = {} ;
         data.json.defaults = {
-                               "data" : false,   // `data` can be a function:
-                                                 //  accepts two arguments - node being loaded
-                                                 //  and a callback to pass the result to
-                                                 //  will be executed in the current tree's scope
-                                                 //  & ajax won't be supported
-                               "ajax"               : false,
-                               "correct_state"      : true,
-                               "progressive_render" : false,
-                               "progressive_unload" : false
+                               "data"  : false,   // `data` can be a function:
+                                                  //  accepts two arguments - node being loaded
+                                                  //  and a callback to pass the result to,
+                                                  //  will be executed in the current tree's scope
+                                                  //  & ajax won't be supported
+                               "ajax"  : false
                              } ;
 
         // html_data
 
        data.html = {} ;
        data.html.defaults = {
-                              "data"          : false,     // `data` can be a function:
-                              "ajax"          : false,
-                              "correct_state" : true 
+                              "data"   : false,   // `data` can be a function:
+                              "ajax"   : false
                             };
 
-       data.html.useExistingMarkup       = false ;         // true == use existing div markup
+       data.html.useExistingMarkup     = false ;  // true == use existing div markup
        data.html.originalContainerHtml = false ;
 
 
@@ -61432,19 +65600,19 @@ check = true ;
         //  Types
 
         data.types           = {} ;
-        data.types.attach_to = [];
-        data.types.defaults  = {
-                                 "max_children"        : -1,     // defines max number of root nodes
-                                                                 // (-1 = unlimited, -2 = disable max_children checking)
-                                 "max_depth"           : -1,     //  maximum depth of the tree
-                                 "valid_children"      : "all",  // defines valid node types for the root nodes
-                                 "use_data" : false,             // whether to use $.data     TDO
-                                 "type_attr" : "type",           // where type stored (the "types" attr of the LI element)
+        data.types.attachTo  = [];
+        data.types.defaults  = {                                 //  Options not published in V1
+                                 "maxChildren"         : -1,     // defines max number of root nodes
+                                                                 // (-1 = unlimited, -2 = disable maxChildren checking)
+                                 "maxDepth"            : -1,     //  maximum depth of the tree
+                                 "validChildren"       : "all",  // defines valid node types for the root nodes
+                                 "useData"             : false,  // whether to use $.data     TDO
+                                 "attr"                : "type", // attr name in <li> where type is stored
                                  "types" : {                     // a list of types
                                              "default" : {       // the default type
-                                                          "max_children"  : -1,
-                                                          "max_depth"     : -1,
-                                                          "valid_children": "all"
+                                                          "maxChildren"   : -1,
+                                                          "maxDepth"      : -1,
+                                                          "validChildren" : "all"
                                        
                                                           // Bound functions - you can bind any other function here
                                                           // (using boolean or function)
@@ -61465,6 +65633,7 @@ check = true ;
         data.menu.$container   = false ;   // the menu <ul>
         data.menu.parent       = false ;   // the menu <ul>'s original parent
         data.menu.$elemPaste   = false ;   // the menu "Paste" element
+        data.menu.node         = false ;   // the tree node the menu was activated on
 
         data.menu.changing     = false ;   // _setOption() gate to inhibit _initMenu() race
 
@@ -61476,8 +65645,8 @@ check = true ;
 
         // Drag and Drop
 
-        data.dnd          = {} ;
-        data.dnd.reorder  = true ;
+        data.dnd            = {} ;
+        data.dnd.reorder    = false ;
 
         data.dnd.active     = false ;
         data.dnd["after"]   = false ;
@@ -61761,8 +65930,8 @@ check = true ;
 //JRM            this.hover_node(this._get_next(o));
                  this["hover"](this._getNext(o));
                }
-           }
-           return false;
+            }
+            return false;
          },
 
          "shift+right" : function ()
@@ -61779,7 +65948,7 @@ check = true ;
             return false;
          },
 
-         "space" : function ()
+         "space" : function ()              // toggle node select status
          { 
             if (this._data.ui.hovered)  {
               this._data.ui.hovered.children("a:eq(0)").click();
@@ -61787,33 +65956,33 @@ check = true ;
             return false; 
          },
 
-         "home" : function ()
+         "home" : function ()               // move hover to top node
          { 
            this["hover"](this._$container_ul.find("li:first"));
            return false; 
          },
 
-         "end" : function ()
+         "end" : function ()                // move hover to last visible node
          { 
            var a = this._$container_ul.find("li.oj-tree-last:visible");
            this["hover"](a[a.length-1]) ;
            return false; 
          },
 
-         "*" : function ()
+         "*" : function ()                  // expand all nodes
          { 
            var l = this._$container_ul.find("a") ;
-           this.selected(l) ;
+           this._expandAll(-1, false) ;
            return false; 
          },
 
          "ctrl+space" : function (event)
          { 
-          event.type = "click";
-          if (this._data.ui.hovered)  { 
-            this._data.ui.hovered.children("a:eq(0)").trigger(event);
-          } 
-         return false; 
+           event.type = "click";
+           if (this._data.ui.hovered)  { 
+             this._data.ui.hovered.children("a:eq(0)").trigger(event);
+           } 
+           return false; 
          },
 
          "shift+space" : function (event)
@@ -61842,29 +66011,25 @@ check = true ;
        */
      _applyMenu : function()
      {
+       var $ul ;
+
        if (!this._data.menu.attached) {
          if (this._data.menu.usermenu) {         // user supplied menu id in options. contextMenu?
            if (this._data.menu.$container) {
-             var $ul = this._data.menu.$container ;
-
-             $ul.parent().detach() ;                             // detach menu div
-             $ul.css('display', 'none') ;
+             $ul = this._data.menu.$container ;
            }
          }
 
          this._data.menu.attached = true ;
-         var _this = this
-         setTimeout(function() {                         //TDO - why do we need this - I think its because of the setTimeout in reload_nodes
-               _this._$container.append(_this._data.menu.$container) ; // reparent to tree container
-               _this._data.menu.$container.ojMenu() ;
-               _this._data.menu.ojmenuCreated = true ;
-               _this._data.menu.changing = true ;     // inhibit _setOption() calling us again
-               _this._setOption("contextMenu", {menu: _this._data.menu.menuid}) ;
-               _this._data.menu.changing = false ;
-               _this._data.menu.$container.on("ojselect",     $.proxy(_this._handleContextMenuSelect, _this));
-               _this._data.menu.$container.on("ojbeforeshow", $.proxy(_this._handleContextMenuBeforeShow, _this));
-       
-           }, 0);
+         this._data.menu.parent  = this._data.menu.$container.parent() ;
+         this._$container.append(this._data.menu.$container) ; // reparent to tree container
+         this._data.menu.$container.ojMenu() ;
+         this._data.menu.ojmenuCreated = true ;
+         this._data.menu.changing = true ;     // inhibit _setOption() calling us again
+         this._setOption("contextMenu", {menu: this._data.menu.menuid}) ;
+         this._data.menu.changing = false ;
+         this._data.menu.$container.on("ojselect",     $.proxy(this._handleContextMenuSelect, this));
+         this._data.menu.$container.on("ojbeforeshow", $.proxy(this._handleContextMenuBeforeShow, this));
        }             // end if not attached
      },
 
@@ -61875,12 +66040,15 @@ check = true ;
      _clearMenu : function() {
 
        if (this._data.menu.usermenu)  {
-         this._data.menu.$container.ojMenu("destroy") ;
-         this._data.menu.parent.append(this._data.menu.$container) ;
+         if (this._data.menu.$container) {
+           this._data.menu.$container.ojMenu("destroy") ;
+           this._data.menu.parent.append(this._data.menu.$container) ;
+         }
          this._data.menu.attached   = false ;
          this._data.menu.menuid     = null ;
          this._data.menu.$container = null ;
          this._data.menu.parent     = null ;
+         this._data.menu.usermenu   = false ;
        }
      },
 
@@ -61956,7 +66124,8 @@ check = true ;
       */
      _crrm_move_node : function (obj, ref, position, is_copy, is_prepared, skip_check)
      {
-        var s = this.options["crrm"]["move"];
+        //var s = this.options["crrm"]["move"];
+        var s = this._data.crrm.defaults["move"];
         if (! is_prepared)  { 
           if (typeof position === "undefined")  {
             position = s["defaultPosition"];
@@ -61984,11 +66153,11 @@ check = true ;
      {
         obj = this._getNode(obj, true);
 
-//         var p   = this._getParent(obj),
-//            prev = this._getPrev(obj);
+//      var p   = this._getParent(obj),
+//          prev = this._getPrev(obj);
 
          this.__rollback();
-         obj = this["delete"](obj);
+         obj = this["remove"](obj);
 //         if (obj !== false) {
 //           this._emitEvent({ "obj" : obj, "prev" : prev, "parent" : p }, "remove");
 //         }
@@ -62021,7 +66190,8 @@ check = true ;
         obj = this._getNode(obj);
 
         var rtl = this._isRtl,
-            w   = this.options["crrm"]["inputWidthLimit"],
+//          w   = this.options["crrm"]["inputWidthLimit"],       // applyDefaults() not done for V1
+            w   = this._data.crrm.defaults["inputWidthLimit"],
             w1  = obj.children("ins").width(),
             w2  = obj.find("> a:visible > ins").width() * obj.find("> a:visible > ins").length,
             t   = this["getText"](obj),
@@ -62150,11 +66320,165 @@ check = true ;
         if (! this.__call_old())  {
           return false;
         }
-        var s = this.options["crrm"]["move"];
+        //var s = this.options["crrm"]["move"];
+        var s = this._data.defaults.crrm["move"];
         if (! s["checkMove"].call(this, this._getMove()))  {
           return false;
         }
         return true;
+     },
+
+     /**
+       *  @private
+       */
+     _isHtml : function(s)
+     {
+        if (!s || s.length < 3) {
+          return false ;
+        }
+
+        s = s.trim() ;
+        return (s.charAt(0) === "<") ;
+     },
+
+
+     /**
+       *  Return the HTMLElement based on the locator object properties.
+       *  @private
+       */
+     _processSubId : function(locator)
+     {
+        // Parent node
+        // <li role="treeitem" id="blogs" class="oj-tree-open">
+        //    <ins class="oj-tree-icon"> </ins>               <-- disclosure icon
+        //    <a tabindex="-1" href="#">
+        //       <ins class="oj-tree-icon"> </ins>Blogs</a>   <-- node icon
+        //       <ul role="group"> . . .<li . . .child node...
+        //       </ul>
+        //    </a>
+        // </li>
+        //
+        //  Leaf node
+        // <li role="treeitem" id="home" myattr1="Hello" class="oj-tree-leaf">
+        //    <ins class="oj-tree-icon"> </ins>
+        //    <a tabindex="-1" href="#">
+        //       <ins class="oj-tree-icon"> ;</ins>Home</a>   <-- node icon
+        // </li>
+
+
+        var  subId      = locator["subId"],
+             origNode   = locator["node"],
+             node       = (origNode? this._getNode(origNode) : null),
+//           index      = ((typeof locator["index"] === "number")?  locator["index"] : -1),
+//           vis        = ((typeof locator["visible"] === "boolean")?  locator["index"] : false),
+             key        = ((typeof locator["key"] === "string")?    locator["key"] : null),
+             val        = ((typeof locator["value"] === "string")?  locator["value"] : null),
+             $elem,
+             txt,
+             l ;
+
+        switch (subId) {
+           case "disclosure" :         // returns the disclosure icon element for the parent node
+                      if (origNode === -1 || node === -1) {
+                        return (this._$container_ul? this._$container_ul[0] : null) ;
+                      }
+
+                      if (key) {                                // we ignore node and find by attr
+                        l = this._$container_ul.find("li") ;
+                        $.each(l, function(i, v) {
+                                     v = $(v)
+                                     if (v.attr(key) && (v.attr(key) === val))  {
+                                       node = v ;
+                                       return false ;
+                                     }
+                                  }) ;
+                      }
+
+                      else if ( (!node) && typeof origNode === "string") {
+                        // node not found, see if we can locate by text
+                        txt = origNode.trim() ;
+                        l = this._$container_ul.find("a") ;
+                        $.each(l, function(i, v) {
+                                     if (v.text.trim() === txt)  {
+                                       $elem = $(v) ;
+                                       return false ;
+                                     }
+                                  }) ;
+                        if (! $elem) {
+                          return null ;               // not found by text
+                        }
+
+                        node = $elem.closest("li")
+                      }
+
+                      else if (node) {                // did _getNode() resolve to a node
+                          if (this._isLeaf(node)) {   // we have a node and
+                            return null ;             // not a parent
+                          }
+                      }
+
+
+                      // Search complete, did we find the node?
+                      if (node) {
+                        if (! this._isLeaf(node)) {
+                          // Have a parent node
+                          return  node.find(" > ins:eq(0)") ;
+                        }
+                      }
+                      return null ;                 // unsuccessful
+                      break ;
+
+           case "icon" :              // returns the icon element for the node
+                      if (origNode === -1 || node === -1) {
+                        return (this._$container_ul? this._$container_ul[0] : null) ;
+                      }
+
+                      if (key) {                                // we ignore node and find by attr
+                        l = this._$container_ul.find("li") ;
+                        $.each(l, function(i, v) {
+                                     v = $(v)
+                                     if (v.attr(key) && (v.attr(key) === val))  {
+                                       node = v ;
+                                       return false ;
+                                     }
+                                  }) ;
+                      }
+
+                      else if ( (!node) && typeof origNode === "string") {
+                        // node not found, see if we can locate by text
+                        txt = origNode.trim() ;
+                        l = this._$container_ul.find("a") ;
+                        $.each(l, function(i, v) {
+                                     if (v.text.trim() === txt)  {
+                                       $elem = $(v) ;
+                                       return false ;
+                                     }
+                                  }) ;
+                        if (! $elem) {
+                          return null ;             // not found by text
+                        }
+
+                        node = $elem.closest("li")
+                      }
+
+                      // Search complete, did we find the node?
+                      if (node && node.length) {
+                        return  node.find(" > a > ins:eq(0)") ;
+                      }
+                      return null ;                 // unsuccessful
+                      break ;
+
+           case "first" :
+                      return  this._$container_ul.find("li:eq(0)") ;
+                      break ;
+
+           case "last" :
+                      return  this._$container_ul.find("li:last-child").last() ;
+                      break ;
+
+        }
+
+        return null ;
      }
 
   }) ;    // end    $.widget("oj.ojTree", ...
@@ -62167,7 +66491,7 @@ check = true ;
            '.oj-tree-list, .oj-tree-list ul, .oj-tree-list li { display:block; margin:0 0 0 0; padding:0 0 0 0; list-style-type:none; } ' + 
            '.oj-tree-list li { display:block; min-height:18px; line-height:18px; white-space:nowrap; margin-left:18px; min-width:18px; } ' + 
            '.oj-tree-rtl li { margin-left:0; margin-right:18px; } ' + 
-           '.oj-tree-list > li { margin-left:0px; } ' + 
+           '.oj-tree-list > ul > li { margin-left:0px; } ' + 
            '.oj-tree-rtl > ul > li { margin-right:0px; } ' + 
            '.oj-tree-list ins { display:inline-block; text-decoration:none; width:18px; height:18px; margin:0 0 0 0; padding:0; } ' + 
            '.oj-tree-list a { display:inline-block; line-height:16px; height:16px; color:black; white-space:nowrap; text-decoration:none; padding:1px 2px; margin:0; } ' + 
@@ -62304,7 +66628,6 @@ check = true ;
 
 })();
 
-
 /*
 ** Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved. 
 ** Important:
@@ -62335,8 +66658,9 @@ adf.shared.impl.conveyorBelt   = adf.shared.impl.conveyorBelt || {};
  * @param {Object} callbackInfo Map of properties for the following callback information:
  *  - "scrollFunc": Callback function to animate scrolling a DOM element, 
  *  - "firstVisibleItemChangedFunc": Callback function to notify when the first visible item changes, 
+ *  - "addResizeListener": Callback function to add a resize listener for a DOM element
+ *  - "removeResizeListener": Callback function to remove a resize listener for a DOM element
  *  - "callbackObj": Optional object on which the callback functions are defined
- *  - "automaticSizeCheck": True to periodically check whether conveyor size
  *    has changed
  */
 adf.shared.impl.conveyorBelt.ConveyorBeltCommon = function(
@@ -62360,7 +66684,8 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon = function(
     this._scrollFunc = callbackInfo["scrollFunc"];
     this._firstVisibleItemChangedFunc = callbackInfo["firstVisibleItemChangedFunc"];
     this._callbackObj = callbackInfo["callbackObj"];
-    this._bAutomaticSizeCheck = callbackInfo["automaticSizeCheck"];
+    this._addResizeListenerFunc = callbackInfo["addResizeListener"];
+    this._removeResizeListenerFunc = callbackInfo["removeResizeListener"];
   }
   
   this._bExternalScroll = true;
@@ -62433,23 +66758,15 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype.setup = function(bInit
   this._clearCachedSizes();
   //adjust overflow size
   this._adjustOverflowSize(bInit);
-  //center buttons orthogonal to conveyor orientation
-  var contentContainer = this._contentContainer;
-  this._alignButtons(contentContainer.offsetWidth, contentContainer.offsetHeight);
-  if (this._bAutomaticSizeCheck)
+  //handle an initial resize
+  this._handleResize(true);
+  
+  if (bInit && this._addResizeListenerFunc)
   {
-    //create the timer to periodically check whether the component or its content 
-    //has been resized
-    if (!this._checkSizesTimer)
-    {
-      this._checkSizesTimer = setInterval(function() {self._checkSizes();}, 
-                                          cbcClass._CHECK_SIZES_INTERVAL);
-    }
-  }
-  else
-  {
-    //if not automatically checking sizes later on a timer, do it immediately
-    this._checkSizes();
+    this._handleResizeFunc = function(width, height) {self._handleResize(false);};
+    //listen for resizes on both the conveyor itself and on its content
+    this._addResizeListenerFunc.call(this._callbackObj, this._elem, this._handleResizeFunc);
+    this._addResizeListenerFunc.call(this._callbackObj, this._contentContainer, this._handleResizeFunc);
   }
 };
 
@@ -62458,12 +66775,6 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype.setup = function(bInit
  */
 adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype.destroy = function()
 {
-  if (this._checkSizesTimer)
-  {
-    clearInterval(this._checkSizesTimer);
-    this._checkSizesTimer = null;
-  }
-  
   var elem = this._elem;
   var cbcClass = adf.shared.impl.conveyorBelt.ConveyorBeltCommon;
   cbcClass._removeBubbleEventListener(elem, "mousewheel", this._mouseWheelListener);
@@ -62476,6 +66787,15 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype.destroy = function()
   this._touchStartListener = null;
   this._touchMoveListener = null;
   this._touchEndListener = null;
+  
+  //remove listeners before reparenting original children and clearing member 
+  //variables
+  if (this._removeResizeListenerFunc && this._handleResizeFunc)
+  {
+    this._removeResizeListenerFunc.call(this._callbackObj, this._elem, this._handleResizeFunc);
+    this._removeResizeListenerFunc.call(this._callbackObj, this._contentContainer, this._handleResizeFunc);
+  }
+  this._handleResizeFunc = null;
   
   //move the children of the _contentContainer back to the original DOM element
   cbcClass._reparentChildren(this._contentContainer, elem);
@@ -62491,6 +66811,7 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype.destroy = function()
     elem.removeChild(this._nextButton);
     elem.removeChild(this._prevButton);
   }
+  
   this._nextButton = null;
   this._prevButton = null;
   this._contentContainer = null;
@@ -62503,6 +66824,8 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype.destroy = function()
   this._elem = null;
   this._scrollFunc = null;
   this._firstVisibleItemChangedFunc = null;
+  this._addResizeListenerFunc = null;
+  this._removeResizeListenerFunc = null;
   this._callbackObj = null;
 };
 
@@ -62718,63 +67041,36 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype._clearCachedSizes = fu
 {
   this._totalSize = null;
   this._sizes = null;
-  this._oldContentSize = null;
-  this._oldComponentSize = null;
 };
 
 /**
- * Check whether component sizes have changed.
+ * Handle a component resize.
+ * @param {boolean} bSetup True when called from _setup, false otherwise
  */
-adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype._checkSizes = function()
+adf.shared.impl.conveyorBelt.ConveyorBeltCommon.prototype._handleResize = function(bSetup)
 {
-  var oldContentSize = this._oldContentSize;
-  var oldComponentSize = this._oldComponentSize;
-  var contentContainer = this._contentContainer;
-  var contentWidth = contentContainer.offsetWidth;
-  var contentHeight = contentContainer.offsetHeight;
-  var elem = this._elem;
-  var elemWidth = elem.offsetWidth;
-  var elemHeight = elem.offsetHeight;
-  var bSizeChanged = false;
-  //this is the first call to _checkSizes if we don't have any saved old sizes
-  var bFirst = (!oldContentSize || !oldComponentSize);
-  //check whether this is the first call or any sizes have changed
-  if (bFirst || 
-      oldContentSize.w !== contentWidth || oldContentSize.h !== contentHeight ||
-      oldComponentSize.w !== elemWidth || oldComponentSize.h !== elemHeight)
+  //if this is not the first call, need to reinitialize the inner DOM before
+  //we can accurately calculate new sizes (if this is the first call, DOM
+  //is already in initial state)
+  if (!bSetup)
   {
-    //if this is not the first call, need to reinitialize the inner DOM before
-    //we can accurately calculate new sizes (if this is the first call, DOM
-    //is already in initial state)
-    if (!bFirst)
-    {
-      this._reinitializeInnerDom();
-    }
-    this._clearCachedSizes();
-    //save updated sizes
-    this._oldContentSize = {w: contentWidth, h: contentHeight};
-    this._oldComponentSize = {w: elemWidth, h: elemHeight};
-    bSizeChanged = true;
+    this._reinitializeInnerDom();
   }
+  this._clearCachedSizes();
   if (!this._totalSize || !this._sizes)
   {
     //measure content size
     this._totalSize = this._measureContents();
-    bSizeChanged = true;
   }
-  //if sizes have changed, need to update inner DOM
-  if (bSizeChanged)
+  //if this is not the first call, need to adjust the overflow size (if this 
+  //is the first call, the overflow size was already adjusted in _setup)
+  if (!bSetup)
   {
-    //if this is not the first call, need to adjust the overflow size (if this 
-    //is the first call, the overflow size was already adjusted in _setup)
-    if (!bFirst)
-    {
-      this._adjustOverflowSize();
-    }
-    //center buttons orthogonal to conveyor orientation
-    var totalSize = this._totalSize;
-    this._alignButtons(totalSize.w, totalSize.h);
+    this._adjustOverflowSize();
   }
+  //center buttons orthogonal to conveyor orientation
+  var totalSize = this._totalSize;
+  this._alignButtons(totalSize.w, totalSize.h);
 };
 
 /**
@@ -63835,10 +68131,6 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._SCROLL_SPEED = 1.1;
  * Touch swipe threshold (percentage of conveyor size).
  */
 adf.shared.impl.conveyorBelt.ConveyorBeltCommon._SWIPE_THRESHOLD = .33;
-/**
- * Time between checks for size changes (ms).
- */
-adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 // lory retrieved from https://raw.github.com/jquery/jquery-ui/1-10-stable/ui/jquery.ui.dialog.js on 09/03/2013, and then modified
 
 //
@@ -64005,12 +68297,18 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 	{
 	    /** 
              *
+	     *
+	     * Specify the appendTo container of the dialog. 
+             * If the appendTo container is null, then dialogs will be appended inline.
+             * Setting to "body" would append all dialogs to the end of the body.
+             *
              * @expose 
              * @memberof! oj.ojDialog
 	     * @instance
-             * @deprecated
+             * @type {string|null}
+             *
              */
-	    appendTo: "body",
+	    appendTo: null,
 
 	    /** 
              * @expose 
@@ -64028,27 +68326,37 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 	    buttons: [],
 
 	    /**
-	     * Specifies the escape behavior of the dialog.
-	     * If set to <code class="prettyprint">"close"</code> (the default) the dialog will close when it has focus and user presses the escape (ESC) key.
-	     * If <code class="prettyprint">"none"</code>, no actions will be associated with the escape key.
              *
              * @expose 
              * @memberof! oj.ojDialog
              * @instance
+             * @deprecated (replaced by cancelBehavior)
+             */
+	    escapeBehavior: "close",
+
+	    /**
+	     * Specifies the cancel behavior of the dialog.
+	     * If set to <code class="prettyprint">"icon"</code> (the default) (a) a close icon will automatically be created, and (b) the dialog will close when it has focus and user presses the escape (ESC) key.
+	     * If <code class="prettyprint">"none"</code>, no actions will be associated with the escape key.
+	     * If <code class="prettyprint">"escape"</code>,  the dialog will close when it has focus and user presses the escape (ESC) key. A close icon will not automatically be created.
+             * Note that the cancelBehavior applies to both automatic and user-defined headers. So by default, a user-defined header will have a system generated close icon.
+             * @expose 
+             * @memberof! oj.ojDialog
+             * @instance
              * @type {string}
-             * @default <code class="prettyprint">"close"</code>
+             * @default <code class="prettyprint">"icon"</code>
              *
-             * @example <caption>Initialize the dialog to disable the default <code class="prettyprint">escapeBehavior</code></caption>
-             * $(".selector" ).ojDialog( {escapeBehavior: "none" } );
+             * @example <caption>Initialize the dialog to disable the default <code class="prettyprint">cancelBehavior</code></caption>
+             * $(".selector" ).ojDialog( {cancelBehavior: "none" } );
              * 
-             * @example <caption>Get or set the <code class="prettyprint">escapeBehavior</code> option, after initialization:</caption>
+             * @example <caption>Get or set the <code class="prettyprint">cancelBehavior</code> option, after initialization:</caption>
              * // getter
-             * var escapeBehavior = $(".selector" ).ojDialog( "option", "escapeBehavior" );
+             * var cancelBehavior = $(".selector" ).ojDialog( "option", "cancelBehavior" );
              * 
              * // setter
-             * $(".selector" ).ojDialog( "option", "escapeBehavior", "none");
+             * $(".selector" ).ojDialog( "option", "cancelBehavior", "none");
              */
-	    escapeBehavior: 'close',
+	    cancelBehavior: "icon",
 
 	    /** 
              * @expose 
@@ -64058,7 +68366,6 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
              */
 	     closeOnEscape: true,
 
-
 	    /** 
              * @expose 
              * @memberof! oj.ojDialog
@@ -64066,7 +68373,6 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
              * @deprecated
              */
 	    closeText: "",
-
 
 	    /** 
              * @expose 
@@ -64097,7 +68403,7 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
              * // setter
              * $(".selector" ).ojDialog( "option", "dragAffordance", "none");
              */
-	    dragAffordance: 'title-bar',
+	    dragAffordance: "title-bar",
 
 	    /** 
              * @expose 
@@ -64740,18 +69046,37 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		.addClass("oj-dialog-content oj-dialog-default-content")
 		.appendTo( this.uiDialog );
 
-	    // check
-
 	    this.userDefinedDialog = false;
-	    if (this.uiDialog.find(".oj-dialog-header").length) 
-		this.userDefinedDialog = true;
+
+	    // We need to find UNTIL we see a .oj-dialog class (or .oj-dialog and ui-resizable)
+
+	    var nestedContent = this.element.find(".oj-dialog");
+
+	    if (nestedContent.length) {
+
+		if (nestedContent.parents(".oj-dialog-header").length) 
+		    this.userDefinedDialog = true;
+
+	    } else {
+
+		if (this.element.find(".oj-dialog-header").length) 
+		    this.userDefinedDialog = true;
+
+	    }
+
+	    // if (this.uiDialog.find(".oj-dialog-header").length) 
+	    // this.userDefinedDialog = true;
 
 	    if (this.userDefinedDialog) {
 
 		// var a = this.uiDialog.find(".oj-dialog-content");
-		var b = this.uiDialog.find(".oj-dialog-header");
+		// var b = this.uiDialog.find(".oj-dialog-header");
+		var b = this.element.find(".oj-dialog-header");
 
 		b.prependTo(this.uiDialog);
+
+		if (this.options.cancelBehavior === "icon")
+		    this._createCloseButton(b);
 
 	    }
 
@@ -64788,7 +69113,9 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 	},
 
 	_appendTo: function() {
+
 	    var element = this.options.appendTo;
+
 	    if ( element && (element.jquery || element.nodeType) ) {
 		return $( element );
 	    }
@@ -64932,6 +69259,43 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 	},
 
 	_moveToTop: function( event, silent ) {
+
+	    if (this.options.appendTo === null) {
+
+		// 
+		// Moves uiDialog after the last visible dialog.
+		// 
+		var lastDialog = $('.oj-dialog').not(':hidden').last();
+
+		// return if there is no last visible dialog
+		if (!lastDialog) return false;
+
+		if (this.uiDialog != lastDialog) {
+		    this.uiDialog.insertAfter(lastDialog);
+		    if (!silent) 
+			this._trigger( "focus", event );
+
+		    return true;
+		}
+		return false;
+
+	    }
+	    else {
+		var moved = !!this.uiDialog.nextAll(":visible").insertBefore( this.uiDialog ).length;
+		if ( moved && !silent ) {
+		    this._trigger( "focus", event );
+		}
+		return moved;
+	    }
+
+	},
+
+/*
+	moveToTopOrig: function() {
+	    this._moveToTopOrig();
+        },
+
+	_moveToTopOrig: function( event, silent ) {
 	    var moved = !!this.uiDialog.nextAll(":visible").insertBefore( this.uiDialog ).length;
 	    if ( moved && !silent ) {
 		this._trigger( "focus", event );
@@ -64939,6 +69303,13 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 	    return moved;
 	},
 
+*/
+	// 
+	// _moveToTopOld: function( event, silent ) {
+	// $("body").find('.oj-dialog').css({position: 'absolute', zIndex:1050}); 
+        // this.element.parent().css({position: 'absolute', zIndex:1300}); 
+	// },
+	// 
 
 	/**
 	 * Opens the dialog.
@@ -64959,9 +69330,17 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 
 	    var that = this;
 	    if ( this._isOpen ) {
+
+		// orig
+		// if ( this._moveToTop() ) {
+		// this._focusTabbable();
+		// }
+
+		// new
 		if ( this._moveToTop() ) {
 		    this._focusTabbable();
 		}
+
 		return;
 	    }
 
@@ -64970,8 +69349,11 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 
 	    this._size();
 	    this._position();
+
 	    this._createOverlay();
-	    this._moveToTop( null, true );
+
+	    this._moveToTop( null, true ); // orig
+
 	    this._show( this.uiDialog, this.options.show, function() {
 		that._focusTabbable();
 		that._trigger("focus");
@@ -65035,14 +69417,21 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		    // Setting tabIndex makes the div focusable
 		    'tabIndex': -1,
 		    'role': "dialog"
-		})
-		.appendTo( this._appendTo() );
+		});
+
+	    if (this.options.appendTo === null)
+		this.uiDialog.insertBefore(this.element);  // position in-line
+	    else 
+		this.uiDialog.appendTo( this._appendTo() ); // original,
+
+	    // .appendTo( this._appendTo() ); // original,
 
 	    this._on( this.uiDialog, {
 		keydown: function( event ) {
 
 		    // if ( this.options.closeOnEscape && !event.isDefaultPrevented() && event.keyCode &&
-		    if (this.options.escapeBehavior === "close" && !event.isDefaultPrevented() && event.keyCode &&
+		    // if (this.options.escapeBehavior === "close" && !event.isDefaultPrevented() && event.keyCode &&
+		    if (this.options.cancelBehavior != "none" && !event.isDefaultPrevented() && event.keyCode &&
 			 event.keyCode === $.ui.keyCode.ESCAPE ) {
 			event.preventDefault();
 			this.close( event );
@@ -65066,8 +69455,11 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		    }
 		},
 		mousedown: function( event ) {
+		    // if ( this._moveToTop( event ) ) {
+		    // this._focusTabbable();
+		    // }
 		    if ( this._moveToTop( event ) ) {
-			this._focusTabbable();
+		    this._focusTabbable();
 		    }
 		}
 	    });
@@ -65080,6 +69472,30 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		    "aria-describedby": this.element.uniqueId().attr("id")
 		});
 	    }
+	},
+
+	// 
+	// Create a close button.
+	// 
+	_createCloseButton: function(domDestination) {
+
+	    this.uiDialogTitlebarClose = $("<button></button>")
+		.ojButton({
+		    display: "icons",
+		    icons: {
+			start: "oj-widget-icon oj-dialog-close-icon"
+		    },
+		    text: false
+		})
+		.addClass("oj-dialog-header-close oj-button-no-chrome")
+		.appendTo(domDestination );
+
+	    this._on( this.uiDialogTitlebarClose, {
+		click: function( event ) {
+		    event.preventDefault();
+		    this.close( event );
+		}
+	    });
 	},
 
 	_createTitlebar: function() {
@@ -65103,29 +69519,8 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		}
 	    });
 
-	    this.uiDialogTitlebarClose = $("<button></button>")
-		.ojButton({
-		    // label: "",
-		    display: "icons",
-		    icons: {
-			// start: "oj-fwk-icon oj-fwk-icon-close"
-			start: "oj-widget-icon oj-dialog-close-icon"
-		    },
-		    text: false
-		})
-		// .addClass("oj-dialog-titlebar-close oj-button-no-chrome")
-		.addClass("oj-dialog-header-close oj-button-no-chrome")
-		.appendTo( this.uiDialogTitlebar );
-
-	    // Add the class to properly center the close icon.
-	    // this.uiDialogTitlebarClose.find(".oj-fwk-icon-close").addClass("oj-dialog-close-icon");
-
-	    this._on( this.uiDialogTitlebarClose, {
-		click: function( event ) {
-		    event.preventDefault();
-		    this.close( event );
-		}
-	    });
+	    if (this.options.cancelBehavior === "icon")
+		this._createCloseButton(this.uiDialogTitlebar);
 
 	    uiDialogTitle = $("<span>")
 		.uniqueId()
@@ -65537,9 +69932,20 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		});
 	    }
 
+	    //
+	    // create an overlay that will disable anything except the dialog.
+	    //
 	    this.overlay = $("<div>")
-		.addClass("oj-widget-overlay oj-dialog-front")
-		.appendTo( this._appendTo() );
+		.addClass("oj-widget-overlay oj-dialog-front");
+
+	    // .insertBefore(this.uiDialog);  // mod
+	    // .appendTo( this._appendTo() );  // orig
+
+	    if (this.options.appendTo === null)
+		this.overlay.insertBefore(this.uiDialog);  // position in-line
+	    else 
+		this.overlay.appendTo( this._appendTo() ); // original
+
 	    this._on( this.overlay, {
 		mousedown: "_keepFocus"
 	    });
@@ -65553,10 +69959,6 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		return;
 	    }
 
-//	    if ( !this.options.modal ) {
-//		return;
-//	    }
-
 	    if ( this.overlay ) {
 		$.ui.dialog['overlayInstances']--;
 
@@ -65566,70 +69968,80 @@ adf.shared.impl.conveyorBelt.ConveyorBeltCommon._CHECK_SIZES_INTERVAL = 300;
 		this.overlay.remove();
 		this.overlay = null;
 	    }
+	},
+
+	/**
+   * Return the subcomponent node represented by the documented locator 
+   * attribute values.
+   * Test authors should target sub elements using the following names:
+   * <ul>
+   * <li><b>oj-dialog-header</b>: dialog header div </li>
+   * <li><b>oj-dialog-body</b>: dialog body div </li>
+   * <li><b>oj-dialog-footer</b>: dialog footer div </li>
+   * <li><b>oj-dialog-content</b>: dialog content div </li>
+   * <li><b>oj-dialog-header-close</b>: dialog header-close button </li>
+   * <li><b>ui-resizable-n</b>: North resizable handle </li>
+   * <li><b>ui-resizable-e</b>: East resizable handle </li>
+   * <li><b>ui-resizable-s</b>: South resizable handle </li>
+   * <li><b>ui-resizable-w</b>: West resizable handle </li>
+   * <li><b>ui-resizable-se</b>: Southeast resizable handle </li>
+   * <li><b>ui-resizable-sw</b>: Southwest resizable handle </li>
+   * <li><b>ui-resizable-ne</b>: Northeast resizable handle </li>
+   * <li><b>ui-resizable-nw</b>: Northwest resizable handle </li>
+   * </ul>
+   * @expose
+   * @memberof! oj.ojConveyorBelt
+   * @instance
+   * @override
+   * @param {Object} locator An Object containing at minimum a subId property 
+   *        whose value is a string, documented by the component, that allows 
+   *        the component to look up the subcomponent associated with that 
+   *        string.  It contains:<p>
+   *        component: optional - in the future there may be more than one 
+   *        component contained within a page element<p>
+   *        subId: the string, documented by the component, that the component 
+   *        expects in getNodeBySubId to locate a particular subcomponent
+   * @returns {Element|null} the subcomponent located by the subId string passed
+   *          in locator, if found.<p>
+   */
+	getNodeBySubId: function(locator)
+	{
+	    if (locator == null)
+	    {
+		return this.element ? this.element[0] : null;
+	    }
+	    
+	    var subId = locator['subId'];
+
+	    switch (subId) {
+
+	    case "oj-dialog-header":
+	    case "oj-dialog-body":
+	    case "oj-dialog-footer":
+	    case "oj-dialog-content":
+	    case "oj-dialog-header-close":
+	    case "ui-resizable-n":
+	    case "ui-resizable-e":
+	    case "ui-resizable-s":
+	    case "ui-resizable-w":
+	    case "ui-resizable-se":
+	    case "ui-resizable-sw":
+	    case "ui-resizable-ne":
+	    case "ui-resizable-nw":
+		return this.widget().find(subId)[0];
+		break;
+
+	    }
+
+	    // Non-null locators have to be handled by the component subclasses
+	    return null;
 	}
+
 
     });
 
     $.ui.dialog['overlayInstances'] = 0;
 
-
-//
-// ldm - deleted BackCompat option.
-//
-
-
-/*
-
-    // DEPRECATED
-    if ( $.uiBackCompat !== false ) {
-	// position option with array notation
-	// just override with old implementation
-	$.widget( "oj.ojDialog", $.oj.ojDialog, { // TODO: if this is uncommented, it should call the new oj.__registerWidget method, not $.widget
-	    _position: function() {
-		var position = this.options.position,
-		myAt = [],
-		offset = [ 0, 0 ],
-		isVisible;
-
-		if ( position ) {
-		    if ( typeof position === "string" || (typeof position === "object" && "0" in position ) ) {
-			myAt = position.split ? position.split(" ") : [ position[0], position[1] ];
-			if ( myAt.length === 1 ) {
-			    myAt[1] = myAt[0];
-			}
-
-			$.each( [ "left", "top" ], function( i, offsetPosition ) {
-			    if ( +myAt[ i ] === myAt[ i ] ) {
-				offset[ i ] = myAt[ i ];
-				myAt[ i ] = offsetPosition;
-			    }
-			});
-
-			position = {
-			    my: myAt[0] + (offset[0] < 0 ? offset[0] : "+" + offset[0]) + " " +
-				myAt[1] + (offset[1] < 0 ? offset[1] : "+" + offset[1]),
-			    at: myAt.join(" ")
-			};
-		    }
-
-		    position = $.extend( {}, $.oj.ojDialog.prototype.options.position, position );
-		} else {
-		    position = $.oj.ojDialog.prototype.options.position;
-		}
-
-		// need to show the dialog to get the actual offset in the position plugin
-		isVisible = this.uiDialog.is(":visible");
-		if ( !isVisible ) {
-		    this.uiDialog.show();
-		}
-		this.uiDialog.position( position );
-		if ( !isVisible ) {
-		    this.uiDialog.hide();
-		}
-	    }
-	});
-    }
-*/
 
 }() );
 
@@ -65832,22 +70244,23 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
           
   /**** start internal widget functions ****/   
        
-  /**
-   * After _create, the widget should be 100% set up.
+    /**
+   * After _CreateComponent and _AfterCreateComponent, 
+   * the widget should be 100% set up. this._super should be call first.
+   * @expose
    * @override
-   * @private
+   * @protected
    */
-  _create : function ()
+  _CreateComponent : function ()
   {
+    this._super();
     // turn each checkbox into ojCheckbox. Do this first, since we need it
     // in calls from 'create'.
     this.$checkboxes = this._findCheckboxesWithMatchingName()._ojRadioCheckbox();
     this.uiCheckboxset = this.element.addClass("oj-checkboxset oj-widget")
                                   .attr( "role", "group" );
-
     this._on(this._events);
     this._setup();
-    this._super();
     
     // todo: where should this be called from?
     this._SetRootAttributes();
@@ -66088,7 +70501,48 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
       this.$checkboxes._ojRadioCheckbox( "option", key, value );
     }
   },
-
+/**
+   * Return the subcomponent node represented by the documented locator attribute values.
+   * Test authors should target spinner sub elements using the following names:
+   * <ul>
+   * <li><b>oj-checkboxset-inputs</b>: the checkboxset's input elements</li>
+   * </ul>
+   * 
+   * @expose
+   * @override
+   * @memberof! oj.ojCheckboxset
+   * @instance
+   * @param {Object} locator An Object containing at minimum a subId property 
+   * whose value is a string, documented by the component, that allows the component to 
+   * look up the subcomponent associated with that string.  It contains:
+   * <ul>
+   * <li>
+   * component: optional - in the future there may be more than one component 
+   *   contained within a page element
+   * </li>
+   * <li>
+   * subId: the string, documented by the component, that the component expects 
+   * in getNodeBySubId to locate a particular subcomponent 
+   * </li>
+   * </ul>  
+   * @returns {Element|null} the subcomponent located by the subId string 
+   * passed in locator, if found.
+   */
+  getNodeBySubId: function(locator)
+  {
+    if (locator == null)
+    {
+      return this.element ? this.element[0] : null;
+    }
+    
+    var subId = locator['subId'];
+    if (subId === "oj-checkboxset-inputs") {
+      return this.$checkboxes;
+    }
+    
+    // Non-null locators have to be handled by the component subclasses
+    return null;
+  }, 
   /**
    * TODO: What is our 'destroy' strategy with regards to html attributes that 
    * they have initially on their dom, but we change? like disabled? Do we store 
@@ -66358,6 +70812,13 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
        * @example [ 0, 2 ] would disable the first and third tab.
        */
       disabled : false, 
+
+      ///NEW options
+      tabSizeBehavior : "auto",
+      tabMinWidth : 40,
+      tabMaxWidth : 100,
+
+
       /** 
        * The type of event that the tabs should react to in order to activate the tab. 
        * To activate on hover, use "mouseover".
@@ -66415,6 +70876,10 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
+       * @property {jQuery} ui.newTab The tab that was just activated.
+       * @property {jQuery} ui.oldTab The tab that was just deactivated.
+       * @property {jQuery} ui.newPanel The panel that was just activated.
+       * @property {jQuery} ui.oldPanel The panel that was just deactivated.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">activate</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -66436,6 +70901,10 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
+       * @property {jQuery} ui.newTab The tab that is about to be activated.
+       * @property {jQuery} ui.oldTab The tab that is about to be deactivated.
+       * @property {jQuery} ui.newPanel The panel that is about to be activated.
+       * @property {jQuery} ui.oldPanel The panel that is about to be deactivated.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">beforeactivate</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -66456,6 +70925,8 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
+       * @property {jQuery} ui.tab The tab that was just removed.
+       * @property {jQuery} ui.panel The panel that was just removed.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">remove</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -66477,6 +70948,8 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
+       * @property {jQuery} ui.tab The tab that is about to be removed.
+       * @property {jQuery} ui.panel The panel that is about to be removed.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">beforeremove</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -66870,36 +71343,13 @@ oj.__registerWidget("oj.ojCheckboxset", $['oj']['editableValue'],
 
       if (this.options.orientation == "horizontal")
       {
+        ///NEW options
+        //always add conveyor
+        this._truncateBeforeOverflow();
         this._addConveyor();
-/*
-tabSizeBehavior: uniform or variable?
-tooltips?
-        if (this.tabs.length > 0)
-        {
-          //TODO: not work if display:none
-          var tabsWidth = this.element[0].offsetWidth;
 
-          var tabPercent = 1 / this.tabs.length;
-          var tabWidth = tabPercent * tabsWidth;
-          var tabBar = this.element.find(".oj-tabs-nav");
-          var minWidth = tabBar.children(0).css("min-width");
-          if (minWidth.length > 0)
-            minWidth = parseInt(minWidth);
-          else
-            minWidth = 0;
-
-          //add conveyorBelt
-          this.tabs.each(function (index)
-          {
-            var tab = $(this);
-            tab.css("width", (tabPercent * 100) + "%");
-          });
-
-          if (tabWidth < minWidth)
-            this._addConveyor();
-        }
-*/
-
+        //uniformTabWidth
+//        this._uniformTabWidth();
       }
 
       //Bug 18269323 - After a tab is deleted, reorder does not work
@@ -66912,19 +71362,11 @@ tooltips?
       {
         var tabsId = this.tablist.uniqueId().attr("id");
 
-        var ulParent = this.tablist
-          .wrap("<div>")
-          .parent();
-
-        ulParent.addClass( "oj-tabs-conveyor" );
-        var conveyorDiv = ulParent
+        var conveyorDiv = this._getTabbarWrapper()
           .wrap("<div>")
           .parent();
 
         conveyorDiv.uniqueId().attr("id");
-
-        //Bug 18330774 - Tabs appear to be broken in ojet version used by 02/27 quickstart 
-//        conveyorDiv.css("max-width", "" + this.element.width() + "px");
 
         this.conveyor = conveyorDiv.ojConveyorBelt(
           {
@@ -66959,6 +71401,7 @@ tooltips?
           var header = $(this).find("> :first-child");
           var headerClone = header.clone();
           headerClone
+            .addClass("oj-tabs-title")
             .css("display", "")
             .attr(
             {
@@ -66966,6 +71409,8 @@ tooltips?
             });
 
           //make ids unique after clone
+          self._removePrefixIds(headerClone);
+
           var ohd = header[0];
           if (ohd.id)
             self._addPrefixId(ohd);
@@ -67330,6 +71775,15 @@ tooltips?
 
     _destroyTabBar : function ()
     {
+      ///NEW options
+      //remove listener
+      this._tabMaxWidthApplied = false;
+      if (this._hasResizeListener)
+      {
+        oj.DomUtils.removeResizeListener(this.element[0], $.proxy(this.handleResize, this));
+        this._hasResizeListener = false;
+      }
+
       if (this.conveyor) {
         this.conveyor.ojConveyorBelt( "destroy" );
         this.conveyor.remove();
@@ -67377,12 +71831,7 @@ tooltips?
           .removeAttr("aria-hidden");
 
         //remove prefix from ids
-        var ohd = header[0];
-        if (ohd.id)
-          self._removePrefixId(ohd);
-        header.find("[id]").each(function() {
-          self._removePrefixId(this);
-        });
+        self._removePrefixIds(header);
 
       });
     },
@@ -67476,10 +71925,18 @@ tooltips?
     _removeTabHandler : function (event)
     {
       var icon = $(event.currentTarget),
-          tab = icon.closest("li");
+          tab = icon.closest("li"),
+          panel = this._getPanelForTab(tab),
+          eventData = 
+          {
+            /** @expose */
+            tab : tab, 
+            /** @expose */
+            panel : panel
+          };
 
       //trigger before delete event and only delete if it's not cancelled
-      if (tab && this._trigger("beforeremove", event) !== false)
+      if (tab && this._trigger("beforeremove", event, eventData) !== false)
       {
         var idxRmTab = this.tabs.index(tab);
 
@@ -67507,12 +71964,11 @@ tooltips?
           }
         }
 
-        var panel = this._getPanelForTab(tab);
-        this._getPanelForTab(tab).remove();
+        panel.remove();
         tab.remove();
 
         this.refresh();
-        this._trigger("remove", event);
+        this._trigger("remove", event, eventData);
       }
     },
 
@@ -67619,12 +72075,191 @@ tooltips?
 
     _addPrefixId : function (elem)
     {
-      $(elem).attr("id", _ID_PREFIX + elem.id);
+      if (elem.id.indexOf(_ID_PREFIX) < 0)
+        $(elem).attr("id", _ID_PREFIX + elem.id);
     },
 
     _removePrefixId : function (elem)
     {
-      $(elem).attr("id", elem.id.substring(_ID_PREFIX.length));
+      if (elem.id.indexOf(_ID_PREFIX) == 0)
+        $(elem).attr("id", elem.id.substring(_ID_PREFIX.length));
+    },
+
+    _removePrefixIds : function (header)
+    {
+      //remove prefix from ids
+      var self = this;
+      var ohd = header[0];
+      if (ohd.id)
+        this._removePrefixId(ohd);
+      header.find("[id]").each(function() {
+        self._removePrefixId(this);
+      });
+    },
+
+    ///NEW options
+    _getTabsWidth: function()
+    {
+      return this.element[0].clientWidth;
+    },
+
+    _isOverflow: function()
+    {
+      return (this._originalWidth > this._getTabsWidth());
+    },
+
+    _getTabMaxWidth: function()
+    {
+//      return Math.floor(Math.max(this.tablist[0].clientWidth / this.tabs.length, 
+//                                 this.options.tabMinWidth));
+
+      return this.options.tabMaxWidth;
+    },
+
+    _applyTabMaxWidth: function()
+    {
+      if (! this._tabMaxWidthApplied)
+      {
+        var maxWidth = this._getTabMaxWidth();
+        if (this.options.removable)
+          maxWidth -= 28;
+
+        this.tabs.each(function (index)
+          {
+            $(this).find(".oj-tabs-title")
+              .css("max-width", "" + maxWidth + "px")
+              .addClass("oj-tabs-title-overflow");
+          });
+
+        this._tabMaxWidthApplied = true;
+      }
+    },
+
+    _removeTabMaxWidth: function()
+    {
+      if (this._tabMaxWidthApplied)
+      {
+        this.tabs.each(function (index)
+          {
+            $(this).find(".oj-tabs-title")
+              .css("max-width", "")
+              .removeClass("oj-tabs-title-overflow");
+          });
+
+        this._tabMaxWidthApplied = false;
+      }
+    },
+
+    handleResize: function(width, height)
+    {
+//      console.log("width " + width + " ulWidth " + this._originalWidth +
+//                  " clientWidth " + this._getTabsWidth());
+
+      if (this._isOverflow())
+      {
+//        console.log("overflow");
+        if (! this._tabMaxWidthApplied)
+        {
+          this._applyTabMaxWidth();
+//          console.log("apply max width");
+        }
+      }
+      else
+      {
+//        console.log("underflow");
+        if (this._tabMaxWidthApplied)
+        {
+          this._removeTabMaxWidth();
+//          console.log("remove max width");
+        }
+      }
+    },
+
+    _getTabbarWrapper: function()
+    {
+      var ulParent = this.tablist.parent();
+      if (! ulParent.hasClass("oj-tabs-conveyor"))
+      {
+        ulParent = this.tablist
+            .wrap("<div>")
+            .parent()
+            .addClass("oj-tabs-conveyor");
+      }
+      return ulParent;
+    },
+
+    _truncateBeforeOverflow: function()
+    {
+      var options = this.options;
+      if (options.orientation == "horizontal" && this.tabs.length > 0)
+      {
+        if (options.tabSizeBehavior === "auto")
+        {
+          oj.DomUtils.addResizeListener(this.element[0], $.proxy(this.handleResize, this));
+          this._hasResizeListener = true;
+
+          //handle initial overflow
+          this._originalWidth = this._getTabbarWrapper()[0].scrollWidth;//this.tablist[0].scrollWidth;
+
+          if (this._isOverflow())
+            this._applyTabMaxWidth();
+
+        }
+      }
+    },
+
+
+    _uniformTabWidth: function()
+    {
+      if (this.tabs.length > 0)
+      {
+        var tabPercent = 1 / this.tabs.length;
+
+        //add conveyorBelt
+        this.tabs.each(function (index)
+          {
+            $(this).css("width", (tabPercent * 100) + "%");
+          });
+
+        // if max tab width is greater than min tab width
+        if ((tabPercent * this._getTabsWidth()) < this.options.tabMinWidth)
+          this._addConveyor();
+      }
+    },
+
+
+    initSizing: function()
+    {
+      //apply maxWidth
+      if (this._isOverflow())
+      {
+        this._applyTabMaxWidth();
+      }
+    },
+
+    initOverflow: function()
+    {
+      //add conveyorBelt
+      if (this._isOverflow())
+      {
+        this._addConveyor();
+      }
+    },
+
+    _truncateBeforeOverflowGab: function()
+    {
+      var options = this.options;
+      if (options.orientation == "horizontal" && this.tabs.length > 0)
+      {
+        //initSizing
+        if (options.tabSizeBehavior === "auto")
+        {
+          window.setTimeout($.proxy(this.initSizing, this), 0);
+        }
+
+        //inirOverFlow
+        window.setTimeout($.proxy(this.initOverflow, this), 0);
+      }
     }
 
 
@@ -67989,7 +72624,13 @@ oj.__registerWidget("oj.ojTextArea", $['oj']['inputBase'],
    * @expose
    * @private
    */
-  _CLASS_NAMES : "oj-textarea oj-form-control oj-widget",
+  _CLASS_NAMES : "oj-textarea-input",
+  
+  /** 
+   * @expose
+   * @private
+   */
+  _WIDGET_CLASS_NAMES : "oj-textarea oj-form-control oj-widget",
   
   /**
    * @override
@@ -68076,7 +72717,13 @@ oj.__registerWidget("oj.ojInputPassword", $['oj']['inputBase'],
    * @expose
    * @private
    */
-  _CLASS_NAMES : "oj-inputpassword oj-form-control oj-widget",
+  _CLASS_NAMES : "oj-inputpassword-input",
+  
+  /** 
+   * @expose
+   * @private
+   */
+  _WIDGET_CLASS_NAMES : "oj-inputpassword oj-form-control oj-widget",
   
   /**
    * @override
@@ -68250,6 +72897,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
    * Anything that should happen on both the first init and every re-init,
    * should be called from _init.
    * @memberof! oj.ojConveyorBelt
+   * @instance
    * @override
    * @protected
    */
@@ -68264,6 +72912,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
    * Called every time ojConveyorBelt is called without attributes. It's essentially
    * a hard-reset.
    * @memberof! oj.ojConveyorBelt
+   * @instance
    * @override
    * @protected
    */
@@ -68274,7 +72923,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
 
   // This method currently runs at create, init, and refresh time (since refresh() is called by _init()).
   /**
-   * Refreshes the visual state of the accordion. JET components require a 
+   * Refreshes the visual state of the conveyorBelt. JET components require a 
    * <code class="prettyprint">refresh()</code> or re-init after the DOM is 
    * programmatically changed underneath the component.
    * 
@@ -68307,6 +72956,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
    * @param {boolean} isInit true if _setup is called from _init(), false
    *        if called from refresh()
    * @memberof! oj.ojConveyorBelt
+   * @instance
    * @private
    */
   _setup: function(isInit) // Private, not an override (not in base class).  
@@ -68346,12 +72996,12 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
         buttonInfo["prevButtonIcon"] = prevIcon;
         buttonInfo["nextButtonIcon"] = nextIcon;
         var callbackInfo = {};
-        callbackInfo["automaticSizeCheck"] = true;
+        callbackInfo["addResizeListener"] = oj.DomUtils.addResizeListener;
+        callbackInfo["removeResizeListener"] = oj.DomUtils.removeResizeListener;
         //disable scroll animation during testing
         if (elem.attr("_ojConveyorBeltTesting") !== "true")
         {
           callbackInfo["scrollFunc"] = animateScrollFunc;
-          callbackInfo["callbackObj"] = this;
         }
         var contentParentElem = null;
         if (options.contentParent)
@@ -68384,6 +73034,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
   /** 
    * Destroy the conveyorBelt.
    * @memberof! oj.ojConveyorBelt
+   * @instance
    * @override
    * @protected
    */
@@ -68397,6 +73048,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
   /** 
    * Set an option on the conveyorBelt.
    * @memberof! oj.ojConveyorBelt
+   * @instance
    * @override
    * @protected
    */
@@ -68431,6 +73083,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
   /** 
    * Destroy the ConveyorBeltCommon.
    * @memberof! oj.ojConveyorBelt
+   * @instance
    * @private
    */
   _destroyCBCommon: function()
@@ -68523,18 +73176,23 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
   },
   
   /**
-   * @expose
    * Return the subcomponent node represented by the documented locator 
    * attribute values.
    * Test authors should target sub elements using the following names:
-   * oj-conveyorbelt-start-overflow-indicator: the start overflow indicator of a
-   * horizontal ConveyorBelt
-   * oj-conveyorbelt-end-overflow-indicator: the end overflow indicator of a
-   * horizontal ConveyorBelt
-   * oj-conveyorbelt-top-overflow-indicator: the top overflow indicator of a
-   * vertical ConveyorBelt
-   * oj-conveyorbelt-bottom-overflow-indicator: the bottom overflow indicator of
-   * a vertical ConveyorBelt
+   * <ul>
+   * <li><b>oj-conveyorbelt-start-overflow-indicator</b>: the start overflow indicator of a
+   * horizontal ConveyorBelt</li>
+   * <li><b>oj-conveyorbelt-end-overflow-indicator</b>: the end overflow indicator of a
+   * horizontal ConveyorBelt</li>
+   * <li><b>oj-conveyorbelt-top-overflow-indicator</b>: the top overflow indicator of a
+   * vertical ConveyorBelt</li>
+   * <li><b>oj-conveyorbelt-bottom-overflow-indicator</b>: the bottom overflow indicator of
+   * a vertical ConveyorBelt</li>
+   * </ul>
+   * @expose
+   * @memberof! oj.ojConveyorBelt
+   * @instance
+   * @override
    * @param {Object} locator An Object containing at minimum a subId property 
    *        whose value is a string, documented by the component, that allows 
    *        the component to look up the subcomponent associated with that 
@@ -68586,19 +73244,47 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
  *  jquery.ui.widget.js
  */
 /**
- * The ojInputNumber component enhances a browser input element into one that holds numbers 
+ * @class
+ * @name oj.ojInputNumber
+ * @augments oj.editableValue
+ * 
+ * @classdesc
+ * <h3 id="inputNumberOverview-section">
+ *   JET InputNumber Component
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#inputNumberOverview-section"></a>
+ * </h3>
+ * <p>Description: The ojInputNumber component enhances a browser input element 
+ * into one that holds numbers 
  * and it has a spinbox to quickly increment or decrement the number. The value option
- * must be a number. Conversion and validation is not yet supported.
+ * must be a number.
  * 
- * <h3>Events:</h3>
- * <ul>
- *   <li>optionChange(event, data) - Type: ojoptionchange<p>
- *   Triggered if the value changes when the user interacts with the component 
- *   (blur, enter, up/down arrows, and up/down buttons); or if the value has 
- *   changed programmatically via the value option or stepUp or stepDown methods. 
- *   </li>
- * </ul>
+ * <h3 id="keyboard-section">
+ *   Keyboard interaction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
+ * </h3>
  * 
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Enter</kbd> or <kbd>Tab</kbd></td>
+ *       <td>Submit the value you typed in the input field.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>UpArrow</kbd></td>
+ *       <td>Increment the number in the input field; alternatively you can click on the up arrow icon.</tr>
+ *     <tr>
+ *       <td><kbd>DownArrow</kbd></td>
+ *       <td>Decrement the number in the input field; alternatively you can click on the down arrow icon.</tr>
+ * </tbody></table>
+ * <!-- - - - - Above this point, the tags are for the class.
+ *              Below this point, the tags are for the constructor (initializer). - - - - - - -->
+ * @desc Creates an ojInputNumber component
  * @example <caption>Initialize component using widget API</caption>
  * &lt;input id="spin" type="text"/&gt;<br/>
  * $("#spin").ojInputNumber({'value': 10, 'max':100, 'min':0, 'step':2});
@@ -68606,10 +73292,7 @@ oj.__registerWidget("oj.ojConveyorBelt", $['oj']['baseComponent'],
  * @example <caption>Using knockout, value, min, max bind to observables - salary, salaryMax, salaryMin</caption> 
  * &lt;input id="foo" data-bind="ojComponent: {component: 'ojInputNumber', value: salary, min:salaryMin, max:salaryMax, step:5}"/&gt;
  * 
- * @class
  * @constructor
- * @name oj.ojInputNumber
- * @augments oj.editableValue
  */
 oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
 {
@@ -68618,9 +73301,27 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
   widgetEventPrefix : "oj", 
   options : 
   {
+    /**
+     * The default converter for ojInputNumber.
+     *
+     * If one wishes to provide a custom converter for the ojInputNumber 
+     * override the factory returned for
+     * oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_NUMBER).
+     * When initialized with no options, 
+     * the default options for the current locale are assumed. 
+     *
+     * @expose
+     * @memberof! oj.ojInputNumber
+     * @instance
+     * @default <code class="prettyprint">
+     *  oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_NUMBER).createConverter()</code>
+     */
+    converter : oj.Validation.converterFactory(
+            oj.ConverterFactory.CONVERTER_TYPE_NUMBER).createConverter(), 
     /** 
      * The maximum allowed value. The element's max attribute is used if it 
      * exists and the option is not explicitly set. If null, there is no maximum enforced.
+     * The max must not be less than the min.
      * @expose 
      * @public
      * @instance
@@ -68629,6 +73330,7 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     /** 
      * The minimum allowed value. The element's min attribute is used if it 
      * exists and the option is not explicitly set. If null, there is no minimum enforced.
+     * The min must not be greater than the max.
      * @expose 
      * @public 
      * @instance
@@ -68671,15 +73373,18 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     _TOOLTIP_INCREMENT: 'tooltipIncrement'    
   },
   /**
-   * 
-   * After _create, the widget should be 100% set up.
-   *
-   *
+   * After _CreateComponent and _AfterCreateComponent, 
+   * the widget should be 100% set up. this._super should be call first.
+   * @expose
    * @override
-   * @private
+   * @protected
+   * @instance
+   * @memberof! oj.ojInputNumber
    */
-  _create : function ()
+  _CreateComponent : function ()
   {
+    this._super();
+    
     this._draw();
     
     // todo: where should this be called from?
@@ -68697,13 +73402,28 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       }
     });
     
-	  this._super();
+    // input type=number does not support the 'pattern' attribute, so
+    // neither should ojInputNumber.
+    // TODO: need to refactor EditableValue#_SaveAttributes for this to work.
+    // this.element.removeAttr("pattern");
     
-    // This will make sure the display value is set. If we don't do this
-    // then the value will be null when we refreshAria and updateButtons.
-    // TODO jmw: We may want to move this up to the base class. Pavitra needs
-    // to think about about why this wouldn't be a good idea first.
-    this._SetDisplayValue(this.options['value']);
+    this._inputNumberDefaultValidators = {};
+
+
+  },
+    /**
+   * This is where we do things right after the component was created.
+   * this._super should be call first.
+   * 
+   * @expose
+   * @override
+   * @memberof! oj.ojInputNumber
+   * @instance
+   * @protected
+   */
+  _AfterCreateComponent : function ()
+  {
+    this._super();
     
     // handle string values that need to be parsed
     // jmw do I really need to do this?
@@ -68727,7 +73447,36 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     
     this._refreshAriaMinMaxValue();
     this._updateButtons();
-
+  },
+    /**
+   * Sets up the default numberRange validators.
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputNumber
+   */
+  _GetDefaultValidators : function ()
+  {
+    var ret = this._superApply(arguments),
+            // TODO: Ask Ji what this does for datepicker
+        //min = this._getMinMaxDate("min"),
+       // max = this._getMinMaxDate("max"),
+        numberRangeOptions = {};
+    
+    if(this.options['min'] != null || this.options['max'] != null) 
+    {
+      //need to alter how the default validators work as validators are now immutable
+      numberRangeOptions = {'min': this.options['min'], 
+                          'max': this.options['max'],
+                          'converter': this._GetConverter()};
+      this._inputNumberDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_NUMBERRANGE] = 
+              oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_NUMBERRANGE)
+              .createValidator(numberRangeOptions);
+    }
+ 
+    return $.extend(this._inputNumberDefaultValidators, ret);
   },
   /** Called when creating widget. Looks for attributes on the dom, and sets
    * the options.
@@ -68955,26 +73704,9 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     // So reading the component's display value should always give you the element's value
     var displayValue = this._GetDisplayValue() || 0;
     var value = this._parseValue(displayValue);
-    // TODO jmw _GetDisplayValue could be 20%. I need to convert it to the actual number first,
-    // then update it, then convert it back, right? Ask pavitra. I use _parseValue, but that is private in EditableValue.
-    //jmw  value needs to be a number, but here it is a string. How do I get it to be a number?
-    if (typeof value === "string")
-    {
-      value = + value;
-    }
     value = this._adjustValue(value, step);
-    //this._SetDisplayValue(value); TODO: jmw I commented this out since it doesn't convert the value for display. Check with Pavitra.
-    // Convert value back to a String. The RequiredValidator currently
-    // fails validation if the value is the number 0. It works if it's a string.
-    // Also, if this we don't do this, then we get two optionChange events triggered,
-    // one from this spin (which is a number unless we convert it to a string)
-    // and one from blur (which gets the value from the dom, which is a string).
-    // TODO: Do I need to convert back to the converted value before I set?
-    // In blur, we are calling _SetValue with the one from the dom which is 
-    // the converted value. Here we are calling _SetValue with the unconverted value.
-    // It seems to work fine. As Pavitra.
-    // TODO: Add tests for converted values.
-    this._SetValue(""+value, event); // calls valueChange event
+    
+    this._SetValue(value, event, this._VALIDATION_MODE.VALIDATORS_ONLY);
   },
   // called from _adjustValue
   _precision : function ()
@@ -69010,11 +73742,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
   {
     var newValue;
     var stepBase, aboveMin, options = this.options;
+    var precision = this._precision();
 
     // make sure we're at a valid step when we step up or down.
     // - find out where we are relative to the base (min or 0)
     stepBase = options.min !== null ? options.min : 0;
      
+    // From http://www.w3.org/TR/html5/forms.html#dom-input-stepup:
     // If value subtracted from the step base is not an integral multiple 
     // of the step, then set value to the nearest value that, when subtracted
     // from the step base, is an integral multiple of the allowed value step,
@@ -69024,6 +73758,7 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     // is value-stepBase an integral multiple of step?
     aboveMin = value - stepBase;
     var rounded = Math.round(aboveMin / options.step) * options.step;
+    rounded = parseFloat(rounded.toFixed(precision));
     var multiple = (rounded === aboveMin);
     
     if (!multiple)
@@ -69044,7 +73779,10 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     }
     
     // fix precision from bad JS floating point math
-    newValue = parseFloat(newValue.toFixed(this._precision()));
+    // toFixed returns the newValue with a specific # of digits after the 
+    // decimal point (this_precision() looks at max of step/min's # of 
+    // digits.
+    newValue = parseFloat(newValue.toFixed(precision));
     
     if (options.min !== null && newValue < options.min)
       return options.min;
@@ -69054,7 +73792,7 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       var validMax = (Math.floor((options.max - stepBase)/ options.step) * 
                   options.step) + stepBase;
       // fix precision from bad JS floating point math
-      validMax = parseFloat(validMax.toFixed(this._precision()));
+      validMax = parseFloat(validMax.toFixed(precision));
       return validMax;
     }
     
@@ -69370,25 +74108,6 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     this._stop();
   },
   /**
-   * Calls _setSubmittedValue if setting value option
-   * 
-   * @param {String|Object} key a single string representing a key or an object representing a group 
-   * of options
-   * @param {Object=} value of the key
-   */
-  /* 
-  // [pavi]: this override is not needed
-  option : function (key, value)
-  {
-    if(key == "value" && arguments.length === 2 && typeof value === "string") 
-    {
-      // TODO jmw: what else do I have to do? Why isn't this in base class?
-      return this._setSubmittedValue(value);
-    } 
-    return this._superApply( arguments );
-  },
-  */
-  /**
    * Returns a jQuery object containing the element visually representing the inputnumber. 
    * 
    * <p>This method does not accept any arguments.
@@ -69587,7 +74306,8 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
           _PAGING_CONTROL_NAV_PREVIOUS_ICON_CLASS:        'oj-pagingcontrol-nav-previous-icon',
           _PAGING_CONTROL_NAV_NEXT_ICON_CLASS:            'oj-pagingcontrol-nav-next-icon',
           _PAGING_CONTROL_NAV_LAST_ICON_CLASS:            'oj-pagingcontrol-nav-last-icon',
-          _WIDGET_ICON_CLASS:                             'oj-widget-icon'
+          _WIDGET_ICON_CLASS:                             'oj-widget-icon',
+          _HIDDEN_CONTENT_ACC_CLASS:                      'oj-helper-hidden-accessible'
         },
       /**
        * @private
@@ -69835,6 +74555,7 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
         this._super();
         this._registerDataSourceEventListeners();
         this._draw();
+        this._registerResizeListener(this._getPagingControlContainer());
         this._on(this._events);
       },
       /**
@@ -69984,7 +74705,8 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
        */
       _setOption: function(key, value)
       {
-
+        this._super(key, value);
+        this._refresh();
       },
       /**** end internal widget functions ****/
 
@@ -70058,7 +74780,7 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       _getItemRangeText: function()
       {
         var data = this._getData();
-        var itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, this._startIndex);
+        var itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, this._startIndex, 0, 0);
         if (data != null)
         {
           if (data.totalSize() != -1)
@@ -70113,7 +74835,7 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       _getTotalPages: function()
       {
         var data = this._getData();
-        var totalSize = -1;
+        var totalSize = 0;
         if (data != null)
         {
           totalSize = data.totalSize();
@@ -70286,6 +75008,23 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
             data.on(this._dataSourceEventHandlers[i]['eventType'], this._dataSourceEventHandlers[i]['eventHandler']);
         }
       },
+      /**
+       * Register event listeners for resize the container DOM element.
+       * @param {jQuery} element  DOM element
+       * @private
+       */
+      _registerResizeListener: function(element)
+      {         
+        if (!this._isResizeListenerAdded)
+        {
+          var self = this;
+          oj.DomUtils.addResizeListener(element[0], function(width, height)
+                                                    {
+                                                      self._refresh();
+                                                    });
+          this._isResizeListenerAdded = true;
+        }
+      },
       /**** end internal functions ****/
       /**
        * Create a span element for acc purposes
@@ -70298,15 +75037,7 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       {
         var accLabel = $(document.createElement('span'));
         accLabel.addClass(className);
-        accLabel.css('position', 'absolute');
-        if (this._GetReadingDirection() === "rtl")
-        {
-          accLabel.css('right', '-999em');
-        }
-        else
-        {
-          accLabel.css('left', '-999em');
-        }
+        accLabel.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         accLabel.append(text);
 
         return accLabel;
@@ -70463,14 +75194,18 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       {
         var options = this.options;
         var pageOptionLayout = options['pageOptions']['layout'];
+        if (pageOptionLayout == null)
+        {
+          pageOptionLayout = [this._PAGE_OPTION_LAYOUT._AUTO];
+        }
         var pagingControlContent = this._getPagingControlContent();
         var pagingControlNav = $(document.createElement('div'));
         pagingControlNav.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_CLASS);
         pagingControlContent.append(pagingControlNav);
 
         // page input section
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._INPUT, pageOptionLayout))
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._INPUT, pageOptionLayout) != -1)
         {
           var pagingControlNavInputSection = $(document.createElement('div'));
           pagingControlNavInputSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_INPUT_SECTION_CLASS);
@@ -70499,8 +75234,8 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
             pagingControlNavInputSection.append(pagingControlNavMaxLabel);
           }
           
-          if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-              $.inArray(this._PAGE_OPTION_LAYOUT._RANGE_TEXT, pageOptionLayout))
+          if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+              $.inArray(this._PAGE_OPTION_LAYOUT._RANGE_TEXT, pageOptionLayout) != -1)
           {
             var pagingControlNavSummaryLabel = $(document.createElement('span'));
             pagingControlNavSummaryLabel.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_INPUT_SUMMARY_CLASS);
@@ -70512,12 +75247,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
         }
 
         // nav arrow section
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout))
+        var pagingControlNavArrowSection = $(document.createElement('div'));
+        pagingControlNavArrowSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_ARROW_SECTION_CLASS);
+        pagingControlNav.append(pagingControlNavArrowSection);
+        
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout) != -1)
         {
-          var pagingControlNavArrowSection = $(document.createElement('div'));
-          pagingControlNavArrowSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_ARROW_SECTION_CLASS);
-          pagingControlNav.append(pagingControlNavArrowSection);
           var pagingControlNavFirst = $(document.createElement('a'));
           pagingControlNavFirst.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_FIRST_CLASS);
           pagingControlNavFirst.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_FIRST_ICON_CLASS);
@@ -70552,8 +75288,8 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
         }
 
         // nav pages section
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._PAGE, pageOptionLayout))
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._PAGES, pageOptionLayout) != -1)
         {
           var pagingControlNavPagesSection = $(document.createElement('div'));
           pagingControlNavPagesSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_PAGES_SECTION_CLASS);
@@ -70561,8 +75297,8 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
           this._createPagingControlNavPages(pagingControlNavPagesSection, this._getMaxPageLinks());
         }
 
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout))
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout) != -1)
         {
           var pagingControlNavNext = $(document.createElement('a'));
           pagingControlNavNext.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_NEXT_CLASS);
@@ -70629,8 +75365,11 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
           var i;
           if (totalPages != -1 && totalPages <= numPagesToAdd)
           {
+            // always add the first page
+            pageList[0] = 1;
+            
             // just enumerate the pages
-            for (i = 0; i < totalPages; i++)
+            for (i = 1; i < totalPages; i++)
             {
               pageList[i] = i + 1;
             }
@@ -71221,11 +75960,11 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryFilter</code> callback specified:</caption>
      * $(".selector").ojLegend({
-     *   "categoryFilter": function(event){}
+     *   "categoryFilter": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryfilter</code> event:</caption>
-     * $(".selector").on("ojcategoryfilter", function(event){});
+     * $(".selector").on("ojcategoryfilter", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -71243,11 +75982,11 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryHighlight</code> callback specified:</caption>
      * $(".selector").ojLegend({
-     *   "categoryHighlight": function(event){}
+     *   "categoryHighlight": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryhighlight</code> event:</caption>
-     * $(".selector").on("ojcategoryhighlight", function(event){});
+     * $(".selector").on("ojcategoryhighlight", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -71385,23 +76124,24 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
      */
     _init: function()
     {
-        var self = this;
+        var self = this, context;
         this._super();
         this._addIcon();
-        this.component = this.options['context']['component'];
-        this.datasource = this.options['context']['datasource'];
-        this.component._registerRowExpander(this);
-
-        if (this._parseMetadata !== null)
+        
+        context = this.options['context'];
+        this.component = context['component'];
+        this.datasource = context['datasource'];
+        if (this.component._registerRowExpander)
         {
-            this.metadata = this._parseMetadata(this.options['context']['metadata']);
+            this.component._registerRowExpander(this);
         }
-        this.indentation = this.metadata['depth'] * this.options['indent'];
-        this.iconState = this.metadata['state'];
-        this.rowKey = this.metadata['key'];
+
+        //root hidden so subtract 1
+        this.indentation = (context['depth'] - 1) * this.options['indent'];
+        this.iconState = context['state'];
+        this.rowKey = context['key'];
         this._setIndentationWidth();
         this._setIconStateClass();
-
 
         if (this.iconState === 'expanded' || this.iconState === 'collapsed')
         {
@@ -71451,7 +76191,6 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
         this.removeClass(this.classNames['root']);
         this.element.empty();
     },
-    _parseMetadata: null,
     /**
      * Add an icon to the row expander with appropriate class names for a clickable icon.
      * @private	 
@@ -71555,11 +76294,11 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
     {
         if (this.iconState === 'collapsed')
         {
-            this.datasource.expand(this.metadata['key']);
+            this.datasource.expand(this.rowKey);
         }
         else if (this.iconState === 'expanded')
         {
-            this.datasource.collapse(this.metadata['key']);
+            this.datasource.collapse(this.rowKey);
         }
     },
     /**
@@ -71744,11 +76483,11 @@ oj.__registerWidget('oj.ojDialGauge', $['oj']['dvtBaseGauge'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">input</code> callback specified:</caption>
      * $(".selector").ojDialGauge({
-     *   "input": function(event){}
+     *   "input": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojinput</code> event:</caption>
-     * $(".selector").on("ojinput", function(event){});
+     * $(".selector").on("ojinput", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -71967,11 +76706,11 @@ oj.__registerWidget('oj.ojRatingGauge', $['oj']['dvtBaseGauge'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">input</code> callback specified:</caption>
      * $(".selector").ojRatingGauge({
-     *   "input": function(event){}
+     *   "input": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojinput</code> event:</caption>
-     * $(".selector").on("ojinput", function(event){});
+     * $(".selector").on("ojinput", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -72091,11 +76830,11 @@ oj.__registerWidget('oj.ojStatusMeterGauge', $['oj']['dvtBaseGauge'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">input</code> callback specified:</caption>
      * $(".selector").ojStatusMeterGauge({
-     *   "input": function(event){}
+     *   "input": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojinput</code> event:</caption>
-     * $(".selector").on("ojinput", function(event){});
+     * $(".selector").on("ojinput", function(event, ui){});
      * 
      * @expose 
      * @event 

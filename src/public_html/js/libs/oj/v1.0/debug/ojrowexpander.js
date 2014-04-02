@@ -103,23 +103,24 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
      */
     _init: function()
     {
-        var self = this;
+        var self = this, context;
         this._super();
         this._addIcon();
-        this.component = this.options['context']['component'];
-        this.datasource = this.options['context']['datasource'];
-        this.component._registerRowExpander(this);
-
-        if (this._parseMetadata !== null)
+        
+        context = this.options['context'];
+        this.component = context['component'];
+        this.datasource = context['datasource'];
+        if (this.component._registerRowExpander)
         {
-            this.metadata = this._parseMetadata(this.options['context']['metadata']);
+            this.component._registerRowExpander(this);
         }
-        this.indentation = this.metadata['depth'] * this.options['indent'];
-        this.iconState = this.metadata['state'];
-        this.rowKey = this.metadata['key'];
+
+        //root hidden so subtract 1
+        this.indentation = (context['depth'] - 1) * this.options['indent'];
+        this.iconState = context['state'];
+        this.rowKey = context['key'];
         this._setIndentationWidth();
         this._setIconStateClass();
-
 
         if (this.iconState === 'expanded' || this.iconState === 'collapsed')
         {
@@ -169,7 +170,6 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
         this.removeClass(this.classNames['root']);
         this.element.empty();
     },
-    _parseMetadata: null,
     /**
      * Add an icon to the row expander with appropriate class names for a clickable icon.
      * @private	 
@@ -273,11 +273,11 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
     {
         if (this.iconState === 'collapsed')
         {
-            this.datasource.expand(this.metadata['key']);
+            this.datasource.expand(this.rowKey);
         }
         else if (this.iconState === 'expanded')
         {
-            this.datasource.collapse(this.metadata['key']);
+            this.datasource.collapse(this.rowKey);
         }
     },
     /**

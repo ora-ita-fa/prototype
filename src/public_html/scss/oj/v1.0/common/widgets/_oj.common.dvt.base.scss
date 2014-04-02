@@ -97,7 +97,7 @@
       color: #333333;
       border-style: solid;
       border-color: black;
-      border-radius: 1px;
+      @include oj-border-radius($smallBorderRadius);
       border-width: 2px;
       padding: 2px;
       position: absolute;

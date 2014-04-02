@@ -9,7 +9,7 @@ $includeRowExpanderClasses:   $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 
 @if $includeRowExpanderClasses != false {
   @include exports("rowexpander") {
@@ -18,45 +18,42 @@ $includeRowExpanderClasses:   $includeAllClasses !default;
 		width:14px;
 		height:14px;
         display:inline-block;
-        position:relative;
+        vertical-align:top;
     }
 
     .oj-rowexpander-expand-icon{
         @include oj-ltr() {
             @extend .oj-fwk-icon-arrow-e;  
-            right:0;
+            float:right;
         }
 
         @include oj-rtl() {    
             @extend .oj-fwk-icon-arrow-w;  
-            left:0;        
+            float:left;        
         }    
-        position: absolute;
 
     }
 
     .oj-rowexpander-collapse-icon {
         @include oj-ltr() {
             @extend .oj-fwk-icon-arrow-se;  
-            right:0;
+            float:right;
         }
 
         @include oj-rtl() {    
             @extend .oj-fwk-icon-arrow-sw;  
-            left:0;        
+            float:left;        
         }    
-        position: absolute;
     }
 
     .oj-rowexpander-leaf-icon {
         @include oj-ltr() {
-            right:0;
+            float:right;
         }
 
         @include oj-rtl() {    
-            left:0;        
+            float:left;        
         }    
-        position: absolute;
     }
   }
 }

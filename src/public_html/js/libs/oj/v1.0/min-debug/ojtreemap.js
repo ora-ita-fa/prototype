@@ -1,6 +1,6 @@
-define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/internal-deps/dvt/DvtTreemap"], function($oj$$12$$, $$$$12$$) {
-  $oj$$12$$.$__registerWidget$("oj.ojTreemap", $$$$12$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{isolate:null, select:null}, $_createComponent$:function($context$$39$$, $callback$$82$$, $callbackObj$$3$$) {
-    return DvtTreemap.newInstance($context$$39$$, $callback$$82$$, $callbackObj$$3$$)
+define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/internal-deps/dvt/DvtTreemap"], function($oj$$13$$, $$$$13$$) {
+  $oj$$13$$.$__registerWidget$("oj.ojTreemap", $$$$13$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{isolate:null, select:null}, $_createComponent$:function($context$$39$$, $callback$$85$$, $callbackObj$$3$$) {
+    return DvtTreemap.newInstance($context$$39$$, $callback$$85$$, $callbackObj$$3$$)
   }, $_getComponentStyleClasses$:function() {
     var $styleClasses$$5$$ = this._super();
     $styleClasses$$5$$.push("oj-treemap");
@@ -23,25 +23,25 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/in
     $styleClasses$$6$$["oj-treemap-node-header oj-selected"] = [{path:"nodeDefaults/header/selectedBackgroundColor", property:"background-color"}, {path:"nodeDefaults/header/selectedOuterColor", property:"border-top-color"}, {path:"nodeDefaults/header/selectedInnerColor", property:"border-bottom-color"}];
     return $styleClasses$$6$$
   }, $_getTranslationMap$:function() {
-    var $superMap$$1$$ = this._super(), $selfMap$$1$$ = {"oj-ojTreemap.labelColor":"DvtTreemapBundle.COLOR", "oj-ojTreemap.labelSize":"DvtTreemapBundle.SIZE"}, $ret$$25$$ = {}, $key$$63$$;
-    for($key$$63$$ in $superMap$$1$$) {
-      $ret$$25$$[$key$$63$$] = $superMap$$1$$[$key$$63$$]
+    var $superMap$$1$$ = this._super(), $selfMap$$1$$ = {"oj-ojTreemap.labelColor":"DvtTreemapBundle.COLOR", "oj-ojTreemap.labelSize":"DvtTreemapBundle.SIZE"}, $ret$$25$$ = {}, $key$$65$$;
+    for($key$$65$$ in $superMap$$1$$) {
+      $ret$$25$$[$key$$65$$] = $superMap$$1$$[$key$$65$$]
     }
-    for($key$$63$$ in $selfMap$$1$$) {
-      $ret$$25$$[$key$$63$$] = $selfMap$$1$$[$key$$63$$]
+    for($key$$65$$ in $selfMap$$1$$) {
+      $ret$$25$$[$key$$65$$] = $selfMap$$1$$[$key$$65$$]
     }
     return $ret$$25$$
-  }, $_handleEvent$:function($event$$120_selection$$3$$) {
-    var $selectedItems$$2$$, $i$$190$$, $selectedItem$$2$$;
-    if(($event$$120_selection$$3$$ && $event$$120_selection$$3$$.getType ? $event$$120_selection$$3$$.getType() : null) === DvtSelectionEvent.TYPE) {
+  }, $_handleEvent$:function($event$$133_selection$$3$$) {
+    var $selectedItems$$2$$, $i$$195$$, $selectedItem$$2$$;
+    if(($event$$133_selection$$3$$ && $event$$133_selection$$3$$.getType ? $event$$133_selection$$3$$.getType() : null) === DvtSelectionEvent.TYPE) {
       $selectedItems$$2$$ = [];
-      $event$$120_selection$$3$$ = $event$$120_selection$$3$$.getSelection();
-      for($i$$190$$ = 0;$i$$190$$ < $event$$120_selection$$3$$.length;$i$$190$$++) {
-        $selectedItem$$2$$ = {id:$event$$120_selection$$3$$[$i$$190$$]}, $selectedItems$$2$$.push($selectedItem$$2$$)
+      $event$$133_selection$$3$$ = $event$$133_selection$$3$$.getSelection();
+      for($i$$195$$ = 0;$i$$195$$ < $event$$133_selection$$3$$.length;$i$$195$$++) {
+        $selectedItem$$2$$ = {id:$event$$133_selection$$3$$[$i$$195$$]}, $selectedItems$$2$$.push($selectedItem$$2$$)
       }
       this._trigger("select", null, {items:$selectedItems$$2$$})
     }else {
-      this._super($event$$120_selection$$3$$)
+      this._super($event$$133_selection$$3$$)
     }
   }})
 });

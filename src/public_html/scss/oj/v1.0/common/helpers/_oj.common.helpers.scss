@@ -44,5 +44,16 @@
   .oj-helper-clearfix {
     min-height: 0; /* support: IE7 */
   }
+  
+  /* Used by the framework's support for detecting resize */
+  .oj-helper-detect-resize {
+      position: absolute;
+      overflow: hidden;
+      visibility: hidden;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0
+  }
 
 }

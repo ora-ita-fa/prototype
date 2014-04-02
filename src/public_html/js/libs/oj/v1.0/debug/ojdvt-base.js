@@ -265,6 +265,9 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
 
     // Render the component
     this._render();
+    
+    // Add resize listener
+    oj.DomUtils.addResizeListener(this.element[0], $.proxy(this._handleResize, this));
   },
   
   // add options object to a hidden div for debugging
@@ -423,6 +426,21 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
   },
   
   // Protected function.
+  // Called when the component is resized. 
+  _handleResize : function(width, height) {
+    // Render the component at the new size if it changed enough
+    var newWidth = this.element.width();
+    var newHeight = this.element.height();
+    if(Math.abs(newWidth - this._width) + Math.abs(newHeight - this._height) >= 5) {    
+      this._component.render(null, newWidth, newHeight);
+      
+      // Update the rendered size
+      this._width = newWidth;
+      this._height = newHeight;
+    }
+  },
+  
+  // Protected function.
   // Called by our implementation to load component resources like images, 
   // resource bundles, or basemaps.
   _loadResources : function() {
@@ -482,11 +500,10 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
         return;
     }
     
-    // Uncomment for testing only
-//    console.log(JSON.stringify(this.options));
-    
     // Render the component
-    this._component.render(this.options, this.element.width(), this.element.height());
+    this._width = this.element.width();
+    this._height = this.element.height();
+    this._component.render(this.options, this._width, this._height);
   },
   
   // Override of public function in base component.

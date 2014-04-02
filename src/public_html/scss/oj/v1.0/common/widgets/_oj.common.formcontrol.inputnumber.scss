@@ -47,41 +47,53 @@
     /* Input field for inputnumber */
     .oj-inputnumber-input { 
       @include oj-form-control-content;
-      @include oj-normalize-text-input;  
+
       // we override border-radius that is in the oj-form-control-content.
       // For inputnumber, we want the radius only on the 'start' of the input
       // not the end. After the 'end' comes the up/down buttons, so we don't
       // want a curved edge next to the up/down buttons
-      @include oj-ltr {
-        @include oj-border-radius($formControlBorderRadius) {
-          border-radius: $formControlBorderRadius 0 0 $formControlBorderRadius;
-        }
-      }
-      @include oj-rtl {
-        @include oj-border-radius($formControlBorderRadius) {
-          border-radius: 0 $formControlBorderRadius $formControlBorderRadius 0;
-        }
-      }
+      @include oj-border-radius( $formControlBorderRadius 0 0 $formControlBorderRadius, $textDirection:ltr);
+      @include oj-border-radius( 0 $formControlBorderRadius $formControlBorderRadius 0, $textDirection:rtl);
+      
       @include oj-box-sizing-property(border-box);
       padding: 0 $formControlPadding; 
       height: $formControlHeight;
       width: 100%;
       display: table-cell;
+
+      // font-family and font-size would normally be included by
+      // calling @include oj-normalize-text-input;
+      // however we can't call @include oj-normalize-text-input;  
+      // or we get a css lint error because margin is set to 0 in that and 
+      // you shouldn't use margin with display: table-cell
+      // so set the font-family and font-size here instead
+      font-family: inherit; 
+      font-size: 100%; 
       
-      @include oj-placeholder()
-      {
-        color: $formControlPlaceholderColor;
+    }
+
+    /* Invalid styling for the widget. Spec calls for border around entire
+     component, not just input. */
+    .oj-inputnumber.oj-invalid .oj-inputnumber-input {
+      border: $formControlMessagingBorderWidth solid $borderColorError;
+      @include oj-ltr() {
+        border-right: none;
+      }
+      @include oj-rtl() {
+        border-left: none;
       }
     }
 
-    /* Invalid styling for the widget */
-    .oj-inputnumber.oj-invalid .oj-inputnumber-input {
-      border: $formControlMessagingBorderWidth solid $borderColorError;
-    }
-
-    /* Warning styling for the widget */
+    /* Warning styling for the widget.  Spec calls for border around entire
+     component, not just input. */
     .oj-inputnumber.oj-warning .oj-inputnumber-input {
       border: $formControlMessagingBorderWidth solid $borderColorWarning;
+      @include oj-ltr() {
+        border-right: none;
+      }
+      @include oj-rtl() {
+        border-left: none;
+      } 
     }
 
     /* Disabled styling for the widget */
@@ -116,6 +128,7 @@
 
     /* more specificity is required here to overide default button borders */
     .oj-inputnumber-button.oj-button { 
+      margin-bottom: 0;
       border-color: $formControlBorderColor;
       // line-height is needed so the button size matches the input. inputs
       // have this style on them.
@@ -124,30 +137,68 @@
       @include oj-ltr() {
         border-left: none;
       }
-      @include oj-rtl() {
+ @include oj-rtl() {
         border-right: none;
-      } 
+      }
+    }
+
+    /* Error border  for the widget. */
+    .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button {
+       border: $formControlMessagingBorderWidth solid $borderColorError;
+    }
+    /* Warning border color for the widget.  */
+    .oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button  {
+       border: $formControlMessagingBorderWidth solid $borderColorWarning;
+    }
+    
+    /* Warning/error styling for the widget.  Spec calls for border around entire
+     component, not just input. We make sure the border is only on the outside
+     of the buttons by setting border-left/right to none as appropriate.
+     The 'down' button is the outside button.
+    */
+    .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down,
+    .oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+       @include oj-ltr() {
+        border-left: none;
+       }
+       @include oj-rtl() {
+         border-right: none;
+       }
+    }
+    // The 'up' button is the inside button in both ltr and rtl, so we don't
+    // want it to have left or right border for error/warnings 
+    // since we want the border around the entire component, not just input.
+    .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up,
+    .oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up {
+         border-left: none;
+         border-right: none;
     }
     
     // according to the alta spec, the up button is before the down button
     // in the layout. The up button should have no border-radius. The 
-    // down ('end') button should have an 'end' border-radius.
+    // down ('end') button should have an 'end' border-radius. 
     .oj-inputnumber-up.oj-button { 
       border-radius: 0;
     }
 
     .oj-inputnumber-down.oj-button { 
-      @include oj-ltr() {
-        border-radius: 0 $formControlBorderRadius $formControlBorderRadius 0;
-      }
-      @include oj-rtl() {
-        border-radius: $formControlBorderRadius 0 0 $formControlBorderRadius;
-      }   
+      @include oj-border-radius( 0 $formControlBorderRadius $formControlBorderRadius 0, $textDirection:ltr);
+      @include oj-border-radius( $formControlBorderRadius 0 0 $formControlBorderRadius, $textDirection:rtl);
     }
 
     .oj-inputnumber .oj-inputnumber-up-icon,
     .oj-inputnumber .oj-inputnumber-down-icon {
       font-size: 1rem;
+    }
+    
+    // The up button looks like it is 1px lower than the down button when
+    // they are perfectly aligned, so UX team wants the up button 1px higher,
+    // so the visual perception is that they are aligned.
+    .oj-inputnumber .oj-inputnumber-up-icon {
+      margin-bottom: 1px;
+    }
+    
+    .oj-inputnumber .oj-inputnumber-down-icon {
       margin-bottom: 0;
     }
 

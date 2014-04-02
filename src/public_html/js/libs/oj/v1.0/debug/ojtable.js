@@ -1,4 +1,4 @@
-define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdatacollection-common'], 
+define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojdatacollection-common'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
@@ -6,63 +6,277 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
        function(oj, $, compCore)
 {
 
+/**
+ * @export
+ * @class oj.FlattenedTreeRowSet
+ * @classdesc RowSet wrapper for FlattenedTreeDataSource
+ * 
+ * @param {oj.FlattenedTreeDataSource} data oj.FlattenedTreeDataSource
+ * @param {Object=} options Passed through to the user's initialize routine, if any, upon construction 
+ * @constructor
+ */
+oj.FlattenedTreeRowSet = function(data, options) 
+{
+  // Initialize
+  oj.FlattenedTreeRowSet._init(this, data, options);
+};
+
+// Subclass from oj.FlattenedTreeDataSource
+oj.Object.createSubclass(oj.FlattenedTreeRowSet, oj.RowSet, "oj.FlattenedTreeRowSet");
+
+/**
+ * Initializes the data source.
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.Init = function()
+{
+    oj.FlattenedTreeRowSet.superclass.Init.call(this);
+};
+
+oj.FlattenedTreeRowSet._init = function(rowSet, data, options) 
+{
+  rowSet._eventHandlers = [];
+  rowSet._startIndex = 0;
+  
+  rowSet.Init();
+  rowSet._data = data;
+  //rowSet._addCollectionEventListeners();
+};
+
+/**
+ * Add an instance of this RowSet's Row(s) to the end of the RowSet.
+ * @param {oj.Row} row Row object
+ * @param {Object=} options at: splice the new Row into the RowSet at the value given (at:index) <p>
+ *                          deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * 
+ * @returns {Object} if deferred or virtual, return a promise when the set has completed
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.add = function(row, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Return the Row object found at the given index of the RowSet, or a promise object that will return the Row to a function
+ * in the done() call.
+ * 
+ * @param {number} index Index for which to return the Row object. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting <p>
+ *                  deferred: if true, return a deferred/promise object as described below.  If not specified, the return value will
+ *                   be determined by whether or not the RowSet is virtual
+ * @return {Object} Row object located at index. If index is out of range, returns null.  If this is a paging/virtual RowSet or
+ *                  if deferred is specified and true, at will return a jQuery promise object which will call its done function,
+ *                  passing the value at(index) 
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.at = function(index, options)
+{
+  var nodeSet = this._currentNodeSet;
+  var startIndex = nodeSet.getStart();
+  return new oj.ArrayRow(nodeSet.getData(startIndex + index));
+};
+
+/**
+ * @export
+ * Return a copy of the RowSet
+ * @return {Object} copy of the RowSet
+ */
+oj.FlattenedTreeRowSet.prototype.clone = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Fetch the RowSet data.
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeRowSet
+ * @instance
+ */
+oj.FlattenedTreeRowSet.prototype.fetch = function(options)
+{
+  options = options || {};
+  if (options['startIndex'] != null)
+  {
+    this._startIndex = options['startIndex'];
+  }
+  var rangeOption = {'start': this._startIndex, 'count':  30};
+  this._data.fetchRows(rangeOption,
+    {
+      "success": function(nodeSet)
+      {
+        this._handleFetchRowsSuccess(nodeSet);
+      }.bind(this),
+      "error": function(status)
+      {
+        //this._handleFetchRowsError(status, {'start': rowStart, 'count': rowCount}, callbacks, callbackObjects);
+      }.bind(this)
+    }
+  ); 
+};
+
+/**
+ * Return the first Row object from the RowSet whose Row id value is the given id
+ * Note this method will not function as expected if the id is not set
+ * @param {Object|string} id ID for which to return the Row object, if found. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting<p>
+ *                  deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * @return {Object} First Row object in the RowSet where Row.id = id. If none are found, returns null.
+ *                  If deferred or virtual, return a promise passing the Row when done
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.get = function(id, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @return {boolean} whether there is more data
+ */
+oj.FlattenedTreeRowSet.prototype.hasMore = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return false;
+};
+
+/**
+ * Return the array index location of the given Row object.
+ * @param {Object} row Row object to locate 
+ * @param {Object=} options deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ 
+ * @return {number} The index of the given Row object, or a promise that will call with the index when complete.
+ *                  If the object is not found, returns -1.
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.indexOf = function(row, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return 0;
+};
+
+/**
+ * @export
+ * Determine if the RowSet has any Rows
+ * 
+ * @returns {boolean} true if RowSet is empty
+ */
+oj.FlattenedTreeRowSet.prototype.isEmpty = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return true;
+};
+
+/**
+ * Remove a Row from the RowSet, if found.
+ * @param {oj.Row} row Row object
+ * @param {Object=} options silent: if set, do not fire a remove event 
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.remove = function(row, options)
+{
+  oj.Assert.failedInAbstractFunction();
+};
+
+/**
+ * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
+ * @param {Object=} data Array of Row objects with which to replace the RowSet's data. 
+ * @param {Object=} options user options, passed to event
+ * @export
+ */
+oj.FlattenedTreeRowSet.prototype.reset = function(data, options)
+{
+  oj.Assert.failedInAbstractFunction();
+};
+
+/**
+ * @export
+ * Return the length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.FlattenedTreeRowSet.prototype.size = function()
+{ 
+  return this._currentNodeSet == null ? 0 : this._currentNodeSet.getCount();
+};
+
+/**
+ * @export
+ * Sort the Rows in the RowSet
+ * 
+ * @param {Object=} options
+ */
+oj.FlattenedTreeRowSet.prototype.sort = function(options)
+{
+  oj.Assert.failedInAbstractFunction();
+};
+
+/**
+ * @export
+ * Return current start index.
+ * @returns {number} start index
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeRowSet.prototype.startIndex = function() {
+  return 0;
+};
+
+/**
+ * @export
+ * Return the total length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.FlattenedTreeRowSet.prototype.totalSize = function()
+{
+  return -1;
+};
+
+oj.FlattenedTreeRowSet.prototype._handleFetchRowsSuccess = function(nodeSet)
+{
+  this._currentNodeSet = nodeSet;
+  var i;
+  var nodeCount = nodeSet.getCount();
+  var startIndex = nodeSet.getStart();
+  for (i = 0; i < nodeCount; i++)
+  {
+    oj.FlattenedTreeRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'row': new oj.ArrayRow(nodeSet.getData(i), {'context': nodeSet.getMetadata(i)}), 'rowIdx': startIndex + i});
+  }
+};
 /*jslint browser: true,devel:true*/
 /**
  * @export
  * @class oj.TableDataSource
- * @classdesc Object representing data used by table component
- * @param {Array|Object|function():Array} data data supported by the components
+ * @classdesc Abstract object representing data used by table component
+ * @param {Object} data data supported by the components
  * @param {Object|null} options Array of options for the TableDataSource
  * @constructor
  */
 oj.TableDataSource = function(data, options)
 {
-  // Initialize
-  if (!(data instanceof Array) &&
-      !(data instanceof oj.RowSet) &&
-      !(data instanceof oj.Collection) &&
-      (typeof (data) != 'function' &&
-       typeof (data.subscribe) != 'function'))
+  if (this.constructor == oj.TableDataSource)
   {
-    // we only support Array, oj.Collection, oj.RowSet, or ko.observableArray. To
-    // check for observableArray, we can't do instanceof check because it's
-    // a function. So we just check if it contains a subscribe function.
-    var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
-    var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
+    // This should only be called by the constructors of the subclasses. If you need
+    // to initialize a new TableDataSource then call the constructors of the subclasses such
+    // as oj.ArrayTableDataSource or oj.CollectionTableDataSource.
+    var errSummary = oj.Translations.getTranslatedString('oj-ojTable.tableDataSourceInstantiated.summary');
+    var errDetail = oj.Translations.getTranslatedString('oj-ojTable.tableDataSourceInstantiated.detail');
     throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
   }
+  // Initialize
   this.data = data;
-  this._options = options;
+  this.options = options;
   this._startIndex = 0;
-
-  if (data instanceof oj.Collection)
-  {
-    this._rowSet = new oj.CollectionRowSet(data, this._options);
-    this._addRowSetEventListeners();
-  }
-  else if (data instanceof oj.RowSet)
-  {
-    this._rowSet = data;
-    this._addRowSetEventListeners();
-  }
-  else
-  {
-    this._rowSet = new oj.RowSet(/** @type Array */ (data), this._options);
-    this._addRowSetEventListeners();
-  }
-
   this.Init();
-
-  if ((options != null && (options['startFetch'] == 'enabled' || options['startFetch'] == null))
-    || options == null)
-  {
-    // do an initial fetch
-    var self = this;
-    setTimeout(function()
-    {
-      self.fetch({'startFetch': 'enabled'});
-    }, 0);
-  }
 };
 
 // Subclass from oj.DataSource 
@@ -78,22 +292,6 @@ oj.TableDataSource.prototype.Init = function()
 };
 
 /**
- * Add an instance of oj.Row to the end of the RowSet.
- * @param {Object|Array} m Row object (or array of rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add().
- * @param {Object=} options silent: if set, do not fire an add event<p>
- *                          at: splice the new Row into the RowSet at the value given (at:index) <p>
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.TableDataSource
- * @instance
- */
-oj.TableDataSource.prototype.add = function(m, options)
-{
-  this._rowSet.add(m, options);
-};
-
-/**
  * Return the oj.Row object found at the given index of the RowSet.
  * 
  * @param {number} index Index for which to return the Row object. 
@@ -106,7 +304,8 @@ oj.TableDataSource.prototype.add = function(m, options)
  */
 oj.TableDataSource.prototype.at = function(index)
 {
-  return this._rowSet.at(index);
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -120,26 +319,7 @@ oj.TableDataSource.prototype.at = function(index)
  */
 oj.TableDataSource.prototype.fetch = function(options)
 {
-  options = options || {};
-  if (options['startIndex'] != null)
-  {
-    this._startIndex = options['startIndex'];
-  }
-  var data = this.data;
-
-  if (options['startFetch'] == 'enabled')
-  {
-    // only do an initial fetch if collection is empty
-    if (this._rowSet.isEmpty() ||
-      (typeof this._rowSet.size() === 'undefined'))
-    {
-      this._rowSet.fetch(options);
-    }
-  }
-  else
-  {
-    this._rowSet.fetch(options);
-  }
+  oj.Assert.failedInAbstractFunction();
 };
 
 /**
@@ -154,7 +334,8 @@ oj.TableDataSource.prototype.fetch = function(options)
  */
 oj.TableDataSource.prototype.get = function(id)
 {
-  return this._rowSet.get(id);
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -167,10 +348,7 @@ oj.TableDataSource.prototype.get = function(id)
  */
 oj.TableDataSource.prototype.hasMore = function()
 {
-  if (this._rowSet != null)
-  {
-    return this._rowSet.hasMore();
-  }
+  oj.Assert.failedInAbstractFunction();
   return false;
 };
 
@@ -186,37 +364,8 @@ oj.TableDataSource.prototype.hasMore = function()
  */
 oj.TableDataSource.prototype.indexOf = function(row)
 {
-  return this._rowSet.indexOf(row);
-};
-
-/**
- * Remove a Row from the RowSet, if found.
- * @param {Object|Array} m oj.Row object or array of Rows to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.TableDataSource
- * @instance
- */
-oj.TableDataSource.prototype.remove = function(m, options)
-{
-  this._rowSet.remove(m, options);
-};
-
-/**
- * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
- * @param {Object=} data Array of Row objects or attribute/value pair objects with which to replace the RowSet's data. 
- * @param {Object=} options user options, passed to event
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.TableDataSource
- * @instance
- */
-oj.TableDataSource.prototype.reset = function(data, options)
-{
-  this._rowSet.reset(data, options);
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -230,7 +379,8 @@ oj.TableDataSource.prototype.reset = function(data, options)
  */
 oj.TableDataSource.prototype.size = function()
 {
-  return this._rowSet.size();
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -245,19 +395,24 @@ oj.TableDataSource.prototype.size = function()
  */
 oj.TableDataSource.prototype.sort = function(comparator, options)
 {
-  this._rowSet['comparator'] = comparator;
-  this._rowSet.sort(options);
+  oj.Assert.failedInAbstractFunction();
 };
 
 /**
  * @export
- * Return current start index.
+ * Get or set the current start index.
+ * @param {number} startIndex start index
  * @returns {number} start index
  * @expose
  * @memberof! oj.TableDataSource
  * @instance
  */
-oj.TableDataSource.prototype.startIndex = function() {
+oj.TableDataSource.prototype.startIndex = function(startIndex) 
+{
+  if (startIndex != null)
+  {
+    this._startIndex = startIndex;
+  }
   return this._startIndex;
 };
 
@@ -271,42 +426,9 @@ oj.TableDataSource.prototype.startIndex = function() {
  */
 oj.TableDataSource.prototype.totalSize = function()
 {
-  return this._rowSet.totalSize();
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
-
-/**
- * Add event listeners to the RowSet
- * @private
- */
-oj.TableDataSource.prototype._addRowSetEventListeners = function()
-{
-  var self = this;
-  this._rowSet.on(oj.RowSet.EventType['ADD'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['REMOVE'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['RESET'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['SORT'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['CHANGE'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['DESTROY'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['SYNC'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SYNC'], event);
-  });
-  this._rowSet.on(oj.RowSet.EventType['ERROR'], function(event) {
-    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
-  });
-};
-
 /*jslint browser: true,devel:true*/
 /**
  * @export
@@ -320,11 +442,8 @@ oj.PagingTableDataSource = function(dataSource, options)
 {
   // Initialize
   options = options || {};
-  if (!(dataSource instanceof oj.TableDataSource) &&
-    !(dataSource instanceof Array) &&
-    !(dataSource instanceof oj.Collection) &&
-    (typeof (dataSource) != 'function' &&
-      typeof (dataSource.subscribe) != 'function'))
+  
+  if (!(dataSource instanceof oj.TableDataSource))
   {
     // we only support Array, oj.Collection, or ko.observableArray. To
     // check for observableArray, we can't do instanceof check because it's
@@ -332,11 +451,6 @@ oj.PagingTableDataSource = function(dataSource, options)
     var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
     var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
     throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
-  }
-  if (!(dataSource instanceof oj.TableDataSource))
-  {
-    options['startFetch'] = 'disabled';
-    dataSource = new oj.TableDataSource(dataSource, options);
   }
   this.dataSource = dataSource;
   this._startIndex = 0;
@@ -438,24 +552,6 @@ oj.PagingTableDataSource.prototype.startIndex = function() {
 /**** start delegated functions ****/
 
 /**
- * Add an instance of this collection's model(s) to the end of the collection.
- * @param {Object|Array} m Model object (or array of models) to add. These can be already-created instance of the oj.Model object, or sets of attribute/values, which will be wrapped by add() using the collection's model.
- * @param {Object=} options silent: if set, do not fire an add event<p>
- *                          at: splice the new model into the collection at the value given (at:index) <p>
- *                          merge: if set, and if the given model already exists in the collection (matched by id), then merge the attribute/value sets, firing change events<p>
- *                          sort: if set, do not re-sort the collection even if the comparator is set. 
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.PagingTableDataSource
- * @instance
- */
-oj.PagingTableDataSource.prototype.add = function(m, options)
-{
-  return this.dataSource.add(m, options);
-};
-
-/**
  * Return the model object found at the given index of the collection.
  * 
  * @param {number} index Index for which to return the model object. 
@@ -539,36 +635,6 @@ oj.PagingTableDataSource.prototype.off = function(eventType, eventHandler)
 };
 
 /**
- * Remove a model from the collection, if found.
- * @param {Object|Array} m Model object or array of Models to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.PagingTableDataSource
- * @instance
- */
-oj.PagingTableDataSource.prototype.remove = function(m, options)
-{
-  this.dataSource.remove(m, options);
-};
-
-/**
- * Remove and replace the collection's entire list of models with a new set of models, if provided. Otherwise, empty the collection.
- * @param {Object=} data Array of model objects or attribute/value pair objects with which to replace the collection's data. 
- * @param {Object=} options user options, passed to event
- * @throws {Error}
- * @export
- * @expose
- * @memberof! oj.PagingTableDataSource
- * @instance
- */
-oj.PagingTableDataSource.prototype.reset = function(data, options)
-{
-  this.dataSource.reset(data, options);
-};
-
-/**
  * @export
  * Return the size of the data locally in the dataSource. -1 if an initial fetch has not been
  * done yet.
@@ -619,6 +685,276 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
 /**** end delegated functions ****/
 
+/*jslint browser: true,devel:true*/
+/**
+ * @export
+ * @class oj.ArrayTableDataSource
+ * @classdesc Object representing data used by table component
+ * @param {Array|Object|function():Array} data data supported by the components
+ * @param {Object|null} options Array of options for the TableDataSource
+ * @constructor
+ */
+oj.ArrayTableDataSource = function(data, options)
+{
+  // Initialize
+  if (!(data instanceof Array) &&
+      (typeof (data) != 'function' &&
+       typeof (data.subscribe) != 'function'))
+  {
+    // we only support Array or ko.observableArray. To
+    // check for observableArray, we can't do instanceof check because it's
+    // a function. So we just check if it contains a subscribe function.
+    var errSummary = oj.Translations.getTranslatedString('oj-ojTable.dataInvalidType.summary');
+    var errDetail = oj.Translations.getTranslatedString('oj-ojTable.dataInvalidType.detail');
+    throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
+  }
+
+  oj.ArrayTableDataSource.superclass.constructor.call(this, data, options);
+
+  this._rowSet = new oj.ArrayRowSet(/** @type Array */ (data), this.options);
+  this._addRowSetEventListeners();
+
+  if ((options != null && (options['startFetch'] == 'enabled' || options['startFetch'] == null))
+    || options == null)
+  {
+    // do an initial fetch
+    var self = this;
+    setTimeout(function()
+    {
+      self.fetch({'startFetch': 'enabled'});
+    }, 0);
+  }
+};
+
+// Subclass from oj.DataSource 
+oj.Object.createSubclass(oj.ArrayTableDataSource, oj.TableDataSource, "oj.ArrayTableDataSource");
+
+/**
+ * Initializes the instance.
+ * @export
+ */
+oj.ArrayTableDataSource.prototype.Init = function()
+{
+  oj.ArrayTableDataSource.superclass.Init.call(this);
+};
+
+/**
+ * Add an instance of oj.Row to the end of the RowSet.
+ * @param {Object} m Row object (or array of rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add().
+ * @param {Object=} options silent: if set, do not fire an add event<p>
+ *                          at: splice the new Row into the RowSet at the value given (at:index) <p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.add = function(m, options)
+{
+  this._rowSet.add(m, options);
+};
+
+/**
+ * Return the oj.Row object found at the given index of the RowSet.
+ * 
+ * @param {number} index Index for which to return the Row object. 
+ * @return {Object} oj.Row object located at index. If index is out of range, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.at = function(index)
+{
+  return this._rowSet.at(index);
+};
+
+/**
+ * Fetch the RowSet data.
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.fetch = function(options)
+{
+  options = options || {};
+  if (options['startIndex'] != null)
+  {
+    oj.ArrayTableDataSource.superclass.startIndex.call(this, options['startIndex']);
+  }
+  var data = this.data;
+
+  if (options['startFetch'] == 'enabled')
+  {
+    // only do an initial fetch if collection is empty
+    if (this._rowSet.isEmpty() ||
+      (typeof this._rowSet.size() === 'undefined'))
+    {
+      this._rowSet.fetch(options);
+    }
+  }
+  else
+  {
+    this._rowSet.fetch(options);
+  }
+};
+
+/**
+ * Return the first oj.Row object from the RowSet whose Row id value is the given id
+ * @param {string} id ID for which to return the Row object, if found. 
+ * @return {Object} First Row object in the RowSet where Row.id = id. If none are found, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.get = function(id)
+{
+  return this._rowSet.get(id);
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @returns {boolean} whether there is more data
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.hasMore = function()
+{
+  if (this._rowSet != null)
+  {
+    return this._rowSet.hasMore();
+  }
+  return false;
+};
+
+/**
+ * Return the array index location of the given Row object.
+ * @param {Object} row oj.Row object to locate 
+ * @return {number} The index of the given Row object. If the object is not found, returns -1.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.indexOf = function(row)
+{
+  return this._rowSet.indexOf(row);
+};
+
+/**
+ * Remove a Row from the RowSet, if found.
+ * @param {Object} m oj.Row object or array of Rows to remove. 
+ * @param {Object=} options silent: if set, do not fire a remove event 
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.remove = function(m, options)
+{
+  this._rowSet.remove(m, options);
+};
+
+/**
+ * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
+ * @param {Object=} data Array of Row objects or attribute/value pair objects with which to replace the RowSet's data. 
+ * @param {Object=} options user options, passed to event
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.reset = function(data, options)
+{
+  this._rowSet.reset(data, options);
+};
+
+/**
+ * @export
+ * Get the length of the RowSet.
+ * limit it.
+ * @returns {number} length of the RowSet
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.size = function()
+{
+  return this._rowSet.size();
+};
+
+/**
+ * Sort the Rows in the RowSet
+ * @param {Object=} comparator
+ * @param {Object=} options silent: if true, do not fire the sort event
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.sort = function(comparator, options)
+{
+  this._rowSet['comparator'] = comparator;
+  this._rowSet.sort(options);
+};
+
+/**
+ * @export
+ * Return the total size of data available, including server side if not local.
+ * @returns {number} total size of data
+ * @expose
+ * @memberof! oj.ArrayTableDataSource
+ * @instance
+ */
+oj.ArrayTableDataSource.prototype.totalSize = function()
+{
+  return this._rowSet.totalSize();
+};
+
+/**
+ * Add event listeners to the RowSet
+ * @private
+ */
+oj.ArrayTableDataSource.prototype._addRowSetEventListeners = function()
+{
+  var self = this;
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ADD'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['REMOVE'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['RESET'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SORT'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['CHANGE'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['DESTROY'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SYNC'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SYNC'], event);
+  });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ERROR'], function(event) {
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
+  });
+};
 /**
  * The ojTable component enhances a HTML table element into one that supports all
  * the features in JET Table.
@@ -878,7 +1214,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            *   <li>data: The cell data</li>
            *   <li>column: The column object</li>
            *   <li>component: Instance of the component</li>
-           *   <li>dataSource: Instance of the dataSource used by the table </li>
+           *   <li>datasource: Instance of the datasource used by the table </li>
            *   <li>row: Key/value pairs of the row</li>
            *   <li>status: Contains the rowIndex, rowKey, and activeRow</li>
            *   <li>parentElement: Empty rendered <td> element</li>
@@ -922,8 +1258,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           /** 
            * The data to bind to the component. 
            * <p>
-           * Can be of type oj.TableDataSource {@link oj.TableDataSource} 
-           * or oj.Collection {@link oj.Collection}.
+           * Must be of type oj.TableDataSource {@link oj.TableDataSource}
            * @expose 
            * @public 
            * @instance
@@ -938,7 +1273,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            * <ul>
            *   <li>component: Instance of the component</li>
            *   <li>parentElement: Empty rendered TFOOT element</li>
-           *   <li>dataSource: Instance of the dataSource used by the table </li>
+           *   <li>datasource: Instance of the datasource used by the table </li>
            * </ul>
            * The function returns either a String or 
            * a DOM element of the content inside the footer. If the developer chooses 
@@ -1244,7 +1579,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           _TABLE_DATA_CELL_HGRID_LINES_CLASS:             'oj-table-data-cell-hgrid-lines',
           _TABLE_STATUS_MESSAGE_CLASS:                    'oj-table-status-message',
           _TABLE_NO_DATA_MESSAGE_CLASS:                   'oj-table-no-data-message',
-          _WIDGET_ICON_CLASS:                             'oj-widget-icon'
+          _WIDGET_ICON_CLASS:                             'oj-widget-icon',
+          _HIDDEN_CONTENT_ACC_CLASS:                      'oj-helper-hidden-accessible'
         },
       /**
        * @private
@@ -1325,49 +1661,31 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         if (index != null)
         {
-          var m = null;
-          // we need to set the active row
-          if (index != -1)
+          if (this._activeRowIndex != index)
           {
-            m = data.at(index);
-          }
-
-          if ((index == -1) || (m != null))
-          {
-            if (this._activeRow != m)
+            // if new active row is different from the existing one then trigger
+            // an event
+            var oldIndex = this._activeRowIndex;
+            try
             {
-              // if new active row is different from the existing one then trigger
-              // an event
-              var oldActiveRow = this._activeRow;
-              var oldIndex = oldActiveRow == null ? -1 : this._getData().indexOf(oldActiveRow);
-              try
-              {
-                this._trigger('preactiverow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
-              }
-              catch (err)
-              {
-                // caught an error. Do not change active row
-                var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_SUMMARY);
-                var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_DETAIL, err.toString());
-                throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
-              }
-              this._activeRow = m;
-              this._trigger('activerow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
-              this._setRowFocus(index, true, null);
+              this._trigger('preactiverow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
             }
-            return index;
+            catch (err)
+            {
+              // caught an error. Do not change active row
+              var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_SUMMARY);
+              var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_PREACTIVEROW_ERROR_DETAIL, err.toString());
+              throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
+            }
+            this._activeRowIndex = index;
+            this._trigger('activerow', null, {'newRowIndex': index, 'oldRowIndex': oldIndex});
+            this._setRowFocus(index, true, null);
           }
-          else
-          {
-            // index is unavailable
-            var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_ACTIVEROW_UNAVAILABLE_INDEX_SUMMARY);
-            var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_ACTIVEROW_UNAVAILABLE_INDEX_DETAIL, index.toString());
-            throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
-          }
+          return index;
         }
-        else if (this._activeRow != null)
+        else if (this._activeRowIndex != null)
         {
-          return data.indexOf(this._activeRow);
+          return this._activeRowIndex;
         }
 
         return -1;
@@ -1777,6 +2095,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         // create all of our DOM. These _create* calls create skeleton DOM elements
         // the content is populated later.
         this._createTableContainer();
+        // create the context menu
+        this._createContextMenu();
         // we only need a scroller div if we are using fallback scrolling
         if (this._useFallbackScrolling)
         {
@@ -1787,7 +2107,10 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         {
           this._createTableHeader();
         }
-        this._createTableFooter();
+        if (!this._isTableFooterless())
+        {
+          this._createTableFooter();
+        }
         this._createTableBody();
         this._createTableNoDataMessage();
         this._createTableStatusMessage();
@@ -1989,7 +2312,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           /**
            * invoke a sort on the column data when the mouse clicks the ascending link
            */
-          'mousedown .oj-table-column-header-asc-link': function(event)
+          'click .oj-table-column-header-asc-link': function(event)
           {
             this._checkFocus();
             var columnIdx = this._getElementColumnIdx($(event.target));
@@ -2000,7 +2323,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           /**
            * invoke a sort on the column data when the mouse clicks the descending link
            */
-          'mousedown .oj-table-column-header-dsc-link': function(event)
+          'click .oj-table-column-header-dsc-link': function(event)
           {
             this._checkFocus();
             var columnIdx = this._getElementColumnIdx($(event.target));
@@ -2013,7 +2336,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            * Ctrl + click results in selection and focus. Plain click results in focus.
            * Plain click on a selected row removes the selection.
            */
-          'mousedown .oj-table-data-cell': function(event)
+          'click .oj-table-data-cell': function(event)
           {
             this._checkFocus();
             // get the row index of the cell element
@@ -2059,7 +2382,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
            * set the column header selection and focus. Plain click results in
            * focus and selection. If Ctrl is not pressed then we have single column selection.
            */
-          'mousedown .oj-table-column-header': function(event)
+          'click .oj-table-column-header': function(event)
           {
             this._checkFocus();
             // get the column index
@@ -2109,24 +2432,11 @@ oj.PagingTableDataSource.prototype.totalSize = function()
        */
       _refresh: function()
       {
-        if (this._isColumnMetadataUpdated())
+        var self = this;
+        setTimeout(function()
         {
-          this._clearCachedMetadata();
-          this._refreshTableHeader();
-        }
-        this._refreshTableFooter();
-        var dataMetadataUpdated = false;
-        if (this._isDataMetadataUpdated())
-        {
-          dataMetadataUpdated = true;
-          this._clearCachedDataMetadata();
-        }
-        this._refreshTableBody();
-        this._refreshTableDimensions();
-        if (dataMetadataUpdated)
-        {
-          this._registerDataSourceEventListeners();
-        }
+          self._refreshAll()
+        }, 0);
       },
       /**
        * @override
@@ -2518,19 +2828,16 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         if (!this._data && this.options.data != null)
         {
           var data = this.options.data;
-          if (data instanceof oj.Collection)
-          {
-            this._data = new oj.TableDataSource(data, null);
-          }
-          else if (data instanceof oj.TableDataSource ||
-                   data instanceof oj.PagingTableDataSource)
+          if (data instanceof oj.TableDataSource ||
+              data instanceof oj.PagingTableDataSource)
           {
             this._data = data;
           }
           else
           {
-            var errSummary = this.getTranslatedString(this._BUNDLE_KEY._ERR_DATA_INVALID_TYPE_SUMMARY);
-            var errDetail = this.getTranslatedString(this._BUNDLE_KEY._ERR_DATA_INVALID_TYPE_DETAIL);
+            // we only support TableDataSource
+            var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
+            var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
             throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
           }
           this._dataMetadata = this.options.data;
@@ -2592,6 +2899,27 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         {
           return null;
         }
+      },
+      /**
+       * Find the first ancestor of an element with a specific class name
+       * @param {jQuery} element the element to find the nearest class name to
+       * @param {string} className the class name to look for
+       * @return {jQuery|null} the element with the className, if there is none returns null 
+       * @private	 
+       */
+      _getFirstAncestor: function(element, className) {
+        var parents;
+        
+        if (element.hasClass(className))
+        {
+          return element;
+        }
+        parents = element.parents('.' + className);
+        if (parents.length != 0)
+        {
+          return parents.eq(0);
+        }
+        return null;
       },
       /**
        * Get the focused column header index
@@ -2884,6 +3212,35 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return null;
       },
       /**
+       * Get the context object to pass into the renderer
+       * @param {Object} row  oj.Row instance
+       * @param {Object} parentElement element
+       * @private
+       */
+      _getRendererContextObject: function(row, parentElement)
+      {
+        var context = [];
+        context['component'] = this;
+        context['datasource'] = this._getData();
+        context['parentElement'] = parentElement;
+      
+        if (row != null)
+        {
+          context['status'] = this._getRendererStatusObject(row);
+          var rowContext = row.context;
+          var i;
+          for (i in rowContext)
+          {
+            if (rowContext.hasOwnProperty(i))
+            {
+              context[i] = rowContext[i];
+            }
+          }
+        }
+        
+        return context;
+      },
+      /**
        * Get the status object to pass into the renderer
        * @param {Object} row  oj.Row instance
        * @return {Object} status object
@@ -2892,7 +3249,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       _getRendererStatusObject: function(row)
       {
         return {'rowIndex': this._getData().indexOf(row),
-          'rowKey': row.id,
+          'rowKey': row['id'],
           'activeRow': this['activeRow']()};
       },
       /**
@@ -2953,6 +3310,73 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return 0;
       },
       /**
+       * Handle an ojbeforeshow event on the context menu. Set the position correctly for keyboard events and store the Keyboard/Mouse event that called the context menu
+       * @private	 
+       */
+      _handleContextMenuBeforeShow: function(event, ui)
+      {
+        var contextMenu = this._getContextMenu();
+
+        this._contextMenuEvent = event['originalEvent']['originalEvent'];
+        if (this._contextMenuEvent['type'] === 'keydown')
+        {
+          contextMenu.ojMenu("option", "menuPosition", {"my": "left top", "at": "left bottom", "of": this.contextMenuEvent['target']});
+        }
+        else
+        {
+          contextMenu.ojMenu("option", "menuPosition", {"my": "left top", "at": "left bottom"});
+        }
+        
+        var headerColumn = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-column-header');
+        var tableBodyCell = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-data-cell');
+        
+        if (tableBodyCell != null)
+        {
+          var columnIdx = this._getElementColumnIdx(tableBodyCell);
+          headerColumn = this._getTableHeaderColumn(columnIdx);
+        }
+
+        if (headerColumn.attr('data-oj-sortable') == this._OPTION_ENABLED)
+        {
+          this._getContextMenu().find('[data-oj-command=oj-table-sortAsc]').removeClass('oj-disabled');
+          this._getContextMenu().find('[data-oj-command=oj-table-sortDsc]').removeClass('oj-disabled');
+        }
+        else
+        {
+          this._getContextMenu().find('[data-oj-command=oj-table-sortAsc]').addClass('oj-disabled');
+          this._getContextMenu().find('[data-oj-command=oj-table-sortDsc]').addClass('oj-disabled');
+        }
+      },
+      /**
+       * Handle an ojselect event on a menu item, if sort call the handler on the core.
+       * If resize prompt the user with a dialog box
+       * @private	 
+       */
+      _handleContextMenuSelect: function(event, ui)
+      {
+        var menuItemCommand = ui.item.attr('data-oj-command');
+        var headerColumn = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-column-header');
+        var tableBodyCell = this._getFirstAncestor($(this._contextMenuEvent['target']), 'oj-table-data-cell');
+        var columnIdx = null;
+        
+        if (headerColumn != null)
+        {
+          columnIdx = this._getElementColumnIdx(headerColumn);
+        }
+        if (tableBodyCell != null)
+        {
+          columnIdx = this._getElementColumnIdx(tableBodyCell);
+        }
+        if (menuItemCommand == 'oj-table-sortAsc')
+        {
+          this._handleSortTableHeaderColumn(columnIdx, true);
+        }
+        else if (menuItemCommand == 'oj-table-sortDsc')
+        {
+          this._handleSortTableHeaderColumn(columnIdx, false);
+        }
+      },
+      /**
        * Callback handler for data error.
        * @param {Object} error 
        * @private
@@ -3004,13 +3428,19 @@ oj.PagingTableDataSource.prototype.totalSize = function()
        * Callback handler for rows added into the datasource. Refresh the DOM
        * at the row index and refresh the table dimensions to accomodate the new
        * row
-       * @param {Object} row  oj.Row instance
+       * @param {Object} event
        * @private
        */
-      _handleDataRowAdd: function(row)
+      _handleDataRowAdd: function(event)
       {
+        var rowIdx = event['rowIdx'];
+        var row = event['row'];
+        
+        if (rowIdx == null)
+        {
+          rowIdx = this._getData().indexOf(row);
+        }
         this._hideStatusMessage();
-        var rowIdx = this._getData().indexOf(row);
         this._refreshTableBodyRow(rowIdx, row);
         // refresh the rowIdx of all remaining rows
         this._refreshTableBodyRowIdxs();
@@ -3020,13 +3450,19 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       /**
        * Callback handler for row change in the datasource. Refresh the changed
        * row.
-       * @param {Object} row  oj.Row instance 
+       * @param {Object} event
        * @private
        */
-      _handleDataRowChange: function(row)
+      _handleDataRowChange: function(event)
       {
+        var rowIdx = event['rowIdx'];
+        var row = event['row'];
+        
+        if (rowIdx == null)
+        {
+          rowIdx = this._getData().indexOf(row);
+        }
         this._hideStatusMessage();
-        var rowIdx = this._getData().indexOf(row);
         this._refreshTableBodyRow(rowIdx, row);
         this._refreshTableDimensions();
       },
@@ -3035,11 +3471,12 @@ oj.PagingTableDataSource.prototype.totalSize = function()
        * table body by searching for the matching rowKey. New rows will have null rowKey.
        * After removing the row, refresh all the remaining row indexes since
        * they will have shifted. Lastly, refresh the table dimensions
-       * @param {Object} row  oj.Row instance
+       * @param {Object} event
        * @private
        */
-      _handleDataRowRemove: function(row)
+      _handleDataRowRemove: function(event)
       {
+        var row = event['row'];
         this._hideStatusMessage();
         var rowKey = row.id;
 
@@ -3624,6 +4061,21 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return false;
       },
       /**
+       * Returns whether the table is footerless
+       * @return {boolean} true or false
+       * @private
+       */
+      _isTableFooterless: function()
+      {
+        var footerRenderer = this.options['footerRenderer'];
+
+        if (footerRenderer)
+        {
+          return false;
+        }
+        return true;
+      },
+      /**
        * Return whether styling has been applied to set the table height
        * @return {boolean} true or false
        * @private
@@ -3681,6 +4133,15 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         return true;
       },
       /**
+       * Returns whether the table header columns were rendered
+       * @return {boolean} true or false
+       * @private
+       */
+      _isTableHeaderColumnsRendered: function()
+      {
+        return this._renderedTableHeaderColumns == true;
+      },
+      /**
        * Return whether the component is in table navigation mode
        * @return {boolean} true or false
        * @private
@@ -3688,6 +4149,33 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       _isTableNavigationMode: function()
       {
         return this._tableNavMode;
+      },
+      /**
+       * @override
+       * @private
+       */
+      _refreshAll: function()
+      {
+        if (this._isColumnMetadataUpdated() ||
+            (!this._isTableHeaderColumnsRendered() &&
+            !this._isTableHeaderless()))
+        {
+          this._clearCachedMetadata();
+          this._refreshTableHeader();
+        }
+        this._refreshTableFooter();
+        var dataMetadataUpdated = false;
+        if (this._isDataMetadataUpdated())
+        {
+          dataMetadataUpdated = true;
+          this._clearCachedDataMetadata();
+        }
+        this._refreshTableBody();
+        this._refreshTableDimensions();
+        if (dataMetadataUpdated)
+        {
+          this._registerDataSourceEventListeners();
+        }
       },
       /**
        * Fix up the table header padding to accommodate the sort links
@@ -3796,11 +4284,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           this._insertTableBodyRow(rowIdx, tableBodyRow, row, docFrag);
           var tableBody = tableBodyRow.parent();
 
-          var rowContent = rowRenderer({'component': this, 
-            'row': row.pairs(),
-            'dataSource': this._getData(),
-            'status': this._getRendererStatusObject(row),
-            'parentElement': tableBodyRow[0]});
+          var rowContent = rowRenderer({'rowContext': this._getRendererContextObject(row, tableBodyRow[0]), 
+                                        'row': row.pairs()});
 
           if (rowContent != null)
           {
@@ -4148,8 +4633,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         if (footerRenderer)
         {
-          var footerContent = footerRenderer({'component': this,
-            'parentElement': tableFooter[0], 'dataSource': this._getData()});
+          var footerContent = footerRenderer({'footerContext': this._getRendererContextObject(null, tableFooter[0])});
            
           if (footerContent != null)
           {
@@ -4190,9 +4674,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         // remove all the existing column headers
         tableHeaderRow.empty();
 
-        if (columns)
+        if (columns && columns.length > 0)
         {
-
           var tableHeaderAccSelectRowColumn = this._createTableHeaderAccSelectRowColumn();
           tableHeaderRow.append(tableHeaderAccSelectRowColumn);
           // first validate column renderer metadata
@@ -4210,9 +4693,8 @@ oj.PagingTableDataSource.prototype.totalSize = function()
             if (headerRenderer)
             {
               // if headerRenderer is defined then call that
-              headerColumnContent = headerRenderer({'component': this,
-                'column': column,
-                'parentElement': headerColumn[0]});
+              headerColumnContent = headerRenderer({'headerContext': this._getRendererContextObject(null, headerColumn[0]),
+                                                    'column': column});
               
               if (headerColumnContent != null)
               {
@@ -4235,6 +4717,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
             // set the acc column selection checkbox
             this._createTableHeaderColumnAccSelect(i);
           }
+          this._renderedTableHeaderColumns = true;
         }
       },
       /**
@@ -4407,6 +4890,23 @@ oj.PagingTableDataSource.prototype.totalSize = function()
             // // component will be notified that the table was scrolled.
             this._trigger('scroll', event, {'scrollLeft': $(event.target).scrollLeft(), 'scrollTop': scrollTop});
           }).bind(this));
+        }
+      },
+      /**
+       * Register event listeners for resize the container DOM element.
+       * @param {jQuery} element  DOM element
+       * @private
+       */
+      _registerResizeListener: function(element)
+      {         
+        if (!this._isResizeListenerAdded)
+        {
+          var self = this;
+          oj.DomUtils.addResizeListener(element[0], function(width, height)
+                                                    {
+                                                      self._refreshTableDimensions();
+                                                    });
+          this._isResizeListenerAdded = true;
         }
       },
        /**
@@ -5099,6 +5599,110 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       /**** start internal DOM functions ****/
 
       /**
+       * Add a default context menu to the table container if there is none. If there is
+       * a context menu set on the table options we use that one. Add listeners
+       * for context menu before show and select.
+       * @return {jQuery} jQuery ul DOM element
+       * @private	 
+       */
+      _createContextMenu: function()
+      {
+        var menuContainer = null;
+        var sortMenu = null, listItems;
+        var self = this;
+
+        if (this._getData() != null)
+        {
+          if (this.options["contextMenu"]['menu'] == null)
+          {
+            menuContainer = $(document.createElement('ul'));
+            menuContainer.css('display', 'none');
+            menuContainer.attr('id', this._getTable().id + 'contextmenu');
+            this._getTableContainer().append(menuContainer);
+            sortMenu = this._createContextMenuItem('sort');
+            menuContainer.append(sortMenu);
+            menuContainer.ojMenu();
+            this._setOption("contextMenu", {menu: menuContainer.attr('id')});
+          }
+          else
+          {
+            menuContainer = $('#' + this.options["contextMenu"]['menu']);
+            listItems = menuContainer.find('[data-oj-command]');
+            listItems.each(function() {
+              var command;
+              if ($(this).children('a').length === 0)
+              {
+                command = $(this).attr('data-oj-command').split("-");
+                $(this).replaceWith(self._createContextMenuItem(command[command.length - 1]));
+              }
+            });
+            menuContainer.ojMenu('refresh');
+          }
+          menuContainer.on("ojbeforeshow", this._handleContextMenuBeforeShow.bind(this));
+          menuContainer.on("ojselect", this._handleContextMenuSelect.bind(this));
+          this._menuContainer = menuContainer;
+        }
+        return menuContainer;
+      },
+      /**
+       * Builds a menu for a command, takes care of submenus where appropriate
+       * @return {jQuery} jQuery li DOM element
+       * @private	 
+       */
+      _createContextMenuItem: function(command)
+      {
+        if (command === 'sort')
+        {
+          return $(this._createContextMenuListItem(command)).append($('<ul></ul>').append($(this._createContextMenuListItem('sortAsc'))).append($(this._createContextMenuListItem('sortDsc'))));
+        }
+        else if (Object.keys(this.resources.commands).indexOf(command) != -1)
+        {
+          return $(this._createContextMenuListItem(command));
+        }
+        return null;
+      },
+      /**
+       * Builds a context menu list item from a command
+       * @param {string} command the string to look up command value for as well as translation
+       * @return {jQuery} jQuery li DOM element
+       * @private	 
+       */
+      _createContextMenuListItem: function(command)
+      {
+        var contextMenuListItem = $(document.createElement('li'));
+        contextMenuListItem.attr('data-oj-command', 'oj-table-' + command);
+        contextMenuListItem.append(this._createContextMenuLabel(command));
+        
+        return contextMenuListItem;
+      },
+      /**
+       * Builds a context menu label by looking up command translation
+       * @param {string} command the string to look up translation for
+       * @return {jQuery} jQuery a DOM element
+       * @private	 
+       */
+      _createContextMenuLabel: function(command)
+      {
+        var contextMenuLabel = $(document.createElement('a'));
+        contextMenuLabel.attr('href', '#');
+        var commandString = null;
+        if (command == 'sort')
+        {
+           commandString = this.getTranslatedString('labelSort');
+        }
+        else if (command == 'sortAsc')
+        {
+          commandString = this.getTranslatedString('labelSortAsc');
+        }
+        else if (command == 'sortDsc')
+        {
+          commandString = this.getTranslatedString('labelSortDsc');
+        }
+        contextMenuLabel.append(commandString);
+        
+        return contextMenuLabel;
+      },
+      /**
        * Create an empty tbody element with appropriate styling
        * @return {jQuery} jQuery tbody DOM element
        * @private
@@ -5147,18 +5751,10 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         accSelectionCell = $(document.createElement('td'));
         accSelectionCell.addClass(this._CSS_CLASSES._TABLE_DATA_CELL_ACC_SELECT_CLASS);
+        accSelectionCell.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         if (!this._isTableHeaderless())
         {
           accSelectionCell.attr('headers', this._COLUMN_HEADER_ROW_SELECT_ID);
-        }
-        accSelectionCell.css('position', 'absolute');
-        if (this._GetReadingDirection() === "rtl")
-        {
-          accSelectionCell.css('right', '-999em');
-        }
-        else
-        {
-          accSelectionCell.css('left', '-999em');
         }
         var accSelectCheckbox = $(document.createElement('input'));
         // set the row index on the element
@@ -5196,10 +5792,9 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         var options = this.options;
         // need to enclose the table in a div to provide horizontal scrolling
         var tableContainer = $(document.createElement('div'));
-        this._styleTableContainer(tableContainer);
-
         this.element.parent()[0].replaceChild(tableContainer[0], this.element[0]);
         tableContainer.prepend(this.element);
+        this._styleTableContainer(tableContainer);
 
         return tableContainer;
       },
@@ -5245,12 +5840,11 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       {
         var headerColumn = $(document.createElement('th'));
         headerColumn.addClass(this._CSS_CLASSES._COLUMN_HEADER_ACC_SELECT_ROW_CLASS);
+        headerColumn.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         headerColumn.attr('id', this._COLUMN_HEADER_ROW_SELECT_ID);
         var selectRowTitle = this.getTranslatedString(this._BUNDLE_KEY._LABEL_SELECT_ROW);
         headerColumn.attr('title', selectRowTitle);
         headerColumn.append(selectRowTitle);
-        headerColumn.css('position', 'absolute');
-        headerColumn.css('left', '-999em');
 
         return headerColumn;
       },
@@ -5312,6 +5906,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           this._hoverable(headerColumnAscLink);
           this._setElementColumnIdx(columnIdx, headerColumnAscLink);
           headerColumnAscDiv.append(headerColumnAscLink);
+          headerColumn.attr('data-oj-sortable', this._OPTION_ENABLED);
         }
         //sort descending link
         var headerColumnDscDiv = $(document.createElement('div'));
@@ -5355,15 +5950,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
 
         accSelectionHeaderColumn = $(document.createElement('div'));
         accSelectionHeaderColumn.addClass(this._CSS_CLASSES._COLUMN_HEADER_ACC_SELECT_COLUMN_CLASS);
-        accSelectionHeaderColumn.css('position', 'absolute');
-        if (this._GetReadingDirection() === "rtl")
-        {
-          accSelectionHeaderColumn.css('right', '-999em');
-        }
-        else
-        {
-          accSelectionHeaderColumn.css('left', '-999em');
-        }
+        accSelectionHeaderColumn.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         var accSelectCheckbox = $(document.createElement('input'));
         // set the column index on the element
         this._setElementColumnIdx(columnIdx, accSelectCheckbox);
@@ -5430,6 +6017,15 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         tableContainer.append(statusMessage);
 
         return statusMessage;
+      },
+      /**
+       * Get the context menu
+       * @return  {jQuery} jQuery table DOM element
+       * @private	 
+       */
+      _getContextMenu: function()
+      {
+        return this._menuContainer;
       },
       /**
        * Return the table element
@@ -5740,11 +6336,15 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       _getTableHeaderColumns: function()
       {
         var tableHeaderRow = this._getTableHeaderRow();
-        var headerColumnElements = tableHeaderRow.children('.' + this._CSS_CLASSES._COLUMN_HEADER_CLASS);
-
-        if (headerColumnElements != null && headerColumnElements.length > 0)
+        
+        if (tableHeaderRow != null)
         {
-          return headerColumnElements;
+          var headerColumnElements = tableHeaderRow.children('.' + this._CSS_CLASSES._COLUMN_HEADER_CLASS);
+
+          if (headerColumnElements != null && headerColumnElements.length > 0)
+          {
+            return headerColumnElements;
+          }
         }
 
         return null;
@@ -6049,13 +6649,10 @@ oj.PagingTableDataSource.prototype.totalSize = function()
           
         if (cellRenderer)
         {
-          var cellColumnContent = cellRenderer({'component': this, 
-            'data': data,
-            'dataSource': this._getData(), 
-            'row': row.pairs(),
-            'column': column,
-            'status': this._getRendererStatusObject(row),
-            'parentElement': tableBodyCell[0]});
+          var cellColumnContent = cellRenderer({'cellContext': this._getRendererContextObject(row, tableBodyCell[0]), 
+                                                'column': column,                                    
+                                                'data': data,
+                                                'row': row.pairs()});
           
           if (cellColumnContent != null)
           {
@@ -6146,7 +6743,7 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       {
         // set the row index on the element
         this._setElementRowIdx(rowIdx, tableBodyRow);
-        this._setElementRowKey(row.id, tableBodyRow);
+        this._setElementRowKey(row['id'], tableBodyRow);
       },
       /**
        * Set the attributes on the header like columndx, etc
@@ -6181,7 +6778,22 @@ oj.PagingTableDataSource.prototype.totalSize = function()
         {
           tableContainer.addClass(options['containerClassName']);
         }
-         tableContainer.css('overflow', 'hidden');
+        tableContainer.css('overflow', 'hidden');
+        
+        if (this._isTableHeightSet() || this._isTableWidthSet())
+        {
+          // propagate the dimensions to the container. Also register
+          // resize listeners in case percentage dimensions were specified
+          if (this._isTableHeightSet())
+          {
+            tableContainer.css('height', this._getTable()[0].style.height);
+          }
+          if (this._isTableWidthSet())
+          {
+            tableContainer.css('width', this._getTable()[0].style.width);
+          }
+          this._registerResizeListener(tableContainer);
+        }
       },
       /**
        * Style the td element
@@ -6265,458 +6877,186 @@ oj.PagingTableDataSource.prototype.totalSize = function()
       /**** end internal DOM functions ****/
     })
 }());
-/*jslint browser: true*/
-
+/*jslint browser: true,devel:true*/
 /**
  * @export
- * @class oj.CollectionRowSet
- * @classdesc RowSet wrapper for oj.Collection 
- * 
- * @param {oj.Collection} collection oj.Collection object 
- * @param {Object=} options Passed through to the user's initialize routine, if any, upon construction 
+ * @class oj.FlattenedTreeTableDataSource
+ * @classdesc Object representing data used by the rowexpander component
+ * @param {Object} data
+ * @param {Object|null} options Array of options for the TreeTableDataSource
  * @constructor
  */
-oj.CollectionRowSet = function(collection, options) 
+oj.FlattenedTreeTableDataSource = function(data, options)
 {
   // Initialize
-  oj.CollectionRowSet._init(this, collection, options, null);
-};
+  options = options || {};
 
-/**
- * @export
- * @desc Sort direction for string-based field comparators.  A value of 1 (the default), indicates ascending sorts, -1 indicates descending
- * 
- * @type number
- */
-oj.CollectionRowSet.prototype.sortDirection = 1;
-
-/**
- * @export
- * @desc If set, sort the rowSet using the given attribute of a row (if string); function(Row) returning a string attribute
- * by which the sort should take place; function(Row1, Row2) if a user-defined function comparing Row1 and Row2 (see the
- * JavaScript array.sort() for details)
- * 
- * @type {String|function(Object)|function(Object,Object)}
- */
-oj.CollectionRowSet.prototype.comparator = null;
-
-/**
- * @export
- * @desc Set to true if sort is supported.
- * 
- * @type boolean
- */
-oj.CollectionRowSet.prototype.sortSupported = true;
-
-
-// Subclass from oj.Object 
-oj.Object.createSubclass(oj.CollectionRowSet, oj.RowSet, "CollectionRowSet.CollectionRowSet");
-
-oj.CollectionRowSet.prototype.Init = function()
-{
-  oj.CollectionRowSet.superclass.Init.call(this);
-};
-
-oj.CollectionRowSet._init = function(rowSet, collection, options, properties) 
-{
-  var prop;
-  rowSet._eventHandlers = [];
-  rowSet._startIndex = 0;
-  
-  rowSet.Init();
-
-  // First, copy all properties passed in
-  if (properties) 
+  if (!(data instanceof oj.FlattenedTreeDataSource))
   {
-    for (prop in properties) 
-    {
-      if (properties.hasOwnProperty(prop)) 
-      {
-        rowSet[prop] = properties[prop];
-      }
-    }
+    var errSummary = oj.Translations.getTranslatedString('oj-table.dataInvalidType.summary');
+    var errDetail = oj.Translations.getTranslatedString('oj-table.dataInvalidType.detail');
+    throw new oj.Message(errSummary, errDetail, oj.Message.SEVERITY_LEVEL['ERROR']);
   }
-  rowSet._collection = collection;
-  rowSet._addCollectionEventListeners();
-};
 
-/**
- * Add an instance of this rowSet's row(s) to the end of the rowSet.
- * @param {Object|Array} m Row object (or array of rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add() using the rowSet's row.
- * @param {Object=} options at: splice the new row into the rowSet at the value given (at:index) <p>
- *                          deferred: if true, return a promise as though this collection were virtual whether it is or not
- * 
- * @returns {Object} if deferred or virtual, return a promise when the set has completed
- * @export
- */
-oj.CollectionRowSet.prototype.add = function(m, options) 
-{
-  return this._collection.add(m, options);
-};
-
-/**
- * Return the row object found at the given index of the collection, or a promise object that will return the row to a function
- * in the done() call.
- * 
- * @param {number} index Index for which to return the row object. 
- * @param {Object=} options <p>
- *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting <p>
- *                  deferred: if true, return a deferred/promise object as described below.  If not specified, the return value will
- *                   be determined by whether or not the collection is virtual
- * @return {Object} Row object located at index. If index is out of range, returns null.  If this is a paging/virtual collection or
- *                  if deferred is specified and true, at will return a jQuery promise object which will call its done function,
- *                  passing the value at(index) 
- * @export
- */
-oj.CollectionRowSet.prototype.at = function(index, options)
-{
-  return this._collection.at(index, options);
-};
-
-/**
- * @export
- * Return a copy of the RowSet
- * @return {Object} copy of the RowSet
- */
-oj.CollectionRowSet.prototype.clone = function() 
-{
-  var rs = new this.constructor(this._collection.clone());
+  this._rowSet = new oj.FlattenedTreeRowSet(data, options);
+  this.Init();
   
-  return rs;
+  if ((options != null && (options['startFetch'] == 'enabled' || options['startFetch'] == null))
+    || options == null)
+  {
+    // do an initial fetch
+    var self = this;
+    setTimeout(function()
+    {
+      self.fetch({'startFetch': 'enabled'});
+    }, 0);
+  }
+};
+
+// Subclass from oj.DataSource 
+oj.Object.createSubclass(oj.FlattenedTreeTableDataSource, oj.TableDataSource, "oj.FlattenedTreeTableDataSource");
+
+/**
+ * Initializes the instance.
+ * @export
+ */
+oj.FlattenedTreeTableDataSource.prototype.Init = function()
+{
+  oj.FlattenedTreeTableDataSource.superclass.Init.call(this);
 };
 
 /**
- * Loads the data into the RowSet
+ * Calls fetch on the datasource.
  * @param {Object=} options Options to control fetch<p>
  * @throws {Error}
  * @export
  * @expose
- * @memberof! oj.RowSet
+ * @memberof! oj.FlattenedTreeTableDataSource
  * @instance
  */
-oj.CollectionRowSet.prototype.fetch = function(options)
+oj.FlattenedTreeTableDataSource.prototype.fetch = function(options)
 {
-  if (oj.CollectionRowSet.superclass._canFetch.call(this))
-  {
-    oj.CollectionRowSet.superclass._startFetch.call(this);
+  this._rowSet.fetch(options);
+};
 
-    options = options || {};
-    var self = this;
-    var isPaged =  options.startIndex != null ? true : false;
-    var origStartIndex = this._startIndex;
-    this._startIndex = isPaged ? options.startIndex : 0;
-    var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
-    var origCollection = this._collection.clone();
-    
-    if (isPaged)
-    {
-      this._collection.setRangeLocal(this._startIndex, pageSize).done(function(collection, response, options) 
-        {
-          var updates = self._compareCollection(origCollection, self._collection, origStartIndex, self._startIndex, pageSize);
-          self._addCollectionEventListeners.call(self);
-          self._processUpdates.call(self, updates, origCollection);
-          oj.CollectionRowSet.superclass._endFetch.call(self, true);
-        });
-    }
-    else
-    {
-      this._collection.fetch({
-        success: function(collection, response, options) 
-        {
-          var updates = self._compareCollection(origCollection, collection, origStartIndex, self._startIndex, pageSize);
-          self._addCollectionEventListeners.call(self);
-          self._processUpdates.call(self, updates, origCollection);
-          oj.CollectionRowSet.superclass._endFetch.call(self, true);
-        }
-      });
-    }
-  }
-}
+
+
+
+/**** start delegated functions ****/
 
 /**
- * Return the first row object from the collection whose row id value is the given id
- * Note this method will not function as expected if the id is not set
- * @param {Object|string} id ID for which to return the row object, if found. 
- * @param {Object=} options <p>
- *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting<p>
- *                  deferred: if true, return a promise as though this collection were virtual whether it is or not
- * @return {Object} First row object in the collection where row.id = id. If none are found, returns null.
- *                  If deferred or virtual, return a promise passing the row when done
+ * Return the model object found at the given index of the collection.
+ * 
+ * @param {number} index Index for which to return the model object. 
+ * @return {Object} Model object located at index. If index is out of range, returns null.
+ * @throws {Error}
  * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
  */
-oj.CollectionRowSet.prototype.get = function(id, options)
+oj.FlattenedTreeTableDataSource.prototype.at = function(index)
 {
-  return this._collection.get(id, options);
+  return this._rowSet.at(index);
+};
+
+/**
+ * Return the first model object from the collection whose model id value is the given id or cid, or the id or cid from a passed in model
+ * @param {Object|string} id ID, cid, or Model (see Model id or cid) for which to return the model object, if found. 
+ * @return {Object} First model object in the collection where model.id = id or model.cid = id. If none are found, returns null.
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.get = function(id)
+{
+  return this._rowSet.get(id);
 };
 
 /**
  * @export
  * Return whether there is more data which can be fetched.
- * @return {boolean} whether there is more data
+ * @returns {boolean} whether there is more data
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
  */
-oj.CollectionRowSet.prototype.hasMore = function()
+oj.FlattenedTreeTableDataSource.prototype.hasMore = function()
 {
-  return this._collection['hasMore'];
+  return this._rowSet.hasMore();
 };
 
 /**
- * Return the array index location of the given row object.
- * @param {Object} row Row object to locate 
- * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not
- 
- * @return {number} The index of the given row object, or a promise that will call with the index when complete.
- *                  If the object is not found, returns -1.
- * @export
- */
-oj.CollectionRowSet.prototype.indexOf = function(row, options) 
-{
-  return this._collection.indexOf(row, options);
-};
-
-/**
- * @export
- * Determine if the rowset has any rows
- * 
- * @returns {boolean} true if collection is empty
- */
-oj.CollectionRowSet.prototype.isEmpty = function() 
-{
-  return this._collection.isEmpty();
-};
-
-/**
- * Remove a row from the collection, if found.
- * @param {Object|Array} r Row object or array of Rows to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @export
- */
-oj.CollectionRowSet.prototype.remove = function(r, options)
-{
-  return this._collection.remove(r, options);
-};
-
-/**
- * Remove and replace the rowset's entire list of rows with a new set of rows, if provided. Otherwise, empty the rowset.
- * @param {Object=} data Array of row objects or attribute/value pair objects with which to replace the collection's data. 
- * @param {Object=} options user options, passed to event
- * @export
- */
-oj.CollectionRowSet.prototype.reset = function(data, options)
-{
-  return this._collection.reset(data, options);
-};
-
-/**
- * @export
- * Return the length of the collection
- * @returns {number} length of the collection
- */
-oj.CollectionRowSet.prototype.size = function() 
-{
-  return this._collection.size();
-};
-
-/**
- * @export
- * Sort the rows in the rowSet
- * 
- * @param {Object=} options
- */
-oj.CollectionRowSet.prototype.sort = function(options) 
-{
-  this._collection['comparator'] = this['comparator'];
-  return this._collection.sort(null);
-};
-
-oj.CollectionRowSet.prototype.totalSize = function()
-{
-  return this._collection.totalResults;
-};
-
-/**
- * Add event listeners to the collection
- * @private
- */
-oj.CollectionRowSet.prototype._addCollectionEventListeners = function()
-{
-  var self = this;
-  this._collection.on(oj.Events.EventType['ADD'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
-  });
-  this._collection.on(oj.Events.EventType['REMOVE'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
-  });
-  this._collection.on(oj.Events.EventType['RESET'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
-  });
-  this._collection.on(oj.Events.EventType['SORT'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
-  });
-  this._collection.on(oj.Events.EventType['CHANGE'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
-  });
-  this._collection.on(oj.Events.EventType['DESTROY'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
-  });
-  this._collection.on(oj.Events.EventType['SYNC'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['SYNC'], event);
-  });
-  this._collection.on(oj.Events.EventType['ERROR'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
-    // call endfetch in case a fetch caused the error
-    oj.CollectionRowSet.superclass._endFetch.call(self, false);
-  });
-};
-
-/**
- * Compare updated collection
- * @param {Object} origCollection  Original collection
- * @param {Object} updCollection  Updated collection
- * @param {number} origStartIndex startIndex for the original collection
- * @param {number} startIndex startIndex for the updated collection
+ * Return the array index location of the given model object.
+ * @param {Object} model Model object to locate 
+ * @return {number} The index of the given model object. If the object is not found, returns -1.
  * @throws {Error}
- * @private
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
  */
-oj.CollectionRowSet.prototype._compareCollection = function(origCollection, updCollection, origStartIndex, startIndex, pageSize)
+oj.FlattenedTreeTableDataSource.prototype.indexOf = function(model)
 {
-  var updates = [];
-
-  // first check if the updated collection is empty
-  if (updCollection.size() > 0)
-  {
-    var i = 0;
-
-    // next delete rows in the original collection which are less than startIndex or greater than
-    // startIndex + pageSize
-    origCollection.each(function(model)
-    {
-      var rowIdx = origCollection.indexOf(model);
-      if (rowIdx < startIndex)
-      {
-        updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._DELETED};
-        i++;
-      }
-      else if (pageSize > 0)
-      {
-        if (rowIdx >= startIndex + pageSize)
-        {
-          updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._DELETED};
-          i++;
-        }
-      }
-    });
-
-    updCollection.each(function(model)
-    {
-      var rowIdx = updCollection.indexOf(model);
-
-      if ((pageSize > 0 && rowIdx >= startIndex &&
-        rowIdx < startIndex + pageSize) ||
-        pageSize < 0)
-      {
-        var origSize = origCollection.size();
-
-        if (rowIdx < origStartIndex ||
-          rowIdx > origSize - 1)
-        {
-          updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._ADDED};
-          i++;
-        }
-        else
-        {
-          var keys = model.keys();
-          var origModel = origCollection.at(rowIdx);
-          var updated = false;
-          var j;
-          for (j = 0; j < keys.length; j++)
-          {
-            if (model.get(keys[j]).toString() != origModel.get(keys[j]).toString())
-            {
-              updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._UPDATED};
-              updated = true;
-              i++;
-              break;
-            }
-          }
-          if (!updated)
-          {
-            updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._NONE};
-            i++;
-          }
-        }
-      }
-    });
-  }
-  else
-  {
-    var i = 0;
-    origCollection.each(function(model)
-    {
-      updates[i] = {'rowIdx': origCollection.indexOf(model), 'status': oj.RowSet._ROW_STATUSES._DELETED};
-      i++;
-    });
-  }
-  return updates;
+  return this._rowSet.indexOf(model);
 };
 
 /**
- * Process the updates array
- * @param {Array} updates Array of row updates
- * @param {Object} origCollection  Original collection
- * @private
+ * @export
+ * Return the size of the data locally in the dataSource. -1 if an initial fetch has not been
+ * done yet.
+ * @returns {number} size of data
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
  */
-oj.CollectionRowSet.prototype._processUpdates = function(updates, origCollection)
+oj.FlattenedTreeTableDataSource.prototype.size = function()
 {
-  // if all the rows are not updated then call end fetch without refresh
-  var noneUpdated = true;
-  var i;
-  for (i = 0; i < updates.length; i++)
-  {
-    if (updates[i]['status'] != oj.RowSet._ROW_STATUSES._NONE)
-    {
-      noneUpdated = false;
-      break;
-    }
-  }
-  if (noneUpdated)
-  {
-    oj.CollectionRowSet.superclass._endFetch.call(this, false);
-    return;
-  }
-
-  // if all the rows are added then refresh the entire table
-  var allAdded = true;
-  for (i = 0; i < updates.length; i++)
-  {
-    if (updates[i]['status'] != oj.RowSet._ROW_STATUSES._ADDED)
-    {
-      allAdded = false;
-      break;
-    }
-  }
-  if (allAdded)
-  {
-    oj.CollectionRowSet.superclass._endFetch.call(this, true);
-    return;
-  }
-
-  // process individual row statuses
-  for (i = 0; i < updates.length; i++)
-  {
-    var rowIdx = updates[i]['rowIdx'];
-    if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._ADDED)
-    {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], this._collection.at(rowIdx));
-    }
-    else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._DELETED)
-    {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], origCollection.at(rowIdx));
-    }
-    else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._UPDATED)
-    {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], this._collection.at(rowIdx));
-    }
-  }
-  oj.CollectionRowSet.superclass._endFetch.call(this, false);
+  return this._rowSet.size();
 };
+
+/**
+ * Sort the models in the collection
+ * @param {Object=} comparator
+ * @param {Object=} options silent: if true, do not fire the sort event
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.sort = function(comparator, options)
+{
+  this._rowSet.sort(options);
+};
+
+/**
+ * @export
+ * Return current start index.
+ * @returns {number} start index
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.startIndex = function() {
+  return this._rowSet.startIndex();
+};
+
+/**
+ * @export
+ * Return the total size of data available, including server side if not local.
+ * @returns {number} total size of data
+ * @expose
+ * @memberof! oj.FlattenedTreeTableDataSource
+ * @instance
+ */
+oj.FlattenedTreeTableDataSource.prototype.totalSize = function()
+{
+  return this._rowSet.totalSize();
+};
+
+/**** end delegated functions ****/
+
 });

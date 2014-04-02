@@ -8,7 +8,11 @@ $includeTabsClasses: $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
+
+
+$paddingEnd: 8px !default;
+
 
 @if $includeTabsClasses != false {
   @include exports("tabs") {
@@ -44,6 +48,10 @@ $includeTabsClasses: $includeAllClasses !default;
       white-space: nowrap;
     }
 
+    .oj-tabs-conveyor {
+      display: inline-block;
+    }
+
     /*
      * applied to the enabled Tab Title
      * display inline so the close icon is aligned with the title text
@@ -57,12 +65,26 @@ $includeTabsClasses: $includeAllClasses !default;
     /*
      * Tab Title text
      */
+    .oj-tabs-title {
+      vertical-align: middle;
+    }
+
+    .oj-tabs-title-overflow {
+      display: inline-block;
+      overflow: hidden; 
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     .oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
       font-weight: normal;
       text-decoration: none;
       cursor: pointer;
       color: $linkTextColor;
       outline:none;
+
+      padding-right: $paddingEnd;
+      padding-left: $paddingEnd;
     }
 
     /*
@@ -98,7 +120,7 @@ $includeTabsClasses: $includeAllClasses !default;
       color: $textColor;
       background-color: $background1Color;
       border: $borderWidth solid $border1Color;
-      border-radius: $largeBorderRadius;
+      @include oj-border-radius($largeBorderRadius);
       margin-top: -1px;
     }
 
@@ -123,10 +145,11 @@ $includeTabsClasses: $includeAllClasses !default;
     .oj-tabs-nav > .oj-tabs-default > .oj-tabs-tab-content {
       white-space: nowrap;
       padding-top: 4px;
-      padding-right: 8px;
-      padding-bottom: 4px;
-      padding-left: 8px;
-
+      padding-bottom: 3px;
+/*
+      padding-right: $paddingEnd;
+      padding-left: $paddingEnd;
+*/
       border-top: 0;
       border-bottom: 0;
       border-right: 1px solid transparent;
@@ -162,18 +185,20 @@ $includeTabsClasses: $includeAllClasses !default;
      * close icon style
      */
     .oj-tabs-close-icon {
-      text-align: center;
       overflow: hidden;
-
-      vertical-align: middle;
       cursor: pointer;
-      font-size: 0.75rem;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 0.85rem;
+      line-height: 20px;
+      width: 22px;
+      height: 22px;
 
       @include oj-ltr() {
-        margin-left: 6px;
+        margin-left: -$paddingEnd;
       }
       @include oj-rtl() {
-        margin-right: 6px;
+        margin-right: -$paddingEnd;
       }
     }
 
@@ -333,12 +358,12 @@ $includeTabsClasses: $includeAllClasses !default;
      */
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
       border: $borderWidth solid $border1Color;
+      @include oj-border-top-left-radius($mediumBorderRadius, $textDirection:ltr);
+      @include oj-border-top-right-radius($mediumBorderRadius, $textDirection:rtl);
       @include oj-ltr() {
-        border-top-left-radius: $mediumBorderRadius;
-        border-right:0;
+          border-right:0;
       }
       @include oj-rtl() {
-        border-top-right-radius: $mediumBorderRadius;
         border-left:0;
       }
     }
@@ -364,12 +389,12 @@ $includeTabsClasses: $includeAllClasses !default;
      * display bottom and left borders and put radius on bottom border
      */
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
+      @include oj-border-bottom-left-radius($mediumBorderRadius, $textDirection:ltr);
+      @include oj-border-bottom-right-radius($mediumBorderRadius, $textDirection:rtl);
       @include oj-ltr() {
-        border-bottom-left-radius: $mediumBorderRadius;
         border-right:0;
       }
       @include oj-rtl() {
-        border-bottom-right-radius: $mediumBorderRadius;
         border-left:0;
       }
     }

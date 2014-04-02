@@ -44,13 +44,12 @@
 
     /* Styling for the column header elements in selected state when table focused. */
     .oj-table.oj-focus .oj-table-column-header.oj-checked {
-       // todo: using row header name for column header
-       background-color: $dataGridRowHeaderBgColorSelected;
+       background-color: $dataGridColumnHeaderBgColorSelected;
     }
 
     /* Styling for the column header elements in selected state when table not focused. */
     .oj-table-column-header.oj-checked {
-       background-color: $dataGridRowHeaderBgColorSelectedInactive;
+       background-color: $dataGridColumnHeaderBgColorSelectedInactive;
     }
 
     /* Styling for the column header element in focused state. */

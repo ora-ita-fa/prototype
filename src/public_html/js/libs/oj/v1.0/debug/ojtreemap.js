@@ -63,11 +63,11 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">isolate</code> callback specified:</caption>
      * $(".selector").ojTreemap({
-     *   "isolate": function(event){}
+     *   "isolate": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojisolate</code> event:</caption>
-     * $(".selector").on("ojisolate", function(event){});
+     * $(".selector").on("ojisolate", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -85,11 +85,11 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">select</code> callback specified:</caption>
      * $(".selector").ojTreemap({
-     *   "select": function(event){}
+     *   "select": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-     * $(".selector").on("ojselect", function(event){});
+     * $(".selector").on("ojselect", function(event, ui){});
      * 
      * @expose 
      * @event 

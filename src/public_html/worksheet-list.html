@@ -24,59 +24,46 @@ and open the template in the editor.
                     <h1>Worksheets</h1>
                 </div>
 
-                <div class="oj-form oj-md-labels-inline oj-md-odd-cols-1 ">
+                <div class="worksheet-search-header">
+                        <button id="show-search-worksheet"
+                                class="oj-button-half-chrome"
+                                data-bind="
+                                click: handleShowSearchEvent,
+                                ojComponent: {
+                                component:'ojButton', 
+                                icons: {start:'oj-fwk-icon-arrow-e oj-fwk-icon'},
+                                label: 'Search'}">
+                        </button>
+                </div>
+                <div id="searchForm" class="oj-form oj-md-labels-inline oj-md-odd-cols-1 ">
                     <div class="oj-row">
                         <div class="oj-col">
                             <label for="inputcontrol">Name</label>
                         </div>
                         <div class="oj-col">
                             <input id="inputcontrol"
-                                   data-bind="ojComponent: {component: 'ojInputText', value:''}">
+                                   data-bind="ojComponent: {component: 'ojInputText', value:filteredWorksheetName}">
                         </div>
                         <div class="oj-col">
                             <label for="combobox">Analysis Type</label>
                         </div>
                         <div class="oj-col">
-                            <input id="combobox" list="browsers"
-                                   data-bind="ojComponent: {component: 'ojCombobox',
-                        value: 'FA'}"/>
-                            <datalist id="browsers">
-                                <option value="FA">Flexible Analysis</option>
-                                <option value="SOA">SOA</option>
-                                <option value="DB Performance">DB Performance</option>
-                                <option value="DB Resource Planning">DB Resource Planning</option>
-                                <option value="APM">Application Performance Analysis</option>
-                            </datalist>
+                            <input id="combobox" data-bind="ojComponent: {component: 'ojCombobox', data: appTypes,placeholder:'<All>', value:selectedAppType}"/>
                         </div>
-                        <div class="oj-col"><label for="search-worksheet"> </label></div>
-                        <!--                    <div class="oj-col">
-                                                <label for="inputcontrol">Created By</label>
-                                            </div>
-                                            <div class="oj-col">
-                                                <input id="inputcontrol"
-                                                       data-bind="ojComponent: {component: 'ojInputText', value:'Sysman'}">
-                                            </div>
-                                            <div class="oj-col">
-                                                <label for="datetimepickercontrol">Created</label>
-                                            </div>
-                                            <div class="oj-col">
-                                                <input id="datetimepickercontrol"
-                                                       data-bind="ojComponent: {component: 'ojInputDateTime', 
-                                                     value: new Date()}">
-                                            </div>-->
                     </div>
                     <div style="text-align: right">
                         <button id="search-worksheet"
                                 data-bind="
-                    ojComponent: {
-                    component:'ojButton', 
-                    icons: {end:'oj-fwk-icon-caret-end oj-fwk-icon'}, 
-                    label: 'Search'
-                }"></button>
+                                click: handleSearchEvent,
+                                ojComponent: {
+                                component:'ojButton', 
+                                icons: {end:'oj-fwk-icon-caret-end oj-fwk-icon'}, 
+                                label: 'Search'}">
+                        </button>
                     </div>
-                    <hr/>
                 </div>
             </div>
+                    <hr/>
             <div id="worksheet-menu">
                 <div id="menuSet" data-bind="ojComponent: {component: 'ojButtonset'}"
                      aria-label="Use left and right arrow keys to navigate.">
@@ -93,72 +80,59 @@ and open the template in the editor.
                                      menu: {'menu': 'worksheetList'}}">
                     </button>
                 </div>
-
                 <div id='menu-container'>
                     <!-- To handle menu item selection, use a select listener as shown, not a click listener. -->
                     <ul id="analysisTypes" style="display:none"
                         data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}">
-                        <li id="fa"><a href="chart-list.html">
-                                <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>Flexible Analysis
-                            </a></li>
-                        <li id="soa" class="oj-disabled"><a href="#">
-                                <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>SOA
-                            </a></li>
-                        <li id="dbPerf" class="oj-disabled"><a href="#">
-                                <span class="oj-menu-item-icon demo-icon-font demo-bookmark-icon"></span>DB Performance
-                            </a></li>
-                        <li id="dbRsr" class="oj-disabled"><a href="#">
-                                <span class="oj-menu-item-icon demo-icon-font demo-chat-icon"></span>DB Resource Planning
-                            </a></li>
-                        <li id="apa" class="oj-disabled"><a href="#">
-                                <span class="oj-menu-item-icon demo-icon-font demo-chat-icon"></span>Application Performance Analysis
-                            </a></li>
+                        <!-- ko foreach: appTypes -->
+                        <li data-bind="attr: {id: id}">
+                            <a href="chart-list.html"  data-bind="text: label"></a>
+                        </li>
+                        <!-- /ko -->
                     </ul>
                     <ul id="worksheetList" style="display:none"
                         data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}">
-                        <li id="worksheet1"><a href="#">
+                        <li id="worksheet1">
+                            <a href="#">
                                 <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>worksheet1
-                            </a></li>
-                        <li id="worksheet2"><a href="#">
+                            </a>
+                        </li>
+                        <li id="worksheet2">
+                            <a href="#">
                                 <span class="oj-menu-item-icon demo-icon-font demo-palette-icon"></span>worksheet2
-                            </a></li>
-                        <li id="worksheet3"><a href="#">
+                            </a>
+                        </li>
+                        <li id="worksheet3">
+                            <a href="#">
                                 <span class="oj-menu-item-icon demo-icon-font demo-bookmark-icon"></span>worksheet3
-                            </a></li>
+                            </a>
+                        </li>
                     </ul>
-<!--                    <p>
-                    <p>
-                    <p class="bold">Last selected menu item:
-                        <span id="results" data-bind='text: selectedMenuItem'></span>
-                    </p>-->
                 </div>
             </div>
             <div class="worksheet-list">
-                <table id="worksheet-table" data-bind="ojComponent: 
+               
+            </div>
+        </div>
+        <script type="text/html" id="worksheet-template">
+            <table id="worksheet-table" data-bind="ojComponent: 
                 {component: 'ojTable', 
                     data: datasource, 
                     containerClassName: 'worksheet-table',
                     columns:
-                        [{headerText: 'Name', field: 'Name',headerStyle:'white-space:nowrap;;width:20%;',id:'Name',style:'white-space:nowrap'},
-                        {headerText: 'Application Type', field: 'ApplicationType',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Description', field: 'Description',headerStyle:'white-space:nowrap; width:100%'},
-                        {headerText: 'Created', field: 'Created',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Created By', field: 'CreatedBy',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Execution Status', field: 'ExecutionStatus',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Last Execution Time', field: 'LastExecutionTime',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Last Execution User', field: 'LastExecutionUser',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Updated', field: 'Updated',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Updated By', field: 'UpdatedBy',headerStyle:'white-space:nowrap;'},
-                        {headerText: 'Precalculated', field: 'Precalculated',headerStyle: 'white-space:nowrap;'}],
-                    columnTemplates: [{columnId: 'Name1', type: 'cell', template: 'name'}]}
-                       ">
-                </table>
-                <script type="text/html" id="name">
-                    <td>
-                        <a href="/chart-list.html">worksheet i</a>
-                    </td>
-                    </script>
-                </div>
-            </div>
-        </body>
-    </html>
+                        [{headerText: 'Name',id:'Name', field: 'Name',headerStyle:'white-space:nowrap;;width:20%;',style:'white-space:nowrap',sortable: 'enabled'},
+                        {headerText: 'Application Type',id:'ApplicationType', field: 'ApplicationType',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Description',id:'Description', field: 'Description',headerStyle:'white-space:nowrap; width:100%',sortable: 'enabled'},
+                        {headerText: 'Created',id:'Created', field: 'Created',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Created By',id:'CreatedBy', field: 'CreatedBy',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Execution Status',id:'ExecutionStatus', field: 'ExecutionStatus',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Last Execution Time',id:'LastExecutionTime', field: 'LastExecutionTime',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Last Execution User',id:'LastExecutionUser', field: 'LastExecutionUser',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Updated',id:'Updated', field: 'Updated',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Updated By',id:'UpdatedBy', field: 'UpdatedBy',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
+                        {headerText: 'Precalculated',id:'Precalculated', field: 'Precalculated',headerStyle: 'white-space:nowrap;',sortable: 'enabled'}]
+                }">
+            </table>
+        </script>
+    </body>
+</html>

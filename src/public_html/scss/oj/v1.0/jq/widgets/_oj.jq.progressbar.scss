@@ -20,7 +20,7 @@ $includeProgressbarClasses: $includeAllClasses !default;
         background: #fcfdfe; 
     	background-image: linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%);
         border: 1px solid #dfe4e7;
-    	border-radius: 2px;
+        @include oj-border-radius($mediumBorderRadius);
     }
     .oj-progressbar .oj-progressbar-value {
         margin: 0; 

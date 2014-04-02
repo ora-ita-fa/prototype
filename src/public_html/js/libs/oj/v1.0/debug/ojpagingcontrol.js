@@ -189,7 +189,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           _PAGING_CONTROL_NAV_PREVIOUS_ICON_CLASS:        'oj-pagingcontrol-nav-previous-icon',
           _PAGING_CONTROL_NAV_NEXT_ICON_CLASS:            'oj-pagingcontrol-nav-next-icon',
           _PAGING_CONTROL_NAV_LAST_ICON_CLASS:            'oj-pagingcontrol-nav-last-icon',
-          _WIDGET_ICON_CLASS:                             'oj-widget-icon'
+          _WIDGET_ICON_CLASS:                             'oj-widget-icon',
+          _HIDDEN_CONTENT_ACC_CLASS:                      'oj-helper-hidden-accessible'
         },
       /**
        * @private
@@ -437,6 +438,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
         this._super();
         this._registerDataSourceEventListeners();
         this._draw();
+        this._registerResizeListener(this._getPagingControlContainer());
         this._on(this._events);
       },
       /**
@@ -586,7 +588,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
        */
       _setOption: function(key, value)
       {
-
+        this._super(key, value);
+        this._refresh();
       },
       /**** end internal widget functions ****/
 
@@ -660,7 +663,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
       _getItemRangeText: function()
       {
         var data = this._getData();
-        var itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, this._startIndex);
+        var itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, this._startIndex, 0, 0);
         if (data != null)
         {
           if (data.totalSize() != -1)
@@ -715,7 +718,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
       _getTotalPages: function()
       {
         var data = this._getData();
-        var totalSize = -1;
+        var totalSize = 0;
         if (data != null)
         {
           totalSize = data.totalSize();
@@ -888,6 +891,23 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
             data.on(this._dataSourceEventHandlers[i]['eventType'], this._dataSourceEventHandlers[i]['eventHandler']);
         }
       },
+      /**
+       * Register event listeners for resize the container DOM element.
+       * @param {jQuery} element  DOM element
+       * @private
+       */
+      _registerResizeListener: function(element)
+      {         
+        if (!this._isResizeListenerAdded)
+        {
+          var self = this;
+          oj.DomUtils.addResizeListener(element[0], function(width, height)
+                                                    {
+                                                      self._refresh();
+                                                    });
+          this._isResizeListenerAdded = true;
+        }
+      },
       /**** end internal functions ****/
       /**
        * Create a span element for acc purposes
@@ -900,15 +920,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
       {
         var accLabel = $(document.createElement('span'));
         accLabel.addClass(className);
-        accLabel.css('position', 'absolute');
-        if (this._GetReadingDirection() === "rtl")
-        {
-          accLabel.css('right', '-999em');
-        }
-        else
-        {
-          accLabel.css('left', '-999em');
-        }
+        accLabel.addClass(this._CSS_CLASSES._HIDDEN_CONTENT_ACC_CLASS);
         accLabel.append(text);
 
         return accLabel;
@@ -1065,14 +1077,18 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
       {
         var options = this.options;
         var pageOptionLayout = options['pageOptions']['layout'];
+        if (pageOptionLayout == null)
+        {
+          pageOptionLayout = [this._PAGE_OPTION_LAYOUT._AUTO];
+        }
         var pagingControlContent = this._getPagingControlContent();
         var pagingControlNav = $(document.createElement('div'));
         pagingControlNav.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_CLASS);
         pagingControlContent.append(pagingControlNav);
 
         // page input section
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._INPUT, pageOptionLayout))
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._INPUT, pageOptionLayout) != -1)
         {
           var pagingControlNavInputSection = $(document.createElement('div'));
           pagingControlNavInputSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_INPUT_SECTION_CLASS);
@@ -1101,8 +1117,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
             pagingControlNavInputSection.append(pagingControlNavMaxLabel);
           }
           
-          if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-              $.inArray(this._PAGE_OPTION_LAYOUT._RANGE_TEXT, pageOptionLayout))
+          if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+              $.inArray(this._PAGE_OPTION_LAYOUT._RANGE_TEXT, pageOptionLayout) != -1)
           {
             var pagingControlNavSummaryLabel = $(document.createElement('span'));
             pagingControlNavSummaryLabel.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_INPUT_SUMMARY_CLASS);
@@ -1114,12 +1130,13 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
         }
 
         // nav arrow section
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout))
+        var pagingControlNavArrowSection = $(document.createElement('div'));
+        pagingControlNavArrowSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_ARROW_SECTION_CLASS);
+        pagingControlNav.append(pagingControlNavArrowSection);
+        
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout) != -1)
         {
-          var pagingControlNavArrowSection = $(document.createElement('div'));
-          pagingControlNavArrowSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_ARROW_SECTION_CLASS);
-          pagingControlNav.append(pagingControlNavArrowSection);
           var pagingControlNavFirst = $(document.createElement('a'));
           pagingControlNavFirst.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_FIRST_CLASS);
           pagingControlNavFirst.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_FIRST_ICON_CLASS);
@@ -1154,8 +1171,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
         }
 
         // nav pages section
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._PAGE, pageOptionLayout))
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._PAGES, pageOptionLayout) != -1)
         {
           var pagingControlNavPagesSection = $(document.createElement('div'));
           pagingControlNavPagesSection.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_PAGES_SECTION_CLASS);
@@ -1163,8 +1180,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           this._createPagingControlNavPages(pagingControlNavPagesSection, this._getMaxPageLinks());
         }
 
-        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) ||
-            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout))
+        if ($.inArray(this._PAGE_OPTION_LAYOUT._AUTO, pageOptionLayout) != -1 ||
+            $.inArray(this._PAGE_OPTION_LAYOUT._NAV, pageOptionLayout) != -1)
         {
           var pagingControlNavNext = $(document.createElement('a'));
           pagingControlNavNext.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_NEXT_CLASS);
@@ -1231,8 +1248,11 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           var i;
           if (totalPages != -1 && totalPages <= numPagesToAdd)
           {
+            // always add the first page
+            pageList[0] = 1;
+            
             // just enumerate the pages
-            for (i = 0; i < totalPages; i++)
+            for (i = 1; i < totalPages; i++)
             {
               pageList[i] = i + 1;
             }

@@ -35,18 +35,14 @@ $includeFormLayoutClasses:    $includeAllClasses !default;
 
 
 
-  // when labels are inline we don't float.
-  // but if we don't float, the label's height collapses
-  // (e.g., the help def's bottom border doesn't show up)
-  // without display: inline-block 
+  // when labels are inline we don't float. 
   .#{$selectorPrefix}-label-inline .oj-label-required-icon,
   .#{$selectorPrefix}-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-required-icon,
   .#{$selectorPrefix}-label-inline .oj-label-help-icon,
   .#{$selectorPrefix}-labels-inline > .oj-row > .oj-col:nth-child(odd) .oj-label-help-icon,
-  .#{$selectorPrefix}-label-inline.oj-label,
+  .#{$selectorPrefix}-label-inline.oj-label label,
   .#{$selectorPrefix}-labels-inline > .oj-row > .oj-col:nth-child(odd) label {
      float:none; 
-     display: inline-block;
      // when we don't float, then the order of the dom is the order of what
      // you see, so we want spacing after the icons, not before.
      @include oj-ltr {

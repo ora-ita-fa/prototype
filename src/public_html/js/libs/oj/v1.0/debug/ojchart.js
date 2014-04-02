@@ -60,11 +60,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryFilter</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "categoryFilter": function(event){}
+     *   "categoryFilter": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryfilter</code> event:</caption>
-     * $(".selector").on("ojcategoryfilter", function(event){});
+     * $(".selector").on("ojcategoryfilter", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -82,11 +82,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">categoryHighlight</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "categoryHighlight": function(event){}
+     *   "categoryHighlight": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojcategoryhighlight</code> event:</caption>
-     * $(".selector").on("ojcategoryhighlight", function(event){});
+     * $(".selector").on("ojcategoryhighlight", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -112,11 +112,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">select</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "select": function(event){}
+     *   "select": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-     * $(".selector").on("ojselect", function(event){});
+     * $(".selector").on("ojselect", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -138,11 +138,11 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">viewportChange</code> callback specified:</caption>
      * $(".selector").ojChart({
-     *   "viewportChange": function(event){}
+     *   "viewportChange": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojviewportchange</code> event:</caption>
-     * $(".selector").on("ojviewportchange", function(event){});
+     * $(".selector").on("ojviewportchange", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -233,6 +233,8 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
                               'group': selection[i].getGroup()};
           selectedItems.push(selectedItem);  
         }
+        
+        // TODO PANGUS: ADD THE MARQUEE SELECT CONTEXT
         
         this._trigger('select', null, {'items': selectedItems});
       }

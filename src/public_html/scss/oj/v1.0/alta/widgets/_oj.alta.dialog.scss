@@ -8,17 +8,14 @@ $includeDialogClasses:  $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 
 
 @if $includeDialogClasses != false {
   @include exports("dialog") {
 
-
-    // todo: this used to be .oj-front, but moving this to oj-dialog-front for now,
-    // however zindexes should all be using variables
     .oj-dialog-front {
-     z-index: 100;
+       z-index: $dialogZindex;
     }
 
     /* dialog */
@@ -32,21 +29,21 @@ $includeDialogClasses:  $includeAllClasses !default;
         box-shadow: $largeBoxShadow;
         background: $dialogWindowBgColor;
         border: $borderWidth solid $dialogWindowBorderColor;
-        border-radius: $smallBorderRadius;
+        @include oj-border-radius($smallBorderRadius);
     }
 
     .oj-dialog .oj-dialog-header {     
         padding: 10px;    
         position: relative;  
         background-color: $headerBgColor;
-        @include oj-linear-gradient($headerGradientStops, $headerGradientDirection);
+        @include oj-background-image($headerBgImage);
         border-width: 0 0 1px 0;
         border-style: solid;
         border-color: $windowBorderColor;        
         font-size: $mediumFontSize;
         color: $headerTextColor;
         font-weight: $headerFontWeight;
-        border-radius: $smallBorderRadius $smallBorderRadius 0 0;
+        @include oj-border-radius($smallBorderRadius $smallBorderRadius 0 0);
     }
     .oj-dialog .oj-dialog-title { 
         float: left; 

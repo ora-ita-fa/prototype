@@ -1,25 +1,25 @@
-define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdatacollection-common"], function($oj$$21$$, $$$$20$$) {
-  $oj$$21$$.$__registerWidget$("oj.ojRowExpander", $$$$20$$.oj.baseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{context:null, indent:10, expand:null, collapse:null}, $classNames$:{root:"oj-rowexpander", icon:"oj-widget-icon", clickable:"oj-clickable-icon", expand:"oj-rowexpander-expand-icon", collapse:"oj-rowexpander-collapse-icon", leaf:"oj-rowexpander-leaf-icon", lazyload:"oj-rowexpander-lazyload-icon"}, _create:function() {
+define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdatacollection-common"], function($oj$$22$$, $$$$21$$) {
+  $oj$$22$$.$__registerWidget$("oj.ojRowExpander", $$$$21$$.oj.baseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{context:null, indent:10, expand:null, collapse:null}, $classNames$:{root:"oj-rowexpander", icon:"oj-widget-icon", clickable:"oj-clickable-icon", expand:"oj-rowexpander-expand-icon", collapse:"oj-rowexpander-collapse-icon", leaf:"oj-rowexpander-leaf-icon", lazyload:"oj-rowexpander-lazyload-icon"}, _create:function() {
     this._super();
     this.element.addClass(this.$classNames$.root)
   }, _init:function() {
-    var $self$$95$$ = this;
+    var $self$$103$$ = this, $context$$45$$;
     this._super();
     this.$_addIcon$();
-    this.$component$ = this.options.context.component;
-    this.$datasource$ = this.options.context.datasource;
-    this.$component$.$_registerRowExpander$(this);
-    null !== this.$_parseMetadata$ && (this.$metadata$ = this.$_parseMetadata$(this.options.context.metadata));
-    this.$indentation$ = this.$metadata$.depth * this.options.indent;
-    this.$iconState$ = this.$metadata$.state;
-    this.$rowKey$ = this.$metadata$.key;
+    $context$$45$$ = this.options.context;
+    this.$component$ = $context$$45$$.component;
+    this.$datasource$ = $context$$45$$.datasource;
+    this.$component$.$_registerRowExpander$ && this.$component$.$_registerRowExpander$(this);
+    this.$indentation$ = ($context$$45$$.depth - 1) * this.options.indent;
+    this.$iconState$ = $context$$45$$.state;
+    this.$rowKey$ = $context$$45$$.key;
     this.$_setIndentationWidth$();
     this.$_setIconStateClass$();
     if("expanded" === this.$iconState$ || "collapsed" === this.$iconState$) {
-      $$$$20$$(this.$icon$).on("click", function() {
-        $self$$95$$.$_fireExpandCollapse$()
-      }), $$$$20$$(this.element).on("keypress", function($event$$293$$) {
-        (($event$$293$$.keyCode || $event$$293$$.which) === $$$$20$$.ui.keyCode.ENTER || $$$$20$$.ui.keyCode.SPACE) && $self$$95$$.$_fireExpandCollapse$()
+      $$$$21$$(this.$icon$).on("click", function() {
+        $self$$103$$.$_fireExpandCollapse$()
+      }), $$$$21$$(this.element).on("keypress", function($event$$307$$) {
+        (($event$$307$$.keyCode || $event$$307$$.which) === $$$$21$$.ui.keyCode.ENTER || $$$$21$$.ui.keyCode.SPACE) && $self$$103$$.$_fireExpandCollapse$()
       })
     }
   }, refresh:function() {
@@ -28,8 +28,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
   }, _destroy:function() {
     this.removeClass(this.$classNames$.root);
     this.element.empty()
-  }, $_parseMetadata$:null, $_addIcon$:function() {
-    this.$icon$ = $$$$20$$("\x3ca\x3e\x3c/a\x3e").addClass(this.$classNames$.icon).addClass(this.$classNames$.clickable);
+  }, $_addIcon$:function() {
+    this.$icon$ = $$$$21$$("\x3ca\x3e\x3c/a\x3e").addClass(this.$classNames$.icon).addClass(this.$classNames$.clickable);
     this.element.append(this.$icon$)
   }, $_addIconClass$:function($classKey$$) {
     this.$icon$.addClass(this.$classNames$[$classKey$$])
@@ -71,7 +71,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
     this.$_ariaExpanded$(!1);
     this._trigger("collapse")
   }, $_fireExpandCollapse$:function() {
-    "collapsed" === this.$iconState$ ? this.$datasource$.expand(this.$metadata$.key) : "expanded" === this.$iconState$ && this.$datasource$.collapse(this.$metadata$.key)
+    "collapsed" === this.$iconState$ ? this.$datasource$.expand(this.$rowKey$) : "expanded" === this.$iconState$ && this.$datasource$.collapse(this.$rowKey$)
   }, $_setIndentationWidth$:function() {
     this._GetReadingDirection();
     this.element.width(this.element.width() + this.$indentation$ + "px")

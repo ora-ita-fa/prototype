@@ -232,12 +232,14 @@ oj.TreeDataSource.prototype.getCapability = function(feature)
 };
 /**
  * Base class for FlattenedTreeDataGridDataSource and FlattenedTreeTableDataSource
- * @param {Object} options the options set on the FlattenedDataSource
+ * @param {Object} treeDataSource the instance of TreeDataSource to flattened
+ * @param {Object=} options the options set on the FlattenedDataSource
  * @constructor
  * @export
  */
-oj.FlattenedTreeDataSource = function(options)
+oj.FlattenedTreeDataSource = function(treeDataSource, options)
 {
+    this.m_wrapped = treeDataSource;
     this.m_options = options;
     oj.FlattenedTreeDataSource.superclass.constructor.call(this);
 };
@@ -255,9 +257,6 @@ oj.FlattenedTreeDataSource.prototype.Init = function()
 
     // super
     oj.FlattenedTreeDataSource.superclass.Init.call(this);
-
-    // retrieves the TreeDataSource.  Mandatory option.
-    this.m_wrapped = this.m_options['dataSource'];
 
     // we have to react if the underlying TreeDataSource has changed
     this.m_wrapped.on('change', this._handleModelEvent.bind(this));
@@ -407,11 +406,11 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
 
     // this condition should always be true since in high watermark scrolling we are
     // always asking for rows after the current last row
-    if (range['start'] >= this.m_cache.length)
+    if (range['start'] > this._getLastIndex())
     {
-        maxFetchSize = this.m_maxCount - this.m_cache.length;
+        maxFetchSize = this._getMaxFetchSize();
         // initial fetch
-        if (this.m_cache.length == 0)
+        if (this._getLastIndex() < 0)
         {
             // adjust fetch count if neccessary
             range['count'] = Math.min(maxFetchSize, range['count']);
@@ -421,7 +420,7 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
         }
         else if (maxFetchSize > 0)
         {
-            lastEntry = this.m_cache[this.m_cache.length-1];
+            lastEntry = this._getLastEntry();
             parent = lastEntry['parent'];
             count = this.m_wrapped.getChildCount(parent);
             index = lastEntry['index'];
@@ -440,6 +439,16 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
                     range['count'] = Math.min(maxFetchSize, Math.min(this.m_fetchSize, count - range['start']));
                 }
                 this.m_wrapped.fetchChildren(parent, range, {"success": function(nodeSet){this._handleFetchSuccess(nodeSet, parent, depth, range, count, callbacks);}.bind(this)});
+            }
+            else if (index === count-1)
+            {
+                // if this is the last child within the parent, then we are done
+                nodeSet = new oj.EmptyNodeSet(null, range['start']);
+                // invoke original success callback
+                if (callbacks != null && callbacks['success'] != null)
+                {
+                    callbacks['success'].call(null, nodeSet);
+                }
             }
             else
             {
@@ -468,6 +477,16 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromChildren = function(range, ca
 };
 
 /**
+ * Determine the maximum possible fetch size.
+ * @return {number} the maximum fetch size
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getMaxFetchSize = function()
+{
+    return this.m_maxCount - (this._getLastIndex()+1);
+};
+
+/**
  * Process success callback for fetchChildren operation before handing it back to original caller.
  * @param {Object} nodeSet the set of fetched nodes
  * @param {Object} parent the parent key of the fetch operation
@@ -483,6 +502,8 @@ oj.FlattenedTreeDataSource.prototype._handleFetchSuccess = function(nodeSet, par
 
     // handle result nodeSet
     toExpand = [];
+    // wrap it to inject additional metadata
+    nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this));
     this._processNodeSet(nodeSet, parent, depth, toExpand);
 
     // if child count is unknown and the result fetched from parent is less than what we asked for 
@@ -527,7 +548,7 @@ oj.FlattenedTreeDataSource.prototype._fetchFromAncestors = function(parent, dept
 
     if (maxFetchSize === undefined)
     {
-        maxFetchSize = this.m_maxCount - this.m_cache.length;
+        maxFetchSize = this._getMaxFetchSize();
     }
 
     // fetch size is greater than the number of children remaining to fetch
@@ -539,10 +560,10 @@ oj.FlattenedTreeDataSource.prototype._fetchFromAncestors = function(parent, dept
     }
 
     remainToFetch = this.m_fetchSize;
-    current = this.m_cache.length-1;
+    current = this._getLastIndex();
     for (i=current-1; i>=0; i--)
     {
-        currEntry = this.m_cache[i];
+        currEntry = this._getEntry(i);
         currDepth = currEntry['depth'];
         if (currDepth < depth)
         {
@@ -610,7 +631,7 @@ oj.FlattenedTreeDataSource.prototype._fetchFromAncestors = function(parent, dept
  */
 oj.FlattenedTreeDataSource.prototype._processNodeSet = function(nodeSet, parent, depth, toExpand)
 {
-    var nodeStart, nodeCount, i, rowData, metadata, key;
+    var nodeStart, nodeCount, i, metadata, key;
 
     nodeStart = nodeSet.getStart();
     nodeCount = nodeSet.getCount();
@@ -621,13 +642,7 @@ oj.FlattenedTreeDataSource.prototype._processNodeSet = function(nodeSet, parent,
         metadata = nodeSet.getMetadata(nodeStart+i);
         key = metadata['key'];
 
-        rowData = new Object();
-        rowData['key'] = key;
-        rowData['depth'] = depth;
-        rowData['index'] = nodeStart+i;
-        rowData['parent'] = parent;
-
-        this.m_cache.push(rowData);
+        this._addEntry(key, depth, nodeStart+i, parent);
 
         if (this._isExpanded(key))
         {
@@ -645,7 +660,7 @@ oj.FlattenedTreeDataSource.prototype._processNodeSet = function(nodeSet, parent,
  */
 oj.FlattenedTreeDataSource.prototype.insertMetadata = function(key, metadata)
 {
-    if (this._isExpanded(key))
+    if (this._isExpanded(key) && !metadata['leaf'])
     {
         // also update metadata with state info
         metadata['state'] = 'expanded';
@@ -676,13 +691,13 @@ oj.FlattenedTreeDataSource.prototype._fetchRowsFromDescendents = function(range,
     var options = {'maxCount': this.m_maxCount};
 
     // give implementation a hint of where to start, implementation can choose to ignore it
-    if (this.m_cache.length > 0)
+    if (this._getLastIndex() >= 0)
     {
-        options['start'] = this.m_cache[this.m_cache.length-1]['key'];
+        options['start'] = this._getEntry(this._getLastIndex())['key'];
     }
 
     // invoke method on TreeDataSource
-    this.m_wrapped.fetchDescendents(null, {"success": function(nodeSet){this._handleFetchDescendentsSuccess(nodeSet, range, callbacks);}.bind(this)}, options);
+    this.m_wrapped.fetchDescendents(null, null, {"success": function(nodeSet){this._handleFetchDescendentsSuccess(nodeSet, range, callbacks);}.bind(this)}, options);
 };
 
 /**
@@ -698,12 +713,15 @@ oj.FlattenedTreeDataSource.prototype._handleFetchDescendentsSuccess = function(n
 
     // this condition should always be true since in high watermark scrolling we are
     // always asking for rows after the current last row
-    if (range['start'] >= this.m_cache.length)
+    if (range['start'] > this._getLastIndex())
     {
-        maxFetchSize = this.m_maxCount - this.m_cache.length;
+        maxFetchSize = this._getMaxFetchSize();
         count = Math.min(maxFetchSize, range['count']);
 
-        if (this.m_cache.length > 0)
+        // wrap it to inject additional metadata
+        nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this));
+
+        if (this._getLastIndex() >= 0)
         {
             // in fetchDescendents case, the result node set would probably contains more than what
             // we would return.  The issue is we can't really use range to filter the set since the 
@@ -711,7 +729,7 @@ oj.FlattenedTreeDataSource.prototype._handleFetchDescendentsSuccess = function(n
             // node might have been collapsed before the fetch.
             // the solution is to use the last cached entry to find where new data starts in the
             // result node set, and use range count to limit what to return
-            lastEntry = this.m_cache[this.m_cache.length-1];
+            lastEntry = this._getLastEntry();
             options = {'index': 0, 'found': false, 'count': 0};
             this._processDescendentsNodeSet(nodeSet, null, 0, lastEntry, count, options);
             actualStart = options['index'] + 1;
@@ -767,7 +785,7 @@ oj.FlattenedTreeDataSource.prototype._handleFetchDescendentsSuccess = function(n
  */
 oj.FlattenedTreeDataSource.prototype._processDescendentsNodeSet = function(nodeSet, parent, depth, lastEntry, maxCount, options)
 {
-    var nodeStart, nodeCount, i, rowData, metadata, key, childNodeSet;
+    var nodeStart, nodeCount, i, metadata, key, childNodeSet;
 
     nodeStart = nodeSet.getStart();
     nodeCount = nodeSet.getCount();
@@ -796,13 +814,7 @@ oj.FlattenedTreeDataSource.prototype._processDescendentsNodeSet = function(nodeS
 
         if (lastEntry == null || options['found'])
         {
-            rowData = new Object();
-            rowData['key'] = key;
-            rowData['depth'] = depth;
-            rowData['index'] = nodeStart+i;
-            rowData['parent'] = parent;
-
-            this.m_cache.push(rowData);
+            this._addEntry(key, depth, nodeStart+i, parent);
 
             options['count'] = options['count'] + 1;
 
@@ -881,7 +893,7 @@ oj.FlattenedTreeDataSource.prototype._expand = function(rowKey, options)
 
     // if cache is full, check if the rowKey is the last row, if it's
     // the last row do nothing
-    if (this.m_cache.length == this.m_maxCount)
+    if (this._getLastIndex()+1 === this.m_maxCount)
     {
        refIndex = this.getIndex(rowKey);
        if (refIndex == this.m_maxCount-1)
@@ -907,18 +919,19 @@ oj.FlattenedTreeDataSource.prototype._expand = function(rowKey, options)
  */
 oj.FlattenedTreeDataSource.prototype.collapse = function(rowKey)
 {
-    var rowIndex, parent, count, i, keys;
+    var rowIndex, parent, count, depth, lastIndex, i, j, keys;
 
     rowIndex = this.getIndex(rowKey) + 1;
-    parent = this.m_cache[rowIndex-1];
+    parent = this._getEntry(rowIndex-1);
 
     // keeping track of how many rows to remove
     count = 0;
 
-    var depth = parent['depth'];
-    for (var j=rowIndex; j<this.m_cache.length; j++)
+    depth = parent['depth'];
+    lastIndex = this._getLastIndex();
+    for (j=rowIndex; j<lastIndex+1; j++)
     {
-        var rowData = this.m_cache[j];
+        var rowData = this._getEntry(j);
         var rowDepth = rowData['depth'];
         if (rowDepth > depth)
         {
@@ -950,12 +963,12 @@ oj.FlattenedTreeDataSource.prototype.collapse = function(rowKey)
     keys = [];
     for (i=0; i<count; i++)
     {
-        keys.push({"row": this.m_cache[rowIndex+i]['key']});
+        keys.push({"row": this._getEntry(rowIndex+i)['key']});
     }
 
     // remove from cache.  Note this has to be done before firing row remove event
     // since it could cause a fetch which relies on the internal cache being up to date.
-    this.m_cache.splice(rowIndex, count);    
+    this._removeEntry(rowIndex, count);    
 
     // (firing of event to view)
     this.removeRows(keys);
@@ -1087,13 +1100,16 @@ oj.FlattenedTreeDataSource.prototype.handleExpandSuccess = function(rowKey, node
 {
     var refIndex, rangeStart, rowStart, rowCount, parent, depth, metadata, key, toExpand, i;
 
+    // wrap it to inject additional metadata
+    nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this));
+
     refIndex = this.getIndex(rowKey) + 1;
     rangeStart = refIndex;
 
     rowStart = nodeSet.getStart();
     rowCount = nodeSet.getCount();
 
-    parent = this.m_cache[refIndex-1];
+    parent = this._getEntry(refIndex-1);
     depth = parent['depth']+1;
 
     toExpand = [];
@@ -1124,7 +1140,12 @@ oj.FlattenedTreeDataSource.prototype.handleExpandSuccess = function(rowKey, node
     }
     else
     {
-        this.m_expandedKeys.push(rowKey);
+        // check whether it's already in expanded keys, which is the case
+        // if it is expanded by initial expansion
+        if (this.m_expandedKeys.indexOf(rowKey) === -1)
+        {
+            this.m_expandedKeys.push(rowKey);
+        }
     }
 
     // fire event to insert the expanded rows
@@ -1137,7 +1158,7 @@ oj.FlattenedTreeDataSource.prototype.handleExpandSuccess = function(rowKey, node
     {
         this._deleteAllRowsBelow(refIndex);
     }
-    else if (this.m_cache.length > this.m_maxCount)
+    else if (this._getLastIndex() >= this.m_maxCount)
     {
         // also clean up rows that goes beyond max row count after expand
         this._deleteAllRowsBelow(this.m_maxCount);
@@ -1192,19 +1213,13 @@ oj.FlattenedTreeDataSource.prototype._insertRow = function(index, metadata, pare
 
     key = metadata['key'];
 
-    rowData = new Object();
-    rowData['key'] = key;
-    rowData['depth'] = depth;
-    rowData['index'] = childIndex;  // can figure out index by walking up until depth change
-    rowData['parent'] = parentKey; // can figure out parent by walking up until depth change
-
-    if (index < this.m_cache.length)    
+    if (index <= this._getLastIndex())    
     {
-        this.m_cache.splice(index, 0, rowData);
+        this._addEntry(key, depth, childIndex, parentKey, index);
     }
     else
     {
-        this.m_cache.push(rowData);
+        this._addEntry(key, depth, childIndex, parentKey);
     }
 };
 
@@ -1220,17 +1235,17 @@ oj.FlattenedTreeDataSource.prototype._deleteAllRowsBelow = function(index, count
 
     if (count == undefined)
     {
-        count = this.m_cache.length - index;
+        count = this._getLastIndex()+1 - index;
     }
 
     keys = [];
     for (var i=0; i<count; i++)
     {
-        keys.push({"row": this.m_cache[index+i]['key']});
+        keys.push({"row": this._getEntry(index+i)['key']});
     }
 
     // update internal cache
-    this.m_cache.splice(index, count);    
+    this._removeEntry(index, count);    
 
     // fire event to remove rows from view
     this.removeRows(keys);
@@ -1285,7 +1300,7 @@ oj.FlattenedTreeDataSource.prototype._handleInsertEvent = function(parentKey, in
     var parentIndex, parent, depth, insertIndex, metadata;
 
     parentIndex = this.getIndex(parentKey);
-    parent = this.m_cache[parentIndex];
+    parent = this._getEntry(parentIndex);
     depth = parent['depth']+1;
     insertIndex = parentIndex + index + 1;
 
@@ -1304,13 +1319,13 @@ oj.FlattenedTreeDataSource.prototype._handleInsertEvent = function(parentKey, in
  */
 oj.FlattenedTreeDataSource.prototype._handleDeleteEvent = function(parentKey, index)
 {
-    var parentIndex, parent, startIndex, start, count, currentIndex, current;
+    var parentIndex, parent, startIndex, start, count, currentIndex, lastIndex, current;
 
     parentIndex = this.getIndex(parentKey);
-    parent = this.m_cache[parentIndex];
+    parent = this._getEntry(parentIndex);
 
     startIndex = parentIndex + index;
-    start = this.m_cache[startIndex];
+    start = this._getEntry(startIndex);
 
     // make sure the child data is valid
     oj.Assert.assert(start['parent'] === parent && start['depth'] === parent['depth']+1); 
@@ -1318,9 +1333,10 @@ oj.FlattenedTreeDataSource.prototype._handleDeleteEvent = function(parentKey, in
     // remove the entry and all of its children from cache
     count = 1;
     currentIndex = startIndex + 1;
-    while (currentIndex < this.m_cache.length)
+    lastIndex = this._getLastIndex();
+    while (currentIndex <= lastIndex)
     {
-        current = this.m_cache[currentIndex];
+        current = this._getEntry(currentIndex);
         // check if we have reached the last child of the deleted node
         if (current['depth'] != start['depth'])
         {
@@ -1378,7 +1394,7 @@ oj.FlattenedTreeDataSource.prototype._isBatchFetching = function()
 oj.FlattenedTreeDataSource.prototype.refresh = function()
 {
     // clear the cache
-    this.m_cache.length = 0;
+    this._clearAll();
 
     // todo: more work here to force fetch (remove then insert)
 };
@@ -1392,11 +1408,12 @@ oj.FlattenedTreeDataSource.prototype.refresh = function()
  */
 oj.FlattenedTreeDataSource.prototype.getIndex = function(rowKey)
 {
-    var rowData;
+    var lastIndex, i, rowData;
 
-    for (var i=0; i<this.m_cache.length; i++)
+    lastIndex = this._getLastIndex();
+    for (i=0; i<=lastIndex; i++)
     {
-        rowData = this.m_cache[i];
+        rowData = this._getEntry(i);
         if (rowData['key'] == rowKey)
         {
             return i;
@@ -1417,13 +1434,13 @@ oj.FlattenedTreeDataSource.prototype.getIndex = function(rowKey)
 oj.FlattenedTreeDataSource.prototype.getKey = function(index)
 {
     // ensure the index is valid and in range
-    if (index < 0 || index >= this.m_cache.length)
+    if (index < 0 || index > this._getLastIndex())
     {
         return null;
     }
 
     // just return from internal cache
-    return this.m_cache[index]['key'];
+    return this._getEntry(index)['key'];
 };
 
 /**
@@ -1433,7 +1450,7 @@ oj.FlattenedTreeDataSource.prototype.getKey = function(index)
  */
 oj.FlattenedTreeDataSource.prototype.getFetchedRange = function()
 {
-    return {'start': 0, 'end': this.m_cache.length};
+    return {'start': 0, 'end': this._getLastIndex()+1};
 };
 
 ///////////////////////////////////// methods subclass must override ////////////////////////////////////////////////////////
@@ -1473,6 +1490,85 @@ oj.FlattenedTreeDataSource.prototype.removeRows = function(rowKeys)
 {
     oj.Assert.failedInAbstractFunction();
 };
+
+///////////////////////////////// methods that manipulates the internal cache ///////////////////////////////////
+/**
+ * Retrieve the flattened index of the last entry fetched so far
+ * @return {number} the flattened index of the last entry
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getLastIndex = function()
+{
+    return this.m_cache.length-1;
+};
+
+/**
+ * Retrieve the metadata for the last entry fetched so far
+ * @return {Object} the metadata for the last entry
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getLastEntry = function()
+{
+    return this.m_cache[this._getLastIndex()];
+};
+
+/**
+ * Retrieve metadata info for the specified index.
+ * @param {number} index the flattened index 
+ * @return {Object} the metadata info
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._getEntry = function(index)
+{
+    return this.m_cache[index];
+};
+
+/**
+ * Add or insert entry to the cache
+ * @param {Object} key the key
+ * @param {number} depth the depth 
+ * @param {number} index the index relative to its parent
+ * @param {Object} parent the parent
+ * @param {number=} insertAt insert the metadata entry at this flattened index
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._addEntry = function(key, depth, index, parent, insertAt)
+{
+    var rowData = new Object();
+    rowData['key'] = key;
+    rowData['depth'] = depth;
+    rowData['index'] = index;
+    rowData['parent'] = parent;
+
+    if (insertAt === undefined)
+    {
+        this.m_cache.push(rowData);
+    }
+    else
+    {
+        this.m_cache.splice(insertAt, 0, rowData);
+    }
+};
+
+/**
+ * Remove entry from cache
+ * @param {number} index the flattened index to start remove entry
+ * @param {number} count how many entries to remove starting from the flattened index
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._removeEntry = function(index, count)
+{
+    this.m_cache.splice(index, count);
+};
+
+/**
+ * Clears the internal cache
+ * @private
+ */
+oj.FlattenedTreeDataSource.prototype._clearAll = function()
+{
+    this.m_cache.length = 0;
+};
 //////////////////// _JsonTreeNodeDataSource ///////////////////////////////////
 
 /**
@@ -1488,6 +1584,7 @@ oj._JsonTreeNodeDataSource = function()
     this.children = [];
     this.title = null;
     this.attr = null;
+    this.leaf = null;
 };
 
 /**
@@ -1542,13 +1639,10 @@ oj._JsonTreeNodeDataSource.prototype._sortRecursive = function(criteria)
     {
         this.children.sort(this._ascending(key));
     }
-    else
-    {
-        if (criteria['direction'] === 'descending')
-        {
-            this.children.sort(this._descending(key));
-        }
-    }
+    else if (criteria['direction'] === 'descending')
+	{
+		this.children.sort(this._descending(key));
+	}
     for (var i = 0, l = this.children.length; i < l; i++)
     {
         this.children[i]._sortRecursive(criteria);
@@ -1711,7 +1805,7 @@ oj.JsonTreeDataSource.prototype.getChildCount = function(parentKey)
  */
 oj.JsonTreeDataSource.prototype.fetchChildren = function(parentKey, range, callbacks, options)
 {
-    var i, childStart, childEnd, nodeSet, results, parent;
+    var i, childStart, childEnd, nodeSet, results, parent, node;
 
     childStart = 0;
     childEnd = 0;
@@ -1747,7 +1841,36 @@ oj.JsonTreeDataSource.prototype.fetchChildren = function(parentKey, range, callb
     // now populate results from data array
     for (i = childStart; i < childEnd; i += 1)
     {
-        results.push(parent.children[i]);
+        node = new oj._JsonTreeNodeDataSource();
+        if(parent.children[i].attr)
+        {
+            node.attr = parent.children[i].attr;
+        }
+        if(parent.children[i].id)
+        {
+            node.id = parent.children[i].id;
+        }
+        if(parent.children[i].depth)
+        {
+            node.depth = parent.children[i].depth;
+        }
+        if(parent.children[i].title)
+        {
+            node.title = parent.children[i].title;
+        }
+        if(parent.children[i].parent)
+        {
+            node.parent = parent.children[i].parent;
+        }
+        if(parent.children[i].children.length > 0)
+        {
+            node.leaf = false;
+        }
+        else 
+        {
+            node.leaf = true;
+        }
+        results.push(node);
     }
 
     // invoke callback
@@ -1771,9 +1894,13 @@ oj.JsonTreeDataSource.prototype.fetchChildren = function(parentKey, range, callb
  *        there is no maximum fetch count.
  * @export
  */
-oj.JsonTreeDataSource.prototype.fetchDescendents = function(parentKey, callbacks, maxCount)
+oj.JsonTreeDataSource.prototype.fetchDescendents = function(parentKey, range, callbacks, maxCount)
 {
-    var parent, results, nodeSet;
+    var i, childStart, childEnd, nodeSet, results, parent;
+
+    childStart = 0;
+    childEnd = 0;
+    results = [];
 
     if (!parentKey)
     {
@@ -1781,7 +1908,40 @@ oj.JsonTreeDataSource.prototype.fetchDescendents = function(parentKey, callbacks
     }
 
     parent = this._searchTreeById(this.data, parentKey);
-    results = this._traverseTree(parent, maxCount, []);
+
+    if (!range)
+    {
+        range = [];
+        range['start'] = 0;
+        range['count'] = parent.children.length;
+    }
+
+    if (!range['count'])
+    {
+        range['count'] = parent.children.length;
+    }
+
+    if (!range['start'])
+    {
+        range['start'] = 0;
+    }
+
+    childStart = range['start'];
+    childEnd = Math.min(parent.children.length, childStart + range['count']);
+
+    // now populate results from data array
+    for (i = childStart; i < childEnd; i += 1)
+    {       
+	if(parent.children[i].children.length > 0)
+        {
+            parent.children[i].leaf = false;
+        }
+        else 
+        {
+            parent.children[i].leaf = true;
+        }
+        results.push(parent.children[i]); 
+    }
 
     // invoke callback
     nodeSet = new oj.JsonNodeSet(0, results.length, results, parentKey, parent.depth);
@@ -2097,13 +2257,201 @@ oj.JsonTreeDataSource.prototype._traverseTree = function(currChild, maxCount, re
                     break;
                 }
             }
-            results.push(currChild.children[i]);
+	    results.push(currChild.children[i]);
             this._traverseTree(currChild.children[i], maxCount, results);
         }
         return results;
     }
     return null;
 };
+
+/**
+ * Determines whether this TreeDataSource supports the specified feature.
+ * @param {string} feature the feature in which its capabilities is inquired.  Currently the valid features "sort", 
+ *        "move", "fetchDescendents", "batchFetch"
+ * @return {string|null} the name of the feature.  Returns null if the feature is not recognized.
+ *         For "sort", the valid return values are: "default", "none".  
+ *         For "fetchDescendents", the valid return values are: "enable", "disable", "suboptimal".  
+ *         For "move", the valid return values are: "default", "none".  
+ *         For "batchFetch", the valid return values are: "enable", "disable".  
+ * @export
+ */
+oj.JsonTreeDataSource.prototype.getCapability = function(feature)
+{
+    if (feature === 'fetchDescendents')
+    {
+        return "enable";
+    }
+    else if (feature === 'sort')
+    {
+        return "default";
+    }
+    else if (feature === 'batchFetch')
+    {
+        return "disable";
+    }
+    else
+    {
+        return null;
+    }
+};
+/*jslint browser: true*/
+
+/**
+ * @export
+ * @class oj.Row
+ * @classdesc Object representing name/value pairs for a row of data
+ *
+ * @param {Object=} attributes Initial set of attribute/value pairs with which to seed this Row object 
+ * @param {Object=} options 
+ *                  rowSet: rowSet for this row
+ *                  context: context for this row
+ * @constructor
+ */
+oj.Row = function(attributes, options)
+{
+  oj.Row._init(this, attributes, options, null);
+};
+
+
+// Subclass from oj.Object 
+oj.Object.createSubclass(oj.Row, oj.Object, "Row.Row");
+
+oj.Row.prototype.Init = function()
+{
+  oj.Row.superclass.Init.call(this);
+};
+
+/**
+ * 
+ * @export
+ * @desc Attribute/value pairs held by the Row.
+ * 
+ * @type Object
+ */
+oj.Row.prototype.attributes = {};
+
+/**
+ * 
+ * @export
+ * @desc Attribute/value pairs for context held by the Row.
+ * 
+ * @type Object
+ */
+oj.Row.prototype.context = {};
+
+/**
+ * @export
+ * @desc The Row's unique ID. 
+ * 
+ * @type String
+ */
+oj.Row.prototype.id = null;
+
+/**
+ * @export
+ * @desc The name of the row property to be used as the unique ID. See property id. This defaults to a value of "id".
+ *  
+ * @type String
+ */
+oj.Row.prototype.idAttribute = null;
+
+oj.Row._init = function(row, attributes, options, properties)
+{
+  var prop = null, attrCopy;
+
+  row.Init();
+
+  row.index = -1;
+
+  options = options || {};
+  row.attributes = {};
+
+  // First, copy all properties passed in
+  for (prop in properties)
+  {
+    if (properties.hasOwnProperty(prop))
+    {
+      row[prop] = properties[prop];
+    }
+  }
+  
+  row['rowSet'] = options['rowSet'];
+  row['context'] = options['context'];
+};
+
+/**
+ * @export
+ * Return a copy of the Row with identical attributes and settings
+ */
+oj.Row.prototype.clone = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Returns the value of the property from the Row.
+ * @param {string} property Property to get from row
+ * @return {Object} value of property
+ * @export
+ */
+oj.Row.prototype.get = function(property)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * Set the value(s) of one or more attributes of the row
+ * @param {string||Object} property Property attribute name to set, or an Object containing attribute/value pairs
+ * @param {Object=} value Value for property if property is not an Object containing attribute/value pairs
+ * @param {Object=} options Options may be passed in
+ * @returns {Object||boolean} the row itself, false if failed
+ * @export
+ */
+oj.Row.prototype.set = function(property, value, options)
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes as an array
+ * 
+ * @returns {Array} array of all the Row's attributes
+ */
+oj.Row.prototype.keys = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes values as an array
+ * 
+ * @returns {Array} array of all the Row's attributes values
+ */
+oj.Row.prototype.values = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
+/**
+ * @export
+ * Return an array of attributes/value pairs found in the Row 
+ * 
+ * @returns {Object} returns the Row's attribute/value pairs as an array
+ */
+oj.Row.prototype.pairs = function()
+{
+  oj.Assert.failedInAbstractFunction();
+  return null;
+};
+
 /*jslint browser: true*/
 
 /**
@@ -2160,8 +2508,6 @@ oj.RowSet._init = function(rowSet, rows, options, properties)
 {
   var prop;
   rowSet._eventHandlers = [];
-  rowSet._startIndex = 0;
-  
   rowSet.Init();
 
   // First, copy all properties passed in
@@ -2175,86 +2521,6 @@ oj.RowSet._init = function(rowSet, rows, options, properties)
       }
     }
   }
-
-  // Check options
-  options = options || {};
-
-  rowSet._rows = [];
-
-  if (rows != null && rows !== undefined)
-  {
-    rowSet._data = (rows instanceof Array) ? rows : rows();
-
-    if (!(rows instanceof Array))
-    {
-      // subscribe to observableArray
-      (/** @type {{subscribe: Function}} */(rows)).subscribe(function(values) {
-        var rowArray = rowSet._getRowArray(values, null, null);
-        rowSet.reset(rowArray);
-        rowSet._handleEvent.call(rowSet, 'change', null);
-      }, null, 'change');
-    }
-    
-    rowSet._totalSize = rowSet._data.length;
-
-    rowSet._idAttribute = 'id';
-    if (options != null && options['idAttribute'] != null)
-    {
-      rowSet._idAttribute = options['idAttribute'];
-    }
-  }
-};
-
-/**
- * Add an instance of this RowSet's Row(s) to the end of the RowSet.
- * @param {Object|Array} m Row object (or array of Rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add() using the rowSet's row.
- * @param {Object=} options at: splice the new Row into the RowSet at the value given (at:index) <p>
- *                          deferred: if true, return a promise as though this RowSet were virtual whether it is or not
- * 
- * @returns {Object} if deferred or virtual, return a promise when the set has completed
- * @export
- */
-oj.RowSet.prototype.add = function(m, options)
-{
-  options = options || {};
-  var rowArray = [];
-  var index = options['at'];
-  var deferred = options['deferred'];
-  var i;
-  var self = this;
-
-  if (m instanceof Array)
-  {
-    rowArray = m;
-  }
-  else
-  {
-    rowArray.push(m);
-  }
-
-  if (deferred)
-  {
-    var doTask = function(rowIdx)
-    {
-      var defer = $.Deferred();
-      self._addToRowSet(rowArray[rowIdx], index);
-      return defer.resolve().promise();
-    };
-
-    var currentStep = doTask(0);
-
-    for (i = 1; i < rowArray.length; i++)
-    {
-      currentStep = currentStep.then(doTask(i));
-    }
-    return $.when(currentStep).promise();
-  }
-  for (i = 0; i < rowArray.length; i++)
-  {
-    this._addToRowSet(rowArray[i], index);
-  }
-
-  return null;
 };
 
 /**
@@ -2273,42 +2539,8 @@ oj.RowSet.prototype.add = function(m, options)
  */
 oj.RowSet.prototype.at = function(index, options)
 {
-  options = options || {};
-  var deferred = options['deferred'];
-
-  if (index < 0 || index >= this._rows.length)
-  {
-    return null;
-  }
-  var row = this._rows[index];
-
-  if (deferred)
-  {
-    return $.Deferred().resolve(row).promise();
-  }
-  return row;
-};
-
-/**
- * @export
- * Return a copy of the RowSet
- * @return {Object} copy of the RowSet
- */
-oj.RowSet.prototype.clone = function()
-{
-  var rs = new this.constructor(), i;
-
-  var row;
-  for (i = 0; i < this._rows.length; i = i + 1)
-  {
-    row = this.at(i, null);
-    if (row)
-    {
-      rs.add(row.clone(), {'at': i});
-    }
-  }
-
-  return rs;
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -2322,27 +2554,7 @@ oj.RowSet.prototype.clone = function()
  */
 oj.RowSet.prototype.fetch = function(options)
 {
-  options = options || {};
-  if (this._canFetch()) {
-    this._startFetch();
-    var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
-    var origStartIndex = this._startIndex;
-    this._startIndex = options != null ? (options['startIndex'] != null ? options['startIndex'] : 0) : 0;
-    var origRowArray = null;
-
-    if (this._rows != null)
-    {
-      origRowArray = this._rows;
-    }
-    this._rows = this._getRowArray(this._data, this._idAttribute, this._startIndex, pageSize);
-
-    if (origRowArray != null)
-    {
-      var updates = this._compareRowArray(origRowArray, this._rows, origStartIndex, this._startIndex, pageSize);
-      this._processUpdates(updates, origRowArray);
-    }
-    this._endFetch(true);
-  }
+  oj.Assert.failedInAbstractFunction();
 }
 
 /**
@@ -2358,23 +2570,8 @@ oj.RowSet.prototype.fetch = function(options)
  */
 oj.RowSet.prototype.get = function(id, options)
 {
-  options = options || {};
-  var deferred = options['deferred'];
-  var i;
-  var row = null;
-  for (i = 0; i < this._rows.length; i = i + 1)
-  {
-    row = this._rows[i];
-    if (row !== undefined && row['id'] == id)
-    {
-      if (deferred)
-      {
-        return $.Deferred().resolve(row);
-      }
-      return row;
-    }
-  }
-  return row;
+  oj.Assert.failedInAbstractFunction();
+  return null;
 };
 
 /**
@@ -2384,6 +2581,7 @@ oj.RowSet.prototype.get = function(id, options)
  */
 oj.RowSet.prototype.hasMore = function()
 {
+  oj.Assert.failedInAbstractFunction();
   return false;
 };
 
@@ -2398,19 +2596,8 @@ oj.RowSet.prototype.hasMore = function()
  */
 oj.RowSet.prototype.indexOf = function(row, options)
 {
-  var location;
-  options = options || {};
-  var deferred = options['deferred'];
-
-  if (deferred)
-  {
-    return this.get(row, null).then(function(loc) {
-      return loc.index;
-    });
-  }
-  location = this.get(row);
-
-  return location.index;
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -2421,82 +2608,8 @@ oj.RowSet.prototype.indexOf = function(row, options)
  */
 oj.RowSet.prototype.isEmpty = function()
 {
-  return this._rows.length === 0;
-};
-
-/**
- * Remove a Row from the RowSet, if found.
- * @param {Object|Array} r Row object or array of Rows to remove. 
- * @param {Object=} options silent: if set, do not fire a remove event 
- * @export
- */
-oj.RowSet.prototype.remove = function(r, options)
-{
-  options = options || {};
-  var rowArray = [], i;
-
-  if (r instanceof Array)
-  {
-    rowArray = r;
-  }
-  else
-  {
-    rowArray.push(r);
-  }
-
-  for (i = rowArray.length - 1; i >= 0; i = i - 1)
-  {
-    this._removeInternal(rowArray[i], -1, options);
-  }
-};
-
-/**
- * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
- * @param {Object=} data Array of Row objects or attribute/value pair objects with which to replace the RowSet's data. 
- * @param {Object=} options user options, passed to event
- * @export
- */
-oj.RowSet.prototype.reset = function(data, options)
-{
-  var i;
-
-  options = options || {};
-  options['previousRows'] = this._rows;
-
-  if (data === undefined || data == null || (data instanceof Array && data.length == 0))
-  {
-    for (i = 0; i < this._rows.length; i = i + 1)
-    {
-      if (this._rows[i])
-      {
-        this._rows[i]['rowSet'] = null;
-      }
-    }
-    this._rows = [];
-  }
-  else
-  {
-    this._rows = [];
-
-    // Parse RowSet
-    if (options['parse'])
-    {
-      data = this['parse'](data);
-    }
-
-    if (data instanceof Array)
-    {
-      for (i = 0; i < data.length; i = i + 1)
-      {
-        this.add(data[i], options);
-      }
-    }
-    else
-    {
-      this.add(data, options);
-    }
-  }
-  this._handleEvent(oj.RowSet.EventType['ADD'], null);
+  oj.Assert.failedInAbstractFunction();
+  return true;
 };
 
 /**
@@ -2506,7 +2619,8 @@ oj.RowSet.prototype.reset = function(data, options)
  */
 oj.RowSet.prototype.size = function()
 {
-  return this._rows.length;
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -2517,22 +2631,7 @@ oj.RowSet.prototype.size = function()
  */
 oj.RowSet.prototype.sort = function(options)
 {
-  options = options || {};
-  var comparator = this['comparator'], self;
-
-  // Check for comparator
-  if (!this._hasComparator())
-  {
-    return;
-  }
-
-  self = this;
-  this._rows.sort(function(a, b)
-  {
-    return oj.RowSet._sortFunc(a, b, comparator, self, self);
-  });
-  this._realignRowIndices(0);
-  this._handleEvent.call(this, oj.RowSet.EventType['SORT'], null);
+  oj.Assert.failedInAbstractFunction();
 };
 
 /**
@@ -2542,7 +2641,8 @@ oj.RowSet.prototype.sort = function(options)
  */
 oj.RowSet.prototype.totalSize = function()
 {
-  return this._totalSize;
+  oj.Assert.failedInAbstractFunction();
+  return 0;
 };
 
 /**
@@ -2589,25 +2689,6 @@ oj.RowSet.prototype.off = function(eventType, eventHandler)
 };
 
 /**
- * @param {Object} row Row instance
- * @param {number} index Index value
- */
-oj.RowSet.prototype._addToRowSet = function (row, index)
-{
-  if (index === undefined)
-  {
-    this._rows.push(row);
-  }
-  else
-  {
-    this._rows[index] = row;
-  }
-  row['rowSet'] = this;
-  row['index'] = this._rows.length;
-  this._handleEvent(oj.RowSet.EventType['ADD'], row);
-}
-
-/**
  * Handle the event
  * @param {string} eventType  event type
  * @param {?} event  event
@@ -2626,7 +2707,800 @@ oj.RowSet.prototype._handleEvent = function(eventType, event)
   }
 };
 
-oj.RowSet._compareKeys = function(keyA, keyB, sortDirection)
+/**
+ * @export
+ * Event types
+ * @enum {string}
+ */
+oj.RowSet.EventType =
+  {
+    /** Triggered when a Row is added to a RowSet */
+    'ADD': "add",
+    /** Triggered when a Row is removed from a RowSet */
+    'REMOVE': "remove",
+    /** Triggered when a RowSet is reset (see oj.RowSet.reset) */
+    'RESET': "reset",
+    /** Triggered when a RowSet is sorted */
+    'SORT': "sort",
+    /** Triggered when a Row's attributes are changed */
+    'CHANGE': "change",
+    /** Triggered when a Row is deleted from the data service (and thus from its RowSet) */
+    'DESTROY': "destroy",
+    /** Triggered when a Row or RowSet has sent a request to the data service */
+    'REQUEST': "request",
+    /** Triggered when a Row or RowSet has been updated from the data service */
+    'SYNC': "sync",
+    /** Triggered when a Row has failed to update on the data service */
+    'ERROR': "error",
+    /** Triggered when a Row being saved has been invalidated by the caller */
+    'INVALID': "invalid",
+    /** Triggered for any of the above events */
+    'ALL': "all"
+  };
+
+/**
+ * @export
+ * Event types
+ * @enum {string}
+ */
+oj.RowSet._ROW_STATUSES =
+  {
+    _ADDED: 'added',
+    _DELETED: 'deleted',
+    _UPDATED: 'updated',
+    _NONE: 'none'
+  };
+/*jslint browser: true*/
+
+/**
+ * @export
+ * @class oj.Row
+ * @classdesc Object representing name/value pairs for a row of data
+ *
+ * @param {Object=} attributes Initial set of attribute/value pairs with which to seed this Row object 
+ * @param {Object=} options 
+ *                  rowSet: rowSet for this row
+ * @constructor
+ */
+oj.ArrayRow = function(attributes, options)
+{
+  oj.ArrayRow._init(this, attributes, options, null);
+};
+
+
+// Subclass from oj.Object 
+oj.Object.createSubclass(oj.ArrayRow, oj.Row, "ArrayRow.ArrayRow");
+
+oj.ArrayRow.prototype.Init = function()
+{
+  oj.ArrayRow.superclass.Init.call(this);
+};
+
+/**
+ * 
+ * @export
+ * @desc Attribute/value pairs held by the Model.
+ * 
+ * @type Object
+ */
+oj.ArrayRow.prototype.attributes = {};
+
+/**
+ * @export
+ * @desc The Row's unique ID. 
+ * 
+ * @type String
+ */
+oj.ArrayRow.prototype.id = null;
+
+/**
+ * @export
+ * @desc The name of the row property to be used as the unique ID. See property id. This defaults to a value of "id".
+ *  
+ * @type String
+ */
+oj.ArrayRow.prototype.idAttribute = null;
+
+oj.ArrayRow._init = function(row, attributes, options, properties)
+{
+  var prop = null, attrCopy;
+
+  row.Init();
+
+  row.index = -1;
+
+  options = options || {};
+  row.attributes = attributes;
+
+  // First, copy all properties passed in
+  for (prop in properties)
+  {
+    if (properties.hasOwnProperty(prop))
+    {
+      row[prop] = properties[prop];
+    }
+  }
+  
+  row['idAttribute'] = options['idAttribute'];
+  row['context'] = options['context'];
+  row._setupId();
+};
+
+/**
+ * @export
+ * Return a copy of the Row with identical attributes and settings
+ */
+oj.ArrayRow.prototype.clone = function()
+{
+  var c = new this.constructor(), prop;
+
+  for (prop in this)
+  {
+    // Shallow copy all but data
+    if (this.hasOwnProperty(prop) && this[prop] !== this.attributes)
+    {
+      c[prop] = this[prop];
+    }
+  }
+  // Deep copy data
+  c.attributes = oj.ArrayRow._cloneAttributes(this.attributes, null);
+
+  c._setupId();
+
+  return c;
+};
+
+/**
+ * Returns the value of the property from the Row.
+ * @param {string} property Property to get from row
+ * @return {Object} value of property
+ * @export
+ */
+oj.ArrayRow.prototype.get = function(property)
+{
+  return this.attributes[property];
+};
+
+/**
+ * Set the value(s) of one or more attributes of the row
+ * @param {string||Object} property Property attribute name to set, or an Object containing attribute/value pairs
+ * @param {Object=} value Value for property if property is not an Object containing attribute/value pairs
+ * @param {Object=} options Options may be passed in
+ * @returns {Object||boolean} the row itself, false if failed
+ * @export
+ */
+oj.ArrayRow.prototype.set = function(property, value, options)
+{
+  var opts = {}, ignoreLastArg = false, prop, i, valid = true;
+
+  if (arguments)
+  {
+    if (arguments.length > 0)
+    {
+      // Check if the last argument is not the first argument
+      if (arguments.length > 1)
+      {
+        if (arguments[arguments.length - 1])
+        {
+          // Last arg is options: ignore later
+          ignoreLastArg = true;
+          opts = arguments[arguments.length - 1] || {};
+        }
+      }
+      // Check if first arg is property bag
+      if (oj.ArrayRow._hasProperties(property))
+      {
+        this._setProp(property, opts);
+      }
+      else
+      {
+        // Not a property bag?  We assume it's a series of property/value arguments
+        for (i = 0; i < arguments.length; i += 2)
+        {
+          // Process the arg as long as its: defined, and isn't the last argument where we're supposed to ignore the last argument
+          // due to it being 'options'
+          if (arguments[i] !== undefined || i < arguments.length - 1 || (!ignoreLastArg && i === arguments.length - 1))
+          {
+            this._setProp(arguments[i], arguments[i + 1]);
+          }
+        }
+      }
+    }
+  }
+  return this;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes as an array
+ * 
+ * @returns {Array} array of all the Row's attributes
+ */
+oj.ArrayRow.prototype.keys = function()
+{
+  var prop, retArray = [];
+
+  for (prop in this.attributes)
+  {
+    if (this.attributes.hasOwnProperty(prop))
+    {
+      retArray.push(prop);
+    }
+  }
+  return retArray;
+};
+
+/**
+ * @export
+ * Return all of the Row's attributes values as an array
+ * 
+ * @returns {Array} array of all the Row's attributes values
+ */
+oj.ArrayRow.prototype.values = function()
+{
+  var prop, retArray = [];
+
+  for (prop in this.attributes)
+  {
+    if (this.attributes.hasOwnProperty(prop))
+    {
+      retArray.push(this.get(prop));
+    }
+  }
+  return retArray;
+};
+
+/**
+ * @export
+ * Return an array of attributes/value pairs found in the Row 
+ * 
+ * @returns {Object} returns the Row's attribute/value pairs as an array
+ */
+oj.ArrayRow.prototype.pairs = function()
+{
+  var prop, retObj = {};
+  for (prop in this.attributes)
+  {
+    if (this.attributes.hasOwnProperty(prop))
+    {
+      retObj[prop] = this.get(prop);
+    }
+  }
+  return retObj;
+};
+
+oj.ArrayRow.prototype._getIdAttr = function()
+{
+  return this['idAttribute'] || 'id';
+};
+
+// Might be a property value or a function
+oj.ArrayRow.prototype._getProp = function(prop)
+{
+  if (this[prop] instanceof Function)
+  {
+    return this[prop]();
+  }
+  return this[prop];
+};
+
+oj.ArrayRow._hasProperties = function(object)
+{
+  var prop;
+  if (object && object instanceof Object)
+  {
+    for (prop in object)
+    {
+      if (object.hasOwnProperty(prop))
+      {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+oj.ArrayRow.prototype._setupId = function()
+{
+  var idAttr = this._getIdAttr();
+  this['id'] = this.attributes[idAttr];
+};
+
+oj.ArrayRow.prototype._setPropInternal = function(prop, value)
+{
+  if (!oj.Object.innerEquals(this.attributes[prop], value))
+  {
+    this.attributes[prop] = value;
+    this._setupId();
+    return true;
+  }
+  return false;
+};
+
+/**
+ * @param {Object||string} prop
+ * @param {Object} value
+ * @returns {boolean}
+ */
+oj.ArrayRow.prototype._setProp = function(prop, value)
+{
+  if (prop == null)
+  {
+    return true;
+  }
+
+  var attrs = {}, p;
+
+  if (arguments.length > 1)
+  {
+    attrs[prop] = value;
+  }
+  else
+  {
+    for (p in prop)
+    {
+      if (prop.hasOwnProperty(p))
+      {
+        attrs[p] = prop[p];
+      }
+    }
+  }
+
+  for (p in attrs)
+  {
+    if (attrs.hasOwnProperty(p))
+    {
+      this._setPropInternal(p, attrs[p]);
+    }
+  }
+  return true;
+};
+
+oj.ArrayRow._cloneAttributes = function(oldData, newData)
+{
+  var prop;
+  newData = newData || {};
+  for (prop in oldData)
+  {
+    if (oldData.hasOwnProperty(prop)) {// && oldData[prop] !== undefined) {
+      if (typeof (oldData[prop]) !== 'object')
+      {
+        // Only overwrite if not undefined
+        if (newData.hasOwnProperty(prop))
+        {
+          if (oldData[prop] !== undefined)
+          {
+            newData[prop] = oldData[prop];
+          }
+        }
+        else
+        {
+          newData[prop] = oldData[prop];
+        }
+      }
+      else
+      {
+        newData[prop] = oj.ArrayRow._cloneAttributes(oldData[prop], null);
+      }
+    }
+  }
+  return newData;
+};
+
+
+/*jslint browser: true*/
+
+/**
+ * @export
+ * @class oj.ArrayRowSet
+ * @classdesc RowSet of Row objects 
+ * 
+ * @param {Array=} rows Set of row objects or JS array of data to put into rowSet at construction time 
+ * @param {Object=} options Passed through to the user's initialize routine, if any, upon construction 
+ * @constructor
+ */
+oj.ArrayRowSet = function(rows, options)
+{
+  // Initialize
+  oj.ArrayRowSet._init(this, rows, options, null);
+};
+
+/**
+ * @export
+ * @desc Sort direction for string-based field comparators.  A value of 1 (the default), indicates ascending sorts, -1 indicates descending
+ * 
+ * @type number
+ */
+oj.ArrayRowSet.prototype.sortDirection = 1;
+
+/**
+ * @export
+ * @desc If set, sort the rowSet using the given attribute of a row (if string); function(Row) returning a string attribute
+ * by which the sort should take place; function(Row1, Row2) if a user-defined function comparing Row1 and Row2 (see the
+ * JavaScript array.sort() for details)
+ * 
+ * @type {String|function(Object)|function(Object,Object)}
+ */
+oj.ArrayRowSet.prototype.comparator = null;
+
+/**
+ * @export
+ * @desc Set to true if sort is supported.
+ * 
+ * @type boolean
+ */
+oj.ArrayRowSet.prototype.sortSupported = true;
+
+
+// Subclass from oj.Object 
+oj.Object.createSubclass(oj.ArrayRowSet, oj.RowSet, "ArrayRowSet.ArrayRowSet");
+
+oj.ArrayRowSet.prototype.Init = function()
+{
+  oj.ArrayRowSet.superclass.Init.call(this);
+};
+
+oj.ArrayRowSet._init = function(rowSet, rows, options, properties)
+{
+  var prop;
+  rowSet._eventHandlers = [];
+  rowSet._startIndex = 0;
+
+  rowSet.Init();
+
+  // First, copy all properties passed in
+  if (properties)
+  {
+    for (prop in properties)
+    {
+      if (properties.hasOwnProperty(prop))
+      {
+        rowSet[prop] = properties[prop];
+      }
+    }
+  }
+
+  // Check options
+  options = options || {};
+
+  rowSet._rows = [];
+
+  if (rows != null && rows !== undefined)
+  {
+    rowSet._data = (rows instanceof Array) ? rows : rows();
+
+    if (!(rows instanceof Array))
+    {
+      // subscribe to observableArray
+      (/** @type {{subscribe: Function}} */(rows)).subscribe(function(values) {
+        var rowArray = rowSet._getRowArray(values, null, null);
+        rowSet.reset(rowArray);
+        rowSet.superclass._handleEvent.call(rowSet, 'change', null);
+      }, null, 'change');
+    }
+
+    rowSet._totalSize = rowSet._data.length;
+
+    rowSet._idAttribute = 'id';
+    if (options != null && options['idAttribute'] != null)
+    {
+      rowSet._idAttribute = options['idAttribute'];
+    }
+  }
+};
+
+/**
+ * Add an instance of this RowSet's Row(s) to the end of the RowSet.
+ * @param {Object} row Row object
+ * @param {Object=} options at: splice the new Row into the RowSet at the value given (at:index) <p>
+ *                          deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * 
+ * @returns {Object} if deferred or virtual, return a promise when the set has completed
+ * @export
+ */
+oj.ArrayRowSet.prototype.add = function(row, options)
+{
+  options = options || {};
+  var index = options['at'];
+  var deferred = options['deferred'];
+
+  this._addToRowSet(row, index);
+
+  if (deferred)
+  {
+    return $.Deferred().resolve().promise();
+  }
+  return null;
+};
+
+/**
+ * Return the Row object found at the given index of the RowSet, or a promise object that will return the Row to a function
+ * in the done() call.
+ * 
+ * @param {number} index Index for which to return the Row object. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting <p>
+ *                  deferred: if true, return a deferred/promise object as described below.  If not specified, the return value will
+ *                   be determined by whether or not the RowSet is virtual
+ * @return {Object} Row object located at index. If index is out of range, returns null.  If this is a paging/virtual RowSet or
+ *                  if deferred is specified and true, at will return a jQuery promise object which will call its done function,
+ *                  passing the value at(index) 
+ * @export
+ */
+oj.ArrayRowSet.prototype.at = function(index, options)
+{
+  options = options || {};
+  var deferred = options['deferred'];
+
+  if (index < 0 || index >= this._rows.length)
+  {
+    return null;
+  }
+  var row = this._rows[index];
+
+  if (deferred)
+  {
+    return $.Deferred().resolve(row).promise();
+  }
+  return row;
+};
+
+/**
+ * @export
+ * Return a copy of the RowSet
+ * @return {Object} copy of the RowSet
+ */
+oj.ArrayRowSet.prototype.clone = function()
+{
+  var rs = new this.constructor(), i;
+
+  var row;
+  for (i = 0; i < this._rows.length; i = i + 1)
+  {
+    row = this.at(i, null);
+    if (row)
+    {
+      rs.add(row.clone(), {'at': i});
+    }
+  }
+
+  return rs;
+};
+
+/**
+ * Loads the data into the RowSet
+ * @param {Object=} options Options to control fetch<p>
+ * @throws {Error}
+ * @export
+ * @expose
+ * @memberof! oj.RowSet
+ * @instance
+ */
+oj.ArrayRowSet.prototype.fetch = function(options)
+{
+  options = options || {};
+  if (this._canFetch()) {
+    this._startFetch();
+    var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
+    var origStartIndex = this._startIndex;
+    this._startIndex = options != null ? (options['startIndex'] != null ? options['startIndex'] : 0) : 0;
+    var origRowArray = null;
+
+    if (this._rows != null)
+    {
+      origRowArray = this._rows;
+    }
+    this._rows = this._getRowArray(this._data, this._idAttribute, this._startIndex, pageSize);
+
+    if (origRowArray != null)
+    {
+      var updates = this._compareRowArray(origRowArray, this._rows, origStartIndex, this._startIndex, pageSize);
+      this._processUpdates(updates, origRowArray);
+    }
+    this._endFetch(true);
+  }
+}
+
+/**
+ * Return the first Row object from the RowSet whose Row id value is the given id
+ * Note this method will not function as expected if the id is not set
+ * @param {string} id ID for which to return the Row object, if found. 
+ * @param {Object=} options <p>
+ *                  fetchSize: fetch size to use if the call needs to fetch more records from the server, if virtualized.  Overrides the overall fetchSize setting<p>
+ *                  deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ * @return {Object} First Row object in the RowSet where Row.id = id. If none are found, returns null.
+ *                  If deferred or virtual, return a promise passing the Row when done
+ * @export
+ */
+oj.ArrayRowSet.prototype.get = function(id, options)
+{
+  options = options || {};
+  var deferred = options['deferred'];
+  var i;
+  var row = null;
+  for (i = 0; i < this._rows.length; i = i + 1)
+  {
+    row = this._rows[i];
+    if (row !== undefined && row['id'] == id)
+    {
+      if (deferred)
+      {
+        return $.Deferred().resolve(row);
+      }
+      return row;
+    }
+  }
+  return row;
+};
+
+/**
+ * @export
+ * Return whether there is more data which can be fetched.
+ * @return {boolean} whether there is more data
+ */
+oj.ArrayRowSet.prototype.hasMore = function()
+{
+  return false;
+};
+
+/**
+ * Return the array index location of the given Row object.
+ * @param {Object} row Row object to locate 
+ * @param {Object=} options deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ 
+ * @return {number} The index of the given Row object, or a promise that will call with the index when complete.
+ *                  If the object is not found, returns -1.
+ * @export
+ */
+oj.ArrayRowSet.prototype.indexOf = function(row, options)
+{
+  var location;
+  options = options || {};
+  var deferred = options['deferred'];
+
+  if (deferred)
+  {
+    return this.get(row['id'], null).then(function(loc) {
+      return loc.index;
+    });
+  }
+  location = this.get(row['id']);
+
+  return location.index;
+};
+
+/**
+ * @export
+ * Determine if the RowSet has any Rows
+ * 
+ * @returns {boolean} true if RowSet is empty
+ */
+oj.ArrayRowSet.prototype.isEmpty = function()
+{
+  return this._rows.length === 0;
+};
+
+/**
+ * Remove a Row from the RowSet, if found.
+ * @param {Object} row Row object
+ * @param {Object=} options silent: if set, do not fire a remove event 
+ * @export
+ */
+oj.ArrayRowSet.prototype.remove = function(row, options)
+{
+  options = options || {};
+  this._removeInternal(row, -1, options);
+};
+
+/**
+ * Remove and replace the RowSet's entire list of Rows with a new set of Rows, if provided. Otherwise, empty the RowSet.
+ * @param {Object=} data Array of Row objects with which to replace the RowSet's data. 
+ * @param {Object=} options user options, passed to event
+ * @export
+ */
+oj.ArrayRowSet.prototype.reset = function(data, options)
+{
+  var i;
+
+  options = options || {};
+  options['previousRows'] = this._rows;
+
+  if (data === undefined || data == null || (data instanceof Array && data.length == 0))
+  {
+    for (i = 0; i < this._rows.length; i = i + 1)
+    {
+      if (this._rows[i])
+      {
+        this._rows[i]['rowSet'] = null;
+      }
+    }
+    this._rows = [];
+  }
+  else
+  {
+    this._rows = [];
+
+    if (data instanceof Array)
+    {
+      for (i = 0; i < data.length; i = i + 1)
+      {
+        this.add(/** @type oj.Row */ (data[i]), options);
+      }
+    }
+    else
+    {
+      this.add(/** @type oj.Row */ (data), options);
+    }
+  }
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['RESET'], null);
+};
+
+/**
+ * @export
+ * Return the length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.ArrayRowSet.prototype.size = function()
+{
+  return this._rows.length;
+};
+
+/**
+ * @export
+ * Sort the Rows in the RowSet
+ * 
+ * @param {Object=} options
+ */
+oj.ArrayRowSet.prototype.sort = function(options)
+{
+  options = options || {};
+  var comparator = this['comparator'], self;
+
+  // Check for comparator
+  if (!this._hasComparator())
+  {
+    return;
+  }
+
+  self = this;
+  this._rows.sort(function(a, b)
+  {
+    return oj.ArrayRowSet._sortFunc(a, b, comparator, self, self);
+  });
+  this._realignRowIndices(0);
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['SORT'], null);
+};
+
+/**
+ * @export
+ * Return the total length of the RowSet
+ * @returns {number} length of the RowSet
+ */
+oj.ArrayRowSet.prototype.totalSize = function()
+{
+  return this._totalSize;
+};
+
+/**
+ * @param {Object} row Row instance
+ * @param {number} index Index value
+ */
+oj.ArrayRowSet.prototype._addToRowSet = function(row, index)
+{
+  if (index === undefined)
+  {
+    this._rows.push(row);
+  }
+  else
+  {
+    this._rows[index] = row;
+  }
+  row['rowSet'] = this;
+  row['index'] = this._rows.length;
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': index, 'row': row});
+}
+
+oj.ArrayRowSet._compareKeys = function(keyA, keyB, sortDirection)
 {
   if (sortDirection === -1)
   {
@@ -2653,7 +3527,7 @@ oj.RowSet._compareKeys = function(keyA, keyB, sortDirection)
   return 0;
 };
 
-oj.RowSet.prototype._compareRowArray = function(origRowArray, updRowArray, origStartIndex, startIndex, pageSize)
+oj.ArrayRowSet.prototype._compareRowArray = function(origRowArray, updRowArray, origStartIndex, startIndex, pageSize)
 {
   var updates = [];
 
@@ -2731,17 +3605,17 @@ oj.RowSet.prototype._compareRowArray = function(origRowArray, updRowArray, origS
   return updates;
 };
 
-oj.RowSet._getKey = function(val, attr) {
-    if (val instanceof oj.Row) {
-        return val.get(attr);
-    }
-    if ($.isFunction(val[attr])) {
-        return val[attr]();
-    }
-    return val[attr];
+oj.ArrayRowSet._getKey = function(val, attr) {
+  if (val instanceof oj.Row) {
+    return val.get(attr);
+  }
+  if ($.isFunction(val[attr])) {
+    return val[attr]();
+  }
+  return val[attr];
 };
 
-oj.RowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pageSize)
+oj.ArrayRowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pageSize)
 {
   var endIndex = values.length - 1;
   if (pageSize > 0)
@@ -2778,7 +3652,7 @@ oj.RowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pag
         clonedRowValues[prop] = rowValues[prop];
       }
     }
-    var row = new oj.Row(clonedRowValues, {'idAttribute': idAttribute});
+    var row = new oj.ArrayRow(clonedRowValues, {'idAttribute': idAttribute});
     row['index'] = i;
     rowArray[i] = row;
   }
@@ -2786,7 +3660,7 @@ oj.RowSet.prototype._getRowArray = function(values, idAttribute, startIndex, pag
   return rowArray;
 };
 
-oj.RowSet.prototype._getSortAttrs = function(sortStr)
+oj.ArrayRowSet.prototype._getSortAttrs = function(sortStr)
 {
   if (sortStr === undefined)
   {
@@ -2795,7 +3669,7 @@ oj.RowSet.prototype._getSortAttrs = function(sortStr)
   return sortStr.split(",");
 };
 
-oj.RowSet.prototype._getSortDirStr = function()
+oj.ArrayRowSet.prototype._getSortDirStr = function()
 {
   if (this['sortDirection'] === -1)
   {
@@ -2804,7 +3678,7 @@ oj.RowSet.prototype._getSortDirStr = function()
   return "asc";
 };
 
-oj.RowSet.prototype._hasComparator = function()
+oj.ArrayRowSet.prototype._hasComparator = function()
 {
   var comparator = this['comparator'];
   return comparator !== undefined && comparator !== null;
@@ -2816,7 +3690,7 @@ oj.RowSet.prototype._hasComparator = function()
  * @param {Object} origRowArray  Original row array
  * @private
  */
-oj.RowSet.prototype._processUpdates = function(updates, origRowArray)
+oj.ArrayRowSet.prototype._processUpdates = function(updates, origRowArray)
 {
   // if all the rows are not updated then call end fetch without refresh
   var noneUpdated = true;
@@ -2857,22 +3731,22 @@ oj.RowSet.prototype._processUpdates = function(updates, origRowArray)
     var rowIdx = updates[i]['rowIdx'];
     if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._ADDED)
     {
-      this._handleEvent.call(this, oj.RowSet.EventType['ADD'], this._rows[rowIdx]);
+      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': rowIdx, 'row': this._rows[rowIdx]});
     }
     else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._DELETED)
     {
-      this._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], origRowArray[rowIdx]);
+      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], {'rowIdx': rowIdx, 'row': origRowArray[rowIdx]});
     }
     else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._UPDATED)
     {
-      this._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], this._rows[rowIdx]);
+      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], {'rowIdx': rowIdx, 'row': this._rows[rowIdx]});
     }
   }
   this._endFetch(false);
 };
 
 // Realign all the indices of the rows (after sort for example)
-oj.RowSet.prototype._realignRowIndices = function(start)
+oj.ArrayRowSet.prototype._realignRowIndices = function(start)
 {
   var row;
   for (var i = start; i < this._rows.length; i++)
@@ -2885,7 +3759,7 @@ oj.RowSet.prototype._realignRowIndices = function(start)
   }
 };
 
-oj.RowSet.prototype._removeInternal = function(row, index, options)
+oj.ArrayRowSet.prototype._removeInternal = function(row, index, options)
 {
   options = options || {};
   index = index == -1 ? this.get(row).index : index;
@@ -2905,20 +3779,20 @@ oj.RowSet.prototype._removeInternal = function(row, index, options)
       options['index'] = index;
       if (row !== undefined)
       {
-        this._handleEvent(oj.RowSet.EventType['REMOVE'], row);
+        oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], {'rowIdx': index, 'row': row});
       }
     }
   }
   return row;
 };
 
-oj.RowSet.prototype._setRow = function(index, row)
+oj.ArrayRowSet.prototype._setRow = function(index, row)
 {
   this._rows[index] = row;
   row['index'] = index;
 };
 
-oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
+oj.ArrayRowSet._sortFunc = function(a, b, comparator, rowSet, self)
 {
   var keyA, keyB, i, retVal;
 
@@ -2934,7 +3808,7 @@ oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
       var attrs2 = oj.StringUtils.isString(keyB) ? keyB.split(",") : [keyB];
       for (i = 0; i < attrs1.length; i++)
       {
-        retVal = oj.RowSet._compareKeys(attrs1[i], attrs2[i], rowSet['sortDirection']);
+        retVal = oj.ArrayRowSet._compareKeys(attrs1[i], attrs2[i], rowSet['sortDirection']);
         if (retVal !== 0)
         {
           return retVal;
@@ -2951,9 +3825,9 @@ oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
 
     for (i = 0; i < attrs.length; i++)
     {
-      keyA = oj.RowSet._getKey(a, attrs[i]);
-      keyB = oj.RowSet._getKey(b, attrs[i]);
-      retVal = oj.RowSet._compareKeys(keyA, keyB, rowSet['sortDirection']);
+      keyA = oj.ArrayRowSet._getKey(a, attrs[i]);
+      keyB = oj.ArrayRowSet._getKey(b, attrs[i]);
+      retVal = oj.ArrayRowSet._compareKeys(keyA, keyB, rowSet['sortDirection']);
       if (retVal !== 0)
       {
         return retVal;
@@ -2967,7 +3841,7 @@ oj.RowSet._sortFunc = function(a, b, comparator, rowSet, self)
  * Indicate whether we can start a fetch
  * @private
  */
-oj.RowSet.prototype._canFetch = function()
+oj.ArrayRowSet.prototype._canFetch = function()
 {
   return !this._isFetching;
 };
@@ -2976,10 +3850,10 @@ oj.RowSet.prototype._canFetch = function()
  * Indicate starting fetch
  * @private
  */
-oj.RowSet.prototype._startFetch = function()
+oj.ArrayRowSet.prototype._startFetch = function()
 {
   this._isFetching = true;
-  this._handleEvent.call(this, oj.RowSet.EventType['REQUEST'], null);
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REQUEST'], null);
 };
 
 /**
@@ -2987,55 +3861,11 @@ oj.RowSet.prototype._startFetch = function()
  * @param {boolean} refresh whether the listener should refresh based on the fetched data
  * @private
  */
-oj.RowSet.prototype._endFetch = function(refresh)
+oj.ArrayRowSet.prototype._endFetch = function(refresh)
 {
   this._isFetching = false;
-  this._handleEvent.call(this, oj.RowSet.EventType['SYNC'], refresh);
+  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['SYNC'], refresh);
 };
-
-/**
- * @export
- * Event types
- * @enum {string}
- */
-oj.RowSet.EventType =
-  {
-    /** Triggered when a Row is added to a RowSet */
-    'ADD': "add",
-    /** Triggered when a Row is removed from a RowSet */
-    'REMOVE': "remove",
-    /** Triggered when a RowSet is reset (see oj.RowSet.reset) */
-    'RESET': "reset",
-    /** Triggered when a RowSet is sorted */
-    'SORT': "sort",
-    /** Triggered when a Row's attributes are changed */
-    'CHANGE': "change",
-    /** Triggered when a Row is deleted from the data service (and thus from its RowSet) */
-    'DESTROY': "destroy",
-    /** Triggered when a Row or RowSet has sent a request to the data service */
-    'REQUEST': "request",
-    /** Triggered when a Row or RowSet has been updated from the data service */
-    'SYNC': "sync",
-    /** Triggered when a Row has failed to update on the data service */
-    'ERROR': "error",
-    /** Triggered when a Row being saved has been invalidated by the caller */
-    'INVALID': "invalid",
-    /** Triggered for any of the above events */
-    'ALL': "all"
-  };
-
-/**
- * @export
- * Event types
- * @enum {string}
- */
-oj.RowSet._ROW_STATUSES =
-  {
-    _ADDED: 'added',
-    _DELETED: 'deleted',
-    _UPDATED: 'updated',
-    _NONE: 'none'
-  };
 /**
  * Convenient class that represents an empty node set
  * @param {Object} parent the parent key
@@ -3107,6 +3937,105 @@ oj.EmptyNodeSet.prototype.getMetadata = function(index)
     return null;
 };
 /**
+ * Wraps around the NodeSet to provide additional metadata
+ * @param {Object} nodeSet the node set to wrap
+ * @param {function(Object, Object)} metadataCallback callback to inject additional metadata information
+ * @constructor
+ * @export
+ */
+oj.NodeSetWrapper = function(nodeSet, metadataCallback)
+{
+    this.m_nodeSet = nodeSet;
+    this.m_callback = metadataCallback;
+};
+
+/**
+ * Gets the parent
+ * @return {Object} the key of the parent.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getParent = function()
+{
+    return this.m_nodeSet.getParent();
+};
+
+/**
+ * Gets the start index of the result set.  
+ * @return {number} the start index of the result set.  
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getStart = function()
+{
+    return this.m_nodeSet.getStart();
+};
+
+/**
+ * Gets the actual count of the result set.  
+ * @return {number} the actual count of the result set.  
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getCount = function()
+{
+    return this.m_nodeSet.getCount();
+};
+
+/**
+ * Gets the data of the specified index.  An error is throw when 1) the range is not yet available and
+ * 2) the index specified is out of bounds. 
+ * @param {number} index the index of the node/row in which we want to retrieve the data from.  
+ * @return {Object} the data for the specified index.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getData = function(index)
+{
+    return this.m_nodeSet.getData(index);
+};
+
+/**
+ * Gets the metadata of the specified index.  An error is throw when 1) the range is not yet available and 
+ * 2) the index specified is out of bounds. 
+ * The metadata that the data source must return are:
+ *  1) key - Object, the key of the node/row.
+ *  2) state - state of the node, valid values are 'expanded', 'collapsed', 'leaf'. 
+ *  3) depth - number, the depth of the node/row. 
+ * @param {number} index the index of the node/row in which we want to retrieve the metadata from.  
+ * @return {Object} the metadata object for the specific index.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getMetadata = function(index)
+{
+    var metadata, rowKey;
+
+    metadata = this.m_nodeSet.getMetadata(index);
+    rowKey = metadata['key'];
+
+    // inject additional metadata
+    this.m_callback.call(null, rowKey, metadata);
+
+    return metadata;
+};
+
+/**
+ * Gets the node set child of the specified index.
+ * @param {number} index the index of the node/row in which we want to retrieve the child node set
+ * @return {Object|null} the child node set representing the child tree data.
+ * @export
+ */
+oj.NodeSetWrapper.prototype.getChildNodeSet = function(index) 
+{
+    var result;
+    if (this.m_nodeSet.getChildNodeSet)
+    {
+        result = this.m_nodeSet.getChildNodeSet(index);
+        if (result != null)
+        {
+            // wraps the child nodeset too
+            return new oj.NodeSetWrapper(result, this.m_callback);
+        }
+    }
+    return null;
+};
+/**
  * A JsonNodeSet represents a collection of nodes.  The JsonNodeSet is an object returned by the success callback
  * of the fetchChildren method on TreeDataSource.  
  * @constructor
@@ -3171,26 +4100,6 @@ oj.JsonNodeSet.prototype.getData = function(index)
         return this.m_nodes[index].attr;
     else
         return null;
-
-};
-
-/**
- * Gets the data of the specified index.  An error is throw when 1) the range is not yet available and
- * 2) the index specified is out of bounds. 
- * @param {number} index the index of the node/row in which we want to retrieve the data from.  
- * @return {Object} the data for the specified index.  oj.RowData should be returned for data that represents a row
- *         with a number of columns.
- * @export
- */
-oj.JsonNodeSet.prototype.getData = function(index)
-{
-    // make sure index are valid
-    oj.Assert.assert(index <= this.m_endNode && index >= this.m_startNode);
-    if (this.m_nodes[index])
-        return this.m_nodes[index];
-    else
-        return null;
-
 };
 
 /**
@@ -3212,318 +4121,70 @@ oj.JsonNodeSet.prototype.getMetadata = function(index)
     oj.Assert.assert(index <= this.m_endNode && index >= this.m_startNode);
 
     metadata["key"] = this.m_nodes[index].id ? this.m_nodes[index].id : this.m_nodes[index].attr.id;
-    metadata["leaf"] = true;
+    metadata["leaf"] = this.m_nodes[index].leaf;
     metadata["depth"] = this.m_nodes[index].depth;
 
-    if (this.m_nodes[index].children && this.m_nodes[index].children.length > 0)
-        metadata["leaf"] = false;
+    if(metadata["leaf"] == null)
+    {
+        if (this.m_nodes[index].children && this.m_nodes[index].children.length > 0)
+        {
+            metadata["leaf"] = false;
+        }
+        else
+        {
+            metadata["leaf"] = true;
+        }
+    }
 
     return metadata;
 };
-/*jslint browser: true*/
 
 /**
- * @export
- * @class oj.Row
- * @classdesc Object representing name/value pairs for a row of data
- *
- * @param {Object=} attributes Initial set of attribute/value pairs with which to seed this Row object 
- * @param {Object=} options 
- *                  rowSet: rowSet for this row
- * @constructor
+ * Helper method to update the node's depth recursively with its children.
+ * @param {Object} currChild the node to update.
+ * @param {number} offset the difference between current and updated depth values.
+ * @private
  */
-oj.Row = function (attributes, options) {
-    oj.Row._init(this, attributes, options, null);
-};
-
-
-// Subclass from oj.Object 
-oj.Object.createSubclass(oj.Row, oj.Object, "Row.Row");
-  
-oj.Row.prototype.Init = function()
+oj.JsonNodeSet.prototype._updateDepth = function (currChild, offset)
 {
-    oj.Row.superclass.Init.call(this);
+    var i;
+
+    offset++;
+    currChild.depth = offset;
+
+    if (currChild.children && currChild.children.length != 0)
+    {
+        for (i = 0; i < currChild.children.length; i++)
+	{
+            this._updateDepth(currChild.children[i], offset);
+	}
+    }
 };
 
 /**
- * 
- * @export
- * @desc Attribute/value pairs held by the Model.
- * 
- * @type Object
- */
-oj.Row.prototype.attributes = {};
-
-/**
- * @export
- * @desc The Row's unique ID. 
- * 
- * @type String
- */
-oj.Row.prototype.id = null;
-
-/**
- * @export
- * @desc The name of the row property to be used as the unique ID. See property id. This defaults to a value of "id".
- *  
- * @type String
- */
-oj.Row.prototype.idAttribute = null;
-
-oj.Row._init = function(row, attributes, options, properties) {
-    var prop = null, attrCopy;
-
-    row.Init();
-    
-    row.index = -1;
-
-    options = options || {};
-    row.attributes = {};
-  
-    // First, copy all properties passed in
-    for (prop in properties) {
-        if (properties.hasOwnProperty(prop)) {
-            row[prop] = properties[prop]; 
-        }
-    }
-
-    if (attributes) {
-        attrCopy = oj.Row._cloneAttributes(attributes, row.attributes);
-        
-        if (attrCopy == null || attrCopy === undefined) {
-            // Reset it
-            row.attributes = {};
-        }
-        else {
-            // Move them in
-            for (prop in attrCopy) {
-                if (attrCopy.hasOwnProperty(prop)) {
-                    row._setProp(prop, attrCopy[prop]);
-                }
-            }
-        }
-    }
-
-    row['rowSet'] = options['rowSet'];
-    row['idAttribute'] = options['idAttribute'];
-    row._setupId();
-};
-
-/**
- * @export
- * Return a copy of the Row with identical attributes and settings
- */
-oj.Row.prototype.clone = function() {
-    var c = new this.constructor(), prop;
-    
-    for (prop in this) {
-        // Shallow copy all but data
-        if (this.hasOwnProperty(prop) && this[prop] !== this.attributes) {
-            c[prop] = this[prop];
-        }
-    }
-    // Deep copy data
-    c.attributes = oj.Row._cloneAttributes(this.attributes, null);
-
-    c._setupId();
-    
-    return c;
-};
-
-/**
- * Returns the value of the property from the Row.
- * @param {string} property Property to get from row
- * @return {Object} value of property
+ * Gets the node set child of the specified index.
+ * @param {number} index the index of the node/row in which we want to retrieve the child node set
+ * @return {oj.JsonNodeSet|null} the child node set representing the child tree data.
  * @export
  */
-oj.Row.prototype.get = function (property) {
-    return this.attributes[property];
-};
+oj.JsonNodeSet.prototype.getChildNodeSet = function(index) {
 
-/**
- * Set the value(s) of one or more attributes of the row
- * @param {string||Object} property Property attribute name to set, or an Object containing attribute/value pairs
- * @param {Object=} value Value for property if property is not an Object containing attribute/value pairs
- * @param {Object=} options Options may be passed in
- * @returns {Object||boolean} the row itself, false if failed
- * @export
- */
-oj.Row.prototype.set = function (property, value, options) {
-    var opts = {}, ignoreLastArg = false, prop, i, valid = true;
-    
-    if (arguments) {
-        if (arguments.length > 0) {
-            // Check if the last argument is not the first argument
-            if (arguments.length > 1) {
-                if (arguments[arguments.length-1]) {
-                    // Last arg is options: ignore later
-                    ignoreLastArg = true;
-                    opts = arguments[arguments.length-1] || {};
-                }
-            }
-            // Check if first arg is property bag
-            if (oj.Row._hasProperties(property)) {
-               this._setProp(property, opts);
-            }
-            else {
-                // Not a property bag?  We assume it's a series of property/value arguments
-                for (i = 0; i < arguments.length; i+=2) {
-                    // Process the arg as long as its: defined, and isn't the last argument where we're supposed to ignore the last argument
-                    // due to it being 'options'
-                    if (arguments[i] !== undefined || i < arguments.length-1 || (!ignoreLastArg && i === arguments.length-1)) {
-                        this._setProp(arguments[i], arguments[i+1]);
-                    }
-                }
-            }
-        }
+    var results, key, depth, i;
+
+    depth = this.m_nodes[index].depth;
+    results = this.m_nodes[index].children;
+    if(results.length == 0)
+    {
+        return null;
     }
-    return this;
-};
-
-/**
- * @export
- * Return all of the Row's attributes as an array
- * 
- * @returns {Array} array of all the Row's attributes
- */
-oj.Row.prototype.keys = function() {
-    var prop, retArray = [];
-    
-    for (prop in this.attributes) {
-        if (this.attributes.hasOwnProperty(prop)) {
-            retArray.push(prop);
-        }
-    }
-    return retArray;
-};
-
-/**
- * @export
- * Return all of the Row's attributes values as an array
- * 
- * @returns {Array} array of all the Row's attributes values
- */
-oj.Row.prototype.values = function() {
-    var prop, retArray = [];
-    
-    for (prop in this.attributes) {
-        if (this.attributes.hasOwnProperty(prop)) {
-            retArray.push(this.get(prop));
-        }
-    }
-    return retArray;
-};
-
-/**
- * @export
- * Return an array of attributes/value pairs found in the Row 
- * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
- */
-oj.Row.prototype.pairs = function() {
-    var prop, retObj = {};
-    for (prop in this.attributes) {
-        if (this.attributes.hasOwnProperty(prop)) {
-            retObj[prop] = this.get(prop);
-        }
-    }
-    return retObj;
-};
-
-oj.Row.prototype._getIdAttr = function () {
-    return this['idAttribute'] || 'id';
-};
-
-// Might be a property value or a function
-oj.Row.prototype._getProp = function(prop) {
-    if (this[prop] instanceof Function) {        
-        return this[prop]();
-    }
-    return this[prop];
-};
-
-oj.Row._hasProperties = function(object) {
-    var prop;
-    if (object && object instanceof Object) {
-        for (prop in object) {
-            if (object.hasOwnProperty(prop)) {
-                return true;
-            }
-        }
-    }
-    return false;
-};
-
-oj.Row.prototype._setupId = function() {
-    var idAttr = this._getIdAttr();
-    this['id'] = this.attributes[idAttr];
-};
-
-oj.Row.prototype._setPropInternal = function(prop, value) {
-    if (!oj.Object.innerEquals(this.attributes[prop], value)) {
-        this.attributes[prop] = value;
-        this._setupId();
-        return true;
-    }
-    return false;
-};
-
-/**
- * @param {Object||string} prop
- * @param {Object} value
- * @returns {boolean}
- */
-oj.Row.prototype._setProp = function(prop, value) {
-    if (prop == null) {
-        return true;
-    }
-    
-    var attrs = {}, p;
-
-    if (arguments.length > 2) {
-        attrs[prop] = value;
-    }
-    else {
-        for (p in prop) {
-            if (prop.hasOwnProperty(p)) {
-                attrs[p] = prop[p];
-            }
-        }
+    key = this.m_nodes[index].id ? this.m_nodes[index].id : this.m_nodes[index].attr.id;
+    for(i = 0; i < results.length; i++)
+    {
+        this._updateDepth(results[i], depth);
     }
 
-    for (p in attrs) {
-        if (attrs.hasOwnProperty(p)) {
-            this._setPropInternal(p, attrs[p]);
-        }
-    }
-    return true;
+    return new oj.JsonNodeSet(0, results.length, results, key, 0);
 };
-
-oj.Row._cloneAttributes = function(oldData, newData) {    
-    var prop;
-    newData = newData || {};
-    for (prop in oldData) { 
-        if (oldData.hasOwnProperty(prop)){// && oldData[prop] !== undefined) {
-            if (typeof(oldData[prop]) !== 'object') {
-                // Only overwrite if not undefined
-                if (newData.hasOwnProperty(prop)) {
-                    if (oldData[prop] !== undefined) {
-                        newData[prop] = oldData[prop];
-                    }
-                }
-                else {
-                    newData[prop] = oldData[prop];
-                }
-            }
-            else {
-                newData[prop] = oj.Row._cloneAttributes(oldData[prop], null);
-            }
-        }
-    }
-    return newData;
-};
-
-
 /**
  * Flattens a hierarchical node set, which can happen in node set returned from
  * fetchDescendents call.
@@ -3716,7 +4377,7 @@ oj.FlattenedNodeSet.prototype._getDataOrMetadata = function(nodeSet, index, curr
 /**
  * The base class for DataGridDataSource.  
  * @export
- * @augments oj.DataSource
+ * @extends oj.DataSource
  * @constructor
  */
 oj.DataGridDataSource = function(data)

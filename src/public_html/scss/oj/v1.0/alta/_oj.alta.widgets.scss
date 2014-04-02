@@ -9,10 +9,10 @@
 
 
 // shared
-@import "widgets/oj.alta.core.icons";
-@import "widgets/oj.alta.core.resizable";
-@import "widgets/oj.alta.core.selectable";
-@import "widgets/oj.alta.core.windows";
+@import "widgets/oj.alta.icons";
+@import "widgets/oj.alta.resizable";
+@import "widgets/oj.alta.selectable";
+@import "widgets/oj.alta.windows";
 
 // layout
 @import "widgets/oj.alta.accordion";
@@ -51,13 +51,14 @@
 @import "widgets/oj.alta.dvt.sunburst";
 
 // form controls and messaging
-@import "widgets/oj.alta.core.messaging";
+@import "widgets/oj.alta.messaging";
 @import "widgets/oj.alta.formcontrol.label";
 @import "widgets/oj.alta.formcontrol.common";
 @import "widgets/oj.alta.formcontrol.inputtextarea";
 @import "widgets/oj.alta.formcontrol.inputnumber";
 @import "widgets/oj.alta.formcontrol.inputdatetime";
 @import "widgets/oj.alta.formcontrol.radiocheckbox";
+@import "widgets/oj.alta.formcontrol.listbox";
 @import "widgets/oj.alta.formcontrol.combobox";
 @import "widgets/oj.alta.formcontrol.select";
 

@@ -13,9 +13,9 @@ $includeComboboxClasses:   $includeFormControlClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 @import "oj.alta.tooltip";
-@import "oj.alta.core.messaging";
+@import "oj.alta.messaging";
 @import "oj.alta.formcontrol.label";
 @import "oj.alta.formcontrol.common";
 
@@ -326,9 +326,9 @@ $includeComboboxClasses:   $includeFormControlClasses !default;
       line-height: 13px;
       color: $textColor;
       cursor: default;
-      border-radius: $mediumBorderRadius;
+      @include oj-border-radius($mediumBorderRadius);
       background-color: $buttonBgColor;
-      @include oj-linear-gradient($buttonGradientStops, $buttonGradientDirection); 
+      @include oj-background-image($buttonBgImage); 
       background-clip: padding-box;
       -webkit-touch-callout: none;
       -webkit-user-select: none;

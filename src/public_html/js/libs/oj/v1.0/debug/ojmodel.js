@@ -1658,7 +1658,7 @@ oj.Model.prototype._attrUnion = function(attrs) {
     return attrReturn;
 };
 
-oj.Model.isArray = function(obj) {
+oj.Model.IsArray = function(obj) {
     return obj.constructor === Array;
 };
 
@@ -1666,6 +1666,10 @@ oj.Model.IsFunction = function(obj) {
     return obj instanceof Function;
 };
 
+oj.Model.IsComplexValue = function(val) {
+    return val && val.hasOwnProperty("value") && val.hasOwnProperty("comparator");
+};
+    
 // Does this model contain all of the given attribute/value pairs?
 oj.Model.prototype._hasAttrs = function(attrs) {
     var prop;
@@ -1675,15 +1679,30 @@ oj.Model.prototype._hasAttrs = function(attrs) {
                 return false;
             }
 
-            if (attrs[prop] !== this.attributes[prop]) {
-                return false;
+            var val = oj.Model.IsArray(attrs[prop]) ? attrs[prop] : [attrs[prop]];
+            for (var i = 0; i < val.length; i++) {
+                if (oj.Model.IsComplexValue(val[i])) {
+                    var comparator = val[i]['comparator'];
+                    var value = val[i]['value'];
+                    if (oj.StringUtils.isString(comparator)) {
+                        throw new Error("String comparator invalid for local where/findWhere");
+                    }
+                    if (!comparator(this, prop, value)) {
+                        return false;
+                    }
+                } else {
+                    // Array case meaningless here.  Model can't be == value1 and value2
+                    if (attrs[prop] !== this.attributes[prop]) {
+                        return false;
+                    }
+                }
             }
         }
     }    
     return true;
 };
 
-// See if this model contains all of the given attribute/value pairs 
+// See if this model contains any of the given attribute/value pairs 
 oj.Model.prototype.Contains = function(attrs) {
     var attrList = (attrs.constructor === Array) ? attrs : [attrs], i;
     
@@ -2043,6 +2062,8 @@ oj.Collection.prototype.url = null;
  * until: Retrieve records with timestamps up to the given timestamp.  Default is "until"<p>
  * sort:  field(s) by which to sort, if set<p>
  * sortDir: sort ascending or descending (asc/dsc) <p>
+ * query: a set of attributes indicating filtering that should be done on the server.  @see (@link where) for complete documentation of query values<p>
+ * all: true (along with 'query', above) indicates that this is a findWhere or where type call that is expecting all models meeting the query condition to be returned<p>
  * 
  * @return {(function(string,Object,Object):(string|Object|null))|null} customURL callbacks should return either: null, in which case the default will be used; a string, which will be used with the standard
  * HTTP method for the type of operation, or an Object with any ajax attributes.  This must at minimum include the URL:<p>
@@ -2469,6 +2490,10 @@ oj.Collection.prototype._manageLRU = function(incoming) {
  * @return {Object} copy of the Collection
  */
 oj.Collection.prototype.clone = function() {
+    return this._cloneInternal(true);
+};
+
+oj.Collection.prototype._cloneInternal = function(withProperties) {
     var c = new this.constructor(), i;
 
     // Only copy locally if virtual
@@ -2478,16 +2503,18 @@ oj.Collection.prototype.clone = function() {
         c._resetModelsToFullLength();
     }
         
-    for (i = 0; i < this._getLength(); i=i+1) {
-        model = this._atInternal(i, null, true, false);
-        if (model) {
-            c._addInternal(model.clone(), {'at':i}, true, false);
+    if (withProperties) {
+        // Try to copy models only if told to--we may only need the shell of the collection with properties
+        for (i = 0; i < this._getLength(); i=i+1) {
+            model = this._atInternal(i, null, true, false);
+            if (model) {
+                c._addInternal(model.clone(), {'at':i}, true, false);
+            }
         }
     }
-
     return c;
 };
-
+    
 // Copy critical properties in clone
 oj.Collection.prototype._copyProperties = function(collection) {
     var props = ['totalResults', 'hasMore', oj.Collection._FETCH_SIZE_PROP], prop, i;
@@ -3967,21 +3994,51 @@ oj.Collection.prototype.pluck = function(attr) {
 
 /**
  * @export
- * Return an array of models that contain the given attribute/value pairs
+ * Return an array of models that contain the given attribute/value pairs.  Note that this function, along with findWhere, expects server-resolved
+ * filtering to return *all* models that meet the criteria, even in virtual cases.  The fetchSize will be set to the value of totalResults for this call to indicate that
+ * all should be returned.
  * 
- * @param {Object|Array} attrs attribute/value pairs to find.  If there are multiple attribute/value pairs in an array, then these are ORed together
- * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not
+ * @param {Object|Array} attrs attribute/value pairs to find.  The attribute/value pairs are ANDed together.  If attrs is an array of attribute/value pairs, then these are ORed together
+ *                             If the value is an object (or an array of objects, in which case the single attribute must meet all of the value/comparator conditions), then if it has both 'value' and 'comparator' parameters these will be interpreted as
+ *                             expressions needing custom commparisons.  The comparator value may either be a string or a comparator callback function.
+ *                             Strings are only valid where the filtering is sent back to the data service (virtual collections).  In the case of a comparator
+ *                             function, the function always takes the signature function(model, attr, value), and for non-virtual collections, is called for each 
+ *                             Model in the collection with the associated attribute and value.  The function should return true if the model meets the attribute/value
+ *                             condition, and false if not.  For cases where the filtering is to be done on the server, the function will be called once per attr/value pair
+ *                             with a null model, and the function should return the string to pass as the comparison in the expression for the filtering parameter
+ *                             in the URL sent back to the server.  Note that the array of value object case is really only meaningful for server-evaluated filters where
+ *                             a complex construction on a single attribute might be needed (e.g., x>v1 && x <=v2)
+ *                             For example:<p>
+ *                             {Dept:53,Name:'Smith'}<p>
+ *                             will return an array of models that have a Dept=53 and a Name=Smith, or, for server-filtered
+ *                             collections, a ?q=Dept=53+Name=Smith parameter will be sent with the URL.<p>
+ *                             [{Dept:53},{Dept:90}]<p>
+ *                             will return all models that have a Dept of 53 or 90.  Or, ?q=Dept=53,Dept=90 will be sent to the server.<p>
+ *                             {Dept:{value:53,comparator:function(model, attr, value) { return model.get(attr) !== value;}}}<p>
+ *                             will return all models that do not have a Dept of 53.<p>
+ *                             {Dept:{value:53,comparator:'<>'}}<p>
+ *                             For server-evaluated filters, a parameter ?q=Dept<>53 will be sent with the URL.  This form is an
+ *                             error on locally-evaluated colleection filters<p>
+ *                             {Dept:{value:53,comparator:function(model, attr, value) { return "<>";}}}<p>
+ *                             expresses the same thing for server-evaluated filters<p>
+ *                             {Dept:[{value:53,comparator:'<'},{value:90,comparator:'<'}]}<p>
+ *                             For server-evaluated filters, a parameter ?q=Dept>53+Dept<93 will be sent to the server<p>
+ * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not<p>
  * 
  * @return {Object} array of models.  If virtual or deferred, a promise that calls with the returned array from the server
  */
 oj.Collection.prototype.where = function(attrs, options) {
+    options = options || {};
     var deferred = this._getDeferred(options);
     if (this._isVirtual()) {
         var defer = $.Deferred();
         var success = function(collection, fetchedModels, options) {
             defer.resolve(fetchedModels);
         };
-        var opt = {'query':attrs,
+        // Send the attributes for a server-based filter; also indicate that we need *all* the attributes.  In the standard
+        // REST URL construction this is accomplished by leaving off fetchSize/start indices, etc.
+        var opt = {'query':attrs,  
+                   'all': true,
                    'success': success};
         this._fetchOnly(opt);
         return defer.promise();
@@ -4000,6 +4057,44 @@ oj.Collection.prototype.where = function(attrs, options) {
     return arr;
 };
 
+/**
+ * @export
+ * Return a collection only containing models that contain the given attribute/value pairs
+ * Note that this returns a non-virtual collection with all the models returned by the server
+ * even if the original collection is virtual.  Virtual collections doing filtering on the server should return all models that meet
+ * the critera.  @see (@link where)
+ * @see (@link where) for complete documentation of the parameters
+ *
+ * @return {Object} A collection, or if virtual or deferred, a promise that calls with the Collection
+ */
+oj.Collection.prototype.whereToCollection = function(attrs, options) {
+    options = options || {};
+    var deferred = this._getDeferred(options);
+    var self = this;
+    if (this._isVirtual() || deferred) {
+        var defer = $.Deferred();
+        this.where(attrs, options).done(function (models) {
+                                            var collection = self._makeNewCollection(models);
+                                            defer.resolve(collection);
+                                        });
+        return defer.promise();
+    }
+    else {
+        var models = this.where(attrs, options);
+        var newCollection = this._makeNewCollection(models);
+        newCollection[oj.Collection._FETCH_SIZE_PROP] = -1;
+        newCollection._setLength();
+        return newCollection;
+    }
+};
+    
+oj.Collection.prototype._makeNewCollection = function(models) {
+    var collection = this._cloneInternal(false);
+    collection._setModels(models);
+    collection._resetLRU();
+    collection._setLength();
+    return collection;
+};
 
 oj.Collection.prototype._throwErrIfVirtual = function(func) {
     if (this._isVirtual()) {
@@ -4279,8 +4374,9 @@ oj.Collection.prototype.any = function(iterator, context) {
  * @export
  * A version of where that only returns the first element found
  * 
- * @param {Object|Array} attrs attribute/value pairs to find.  If there are multiple attribute/value pairs in an array, then these are ORed together
- * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not
+ * @param {Object|Array} attrs attribute/value pairs to find.  
+ * @see (@link where) for more details and examples.
+ * @param {Object=} options deferred: if true, return a promise as though this collection were virtual whether it is or not<p>
  * 
  * @returns {Object} first model found with the attribute/value pairs.  If virtual or deferred, a promise that calls with the returned array from the server
  */
@@ -4381,7 +4477,7 @@ oj.Collection.prototype._setInternal = function(models, options, deferred) {
         models = this['parse'](models);
     }
 
-    modelList = oj.Model.isArray(models) ? models : [models];
+    modelList = oj.Model.IsArray(models) ? models : [models];
 
     if (this._isVirtual() || deferred) {
         return this._deferredSet(modelList, options, remove, add, merge);
@@ -4654,18 +4750,35 @@ oj.Collection.prototype._getSortAttrs = function(sortStr) {
 
 // Return a URL query string based on an array of or a single attr/value pair set
 oj.Collection._getQueryString = function(q) {
-    function expression(left, right) {
-        return left + "=" + right;
+    function expression(left, right, compare) {
+        return left + compare + right;
     }
     
-    var queries = oj.Model.isArray(q) ? q : [q];
+    var queries = oj.Model.IsArray(q) ? q : [q];
     var str = "", query, exp, i, prop;
     for (i = 0; i < queries.length; i++) {
         query = queries[i];
         for (prop in query) {
             if (query.hasOwnProperty(prop)) {
-                exp = expression(prop, query[prop]);
-                str += exp + "+";
+                var val = oj.Model.IsArray(query[prop]) ? query[prop] : [query[prop]];
+                for (var j = 0; j < val.length; j++) {
+                    if (oj.Model.IsComplexValue(val[j])) {
+                        var value = val[j]['value'];
+                        var compare = null;
+                        var comparator = val[j]['comparator'];
+                        if (oj.Model.IsFunction(comparator)) {
+                            compare = comparator(null, prop, value);
+                        }
+                        else {
+                            compare = comparator;
+                        }
+                        exp = expression(prop, value, compare);
+                    }
+                    else {
+                        exp = expression(prop, query[prop], "=");
+                    }
+                    str += exp + "+";
+                }
             }
         }
         // Remove trailing '+'
@@ -4711,20 +4824,32 @@ oj.Collection.prototype.GetCollectionFetchUrl = function(options) {
     
     // Adorn it with options, if any
     if (this._isVirtual()) {
+        var all = options['all'];
+        
         // Put in page size
-        url += "?limit=" + this._getFetchSize(options);
-                
-        if (options['startIndex']) {
-            url += "&offset=" + options['startIndex'];
+        var limit = null;
+        if (all) {
+            var totalResults = this['totalResults'];
+            limit = totalResults ? totalResults : this._getFetchSize(options);
         }
-        if (options['startID']) {
-            url += "&fromID=" + options['startID'];
+        else {
+            limit = this._getFetchSize(options);
         }
-        if (options['since']) {
-            url += "&since=" + options['since'];
-        }
-        if (options['until']) {
-            url += "&until=" + options['until'];
+        url += "?limit=" + limit;
+
+        if (!all) {
+            if (options['startIndex']) {
+                url += "&offset=" + options['startIndex'];
+            }
+            if (options['startID']) {
+                url += "&fromID=" + options['startID'];
+            }
+            if (options['since']) {
+                url += "&since=" + options['since'];
+            }
+            if (options['until']) {
+                url += "&until=" + options['until'];
+            }
         }
         // Query
         if (options['query']) {

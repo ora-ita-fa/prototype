@@ -8,8 +8,11 @@
     color: $formControlValueColor; 
     background-color: $formControlBgColor; 
     border: $formControlBorderWidth solid $formControlBorderColor;
-    @include oj-border-radius($formControlBorderRadius) {
-      border-radius: $formControlBorderRadius;
+    @include oj-border-radius($formControlBorderRadius);
+
+    @include oj-placeholder()
+    {
+      color: $formControlPlaceholderColor;
     }
 }
 

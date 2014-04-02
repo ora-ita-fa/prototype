@@ -14,9 +14,9 @@ $includeSelectClasses:   $includeFormControlClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.core.icons";
+@import "oj.alta.icons";
 @import "oj.alta.tooltip";
-@import "oj.alta.core.messaging";
+@import "oj.alta.messaging";
 @import "oj.alta.formcontrol.label";
 @import "oj.alta.formcontrol.common";
 
@@ -61,26 +61,6 @@ $includeSelectClasses:   $includeFormControlClasses !default;
 
     }
 
-    /* suppress all browser decorations of anchors in the select */
-    /* --------------------------------------------------------- */
-    .oj-select a,
-    .oj-select a:active,
-    .oj-select a:visited,
-    .oj-select a:hover,
-    .oj-select a:focus {
-      text-decoration: none;
-    }
-
-
-    .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
-      @include oj-ltr() {
-        margin-right: 42px; 
-      }
-      @include oj-rtl() {
-        margin-left: 42px; 
-      }
-    }
-
     .oj-select .oj-select-choice .oj-select-search {
       display: block;
       overflow: hidden;
@@ -113,12 +93,31 @@ $includeSelectClasses:   $includeFormControlClasses !default;
       }
     }
 
+    .oj-select .oj-select-choice abbr:hover {
+      cursor: pointer; 
+    }
+
+    /* suppress all browser decorations of anchors in the select */
+    /* --------------------------------------------------------- */
+    .oj-select a,
+    .oj-select a:active,
+    .oj-select a:visited,
+    .oj-select a:hover,
+    .oj-select a:focus {
+      text-decoration: none;
+    }
+
     .oj-select.oj-select-allowclear .oj-select-choice abbr {
       display: inline-block; 
     }
 
-    .oj-select .oj-select-choice abbr:hover {
-      cursor: pointer; 
+    .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
+      @include oj-ltr() {
+        margin-right: 42px; 
+      }
+      @include oj-rtl() {
+        margin-left: 42px; 
+      }
     }
 
     .oj-select-drop {
@@ -313,9 +312,9 @@ $includeSelectClasses:   $includeFormControlClasses !default;
       line-height: 13px;
       color: $textColor;
       cursor: default;
-      border-radius: $mediumBorderRadius;
+      @include oj-border-radius($mediumBorderRadius);
       background-color: $buttonBgColor;
-      @include oj-linear-gradient($buttonGradientStops, $buttonGradientDirection); 
+      @include oj-background-image($buttonBgImage);
       background-clip: padding-box;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
@@ -488,16 +487,12 @@ $includeSelectClasses:   $includeFormControlClasses !default;
       display: inline-table;
       background-color: $background3Color;
       border: $borderWidth solid $border4Color;
-      border-radius: $mediumBorderRadius;
-/* wrapper
-      margin: 5px 5px 4px 5px;
- */
+      @include oj-border-radius($mediumBorderRadius);
     }
-
 
     .oj-select-search .oj-select-input {
       @include oj-box-sizing-property(border-box);
-      width: 98%;
+      width: 100%;
       color: $textColor;
       padding: 6px 5px 5px 5px;
       display: table-cell;
@@ -506,22 +501,32 @@ $includeSelectClasses:   $includeFormControlClasses !default;
       outline: 0;
      }
 
-
     .oj-select-spyglass-box {
       @include oj-box-sizing-property(border-box);
       background-color: $background1Color;
       display: table-cell;
-      vertical-align:middle;
       line-height: 26px;
-
+      width: 28px;
+      text-align: center;
+      vertical-align: middle;
       border:0;
       box-shadow: none;
-    }
+   }
 
     .oj-select-search-wrapper {
       border: 0;
       padding: 5px;
       background-color: $background3Color;
     }
+
+   .oj-select-no-results {
+      @include oj-ltr() {
+        padding-left: 5px;
+      }
+      @include oj-rtl() {
+        padding-right: 5px;
+      }
+   }
+
   }
 }

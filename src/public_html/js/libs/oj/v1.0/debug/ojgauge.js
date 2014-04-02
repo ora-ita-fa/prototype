@@ -156,11 +156,11 @@ oj.__registerWidget('oj.ojDialGauge', $['oj']['dvtBaseGauge'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">input</code> callback specified:</caption>
      * $(".selector").ojDialGauge({
-     *   "input": function(event){}
+     *   "input": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojinput</code> event:</caption>
-     * $(".selector").on("ojinput", function(event){});
+     * $(".selector").on("ojinput", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -379,11 +379,11 @@ oj.__registerWidget('oj.ojRatingGauge', $['oj']['dvtBaseGauge'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">input</code> callback specified:</caption>
      * $(".selector").ojRatingGauge({
-     *   "input": function(event){}
+     *   "input": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojinput</code> event:</caption>
-     * $(".selector").on("ojinput", function(event){});
+     * $(".selector").on("ojinput", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -503,11 +503,11 @@ oj.__registerWidget('oj.ojStatusMeterGauge', $['oj']['dvtBaseGauge'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">input</code> callback specified:</caption>
      * $(".selector").ojStatusMeterGauge({
-     *   "input": function(event){}
+     *   "input": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojinput</code> event:</caption>
-     * $(".selector").on("ojinput", function(event){});
+     * $(".selector").on("ojinput", function(event, ui){});
      * 
      * @expose 
      * @event 

@@ -843,6 +843,11 @@ DvtDataGrid.UPDATE_ANIMATION_FADE_INOUT = 1;
 DvtDataGrid.UPDATE_ANIMATION_SLIDE_INOUT = 2;
 DvtDataGrid.UPDATE_ANIMATION_DURATION = 250;
 
+// extra momentum for gesture
+DvtDataGrid.TOUCHHOLD_MOMENTUM_FACTOR = 1.5;
+DvtDataGrid.SWIPE_MOMENTUM_FACTOR = 3.5;
+DvtDataGrid.MAX_OVERSCROLL_PIXEL = 50;
+
 /**
  * Sets options on DataGrid
  * @export
@@ -963,6 +968,15 @@ DvtDataGrid.prototype.destroy = function()
         this.m_dataSource.off("expand", this.handleExpandEvent);
         this.m_dataSource.off("collapse", this.handleCollapseEvent);
     }
+    
+    if (this.m_root != null)
+    {
+        if (this.m_handleDatabodyKeyDown)
+            this.m_root.removeEventListener("keydown", this.m_handleDatabodyKeyDown, false);
+        if (this.m_handleFocus)
+            this.m_root.removeEventListener("focus", this.m_handleFocus, false);
+    }
+
     delete this.m_styleClassDimensionMap;
     this.m_styleClassDimensionMap = {};
 };
@@ -1355,6 +1369,16 @@ DvtDataGrid.prototype.isLastColumn = function(columnIndex)
 DvtDataGrid.prototype.refresh = function(root)
 {
     this.destroy();
+    this.resetInternal();
+    this.render(root);
+};
+
+/**
+ * Resets internal state of data grid.
+ * @private
+ */
+DvtDataGrid.prototype.resetInternal = function()
+{
     this.m_cachedRowHeight = [];
     this.m_cachedColumnWidth = [];
     this.m_sizingManager.clear();
@@ -1378,7 +1402,6 @@ DvtDataGrid.prototype.refresh = function(root)
     this.m_stopRowHeaderFetch = false;
     this.m_stopColumnFetch = false;
     this.m_stopColumnHeaderFetch = false;
-    this.render(root);
 };
 
 /**
@@ -1388,6 +1411,13 @@ DvtDataGrid.prototype.refresh = function(root)
  */
 DvtDataGrid.prototype.render = function(root)
 {
+    // if this is the same instance and state wasn't clear out from last time
+    if (this.m_databody != null)
+    {
+        this.destroy();
+        this.resetInternal();
+    }
+    
     this.m_timingStart = new Date();
     this.m_fetching = {
     };
@@ -1426,7 +1456,8 @@ DvtDataGrid.prototype.render = function(root)
  */
 DvtDataGrid.prototype.buildGrid = function(root)
 {
-    var status, accInfo, stateInfo, rtl, colHeader, rowHeader, scroller, databody, empty, emptyText;
+    var status, accInfo, stateInfo, rtl, colHeader, rowHeader, scroller, databody, empty, emptyText, i;
+    
     this.m_root = root;
     this.m_root.className = this.getMappedStyle("datagrid");
     this.m_root.setAttribute("role", "application");
@@ -1493,8 +1524,11 @@ DvtDataGrid.prototype.buildGrid = function(root)
             databody.addEventListener("mouseup", this.handleDatabodyMouseUp.bind(this), false);
             databody.addEventListener("mouseout", this.handleDatabodyMouseOut.bind(this), false);
             databody.addEventListener("mouseover", this.handleDatabodyMouseOver.bind(this), false);
-            root.addEventListener("keydown", this.handleDatabodyKeyDown.bind(this), false);
-            root.addEventListener("focus", this.handleFocus.bind(this), false);
+            // store the listeners so we can remove them later (bind creates a new function)
+            this.m_handleDatabodyKeyDown = this.handleDatabodyKeyDown.bind(this);
+            this.m_handleFocus = this.handleFocus.bind(this);
+            root.addEventListener("keydown", this.m_handleDatabodyKeyDown, false);
+            root.addEventListener("focus", this.m_handleFocus, false);
 
             this.m_isResizing = false;
             this.m_resizingElement = null;
@@ -1541,6 +1575,17 @@ DvtDataGrid.prototype.buildGrid = function(root)
         {
             this.resizeGrid();            
             this.setInitialScrollPosition();
+
+            // check the model event queue to see if there are outstanding events
+            if (this.m_modelEvents != null)
+            {
+                for (i=0; i<this.m_modelEvents.length; i++)
+                {
+                    this.handleModelEvent(this.m_modelEvents[i]);
+                }
+                // empty the queue
+                this.m_modelEvents.length = 0;
+            }
         }
         else if (this.isHeaderFetchComplete() && !this.m_initialized)
         {
@@ -1607,6 +1652,18 @@ DvtDataGrid.prototype.resizeGrid = function()
     // this is the case where data is ready before dom structure is complete
     if (this.m_databody == null)
     {
+        return;
+    }
+
+    // check if there's no data
+    if (this.m_databody['firstChild'] == null)
+    {
+        emptyText = this.getEmptyText();
+        empty = document.createElement("div");
+        empty['className'] = this.getMappedStyle("emptytext");
+        this.setElementDir(empty, 0, 'top');
+        empty.innerHTML = emptyText;
+        this.m_root.appendChild(empty);
         return;
     }
 
@@ -1691,17 +1748,6 @@ DvtDataGrid.prototype.resizeGrid = function()
     this.m_scrollHeight = databodyContentHeight - databodyHeight;
 
     this.buildCorners();
-
-    // check if there's no data
-    if (!this.m_initialized && this.m_startRow == 0 && this.m_endRow == 0 && this.m_startRowHeader == 0 && this.m_endRowHeader == 0)
-    {
-        emptyText = this.getEmptyText();
-        empty = document.createElement("div");
-        empty['className'] = this.getMappedStyle("emptytext");
-        this.setElementDir(empty, colHeaderHeight, 'top');
-        empty.innerHTML = emptyText;
-        this.m_root.appendChild(empty);
-    }
     
     // now we are initialized
     this.m_initialized = true;
@@ -1831,7 +1877,7 @@ DvtDataGrid.prototype.setInitialScrollPosition = function()
             rowScrollPosition = this.m_options.getRowScrollPosition();
             if (scrollMode === 'key')
             {
-                indexes = this.getDataSource().indexes({row:rowScrollPosition, column:columnScrollPosition});
+                indexes = this.getDataSource().indexes({'row':rowScrollPosition, 'column':columnScrollPosition});
                 columnScrollPosition = indexes['column'] === -1 ? 0:indexes['column'];
                 rowScrollPosition = indexes['row'] === -1 ? 0:indexes['row'];
             }    
@@ -2186,7 +2232,7 @@ DvtDataGrid.prototype.handleHeadersFetchSuccess = function(results, headerRange,
     if (this.m_initialized)
     {
         // check if we need to sync header scroll position
-        this._syncScrollerAndHeaders();
+        this._syncScroller();
     }    
 };
 
@@ -2224,8 +2270,7 @@ DvtDataGrid.prototype.createHeaderContext = function(axis, index, data, metadata
     var key = metadata['key'];
     if (key != null)
     {
-        headerContext['key'] = key;
-        // store the key in the header element for fast retrieval
+        // store the key in the header element for fast retrieval        
         if (axis === 'row')
         {
             elem.parentNode.setAttribute(this.getResources().getMappedAttribute('key'), key);
@@ -2233,6 +2278,16 @@ DvtDataGrid.prototype.createHeaderContext = function(axis, index, data, metadata
         else
         {
             elem.setAttribute(this.getResources().getMappedAttribute('key'), key);
+        }
+    }
+
+    // merge properties from metadata into cell context
+    // the properties in metadata would have precedence
+    for (var prop in metadata) 
+    {
+        if (metadata.hasOwnProperty(prop)) 
+        {
+            headerContext[prop] = metadata[prop];   
         }
     }
 
@@ -3260,8 +3315,7 @@ DvtDataGrid.prototype.handleCellsFetchSuccess = function(cellSet, cellRange, row
     if (this.m_initialized)
     {
         // check if we need to sync header and databody scroll position
-        this._syncScrollerAndHeaders();
-        this._syncScrollerAndDatabody();
+        this._syncScroller();
     }
     
     // size the grid if fetch is done
@@ -3540,11 +3594,19 @@ DvtDataGrid.prototype.createCellContext = function(indexes, data, metadata, elem
     };
     cellContext['parentElement'] = elem;
     cellContext['indexes'] = indexes;
-    cellContext['keys'] = metadata['keys'];
     cellContext['data'] = data;
     cellContext['component'] = this;
     cellContext['datasource'] = this.getDataSource();
-    cellContext['metadata'] = metadata;
+
+    // merge properties from metadata into cell context
+    // the properties in metadata would have precedence
+    for (var prop in metadata) 
+    {
+        if (metadata.hasOwnProperty(prop)) 
+        {
+            cellContext[prop] = metadata[prop];   
+        }
+    }
 
     // invoke callback to allow ojDataGrid to change datagrid reference
     if (this.m_createContextCallback != null)
@@ -3625,6 +3687,12 @@ DvtDataGrid.prototype.addCellsToRow = function(cellSet, row, rowIndex, renderer,
         {
             row.setAttribute(keyAttribute, cellContext['keys']['row']);
         }
+        //before setting our own styles, else we will overwrite them
+        inlineStyle = this.m_options.getInlineStyle("cell", cellContext);
+        if (inlineStyle != null)
+        {
+            cell['style']['cssText'] = inlineStyle;
+        }
         
         //do not put borders on far edge column, edge row, turn off gridlines
         if (verticalGridlines === 'hidden' || this.isLastColumn(columnIndex))
@@ -3642,12 +3710,6 @@ DvtDataGrid.prototype.addCellsToRow = function(cellSet, row, rowIndex, renderer,
         {
             cell['style']['borderBottomStyle'] = 'none';
         }        
-        
-        inlineStyle = this.m_options.getInlineStyle("cell", cellContext);
-        if (inlineStyle != null)
-        {
-            cell['style']['cssText'] = inlineStyle;
-        }
 
         //determine if the newly fetched row should be banded
         if ((Math.floor(columnIndex / columnBandingInterval) % 2 === 1))
@@ -3863,7 +3925,7 @@ DvtDataGrid.prototype._getMaxScrollHeight = function()
  */
 DvtDataGrid.prototype.scrollDelta = function(deltaX, deltaY)
 {
-    var scrollLeft, scrollTop;
+    var scrollLeft, scrollTop, scrollerScrollLeft, scrollerScrollTop, diff;
     // prevent 'diagonal' scrolling
     if (deltaX != 0 && deltaY != 0)
     {
@@ -3878,12 +3940,31 @@ DvtDataGrid.prototype.scrollDelta = function(deltaX, deltaY)
         }
     }
 
-    scrollLeft = Math.max(0, Math.min(this._getMaxScrollWidth(), this.m_currentScrollLeft - deltaX));
-    scrollTop = Math.max(0, Math.min(this._getMaxScrollHeight(), this.m_currentScrollTop - deltaY));
+    scrollLeft = this.m_currentScrollLeft - deltaX;
+    scrollTop = this.m_currentScrollTop - deltaY;
     
     // this should force a scroll event
-    this.m_utils.setElementScrollLeft(this.m_scroller, scrollLeft);
-    this.m_scroller['scrollTop'] = scrollTop;
+    this.m_utils.setElementScrollLeft(this.m_scroller, Math.max(0, Math.min(this._getMaxScrollWidth(), scrollLeft)));
+    this.m_scroller['scrollTop'] = Math.max(0, Math.min(this._getMaxScrollHeight(), scrollTop));
+
+    // checks whether we are overscroll, for touch we should do the bounce animation
+    if (this.m_utils.isTouchDevice())
+    {
+        scrollerScrollTop = this.m_scroller['scrollTop'];
+        scrollerScrollLeft = this.m_utils.getElementScrollLeft(this.m_scroller);
+
+        // over scroll vertically
+        if (deltaY != 0 && scrollTop != this.m_scroller['scrollTop'])
+        {
+            diff = scrollTop - scrollerScrollTop;
+            this.m_extraScrollOverY = diff > 0 ? Math.min(DvtDataGrid.MAX_OVERSCROLL_PIXEL, diff) : Math.max(-DvtDataGrid.MAX_OVERSCROLL_PIXEL, diff);
+        }
+        else if (deltaX != 0 && scrollLeft != scrollerScrollLeft)
+        {
+            diff = scrollLeft - scrollerScrollLeft;
+            this.m_extraScrollOverX = diff > 0 ? Math.min(DvtDataGrid.MAX_OVERSCROLL_PIXEL, diff) : Math.max(-DvtDataGrid.MAX_OVERSCROLL_PIXEL, diff);
+        }        
+    }    
 };
 
 /**
@@ -3944,8 +4025,7 @@ DvtDataGrid.prototype.scrollTo = function(scrollLeft, scrollTop)
     this.m_stopDatabodyScroll = false;
 
     // update header and databody scroll position
-    this._syncScrollerAndHeaders();
-    this._syncScrollerAndDatabody();
+    this._syncScroller();
 
     // check if we need to adjust scroller dimension
     this._adjustScrollerSize();
@@ -3959,64 +4039,101 @@ DvtDataGrid.prototype.scrollTo = function(scrollLeft, scrollTop)
 };
 
 /**
- * Make sure the databody and the scroller is in sync, which could happen when scrolling
- * stopped awaiting fetch to complete.
+ * Perform the bounce back animation when a swipe gesture causes over scrolling
  * @private
  */
-DvtDataGrid.prototype._syncScrollerAndDatabody = function()
+DvtDataGrid.prototype._bounceBack = function()
 {
-    var scrollLeft, scrollTop, databody, dir;
+    var scrollLeft, scrollTop, databody, colHeader, rowHeader, dir;
 
     scrollLeft = this.m_currentScrollLeft;
     scrollTop = this.m_currentScrollTop;
 
     databody = this.m_databody['firstChild'];    
+    colHeader = this.m_colHeader['firstChild'];
+    rowHeader = this.m_rowHeader['firstChild'];
+
+    // remove existing listener
+    databody.removeEventListener("webkitTransitionEnd", this.m_bounceBack);
+
+    // scroll back to actual scrollLeft/scrollTop positions
+    if (this.getResources().isRTLMode())
+    {
+        databody.style.webkitTransform = "translate3d(" + scrollLeft + "px, " + (-scrollTop) + "px, 0)";
+        colHeader.style.webkitTransform = "translate3d(" + scrollLeft + "px, 0, 0)";
+    }
+    else
+    {
+        databody.style.webkitTransform = "translate3d(" + (-scrollLeft) + "px, " + (-scrollTop) + "px, 0)";
+        colHeader.style.webkitTransform = "translate3d(" + (-scrollLeft) + "px, 0, 0)";
+    }
+    rowHeader.style.webkitTransform = "translate3d(0, " + (-scrollTop) + "px, 0)";
+
+    // reset
+    this.m_extraScrollOverX = null;
+    this.m_extraScrollOverY = null;
+};
+
+/**
+ * Make sure the databody/headers and the scroller are in sync, which could happen when scrolling
+ * stopped awaiting fetch to complete.
+ * @private
+ */
+DvtDataGrid.prototype._syncScroller = function()
+{
+    var scrollLeft, scrollTop, databody, colHeader, rowHeader, dir;
+
+    scrollLeft = this.m_currentScrollLeft;
+    scrollTop = this.m_currentScrollTop;
+
+    databody = this.m_databody['firstChild'];    
+    colHeader = this.m_colHeader['firstChild'];
+    rowHeader = this.m_rowHeader['firstChild'];
 
     // use translate3d for smoother scrolling
     // this checks determine whether this is webkit and translated3d is supported
-    if (window.hasOwnProperty('WebKitCSSMatrix') && new WebKitCSSMatrix().hasOwnProperty('m11'))
+    if (this.m_utils.isTouchDevice() && window.hasOwnProperty('WebKitCSSMatrix') && new WebKitCSSMatrix().hasOwnProperty('m11'))
     {
+        // check if the swipe gesture causes over scrolling of scrollable area
+        if (this.m_extraScrollOverX != null || this.m_extraScrollOverY != null)
+        {
+            // swipe horizontal or vertical
+            if (this.m_extraScrollOverX != null)
+            {
+                scrollLeft = scrollLeft + this.m_extraScrollOverX;
+            }
+            else
+            {
+                scrollTop = scrollTop + this.m_extraScrollOverY;
+            }
+
+            // bounce back animation function
+            if (this.m_bounceBack == null)
+            {
+                this.m_bounceBack = this._bounceBack.bind(this);
+            }
+
+            databody.addEventListener("webkitTransitionEnd", this.m_bounceBack);
+        }
+
+        // actual scrolling of databody and headers
         if (this.getResources().isRTLMode())
+        {
             databody.style.webkitTransform = "translate3d(" + scrollLeft + "px, " + (-scrollTop) + "px, 0)";
+            colHeader.style.webkitTransform = "translate3d(" + scrollLeft + "px, 0, 0)";
+        }
         else
+        {
             databody.style.webkitTransform = "translate3d(" + (-scrollLeft) + "px, " + (-scrollTop) + "px, 0)";
+            colHeader.style.webkitTransform = "translate3d(" + (-scrollLeft) + "px, 0, 0)";
+        }
+        rowHeader.style.webkitTransform = "translate3d(0, " + (-scrollTop) + "px, 0)";
     }
     else
     {
         dir = this.getResources().isRTLMode() ? "right" : "left";
         this.setElementDir(databody, -scrollLeft, dir);
         this.setElementDir(databody, -scrollTop, 'top');
-    }
-};
-
-/**
- * Make sure the header and the scroller is in sync, which could happen when scrolling
- * stopped awaiting fetch to complete.
- * @private
- */
-DvtDataGrid.prototype._syncScrollerAndHeaders = function()
-{
-    var scrollLeft, scrollTop, colHeader, rowHeader, dir;
-
-    scrollLeft = this.m_currentScrollLeft;
-    scrollTop = this.m_currentScrollTop;
-
-    colHeader = this.m_colHeader['firstChild'];
-    rowHeader = this.m_rowHeader['firstChild'];
-
-    // use translate3d for smoother scrolling
-    // this checks determine whether this is webkit and translated3d is supported
-    if (window.hasOwnProperty('WebKitCSSMatrix') && new WebKitCSSMatrix().hasOwnProperty('m11'))
-    {
-        if (this.getResources().isRTLMode())
-            colHeader.style.webkitTransform = "translate3d(" + scrollLeft + "px, 0, 0)";
-        else
-            colHeader.style.webkitTransform = "translate3d(" + (-scrollLeft) + "px, 0, 0)";
-        rowHeader.style.webkitTransform = "translate3d(0, " + (-scrollTop) + "px, 0)";
-    }
-    else
-    {
-        dir = this.getResources().isRTLMode() ? "right" : "left";
         this.setElementDir(colHeader, -scrollLeft, dir);
         this.setElementDir(rowHeader, -scrollTop, 'top');
     }
@@ -4848,18 +4965,19 @@ DvtDataGrid.prototype.handleRowHeaderMouseMove = function(event)
 DvtDataGrid.prototype.handleHeaderMouseDown = function(event)
 {
     event.preventDefault();
-
+    //handle resize movements first if we're on the border
+    if (this.isResizeEnabled())
+    {
+        this.handleResizeMouseDown(event);
+    }
+    
+    var row = this.findRow(event.target);
     //if our move is enabled make sure our row has the active cell in it
-    if (this._isMoveEnabled('row') && this._getActiveRowKey() === this._getKey(this.find(event.target, 'row')))
+    if (!this.m_isResizing && this._isMoveOnRowEnabled(row))
     {
         this.m_databodyMove = true;
         this.m_currentX = event['pageX'];
         this.m_currentY = event['pageY'];
-    }
-    
-    if (this.isResizeEnabled())
-    {
-        this.handleResizeMouseDown(event);
     }
 };
 
@@ -4873,25 +4991,8 @@ DvtDataGrid.prototype.handleMouseUp = function(event)
     //if we mouseup outside the grid we want to cancel the selection and return the row
     if (this.m_databodyMove && this.m_moveRow != null)
     {
-        //remove the the drop target div from the databody/rowHeader
-        this.m_dropTarget['parentNode'].removeChild(this.m_dropTarget);
-        this.m_moveRow['style']['zIndex'] = 0;
-        if (this.m_moveRowHeader !== null)
-        {
-            this.m_dropTargetHeader['parentNode'].removeChild(this.m_dropTargetHeader);
-            this.m_moveRowHeader['style']['zIndex'] = 0;
-        }
-        //clear selection         
-        if (this._isSelectionEnabled())
-        {
-            this.unhighlightSelection();
-            this._clearSelection();
-        }    
-        
-        //move the rows on the datasource from the new key to the                
-        this.getDataSource().move(this._getKey(this.m_moveRow), this._getKey(this.m_moveRow));
-        this.m_moveRow = null;
-    }
+        this._handleMoveMouseUp(event, false);
+    }           
     else if (this.isResizeEnabled())
     {
         this.handleResizeMouseUp(event);
@@ -4905,6 +5006,11 @@ DvtDataGrid.prototype.handleHeaderMouseOver = function(event)
     {
         this._handleSortMouseOver(event);
     }
+    var row = this.findRow(event.target);
+    if (this._isMoveOnRowEnabled(row))
+    {
+        this.m_rowHeader['style']['cursor'] = 'move';
+    }    
 };
 
 DvtDataGrid.prototype.handleHeaderMouseOut = function(event)
@@ -4913,32 +5019,15 @@ DvtDataGrid.prototype.handleHeaderMouseOut = function(event)
     {
         this._handleSortMouseOut(event);
     }
+    this.m_rowHeader['style']['cursor'] = 'default';
 };
 
 DvtDataGrid.prototype.handleHeaderMouseUp = function(event)
 {
     if (this.m_databodyMove && this.m_moveRow != null)
     {
-        //remove the the drop target div from the databody/rowHeader
-        this.m_dropTarget['parentNode'].removeChild(this.m_dropTarget);
-        this.m_moveRow['style']['zIndex'] = 0;
-        if (this.m_moveRowHeader !== null)
-        {
-            this.m_dropTargetHeader['parentNode'].removeChild(this.m_dropTargetHeader);
-            this.m_moveRowHeader['style']['zIndex'] = 0;
-        }
-        //clear selection         
-        if (this._isSelectionEnabled())
-        {
-            this.unhighlightSelection();
-            this._clearSelection();
-        }    
-        
-        //move the rows on the datasource from the new key to the                
-        this.getDataSource().move(this._getKey(this.m_moveRow), this.m_moveRow['nextSibling'] === null ? null : this._getKey(this.m_moveRow['nextSibling']));
-        this.m_moveRow = null;
-        this.m_databodyMove = false;    
-    }       
+        this._handleMoveMouseUp(event, true);
+    }           
 };
 
 /**
@@ -4965,7 +5054,7 @@ DvtDataGrid.prototype.handleHeaderClick = function(event)
  */
 DvtDataGrid.prototype.handleDatabodyMouseDown = function(event)
 {
-    if (this._isMoveEnabled('row') && this._getActiveRowKey() === this._getKey(this.find(event.target, 'row')))
+    if (this._isMoveOnRowEnabled(this.find(event.target, 'row')))
     {
         this.m_databodyMove = true;
         this.m_currentX = event['pageX'];
@@ -4992,35 +5081,47 @@ DvtDataGrid.prototype.handleDatabodyMouseDown = function(event)
 
 DvtDataGrid.prototype.handleDatabodyMouseOut = function(event)
 {
+    var row, selectionMode;
     if (!this.m_databodyMove)
     {
-        var selectionMode = this.m_options.getSelectionMode();
+        selectionMode = this.m_options.getSelectionMode();
+        row = this.findRow(event.target);
         if (selectionMode === 'cell')
         {    
             this.m_utils.removeCSSClassName(this.findCell(event.target), this.getMappedStyle('hover'));
         }
         else if (selectionMode === 'row')
         {
-            this.m_utils.removeCSSClassName(this.findRow(event.target), this.getMappedStyle('hover'));
+            this.m_utils.removeCSSClassName(row, this.getMappedStyle('hover'));
+        }
+        if (row)
+        {
+            row['style']['cursor'] = 'default';
         }
     }
-}
+};
 
 DvtDataGrid.prototype.handleDatabodyMouseOver = function(event)
 {
+    var row, selectionMode;    
     if (!this.m_databodyMove)
     {
-        var selectionMode = this.m_options.getSelectionMode();
+        selectionMode = this.m_options.getSelectionMode();
+        row = this.findRow(event.target);        
         if (selectionMode === 'cell')
         {
             this.m_utils.addCSSClassName(this.findCell(event.target), this.getMappedStyle('hover'));
         }
         else if (selectionMode === 'row')
         {
-            this.m_utils.addCSSClassName(this.findRow(event.target), this.getMappedStyle('hover'));         
+            this.m_utils.addCSSClassName(row, this.getMappedStyle('hover'));         
+        }
+        if (this._isMoveOnRowEnabled(row))
+        {
+            row['style']['cursor'] = 'move';
         }
     }
-}
+};
 
 /**
  * Event handler for when mouse move anywhere in the databody
@@ -5029,13 +5130,14 @@ DvtDataGrid.prototype.handleDatabodyMouseOver = function(event)
  */
 DvtDataGrid.prototype.handleDatabodyMouseMove = function(event)
 {
-    if (this.m_databodyDragState)
-    {
-        this.handleDatabodySelectionDrag(event);
-    }
-    else if (this.m_databodyMove)
+    //handle move first because it should happen first on the second click
+    if (this.m_databodyMove)
     {
         this._handleMove(event);
+    }    
+    else if (this.m_databodyDragState)
+    {
+        this.handleDatabodySelectionDrag(event);
     }
 };
 
@@ -5049,26 +5151,13 @@ DvtDataGrid.prototype.handleDatabodyMouseUp = function(event)
     this.m_databodyDragState = false;
     if (this.m_databodyMove && this.m_moveRow != null)
     {
-        //remove the the drop target div from the databody/rowHeader
-        this.m_dropTarget['parentNode'].removeChild(this.m_dropTarget);
-        this.m_moveRow['style']['zIndex'] = 0;
-        if (this.m_moveRowHeader !== null)
-        {
-            this.m_dropTargetHeader['parentNode'].removeChild(this.m_dropTargetHeader);
-            this.m_moveRowHeader['style']['zIndex'] = 0;
-        }
-        //clear selection         
-        if (this._isSelectionEnabled())
-        {
-            this.unhighlightSelection();
-            this._clearSelection();
-        }    
-        
-        //move the rows on the datasource from the new key to the                
-        this.getDataSource().move(this._getKey(this.m_moveRow), this.m_moveRow['nextSibling'] === null ? null : this._getKey(this.m_moveRow['nextSibling']));
-        this.m_moveRow = null;
-        this.m_databodyMove = false;    
-    }           
+        this._handleMoveMouseUp(event, true);
+    }
+    else if (this._isMoveEnabled('row'))
+    {
+        this._getActiveRow()['style']['cursor'] = 'move';
+    }
+
 };
 
 /**
@@ -5078,6 +5167,8 @@ DvtDataGrid.prototype.handleDatabodyMouseUp = function(event)
  */
 DvtDataGrid.prototype.handleDatabodyKeyDown = function(event)
 {
+    //prevent page scroll on arrow key
+    event.preventDefault();
     var cell;
     // if nothing is active, do nothing
     if (this.m_active == null && this.m_activeHeader == null)
@@ -5261,10 +5352,8 @@ DvtDataGrid.prototype.handleTouchMove = function(event)
         }
         else
         {
-            // a longer swipe, reset count and start x/y
+            // a longer swipe, reset count
             this.m_moveCount = 0;
-            this.m_startX = this.m_currentX;
-            this.m_startY = this.m_currentY;
         }
         this.m_prevX = this.m_currentX;
         this.m_prevY = this.m_currentY;
@@ -5341,7 +5430,7 @@ DvtDataGrid.prototype.handleTouchCancel = function(event)
  */
 DvtDataGrid.prototype.handleTouchAndHoldScroll = function(deltaX, deltaY)
 {
-    this.scrollDelta(deltaX, deltaY);
+    this.scrollDelta(deltaX * DvtDataGrid.TOUCHHOLD_MOMENTUM_FACTOR, deltaY * DvtDataGrid.TOUCHHOLD_MOMENTUM_FACTOR);
 };
 
 /**
@@ -5352,7 +5441,7 @@ DvtDataGrid.prototype.handleTouchAndHoldScroll = function(deltaX, deltaY)
 DvtDataGrid.prototype.handleSwipe = function(swipeLength, swipeDirection)
 {
     // give it extra momentum
-    swipeLength = swipeLength + 10;
+    swipeLength = swipeLength * DvtDataGrid.SWIPE_MOMENTUM_FACTOR;
 
     if (swipeDirection == 'down')
     {
@@ -5705,6 +5794,18 @@ DvtDataGrid.prototype._isInViewport = function(indexes)
 DvtDataGrid.prototype.handleModelEvent = function(event)
 {
     var operation, keys, cellSet;
+
+    // in case if the model event arrives before the grid is fully rendered, 
+    // queue the event and handle it later
+    if (!this.m_initialized)
+    {
+        if (this.m_modelEvents == undefined)
+        {
+            this.m_modelEvents = [];
+        }
+        this.m_modelEvents.push(event);
+        return;
+    }
 
     operation = event['operation'];
     keys = event['keys'];
@@ -6657,7 +6758,7 @@ DvtDataGrid.prototype.getLabelledBy = function(cell)
                 }
                 else
                 {
-                    label = [label, columns[colIndex]['id']].join(",");
+                    label = [label, columns[colIndex]['id']].join(" ");
                 }
             }
         }
@@ -6670,7 +6771,7 @@ DvtDataGrid.prototype.getLabelledBy = function(cell)
     }
     else
     {
-        label = [label, this.createSubId("state")].join(",");
+        label = [label, this.createSubId("state")].join(" ");
     }
     
     return label;
@@ -7970,6 +8071,21 @@ DvtDataGrid.prototype._getActiveRowKey = function()
     return null;
 };
 
+/**
+ * Retrieve the active row.
+ * @return {Element|null} the active row
+ * @private
+ */
+DvtDataGrid.prototype._getActiveRow = function()
+{
+    if (this.m_active != null)
+    {
+        //+1 for resizer
+        return this.m_databody['firstChild']['childNodes'][this.m_active['row'] + 1];
+    }
+    return null;
+};
+
 ///////////////////// move methods////////////////////////
 /**
  * Handles cut event from the flattened datasource.
@@ -8114,18 +8230,27 @@ DvtDataGrid.prototype._handleMove = function(event)
  */
 DvtDataGrid.prototype._moveDropRows = function(sibling)
 {
-    var newTop, databodyScroller, headerScroller;
+    var newTop, databodyScroller, newSiblingTop, headerScroller;
     databodyScroller = this.m_moveRow['parentNode'];
-
     //move the drop target and the adjacent row
-    newTop = this.getElementDir(this.m_moveRow[sibling], 'top');
+    if (sibling == 'nextSibling')
+    {
+        newTop = this.m_originalTop + this.getElementHeight(this.m_moveRow[sibling]);
+        newSiblingTop = this.m_originalTop;        
+    }
+    else
+    {
+        newTop = this.getElementDir(this.m_moveRow[sibling], 'top');
+        newSiblingTop = newTop + this.getElementHeight(this.m_moveRow);            
+    }
+
     this.setElementDir(this.m_dropTarget, newTop, 'top');
-    this.setElementDir(this.m_moveRow[sibling], this.m_originalTop, 'top');
+    this.setElementDir(this.m_moveRow[sibling], newSiblingTop, 'top');
     if (this.m_moveRowHeader !== null)
     {
         headerScroller = this.m_moveRowHeader['parentNode'];
         this.setElementDir(this.m_dropTargetHeader, newTop, 'top');
-        this.setElementDir(this.m_moveRowHeader[sibling], this.m_originalTop, 'top');
+        this.setElementDir(this.m_moveRowHeader[sibling], newSiblingTop, 'top');
     }
     
     //store the new top value
@@ -8167,6 +8292,65 @@ DvtDataGrid.prototype._isMoveEnabled = function(axis)
         return true;
     }
 
+    return false;
+};
+
+/**
+ * Handles a mouse up after move
+ * @param {Event} event MouseUp Event
+ * @param {boolean} validUp true if in the databody or rowHeader
+ * @private
+ */
+DvtDataGrid.prototype._handleMoveMouseUp = function(event, validUp)
+{
+    //remove the the drop target div from the databody/rowHeader
+    this.m_dropTarget['parentNode'].removeChild(this.m_dropTarget);
+    this.m_moveRow['style']['zIndex'] = 0;
+    if (this.m_moveRowHeader !== null)
+    {
+        this.m_dropTargetHeader['parentNode'].removeChild(this.m_dropTargetHeader);
+        this.m_moveRowHeader['style']['zIndex'] = 0;
+    }
+
+    this.m_active = null;        
+    //clear selection         
+    if (this._isSelectionEnabled())
+    {
+        this.unhighlightSelection();
+        this._clearSelection();
+    }    
+
+    //if the mousup was in the rowHeader or databody 
+    if (validUp == true)
+    {
+        this.getDataSource().move(this._getKey(this.m_moveRow), this.m_moveRow['nextSibling'] === null ? null : this._getKey(this.m_moveRow['nextSibling']));  
+    }
+    else
+    {
+        this.getDataSource().move(this._getKey(this.m_moveRow), this._getKey(this.m_moveRow));
+    }
+    this.m_moveRow = null;
+    this.m_databodyMove = false;    
+};
+
+/**
+ * Check if a row can be moved, meaning it is the active row and move is enabled
+ * @param {Element|null} row the row to move
+ * @returns {Boolean} true if the row can be moved
+ */
+DvtDataGrid.prototype._isMoveOnRowEnabled = function(row)
+{
+    if (row == null)
+    {
+        return false;
+    }
+    if (this._isMoveEnabled('row'))
+    {
+        if (this._getActiveRowKey() === this._getKey(row))
+        {
+            return true;
+        }
+    }
     return false;
 };
 // constants for key codes
@@ -9044,6 +9228,7 @@ DvtDataGrid.prototype.isElementVisible = function(elem, node)
  */
 DvtDataGrid.prototype.handleResize = function(event)
 {
+    var header, row;
     //if not resizing, monitor the cursor position, otherwise handle resizing
     if (this.m_isResizing === false)
     {
@@ -9052,12 +9237,28 @@ DvtDataGrid.prototype.handleResize = function(event)
                 this.m_utils.containsCSSClassName(event['target'], this.getMappedStyle('rowheadercell')))
         {
             this.m_cursor = this.manageHeaderCursor(event);
-            document['body']['style']['cursor'] = this.m_cursor;
         }
         else
         {
             this.m_cursor = 'default';
-            document['body']['style']['cursor'] = 'default';
+        }
+
+        if (this.m_resizingElement != null)
+        {
+            header = this.find(this.m_resizingElement, 'header');
+            if (header != null)
+            {
+                //do not set on document body but rather just the header area 
+                //don't have to deal with the sibling headers
+                if (this.m_cursor == 'default')
+                {
+                    header['style']['cursor'] = header['style']['cursor'] === 'move' ? 'move':this.m_cursor;
+                }
+                else
+                {
+                    header['style']['cursor'] = this.m_cursor;
+                }
+            }        
         }
     }
     else
@@ -9104,8 +9305,9 @@ DvtDataGrid.prototype.handleResizeMouseUp = function(event) {
 
         //no longer resizing
         this.m_isResizing = false;
-        document['body']['style']['cursor'] = 'default';
         this.m_cursor = 'default';
+        this.find(this.m_resizingElement, 'header')['style']['cursor'] = this.m_cursor;        
+        
     }
 };
 
@@ -9741,14 +9943,12 @@ DvtDataGrid.prototype.getHeaderEdgePixels = function(elem)
     } else
     {
          targetWidth = this.getElementWidth(this.m_rowHeader);
-         targetHeight = isNaN(this.getElementHeight(elem)) ? this.getDefaultRowHeight() : this.getElementHeight(elem);
+         targetHeight = isNaN(this.getElementHeight(elem['parentNode'])) ? this.getDefaultRowHeight() : this.getElementHeight(elem['parentNode']);
     }
      rightEdge = leftEdge + targetWidth;
      bottomEdge = topEdge + targetHeight;
     return [leftEdge, topEdge, rightEdge, bottomEdge];
 };
-
-
 /**
  * Event handler for handling mouse over event on headers.
  * @param {Event} event the DOM event

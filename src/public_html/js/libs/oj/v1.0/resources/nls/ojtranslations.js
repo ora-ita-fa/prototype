@@ -229,6 +229,9 @@ define
         'labelRequired':'Required',
         'labelSelectRow':'Select Row',
         'labelSelectColumn':'Select Column',
+        'labelSort': 'Sort',
+		    'labelSortAsc': 'Sort Ascending',
+		    'labelSortDsc': 'Sort Descending',
         'msgFetchingData':'Fetching Data...',
         'msgNoData':'No data to display.',
 
@@ -250,7 +253,7 @@ define
         'dataInvalidType':
         {
           'summary': 'Invalid data type.',
-          'detail': 'Please specify oj.Collection or oj.TableDataSource or ko.observableArray.'
+          'detail': 'Please specify the appropriate data type.'
         },
         'dataUnitialized':
         {
@@ -266,7 +269,12 @@ define
         {
           'summary': 'Invalid row index value.',
           'detail': 'Row index: {0}.'
-        }
+        },
+        'tableDataSourceInstantiated':
+        {
+          'summary': 'oj.TableDataSource constructor called.',
+          'detail': 'Please do not instantiate oj.TableDataSource. Please use one of the subclasses instead such as oj.ArrayTableDataSource or oj.CollectionTableDataSource.'
+        },
       },
 
       'oj-ojTree':

@@ -1,6 +1,6 @@
-define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/internal-deps/dvt/DvtChart"], function($oj$$14$$, $$$$14$$) {
-  $oj$$14$$.$__registerWidget$("oj.ojChart", $$$$14$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{categoryFilter:null, categoryHighlight:null, select:null, viewportChange:null}, $_createComponent$:function($context$$40$$, $callback$$83$$, $callbackObj$$4$$) {
-    return DvtChart.newInstance($context$$40$$, $callback$$83$$, $callbackObj$$4$$)
+define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/internal-deps/dvt/DvtChart"], function($oj$$15$$, $$$$15$$) {
+  $oj$$15$$.$__registerWidget$("oj.ojChart", $$$$15$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{categoryFilter:null, categoryHighlight:null, select:null, viewportChange:null}, $_createComponent$:function($context$$40$$, $callback$$86$$, $callbackObj$$4$$) {
+    return DvtChart.newInstance($context$$40$$, $callback$$86$$, $callbackObj$$4$$)
   }, $_getComponentStyleClasses$:function() {
     var $styleClasses$$7$$ = this._super();
     $styleClasses$$7$$.push("oj-chart");
@@ -27,38 +27,38 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/in
     return $styleClasses$$8$$
   }, $_getTranslationMap$:function() {
     var $superMap$$2$$ = this._super(), $selfMap$$2$$ = {"oj-ojDvtCommon.msgNoData":"DvtChartBundle.EMPTY_TEXT", "oj-ojChart.labelDefaultGroupName":"DvtChartBundle.DEFAULT_GROUP_NAME", "oj-ojChart.labelSeries":"DvtChartBundle.LABEL_SERIES", "oj-ojChart.labelGroup":"DvtChartBundle.LABEL_GROUP", "oj-ojChart.labelValue":"DvtChartBundle.LABEL_VALUE", "oj-ojChart.labelTargetValue":"DvtChartBundle.LABEL_TARGET_VALUE", "oj-ojChart.labelX":"DvtChartBundle.LABEL_X", "oj-ojChart.labelY":"DvtChartBundle.LABEL_Y", 
-    "oj-ojChart.labelZ":"DvtChartBundle.LABEL_Z", "oj-ojChart.labelLow":"DvtChartBundle.LABEL_LOW", "oj-ojChart.labelHigh":"DvtChartBundle.LABEL_HIGH", "oj-ojChart.labelOther":"DvtChartBundle.LABEL_OTHER", "oj-ojChart.tooltipPan":"DvtChartBundle.PAN", "oj-ojChart.tooltipSelect":"DvtChartBundle.MARQUEE_SELECT", "oj-ojChart.tooltipZoom":"DvtChartBundle.MARQUEE_ZOOM"}, $ret$$26$$ = {}, $key$$64$$;
-    for($key$$64$$ in $superMap$$2$$) {
-      $ret$$26$$[$key$$64$$] = $superMap$$2$$[$key$$64$$]
+    "oj-ojChart.labelZ":"DvtChartBundle.LABEL_Z", "oj-ojChart.labelLow":"DvtChartBundle.LABEL_LOW", "oj-ojChart.labelHigh":"DvtChartBundle.LABEL_HIGH", "oj-ojChart.labelOther":"DvtChartBundle.LABEL_OTHER", "oj-ojChart.tooltipPan":"DvtChartBundle.PAN", "oj-ojChart.tooltipSelect":"DvtChartBundle.MARQUEE_SELECT", "oj-ojChart.tooltipZoom":"DvtChartBundle.MARQUEE_ZOOM"}, $ret$$26$$ = {}, $key$$66$$;
+    for($key$$66$$ in $superMap$$2$$) {
+      $ret$$26$$[$key$$66$$] = $superMap$$2$$[$key$$66$$]
     }
-    for($key$$64$$ in $selfMap$$2$$) {
-      $ret$$26$$[$key$$64$$] = $selfMap$$2$$[$key$$64$$]
+    for($key$$66$$ in $selfMap$$2$$) {
+      $ret$$26$$[$key$$66$$] = $selfMap$$2$$[$key$$66$$]
     }
     return $ret$$26$$
-  }, $_handleEvent$:function($event$$122_selection$$4$$) {
-    var $filterType_highlightType_selectedItems$$3_type$$78$$ = $event$$122_selection$$4$$ && $event$$122_selection$$4$$.getType ? $event$$122_selection$$4$$.getType() : null;
+  }, $_handleEvent$:function($event$$135_selection$$4$$) {
+    var $filterType_highlightType_selectedItems$$3_type$$78$$ = $event$$135_selection$$4$$ && $event$$135_selection$$4$$.getType ? $event$$135_selection$$4$$.getType() : null;
     if($filterType_highlightType_selectedItems$$3_type$$78$$ === DvtSelectionEvent.TYPE) {
-      if($event$$122_selection$$4$$ = $event$$122_selection$$4$$.getSelection()) {
-        for(var $filterType_highlightType_selectedItems$$3_type$$78$$ = [], $i$$191$$ = 0;$i$$191$$ < $event$$122_selection$$4$$.length;$i$$191$$++) {
-          var $selectedItem$$3$$ = {id:$event$$122_selection$$4$$[$i$$191$$].getId(), series:$event$$122_selection$$4$$[$i$$191$$].getSeries(), group:$event$$122_selection$$4$$[$i$$191$$].getGroup()};
+      if($event$$135_selection$$4$$ = $event$$135_selection$$4$$.getSelection()) {
+        for(var $filterType_highlightType_selectedItems$$3_type$$78$$ = [], $i$$196$$ = 0;$i$$196$$ < $event$$135_selection$$4$$.length;$i$$196$$++) {
+          var $selectedItem$$3$$ = {id:$event$$135_selection$$4$$[$i$$196$$].getId(), series:$event$$135_selection$$4$$[$i$$196$$].getSeries(), group:$event$$135_selection$$4$$[$i$$196$$].getGroup()};
           $filterType_highlightType_selectedItems$$3_type$$78$$.push($selectedItem$$3$$)
         }
         this._trigger("select", null, {items:$filterType_highlightType_selectedItems$$3_type$$78$$})
       }
     }else {
-      $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryHideShowEvent.TYPE_HIDE || $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryHideShowEvent.TYPE_SHOW ? ($filterType_highlightType_selectedItems$$3_type$$78$$ = $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryHideShowEvent.TYPE_HIDE ? "out" : "in", this._trigger("categoryFilter", null, {category:$event$$122_selection$$4$$.getCategory(), type:$filterType_highlightType_selectedItems$$3_type$$78$$})) : 
-      $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryRolloverEvent.TYPE_OVER || $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryRolloverEvent.TYPE_OUT ? ($filterType_highlightType_selectedItems$$3_type$$78$$ = $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryRolloverEvent.TYPE_OVER ? "on" : "off", this._trigger("categoryHighlight", null, {categories:[$event$$122_selection$$4$$.getCategory()], type:$filterType_highlightType_selectedItems$$3_type$$78$$})) : 
-      this._super($event$$122_selection$$4$$)
+      $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryHideShowEvent.TYPE_HIDE || $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryHideShowEvent.TYPE_SHOW ? ($filterType_highlightType_selectedItems$$3_type$$78$$ = $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryHideShowEvent.TYPE_HIDE ? "out" : "in", this._trigger("categoryFilter", null, {category:$event$$135_selection$$4$$.getCategory(), type:$filterType_highlightType_selectedItems$$3_type$$78$$})) : 
+      $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryRolloverEvent.TYPE_OVER || $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryRolloverEvent.TYPE_OUT ? ($filterType_highlightType_selectedItems$$3_type$$78$$ = $filterType_highlightType_selectedItems$$3_type$$78$$ === DvtCategoryRolloverEvent.TYPE_OVER ? "on" : "off", this._trigger("categoryHighlight", null, {categories:[$event$$135_selection$$4$$.getCategory()], type:$filterType_highlightType_selectedItems$$3_type$$78$$})) : 
+      this._super($event$$135_selection$$4$$)
     }
   }, $_loadResources$:function() {
     null == this.options._resources && (this.options._resources = {});
     var $resources$$1$$ = this.options._resources;
-    $resources$$1$$.overviewGrippy = $oj$$14$$.$Config$.$getResourceUrl$("resources/internal-deps/dvt/chart/drag_horizontal.png");
-    $resources$$1$$.panCursorDown = $oj$$14$$.$Config$.$getResourceUrl$("resources/internal-deps/dvt/chart/hand-closed.cur");
-    $resources$$1$$.panCursorUp = $oj$$14$$.$Config$.$getResourceUrl$("resources/internal-deps/dvt/chart/hand-open.cur")
+    $resources$$1$$.overviewGrippy = $oj$$15$$.$Config$.$getResourceUrl$("resources/internal-deps/dvt/chart/drag_horizontal.png");
+    $resources$$1$$.panCursorDown = $oj$$15$$.$Config$.$getResourceUrl$("resources/internal-deps/dvt/chart/hand-closed.cur");
+    $resources$$1$$.panCursorUp = $oj$$15$$.$Config$.$getResourceUrl$("resources/internal-deps/dvt/chart/hand-open.cur")
   }});
-  $oj$$14$$.$__registerWidget$("oj.ojSparkChart", $$$$14$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", $_createComponent$:function($context$$41$$, $callback$$84$$, $callbackObj$$5$$) {
-    return DvtSparkChart.newInstance($context$$41$$, $callback$$84$$, $callbackObj$$5$$)
+  $oj$$15$$.$__registerWidget$("oj.ojSparkChart", $$$$15$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", $_createComponent$:function($context$$41$$, $callback$$87$$, $callbackObj$$5$$) {
+    return DvtSparkChart.newInstance($context$$41$$, $callback$$87$$, $callbackObj$$5$$)
   }, $_getComponentStyleClasses$:function() {
     var $styleClasses$$9$$ = this._super();
     $styleClasses$$9$$.push("oj-sparkchart");

@@ -4,7 +4,7 @@
 @mixin ui-widget-content {
   border: 1px solid $contentBorderColor;
   background-color: $contentBgColor;
-  @include oj-linear-gradient($contentGradientStops, $contentGradientDirection);
+  @include oj-background-image($contentBgImage);
   color: $contentTextColor;
 }
 
@@ -15,7 +15,7 @@
 @mixin ui-widget-header {
   border: 1px solid $headerBorderColor;
   background-color: $headerBgColor;
-  @include oj-linear-gradient($headerGradientStops, $headerGradientDirection);
+  @include oj-background-image($headerBgImage);
   color: $headerTextColor;
   font-weight: bold;
 }
@@ -30,7 +30,7 @@
 @mixin ui-state-default {
   border: 1px solid $clickableBorderColor;
   background-color: $clickableBgColor;
-  @include oj-linear-gradient($clickableGradientStops, $clickableGradientDirection);
+  @include oj-background-image($clickableBgImage);
   font-weight: $widgetFontWeight;
   color: $clickableTextColor;
 }
@@ -43,7 +43,7 @@
 @mixin ui-state-hover {
   border: 1px solid $clickableBorderColorHover;
   background-color: $clickableBgColorHover;
-  @include oj-linear-gradient($clickableGradientStopsHover, $clickableGradientDirectionHover);
+  @include oj-background-image($clickableBgImageHover);
   font-weight: $widgetFontWeight;
   color: $clickableTextColorHover;
 }
@@ -56,7 +56,7 @@
 @mixin ui-state-active {
   border: 1px solid $clickableBorderColorActive;
   background-color: $clickableBgColorActive;
-  @include oj-linear-gradient($clickableGradientStopsActive, $clickableGradientDirectionActive);
+  @include oj-background-image($clickableBgImageActive);
   font-weight: $widgetFontWeight;
   color: $clickableTextColorActive;
 }
@@ -75,7 +75,7 @@
 @mixin ui-state-highlight {
   border: 1px solid $borderColorHighlight;
   background-color: $bgColorHighlight;
-  @include oj-linear-gradient($gradientStopsHighlight, $gradientDirectionHighlight);
+  @include oj-background-image($bgImageHighlight);
   color: $textColorHighlight;
 }
 
@@ -86,7 +86,7 @@
 @mixin ui-state-error {
   border: 1px solid $borderColorError;
   background-color: $bgColorError;
-  @include oj-linear-gradient($gradientStopsError, $gradientDirectionError);
+  @include oj-background-image($bgImageError);
   color: $textColorError;
 }
 
@@ -119,46 +119,43 @@
 // Corner radius
 //----------------------------------
 @mixin ui-corner-all {
-  border-top-left-radius: $borderRadius;
-  border-top-right-radius: $borderRadius;
-  border-bottom-left-radius: $borderRadius;
-  border-bottom-right-radius: $borderRadius;
+  @include oj-border-radius($borderRadius);
 }
 
 @mixin ui-corner-top {
-  border-top-left-radius: $borderRadius;
-  border-top-right-radius: $borderRadius;
+  @include oj-border-top-left-radius($borderRadius);
+  @include oj-border-top-right-radius($borderRadius);
 }
 
 @mixin ui-corner-bottom {
-  border-bottom-left-radius: $borderRadius;
-  border-bottom-right-radius: $borderRadius;
+  @include oj-border-bottom-left-radius($borderRadius);
+  @include oj-border-bottom-right-radius($borderRadius);
 }
 
 @mixin ui-corner-left {
-  border-top-left-radius: $borderRadius;
-  border-bottom-left-radius: $borderRadius;
+  @include oj-border-top-left-radius($borderRadius);
+  @include oj-border-bottom-left-radius($borderRadius);
 }
 
 @mixin ui-corner-right {
-  border-top-right-radius: $borderRadius;
-  border-bottom-right-radius: $borderRadius;
+  @include oj-border-top-right-radius($borderRadius);
+  @include oj-border-bottom-right-radius($borderRadius);
 }
 
 @mixin ui-corner-tl {
-  border-top-left-radius: $borderRadius;
+  @include oj-border-top-left-radius($borderRadius);
 }
 
 @mixin ui-corner-tr {
-  border-top-right-radius: $borderRadius;
+  @include oj-border-top-right-radius($borderRadius);
 }
 
 @mixin ui-corner-bl {
-  border-bottom-left-radius: $borderRadius;
+  @include oj-border-bottom-left-radius($borderRadius);
 }
 
 @mixin ui-corner-br {
-  border-bottom-right-radius: $borderRadius;
+  @include oj-border-bottom-right-radius($borderRadius);
 }
 
  

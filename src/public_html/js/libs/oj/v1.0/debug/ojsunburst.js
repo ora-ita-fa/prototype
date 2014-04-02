@@ -60,11 +60,11 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">rotate</code> callback specified:</caption>
      * $(".selector").ojSunburst({
-     *   "rotate": function(event){}
+     *   "rotate": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojrotate</code> event:</caption>
-     * $(".selector").on("ojrotate", function(event){});
+     * $(".selector").on("ojrotate", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -81,11 +81,11 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">rotateInput</code> callback specified:</caption>
      * $(".selector").ojSunburst({
-     *   "rotateInput": function(event){}
+     *   "rotateInput": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojrotateinput</code> event:</caption>
-     * $(".selector").on("ojrotateinput", function(event){});
+     * $(".selector").on("ojrotateinput", function(event, ui){});
      * 
      * @expose 
      * @event 
@@ -103,11 +103,11 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
      * 
      * @example <caption>Initialize the component with the <code class="prettyprint">select</code> callback specified:</caption>
      * $(".selector").ojSunburst({
-     *   "select": function(event){}
+     *   "select": function(event, ui){}
      * });
      *
      * @example <caption>Bind an event listener to the <code class="prettyprint">ojselect</code> event:</caption>
-     * $(".selector").on("ojselect", function(event){});
+     * $(".selector").on("ojselect", function(event, ui){});
      * 
      * @expose 
      * @event 

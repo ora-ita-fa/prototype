@@ -103,10 +103,6 @@ oj.CollectionCellSet.prototype._getModel = function(indexes)
 
     // extract row and column index
     row = indexes['row'];
-    if (this.m_collection.offset != null)
-    {
-        row += this.m_collection.offset;
-    }      
     column = indexes['column'];
 
     // make sure index are valid
@@ -231,10 +227,6 @@ oj.CollectionHeaderSet.prototype.getData = function(index)
     // row or column header
     if (this.m_rowHeader != null && this.m_collection != null)
     {
-        if (this.m_collection.offset != null)
-        {
-            index += this.m_collection.offset;
-        }  
         this.m_collection.at(index, {'deferred':true}).done(function (model) { self.model = model });
         return self.model.get(this.m_rowHeader);
     }
@@ -343,7 +335,7 @@ oj.CollectionHeaderSet.prototype.getCollection = function()
  *        what order.  These columns must be a subset of attributes from Model. * @constructor
  * @export
  * @constructor
- * @extends oj.DataSource
+ * @extends oj.DataGridDataSource
  */
 oj.CollectionDataGridDataSource = function(collection, options)
 {
@@ -379,7 +371,7 @@ oj.CollectionDataGridDataSource.prototype.Init = function()
     if (this._isRemote())
     {
         this.initialSync = true;
-        this.collection.fetch({success:this._handleCollectionFetched.bind(this, true)});        
+//        this.collection.fetch({success:this._handleCollectionFetched.bind(this, true)});        
     }
     else
     {
@@ -419,6 +411,11 @@ oj.CollectionDataGridDataSource.prototype._isRemote = function()
     return (this.collection['url'] != null);
 };
 
+/**
+ * Determines if data is locally available.
+ * @return {boolean} true if data is locally available, false otherwise.
+ * @private
+ */
 oj.CollectionDataGridDataSource.prototype._isDataAvailable = function()
 {
     if (this._isRemote())
@@ -492,7 +489,7 @@ oj.CollectionDataGridDataSource.prototype.getCount = function(axis)
     if (!this._isDataAvailable())
     {
         this.precision = "estimate";
-        return 100;  // arbitrary number, should be large enough to cover viewport
+        return -1;
     }
 
     this.precision = "exact";
@@ -544,52 +541,13 @@ oj.CollectionDataGridDataSource.prototype.getCountPrecision = function(axis)
  */
 oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, callbacks, callbackObjects)
 {
-    var axis, start, count, end, callback, headerSet;
+    var axis, callback;
 
     axis = headerRange.axis;
     if (this._isDataAvailable())
     {
-        start = headerRange.start;
-        count = headerRange.count;	            
-
-        oj.Assert.assert(axis === 'row' || axis === 'column');
-        oj.Assert.assert(start < this.getCount(axis));
-        oj.Assert.assert(count > 0);
-		
-        if (axis === "column")
-        {  
-            end = Math.min(this.columns.length, start+count);
-            headerSet = new oj.CollectionHeaderSet(start, end, this.columns);
-        }
-        else if (axis === "row")
-        {
-            if (this.rowHeader != null)
-            {
-                end = Math.min(this.size(), start+count);
-                if (this._pageSize > 0)
-                {
-                    end = Math.min(end, this._startIndex + this._pageSize);
-                    end = Math.min(end, this.totalSize() - this._startIndex);                    
-                }                    
-                headerSet = new oj.CollectionHeaderSet(start, end, this.columns, this.collection, this.rowHeader);
-            }
-            else
-            {
-                // no row header, return empty result set
-                headerSet = new oj.ArrayHeaderSet(start, start, axis, null);
-            }
-        }
-
-        if (callbacks != null && callbacks['success'] != null)
-        {
-            if (callbackObjects == null)
-            {
-                callbackObjects = {};
-            }	            
-            callbacks['success'].call(callbackObjects['success'], headerSet, headerRange);
-        }
-        // clear any pending callback
-        this.pendingHeaderCallback[axis] = null;
+        // headers are locally available
+        this._handleHeaderFetchSuccess(headerRange, callbacks, callbackObjects);
     }
     else
     {
@@ -603,6 +561,156 @@ oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, c
             this.pendingHeaderCallback[axis] = callback;
         }
     }
+};
+
+/**
+ * Handle success fetchHeaders request
+ * @param {Object} headerRange information about the header range, it must contain the following properties:
+ *        axis, start, count.
+ * @param {string} headerRange.axis the axis of the header that are fetched.  Valid values are "row" and "column".
+ * @param {number} headerRange.start the start index of the range in which the header data are fetched.
+ * @param {number} headerRange.count the size of the range in which the header data are fetched.  
+ * @param {Object} callbacks the callbacks to be invoke when fetch headers operation is completed.  The valid callback
+ *        types are "success" and "error".
+ * @param {function(HeaderSet)} callbacks.success the callback to invoke when fetch headers completed successfully.
+ * @param {function({status: Object})} callbacks.error the callback to invoke when fetch cells failed.
+ * @param {Object=} callbackObjects the object in which the callback function is invoked on.  This is optional.  
+ *        You can specify the callback object for each callbacks using the "success" and "error" keys.
+ */
+oj.CollectionDataGridDataSource.prototype._handleHeaderFetchSuccess = function(headerRange, callbacks, callbackObjects)
+{
+    var axis, start, count, end, callback, headerSet;
+
+    axis = headerRange.axis;
+    start = headerRange.start;
+    count = headerRange.count;	            
+
+    oj.Assert.assert(axis === 'row' || axis === 'column');
+    oj.Assert.assert(count > 0);
+		
+    if (axis === "column")
+    {  
+         // column headers, this.columns should be populated by now
+        if (this.columns != null)
+        {
+            end = Math.min(this.columns.length, start+count);
+            headerSet = new oj.CollectionHeaderSet(start, end, this.columns);
+        }
+        else
+        {
+            // no row header, return empty result set
+            headerSet = new oj.ArrayHeaderSet(start, start, axis, null);
+        }
+    }
+    else if (axis === "row")
+    {
+        // row headers, return non-empty header set if row header is specified
+        if (this.rowHeader != null)
+        {
+            end = Math.min(this.size(), start+count);
+            if (this._pageSize > 0)
+            {
+                end = Math.min(end, this._startIndex + this._pageSize);
+                end = Math.min(end, this.totalSize() - this._startIndex);                    
+            }                    
+            headerSet = new oj.CollectionHeaderSet(start, end, this.columns, this.collection, this.rowHeader);
+        }
+        else
+        {
+            // no row header, return empty result set
+            headerSet = new oj.ArrayHeaderSet(start, start, axis, null);
+        }
+    }
+
+    // invoke callback
+    if (callbacks != null && callbacks['success'])
+    {
+        callbacks['success'].call(callbackObjects['success'], headerSet, headerRange);
+    }
+
+    // clear any pending callback
+    this.pendingHeaderCallback[axis] = null;
+};
+
+/**
+ * Helper method to extract range information from cellRanges
+ * @param {Array.<Object>} cellRanges Information about the cell range.  A cell range is defined by an array 
+ *        of range info for each axis, where each range contains three properties: axis, start, count.
+ * @param {string} cellRanges.axis the axis associated with this range where cells are fetched.  Valid 
+ *        values are "row" and "column".
+ * @param {number} cellRanges.start the start index of the range for this axis in which the cells are fetched.
+ * @param {number} cellRanges.count the size of the range for this axis in which the cells are fetched. 
+ * @return {Object} an object containing rowStart, rowCount, colStart, colCount
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._getRanges = function(cellRanges)
+{
+    var i, cellRange, rowStart, rowCount, colStart, colCount;
+
+    // extract the start and end row/column info from cellRanges (there should only be two, one for each axis)
+    for (i=0; i<cellRanges.length; i+=1)
+    {
+        cellRange = cellRanges[i];   
+        oj.Assert.assert(cellRange['axis'] === 'row' || cellRange['axis'] === 'column');
+        oj.Assert.assert(cellRange['count'] > 0);
+        if (cellRange['axis'] === "row")
+        {
+            rowStart = cellRange['start'];
+            rowCount = cellRange['count'];
+        }
+        else if (cellRange['axis'] === "column")
+        {
+            colStart = cellRange['start'];
+            colCount = cellRange['count'];
+        }
+    }			
+
+    // return object containing the ranges
+    return {'rowStart': rowStart, 'rowCount': rowCount, 'colStart': colStart, 'colCount': colCount};
+};
+
+/**
+ * Handle success fetchCells request
+ * @param {Array.<Object>} cellRanges Information about the cell range.  A cell range is defined by an array 
+ *        of range info for each axis, where each range contains three properties: axis, start, count.
+ * @param {string} cellRanges.axis the axis associated with this range where cells are fetched.  Valid 
+ *        values are "row" and "column".
+ * @param {number} cellRanges.start the start index of the range for this axis in which the cells are fetched.
+ * @param {number} cellRanges.count the size of the range for this axis in which the cells are fetched. 
+ * @param {Object} callbacks the callbacks to be invoke when fetch cells operation is completed.  The valid callback
+ *        types are "success" and "error".
+ * @param {function(CellSet)} callbacks.success the callback to invoke when fetch cells completed successfully.
+ * @param {function({status: Object})} callbacks.error the callback to invoke when fetch cells failed.
+ * @param {Object=} callbackObjects the object in which the callback function is invoked on.  This is optional.  
+ *        You can specify the callback object for each callbacks using the "success" and "error" keys.
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._handleCellFetchSuccess = function(cellRanges, callbacks, callbackObjects)
+{
+    var ranges, rowStart, rowEnd, colStart, colEnd, cellSet;
+
+    // extract the start and end row/column info from cellRanges (there should only be two, one for each axis)
+    ranges = this._getRanges(cellRanges);
+    rowStart = ranges['rowStart'];
+    rowEnd = Math.min(this.size(), rowStart + ranges['rowCount']);
+    colStart = ranges['colStart'];
+    colEnd = Math.min(this.columns.length, colStart + ranges['colCount']);       
+
+    // create CellSet and invoke callback
+    cellSet = new oj.CollectionCellSet(rowStart, rowEnd, colStart, colEnd, this.collection, this.columns);
+        
+    if (callbacks != null && callbacks['success'] != null)
+    {
+        if (callbacks != null && callbackObjects == null)
+        {
+            callbackObjects = {};
+        }
+        callbacks['success'].call(callbackObjects['success'], cellSet, cellRanges);
+        this._fetchCalls = 0;
+    }
+
+    // clear any pending callback
+    this.pendingCellCallback = null;
 };
 
 /**
@@ -623,54 +731,15 @@ oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, c
  */
 oj.CollectionDataGridDataSource.prototype.fetchCells = function(cellRanges, callbacks, callbackObjects)
 {
-    var i, cellRange, rowStart, rowEnd, cellSet, colStart, colEnd;
+    var ranges, rowStart, rowEnd, colStart, colEnd, cellSet;
 
     rowEnd = 0;
     colEnd = 0;
 
-    // checks if data is available
+    // checks if data is locally available
     if (this._isDataAvailable())
     {
-
-        // extract the start and end row/column info from cellRanges (there should only be two, one for each axis)
-        for (i=0; i<cellRanges.length; i+=1)
-        {
-            cellRange = cellRanges[i];   
-            oj.Assert.assert(cellRange['axis'] === 'row' || cellRange['axis'] === 'column');
-            oj.Assert.assert(cellRange['start'] < this.getCount(cellRange['axis']));
-            oj.Assert.assert(cellRange['count'] > 0);
-            if (cellRange['axis'] === "row")
-            {
-                rowStart = cellRange['start'];
-                rowEnd = Math.min(this.size(), rowStart + cellRange['count']);
-                if (this._pageSize > 0)
-                {
-                    rowEnd = Math.min(rowEnd, this._startIndex + this._pageSize);
-                    rowEnd = Math.min(rowEnd, this.totalSize() - this._startIndex);                    
-                }    
-            }
-            else if (cellRange['axis'] === "column")
-            {
-                colStart = cellRange['start'];
-                colEnd = Math.min(this.columns.length, colStart + cellRange['count']);
-            }
-        }			
-
-        // create CellSet and invoke callback
-        cellSet = new oj.CollectionCellSet(rowStart, rowEnd, colStart, colEnd, this.collection, this.columns);
-        
-        if (callbacks != null && callbacks['success'] != null)
-        {
-            if (callbacks != null && callbackObjects == null)
-            {
-                callbackObjects = {};
-            }
-            callbacks['success'].call(callbackObjects['success'], cellSet, cellRanges);
-            this._fetchCalls = 0;
-        }
-        // clear any pending callback
-        this.pendingCellCallback = null;
-        
+        this._handleCellFetchSuccess(cellRanges, callbacks, callbackObjects);
     }
     else
     {
@@ -682,7 +751,99 @@ oj.CollectionDataGridDataSource.prototype.fetchCells = function(cellRanges, call
             this.pendingCellCallback.callbacks = callbacks;
             this.pendingCellCallback.callbackObjects = callbackObjects;
         }
+
+        // kick start a setRangeLocal call on the collection
+        this._fetchCells(cellRanges);
     }
+};
+
+/**
+ * Processing pending header callbacks.
+ * @param {string} axis the axis to check for pending header callbacks.
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._processPendingHeaderCallbacks = function(axis)
+{
+    var pendingCallback, headerRange, callbacks, callbackObjects;
+
+    // check if there's callback remaining for the axis
+    pendingCallback = this.pendingHeaderCallback[axis];
+    if (pendingCallback != null)
+    {
+        // todo: check whether pending header range matches result
+        headerRange = pendingCallback.headerRange;
+        callbacks = pendingCallback.callbacks;
+        callbackObjects = pendingCallback.callbackObjects;
+
+        this._handleHeaderFetchSuccess(headerRange, callbacks, callbackObjects);
+    }
+};
+
+/**
+ * Processing pending cell callbacks.
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._processPendingCellCallbacks = function()
+{
+    var cellRanges, callbacks, callbackObjects;
+
+    cellRanges = this.pendingCellCallback.cellRanges;
+    callbacks = this.pendingCellCallback.callbacks;
+    callbackObjects = this.pendingCellCallback.callbackObjects;
+
+    // handles success cell fetch
+    this._handleCellFetchSuccess(cellRanges, callbacks, callbackObjects);
+};
+
+/**
+ * Internal method to handle fetching of cells for virtualized collection.
+ * @param {Array.<Object>} cellRanges Information about the cell range.  A cell range is defined by an array 
+ *        of range info for each axis, where each range contains three properties: axis, start, count.
+ * @param {string} cellRanges.axis the axis associated with this range where cells are fetched.  Valid 
+ *        values are "row" and "column".
+ * @param {number} cellRanges.start the start index of the range for this axis in which the cells are fetched.
+ * @param {number} cellRanges.count the size of the range for this axis in which the cells are fetched. 
+ * @private
+ */
+oj.CollectionDataGridDataSource.prototype._fetchCells = function(cellRanges)
+{
+    var ranges, rowStart, rowCount;
+
+    ranges = this._getRanges(cellRanges);
+    rowStart = ranges['rowStart'];
+    rowCount = ranges['rowCount'];
+
+    // set the range local for the requested range
+    this.collection.setRangeLocal(rowStart, rowCount).done(function (deferred)
+    {
+        var first = this.collection.at(rowStart, {'deferred':true});
+
+        // check if we need to poach columns from row
+        if (first != null && this.columns === undefined)
+        {
+            first.done(function(model) 
+            {
+                this.columns = model.keys();
+                if (this.columns.indexOf(this.rowHeader) != -1)
+                {
+                    this.columns.splice(this.columns.indexOf(this.rowHeader),1);
+                }
+            }.bind(this));
+        }
+
+        // check outstanding header calls
+        if (this.pendingHeaderCallback != null)
+        {
+            this._processPendingHeaderCallbacks('column');
+            this._processPendingHeaderCallbacks('row');
+        }        
+
+        // finally process outstanding cell calls
+        if (this.pendingCellCallback != null)
+        {
+            this._processPendingCellCallbacks();
+        }        
+    }.bind(this));
 };
 
 /**

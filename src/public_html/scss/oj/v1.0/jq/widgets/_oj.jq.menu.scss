@@ -8,7 +8,7 @@ $includeMenuClasses: $includeAllClasses !default;
 }
 
 @import "../../common/helpers/oj.common.helpers"; 
-@import "oj.jq.core.icons";
+@import "oj.jq.icons";
 
 
 @if $includeMenuClasses != false  {
@@ -23,7 +23,7 @@ $includeMenuClasses: $includeAllClasses !default;
 			list-style: none;
 			padding: 2px;
 			margin: 0;
-			display: block;
+			display: inline-block;
 			outline: none;
 		}
 		.oj-menu a {
@@ -86,7 +86,7 @@ $includeMenuClasses: $includeAllClasses !default;
 		}
 
 		/* right-aligned */
-		.oj-menu .oj-menu-icon {
+		.oj-menu .oj-menu-submenu-icon {
 			position: static;
 			float: right;
 		}
@@ -98,10 +98,10 @@ $includeMenuClasses: $includeAllClasses !default;
 
 		// we render oj-widget-icon as well, which defines 
 		// an icon sprite
-		html:not([dir="rtl"]) .oj-menu-icon:before {
+		html:not([dir="rtl"]) .oj-menu-submenu-icon:before {
 		  @extend .oj-fwk-icon-caret-e:before;
 		}
-		html[dir="rtl"] .oj-menu-icon:before {
+		html[dir="rtl"] .oj-menu-submenu-icon:before {
 		  @extend .oj-fwk-icon-caret-w:before;
 		}
   }
