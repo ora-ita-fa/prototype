@@ -39,10 +39,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                             if (element.Name.indexOf(self.filteredWorksheetName()) === -1)
                                 return false;
                         if ( self.selectedAppType()[0] != null) {
-                            if (element.ApplicationTypeID !== self.selectedAppType()[0])                               
-                                return false;
+                            if (element.ApplicationTypeID !== self.selectedAppType()[0])                                return false;
 
-<<<<<<< HEAD
                         }
                         return true; // retain appropriate elements
                     });
@@ -72,13 +70,5 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
             ko.applyBindings(searchModel, $(".worksheet-search")[0]);
         });
     });
-=======
-                        ko.applyBindings(wm, $("#worksheet-table")[0]);
-                        ko.applyBindings(new MenuModel(), $('#menu-container')[0]);
-                        ko.applyBindings(null, $('#menuSet')[0]);
-                        ko.applyBindings(null, $(".worksheet-search")[0]);
-                    }
-            );
->>>>>>> 8aca461c5063d69331d3d717109ea02ef6378c4d
 });
 
