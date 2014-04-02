@@ -2363,7 +2363,7 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
   border-right: 1px solid #d6dfe6;
   border-bottom: 1px solid #d6dfe6;
   background-color: #f2f4f7;
-  float: none;
+  float: none!important;
   min-height: 1.167rem;
   padding-top: 5px;
   padding-bottom: 5px; }
