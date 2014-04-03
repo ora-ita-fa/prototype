@@ -8,7 +8,7 @@ and open the template in the editor.
     Author     : danfjian
 */
 
-@import "common.scss";
+@import "_common.scss";
 
 #add-chart {
     width:600px;
@@ -50,23 +50,24 @@ and open the template in the editor.
     }
 }
 
-@mixin icon-style {
+.icon-size {
     width: 24px;
     height: 24px;
+}
+
+.icon-style {
+    @extend .icon-size;
     background-repeat: no-repeat;
     padding-left: 18px;  /* width of the image plus a little extra padding */
 }
 
-@mixin icon-size {
-    width: 24px;
-    height: 24px;
-}
-
-.menus-bar{
+.menus-bar {
+    
     padding:10px 15px 0px 20px;
     float:left;
     width:1200px;
-    > button{
+    
+    > button {
         margin: 0px 0px 2px 0px;
         vertical-align: top;
         height:30px;
@@ -74,83 +75,91 @@ and open the template in the editor.
         min-width:30px;
         border-width: 1px;
     }
+    
     > span {
         height:28px;
         vertical-align:middle;
         color:  #0572CE;
     }
 
-
-
     img {
-        @include icon-size;
+        @extend .icon-size;
     }
 
-    .action-icon{
-        @include icon-style;
+    .action-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/action-icon.png");
     }
-    .delete-icon{
-        @include icon-style;
+    
+    .delete-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/delete-icon.png");
     }
-    .create-icon{
-        @include icon-style;
+    
+    .create-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/new_ena.png");
     } 
-    .import-icon{
-        @include icon-style;
+    
+    .import-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/importIcon_ena.png");
     }
-    .edit-icon{
-        @include icon-style;
+    
+    .edit-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/edit_ena.png");
     }
-    .control-icon{
-        @include icon-style;
+    
+    .control-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/agent_ena.png");
     }
-    .view-icon{
-        @include icon-style;
+    
+    .view-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/eyeglasses.png");
     }
     
-    .layout-icon{
-        @include icon-style;
+    .layout-icon {
+        @extend .icon-style;
         background-image: url("#{$img-path}/layout-icon.png");
     }
 }
 
-#menu-container{
+#menu-container {
     a {
         padding-left: 20px;
         padding-right: 18px;
     }
 
     .command-icon {
-        @include icon-style;
+        @extend .icon-style;
         background-image: url("#{$img-path}/command-icon.png");
     }
 
     .line-icon {
-        @include icon-style;
+        @extend .icon-style;
         background-image: url("#{$img-path}/graph_line.png");
     }
 
     .bar-icon {
-        @include icon-style;
+        @extend .icon-style;
         background-image: url("#{$img-path}/graph_bar.png");
     }
-    .one-column{
-        @include icon-style;
+    
+    .one-column {
+        @extend .icon-style;
         background-image: url("#{$img-path}/layout-1-icon.png");
     }
-    .two-column{
-        @include icon-style;
+    
+    .two-column {
+        @extend .icon-style;
         background-image: url("#{$img-path}/layout-2-icon.png");
     }
-    .three-column{
-        @include icon-style;
+    
+    .three-column {
+        @extend .icon-style;
         background-image: url("#{$img-path}/layout-3-icon.png");
     }
 } 

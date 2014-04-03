@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
 "version": 3,
 "mappings": ";;;;;;;;;;;;;;;;;;AAaI,eAAG;EACC,YAAY,EAAC,IAAI;EAEjB,kBAAG;IACC,UAAU,EAAE,IAAI;IAChB,WAAW,EAAE,IAAI;IAEjB,+BAAa;MACT,OAAO,EAAE,YAAY;MACrB,MAAM,EAAE,IAAI;MACZ,KAAK,EAAE,IAAI;MACX,cAAc,EAAE,MAAM;MACtB,UAAU,EAAE,sDAAyD;MACrE,MAAM,EAAE,OAAO;IAGnB,oBAAE;MACE,MAAM,EAAE,OAAO",
@@ -6,12 +5,3 @@
 "names": [],
 "file": "rollup-table.css"
 }
-=======
-{
-"version": 3,
-"mappings": ";;;;;;;;;;;;;;;;;;AAaI,eAAG;EACC,YAAY,EAAC,IAAI;EAEjB,kBAAG;IACC,UAAU,EAAE,IAAI;IAChB,WAAW,EAAE,IAAI;IAEjB,+BAAa;MACT,OAAO,EAAE,YAAY;MACrB,MAAM,EAAE,IAAI;MACZ,KAAK,EAAE,IAAI;MACX,cAAc,EAAE,MAAM;MACtB,UAAU,EAAE,sDAAyD;MACrE,MAAM,EAAE,OAAO;IAGnB,oBAAE;MACE,MAAM,EAAE,OAAO",
-"sources": ["../scss/rollup-table.scss"],
-"names": [],
-"file": "rollup-table.css"
-}
->>>>>>> 8aca461c5063d69331d3d717109ea02ef6378c4d

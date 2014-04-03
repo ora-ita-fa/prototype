@@ -8,14 +8,14 @@ and open the template in the editor.
     Author     : danfjian
 */
 
-@import "common.scss"; 
+@import "_common.scss"; 
 
 .inline-title {
     display: inline;
     margin-right: 10px;
 }
 
-@mixin icon-size {
+.icon-size {
     width: 32px;
     height: 32px;
 }
@@ -166,25 +166,25 @@ and open the template in the editor.
                     text-align: right;
 
                     .img {
-                        @include icon-size;
+                        @extend .icon-size;
                     }
 
                     .line-icon {
-                        @include icon-size;
+                        @extend .icon-size;
                         :before {
                             content: url("#{$img-path}/graph_line.png");
                         }
                     }
 
                     .bar-icon {
-                        @include icon-size;
+                        @extend .icon-size;
                         :before {
                             content: url("#{$img-path}/graph_bar.png");
                         }
                     }
 
                     .area-icon {
-                        @include icon-size;
+                        @extend .icon-size;
                         :before {
                             content: url("#{$img-path}/graph_area.png");
                         }
