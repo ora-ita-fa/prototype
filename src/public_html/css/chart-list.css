@@ -54,7 +54,6 @@ and open the template in the editor.
 
 .menus-bar {
   padding: 10px 15px 0px 20px;
-  float: left;
   width: 1200px; }
   .menus-bar > button {
     margin: 0px 0px 2px 0px;
@@ -99,5 +98,3 @@ and open the template in the editor.
   background-image: url("../images/layout-2-icon.png"); }
 #menu-container .three-column {
   background-image: url("../images/layout-3-icon.png"); }
-
-/*# sourceMappingURL=chart-list.css.map */
