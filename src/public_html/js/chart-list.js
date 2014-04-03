@@ -90,6 +90,9 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
 
                 function MenuModel() {
                     var self = this;
+                    self.saveWorksheet = function(){
+                        document.location.href = "worksheet-list.html";
+                    };
                     self.selectedMenuItem = ko.observable("(None selected yet)");
                     self.menuItemSelect = function(event, ui) {
                         self.selectedMenuItem(ui.item.children("a").text());
@@ -115,6 +118,7 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                 }
                 
                 addChartFunction();
+                
             });
             
             

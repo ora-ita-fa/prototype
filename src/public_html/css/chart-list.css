@@ -16,6 +16,9 @@ and open the template in the editor.
     Created on : 2014-3-27, 17:25:12
     Author     : danfjian
 */
+button:not(.oj-button) {
+  display: none; }
+
 .timeseries-container {
   display: none; }
 
@@ -31,12 +34,12 @@ and open the template in the editor.
     vertical-align: top; }
     .chart-list-main .chart-list .region .rollup-table {
       height: 100%;
-      width: 29%;
+      width: 19%;
       float: left;
       overflow: hidden; }
     .chart-list-main .chart-list .region .chart {
       height: 100%;
-      width: 70%;
+      width: 80%;
       float: left; }
   .chart-list-main .icon-size, .chart-list-main .icon-style, .chart-list-main .menus-bar .action-icon, .chart-list-main .menus-bar .delete-icon, .chart-list-main .menus-bar .create-icon, .chart-list-main .menus-bar .import-icon, .chart-list-main .menus-bar .edit-icon, .chart-list-main .menus-bar .control-icon, .chart-list-main .menus-bar .view-icon, .chart-list-main .menus-bar .layout-icon, .chart-list-main #menu-container .command-icon, .chart-list-main #menu-container .line-icon, .chart-list-main #menu-container .bar-icon, .chart-list-main #menu-container .one-column, .chart-list-main #menu-container .two-column, .chart-list-main #menu-container .three-column, .chart-list-main .menus-bar img {
     width: 24px;
@@ -91,5 +94,7 @@ and open the template in the editor.
     background-image: url("../images/layout-2-icon.png"); }
   .chart-list-main #menu-container .three-column {
     background-image: url("../images/layout-3-icon.png"); }
+  .chart-list-main #menu-container #btn-save-worksheet {
+    float: right; }
 
 /*# sourceMappingURL=chart-list.css.map */

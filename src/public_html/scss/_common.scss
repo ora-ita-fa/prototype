@@ -9,3 +9,8 @@ and open the template in the editor.
 */
 
 $img-path : '../images';
+
+// hide the oj-buttons that are not binded by ko.
+button:not(.oj-button) {
+    display: none;
+}

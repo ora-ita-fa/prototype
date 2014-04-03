@@ -53,6 +53,14 @@ and open the template in the editor.
             <div id='menu-container'>
                 <div>
                     <h1>Flexible Analysis</h1>
+                    <button id="btn-save-worksheet"
+                        data-bind="
+                        click: saveWorksheet,
+                        ojComponent: {
+                        component:'ojButton', 
+                        icons: {end:'oj-fwk-icon-caret-end oj-fwk-icon'}, 
+                        label: 'Save Worksheet'
+                    }"></button>
                 </div>
                 <div >
                     <ul id="action-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">

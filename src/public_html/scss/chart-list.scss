@@ -31,14 +31,14 @@ and open the template in the editor.
             
             .rollup-table{
                 height:100%;
-                width:29%;
+                width:19%;
                 float:left;
                 overflow:hidden;
             }
 
             .chart{
                 height:100%;
-                width:70%;
+                width:80%;
                 float:left;
             }
         }
@@ -155,6 +155,10 @@ and open the template in the editor.
         .three-column {
             @extend .icon-style;
             background-image: url("#{$img-path}/layout-3-icon.png");
+        }
+        
+        #btn-save-worksheet {
+            float:right;
         }
     } 
 
