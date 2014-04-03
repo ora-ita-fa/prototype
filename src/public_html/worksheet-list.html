@@ -12,7 +12,6 @@ and open the template in the editor.
 
 	<link rel="stylesheet" href="css/libs/oj/v1.0/alta/oj-alta-min.css" id="css" >
         <link rel="stylesheet" href="css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
-    
         <link rel="stylesheet" href="css/worksheet-list.css">
         <script src="js/libs/require/require.js"></script>
         <script src="js/main.js"></script>
@@ -139,10 +138,13 @@ and open the template in the editor.
                         {headerText: 'Updated',id:'Updated', field: 'Updated',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
                         {headerText: 'Updated By',id:'UpdatedBy', field: 'UpdatedBy',headerStyle:'white-space:nowrap;',sortable: 'enabled'},
                         {headerText: 'Precalculated',id:'Precalculated', field: 'Precalculated',headerStyle: 'white-space:nowrap;',sortable: 'enabled'}]
-                }">
+           }">
             </table>
         </script>
-
+<!--<script type="text/html" id="worksheet_name">
+     <td data-bind="headerText: Name">
+     </td>
+</script>-->
         <footer>
             <div id='demo_appfooter_div' data-bind="template: {name: 'demoAppFooterTemplate'}"></div>
         </footer>
