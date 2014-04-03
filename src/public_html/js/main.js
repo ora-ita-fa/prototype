@@ -42,6 +42,7 @@ require(['ojs/ojcore', 'knockout', 'jquery',
         {
             $(function() {
                 $.get('../src/patterntemplates/demoAppHeaderTemplateLite.html', function(data) {
+                    var $header = $('#demo_appheader_div');
                     function headerViewModel() {
 
                         // 
@@ -104,10 +105,10 @@ require(['ojs/ojcore', 'knockout', 'jquery',
                                     "url": "#"
                                 },
                             ]
-                        }
+                        };
 
                         this.appId = appName.id;
-                        this.appName = appName.name;
+                        this.title =' - ' + $header.attr("title");
 
                         this.userName = ko.observable(toolbarData.userName);
                         this.toolbarButtons = toolbarData.toolbar_buttons;
@@ -116,9 +117,9 @@ require(['ojs/ojcore', 'knockout', 'jquery',
                     }
                     oj.koStringTemplateEngine.install();
                     ko.templates["demoAppHeaderTemplateLite"] = data;
-                    if ($('#demo_appheader_div')[0] != null) {
+                    if ($header[0]) {
                         ko.applyBindings(new headerViewModel(),
-                                $('#demo_appheader_div')[0]);
+                                $header[0]);
                     }
                 });
                 $.get('../src/patterntemplates/demoAppFooterTemplate.html', function(data) {
