@@ -21,6 +21,10 @@ button:not(.oj-button) {
 
 .timeseries-container {
   display: none; }
+  .timeseries-container .toolbar-container {
+    margin-top: 20px;
+    padding-right: 30px;
+    text-align: right; }
 
 .chart-list-main {
   margin-left: 20px;

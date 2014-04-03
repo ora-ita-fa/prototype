@@ -12,6 +12,12 @@ and open the template in the editor.
 
 .timeseries-container {
     display:none;
+    
+    .toolbar-container {
+        margin-top:20px;
+        padding-right: 30px;
+        text-align:right;
+    }
 }
 
 .chart-list-main {
