@@ -39,7 +39,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                             if (element.Name.indexOf(self.filteredWorksheetName()) === -1)
                                 return false;
                         if ( self.selectedAppType()[0] != null) {
-                            if (element.ApplicationTypeID !== self.selectedAppType()[0])                                return false;
+                            if (element.ApplicationTypeID !== self.selectedAppType()[0])                                
+                                return false;
 
                         }
                         return true; // retain appropriate elements
@@ -61,7 +62,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                     ko.applyBindings(worksheet, $("#worksheet-table")[0]);
                 },
                 handleShowSearchEvent: function(data, event){
-                    $("#searchForm").toggle('puff',null,1000,null);
+                    $("#searchForm").toggle( 'blind', null, 500 );
                 }
             };
             

@@ -8,8 +8,7 @@ and open the template in the editor.
     Author     : phzhou
 */
 .worksheet {
-  padding: 10px;
-  height: 100%; }
+  padding: 10px; }
   .worksheet .worksheet-search-header {
     display: inline-block; }
   .worksheet #searchForm {

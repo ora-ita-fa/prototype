@@ -9,15 +9,23 @@ and open the template in the editor.
         <title>Worksheets</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+
+	<link rel="stylesheet" href="css/libs/oj/v1.0/alta/oj-alta-min.css" id="css" >
+        <link rel="stylesheet" href="css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
+    
         <link rel="stylesheet" href="css/worksheet-list.css">
         <script src="js/libs/require/require.js"></script>
         <script src="js/main.js"></script>
         <script>
             require(['worksheet-list']);
         </script>
-    </head>
-    <body>
+</head>
+
+<body>
+    <header  role="banner">
+        <div id='demo_appheader_div' data-bind="template: {name: 'demoAppHeaderTemplateLite'}"></div>
+    </header>
+
         <div class='worksheet' >
             <div class="worksheet-search">
                 <div>
@@ -134,5 +142,9 @@ and open the template in the editor.
                 }">
             </table>
         </script>
-    </body>
+
+        <footer>
+            <div id='demo_appfooter_div' data-bind="template: {name: 'demoAppFooterTemplate'}"></div>
+        </footer>
+</body>
 </html>

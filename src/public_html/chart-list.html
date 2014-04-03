@@ -10,6 +10,7 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
         <link rel="stylesheet" href="css/chart-list.css">
         <script src="js/libs/require/require.js"></script>
         <script src="js/main.js"></script>
@@ -41,7 +42,16 @@ and open the template in the editor.
             }"></div>
             </div>
         </script>
+
+        <header>
+            <div id="demo-appheader-body"> 
+                <div id='demo_appheader_div' data-bind="template: {name: 'demoAppHeaderTemplateLite'}"></div>
+            </div>
+        </header>
         <div id='menu-container'>
+                <div>
+                    <h1>Flexible Analysis</h1>
+                </div>
             <div >
                 <ul id="action-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
                     <li ><a href="#"><span class="command-icon"></span>Command 1</a></li>
