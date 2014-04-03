@@ -25,7 +25,7 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
 
                 function addChart() {
                     var $newChart = $($("#chart-template").html());
-                    $("#add-chart").before($newChart);
+                    $(".chart-list").append($newChart);
 
                     var chartEl = $newChart.find('.chart').get(0);
                     var demoChart = new DemoChartModel();
@@ -34,6 +34,9 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                         stop: function(event, ui) {
                             ko.cleanNode(chartEl);
                             ko.applyBindings(demoChart, chartEl);
+                            if($newChart.width()>$(window).width()-50){
+                                $newChart.removeAttr('style');
+                            }
                         }
                     });
 
@@ -59,12 +62,12 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                         handleRollupDrilldown: handleRollupDrilldown
                     }, rollupEl);
                 }
-
+                
+                var slideDir = {direction: "up"};
                 var renderred = false;
-                   function addChartFunction () {
-                    $('.menus-bar').toggle('slide');
-                    $('.chart-list').toggle('slide');
-                    $('.timeseries-container').toggle('slide', function() {
+                function addChartFunction () {
+                    $('.chart-list-main').toggle('slide', slideDir);
+                    $('.timeseries-container').toggle('slide', slideDir, function() {
                         // render the timeseries after finishing slide effects,
                         // to prevent chart displaying problems.
                         if (!renderred) {
@@ -74,14 +77,12 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                         }
                     });
                 }
-                $("#add-chart").click(addChartFunction);
                 $("#add-chart-button").click(addChartFunction);
 
                 ko.applyBindings({
                     goBack: function() {
-                        $('.menus-bar').toggle('slide');
-                        $('.timeseries-container').toggle('slide');
-                        $('.chart-list').toggle('slide', function() {
+                        $('.timeseries-container').toggle('slide', slideDir);
+                        $('.chart-list-main').toggle('slide', slideDir, function() {
                             addChart();
                         });
                     }
@@ -112,5 +113,9 @@ define(['timeseries-config', 'rollup-table', 'ojs/ojcore', 'knockout', 'jquery',
                 for (var i = 0; i < $('.menus-bar button').size(); i++) {
                     ko.applyBindings(new ButtonModel(), $('.menus-bar button')[i]);
                 }
+                
+                addChartFunction();
             });
+            
+            
         });

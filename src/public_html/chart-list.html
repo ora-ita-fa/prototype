@@ -48,65 +48,65 @@ and open the template in the editor.
                 <div id='demo_appheader_div' data-bind="template: {name: 'demoAppHeaderTemplateLite'}"></div>
             </div>
         </header>
-        <div id='menu-container'>
+        
+        <div class="chart-list-main">
+            <div id='menu-container'>
                 <div>
                     <h1>Flexible Analysis</h1>
                 </div>
-            <div >
-                <ul id="action-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
-                    <li ><a href="#"><span class="command-icon"></span>Command 1</a></li>
-                    <li ><a href="#"><span class="command-icon"></span>Command 2</a></li>
-                </ul>
+                <div >
+                    <ul id="action-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
+                        <li ><a href="#"><span class="command-icon"></span>Command 1</a></li>
+                        <li ><a href="#"><span class="command-icon"></span>Command 2</a></li>
+                    </ul>
+                </div>
+                <div >
+                    <ul id="demo-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
+                        <li ><a href="#"><span class="line-icon"></span>Region_1</a></li>
+                        <li ><a href="#"><span class="bar-icon"></span>Region_2</a></li>
+                    </ul>
+                </div>
+                <div >
+                    <ul id="layout-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
+                        <li ><a href="#"><span class="one-column"></span>One Column</a></li>
+                        <li ><a href="#"><span class="two-column"></span>Two Column</a></li>
+                        <li ><a href="#"><span class="three-column"></span>Three Column</a></li>
+                    </ul>
+                </div>
             </div>
-            <div >
-                <ul id="demo-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
-                    <li ><a href="#"><span class="line-icon"></span>Region_1</a></li>
-                    <li ><a href="#"><span class="bar-icon"></span>Region_2</a></li>
-                </ul>
-            </div>
-            <div >
-                <ul id="layout-menu" style="display:none"  data-bind="ojComponent: {component: 'ojMenu'}">
-                    <li ><a href="#"><span class="one-column"></span>One Column</a></li>
-                    <li ><a href="#"><span class="two-column"></span>Two Column</a></li>
-                    <li ><a href="#"><span class="three-column"></span>Three Column</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class='menus-bar'>
-            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', 
+            <div class='menus-bar'>
+                <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', 
                                                           icons: {start:'action-icon'}, label: 'Action',menu: {'menu': 'action-menu'} }">       
-            </button>
-            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
-            <button id="add-chart-button" class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Create Chart/Table',  
+                </button>
+                <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
+                <button id="add-chart-button" class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Create Chart/Table',  
                                                           icons: {start:'create-icon'}}">       
-            </button>
-            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Import Chart/Table',  
+                </button>
+                <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Import Chart/Table',  
                                                           icons: {start:'import-icon'}}">       
-            </button>
-            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Edit',  
+                </button>
+                <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Edit',  
                                                           icons: {start:'edit-icon'},menu: {'menu': 'demo-menu'} }">       
-            </button>
-            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Delete',  
+                </button>
+                <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Delete',  
                                                           icons: {start:'delete-icon'},menu: {'menu': 'demo-menu'} }">       
-            </button>
-            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
-            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Show Control Panel',  
+                </button>
+                <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
+                <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Show Control Panel',  
                                                           icons: {start:'control-icon'},menu: {'menu': 'demo-menu'} }">       
-            </button>
-            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'View Query',  
+                </button>
+                <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'View Query',  
                                                           icons: {start:'view-icon'},menu: {'menu': 'demo-menu'} }">       
-            </button>
-            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
-            <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Change Layout',  
+                </button>
+                <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator"></span>
+                <button class="oj-button-half-chrome" id="halfMenu"    data-bind="ojComponent: { component:'ojButton', label: 'Change Layout',  
                                                           icons: {start:'layout-icon'},menu: {'menu': 'layout-menu'} }">      
-            </button>
-        </div>
-        <div class="chart-list">
-
-            <div id="add-chart">
-
+                </button>
+            </div>
+            <div class="chart-list">
             </div>
         </div>
+
         <div class="timeseries-container">
             <div style="text-align: right">
                 <button id="back-to-chart-list"
