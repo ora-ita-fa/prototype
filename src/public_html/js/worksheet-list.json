@@ -1,6 +1,6 @@
 [
     {
-        "Name": "<a href='chart-list.html'>worksheet1</a>",
+        "Name": "<a href='chart-list.html'>time series demo</a>",
         "ApplicationType": "Flexible Analysis",
         "ApplicationTypeID":"FA",
         "Description": "Test Worksheet1",
@@ -14,7 +14,7 @@
         "Precalculated": "true"
     },
     {
-        "Name": "<a href='chart-list.html'>worksheet2</a>",
+        "Name": "<a href='chart-list.html'>comparison charts</a>",
         "ApplicationType": "Flexible Analysis",
         "ApplicationTypeID":"FA",
         "Description": "Test Worksheet2",
@@ -28,7 +28,7 @@
         "Precalculated": "true"
     },
     {
-        "Name": "<a href='chart-list.html'>worksheet3</a>",
+        "Name": "<a href='chart-list.html'>test trending</a>",
         "ApplicationType": "Flexible Analysis",
         "ApplicationTypeID":"FA",
         "Description": "Test Worksheet3",
@@ -42,7 +42,7 @@
         "Precalculated": "true"
     },  
     {
-        "Name": "<a href='chart-list.html'>worksheet4</a>",
+        "Name": "<a href='chart-list.html'>baseline</a>",
         "ApplicationType": "Database Performance",
         "ApplicationTypeID":"DBPerf",
         "Description": "Test Worksheet4",
@@ -56,7 +56,7 @@
         "Precalculated": "true"
     },
     {
-        "Name": "<a href='chart-list.html'>worksheet5</a>",
+        "Name": "<a href='chart-list.html'>categorical(pivot table)</a>",
         "ApplicationType": "Database Performance",
         "ApplicationTypeID":"DBPerf",
         "Description": "Test Worksheet5",
@@ -70,7 +70,7 @@
         "Precalculated": "true"
     },
     {
-        "Name": "<a href='chart-list.html'>worksheet6</a>",
+        "Name": "<a href='chart-list.html'>categorical(pivot chart)</a>",
         "ApplicationType": "Database Performance",
         "ApplicationTypeID":"DBPerf",
         "Description": "Test Worksheet6",
@@ -84,7 +84,7 @@
         "Precalculated": "true"
     },  
     {
-        "Name": "<a href='chart-list.html'>worksheet7</a>",
+        "Name": "<a href='chart-list.html'>dashboard demo</a>",
         "ApplicationType": "Application Performance Analysis",
         "ApplicationTypeID":"APM",
         "Description": "Test Worksheet7",
@@ -98,7 +98,7 @@
         "Precalculated": "true"
     },
     {
-        "Name": "<a href='chart-list.html'>worksheet8</a>",
+        "Name": "<a href='chart-list.html'>worksheet prototype1</a>",
         "ApplicationType": "Application Performance Analysis",
         "ApplicationTypeID":"APM",
         "Description": "Test Worksheet8",
@@ -112,7 +112,7 @@
         "Precalculated": "true"
     },
     {
-        "Name": "<a href='chart-list.html'>worksheet9</a>",
+        "Name": "<a href='chart-list.html'>worksheet prototype2</a>",
         "ApplicationType": "Application Performance Analysis",
         "ApplicationTypeID":"APM",
         "Description": "Test Worksheet9",

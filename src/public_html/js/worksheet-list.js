@@ -14,8 +14,22 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                 datasource : new oj.ArrayTableDataSource(data, {idAttribute: 'Name'})
             };
             $(".worksheet-list").append($("#worksheet-template").html());
+            
+        var availableWorksheets = [ ];
+            for (var key in data) {
+                console.log(data[key].Name);
+                var value=data[key].Name;
+                availableWorksheets.push(data[key].Name.substring(value.indexOf('>')+1, value.lastIndexOf('</a>')));
+//            $.each(data[key], function(k, arrayItem) {
+//              console.log(k);
+//            });
+        }
+    $( "#inputcontrol" ).autocomplete({
+      source: availableWorksheets
+    });
             ko.applyBindings(worksheet, $("#worksheet-table")[0]);
         });
+              
         
         $.getJSON("js/worksheet-list-app-type.json", function(data) {
             var wsMenu = (function() {
