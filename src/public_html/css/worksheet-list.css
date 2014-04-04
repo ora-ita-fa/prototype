@@ -31,7 +31,6 @@ ul.ui-autocomplete {
   font-size: 1rem;
   white-space: nowrap;
   width: 200px; }
-
 ul li.ui-menu-item {
   color: #333333;
   display: list-item;
@@ -42,14 +41,6 @@ ul li.ui-menu-item {
   list-style-image: none;
   list-style-position: outside;
   list-style-type: none;
-  margin-bottom: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  margin-top: 0px;
-  padding-bottom: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 0px;
   text-align: left;
   white-space: nowrap;
   width: 234px; }
@@ -75,11 +66,11 @@ ul li.ui-menu-item {
     white-space: nowrap;
     width: 163px;
     overflow: hidden; }
-  ul li.ui-menu-item a:hover {
-    font-weight: normal;
-    margin: 0;
-    background: #ebeced;
-    border: 0; }
+    ul li.ui-menu-item a:hover {
+      font-weight: normal;
+      margin: 0;
+      background: #ebeced;
+      border: 0; }
 
 .worksheet {
   padding: 10px; }

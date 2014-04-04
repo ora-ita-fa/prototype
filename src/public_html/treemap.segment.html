@@ -114,26 +114,26 @@ function(oj, ko, $)
     $(document).ready(
 	function()
 	{
-            ko.applyBindings(treemapModel, document.getElementById('treemap-container'));
+            ko.applyBindings(treemapModel, $('.treemap-container')[0]);
 	}
     );
 });
     
 </script>
-<div id='treemap-container' style="position: relative; height: 600px;">
-    <div style="display:inline-block">
-        <!-- sorting toggle button -->
+<div class='treemap-container' style="position: relative; height: 600px;">
+<!--     <div style="display:inline-block">
+        sorting toggle button 
         <div style="line-height:64px;font-weight:bold;padding-left:16px;display:inline-block">
             Sorting:
         </div>
         <div id="radioButtonset" data-bind="ojComponent: {component: 'ojButtonset'}" style="padding:16px;display:inline-block">
-            <!-- ko foreach: sortingOptions -->
+             ko foreach: sortingOptions 
             <label data-bind="attr: {for: id}, text: label"></label>                               
             <input id="sorting" type="radio" name="sorting"
                    data-bind="value: value, click: $parent.sortingChange, attr: {id: id, checked: id === $parent.initialSorting}"/>
-            <!-- /ko -->
+             /ko 
         </div>
-        <!-- other threshold toggle button -->
+         other threshold toggle button 
         <div style="line-height:64px;font-weight:bold;padding-left:32px;display:inline-block">
             Other Threshold:
         </div>
@@ -142,7 +142,7 @@ function(oj, ko, $)
                      max:1, min:0, step:.05, value: otherThresholdValue}"/>
         </div>
     </div>
-    <br style="clear:both;"/> 
+    <br style="clear:both;"/> -->
     <div data-bind="ojComponent: {
                                 component: 'ojTreemap', 
                                 animationOnDisplay: 'auto',
