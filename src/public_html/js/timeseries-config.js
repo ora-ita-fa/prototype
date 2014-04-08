@@ -325,11 +325,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                 init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
                     // This will be called when the binding is first applied to an element
                     // Set up any initial state, event handlers, etc. here
-                    console.log(element);
-                    console.log(valueAccessor());
-                    console.log(allBindings);
-                    console.log(viewModel);
-                    console.log(bindingContext);
                     $.get('timeseries-config.html', function(resp) {
                         $('head').append('<link rel="stylesheet" href="css/timeseries-config.css">');
                         var $container = $(element);

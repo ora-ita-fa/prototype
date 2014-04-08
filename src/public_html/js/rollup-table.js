@@ -13,35 +13,32 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
             // This will be called when the binding is first applied to an element
             // Set up any initial state, event handlers, etc. here
-            console.log(element);
-            console.log(valueAccessor());
-            console.log(allBindings);
-            console.log(viewModel);
-            console.log(bindingContext);
-            $.get('rollup-table.html', function(resp) {
-                $('head').append('<link rel="stylesheet" href="css/rollup-table.css">');
-                
+            if ($('#rollup-table-css').length === 0) {
+                $('head').append('<link id="rollup-table-css" rel="stylesheet" href="/src/css/rollup-table.css">');
+            }
+            $.get('/src/rollup-table.html', function(resp) {
+
                 var properties = valueAccessor();
 
                 var $rollupTableRoot;
 
                 var levels = [
-                                {
-                                    display: 'All Selected target',
-                                    name: 'root'
-                                },
-                                {
-                                    display: 'By COSTCENTER_Level',
-                                    name: 'COSTCENTER'
-                                },
-                                {
-                                    display: 'By DISPLAYNAME_Level',
-                                    name: 'DISPLAYNAME'
-                                }
-                            ];
+                    {
+                        display: 'All Selected target',
+                        name: 'root'
+                    },
+                    {
+                        display: 'By COSTCENTER_Level',
+                        name: 'COSTCENTER'
+                    },
+                    {
+                        display: 'By DISPLAYNAME_Level',
+                        name: 'DISPLAYNAME'
+                    }
+                ];
                 var dimension = 'target';
 
-                var rootLevel = 
+                var rootLevel =
                         {
                             dimension: dimension,
                             levels: levels,
@@ -75,7 +72,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                             ]
                         };
 
-                var targetInstanceLevel = 
+                var targetInstanceLevel =
                         {
                             dimension: dimension,
                             levels: levels,
@@ -107,30 +104,28 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                                 {
                                     value: 'wls9'
                                 }
-                            ]       
+                            ]
                         };
 
-                function redraw(model){
+                var currentSeries;
+
+                function drawRollupTable(model) {
                     var el = $rollupTableRoot.find('.rollup-main').get(0);
                     ko.cleanNode(el);
                     model.drilldown = drilldown;
                     model.rollup = rollup;
                     ko.applyBindings(model, el);
 
-                    var series = [];
-                    $.each(model.attributeValues,function(i,attr){
-                        series.push(attr.value);
+                    currentSeries = [];
+                    $.each(model.attributeValues, function(i, attr) {
+                        currentSeries.push(attr.value);
                     });
-
-                    var listener = properties.rollupDrilldown;
-                    if(listener && typeof listener === 'function'){
-                        listener(series);
-                    }
+                    fireRollupDrillDown();
                 }
 
-                function drilldown(currentLevel){
+                function drilldown(currentLevel) {
                     var mappedModel = null;
-                    switch(currentLevel){
+                    switch (currentLevel) {
                         case 'root':
                             mappedModel = costCenterLevel;
                             break;
@@ -138,14 +133,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                             mappedModel = targetInstanceLevel;
                             break;
                     }
-                    if(mappedModel !== null){
-                        redraw(mappedModel);
+                    if (mappedModel !== null) {
+                        drawRollupTable(mappedModel);
                     }
                 }
 
-                function rollup(currentLevel){
+                function rollup(currentLevel) {
                     var mappedModel = null;
-                    switch(currentLevel){
+                    switch (currentLevel) {
                         case 'DISPLAYNAME':
                             mappedModel = costCenterLevel;
                             break;
@@ -153,14 +148,21 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/o
                             mappedModel = rootLevel;
                             break;
                     }
-                    if(mappedModel !== null){
-                        redraw(mappedModel);
+                    if (mappedModel !== null) {
+                        drawRollupTable(mappedModel);
+                    }
+                }
+
+                function fireRollupDrillDown() {
+                    var listener = properties.rollupDrilldown;
+                    if (listener && typeof listener === 'function') {
+                        listener(currentSeries);
                     }
                 }
                 $rollupTableRoot = $(element);
                 $rollupTableRoot.append(resp);
-                
-                redraw(targetInstanceLevel);
+
+                drawRollupTable(targetInstanceLevel);
             });
         }
     });

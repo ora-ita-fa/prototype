@@ -14,7 +14,7 @@ and open the template in the editor.
         <script src="js/libs/require/require.js"></script>
         <script src="js/main.js"></script>
         <script>
-            require(['time-slider','knockout', 'ojs/ojdatetimepicker'],function(ts,ko){
+            require(['knockout', 'time-slider'],function(ko){
                 var nowStamp = new Date();
                 var timeSliderVM = {
                     totalStart: ko.observable(new Date(nowStamp-40*24*60*60*1000)),

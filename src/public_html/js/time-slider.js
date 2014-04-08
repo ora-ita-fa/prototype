@@ -5,15 +5,16 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui'], function(oj, ko, $, ita) {
+define(['ojs/ojcore', 'knockout', 'jquery', 'ita-core', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui', 
+    'ojs/ojdatetimepicker'], function(oj, ko, $, ita) {
 
     ita.registerTool(
             {
                 name: 'time-slider',
                 init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
                     var vm = valueAccessor();
-                    $("head").append('<link rel="stylesheet" href="css/time-slider.css"/>');
-                    $.get('time-slider.html', function(resp) {
+                    $("head").append('<link rel="stylesheet" href="/src/css/time-slider.css"/>');
+                    $.get('/src/time-slider.html', function(resp) {
                         var $container = $(element);
                         $container.append(resp);
                         ko.applyBindings(vm,$(".time-filter")[0]);

@@ -1,0 +1,85 @@
+{
+    "identity": "REGION_1",
+    "QueryDescriptor": [{
+            "-xmlns": "http://www.oracle.com/sysman/core/emwanalytics/Worksheet",
+            "-identity": "query-126",
+            "Subject": {
+                "-name": "TVMDWFSUBJECT"
+            },
+            "Cube": {
+                "-name": "TVMDWFDISKACTIVITY"
+            },
+            "Source": {
+                "-type": "cube"
+            },
+            "Aggregations": {
+                "MeasureAggregation": {
+                    "-alias": "AVG_ACTIVEREADS_",
+                    "Function": "Average",
+                    "Measure": "ACTIVE READS (PER SEC)"
+                },
+                "AggregationAggregation": {
+                    "-treatAsMeasure": "false",
+                    "-alias": "EMWC_TVMDWFDISKACT_END_TIME_ID",
+                    "Function": "Trunc with format",
+                    "FunctionParameters": {
+                        "FunctionParameter": "'dd'"
+                    },
+                    "DateAggregation": {
+                        "-cube": "TVMDWFDISKACTIVITY",
+                        "-dimension": "END_TIME",
+                        "Function": "Minimum"
+                    }
+                }
+            },
+            "GroupByEntities": {
+                "GroupByLevel": {
+                    "Level": {
+                        "-name": "TARGETLEVELINSTANCE",
+                        "Dimension": "TARGET",
+                        "Hierarchy": "TARGETHIERBYCOSTCENTER"
+                    },
+                    "AttributeSelections": {
+                        "AttributeSelection": {
+                            "-alias": "TARGET_DISPLAYNAME",
+                            "Attribute": {
+                                "-name": "DISPLAYNAME",
+                                "-type": "1",
+                                "Level": {
+                                    "-name": "TARGETLEVELINSTANCE",
+                                    "Dimension": "TARGET",
+                                    "Hierarchy": "TARGETHIERBYCOSTCENTER"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "WhereExpression": {
+                "-conjunction": "AND",
+                "Filter": {
+                    "-type": "relative_time_range",
+                    "RelativeTimeRangeFilter": {
+                        "offsetField": "1",
+                        "offset": "1",
+                        "dimensionName": "END_TIME"
+                    }
+                }
+            },
+            "StartingRollupLevels": {
+                "Level": {
+                    "-name": "TIMELEVELMONTHOFYEAR",
+                    "Dimension": "END_TIME",
+                    "Hierarchy": "TIMEHIERBYMONTHOFYEAR"
+                }
+            }
+        }],
+    "Parameters": {
+        "FAUICONFIG": {
+            "chartType": "line"
+        },
+        "AnalyticType": "timeseries",
+        "QDG_TIMESERIES_REGION_CONFIG_KEY": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><timeSeriesRegionConfig><description>Timeseries Analysis Desc</description><enableGlobalTimeSlider>false</enableGlobalTimeSlider><title>Timeseries Analysis</title><type>timeseries</type><enablePivot>false</enablePivot><chartDisplayType>LINE_VERT_ABS</chartDisplayType><chartInlineStyle>width:99%; height:200px</chartInlineStyle><displayChartLegend>true</displayChartLegend><displayMeasureInfo>false</displayMeasureInfo><enable>true</enable><enableAsync>true</enableAsync><enableBaseline>false</enableBaseline><enableEventOverlay>false</enableEventOverlay><enableMetricOverlay>false</enableMetricOverlay><enableRollup>true</enableRollup><enableSeriesSelection>false</enableSeriesSelection><enableStatisticCorrelation>false</enableStatisticCorrelation><enableSwitchToForecast>false</enableSwitchToForecast><eventOvelayChartDisplayType>LINE_VERT_ABS</eventOvelayChartDisplayType><eventOverlayDenseView>false</eventOverlayDenseView><expandDataNavPanel>true</expandDataNavPanel><forecastRegionConfig><enableGlobalTimeSlider>false</enableGlobalTimeSlider><capacity>0.0</capacity><chartDisplayType>LINE_VERT_ABS</chartDisplayType><chartInlineStyle>width:99%; height:200px</chartInlineStyle><confidence>95</confidence><enableForecast>false</enableForecast><forecastPeriod>60</forecastPeriod><hideConfigPanel>true</hideConfigPanel><lowerBoundThreshold>0.0</lowerBoundThreshold><selectedRegressionModel>LINEAR</selectedRegressionModel><showChannels>false</showChannels><showInputOptions>true</showInputOptions><showThresholds>false</showThresholds><showTotalTrend>false</showTotalTrend><showTrendTotal>false</showTrendTotal><singleChartMode>true</singleChartMode><upperBoundThreshold>0.0</upperBoundThreshold></forecastRegionConfig><outcome></outcome><queryDescriptorType>timeSeries</queryDescriptorType><redirectToEmbeddedForecast>false</redirectToEmbeddedForecast><singleChart>true</singleChart><viewEndRange>2014-04-07T00:00:00-07:00</viewEndRange><viewStartRange>2013-04-07T00:00:00-07:00</viewStartRange></timeSeriesRegionConfig>"
+    }
+
+}

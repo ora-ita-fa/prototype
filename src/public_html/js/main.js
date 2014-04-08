@@ -2,7 +2,7 @@
  * Example of Require.js boostrap javascript
  */
 requirejs.config({
-    baseUrl: 'js',
+    baseUrl: '/src/js',
     // Path mappings for the logical module names
     paths: {
         'knockout': 'libs/knockout/knockout-3.1.0',
@@ -41,7 +41,7 @@ require(['ojs/ojcore', 'knockout', 'jquery',
         function(oj, ko, $, t0, t1)
         {
             $(function() {
-                $.get('../src/patterntemplates/demoAppHeaderTemplateLite.html', function(data) {
+                $.get('/src/patterntemplates/demoAppHeaderTemplateLite.html', function(data) {
                     var $header = $('#demo_appheader_div');
                     function headerViewModel() {
 
@@ -122,7 +122,7 @@ require(['ojs/ojcore', 'knockout', 'jquery',
                                 $header[0]);
                     }
                 });
-                $.get('../src/patterntemplates/demoAppFooterTemplate.html', function(data) {
+                $.get('/src/patterntemplates/demoAppFooterTemplate.html', function(data) {
                     function footerViewModel() {
                         var templateData = {
                             "footer_links": [
