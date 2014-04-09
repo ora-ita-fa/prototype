@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": ";;;;;;;;;AAkBQ,oCAAc;EACV,MAAM,EAAE,IAAI;EACZ,KAAK,EAAE,GAAG;EACV,KAAK,EAAE,IAAI;EACX,QAAQ,EAAE,MAAM;EAChB,OAAO,EAAE,IAAI;AAGjB,4CAAsB;EAClB,OAAO,EAAC,KAAK;AAGjB,6BAAO;EACH,MAAM,EAAE,IAAI;EACZ,KAAK,EAAE,GAAG;EACV,KAAK,EAAE,IAAI;AAGf,4CAAsB;EAClB,KAAK,EAAE,GAAG",
-"sources": ["../scss/timeseries-tool.scss"],
-"names": [],
-"file": "timeseries-tool.css"
-}

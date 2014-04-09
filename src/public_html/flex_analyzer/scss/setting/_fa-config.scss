@@ -1,0 +1,292 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-26, 13:37:22
+    Author     : danfjian
+*/
+
+@import "../_fa-common.scss"; 
+
+.inline-title {
+    display: inline;
+    margin-right: 10px;
+}
+
+.icon-size {
+    width: 32px;
+    height: 32px;
+}
+
+.tree-table {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid rgb(214, 223, 230);
+
+    a {
+        line-height: 20px;
+        width: 100%;
+    }
+
+    > ul > li {
+        &:nth-child(even) > a {
+            background-color: rgb(238, 238, 238);
+        }
+
+        &:nth-child(odd) > ul > li:nth-child(odd) > a {
+            background-color: rgb(238, 238, 238);
+        }
+
+        &:nth-child(even) > ul > li:nth-child(even) > a {
+            background-color: rgb(238, 238, 238);
+        }
+    }
+}
+
+.tree-not-collapsable ul {
+    margin-left: -22px;
+    padding-left: 5px;
+}
+
+.timeseries-main {
+    position: relative;
+    height: 600px;
+
+    .left {
+        padding: 30px;
+        height: 100%;
+        width: 280px;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        .measure-selector {
+            height: 320px;
+            width: 290px;
+
+            a ins {
+                background-repeat: no-repeat;
+                background-position: top left;
+                background-image: url('#{$img-path}/warehouse_measure_ena.png');
+            }
+        }
+
+        .dimension-selector {
+            width: 290px;
+            height: 320px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+
+            > ul > li {
+                > a ins {
+                    background-image: url('#{$img-path}/warehouse_dimension_ena.png');
+                    background-repeat: no-repeat;
+                    background-position: top left;
+                }
+
+                > ul > li > a ins {
+                    background-image: url('#{$img-path}/warehouse_attribute.png');
+                    background-repeat: no-repeat;
+                    background-position: top left;
+                }
+            }
+        }
+    }
+
+    .middle {
+        padding: 30px;
+        margin-left: 300px;
+        margin-right: 450px;
+        height: 100%;
+
+        .selected-measures {
+            background-color: silver;
+            line-height: 22px;
+        }
+
+        .main-config {
+            margin-top: 10px;
+            height: 310px;
+
+            #chart-container {
+                width: 100%;
+                float: left;
+                overflow: hidden;
+            }
+
+            .data-series {
+                width: 32%;
+                float: right;
+                padding-top: 110px;
+
+                .title {
+                    clear: both;
+                }
+            }
+        }
+
+        .x-axis .time-settings {
+            background-color: silver;
+            line-height: 22px;
+        }
+
+        .include {
+            margin-top: 20px;
+        }
+    }
+
+    .right {
+        padding: 30px;
+        height: 100%;
+        width: 420px;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        .oj-tabs-panel {
+            height: 100%
+        }
+
+        .data-display {
+
+            table th {
+                padding: 10px 15px 10px 0;
+                text-align: right;
+            }
+
+            .chart-options {
+                margin-top: 50px;
+
+                .type {
+                    float: left;
+                    width: 50px;
+                    border-right: 1px solid #d6dfe6;
+                    text-align: right;
+
+                    .img {
+                        @extend .icon-size;
+                    }
+
+                    .line-icon {
+                        @extend .icon-size;
+                        :before {
+                            content: url("#{$img-path}/graph_line.png");
+                        }
+                    }
+
+                    .bar-icon {
+                        @extend .icon-size;
+                        :before {
+                            content: url("#{$img-path}/graph_bar.png");
+                        }
+                    }
+
+                    .area-icon {
+                        @extend .icon-size;
+                        :before {
+                            content: url("#{$img-path}/graph_area.png");
+                        }
+                    }
+                }
+
+                .displays {
+                    float: left;
+
+                    .show-title {
+                        float: left;
+                        padding-left: 20px;
+                    }
+
+                    .show-options {
+                        float: left;
+                        padding-left: 10px;
+
+                        div {
+                            line-height: 20px;
+                        }
+                    }
+                }
+            }
+        }
+        .data-series-display{
+            table td{
+                vertical-align:  top;
+                .value-div > div{
+                    float: left;
+
+                }
+            }
+            .top-bottom {
+                .inputnumber{
+                    padding: 0px 0px 0px 0px;
+                    .oj-inputnumber {
+                        padding: 0px 0px 0px 0px;
+                        height: 12px;
+                        width:20px;
+                        min-width:10px;
+                    }
+                    >span {
+                        >input {
+                            height: 20px;
+                            width:50px;
+                        }
+                        > a {
+                            height: 10px;
+                            margin:  0px 0px 0px 0px;
+                            padding: 0px 0px 0px 0px;
+                            width:13px;
+                            >span{
+                                padding:inherit;
+                                margin: inherit;
+                            }
+                        }
+                    }
+                }
+                table td {
+                    width:30%;
+                }
+                margin-top: 50px;
+                div{
+                    padding: 2px 2px 2px 2px
+                }
+
+                input[type="radio"] {
+                    padding-bottom: 2px;
+                }
+            }
+        }
+        .trending-forecasting-baseline{
+            table th {
+                padding: 10px 15px 10px 0;
+                text-align: right;
+            }
+        }
+        .correlation {
+            > div{
+                width:auto;
+                float: left;
+                > div{
+                    vertical-align: top;
+                    float: left;
+                    padding: 2px 2px 5px 2px ;
+                    span{
+                        font-size: 12px;
+                        font-weight: bold;
+                        padding: 10px 10px 10px 0;
+                        text-align: right;
+                    } 
+                }
+
+                > div:nth-child(even){
+                    float:right;
+                }
+            }
+
+            .correlation-analyze {
+                float: right
+            }
+        }
+    }
+}

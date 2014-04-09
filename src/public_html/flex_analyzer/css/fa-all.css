@@ -1,0 +1,286 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-4-9, 13:41:57
+    Author     : danfjian
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-26, 15:31:11
+    Author     : danfjian
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-4-9, 13:43:43
+    Author     : danfjian
+*/
+.timeseries-container {
+  display: none; }
+  .timeseries-container .toolbar-container {
+    margin-top: 20px;
+    padding-right: 30px;
+    text-align: right; }
+
+.chart-list-main {
+  margin-left: 20px;
+  margin-right: 30px; }
+  .chart-list-main .chart-list .region {
+    border: 2px solid silver;
+    display: inline-block;
+    width: 100%;
+    height: 247px;
+    margin: 5px;
+    vertical-align: top; }
+  .chart-list-main .icon-size, .chart-list-main .icon-style, .chart-list-main .menus-bar .action-icon, .chart-list-main .menus-bar .delete-icon, .chart-list-main .menus-bar .create-icon, .chart-list-main .menus-bar .import-icon, .chart-list-main .menus-bar .edit-icon, .chart-list-main .menus-bar .control-icon, .chart-list-main .menus-bar .view-icon, .chart-list-main .menus-bar .layout-icon, .chart-list-main #menu-container .command-icon, .chart-list-main #menu-container .line-icon, .chart-list-main #menu-container .bar-icon, .chart-list-main #menu-container .one-column, .chart-list-main #menu-container .two-column, .chart-list-main #menu-container .three-column, .chart-list-main .menus-bar img, .chart-list-main .timeseries-main .right .data-display .chart-options .type .img, .timeseries-main .right .data-display .chart-options .type .chart-list-main .img, .chart-list-main .timeseries-main .right .data-display .chart-options .type .line-icon, .timeseries-main .right .data-display .chart-options .type .chart-list-main .line-icon, .chart-list-main .timeseries-main .right .data-display .chart-options .type .bar-icon, .timeseries-main .right .data-display .chart-options .type .chart-list-main .bar-icon, .chart-list-main .timeseries-main .right .data-display .chart-options .type .area-icon, .timeseries-main .right .data-display .chart-options .type .chart-list-main .area-icon {
+    width: 24px;
+    height: 24px; }
+  .chart-list-main .icon-style, .chart-list-main .menus-bar .action-icon, .chart-list-main .menus-bar .delete-icon, .chart-list-main .menus-bar .create-icon, .chart-list-main .menus-bar .import-icon, .chart-list-main .menus-bar .edit-icon, .chart-list-main .menus-bar .control-icon, .chart-list-main .menus-bar .view-icon, .chart-list-main .menus-bar .layout-icon, .chart-list-main #menu-container .command-icon, .chart-list-main #menu-container .line-icon, .chart-list-main #menu-container .bar-icon, .chart-list-main #menu-container .one-column, .chart-list-main #menu-container .two-column, .chart-list-main #menu-container .three-column {
+    background-repeat: no-repeat;
+    padding-left: 18px;
+    /* width of the image plus a little extra padding */ }
+  .chart-list-main .menus-bar {
+    padding: 10px 15px 0px 20px;
+    float: left;
+    width: 1200px; }
+    .chart-list-main .menus-bar > button {
+      margin: 0px 0px 2px 0px;
+      vertical-align: top;
+      height: 30px;
+      max-width: 200px;
+      min-width: 30px;
+      border-width: 1px; }
+    .chart-list-main .menus-bar > span {
+      height: 28px;
+      vertical-align: middle;
+      color: #0572CE; }
+    .chart-list-main .menus-bar .action-icon {
+      background-image: url("/flex_analyzer/images//action-icon.png"); }
+    .chart-list-main .menus-bar .delete-icon {
+      background-image: url("/flex_analyzer/images//delete-icon.png"); }
+    .chart-list-main .menus-bar .create-icon {
+      background-image: url("/flex_analyzer/images//new_ena.png"); }
+    .chart-list-main .menus-bar .import-icon {
+      background-image: url("/flex_analyzer/images//importIcon_ena.png"); }
+    .chart-list-main .menus-bar .edit-icon {
+      background-image: url("/flex_analyzer/images//edit_ena.png"); }
+    .chart-list-main .menus-bar .control-icon {
+      background-image: url("/flex_analyzer/images//agent_ena.png"); }
+    .chart-list-main .menus-bar .view-icon {
+      background-image: url("/flex_analyzer/images//eyeglasses.png"); }
+    .chart-list-main .menus-bar .layout-icon {
+      background-image: url("/flex_analyzer/images//layout-icon.png"); }
+  .chart-list-main #menu-container a {
+    padding-left: 20px;
+    padding-right: 18px; }
+  .chart-list-main #menu-container .command-icon {
+    background-image: url("/flex_analyzer/images//command-icon.png"); }
+  .chart-list-main #menu-container .line-icon {
+    background-image: url("/flex_analyzer/images//graph_line.png"); }
+  .chart-list-main #menu-container .bar-icon {
+    background-image: url("/flex_analyzer/images//graph_bar.png"); }
+  .chart-list-main #menu-container .one-column {
+    background-image: url("/flex_analyzer/images//layout-1-icon.png"); }
+  .chart-list-main #menu-container .two-column {
+    background-image: url("/flex_analyzer/images//layout-2-icon.png"); }
+  .chart-list-main #menu-container .three-column {
+    background-image: url("/flex_analyzer/images//layout-3-icon.png"); }
+  .chart-list-main #menu-container #btn-save-worksheet {
+    float: right; }
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-26, 13:37:22
+    Author     : danfjian
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-4-9, 13:43:43
+    Author     : danfjian
+*/
+.inline-title {
+  display: inline;
+  margin-right: 10px; }
+
+.icon-size, .chart-list-main .icon-style, .chart-list-main .menus-bar .action-icon, .chart-list-main .menus-bar .delete-icon, .chart-list-main .menus-bar .create-icon, .chart-list-main .menus-bar .import-icon, .chart-list-main .menus-bar .edit-icon, .chart-list-main .menus-bar .control-icon, .chart-list-main .menus-bar .view-icon, .chart-list-main .menus-bar .layout-icon, .chart-list-main #menu-container .command-icon, .chart-list-main #menu-container .line-icon, .chart-list-main #menu-container .bar-icon, .chart-list-main #menu-container .one-column, .chart-list-main #menu-container .two-column, .chart-list-main #menu-container .three-column, .chart-list-main .menus-bar img, .timeseries-main .right .data-display .chart-options .type .img, .timeseries-main .right .data-display .chart-options .type .line-icon, .timeseries-main .right .data-display .chart-options .type .bar-icon, .timeseries-main .right .data-display .chart-options .type .area-icon {
+  width: 32px;
+  height: 32px; }
+
+.tree-table {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border: 1px solid #d6dfe6; }
+  .tree-table a {
+    line-height: 20px;
+    width: 100%; }
+  .tree-table > ul > li:nth-child(even) > a {
+    background-color: #eeeeee; }
+  .tree-table > ul > li:nth-child(odd) > ul > li:nth-child(odd) > a {
+    background-color: #eeeeee; }
+  .tree-table > ul > li:nth-child(even) > ul > li:nth-child(even) > a {
+    background-color: #eeeeee; }
+
+.tree-not-collapsable ul {
+  margin-left: -22px;
+  padding-left: 5px; }
+
+.timeseries-main {
+  position: relative;
+  height: 600px; }
+  .timeseries-main .left {
+    padding: 30px;
+    height: 100%;
+    width: 280px;
+    position: absolute;
+    top: 0;
+    left: 0; }
+    .timeseries-main .left .measure-selector {
+      height: 320px;
+      width: 290px; }
+      .timeseries-main .left .measure-selector a ins {
+        background-repeat: no-repeat;
+        background-position: top left;
+        background-image: url("/flex_analyzer/images//warehouse_measure_ena.png"); }
+    .timeseries-main .left .dimension-selector {
+      width: 290px;
+      height: 320px;
+      overflow-y: scroll;
+      overflow-x: hidden; }
+      .timeseries-main .left .dimension-selector > ul > li > a ins {
+        background-image: url("/flex_analyzer/images//warehouse_dimension_ena.png");
+        background-repeat: no-repeat;
+        background-position: top left; }
+      .timeseries-main .left .dimension-selector > ul > li > ul > li > a ins {
+        background-image: url("/flex_analyzer/images//warehouse_attribute.png");
+        background-repeat: no-repeat;
+        background-position: top left; }
+  .timeseries-main .middle {
+    padding: 30px;
+    margin-left: 300px;
+    margin-right: 450px;
+    height: 100%; }
+    .timeseries-main .middle .selected-measures {
+      background-color: silver;
+      line-height: 22px; }
+    .timeseries-main .middle .main-config {
+      margin-top: 10px;
+      height: 310px; }
+      .timeseries-main .middle .main-config #chart-container {
+        width: 100%;
+        float: left;
+        overflow: hidden; }
+      .timeseries-main .middle .main-config .data-series {
+        width: 32%;
+        float: right;
+        padding-top: 110px; }
+        .timeseries-main .middle .main-config .data-series .title {
+          clear: both; }
+    .timeseries-main .middle .x-axis .time-settings {
+      background-color: silver;
+      line-height: 22px; }
+    .timeseries-main .middle .include {
+      margin-top: 20px; }
+  .timeseries-main .right {
+    padding: 30px;
+    height: 100%;
+    width: 420px;
+    position: absolute;
+    top: 0;
+    right: 0; }
+    .timeseries-main .right .oj-tabs-panel {
+      height: 100%; }
+    .timeseries-main .right .data-display table th {
+      padding: 10px 15px 10px 0;
+      text-align: right; }
+    .timeseries-main .right .data-display .chart-options {
+      margin-top: 50px; }
+      .timeseries-main .right .data-display .chart-options .type {
+        float: left;
+        width: 50px;
+        border-right: 1px solid #d6dfe6;
+        text-align: right; }
+        .timeseries-main .right .data-display .chart-options .type .line-icon :before {
+          content: url("/flex_analyzer/images//graph_line.png"); }
+        .timeseries-main .right .data-display .chart-options .type .bar-icon :before {
+          content: url("/flex_analyzer/images//graph_bar.png"); }
+        .timeseries-main .right .data-display .chart-options .type .area-icon :before {
+          content: url("/flex_analyzer/images//graph_area.png"); }
+      .timeseries-main .right .data-display .chart-options .displays {
+        float: left; }
+        .timeseries-main .right .data-display .chart-options .displays .show-title {
+          float: left;
+          padding-left: 20px; }
+        .timeseries-main .right .data-display .chart-options .displays .show-options {
+          float: left;
+          padding-left: 10px; }
+          .timeseries-main .right .data-display .chart-options .displays .show-options div {
+            line-height: 20px; }
+    .timeseries-main .right .data-series-display table td {
+      vertical-align: top; }
+      .timeseries-main .right .data-series-display table td .value-div > div {
+        float: left; }
+    .timeseries-main .right .data-series-display .top-bottom {
+      margin-top: 50px; }
+      .timeseries-main .right .data-series-display .top-bottom .inputnumber {
+        padding: 0px 0px 0px 0px; }
+        .timeseries-main .right .data-series-display .top-bottom .inputnumber .oj-inputnumber {
+          padding: 0px 0px 0px 0px;
+          height: 12px;
+          width: 20px;
+          min-width: 10px; }
+        .timeseries-main .right .data-series-display .top-bottom .inputnumber > span > input {
+          height: 20px;
+          width: 50px; }
+        .timeseries-main .right .data-series-display .top-bottom .inputnumber > span > a {
+          height: 10px;
+          margin: 0px 0px 0px 0px;
+          padding: 0px 0px 0px 0px;
+          width: 13px; }
+          .timeseries-main .right .data-series-display .top-bottom .inputnumber > span > a > span {
+            padding: inherit;
+            margin: inherit; }
+      .timeseries-main .right .data-series-display .top-bottom table td {
+        width: 30%; }
+      .timeseries-main .right .data-series-display .top-bottom div {
+        padding: 2px 2px 2px 2px; }
+      .timeseries-main .right .data-series-display .top-bottom input[type="radio"] {
+        padding-bottom: 2px; }
+    .timeseries-main .right .trending-forecasting-baseline table th {
+      padding: 10px 15px 10px 0;
+      text-align: right; }
+    .timeseries-main .right .correlation > div {
+      width: auto;
+      float: left; }
+      .timeseries-main .right .correlation > div > div {
+        vertical-align: top;
+        float: left;
+        padding: 2px 2px 5px 2px; }
+        .timeseries-main .right .correlation > div > div span {
+          font-size: 12px;
+          font-weight: bold;
+          padding: 10px 10px 10px 0;
+          text-align: right; }
+      .timeseries-main .right .correlation > div > div:nth-child(even) {
+        float: right; }
+    .timeseries-main .right .correlation .correlation-analyze {
+      float: right; }
+
+/*# sourceMappingURL=fa-all.css.map */

@@ -1,0 +1,158 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-3-26, 15:31:11
+    Author     : danfjian
+*/
+
+@import "../_fa-common.scss"; 
+
+.timeseries-container {
+    display:none;
+    
+    .toolbar-container {
+        margin-top:20px;
+        padding-right: 30px;
+        text-align:right;
+    }
+}
+
+.chart-list-main {
+    margin-left:20px;
+    margin-right:30px;
+    
+    .chart-list {
+        
+        .region {
+            
+            border:2px solid silver;
+            display:inline-block;
+            width:100%;
+            height:247px;
+            margin:5px;
+            vertical-align: top;
+        }
+    }
+
+    .icon-size {
+        width: 24px;
+        height: 24px;
+    }
+
+    .icon-style {
+        @extend .icon-size;
+        background-repeat: no-repeat;
+        padding-left: 18px;  /* width of the image plus a little extra padding */
+    }
+
+    .menus-bar {
+
+        padding:10px 15px 0px 20px;
+        float:left;
+        width:1200px;
+
+        > button {
+            margin: 0px 0px 2px 0px;
+            vertical-align: top;
+            height:30px;
+            max-width:200px;
+            min-width:30px;
+            border-width: 1px;
+        }
+
+        > span {
+            height:28px;
+            vertical-align:middle;
+            color:  #0572CE;
+        }
+
+        img {
+            @extend .icon-size;
+        }
+
+        .action-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/action-icon.png");
+        }
+
+        .delete-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/delete-icon.png");
+        }
+
+        .create-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/new_ena.png");
+        } 
+
+        .import-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/importIcon_ena.png");
+        }
+
+        .edit-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/edit_ena.png");
+        }
+
+        .control-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/agent_ena.png");
+        }
+
+        .view-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/eyeglasses.png");
+        }
+
+        .layout-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/layout-icon.png");
+        }
+    }
+
+    #menu-container {
+        a {
+            padding-left: 20px;
+            padding-right: 18px;
+        }
+
+        .command-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/command-icon.png");
+        }
+
+        .line-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/graph_line.png");
+        }
+
+        .bar-icon {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/graph_bar.png");
+        }
+
+        .one-column {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/layout-1-icon.png");
+        }
+
+        .two-column {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/layout-2-icon.png");
+        }
+
+        .three-column {
+            @extend .icon-style;
+            background-image: url("#{$img-path}/layout-3-icon.png");
+        }
+        
+        #btn-save-worksheet {
+            float:right;
+        }
+    } 
+
+}
