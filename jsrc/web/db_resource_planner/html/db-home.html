@@ -32,7 +32,7 @@ and open the template in the editor.
                 <div id='demo_appheader_div' data-bind="template: {name: 'EMHeaderTemplate'}" title="Database Analysis"></div>
             </div>
         </header>
-        
+
         <div id="global-time-slider" data-bind="
              itaComponent: {
                  component: 'time-slider',
@@ -43,41 +43,48 @@ and open the template in the editor.
                  viewRangeChange: viewRangeChange
              }
              " style="height:85px;width:90%;padding:20px;"></div>
-             
+
         <div class="chart-container">
-            <div data-bind="
+            <div>
+                <h3>Avg Active Cores</h3>
+                <div data-bind="
              itaComponent: {
                  component: 'timeseries-tool',
                  queryDescriptorGroup: qdg1,
                  datasetGroup: dsg1
              }
-                 "></div>
-
-            <div data-bind="
+                     "></div> 
+            </div>
+            <div>
+                <h3>Global Cache Busy</h3>
+                <div data-bind="
              itaComponent: {
                  component: 'timeseries-tool',
                  queryDescriptorGroup: qdg2,
                  datasetGroup: dsg2
              }
-                 "></div>
-
-            <div data-bind="
+                     "></div>
+            </div>
+            <div>
+                <h3>I/O per second</h3>
+                <div data-bind="
              itaComponent: {
                  component: 'timeseries-tool',
                  queryDescriptorGroup: qdg3,
                  datasetGroup: dsg3
              }
-                 "></div>
-
-            <div data-bind="
+                     "></div>
+            </div>
+            <div>
+                <h3>...</h3>
+                <div data-bind="
              itaComponent: {
                  component: 'timeseries-tool',
                  queryDescriptorGroup: qdg4,
                  datasetGroup: dsg4
              }
-                 "></div>
+                     "></div>
+            </div>
         </div>
-
-
     </body>
 </html>
