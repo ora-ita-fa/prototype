@@ -25,9 +25,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             min: vm.totalStart().getTime(),
                             max: vm.totalEnd().getTime(),
                             values: [vm.viewStart().getTime(), vm.viewEnd().getTime()],
-                            slide: function(event, ui) {
-                                vm.viewStart(new Date(ui.values[0]));
-                                vm.viewEnd(new Date(ui.values[1]));
+                            stop: function(event, ui) {
+                                var newStart = ui.values[0];
+                                if (newStart !== vm.viewStart().getTime()) {
+                                    vm.viewStart(new Date(newStart));
+                                }
+                                
+                                var newEnd = ui.values[1];
+                                if (newEnd !== vm.viewEnd().getTime()) {
+                                    vm.viewEnd(new Date(newEnd));
+                                }
                             }
                         });
 
@@ -88,12 +95,18 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                         };
 
                         drawSplitterScale();
+                        // Redraw the slider when browser window is resized.
+                        $(window).resize(function() {
+                            drawSplitterScale();
+                        });
 
                         vm.viewStart.subscribe(function(newVal) {
                             $sliderBar.slider("values", [newVal.getTime(), vm.viewEnd().getTime()]);
+                            fireViewRangeChange();
                         });
                         vm.viewEnd.subscribe(function(newVal) {
                             $sliderBar.slider("values", [vm.viewStart().getTime(), newVal.getTime()]);
+                            fireViewRangeChange();
                         });
                         vm.totalStart.subscribe(function(newVal) {
                             $sliderBar.slider("option", "min", newVal.getTime());
@@ -104,10 +117,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             drawSplitterScale();
                         });
 
-                        // Redraw the slider when browser window is resized.
-                        $(window).resize(function() {
-                            drawSplitterScale();
-                        });
+                        function fireViewRangeChange() {
+                            if (vm.viewRangeChange && typeof vm.viewRangeChange === 'function') {
+                                vm.viewRangeChange(vm.viewStart(), vm.viewEnd());
+                            }
+                        }
                     });
                 }
             }

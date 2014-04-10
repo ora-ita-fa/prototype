@@ -5,8 +5,9 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita) {
-
+define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
+    '/analytics/js/view_model/timeseries/ChartRegionModel.js',
+    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita, ChartRegionModel) {
     ita.registerTool(
             {
                 name: 'fa-config',
@@ -252,19 +253,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 
                         };
                     }
 
-                    function ChartModel() {
-                        /* chart data */
-                        var lineSeries = [{name: "Series 1", items: [74, 62, 70, 76, 66]},
-                            {name: "Series 2", items: [50, 38, 46, 54, 42]},
-                            {name: "Series 3", items: [34, 22, 30, 32, 26]},
-                            {name: "Series 4", items: [18, 6, 14, 22, 10]},
-                            {name: "Series 5", items: [3, 2, 3, 3, 2]}];
-                        var lineGroups = ["Group A", "Group B", "Group C", "Group D", "Group E"];
-                        this.lineSeriesValue = ko.observableArray(lineSeries);
-                        this.lineGroupsValue = ko.observableArray(lineGroups);
-                        this.chartType = ko.observable('line');
-                    }
-
                     function ChartTypeModel() {
                         this.chartTypeButtonClick = function(data, event) {
                             var currentType = event.currentTarget.id;
@@ -278,7 +266,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 
                         };
                     }
 
-                    var model = new ChartModel();
+                    var model = new ChartRegionModel();
                     var chartTypeModel = new ChartTypeModel();
 
                     function koBind() {

@@ -13,6 +13,7 @@
         <div class="chart" 
              data-bind="
             ojComponent: {
+                timeAxisType: 'enabled',
                 component: 'ojChart', 
                 type: chartType, 
                 selection: 'multiple', 
@@ -20,7 +21,8 @@
                 groups: lineGroupsValue, 
                 animationOnDisplay: 'auto',
                 animationOnDataChange: 'auto',
-                orientation: 'vertical'
+                orientation: 'vertical',
+                legend: {rendered: 'off'}
             }">
         </div>
     </div>

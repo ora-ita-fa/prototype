@@ -14,10 +14,17 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
         name: 'timeseries-tool',
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
             var qdg = valueAccessor().queryDescriptorGroup;
+            var dsg = valueAccessor().datasetGroup;
 
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
 
                 var demoChart = new ChartRegionModel();
+                
+                if (dsg && dsg.groups && dsg.series) {
+                    demoChart.lineSeriesValue = dsg.series;
+                    demoChart.lineGroupsValue = dsg.groups;
+                }
+                
                 var chartType = "line";
                 try {
                     chartType = qdg.Parameters.FAUICONFIG.chartType;
