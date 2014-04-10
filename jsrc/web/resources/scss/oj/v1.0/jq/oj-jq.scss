@@ -1,0 +1,12 @@
+/* 
+   Please choose a different theme if 
+   accessibility is required, as the JQ theme 
+   makes no guarantee to be accessible. 
+   For example color contrast ratios
+   (WCAG 2.0 - section 1.4.3 Contrast) are untested.
+*/
+
+@import "oj.jq.variables";
+
+@import "../3rdparty/normalize/normalize";
+@import "oj.jq.widgets";

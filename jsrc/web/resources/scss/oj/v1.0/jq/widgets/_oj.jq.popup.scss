@@ -1,0 +1,86 @@
+@import "../../utilities/oj.utilities";
+
+$includePopupClasses:  $includeAllClasses !default;
+
+@import "../../common/helpers/oj.common.helpers"; 
+
+@if $includePopupClasses != false {
+  @include exports("popup") {
+    /* popup */
+    /* --------------------------------------------------------------- */
+
+    .oj-popup {
+      border: $borderWidth solid $border5Color;
+      z-index: 98;
+      position:absolute;
+      @include oj-border-radius($smallBorderRadius);
+      background-color: $background2Color;
+      box-shadow: 0 0 5px #aaa;
+    }
+    .oj-popup.oj-popup-tail-simple {
+      z-index: 200;
+      border-radius: 0;
+      box-shadow: 0 0 10px #aaa;
+    }
+    .oj-popup-no-chrome {
+      border-width: 0;
+      box-shadow: none;
+      border-radius: 0;
+    }  
+    .oj-popup-content {
+      padding: 8px;
+    }
+    .oj-popup-tail {
+      position: absolute;
+      pointer-events: none;
+      z-index: 99;
+    }
+    .oj-popup-tail-simple  > .oj-popup-tail {
+      height: 0;
+      width: 0;
+      z-index: 201;
+    }
+    .oj-popup-tail-simple-start-top, .oj-popup-tail-simple-end-top {
+      top: 2px;
+    }
+    .oj-popup-tail-simple-start-top, .oj-popup-tail-simple-start-middle, .oj-popup-tail-simple-start-bottom {
+      left:-14px;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 0 solid transparent;
+      border-right: 14px solid $border5Color;
+    }
+    .oj-popup-tail-simple-center-top {
+      left: 50%;
+      top: -14px;
+      border-top: 0 solid transparent;
+      border-bottom: 14px solid $border5Color;
+      border-left: 7px solid transparent; 
+      border-right: 7px solid transparent;
+    }
+    .oj-popup-tail-simple-start-middle {
+      top:50%;
+    }
+    .oj-popup-tail-simple-end-top, .oj-popup-tail-simple-end-middle, .oj-popup-tail-simple-end-bottom {
+      right: -14px;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 14px solid $border5Color;
+      border-right: 0 solid transparent;
+    }
+    .oj-popup-tail-simple-center-bottom {
+      left: 50%;
+      bottom: -14px;
+      border-top: 14px solid $border5Color;
+      border-bottom: 0 solid transparent;
+      border-left: 7px solid transparent; 
+      border-right: 7px solid transparent;
+    }
+    .oj-popup-tail-simple-end-middle {
+      top:50%;
+    }
+    .oj-popup-tail-simple-end-bottom, .oj-popup-tail-simple-start-bottom {
+      bottom: 2px;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+@import "../../utilities/oj.utilities";
+
+$includeButtonClasses:  $includeAllClasses !default;
+
+@if $includeButtonClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers";
+@import "oj.jq.icons";
+
+@import "../../common/widgets/oj.common.button"; 
+
+@if $includeButtonClasses != false {
+  @include exports("button") {
+
+    // menu buttons 
+
+    .oj-button-menu-dropdown-icon {
+    }
+
+    .oj-button-menu-dropdown-icon:before {
+      @extend .oj-fwk-icon-arrow-s:before; 
+    }
+    
+  }
+}

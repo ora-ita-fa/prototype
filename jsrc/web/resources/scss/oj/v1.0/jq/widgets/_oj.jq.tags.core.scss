@@ -1,0 +1,12 @@
+@import "../../utilities/oj.utilities";
+// todo: rename to tagsHtml instead of core?
+$includeTagsCoreClasses:  $includeTagClasses !default;
+
+
+@import "../../common/widgets/oj.common.tags.core"; 
+
+@if $includeTagsCoreClasses != false {
+  @include exports("tagscore") {
+  
+  }
+}

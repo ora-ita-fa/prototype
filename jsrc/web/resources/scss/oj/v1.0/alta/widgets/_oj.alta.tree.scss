@@ -1,0 +1,21 @@
+@import "../../utilities/oj.utilities";  
+
+$includeTreeClasses:  $includeAllClasses !default;
+
+@import "../../common/helpers/oj.common.helpers"; 
+
+// include dependencies
+@if $includeTreeClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "oj.alta.icons";
+
+
+@import "../../common/widgets/oj.common.tree";
+
+@if $includeTreeClasses != false  {
+  @include exports("tree") {
+
+  }
+}

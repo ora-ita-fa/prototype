@@ -1,0 +1,99 @@
+@import "../../utilities/oj.utilities";
+
+$includeConveyerBeltClasses:  $includeAllClasses !default;
+
+// include dependencies
+@if $includeConveyerBeltClasses != false {
+  $includeIconClasses: true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers"; 
+@import "oj.jq.icons";
+
+
+@if $includeConveyerBeltClasses != false {
+  @include exports("conveyerbelt") {
+
+    /* conveyorbelt */
+    /* --------------------------------------------------------------- */
+    .oj-conveyorbelt {
+        position: relative;
+    }
+    /* overflow indicators */
+    .oj-conveyorbelt-overflow-indicator {
+        @include oj-box-sizing-property(border-box);
+        @include ui-corner-all;
+        @include ui-state-default;
+        cursor: default;
+        text-align: center;
+    }
+    .oj-conveyorbelt-overflow-indicator.oj-hover {
+        //from .oj-button.oj-hover
+        @include ui-state-hover;
+    }
+    .oj-conveyorbelt-overflow-indicator.oj-active {
+        //from .oj-button.oj-active
+        @include ui-state-active;
+    }
+    .oj-conveyorbelt-start-overflow-indicator,
+    .oj-conveyorbelt-end-overflow-indicator,
+    .oj-conveyorbelt-top-overflow-indicator,
+    .oj-conveyorbelt-bottom-overflow-indicator {
+        //move height from .oj-conveyorbelt-button to here to separate it from 
+        //the border specified by ui-state-default, because when they're together
+        //csslint complains about them
+        width: $buttonHeight;
+        height: $buttonHeight;
+        line-height: $buttonHeight;
+    }
+    /* overflow icons */
+    //need to include .oj-conveyorbelt-overflow-indicator here to make this selector
+    //more specific than ".oj-enabled .oj-clickable-icon"
+    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-start-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-end-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-top-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-bottom-overflow-icon {
+        vertical-align:middle;
+    }
+    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-start-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-end-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-top-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-bottom-overflow-icon {
+    }
+    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-start-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-end-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-top-overflow-icon,
+    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-bottom-overflow-icon {
+    }
+
+
+    // icons
+    //------------------------------------------
+
+    .oj-conveyorbelt-start-overflow-icon:before {
+        @include oj-ltr() {
+            @extend .oj-fwk-icon-caret-w:before;
+        }
+        @include oj-rtl() {
+            @extend .oj-fwk-icon-caret-e:before;
+        }
+    }
+    .oj-conveyorbelt-end-overflow-icon:before {
+        @include oj-ltr() {
+            @extend .oj-fwk-icon-caret-e:before;
+        }
+        @include oj-rtl() {
+            @extend .oj-fwk-icon-caret-w:before;
+        }
+    }
+    .oj-conveyorbelt-top-overflow-icon:before {
+        //there is no .oj-fwk-icon-caret-n:before defined in 
+        //_oj.jq.icons.scss, because it doesn't require an offset into the 
+        //image sheet
+        //@extend .oj-fwk-icon-caret-n:before;
+    }
+    .oj-conveyorbelt-bottom-overflow-icon:before {
+        @extend .oj-fwk-icon-caret-s:before;
+    }
+  }
+}

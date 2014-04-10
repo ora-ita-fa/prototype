@@ -1,0 +1,27 @@
+@import "../../utilities/oj.utilities";
+
+
+@if $includeSelectableClasses != false {
+  @include exports("common.selectable") {
+
+
+// todo: do we need this in jet?
+
+    /* selectable */
+    /* --------------------------------------------------------------- */
+
+    .oj-selectable-helper { 
+        position: absolute; 
+        z-index: 100; 
+        border: 1px dotted black; 
+    }
+
+
+    // todo: getting rid of ui- classes jan 15 2014
+    .ui-selectable-helper { 
+        position: absolute; 
+        z-index: 100; 
+        border: 1px dotted black; 
+    }
+  }
+}

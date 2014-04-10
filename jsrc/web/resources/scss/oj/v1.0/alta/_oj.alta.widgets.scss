@@ -1,0 +1,77 @@
+
+// helpers
+@import "../common/helpers/oj.common.helpers"; 
+
+// tags
+@import "widgets/oj.alta.tags.core";
+@import "widgets/oj.alta.tags.typography";
+@import "widgets/oj.alta.tags.lists";
+
+
+// shared
+@import "widgets/oj.alta.icons";
+@import "widgets/oj.alta.resizable";
+@import "widgets/oj.alta.selectable";
+@import "widgets/oj.alta.windows";
+
+// layout
+@import "widgets/oj.alta.accordion";
+@import "widgets/oj.alta.conveyorbelt";
+@import "widgets/oj.alta.tabs";
+
+// behavior
+@import "widgets/oj.alta.progressbar";
+
+// secondary windows
+@import "widgets/oj.alta.dialog";
+@import "widgets/oj.alta.popup";
+@import "widgets/oj.alta.tooltip";
+
+// button and menu
+@import "widgets/oj.alta.menu";
+@import "widgets/oj.alta.button";
+@import "widgets/oj.alta.toolbar";
+
+// todo: move train
+@import "widgets/oj.alta.train";
+
+// data collections
+@import "widgets/oj.alta.pagingcontrol";
+@import "widgets/oj.alta.table";
+@import "widgets/oj.alta.tree";
+@import "widgets/oj.alta.datagrid";
+@import "widgets/oj.alta.rowexpander";
+
+// data visualizations
+@import "widgets/oj.alta.dvt.base";
+@import "widgets/oj.alta.dvt.chart";
+@import "widgets/oj.alta.dvt.gauge";
+@import "widgets/oj.alta.dvt.thematicmap";
+@import "widgets/oj.alta.dvt.treemap";
+@import "widgets/oj.alta.dvt.sunburst";
+
+// form controls and messaging
+@import "widgets/oj.alta.messaging";
+@import "widgets/oj.alta.formcontrol.label";
+@import "widgets/oj.alta.formcontrol.common";
+@import "widgets/oj.alta.formcontrol.inputtextarea";
+@import "widgets/oj.alta.formcontrol.inputnumber";
+@import "widgets/oj.alta.formcontrol.inputdatetime";
+@import "widgets/oj.alta.formcontrol.radiocheckbox";
+@import "widgets/oj.alta.formcontrol.listbox";
+@import "widgets/oj.alta.formcontrol.combobox";
+@import "widgets/oj.alta.formcontrol.select";
+
+// responsive
+@import "widgets/oj.alta.grid";
+@import "widgets/oj.alta.responsive.helpers";
+@import "widgets/oj.alta.formlayout";
+
+// Though the experimental version of the grid
+// is imported below, by default this outputs nothing.
+// To replace the implementation of the current grid with 
+// the EXPERIMENTAL flexbox grid set the following
+// in your settings file:
+// $include-experimental-flexbox-grid-classes: true;
+// $include-grid-classes: false;
+@import "widgets/oj.experimental.alta.flexboxgrid";

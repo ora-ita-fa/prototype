@@ -1,0 +1,115 @@
+
+$gradientDirectionWebkit: (
+    'to bottom':       'top',
+    'to top':          'bottom',
+    'to right':        'left',
+    'to left':         'right',
+    'to bottom right': 'left top',
+    'to bottom left':  'right top',
+    'to top right':    'left bottom',
+    'to top left':     'right bottom',
+);
+
+
+@mixin oj-webkit-linear-gradient($gradient) 
+{
+  $gradientDirection: null;
+
+  $gradientToStartIndex: str_index($gradient, 'to ');
+  $gradientWebkit: null;
+
+  @if ($gradientToStartIndex != null)
+  {
+
+    $gradientToEndIndex: str_index($gradient, ',');
+    $gradientDirection: str_slice($gradient, $gradientToStartIndex, $gradientToEndIndex - 1);
+
+
+    $gradientWebkit: unquote("-webkit-" + str-slice($gradient, 0, $gradientToStartIndex - 1) + 
+          map-get($gradientDirectionWebkit, $gradientDirection) + 
+          str-slice($gradient, $gradientToEndIndex));
+
+    //@debug($gradientWebkit);
+  }
+
+  // we only support prefixes that we require for our supported browsers
+  // don't use ms- prefix: http://blogs.msdn.com/b/ie/archive/2012/06/06/moving-the-stable-web-forward-in-ie10-release-preview.aspx
+  // See: http://www.css3files.com/gradient/
+  // don't need -moz-linear-gradient, that's for FF 15 and older. 
+  // don't need -webkit-gradient, use -webkit-linear-gradient
+
+  background-image: $gradientWebkit;
+
+}
+
+
+
+
+
+//*****************************************************************************
+//
+// $gradientGeneration controls gradient generation. Values are 
+//    - default: generate only the gradient value passed to the mixin
+//    - none: dont write out any gradient values at all. This will
+//            ignore the gradient passed to the mixin and won't 
+//            write out anything
+//    - slowOverride: generate the gradient passed in, but in addition 
+//            generate selectors with .oj-slow-cssgradients, see the 
+//            example below for details.
+//
+//
+// In certain browsers you may notice that by default we're not showing a  
+// gradent, even if the browser supports the css property. 
+// In browsers where we feel the performance is unacceptably slow 
+// we will put a class oj-slow-cssgradients on the html element. 
+// This is similar to what modernizr does with classes like no-cssgradients
+// on browsers that don't support gradients.
+//
+// In the CSS you may see code like this:
+//
+//  .oj-button {
+//      background
+//  }
+//  
+//  html.oj-slow-cssgradients .oj-button {
+//      background-image: none;
+//  }
+//
+// The main reason we need this is that IE has two rendering modes, 
+// GPU and software rendering mode. There is no known way for JET to 
+// detect which rendering mode is being used. Performance for  
+// gradients can be very slow in software rendering mode, 
+// and even GPU rendering has been slow in many cases. Therefore in 
+// JET the oj-slow-cssgradients class is put on the html element in all 
+// current versions of IE (at the time of this writing IE 9-11).
+//
+//*****************************************************************************
+
+$gradientGeneration: slowOverride !default;
+
+// todo: where to put this
+
+@mixin oj-background-image($bgImage)
+{
+  @if ($bgImage != null)
+  {
+    $linearIndex: str-index($bgImage, 'linear-gradient');
+
+    @if ($linearIndex != null)
+    {
+      @include oj-webkit-linear-gradient($bgImage);
+    }
+
+    @if ($linearIndex == null or $gradientGeneration != none)
+    {
+      background-image: $bgImage; 
+    }
+
+    @if ($linearIndex != null and $gradientGeneration == slowOverride)
+    {
+      html.oj-slow-cssgradients & {
+        background-image: none; 
+      }
+    }
+  }
+}

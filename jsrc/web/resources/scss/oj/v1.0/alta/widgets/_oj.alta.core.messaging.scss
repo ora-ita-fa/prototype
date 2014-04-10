@@ -1,0 +1,18 @@
+@import "../../utilities/oj.utilities";
+
+/// files with "core" in the name have 
+// selectors that may be used by multiple widgets.
+
+$includeMessagingClasses:   $includeAllClasses !default;
+
+
+@import "../../common/helpers/oj.common.helpers"; 
+
+
+@import "../../common/widgets/oj.common.core.messaging"; 
+
+@if $includeMessagingClasses != false {
+  @include exports("messaging") {
+
+  }
+}

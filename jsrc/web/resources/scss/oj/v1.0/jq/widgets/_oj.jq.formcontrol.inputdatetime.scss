@@ -1,0 +1,288 @@
+@import "../../utilities/oj.utilities";
+
+$includeInputDateTimeClasses:   $includeFormControlClasses !default;
+
+// include dependencies
+@if $includeInputDateTimeClasses != false {
+  $includeIconClasses:              true !global;
+  $includeNoteWindowClasses:        true !global;
+  $includeButtonClasses:            true !global;
+  $includeLabelClasses:             true !global;
+  $includeMessagingClasses:         true !global;
+  $includeFormControlCommonClasses: true !global;
+  $includeComboboxClasses:			true !global;
+}
+
+@import "../../common/helpers/oj.common.helpers"; 
+@import "oj.jq.icons";
+@import "oj.jq.tooltip";
+@import "oj.jq.button";
+@import "oj.jq.messaging";
+@import "oj.jq.formcontrol.label";
+@import "oj.jq.formcontrol.common";
+
+//Need to look similar to combobox, so share the CSS, add when is included
+//@import "oj.jq.formcontrol.combobox";
+
+// most of the styling for the field in common file
+@import "../../common/widgets/oj.common.formcontrol.inputdatetime";
+
+@if $includeInputDateTimeClasses != false  {
+  @include exports("inputdatetime") {
+
+    /* Class for the root node that contains the floating calendar */
+    .oj-datepicker-content 
+    {
+      @include ui-widget-content;
+      @include ui-corner-all;
+      // explicitly set box sizing when width and padding used together;
+      box-sizing: content-box;
+      display: none;
+      padding: .2em .2em 0;
+
+      width: $formControlMediumMaxWidth;
+      @include oj-rtl()
+      {
+        direction: rtl;
+      }
+    }
+
+    .oj-datepicker-header 
+    {
+      @include ui-widget-header;
+      @include ui-corner-all;
+      position: relative;
+      padding: .2em 0;
+    }
+    .oj-datepicker-prev-icon,
+    .oj-datepicker-next-icon 
+    {
+      position: absolute;
+      top: 2px;
+      @include ui-corner-all;
+    }
+    .oj-datepicker-prev-icon 
+    {
+      @include oj-ltr()
+      {
+        left: 2px;
+      }
+      @include oj-rtl()
+      {
+        right: 2px;
+      }
+    }
+    .oj-datepicker-next-icon 
+    {
+      @include oj-ltr()
+      {
+        right: 2px;
+      }
+      @include oj-rtl()
+      {
+        left: 2px;
+      }
+    }
+    .oj-datepicker-prev-icon.oj-hover, 
+    .oj-datepicker-next-icon.oj-hover 
+    {
+      @include ui-state-hover;
+    }
+	
+    .oj-datepicker-title 
+    {
+      margin: 0 2.3em;
+      line-height: 1.8em;
+      text-align: center;
+    }
+    .oj-datepicker-title select 
+    {
+      font-size: 1em;
+      margin: 1px 0;
+    }
+    .oj-datepicker-month-year 
+    {
+      width: 100%;
+    }
+    .oj-datepicker-month,
+    .oj-datepicker-year 
+    {
+      width: 49%;
+      min-width: 0;
+    }
+    .oj-datepicker-calendar 
+    {
+      width: 100%;
+      font-size: .9em;
+      border-collapse: collapse;
+      margin: 0 0 .4em;
+      outline: 0 none;
+    }
+    .oj-datepicker-calendar th 
+    {
+      padding: .7em .3em;
+      text-align: center;
+      font-weight: bold;
+      border: 0;
+    }
+    .oj-datepicker-calendar td 
+    {
+      border: 0;
+      padding: 1px;
+    }
+    .oj-datepicker-calendar td span,
+    .oj-datepicker-calendar td a 
+    {
+      display: block;
+      padding: .2em;
+      text-align: right;
+    }
+
+    .oj-datepicker-calendar td a.oj-enabled 
+    {
+      @include ui-state-default;
+    }
+    .oj-datepicker-calendar td a.oj-hover 
+    {
+      @include ui-state-hover;
+    }
+    .oj-datepicker-calendar td a.oj-active 
+    {
+      @include ui-state-active;
+    }
+    .oj-datepicker-calendar td a.oj-selected 
+    {
+      @include ui-state-highlight;
+    }
+
+    .oj-datepicker-buttonpane 
+    {
+      @include oj-box-sizing-property(border-box);
+      
+      background-image: none;
+      margin: .7em 0 0 0;
+      padding: 0 .2em;
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 0;
+      display: inline-block;
+      width: 100%;
+      @include oj-rtl()
+      { 
+        clear: right; 
+      }
+    }
+    .oj-datepicker-buttonpane button
+    {
+      margin: .5em .2em .4em;
+      padding: .2em .6em .3em .6em;
+      width: auto;
+      overflow: visible;
+    }
+
+    .oj-datepicker-buttonpane .oj-datepicker-current 
+    {
+      @include ui-priority-secondary;
+      
+      @include oj-bidi-property($property: 'float', $startOrEnd: start);
+    }
+    .oj-datepicker-buttonpane .oj-datepicker-close 
+    {
+      @include ui-priority-primary;
+
+      @include oj-bidi-property($property: 'float', $startOrEnd: end);
+    }
+
+    /* with multiple calendars */
+    .oj-datepicker-content.oj-datepicker-multi 
+    {
+      width: auto;
+    }
+    .oj-datepicker-multi .oj-datepicker-group 
+    {
+      @include oj-bidi-property($property: 'float', $startOrEnd: start);
+    }
+    .oj-datepicker-multi .oj-datepicker-group table 
+    {
+      width: 95%;
+      margin: 0 auto .4em;
+    }
+    .oj-datepicker-multi-2 .oj-datepicker-group 
+    {
+      width: 50%;
+    }
+    .oj-datepicker-multi-3 .oj-datepicker-group 
+    {
+      width: 33.3%;
+    }
+    .oj-datepicker-multi-4 .oj-datepicker-group 
+    {
+      width: 25%;
+    }
+    .oj-datepicker-multi .oj-datepicker-group-last .oj-datepicker-header,
+    .oj-datepicker-multi .oj-datepicker-group-middle .oj-datepicker-header 
+    {
+      @include oj-ltr()
+      {
+        border-left-width: 0;
+      }
+      @include oj-rtl()
+      {
+        border-right-width: 0; 
+      }
+    }
+    .oj-datepicker-multi .oj-datepicker-buttonpane 
+    {
+      clear: left;
+    }
+    .oj-datepicker-row-break 
+    {
+      clear: both;
+      width: 100%;
+      font-size: 0;
+    }
+
+    .oj-datepicker-unselectable 
+    {
+      opacity: 0.35;
+    }
+
+    .oj-datepicker-days-cell-over 
+    {
+      outline: 1px dotted #145c9e;
+    }
+
+    .oj-datepicker-inline 
+    {
+      margin-bottom: 6px;
+    }
+	
+    // icons
+    //------------------------------------------
+    .oj-datepicker-prev-icon:before 
+    {
+      @include oj-ltr()
+      {
+        @include ui-icon-circle-triangle-w;
+      }
+
+      @include oj-rtl()
+      {
+        @include ui-icon-circle-triangle-e;
+      }
+    }
+
+    .oj-datepicker-next-icon:before 
+    {
+      @include oj-ltr()
+      {
+        @include ui-icon-circle-triangle-e;
+      }
+      @include oj-rtl()
+      {
+        @include ui-icon-circle-triangle-w;
+      }
+    }
+
+  }
+}

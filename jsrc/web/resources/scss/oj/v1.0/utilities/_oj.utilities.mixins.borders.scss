@@ -1,0 +1,125 @@
+
+@import "oj.utilities.mixins.bidi";
+
+
+//*****************************************************************************
+//
+// $borderRadiusGeneration controls border radius generation. Values are 
+//    - default: generate only the border radius value passed to the mixin
+//    - none: dont write out any border radius values at all. This will
+//            ignore the border radius passed to the mixin and won't 
+//            write out anything
+//    - slowOverride: generate the border radius passed in, but in addition 
+//            generate selectors with .oj-slow-borderradius, see the 
+//            example below for details.
+//
+//
+// In certain browsers you may notice that by default we're not showing a  
+// border-radius, even if the browser supports the css property. 
+// In browsers where we feel the performance is unacceptably slow 
+// we will put a class oj-slow-borderradius on the html element. 
+// This is similar to what modernizr does with classes like no-borderradius
+// browsers that don't support border radius.
+//
+// In the CSS you may see code like this:
+//
+//  .oj-button {
+//      border-radius: 2px;
+//  }
+//  
+//  html.oj-slow-borderradius .oj-button {
+//      border-radius: 0;
+//  }
+//
+// The main reason we need this is that IE has two rendering modes, 
+// GPU and software rendering mode. There is no known way for JET to 
+// detect which rendering mode is being used. Performance for  
+// border radius can be very slow in software rendering mode, 
+// and even GPU rendering has been slow in many cases. Therefore in 
+// JET the oj-slow-borderradius class is put on the html element in all 
+// current versions of IE (at the time of this writing IE 9-11).
+//
+//*****************************************************************************
+
+$borderRadiusGeneration: slowOverride !default;
+
+
+//*****************************************************************************
+//
+// Usage Example:
+//
+//      .oj-foo .oj-binky {
+//       
+//        @include oj-border-radius(0 $buttonBorderRadius $buttonBorderRadius 0);
+//      }
+//
+//  Usage in conjunction with rtl below. 
+//
+//      .oj-foo .oj-binky {
+//       
+//        @include oj-border-radius($buttonBorderRadius, $textDirection: ltr);
+//        @include oj-border-radius($buttonBorderRadius, $textDirection: rtl); 
+//
+//        @include oj-ltr() {
+//          border-right:0;
+//        }
+//        @include oj-rtl() {
+//          border-left:0;
+//        }
+//      }
+//*****************************************************************************
+
+@mixin oj-border-radius-property ($borderRadiusProperty, $borderRadiusValue, $textDirection:null)
+{
+  @if ($borderRadiusGeneration != none)
+  {
+    @if ($textDirection == ltr)
+    {
+      @include oj-ltr() {
+        #{$borderRadiusProperty}: $borderRadiusValue;
+      }
+    }
+    @else if ($textDirection == rtl)
+    {
+      @include oj-rtl() {
+        #{$borderRadiusProperty}: $borderRadiusValue;
+      }
+    }
+    @else {
+      #{$borderRadiusProperty}: $borderRadiusValue;
+    }
+
+    @if ($borderRadiusGeneration == slowOverride) {
+      html.oj-slow-borderradius & {
+        #{$borderRadiusProperty}: 0;
+      }
+    }
+  }
+}
+
+
+
+@mixin oj-border-radius ($borderRadiusValue, $textDirection:null)
+{
+  @include oj-border-radius-property("border-radius", $borderRadiusValue, $textDirection)
+}
+
+@mixin oj-border-top-left-radius ($borderRadiusValue, $textDirection:null)
+{
+  @include oj-border-radius-property("border-top-left-radius", $borderRadiusValue, $textDirection)
+}
+
+@mixin oj-border-top-right-radius ($borderRadiusValue, $textDirection:null)
+{
+  @include oj-border-radius-property("border-top-right-radius", $borderRadiusValue, $textDirection)
+}
+
+@mixin oj-border-bottom-left-radius ($borderRadiusValue, $textDirection:null)
+{
+  @include oj-border-radius-property("border-bottom-left-radius", $borderRadiusValue, $textDirection)
+}
+
+@mixin oj-border-bottom-right-radius ($borderRadiusValue, $textDirection:null)
+{
+  @include oj-border-radius-property("border-bottom-right-radius", $borderRadiusValue, $textDirection)
+}

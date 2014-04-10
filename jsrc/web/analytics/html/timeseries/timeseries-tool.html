@@ -1,0 +1,27 @@
+<div class="timeseries-tool">
+    <h3 class="header" data-bind="text: title">
+    </h3>
+    <div class="main">
+        <div class="rollup-table" 
+             data-bind="
+            itaComponent:{
+                component:'rollup-table',
+                rollupDrilldown:handleRollupDrilldown     
+            }">
+        </div>
+
+        <div class="chart" 
+             data-bind="
+            ojComponent: {
+                component: 'ojChart', 
+                type: chartType, 
+                selection: 'multiple', 
+                series: lineSeriesValue, 
+                groups: lineGroupsValue, 
+                animationOnDisplay: 'auto',
+                animationOnDataChange: 'auto',
+                orientation: 'vertical'
+            }">
+        </div>
+    </div>
+</div>
