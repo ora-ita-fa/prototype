@@ -11,17 +11,25 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
     $(function() {
         $.get("/db_resource_planner/data/sample-qdg-db.json", function(resp) {
 
+            var DAY = 24 * 60 * 60 * 1000;
             var nowStamp = new Date();
+            /**
+             * Here is a model that the 'time-slider region' will accept.
+             * The parameters are observable so that position of the sliding block  
+             *   will be redraw after changing the start or end time.
+             * Also the time-slider provides the event listener 'viewRangeChange'
+             *   so that we can get the signal to reset the dsg(or qdg) of the 'timeseries-tool'
+             */
             var timeSliderVM = {
-                totalStart: ko.observable(new Date(nowStamp - 40 * 24 * 60 * 60 * 1000)),
+                totalStart: ko.observable(new Date(nowStamp - 40 * DAY)),
                 totalEnd: ko.observable(nowStamp),
-                viewStart: ko.observable(new Date(nowStamp - 30 * 24 * 60 * 60 * 1000)),
-                viewEnd: ko.observable(new Date(nowStamp - 10 * 24 * 60 * 60 * 1000)),
+                viewStart: ko.observable(new Date(nowStamp - 30 * DAY)),
+                viewEnd: ko.observable(new Date(nowStamp - 10 * DAY)),
                 viewRangeChange: handleTimeChange
             };
 
             function generateGroupWithinTime(startTime, endTime) {
-                var DAY = 24 * 60 * 60 * 1000;
+
                 var groups = [];
                 for (var timeCur = Math.floor(startTime.getTime() / DAY) * DAY;
                         timeCur < endTime.getTime();
@@ -41,14 +49,24 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
 
             var qdgSample = resp;
 
+            /**
+             * The qdg can be returned by sending any ajax request as long as 
+             *   it responses in the format of qdg json.
+             * Or, even they can manually write a qdg in their js code.
+             * 
+             * When the 'region' of 'timeseries-tool' recognizes a qdg parameter is set,
+             *   it will send an ajax request to get the dsg.
+             */
             var _qdg1 = qdgSample;
-            _qdg1.identity = "Avg Active Cores";
 
-
+            /**
+             * Also they can provide a dsg instead of a qdg if they prefer.
+             */
             var _dsg1 = {
                 groups: ko.observableArray(),
                 series: ko.observableArray()
             };
+
 
             ko.applyBindings({
                 qdg1: _qdg1,
@@ -57,7 +75,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
 
 
             var _qdg2 = qdgSample;
-            _qdg2.identity = "Global Cache Busy";
 
             var _dsg2 = {
                 groups: ko.observableArray(),
@@ -102,6 +119,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
              * reset the groups and series each time the slider finishes a slide
              */
             function handleTimeChange() {
+                // here we just generate the dsg in this demo
                 resetDsg(_dsg1);
                 resetDsg(_dsg2);
                 resetDsg(_dsg3);

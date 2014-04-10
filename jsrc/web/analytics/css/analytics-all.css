@@ -153,7 +153,7 @@ and open the template in the editor.
 
 .total-start-selector > div, .total-end-selector > div {
   width: auto;
-  min-width: auto; }
+  min-width: initial; }
 
 /*
 To change this license header, choose License Headers in Project Properties.

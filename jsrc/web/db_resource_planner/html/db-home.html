@@ -24,6 +24,12 @@ and open the template in the editor.
                 height: 250px;
                 margin: 10px;
             }
+            
+            #global-time-slider {
+                height:85px;
+                width:90%;
+                padding:20px;
+            }
         </style>
     </head>
     <body>
@@ -42,47 +48,64 @@ and open the template in the editor.
                  viewEnd: viewEnd,
                  viewRangeChange: viewRangeChange
              }
-             " style="height:85px;width:90%;padding:20px;"></div>
+             "></div>
 
         <div class="chart-container">
             <div>
                 <h3>Avg Active Cores</h3>
+                
+                <!--
+                Below is a knockout data-bind. It plays a role of ADF region.
+                itaComponent: { component: 'timeseries-tool', ... } 
+                  means we are going to include a region named 'timeseries-tool'
+                -->
                 <div data-bind="
-             itaComponent: {
-                 component: 'timeseries-tool',
-                 queryDescriptorGroup: qdg1,
-                 datasetGroup: dsg1
-             }
+                        itaComponent: {
+                            component: 'timeseries-tool', 
+                            queryDescriptorGroup: qdg1,
+                            datasetGroup: dsg1
+                            /* or any other parameters the region would accept */
+                        }
                      "></div> 
+                <!--
+                The style of including a 'region' is like how we bind a JET component
+                
+                <div data-bind="
+                    ojComponent: {
+                        component: 'ojTree', 
+                        data: treedata}
+                ">
+               </div>
+                -->
             </div>
             <div>
                 <h3>Global Cache Busy</h3>
                 <div data-bind="
-             itaComponent: {
-                 component: 'timeseries-tool',
-                 queryDescriptorGroup: qdg2,
-                 datasetGroup: dsg2
-             }
+                        itaComponent: {
+                            component: 'timeseries-tool',
+                            queryDescriptorGroup: qdg2,
+                            datasetGroup: dsg2
+                        }
                      "></div>
             </div>
             <div>
                 <h3>I/O per second</h3>
                 <div data-bind="
-             itaComponent: {
-                 component: 'timeseries-tool',
-                 queryDescriptorGroup: qdg3,
-                 datasetGroup: dsg3
-             }
+                        itaComponent: {
+                            component: 'timeseries-tool',
+                            queryDescriptorGroup: qdg3,
+                            datasetGroup: dsg3
+                        }
                      "></div>
             </div>
             <div>
                 <h3>...</h3>
                 <div data-bind="
-             itaComponent: {
-                 component: 'timeseries-tool',
-                 queryDescriptorGroup: qdg4,
-                 datasetGroup: dsg4
-             }
+                        itaComponent: {
+                            component: 'timeseries-tool',
+                            queryDescriptorGroup: qdg4,
+                            datasetGroup: dsg4
+                        }
                      "></div>
             </div>
         </div>
