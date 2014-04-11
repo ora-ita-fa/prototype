@@ -47,6 +47,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
                 return points;
             }
 
+            /**
+             * The demo qdg instance is from an ajax response.
+             */
             var qdgSample = resp;
 
             /**
@@ -125,6 +128,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
                 resetDsg(_dsg3);
                 resetDsg(_dsg4);
             }
+
             handleTimeChange();
 
             function resetDsg(dsg) {
