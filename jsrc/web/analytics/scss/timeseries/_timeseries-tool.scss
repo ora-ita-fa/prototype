@@ -9,8 +9,10 @@ and open the template in the editor.
 */
 
 .timeseries-tool {    
+    height: 100%;
 
     .main {
+        height: inherit;
 
         .rollup-table {
             height: 100%;

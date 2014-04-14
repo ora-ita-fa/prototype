@@ -15,6 +15,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
             var qdg = valueAccessor().queryDescriptorGroup;
             var dsg = valueAccessor().datasetGroup;
+            var rangeMask = valueAccessor().rangeMask;
 
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
 
@@ -23,6 +24,28 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 if (dsg && dsg.groups && dsg.series) {
                     demoChart.lineSeriesValue = dsg.series;
                     demoChart.lineGroupsValue = dsg.groups;
+                }
+                if (rangeMask && rangeMask.subscribe && typeof rangeMask.subscribe === 'function') {
+                    rangeMask.subscribe(function(newVal) {
+                        var constantAreaX = {
+                            referenceObjects: [
+                                {
+                                    text: 'Reference Object', 
+                                    type: 'area',
+                                    min: newVal.start, 
+                                    max: newVal.end, 
+                                    color: '#80A0CEEC', 
+                                    displayInLegend: 'on',
+                                    location: 'back'
+                                }
+                            ]
+                        };
+                        demoChart.xAxisData(constantAreaX);
+                        console.log(demoChart.xAxisData());
+//                        var axisInfo = ko.toJS(demoChart.xAxisData);
+//                        console.log(axisInfo);
+//                        demoChart.xAxisData(axisInfo);
+                    });
                 }
                 
                 var chartType = "line";

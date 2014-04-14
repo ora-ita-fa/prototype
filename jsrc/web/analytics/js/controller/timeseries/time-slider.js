@@ -36,33 +36,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                                     vm.viewEnd(new Date(newEnd));
                                 }
                             },
-                            slide: function() {
-                                // draw the canvas
-//                                var $sliderHandleLeft = $(".ui-slider-handle:eq(0)");
-//                                var $sliderHandleRight = $(".ui-slider-handle:eq(1)");
-
-                                var $topLine = $("svg:first line[y2=0]");
-                                var $bottomLine = $("svg:first line:first");
-                                if(!this.canvas) {
-                                    var canvasHTML = "<canvas id='myCanvas' height='{height}' width='{width}' style='position:absolute;left:0;top:0;width:100%;hegith:100%;'></canvas>";
-                                    $("body").append(canvasHTML.replace('{height}', $('body').height()).replace('{width}', $('body').width()));
-                                    this.canvas = document.getElementById("myCanvas");
-                                } 
-                                var context = this.canvas.getContext("2d");
-                                context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                                
-                                context.beginPath();
-                                
-                                var start = $topLine.offset();
-                                var width = $topLine.attr("x2") - $topLine.attr("x1");
-                                var height = $bottomLine.offset().top - start.top;
-                                
-                                context.rect(start.left,start.top,width,height);
-                                    
-                                context.closePath();
-                                context.fillStyle = "rgba(0,0,0,0.05)";
-                                context.fill();
-                                context.stroke();
+                            slide: function(event, ui) {
+                                if (vm.slide && typeof vm.slide === 'function') {
+                                    vm.slide(new Date(ui.values[0]), new Date(ui.values[1]));
+                                }
                             }
                         });
 

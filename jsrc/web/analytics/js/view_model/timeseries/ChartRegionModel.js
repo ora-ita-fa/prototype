@@ -13,10 +13,12 @@ define(['knockout'], function(ko) {
             {name: "Series 3", items: [34, 22, 30, 32, 26]},
             {name: "Series 4", items: [18, 6, 14, 22, 10]},
             {name: "Series 5", items: [3, 2, 3, 3, 2]}];
-        var lineGroups =[new Date(2014,2,4), new Date(2014,2,11), new Date(2014,2,18), new Date(2014,2,25), new Date(2014,3,1), new Date(2014,3,8)];
+        var lineGroups = [new Date(2014, 2, 4), new Date(2014, 2, 11), new Date(2014, 2, 18), new Date(2014, 2, 25), new Date(2014, 3, 1), new Date(2014, 3, 8)];
         this.lineSeriesValue = ko.observableArray(lineSeries);
         this.lineGroupsValue = ko.observableArray(lineGroups);
         this.chartType = ko.observable('line');
+        this.xAxisData = ko.observable({});
+        this.yAxisData = ko.observable({});
     }
 
     return ChartRegionModel;

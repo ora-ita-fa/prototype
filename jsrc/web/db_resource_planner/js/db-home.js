@@ -25,7 +25,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
                 totalEnd: ko.observable(nowStamp),
                 viewStart: ko.observable(new Date(nowStamp - 30 * DAY)),
                 viewEnd: ko.observable(new Date(nowStamp - 10 * DAY)),
-                viewRangeChange: handleTimeChange
+                viewRangeChange: handleTimeChange,
+                slide: maskChart
             };
 
             function generateGroupWithinTime(startTime, endTime) {
@@ -70,12 +71,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
                 series: ko.observableArray()
             };
 
+            var rangeMask = ko.observable();
 
             ko.applyBindings({
                 qdg1: _qdg1,
-                dsg1: _dsg1
+                dsg1: _dsg1,
+                rangeMask: rangeMask
             }, $(".chart-container>div")[0]);
-
 
             var _qdg2 = qdgSample;
 
@@ -123,12 +125,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
              */
             function handleTimeChange() {
                 // here we just generate the dsg in this demo
-                resetDsg(_dsg1);
+                
                 resetDsg(_dsg2);
                 resetDsg(_dsg3);
                 resetDsg(_dsg4);
             }
-
+            
+            resetDsg(_dsg1);
             handleTimeChange();
 
             function resetDsg(dsg) {
@@ -139,6 +142,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
                         name: 'series1',
                         items: points
                     }]);
+            }
+            
+            function maskChart(startTime, endTime) {
+                rangeMask({
+                    start: startTime,
+                    end: endTime
+                });
             }
 
             ko.applyBindings(timeSliderVM, $("#global-time-slider")[0]);

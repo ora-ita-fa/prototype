@@ -20,9 +20,12 @@ and open the template in the editor.
         <style>
             body > .chart-container > div  {
                 display: inline-block;
+                margin: 10px;
+            }
+            
+            body > .chart-container > div > div {
                 width: 750px;
                 height: 250px;
-                margin: 10px;
             }
             
             #global-time-slider {
@@ -46,7 +49,8 @@ and open the template in the editor.
                  totalEnd: totalEnd,
                  viewStart: viewStart,
                  viewEnd: viewEnd,
-                 viewRangeChange: viewRangeChange
+                 viewRangeChange: viewRangeChange,
+                 slide: slide
              }
              "></div>
 
@@ -63,7 +67,8 @@ and open the template in the editor.
                         itaComponent: {
                             component: 'timeseries-tool', 
                             queryDescriptorGroup: qdg1,
-                            datasetGroup: dsg1
+                            datasetGroup: dsg1,
+                            rangeMask: rangeMask
                             /* or any other parameters the region would accept */
                         }
                      "></div> 
