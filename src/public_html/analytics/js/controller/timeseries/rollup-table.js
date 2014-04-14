@@ -5,8 +5,9 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita) {
-
+define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 
+    '/analytics/js/view_model/timeseries/ChartRegionModel.js',
+    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita, ChartRegionModel) {
 
     ita.registerTool({
         name: 'rollup-table',

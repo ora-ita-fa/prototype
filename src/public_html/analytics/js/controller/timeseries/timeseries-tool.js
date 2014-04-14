@@ -5,28 +5,19 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 
-    '/analytics/js/controller/timeseries/rollup-table.js'], function(oj, ko, $, ita) {
+define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 
+    '/analytics/js/view_model/timeseries/ChartRegionModel.js',
+    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 
+    '/analytics/js/controller/timeseries/rollup-table.js'], function(oj, ko, $, ita, ChartRegionModel) {
+    
     ita.registerTool({
         name: 'timeseries-tool',
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
             var qdg = valueAccessor().queryDescriptorGroup;
 
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
-                function DemoChartModel() {
-                    /* chart data */
-                    var lineSeries = [{name: "Series 1", items: [74, 62, 70, 76, 66]},
-                        {name: "Series 2", items: [50, 38, 46, 54, 42]},
-                        {name: "Series 3", items: [34, 22, 30, 32, 26]},
-                        {name: "Series 4", items: [18, 6, 14, 22, 10]},
-                        {name: "Series 5", items: [3, 2, 3, 3, 2]}];
-                    var lineGroups = ["Group A", "Group B", "Group C", "Group D", "Group E"];
-                    this.lineSeriesValue = ko.observableArray(lineSeries);
-                    this.lineGroupsValue = ko.observableArray(lineGroups);
-                    this.chartType = ko.observable('line');
-                }
 
-                var demoChart = new DemoChartModel();
+                var demoChart = new ChartRegionModel();
                 var chartType = "line";
                 try {
                     chartType = qdg.Parameters.FAUICONFIG.chartType;
