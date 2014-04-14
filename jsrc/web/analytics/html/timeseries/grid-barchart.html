@@ -1,0 +1,67 @@
+<div id="datagrid" style="width:670px;height:500px"
+     data-bind="ojComponent:
+     {
+        component:'ojDataGrid', 
+        data: dataSource, 
+        selectionMode:{row:'single'}, 
+        header:
+        {
+            row: 
+            {
+                style: 'height:200px'
+            },
+            column:
+            {
+                style: 'width:200px;text-align:center'
+            }   
+        },
+        cell:
+        {
+            template:'bar_template'
+        }
+    }">
+</div>
+
+<script type="text/html" id="pie_template">
+    <div data-bind="
+        ojComponent: {
+            component: 'ojChart', 
+            type: 'pie',  
+            series: [{name: 'Male', items: [male]}, 
+                {name: 'Female', items: [female]}]
+        }" 
+         style="width:200px;height:200px">
+    </div>
+</script>
+
+
+<script type="text/html" id="bar_template">
+    <div data-bind="ojComponent: {
+            component: 'ojChart',     
+            type: 'bar',
+            series: series, 
+            groups: groups, 
+            animationOnDisplay: 'auto',
+            animationOnDataChange: 'auto',
+            timeAxisType: 'enabled',
+            legend: {rendered: 'off'},
+            title: {text: 'Regula Time Axis', hAlign: 'center'}
+    }"
+         style="width:200px;height:200px">
+    </div>
+</script>
+<div id='chart-container'>
+    <div data-bind="ojComponent: {
+        component: 'ojChart',     
+        type: 'bar',
+            series: regularSeriesValue, 
+            groups: regularGroupsValue, 
+            animationOnDisplay: 'auto',
+            animationOnDataChange: 'auto',
+            timeAxisType: 'enabled',
+            legend: {rendered: 'off'},
+            title: {text: 'Regular Time Axis', hAlign: 'center'}
+    }"
+         style="width:200px;height:200px">
+    </div>
+</div>
