@@ -23,7 +23,7 @@
 </div>
 
 <script type="text/html" id="pie_template">
-    <div data-bind="
+    <div style="background-color:  #DFE4E7" data-bind="
         ojComponent: {
             component: 'ojChart', 
             type: 'pie',  
@@ -37,7 +37,9 @@
 
 <script type="text/html" id="bar_template">
     <div data-bind="ojComponent: {
-            component: 'ojChart',     
+            component: 'ojChart',
+            xAxis:x_axis,
+            yAxis:y_axis,
             type: 'bar',
             series: series, 
             groups: groups, 
@@ -45,23 +47,8 @@
             animationOnDataChange: 'auto',
             timeAxisType: 'enabled',
             legend: {rendered: 'off'},
-            title: {text: 'Regula Time Axis', hAlign: 'center'}
+            title: {text: '', hAlign: 'center'}
     }"
          style="width:200px;height:200px">
     </div>
 </script>
-<div id='chart-container'>
-    <div data-bind="ojComponent: {
-        component: 'ojChart',     
-        type: 'bar',
-            series: regularSeriesValue, 
-            groups: regularGroupsValue, 
-            animationOnDisplay: 'auto',
-            animationOnDataChange: 'auto',
-            timeAxisType: 'enabled',
-            legend: {rendered: 'off'},
-            title: {text: 'Regular Time Axis', hAlign: 'center'}
-    }"
-         style="width:200px;height:200px">
-    </div>
-</div>
