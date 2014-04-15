@@ -71,12 +71,12 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
                 series: ko.observableArray()
             };
 
-            var rangeMask = ko.observable();
+            var timeWindow = ko.observable();
 
             ko.applyBindings({
                 qdg1: _qdg1,
                 dsg1: _dsg1,
-                rangeMask: rangeMask
+                timeWindow: timeWindow
             }, $(".chart-container>div")[0]);
 
             var _qdg2 = qdgSample;
@@ -145,7 +145,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
             }
             
             function maskChart(startTime, endTime) {
-                rangeMask({
+                timeWindow({
                     start: startTime,
                     end: endTime
                 });
