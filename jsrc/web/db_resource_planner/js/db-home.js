@@ -16,7 +16,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
             /**
              * Here is a model that the 'time-slider region' will accept.
              * The parameters are observable so that position of the sliding block  
-             *   will be redraw after changing the start or end time.
+             *   will be redrawn after changing the start or end time.
              * Also the time-slider provides the event listener 'viewRangeChange'
              *   so that we can get the signal to reset the dsg(or qdg) of the 'timeseries-tool'
              */

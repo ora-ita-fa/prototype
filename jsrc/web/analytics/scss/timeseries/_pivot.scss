@@ -1,0 +1,42 @@
+/* 
+    Document   : pivot
+    Created on : 2014-3-10, 17:01:48
+    Author     : danfjian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.pivot-header{
+    background-color: rgb(240, 244, 250);
+    table-layout: fixed;
+    position: relative;
+}
+.pivot-header-cell{
+    border-width: 1px;
+    border-style: solid;
+    border-color: #D6DFE6;
+    border-top: none;
+    border-left: none;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 4px;
+    padding-right: 4px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: bottom;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    background-color: transparent;
+}
+
+.pivot-header tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.pivot-header tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
