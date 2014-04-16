@@ -11,14 +11,17 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
     ita.registerTool({
         name: 'pivot-table',
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-            
+
             function drawDim(dims) {
                 $.get('/analytics/html/timeseries/pivot-table.html', function(resp) {
                     var $pivotTable = $(resp);
                     $(element).append($pivotTable);
                     var dimsWithComputedSpan = computeSpan(dims);
+                    var verticalTable = toVerticalTableLayout(dimsWithComputedSpan);
+                    console.log(verticalTable);
                     ko.applyBindings({
-                        dims: dimsWithComputedSpan
+                        dims: dimsWithComputedSpan,
+                        verticalHeader: verticalTable
                     }, $pivotTable[0]);
                 });
             }
@@ -41,7 +44,40 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 return dims;
             }
 
-            $.getJSON('/analytics/data/timeseries/data_structure.json', function(resp) {
+            function toVerticalTableLayout(dimsWithColspan) {
+                var table = null;
+                for (var i = 0; i < dimsWithColspan.length; i++) {
+                    var dim = dimsWithColspan[i];
+                    var attrArr = alignDimAttr2Arr(dim);
+                    for (var j = 0; j < attrArr.length; j++) {
+                        if (!table) {
+                            table = new Array(attrArr.length);
+                        }
+                        if (!table[j]) {
+                            table[j] = new Array(dimsWithColspan.length);
+                        }
+                        table[j][i] = attrArr[j];
+                    }
+                }
+                return table;
+            }
+
+            function alignDimAttr2Arr(dim) {
+                var trs = [];
+                for (var i = 0; i < dim.repeat; i++) {
+                    for (var j = 0; j < dim.attrs.length; j++) {
+                        var attr = dim.attrs[j];
+                        attr.dim = dim;
+                        trs.push(attr);
+                        for (var k = 1; k < dim.span; k++) {
+                            trs.push(null);
+                        }
+                    }
+                }
+                return trs;
+            }
+
+            $.getJSON('/analytics/data/timeseries/pivot-dimension.json', function(resp) {
                 drawDim(resp.x);
             });
         }

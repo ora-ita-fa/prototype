@@ -1,16 +1,35 @@
-<table class='pivot-header'>
-    <tbody data-bind="foreach: {data:dims,as:'dim'}">
-        <tr data-bind="foreach: {data:attrs,as:'attr'}">
-            <!-- ko foreach: new Array(dim.repeat) -->
-            <td class='pivot-header-cell' data-bind="
-                attr: {
-                    'data-value': attr.value,
-                    'colspan': dim.span        
-                },
-                text: attr.text
-                ">
-            </td>
-            <!-- /ko -->
-        </tr>
-    </tbody>
-</table>
+<div>
+
+    <table class='pivot-header'>
+        <tbody data-bind="foreach: {data: dims, as: 'dim'}">
+            <tr data-bind="foreach: new Array(dim.repeat)">
+                <!-- ko foreach: {data: dim.attrs, as: 'attr'} -->
+                <td class='pivot-header-cell' 
+                    data-bind="
+                        attr: {
+                            'data-value': attr.value,
+                            'colspan': dim.span        
+                        },
+                        text: attr.text">
+                </td>
+                <!-- /ko -->
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="pivot-header">
+        <tbody data-bind="foreach: {data: verticalHeader, as: 'row'}">
+            <tr data-bind="foreach: {data: row, as: 'attr'}">
+                <!-- ko if: attr -->
+                <td class='pivot-header-cell' 
+                    data-bind="
+                        text: attr.text,
+                        attr: {
+                            rowspan: attr.dim.span
+                        }"></td>
+                <!-- /ko -->
+            </tr>
+        </tbody>
+    </table>
+
+</div>

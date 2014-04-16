@@ -15,6 +15,25 @@
             ]
         },
         {
+            "key": "time",
+            "text": "Time",
+            "attrs": [
+                {
+                    "text": "2007",
+                    "value": 2007
+                },
+                {
+                    "text": "2008",
+                    "value": 2008
+                }
+            ],
+            "aggrs": [
+                {
+                    "text": "Time Total",
+                    "func": "sum"
+                }
+            ]
+        }, {
             "key": "chanel",
             "text": "Channel",
             "attrs": [
@@ -26,6 +45,26 @@
             "aggrs": [
                 {
                     "text": "Channel Total",
+                    "func": "sum"
+                }
+            ]
+        },
+        {
+            "key": "product",
+            "text": "Product",
+            "attrs": [
+                {
+                    "text": "Tents",
+                    "value": "Tents"
+                },
+                {
+                    "text": "Canoes",
+                    "value": "Canoes"
+                }
+            ],
+            "aggrs": [
+                {
+                    "text": "Product Total",
                     "func": "sum"
                 }
             ]
@@ -53,21 +92,17 @@
     ],
     "y": [
         {
-            "key": "time",
-            "text": "Time",
+            "key": "chanel",
+            "text": "Channel",
             "attrs": [
                 {
-                    "text": "2007",
-                    "value": 2007
-                },
-                {
-                    "text": "2008",
-                    "value": 2008
+                    "text": "All Channels",
+                    "value": "All Channels"
                 }
             ],
             "aggrs": [
                 {
-                    "text": "Time Total",
+                    "text": "Channel Total",
                     "func": "sum"
                 }
             ]
