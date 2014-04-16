@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Pivot table sample</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/resources/css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="/resources/css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
+        <link rel="stylesheet" href="/analytics/css/analytics-all.css">
+        <link rel="stylesheet" href="/flex_analyzer/css/fa-all.css">
+        <script src="/resources/js/libs/require/require.js"></script>
+        <script src="/resources/js/main.js"></script>
+        <script>
+            require(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
+                '/analytics/js/controller/timeseries/pivot-table.js'],
+                    function(oj, ko, $) {
+                        $(function() {
+                            ko.applyBindings(null, $('div')[0]);
+                        });
+                    });
+        </script>
+    </head>
+    <body>
+        <div data-bind="itaComponent: {
+                component: 'pivot-table'}"></div>
+    </body>
+</html>

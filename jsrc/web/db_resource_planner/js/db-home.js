@@ -16,7 +16,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
             /**
              * Here is a model that the 'time-slider region' will accept.
              * The parameters are observable so that position of the sliding block  
-             *   will be redraw after changing the start or end time.
+             *   will be redrawn after changing the start or end time.
              * Also the time-slider provides the event listener 'viewRangeChange'
              *   so that we can get the signal to reset the dsg(or qdg) of the 'timeseries-tool'
              */
@@ -71,12 +71,12 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
                 series: ko.observableArray()
             };
 
-            var rangeMask = ko.observable();
+            var timeWindow = ko.observable();
 
             ko.applyBindings({
                 qdg1: _qdg1,
                 dsg1: _dsg1,
-                rangeMask: rangeMask
+                timeWindow: timeWindow
             }, $(".chart-container>div")[0]);
 
             var _qdg2 = qdgSample;
@@ -145,7 +145,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
             }
             
             function maskChart(startTime, endTime) {
-                rangeMask({
+                timeWindow({
                     start: startTime,
                     end: endTime
                 });

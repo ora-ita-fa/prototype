@@ -15,7 +15,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
             var qdg = valueAccessor().queryDescriptorGroup;
             var dsg = valueAccessor().datasetGroup;
-            var rangeMask = valueAccessor().rangeMask;
+            var timeWindow = valueAccessor().timeWindow;
 
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
 
@@ -25,8 +25,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                     demoChart.lineSeriesValue = dsg.series;
                     demoChart.lineGroupsValue = dsg.groups;
                 }
-                if (rangeMask && rangeMask.subscribe && typeof rangeMask.subscribe === 'function') {
-                    rangeMask.subscribe(function(newVal) {
+                if (timeWindow && timeWindow.subscribe && typeof timeWindow.subscribe === 'function') {
+                    timeWindow.subscribe(function(newVal) {
                         var constantAreaX = {
                             referenceObjects: [
                                 {
