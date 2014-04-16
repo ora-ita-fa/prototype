@@ -1,9 +1,9 @@
-<div id="datagrid" style="width:670px;height:500px"
+<div id="datagrid" style="width:870px;height:600px"
      data-bind="ojComponent:
      {
         component:'ojDataGrid', 
         data: dataSource, 
-        selectionMode:{row:'single'}, 
+        selectionMode:{row:'none'}, 
         header:
         {
             row: 
@@ -17,6 +17,7 @@
         },
         cell:
         {
+            style: 'padding:0px',
             template:'bar_template'
         }
     }">
@@ -45,7 +46,20 @@
             animationOnDataChange: 'auto',
             timeAxisType: 'enabled',
             legend: {rendered: 'off'},
-            title: {text: 'Regula Time Axis', hAlign: 'center'}
+        xAxis: {
+          tickLabel: {rendered: 'off'},
+          axisLine: {rendered: 'on'}
+        },
+        yAxis: {
+          tickLabel: {rendered: 'off'},
+          axisLine: {rendered: 'off'}
+        },
+        styleDefaults: {lineWidth: 3},
+        layout: {
+        // TODO, the following are internal and should be moved to a _layout object
+        outerGapWidth: 0, outerGapHeight: 0,
+        axisMaxSize: 0
+      }
     }"
          style="width:200px;height:200px">
     </div>
@@ -54,14 +68,22 @@
     <div data-bind="ojComponent: {
         component: 'ojChart',     
         type: 'bar',
-            series: regularSeriesValue, 
-            groups: regularGroupsValue, 
-            animationOnDisplay: 'auto',
-            animationOnDataChange: 'auto',
-            timeAxisType: 'enabled',
-            legend: {rendered: 'off'},
-            title: {text: 'Regular Time Axis', hAlign: 'center'}
-    }"
-         style="width:200px;height:200px">
+        series: regularSeriesValue, 
+        groups: regularGroupsValue, 
+        animationOnDisplay: 'auto',
+        animationOnDataChange: 'auto',
+        timeAxisType: 'enabled',
+        legend: {rendered: 'off'},
+        title: {text: 'Regular Time Axis1', hAlign: 'center',rendered:'off'},
+  
+        xAxis: {
+          tickLabel: {rendered: 'off'},
+          axisLine: {rendered: 'on'}
+        },
+        yAxis: {
+          tickLabel: {rendered: 'off'},
+          axisLine: {rendered: 'on'}
+        }
+    }" style="width:300px;height:200px">
     </div>
 </div>
