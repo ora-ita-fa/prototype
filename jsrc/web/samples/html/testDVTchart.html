@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>DVT Testing</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/resources/css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="/resources/css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
+        <link rel="stylesheet" href="/analytics/css/analytics-all.css">
+        <link rel="stylesheet" href="/flex_analyzer/css/fa-all.css">
+        <script src="/resources/js/libs/require/require.js"></script>
+        <script src="/resources/js/main.js"></script>
+        <script >
+            require(['/samples/js/testDVTchart.js']);
+        </script>
+    </head>
+    <body>
+        <div id='chart-container'> 
+            <div>
+                <div style="display:inline-block">
+                    <h2>Missing Date (timeAxisType: 'enabled')</h2>
+                    <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: 'bar',
+                                hideAndShowBehavior: 'withRescale',
+                                series: lineSeriesValue1, 
+                                groups: lineGroupsValue1, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical',
+                                timeAxisType: 'enabled',
+                                hoverBehavior: 'dim',
+                                }"
+                         style="width:500px;height:350px">
+                    </div>
+                </div>
+                <div  style="display:inline-block"> 
+                    <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: 'line',
+                                hideAndShowBehavior: 'withRescale',
+                                series: lineSeriesValue1, 
+                                groups: lineGroupsValue1, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical',
+                                timeAxisType: 'enabled',
+                                hoverBehavior: 'dim',
+                                }"
+                         style="width:500px;height:350px;display:inline-block">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <div style="display:inline-block">
+                    <h2>Missing Date (timeAxisType: 'disabled')</h2>
+                    <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: 'bar',
+                                hideAndShowBehavior: 'withRescale',
+                                series: lineSeriesValue1, 
+                                groups: lineGroupsValue1, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical',
+                                timeAxisType: 'disabled',
+                                hoverBehavior: 'dim',
+                                }"
+                         style="width:500px;height:350px">
+                    </div>
+                </div>
+                <div  style="display:inline-block"> 
+                    <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: 'line',
+                                hideAndShowBehavior: 'withRescale',
+                                series: lineSeriesValue1, 
+                                groups: lineGroupsValue1, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical',
+                                timeAxisType: 'disabled',
+                                hoverBehavior: 'dim',
+                                }"
+                         style="width:500px;height:350px;display:inline-block">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div id='chart-container2'>
+                <h2>Zero Value</h2>
+                <div>
+                    <div data-bind="ojComponent: {
+                            component: 'ojChart', 
+                            type: 'bar',
+                            hideAndShowBehavior: 'withRescale',
+                            series: lineSeriesValue2, 
+                            groups: lineGroupsValue2, 
+                            animationOnDisplay: 'auto',
+                            animationOnDataChange: 'auto',
+                            orientation: 'vertical',
+                            timeAxisType: 'enabled',
+                            hoverBehavior: 'dim'
+                            }"
+                         style="width:500px;height:350px;display:inline-block">
+                    </div>
+                    <div data-bind="ojComponent: {
+                            component: 'ojChart', 
+                            type: 'line',
+                            hideAndShowBehavior: 'withRescale',
+                            series: lineSeriesValue2, 
+                            groups: lineGroupsValue2, 
+                            animationOnDisplay: 'auto',
+                            animationOnDataChange: 'auto',
+                            orientation: 'vertical',
+                            timeAxisType: 'enabled',
+                            hoverBehavior: 'dim'
+                            }"
+                         style="width:500px;height:350px;display:inline-block">
+                    </div>
+                </div>
+            </div> 
+
+            <hr>
+            <h2>Null / NaN Value</h2>
+            <div id='chart-container3'>
+                <div data-bind="ojComponent: {
+                            component: 'ojChart', 
+                            type: 'bar',
+                            hideAndShowBehavior: 'withRescale',
+                            series: lineSeriesValue3, 
+                            groups: lineGroupsValue3, 
+                            animationOnDisplay: 'auto',
+                            animationOnDataChange: 'auto',
+                            orientation: 'vertical',
+                            timeAxisType: 'enabled',
+                            hoverBehavior: 'dim'
+                            }"
+                     style="width:500px;height:350px;display:inline-block">
+                </div>
+                <div data-bind="ojComponent: {
+                            component: 'ojChart', 
+                            type: 'line',
+                            hideAndShowBehavior: 'withRescale',
+                            series: lineSeriesValue3, 
+                            groups: lineGroupsValue3, 
+                            animationOnDisplay: 'auto',
+                            animationOnDataChange: 'auto',
+                            orientation: 'vertical',
+                            timeAxisType: 'enabled',
+                            hoverBehavior: 'dim'
+                            }"
+                     style="width:500px;height:350px;display:inline-block">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
