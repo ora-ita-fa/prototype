@@ -5,7 +5,7 @@
     Description:
         Purpose of the stylesheet follows.
 */
-.pivot-header{
+.pivot-table {
     border-width: 1px;
     border-style: solid;
     border-color: #D6DFE6;
@@ -15,7 +15,7 @@
     table-layout: fixed;
     position: relative;
 }
-.pivot-header-cell{
+.pivot-table th, .pivot-table td{
     border-width: 1px;
     border-style: solid;
     border-color: #D6DFE6;
@@ -34,13 +34,17 @@
     background-color: transparent;
 }
 
-.pivot-header tbody {
+.pivot-table td {
+    background-color: white;
+}
+
+.pivot-table tbody {
     display: table-row-group;
     vertical-align: middle;
     border-color: inherit;
 }
 
-.pivot-header tr {
+.pivot-table tr {
     display: table-row;
     vertical-align: inherit;
     border-color: inherit;

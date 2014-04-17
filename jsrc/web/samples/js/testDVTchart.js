@@ -9,12 +9,22 @@ function(oj, ko, $) {
     function ChartModel() {
         var self = this;
         /* chart data */
-        var lineSeries1 = [{name: "host1", items: [74, 0, 62, 70, 76, 66]},
+        
+        var lineSeries = [{name: "host1", items: [74, 74, 87, 62, 70, 76, 66]},
+            {name: "host2", items: [50, 50, 21, 38, 46, 54, 42]},
+            {name: "db1", items: [34, 34, 15, 22, 30, 32, 26]},
+            {name: "db2", items: [18,18, 7, 6, 14, 22, 10]},
+            {name: "wls1", items: [3, 3, 1, 2, 3, 3, 2]}];
+        var lineGroups = [new Date("April 11, 2014"), new Date("April 12, 2014"), new Date("April 13, 2014"), new Date("April 14, 2014"), new Date("April 15, 2014"), new Date("April 16, 2014"), new Date("April 17, 2014")];
+        this.lineSeriesValue = ko.observableArray(lineSeries);
+        this.lineGroupsValue = ko.observableArray(lineGroups);
+        
+        var lineSeries1 = [{name: "host1", items: [74, 87, 62, 70, 76, 66]},
             {name: "host2", items: [50, 21, 38, 46, 54, 42]},
             {name: "db1", items: [34, 15, 22, 30, 32, 26]},
             {name: "db2", items: [18, 7, 6, 14, 22, 10]},
             {name: "wls1", items: [3, 1, 2, 3, 3, 2]}];
-        var lineGroups1 = [new Date("11:13:00 April 11, 2014"), new Date("April 13, 2014"), new Date("April 14, 2014"), new Date("April 15, 2014"), new Date("April 16, 2014"), new Date("April 17, 2014")];
+        var lineGroups1 = [new Date("April 11, 2014"), new Date("April 13, 2014"), new Date("April 14, 2014"), new Date("April 15, 2014"), new Date("April 16, 2014"), new Date("April 17, 2014")];
         this.lineSeriesValue1 = ko.observableArray(lineSeries1);
         this.lineGroupsValue1 = ko.observableArray(lineGroups1);
     }
