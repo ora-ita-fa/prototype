@@ -32,8 +32,18 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                     $(this).attr('transform', 'translate(' + translateXValue + ',0)');
                 });
 
+                var yAxis_content = $('#datagrid\\:databody svg>g>g>g>g[transform]').filter(':nth-child(3n+2)').attr('transform', function(index, attr) {
+                    if (index%3=== 0) {
+                        var translateYValue = index === 0 ? 10 : index/3 * 202 + 5;
+                        $(this).attr('transform', 'translate(0,' + translateYValue + ')');
+                        console.log(translateYValue);
+                    }
+                });
+
                 var fixed_xAxis = $("<div class='fixed_xAxis' style='padding:0px 0px 1px 2px;height:25px;top:474px;width:600px;left:50px;position:fixed;background-color:#DFE4E7;vertical-align:bottom'><svg width='600px' height='25px'></svg></div>").find('svg').append(xAxis_content).end();
                 $('#datagrid').after(fixed_xAxis);
+                var fixed_yAxis = $("<div class='fixed_yAxis' style='padding:1px 0px 1px 5px;height:450px;top:30px;width:24px;left:50px;position:fixed;background-color:#DFE4E7;'><svg width='24px' height='450px'></svg></div>").find('svg').append(yAxis_content).end();
+                $('#datagrid').after(fixed_yAxis);
             });
         }
     });
