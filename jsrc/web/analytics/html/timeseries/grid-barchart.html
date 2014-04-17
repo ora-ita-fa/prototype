@@ -3,7 +3,7 @@
      {
         component:'ojDataGrid', 
         data: dataSource, 
-        selectionMode:{row:'single'}, 
+        selectionMode:{row:'none'}, 
         header:
         {
             row: 
@@ -17,6 +17,7 @@
         },
         cell:
         {
+            style: 'padding:0px',
             template:'bar_template'
         }
     }">
@@ -52,3 +53,26 @@
          style="width:200px;height:200px">
     </div>
 </script>
+<div id='chart-container'>
+    <div data-bind="ojComponent: {
+        component: 'ojChart',     
+        type: 'bar',
+        series: regularSeriesValue, 
+        groups: regularGroupsValue, 
+        animationOnDisplay: 'auto',
+        animationOnDataChange: 'auto',
+        timeAxisType: 'enabled',
+        legend: {rendered: 'off'},
+        title: {text: 'Regular Time Axis1', hAlign: 'center',rendered:'off'},
+  
+        xAxis: {
+          tickLabel: {rendered: 'off'},
+          axisLine: {rendered: 'on'}
+        },
+        yAxis: {
+          tickLabel: {rendered: 'off'},
+          axisLine: {rendered: 'on'}
+        }
+    }" style="width:300px;height:200px">
+    </div>
+</div>
