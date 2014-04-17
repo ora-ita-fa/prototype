@@ -34,8 +34,17 @@ and open the template in the editor.
                                 orientation: 'vertical',
                                 timeAxisType: 'enabled',
                                 hoverBehavior: 'dim',
-                                }"
-                         style="width:500px;height:350px">
+                                legend:{rendered: 'off'},
+                                xAxis: {
+                                  tickLabel: {rendered: 'off'},
+                                  axisLine: {rendered: 'on'}
+                                },
+                                yAxis: {
+                                  tickLabel: {rendered: 'on'},
+                                  axisLine: {rendered: 'on'}
+                                }
+                            }"
+                         style="width:500px;height:150px">
                     </div>
                 </div>
                 <div  style="display:inline-block"> 
@@ -50,11 +59,60 @@ and open the template in the editor.
                                 orientation: 'vertical',
                                 timeAxisType: 'enabled',
                                 hoverBehavior: 'dim',
+                                legend:{rendered: 'off'},
+                                xAxis: {
+                                  tickLabel: {rendered: 'off'},
+                                  axisLine: {rendered: 'on'}
+                                },
+                                yAxis: {
+                                  tickLabel: {rendered: 'on'},
+                                  axisLine: {rendered: 'on'}
+                                }
                                 }"
-                         style="width:500px;height:350px;display:inline-block">
+                         style="width:500px;height:150px;display:inline-block">
                     </div>
                 </div>
             </div>
+              <div>
+                    <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: 'bar',
+                                hideAndShowBehavior: 'withRescale',
+                                series: lineSeriesValue, 
+                                groups: lineGroupsValue, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical',
+                                timeAxisType: 'enabled',
+                                hoverBehavior: 'dim',
+                                legend:{rendered: 'off'},
+                                yAxis: {
+                                  tickLabel: {rendered: 'on'},
+                                  axisLine: {rendered: 'on'}
+                                }
+                          }"
+                         style="width:500px;height:150px;display:inline-block">
+                    </div>
+                    <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: 'line',
+                                hideAndShowBehavior: 'withRescale',
+                                series: lineSeriesValue, 
+                                groups: lineGroupsValue, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical',
+                                timeAxisType: 'enabled',
+                                hoverBehavior: 'dim',
+                                legend:{rendered: 'off'},
+                                yAxis: {
+                                  tickLabel: {rendered: 'on'},
+                                  axisLine: {rendered: 'on'}
+                                }
+                                }"
+                         style="width:500px;height:150px;display:inline-block">
+                    </div>
+                </div>
             <hr>
             <div>
                 <div style="display:inline-block">
