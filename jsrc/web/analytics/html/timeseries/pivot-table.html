@@ -1,17 +1,15 @@
 <div>
 
-    <table class='pivot-header'>
+    <table class='pivot-table'>
         <tbody >
             <!-- ko foreach: {data: horizontalHeader, as: 'row'} -->
             <tr data-bind="foreach: {data: row, as: 'attr'}">
                 <!-- ko if: $index() === 0 && $parentContext.$index() === 0 -->
-                <td class="pivot-header-cell" 
-                    data-bind="attr: {colspan: $root.yDims.length, rowspan: $root.xDims.length}"></td>
+                <th data-bind="attr: {colspan: $root.yDims.length, rowspan: $root.xDims.length}"></th>
                 <!-- /ko -->
 
                 <!-- ko if: attr -->
-                <td class="pivot-header-cell" 
-                    data-bind="text: attr.text,attr: {colspan: attr.dim.span}"></td>
+                <th data-bind="text: attr.text,attr: {colspan: attr.dim.span}"></th>
                 <!-- /ko -->
             </tr>
             <!-- /ko -->
@@ -19,14 +17,12 @@
             <!-- ko foreach: {data: verticalHeader, as: 'row'} -->
             <tr data-bind="foreach: {data: row, as: 'attr'}">
                 <!-- ko if: attr -->
-                <td class="pivot-header-cell" 
-                    data-bind="text: attr.text, attr: {rowspan: attr.dim.span }"></td>
+                <th data-bind="text: attr.text, attr: {rowspan: attr.dim.span }"></th>
                 <!-- /ko -->
 
                 <!-- ko if: $index() === $parent.length - 1 -->
                 <!-- ko foreach: {data: $root.horizontalPaths, as: 'xDim'} -->
-                <td class="pivot-header-cell" 
-                    data-bind="text: $index() + ' ' + $parentContext.$parentContext.$index(), 
+                <td data-bind="text: $index() + ' ' + $parentContext.$parentContext.$index(), 
                         event: {mousemove: $root.showPaths.bind($data,$index(),$parentContext.$parentContext.$index())}"></td>
                 <!-- /ko -->
                 <!-- /ko -->
