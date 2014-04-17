@@ -17,12 +17,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                     var $pivotTable = $(resp);
                     $(element).append($pivotTable);
                     var dimsWithComputedSpan = computeSpan(dims);
-                    var verticalTable = toVerticalTableLayout(dimsWithComputedSpan);
-                    console.log(verticalTable);
+                    var horizonHeader = toHorizontalHeader(dimsWithComputedSpan);
+                    var verticalHeader = toVerticalHeader(dimsWithComputedSpan);
                     ko.applyBindings({
                         dims: dimsWithComputedSpan,
-                        verticalHeader: verticalTable
+                        horizontalHeader: horizonHeader,
+                        verticalHeader: verticalHeader
                     }, $pivotTable[0]);
+                    $('td').resizable();
                 });
             }
 
@@ -44,17 +46,27 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 return dims;
             }
 
-            function toVerticalTableLayout(dimsWithColspan) {
+            function toHorizontalHeader(dimsWithComputedSpan) {
+                var table = [];
+                for (var i = 0; i < dimsWithComputedSpan.length; i++) {
+                    var dim = dimsWithComputedSpan[i];
+                    var attrArr = alignDimAttr2Arr(dim);
+                    table.push(attrArr);
+                }
+                return table;
+            }
+
+            function toVerticalHeader(dimsWithComputedSpan) {
                 var table = null;
-                for (var i = 0; i < dimsWithColspan.length; i++) {
-                    var dim = dimsWithColspan[i];
+                for (var i = 0; i < dimsWithComputedSpan.length; i++) {
+                    var dim = dimsWithComputedSpan[i];
                     var attrArr = alignDimAttr2Arr(dim);
                     for (var j = 0; j < attrArr.length; j++) {
                         if (!table) {
                             table = new Array(attrArr.length);
                         }
                         if (!table[j]) {
-                            table[j] = new Array(dimsWithColspan.length);
+                            table[j] = new Array(dimsWithComputedSpan.length);
                         }
                         table[j][i] = attrArr[j];
                     }

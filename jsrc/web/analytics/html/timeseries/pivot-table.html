@@ -1,34 +1,29 @@
 <div>
 
     <table class='pivot-header'>
-        <tbody data-bind="foreach: {data: dims, as: 'dim'}">
-            <tr data-bind="foreach: new Array(dim.repeat)">
-                <!-- ko foreach: {data: dim.attrs, as: 'attr'} -->
-                <td class='pivot-header-cell' 
-                    data-bind="
-                        attr: {
-                            'data-value': attr.value,
-                            'colspan': dim.span        
-                        },
-                        text: attr.text">
-                </td>
+        <tbody >
+            <!-- ko foreach: {data: horizontalHeader, as: 'row'} -->
+            <tr data-bind="foreach: {data: row, as: 'attr'}">
+                <!-- ko if: $index() === 0 && $parentContext.$index() === 0 -->
+                <td class="pivot-header-cell" 
+                    data-bind="attr: {colspan: $root.dims.length, rowspan: $root.dims.length}"></td>
+                <!-- /ko -->
+
+                <!-- ko if: attr -->
+                <td class="pivot-header-cell" 
+                    data-bind="text: attr.text,attr: {colspan: attr.dim.span}"></td>
                 <!-- /ko -->
             </tr>
-        </tbody>
-    </table>
+            <!-- /ko -->
 
-    <table class="pivot-header">
-        <tbody data-bind="foreach: {data: verticalHeader, as: 'row'}">
+            <!-- ko foreach: {data: verticalHeader, as: 'row'} -->
             <tr data-bind="foreach: {data: row, as: 'attr'}">
                 <!-- ko if: attr -->
-                <td class='pivot-header-cell' 
-                    data-bind="
-                        text: attr.text,
-                        attr: {
-                            rowspan: attr.dim.span
-                        }"></td>
+                <td class="pivot-header-cell" 
+                    data-bind="text: attr.text, attr: {rowspan: attr.dim.span }"></td>
                 <!-- /ko -->
             </tr>
+            <!-- /ko -->
         </tbody>
     </table>
 
