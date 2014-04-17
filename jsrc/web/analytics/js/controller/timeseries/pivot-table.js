@@ -89,7 +89,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 return trs;
             }
 
-            $.getJSON('/analytics/data/timeseries/pivot-dimension.json', function(resp) {
+            $.getJSON('/samples/data/pivot-dimension.json', function(resp) {
                 drawDim(resp.x);
             });
         }
