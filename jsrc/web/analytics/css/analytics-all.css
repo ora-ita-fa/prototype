@@ -215,6 +215,11 @@ and open the template in the editor.
         Purpose of the stylesheet follows.
 */
 .pivot-header {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #D6DFE6;
+  border-bottom: none;
+  border-right: none;
   background-color: #f0f4fa;
   table-layout: fixed;
   position: relative; }
