@@ -14,11 +14,13 @@
     background-color: rgb(240, 244, 250);
     table-layout: fixed;
     position: relative;
+    font-family:  'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
 }
+
 .pivot-table th, .pivot-table td{
     border-width: 1px;
     border-style: solid;
-    border-color: #D6DFE6;
     border-top: none;
     border-left: none;
     padding-top: 1px;
@@ -31,11 +33,21 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
-    background-color: transparent;
 }
 
-.pivot-table td {
+.pivot-corner {
+    border-color: #D6DFE6;
+    background-color: #F7F9FC;
+}
+
+.pivot-cell {
+    border-color: #D6DFE6;
     background-color: white;
+}
+
+.pivot-horizontal-header, .pivot-vertical-header {
+    border-color: #D6DFE6;
+    background-color: rgb(242, 244, 247);
 }
 
 .pivot-table tbody {
@@ -48,4 +60,23 @@
     display: table-row;
     vertical-align: inherit;
     border-color: inherit;
+}
+
+#draggableHeader {
+    position: absolute;
+    display: none;
+    background-color: rgba(0,0,0,0.2);
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#dropLine {
+    position: absolute;
+    display: none;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.pivot-horizontal-header div {
+    min-height: 30px; 
+    line-height: 30px;
 }

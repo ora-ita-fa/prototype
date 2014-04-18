@@ -222,12 +222,13 @@ and open the template in the editor.
   border-right: none;
   background-color: #f0f4fa;
   table-layout: fixed;
-  position: relative; }
+  position: relative;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px; }
 
 .pivot-table th, .pivot-table td {
   border-width: 1px;
   border-style: solid;
-  border-color: #D6DFE6;
   border-top: none;
   border-left: none;
   padding-top: 1px;
@@ -239,11 +240,19 @@ and open the template in the editor.
   vertical-align: middle;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: center;
-  background-color: transparent; }
+  text-align: center; }
 
-.pivot-table td {
+.pivot-corner {
+  border-color: #D6DFE6;
+  background-color: #F7F9FC; }
+
+.pivot-cell {
+  border-color: #D6DFE6;
   background-color: white; }
+
+.pivot-horizontal-header, .pivot-vertical-header {
+  border-color: #D6DFE6;
+  background-color: #f2f4f7; }
 
 .pivot-table tbody {
   display: table-row-group;
@@ -254,5 +263,21 @@ and open the template in the editor.
   display: table-row;
   vertical-align: inherit;
   border-color: inherit; }
+
+#draggableHeader {
+  position: absolute;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.2);
+  text-overflow: ellipsis;
+  overflow: hidden; }
+
+#dropLine {
+  position: absolute;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.2); }
+
+.pivot-horizontal-header div {
+  min-height: 30px;
+  line-height: 30px; }
 
 /*# sourceMappingURL=analytics-all.css.map */
