@@ -48,26 +48,6 @@
                     "func": "sum"
                 }
             ]
-        },
-        {
-            "key": "product",
-            "text": "Product",
-            "attrs": [
-                {
-                    "text": "Tents",
-                    "value": "Tents"
-                },
-                {
-                    "text": "Canoes",
-                    "value": "Canoes"
-                }
-            ],
-            "aggrs": [
-                {
-                    "text": "Product Total",
-                    "func": "sum"
-                }
-            ]
         }
     ],
     "y": [
@@ -92,24 +72,21 @@
             ]
         },
         {
-            "key": "season",
-            "text": "Season",
+            "key": "product",
+            "text": "Product",
             "attrs": [
                 {
-                    "text": "Season 1",
-                    "value": "Season 1"
+                    "text": "Tents",
+                    "value": "Tents"
                 },
                 {
-                    "text": "Season 2",
-                    "value": "Season 2"
-                }, {
-                    "text": "Season 3",
-                    "value": "Season 3"
+                    "text": "Canoes",
+                    "value": "Canoes"
                 }
             ],
             "aggrs": [
                 {
-                    "text": "Season Total",
+                    "text": "Product Total",
                     "func": "sum"
                 }
             ]
