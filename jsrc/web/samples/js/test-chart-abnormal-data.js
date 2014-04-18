@@ -49,7 +49,7 @@ function(oj, ko, $) {
     this.lineGroupsValue3 = ko.observableArray(lineGroups3);
     $(
         function() {
-            ko.applyBindings(new ChartModel(), $('chart-container')[0]);
+            ko.applyBindings(new ChartModel(), $('#chart-container')[0]);
         }
     );
 });
