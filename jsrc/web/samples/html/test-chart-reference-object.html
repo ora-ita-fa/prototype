@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Chart Referencing Object</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/resources/css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="/resources/css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
+        <link rel="stylesheet" href="/analytics/css/analytics-all.css">
+        <link rel="stylesheet" href="/flex_analyzer/css/fa-all.css">
+        <script src="/resources/js/libs/require/require.js"></script>
+        <script src="/resources/js/main.js"></script>
+        <script >
+            require(['/samples/js/test-chart-reference-object.js']);
+        </script>
+    </head>
+    <body>
+        <div id='chart-container'>
+            <div data-bind="ojComponent: {
+                                component: 'ojChart', 
+                                type: 'area',
+                                hideAndShowBehavior: 'withRescale',
+                                series: lineSeriesValue, 
+                                groups: lineGroupsValue, 
+                                animationOnDisplay: 'auto',
+                                animationOnDataChange: 'auto',
+                                orientation: 'vertical',
+                                timeAxisType: 'enabled',
+                                hoverBehavior: 'dim',
+                                stack:'on',
+                                legend:{rendered: 'on'},
+                                xAxis:xAxisData,
+                                yAxis: {
+                                  tickLabel: {rendered: 'on'},
+                                  axisLine: {rendered: 'on'}
+                                }
+                          }"
+                 style="width:800px;height:250px;display:inline-block">
+            </div>
+        </div>
+    </body>
+</html>
