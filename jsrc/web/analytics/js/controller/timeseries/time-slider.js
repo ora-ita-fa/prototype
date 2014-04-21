@@ -26,12 +26,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             max: vm.totalEnd().getTime(),
                             values: [vm.viewStart().getTime(), vm.viewEnd().getTime()],
                             stop: function(event, ui) {
-                                var newStart = ui.values[0];
+                                var values = $(this).slider('values');
+                                var newStart = values[0];
                                 if (newStart !== vm.viewStart().getTime()) {
                                     vm.viewStart(new Date(newStart));
                                 }
 
-                                var newEnd = ui.values[1];
+                                var newEnd = values[1];
                                 if (newEnd !== vm.viewEnd().getTime()) {
                                     vm.viewEnd(new Date(newEnd));
                                 }
@@ -39,21 +40,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             slide: function(event, ui) {
                                 var thiz = this;
                                 if (vm.slide && typeof vm.slide === 'function') {
-                                    if (ui) {
-                                        vm.slide(new Date(ui.values[0]), new Date(ui.values[1]));
-                                    } else {
-                                        //get called when zoom-btn clicked
-                                        var values = $(thiz).slider("values");
-                                        vm.slide(new Date(values[0]), new Date(values[1]));
-                                        var newStart = values[0];
-                                        if (newStart !== vm.viewStart().getTime()) {
-                                            vm.viewStart(new Date(newStart));
-                                        }
-                                        var newEnd = values[1];
-                                        if (newEnd !== vm.viewEnd().getTime()) {
-                                            vm.viewEnd(new Date(newEnd));
-                                        }
-                                    }
+                                    var values = $(thiz).slider("values");
+                                    vm.slide(new Date(values[0]), new Date(values[1]));
                                 }
                             },
                             start: function(event, ui) {
@@ -75,6 +63,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             newValues[1] = (max > values[1] + zoomInScale ? values[1] + zoomInScale : max);
                             $sliderBar.slider('values', [newValues[0], newValues[1]]);
                             $sliderBar.slider('option', 'slide').call($sliderBar);
+                            $sliderBar.slider('option', 'stop').call($sliderBar);
                         });
 
                         var $zoomOutBtn = $('.time-filter > .slider-bar-zoom-out');
@@ -96,23 +85,67 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             }
                             $sliderBar.slider('values', [newValues[0], newValues[1]]);
                             $sliderBar.slider('option', 'slide').call($sliderBar);
+                            $sliderBar.slider('option', 'stop').call($sliderBar);
                         });
 
                         var $range = $('.ui-slider-range');
                         $range.draggable({
                             axis: 'x',
+                            containment: $sliderBar,
                             drag: function(event, ui) {
-                                
-                            },
-                            start: function( event, ui ) {
-                                console.log(ui.position.left);
-                                 console.log(ui.position.left);
-                            },
-                            stop: function( event, ui ) {
-                                
-                            }
+                                var thiz = this;
+                                //Compute  handles' new position
+                                var newOffsetLeft = ui.position.left;
+                                var rangeWidth = $(thiz).width();
+                                var $handle0 = $('.slider-bar > .ui-slider-handle').eq(0);
+                                $handle0.css({left: newOffsetLeft});
+                                var $handle1 = $('.slider-bar > .ui-slider-handle').eq(1);
+                                $handle1.css({left: newOffsetLeft + rangeWidth});
+                                var values = $sliderBar.slider("values");
 
+                                //Compute slider's new values;
+                                var interval = values[1] - values[0];
+                                var min = $sliderBar.slider("option", "min");
+                                var max = $sliderBar.slider("option", "max");
+                                var weight = (max - min) / $sliderBar.width();
+                                values[0] = min + $handle0.position().left * weight;
+                                values[1] = values[0] + interval;
+                                var newValues = new Array();
+
+                                //in addition to  containment  limitation
+                                if (values[1] >= max) {
+                                    newValues[1] = max;
+                                    newValues[0] = max - interval;
+                                } else if (values[0] <= min) {
+                                    newValues[0] = min;
+                                    newValues[1] = min + interval;
+                                } else {
+                                    newValues[0] = values[0];
+                                    newValues[1] = values[1];
+                                }
+                                // map slide event in slider 
+                                $sliderBar.slider('values', [newValues[0], newValues[1]]);
+                                $sliderBar.slider('option', 'slide').call($sliderBar);
+                            },
+                            stop: function(event, ui) {
+                                // map stop event in slider 
+                                $sliderBar.slider('option', 'stop').call($sliderBar);
+                            }
                         });
+
+                        // map stop event in slider,trggered on mouseup  
+//                        $range.mouseup(function() {
+//                            console.log('drag stop');
+//                            var newStart = $sliderBar.slider("values", 0);
+//                            if (newStart !== vm.viewStart().getTime()) {
+//                                vm.viewStart(new Date(newStart));
+//                            }
+//
+//                            var newEnd = $sliderBar.slider("values", 1);
+//                            if (newEnd !== vm.viewEnd().getTime()) {
+//                                vm.viewEnd(new Date(newEnd));
+//                            }
+//                        });
 
                         var $splitterBar = $container.find(".splitter-bar");
                         var $scaleBar = $container.find(".scale-bar");

@@ -5,11 +5,11 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js', 
+define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
     '/analytics/js/view_model/timeseries/ChartRegionModel.js',
-    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 
+    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart',
     '/analytics/js/controller/timeseries/rollup-table.js'], function(oj, ko, $, ita, ChartRegionModel) {
-    
+
     ita.registerTool({
         name: 'timeseries-tool',
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
@@ -20,7 +20,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
 
                 var demoChart = new ChartRegionModel();
-                
+
                 if (dsg && dsg.groups && dsg.series) {
                     demoChart.lineSeriesValue = dsg.series;
                     demoChart.lineGroupsValue = dsg.groups;
@@ -30,24 +30,24 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                         var constantAreaX = {
                             referenceObjects: [
                                 {
-                                    text: 'Reference Object', 
+                                    text: 'Reference Object',
                                     type: 'area',
-                                    min: newVal.start, 
-                                    max: newVal.end, 
-                                    color: '#80A0CEEC', 
+                                    min: newVal.start,
+                                    max: newVal.end,
+                                    color: '#80A0CEEC',
                                     displayInLegend: 'on',
                                     location: 'back'
                                 }
                             ]
                         };
                         demoChart.xAxisData(constantAreaX);
-                        console.log(demoChart.xAxisData());
+                        //             console.log(demoChart.xAxisData());
 //                        var axisInfo = ko.toJS(demoChart.xAxisData);
 //                        console.log(axisInfo);
 //                        demoChart.xAxisData(axisInfo);
                     });
                 }
-                
+
                 var chartType = "line";
                 try {
                     chartType = qdg.Parameters.FAUICONFIG.chartType;
@@ -95,7 +95,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 try {
                     rollupConfig = qdg.QueryDescriptor[0].RollupLevels;
                 } catch (ignore) {
-                    
+
                 }
                 if (rollupConfig && rollupConfig.length > 0) {
                     $(rollupEl).addClass("rollup-table-enabled ");
