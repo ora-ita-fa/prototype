@@ -26,7 +26,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             max: vm.totalEnd().getTime(),
                             values: [vm.viewStart().getTime(), vm.viewEnd().getTime()],
                             stop: function(event, ui) {
-                                var values = $(this).slider('values');
+                                    var values = $(this).slider('values');
                                 var newStart = values[0];
                                 if (newStart !== vm.viewStart().getTime()) {
                                     vm.viewStart(new Date(newStart));
@@ -40,8 +40,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             slide: function(event, ui) {
                                 var thiz = this;
                                 if (vm.slide && typeof vm.slide === 'function') {
-                                    var values = $(thiz).slider("values");
-                                    vm.slide(new Date(values[0]), new Date(values[1]));
+                                        var values = $(thiz).slider("values");
+                                        vm.slide(new Date(values[0]), new Date(values[1]));
                                 }
                             },
                             start: function(event, ui) {
@@ -133,19 +133,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             }
                         });
 
-                        // map stop event in slider,trggered on mouseup  
-//                        $range.mouseup(function() {
-//                            console.log('drag stop');
-//                            var newStart = $sliderBar.slider("values", 0);
-//                            if (newStart !== vm.viewStart().getTime()) {
-//                                vm.viewStart(new Date(newStart));
-//                            }
-//
-//                            var newEnd = $sliderBar.slider("values", 1);
-//                            if (newEnd !== vm.viewEnd().getTime()) {
-//                                vm.viewEnd(new Date(newEnd));
-//                            }
-//                        });
 
                         var $splitterBar = $container.find(".splitter-bar");
                         var $scaleBar = $container.find(".scale-bar");

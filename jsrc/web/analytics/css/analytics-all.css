@@ -135,6 +135,19 @@ and open the template in the editor.
   color: #212121;
   text-decoration: none; }
 
+.slider-bar-zoom-in {
+  float: right;
+  height: 24px;
+  width: 24px;
+  background-image: url("../images/zoom_in.png"); }
+
+.slider-bar-zoom-out {
+  float: right;
+  margin-right: 2px;
+  height: 20px;
+  width: 20px;
+  background-image: url("../images/zoom_out.png"); }
+
 .splitter-bar, .scale-bar {
   position: relative;
   height: 10px; }
@@ -215,6 +228,7 @@ and open the template in the editor.
         Purpose of the stylesheet follows.
 */
 .pivot-table {
+  border-collapse: separate;
   border-width: 1px;
   border-style: solid;
   border-color: #D6DFE6;
@@ -264,14 +278,26 @@ and open the template in the editor.
   vertical-align: inherit;
   border-color: inherit; }
 
-#draggableHeader {
+.draggable-header {
   position: absolute;
-  display: none;
-  background-color: rgba(0, 0, 0, 0.2);
+  cursor: move;
+  border: 1px solid #D6DFE6;
+  border-left: 3px solid #0572ce;
+  background-color: white;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
   text-overflow: ellipsis;
-  overflow: hidden; }
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  box-sizing: border-box; }
 
-#dropLine {
+.vertical-draggable {
+  border: 1px solid #D6DFE6;
+  border-top: 3px solid #0572ce; }
+
+.drop-line {
   position: absolute;
   display: none;
   background-color: rgba(0, 0, 0, 0.2); }
