@@ -51,26 +51,7 @@
         }
     ],
     "y": [
-        {
-            "key": "time",
-            "text": "Time",
-            "attrs": [
-                {
-                    "text": "2007",
-                    "value": 2007
-                },
-                {
-                    "text": "2008",
-                    "value": 2008
-                }
-            ],
-            "aggrs": [
-                {
-                    "text": "Time Total",
-                    "func": "sum"
-                }
-            ]
-        },
+        
         {
             "key": "product",
             "text": "Product",
@@ -87,6 +68,26 @@
             "aggrs": [
                 {
                     "text": "Product Total",
+                    "func": "sum"
+                }
+            ]
+        },
+        {
+            "key": "time",
+            "text": "Time",
+            "attrs": [
+                {
+                    "text": "2007",
+                    "value": 2007
+                },
+                {
+                    "text": "2008",
+                    "value": 2008
+                }
+            ],
+            "aggrs": [
+                {
+                    "text": "Time Total",
                     "func": "sum"
                 }
             ]

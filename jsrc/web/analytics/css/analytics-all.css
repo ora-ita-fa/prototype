@@ -269,7 +269,8 @@ and open the template in the editor.
   display: none;
   background-color: rgba(0, 0, 0, 0.2);
   text-overflow: ellipsis;
-  overflow: hidden; }
+  overflow: hidden;
+  cursor: move; }
 
 #dropLine {
   position: absolute;
