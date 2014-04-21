@@ -18,7 +18,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 $(element).empty();
                 var $pivotTable = $(pivotTemplate);
                 $(element).append($pivotTable);
-                
+
                 var xDimsWithComputedSpan = computeSpan(xDims);
                 var yDimsWithComputedSpan = computeSpan(yDims);
 
@@ -63,8 +63,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 var isDragging = false;
                 $('th').resizable();
 
-                var $draggableHeader = $("#draggableHeader");
-                var $dropLine = $("#dropLine");
+                var $draggableHeader = $(".draggable-header");
+                var $draggableDimText = $(".draggable-dim-text ");
+                var $dropLine = $(".drop-line");
                 var $pivotCorner = $(".pivot-corner");
 
                 var dragFromDim;
@@ -76,7 +77,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 $draggableHeader.draggable({
                     cursorAt: {top: -5, left: -5},
                     cursor: 'move',
-                    revert: true,
                     start: function() {
                         isDragging = true;
                     },
@@ -90,36 +90,58 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
 
                 function showHorizontalDim(obj, event) {
                     if (!isDragging) {
+                        dragFromDim = obj.dim;
+                        dragFromX = true;
+
                         var $containerTr = $(event.currentTarget).parent();
                         var $thsInLine = $containerTr.find('th:not(.pivot-corner)');
 
                         var pos = $thsInLine.offset();
-                        var height = $containerTr.height();
-                        var width = $(".pivot-vertical-header+:not(th)").prev().outerWidth();
+                        var height = $containerTr.outerHeight() - 2;
+                        var top = pos.top;
+                        var maxWidth = $pivotCorner.outerWidth(true);
 
-                        dragFromDim = obj.dim;
-                        dragFromX = true;
+                        // Set height width first. 
+                        // Otherwise, the $draggableHeader.outerWidth() will be calculated wrong.
+                        $draggableHeader.css({
+                            width: 'auto',
+                            lineHeight: height + 'px',
+                            height: height,
+                            maxWidth: maxWidth + 'px'
+                        });
+                        
                         $draggableHeader.text(dragFromDim.text);
-                        $draggableHeader.css('top', pos.top + 'px').css('left', pos.left - width + 'px')
-                                .width(width).height(height).show();
+
+                        var left = $pivotCorner.outerWidth() - $draggableHeader.outerWidth(true);
+                        $draggableHeader.css({
+                            top: top,
+                            left: left}).removeClass('vertical-draggable').show();
                     }
                 }
 
                 function showVerticalDim(obj, event) {
                     if (!isDragging) {
-                        var $sender = $(event.currentTarget);
-
-                        var $lastHorizontalHeader = $(".pivot-horizontal-header").parent(":last");
-                        var top = $lastHorizontalHeader.offset().top;
-                        var left = $sender.offset().left;
-                        var width = $sender.outerWidth();
-                        var height = $lastHorizontalHeader.outerHeight();
-
                         dragFromDim = obj.dim;
                         dragFromX = false;
+
+                        var $sender = $(event.currentTarget);
+                        var $lastHorizontalHeader = $(".pivot-horizontal-header").parent(":last");
+
+                        var left = $sender.offset().left;
+                        var width = $sender.outerWidth();
+                        var height = $lastHorizontalHeader.height() - 4;
+
+                        $draggableHeader.css({
+                            lineHeight: height + 'px',
+                            width: width
+                        });
                         $draggableHeader.text(dragFromDim.text);
-                        $draggableHeader.css('top', top + 'px').css('left', left + 'px')
-                                .width(width).height(height).show();
+
+                        var top = $pivotCorner.outerHeight() - $draggableHeader.outerHeight(true);
+                        $draggableHeader.css({
+                            top: top,
+                            left: left
+                        }).addClass('vertical-draggable').show();
                     }
                 }
 
@@ -223,7 +245,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 }
 
 
-                dim.span = 0;
+                dim.span = 1;
                 var spanProduct = dims[dims.length - 1].attrs.length;
                 for (var i = dims.length - 2; i >= 0; i--) {
                     var dim = dims[i];
