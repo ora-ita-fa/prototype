@@ -133,19 +133,24 @@ and open the template in the editor.
     text-decoration: none;
 }
 
-
-.slider-bar-zoom-in{
-    float:right;
-    height:24px;
-    width:24px;
-    background-image: url('../images/zoom_in.png');
-}
-.slider-bar-zoom-out{
-    float:right;
-    margin-right: 2px;
-    height:24px;
-    width:24px;
-    background-image: url('../images/zoom_out.png');
+.slider-bar-zoom{
+    position: relative;
+    left: 100%;
+    top:-18px;
+    margin-left: 10px;
+    .slider-bar-zoom-in{
+        position: absolute;
+        height:24px;
+        width:24px;
+        background-image: url('../images/zoom_in.png');
+    }
+    .slider-bar-zoom-out{
+        position: absolute;
+        margin-left: 25px;
+        height:24px;
+        width:24px;
+        background-image: url('../images/zoom_out.png');
+    }
 }
 
 .splitter-bar, .scale-bar {

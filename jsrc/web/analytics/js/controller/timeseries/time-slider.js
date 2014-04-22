@@ -26,7 +26,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             max: vm.totalEnd().getTime(),
                             values: [vm.viewStart().getTime(), vm.viewEnd().getTime()],
                             stop: function(event, ui) {
-                                    var values = $(this).slider('values');
+                                var values = $(this).slider('values');
                                 var newStart = values[0];
                                 if (newStart !== vm.viewStart().getTime()) {
                                     vm.viewStart(new Date(newStart));
@@ -40,8 +40,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             slide: function(event, ui) {
                                 var thiz = this;
                                 if (vm.slide && typeof vm.slide === 'function') {
-                                        var values = $(thiz).slider("values");
-                                        vm.slide(new Date(values[0]), new Date(values[1]));
+                                    var values = $(thiz).slider("values");
+                                    vm.slide(new Date(values[0]), new Date(values[1]));
                                 }
                             },
                             start: function(event, ui) {
@@ -51,8 +51,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                                 }
                             }
                         });
-
-                        var $zoomInBtn = $('.time-filter > .slider-bar-zoom-in');
+                        var $zoomInBtn = $('.slider-bar-zoom >.slider-bar-zoom-in');
                         $zoomInBtn.click(function() {
                             var values = $sliderBar.slider("values");
                             var min = $sliderBar.slider("option", "min");
@@ -65,8 +64,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             $sliderBar.slider('option', 'slide').call($sliderBar);
                             $sliderBar.slider('option', 'stop').call($sliderBar);
                         });
-
-                        var $zoomOutBtn = $('.time-filter > .slider-bar-zoom-out');
+                        var $zoomOutBtn = $('.slider-bar-zoom > .slider-bar-zoom-out');
                         $zoomOutBtn.click(function() {
                             var values = $sliderBar.slider("values");
                             var min = $sliderBar.slider("option", "min");
@@ -132,25 +130,25 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                                 $sliderBar.slider('option', 'stop').call($sliderBar);
                             }
                         });
-
-
+                        
+                        
                         var $splitterBar = $container.find(".splitter-bar");
                         var $scaleBar = $container.find(".scale-bar");
                         var drawSplitterScale = function() {
                             // constants
                             var HOUR = 60 * 60 * 1000;
                             var DAY = 24 * HOUR;
-
+                            
                             // Clean the two containers in case a redraw is triggered. 
                             $splitterBar.empty();
                             $scaleBar.empty();
-
+                            
                             // Calculate the start distance and start date align at day.
                             var dVal = vm.totalEnd().getTime() - vm.totalStart().getTime();
                             var splitterDistance = $scaleBar.width() * (DAY / dVal);
                             var startDate = Math.ceil(vm.totalStart().getTime() / DAY) * DAY;
                             var startPos = (startDate - vm.totalStart().getTime()) / DAY * splitterDistance;
-
+                            
                             // Calculate the step in case there will be too many scales to draw.
                             var minSplitterDistance = 20;
                             var step = 1;
@@ -170,7 +168,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                                 var $splitter = $("<span></span>").css("left", currentPos + "px");
                                 $splitterBar.append($splitter);
                                 var currentTimeObj = new Date(currentTime);
-
+                               
                                 // Calculate the scale text. 
                                 var scaleText = '';
                                 var currentMonth = currentTimeObj.getMonth();
@@ -181,7 +179,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                                     lastMonth = currentMonth;
                                 }
                                 scaleText += currentTimeObj.getDate();
-
+                                
                                 // Draw the scale.
                                 var $scale = $("<span></span>").text(scaleText);
                                 $scaleBar.append($scale);
@@ -189,13 +187,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                                 $scale.css("left", currentPos - $scale.width() / 2 + "px");
                             }
                         };
-
+                        
                         drawSplitterScale();
                         // Redraw the slider when browser window is resized.
                         $(window).resize(function() {
                             drawSplitterScale();
                         });
-
+                       
                         vm.viewStart.subscribe(function(newVal) {
                             $sliderBar.slider("values", [newVal.getTime(), vm.viewEnd().getTime()]);
                             fireViewRangeChange();
@@ -212,7 +210,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             $sliderBar.slider("option", "max", newVal.getTime());
                             drawSplitterScale();
                         });
-
+                        
                         function fireViewRangeChange() {
                             if (vm.viewRangeChange && typeof vm.viewRangeChange === 'function') {
                                 vm.viewRangeChange(vm.viewStart(), vm.viewEnd());
@@ -222,5 +220,4 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 }
             }
     );
-
 });
