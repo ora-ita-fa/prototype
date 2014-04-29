@@ -1,0 +1,96 @@
+{
+    "x": [
+        {
+            "key": "measure",
+            "text": "Measure",
+            "attrs": [
+                {
+                    "text": "Sales",
+                    "value": "Sales"
+                },
+                {
+                    "text": "Units",
+                    "value": "Units"
+                }
+            ]
+        }, {
+            "key": "chanel",
+            "text": "Channel",
+            "attrs": [
+                {
+                    "text": "All Channels",
+                    "value": "All Channels"
+                }
+            ],
+            "aggrs": [
+                {
+                    "text": "Channel Total",
+                    "func": "sum"
+                }
+            ]
+        },
+        {
+            "key": "geography",
+            "text": "Geography",
+            "attrs": [
+                {
+                    "text": "World",
+                    "value": "World"
+                },
+                {
+                    "text": "Boston",
+                    "value": "Boston"
+                }
+            ],
+            "aggrs": [
+                {
+                    "text": "Geography Total",
+                    "func": "sum"
+                }
+            ]
+        }
+    ],
+    "y": [
+        
+        {
+            "key": "product",
+            "text": "Product",
+            "attrs": [
+                {
+                    "text": "Tents",
+                    "value": "Tents"
+                },
+                {
+                    "text": "Canoes",
+                    "value": "Canoes"
+                }
+            ],
+            "aggrs": [
+                {
+                    "text": "Product Total",
+                    "func": "sum"
+                }
+            ]
+        },
+        {
+            "key": "time",
+            "text": "Time",
+            "attrs": [
+                {
+                    "text": "2007",
+                    "value": 2007
+                },
+                {
+                    "text": "2008",
+                    "value": 2008
+                }
+            ],
+            "aggrs": [
+                {
+                    "text": "Time Total",
+                    "func": "sum"
+                }
+            ]
+        }
+    ]
+}

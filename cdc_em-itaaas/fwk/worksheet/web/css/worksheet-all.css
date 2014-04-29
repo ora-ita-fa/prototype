@@ -1,0 +1,94 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-4-9, 11:52:57
+    Author     : danfjian
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 2, 2014, 3:27:17 PM
+    Author     : phzhou
+*/
+ul.ui-autocomplete {
+  color: #333;
+  border: 1px solid #c4ced7;
+  background: #fff;
+  list-style: none;
+  padding: 1px 0;
+  margin: 0;
+  display: inline-block;
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35);
+  font-size: 1rem;
+  white-space: nowrap;
+  width: 200px; }
+ul li.ui-menu-item {
+  color: #333333;
+  display: list-item;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  height: 31.96875px;
+  line-height: 15px;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  text-align: left;
+  white-space: nowrap;
+  width: 234px; }
+  ul li.ui-menu-item a {
+    color: black;
+    cursor: auto;
+    display: block;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    height: 30px;
+    line-height: 30px;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    padding-bottom: 0.9959999918937683px;
+    padding-left: 30px;
+    padding-right: 21px;
+    padding-top: 0.9959999918937683px;
+    position: relative;
+    text-align: left;
+    text-decoration: none solid black;
+    white-space: nowrap;
+    width: 163px;
+    overflow: hidden; }
+    ul li.ui-menu-item a:hover {
+      font-weight: normal;
+      margin: 0;
+      background: #ebeced;
+      border: 0; }
+
+.worksheet {
+  padding: 10px; }
+  .worksheet .worksheet-search-header {
+    display: inline-block; }
+  .worksheet #searchForm {
+    display: none; }
+  .worksheet #show-search-worksheet {
+    font-size: medium;
+    font-weight: bold; }
+  .worksheet #worksheet-menu {
+    z-index: 10; }
+  .worksheet .worksheet-list {
+    right: 0; }
+  .worksheet .worksheet-table {
+    white-space: nowrap;
+    right: 0;
+    width: 100%; }
+    .worksheet .worksheet-table .worksheet-table-column3 {
+      width: 300px;
+      white-space: nowrap;
+      background-color: red; }
+
+/*# sourceMappingURL=worksheet-all.css.map */

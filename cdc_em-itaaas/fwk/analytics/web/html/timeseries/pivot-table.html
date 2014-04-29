@@ -1,0 +1,71 @@
+<div>
+
+    <table class='pivot-table'>
+        <tbody >
+            <!-- ko foreach: {data: horizontalHeader, as: 'row'} -->
+            <tr data-bind="foreach: {data: row, as: 'attr'}">
+                <!-- ko if: $index() === 0 && $parentContext.$index() === 0 -->
+                <th class="pivot-corner" data-bind="attr: {colspan: $root.yDims.length, rowspan: $root.xDims.length}"></th>
+                <!-- /ko -->
+
+                <!-- ko if: attr -->
+                <th class="pivot-horizontal-header" data-bind="attr: {colspan: attr.dim.span},
+                    event: {mouseover: $root.showHorizontalDim.bind($data), mousemove: $root.handleHorizontalDrop.bind($data)}">
+        <div data-bind="text: attr.text"></div>
+        </th>
+        <!-- /ko -->
+        </tr>
+        <!-- /ko -->
+
+        <!-- ko foreach: {data: verticalHeader, as: 'row'} -->
+        <tr data-bind="foreach: {data: row, as: 'attr'}">
+            <!-- ko if: attr -->
+            <th class="pivot-vertical-header" data-bind="attr: {rowspan: attr.dim.span },
+                    event: {mouseover: $root.showVerticalDim.bind($data), mousemove: $root.handleVerticalDrop.bind($data)}">
+        <div data-bind="text: attr.text"></div>    
+        </th>
+        <!-- /ko -->
+
+        <!-- ko if: $index() === $parent.length - 1 -->
+        <!-- ko foreach: {data: $root.horizontalPaths, as: 'xDim'} -->
+        <td class="pivot-cell" data-bind="event: {mouseover: $root.showPaths.bind($data,$index(),$parentContext.$parentContext.$index())}">
+            <div data-bind="ojComponent: {
+                            component: 'ojChart',
+                            type: 'bar',
+                            series: $root.series, 
+                            groups: $root.groups, 
+                            animationOnDisplay: 'auto',
+                            animationOnDataChange: 'auto',
+                            timeAxisType: 'enabled',
+                            legend: {rendered: 'off'},
+                            title: {text: '', hAlign: 'center'},
+                            xAxis: {
+                                tickLabel: {rendered: 'off'},
+                                axisLine: {rendered: 'off'}
+                            },
+                            yAxis: {
+                                tickLabel: {rendered: 'off'},
+                                axisLine: {rendered: 'off'}
+                            },
+                            layout: {
+                                outerGapWidth: 0, 
+                                outerGapHeight: 0,
+                                axisMaxSize: 0
+                            }
+                        }"
+                 style="width:200px;height:200px">
+            </div>
+        </td>
+        <!-- /ko -->
+        <!-- /ko -->
+        </tr>
+        <!-- /ko -->
+
+        </tbody>
+    </table>
+
+    <div id="pathsConsole"></div>
+    <div class="draggable-header">
+    </div>
+    <div class="drop-line"></div>
+</div>

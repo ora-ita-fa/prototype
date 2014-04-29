@@ -1,0 +1,326 @@
+<div class="timeseries-main">
+    <div class="left">
+        <h2>Measures</h2>
+        <div id="measure-selector" class="measure-selector tree-table tree-not-collapsable" 
+             data-bind="
+             ojComponent:{
+                 component: 'ojTree', 
+                 data:measures}
+             ">
+        </div>
+        <h2>Dimension Attributes</h2>
+        <div id="dimension-selector" class="dimension-selector tree-table"
+             data-bind="
+             ojComponent:{
+                 component: 'ojTree', 
+                 data:dimensions}
+             ">
+        </div>
+    </div>
+
+    <div class="middle">
+        <div class="header-bar">
+            <h2>Data Selection</h2>
+        </div>
+        <div class="selected-measures">Selected Measures</div>
+
+        <div class="main-config">
+            <!-- <div class="sample-chart">
+                <img src="images/sample-chart.png" alt="Sample Chart"/>
+            </div>-->
+            <div id='chart-container'>
+                <!-- <button id= "button"
+                        data-bind="click: chartTypeButtonClick, 
+                    ojComponent: {component: 'ojButton', label: 'Vertical/Horizontal'}">
+                     </button>-->
+                <div data-bind="ojComponent: {
+                        component: 'ojChart', 
+                        type: chartType, 
+                        timeAxisType: 'enabled',
+                        selection: 'multiple', 
+                        series: lineSeriesValue, 
+                        groups: lineGroupsValue, 
+                        animationOnDisplay: 'auto',
+                        animationOnDataChange: 'auto',
+                        orientation: 'vertical'
+                        }"
+                     style="width:100%;height:300px;">
+                </div>
+            </div>
+            <!-- <div class="data-series">
+                <h3 class="title">Data Series</h3>
+                <p>Data Series Place Holder</p>
+            </div>-->
+        </div>
+
+        <div class="x-axis">
+            <div>
+                <h3 class="inline-title">X-Axis</h3>
+                <label>
+                    <input type="checkbox" />
+                    Enable Global Time Slider
+                </label>                        
+            </div>
+            <div class="time-settings">Time: In the past: 1 Year(s)</div>
+        </div>
+
+        <div class="include">
+            <h3 class="inline-title">Include </h3>
+            <label>
+                <input type="checkbox"/>
+                Comparison Cube		 
+            </label>
+        </div>
+    </div>
+    <div id="tabs" class="right"
+         data-bind="
+         ojComponent:{
+             component:'ojTabs',
+             active:1
+         }
+         ">
+        <div>
+            <span>Filters</span>
+        </div>
+        <div class="data-display">
+            <span>Data Display</span>
+            <div>
+                <table>
+                    <tr>
+                        <th>* Region Name</th>
+                        <td><input/></td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Display</th>
+                        <td>
+                            <label>
+                                <input type="radio" name="data-display-display"/>
+                                Chart
+                            </label>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <input type="radio" name="data-display-display"/>
+                                Table of
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Region Height(px)</th>
+                        <td>
+                            <label>
+                                <input type="checkbox"/>
+                                Auto
+                            </label>
+                            <label> Slider Control Place Holder</label>
+                        </td>
+                    </tr>
+                </table>
+                <div class="chart-options">
+                    <h3>Chart Options</h3>
+                    <hr/>
+                    <div class="type"> 
+                        <button  id="line"
+                                 class="line-icon"
+                                 data-bind="click: chartTypeButtonClick,
+                             ojComponent: {
+                            component:'ojButton', 
+                            display: 'icons', 
+                            icons: {start:'line-icon'}, 
+                            label: 'line chart'}">
+                        </button>
+                        <button id="bar"
+                                class="bar-icon"
+                                data-bind="click: chartTypeButtonClick,
+                                ojComponent: {
+                            component:'ojButton', 
+                            display: 'icons', 
+                            icons: {start:'bar-icon'}, 
+                            label: 'bar chart'}">
+                        </button>
+                        <button id="area"
+                                class="area-icon"
+                                data-bind="click: chartTypeButtonClick,
+                                ojComponent: {
+                            component:'ojButton', 
+                            display: 'icons', 
+                            icons: {start:'bar-icon'}, 
+                            label: 'area chart'}">
+                        </button>
+                        <!-- <img src="images/LINE_VERT_ABS.png" alt="line chart"/>
+                        <i src="images/AREA_VERT_ABS.png" alt="area chart"/>
+                        <img src="images/BAR_VERT_CLUST.png" alt="bar chart"/>-->
+                    </div>
+                    <div class="displays">
+                        <div class="show-title">Show </div>
+                        <div class="show-options">
+                            <div>
+                                <label>
+                                    <input type="checkbox" checked/>
+                                    Multiple Data Series in One Chart
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <input type="checkbox" checked/>
+                                    Legend
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <input type="checkbox" checked/>
+                                    Tooltips
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <input type="checkbox"/>	
+                                    X-Axis Label
+                                </label>
+                                <input value="<Cutomized X-Axis Label>"/>
+                            </div>
+                            <div>
+                                <label>
+                                    <input type="checkbox"/>	
+                                    Y-Axis Label
+                                </label>
+                                <input value="<Cutomized X-Axis Label>"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="data-series-display">
+            <span>Data Series Display</span>
+            <div>
+                <h3>Drill Down</h3>
+                <hr/>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><input id ="check-by-month-of-year" type="checkbox"  /></td>
+                            <td><label>By Month of Year</label></td>
+                        </tr>
+                        <tr><td></td>
+                            <td> <div id='lowest-level-div'>
+                                    <label>Lowest Level</label>
+                                    <select name="lowest-level" >
+                                        <option value="day" selected>Day of Month</option>
+                                        <option value="month">Month of Year</option>
+                                        <option value="hour">Hour</option>
+                                    </select>
+                                </div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="top-bottom">
+                    <h3>Top/Bottom</h3>
+                    <hr/>
+                    <table>
+                        <tr><td>
+                                <div >
+                                    <label>Show&nbsp;</label>
+                                    <input id='check-show-only-topbottom' type="checkbox" />
+                                    <label>Only Top/Bottom Data Series</label>
+                                </div>
+                                <div class='top-bottom-editable'>
+                                    <label>Include</label> 
+                                    <select  id='include-select'>
+                                        <option value="top" >Top</option>
+                                        <option value="bottom">Bottom</option>
+                                    </select>
+                                </div>
+                                <div class='top-bottom-editable'>
+                                    <label><input type= "radio" name="include-radio" /><span id='top-or-bottom-span'>Top</span> N Data Series</label><br>
+                                    <div class="inputnumber"><input id="inputnumber-1"   data-bind="ojComponent: {component: 'ojInputNumber', max:100, min:-20, step:1,value:5}"/></div>
+                                    <label><input type= "radio" name="include-radio"/><span  id='largest-or-smallest-span' >Largest</span> Contributors</label><br/>
+                                     <div  class="inputnumber"><input id="inputnumber-2"   data-bind="ojComponent: {component: 'ojInputNumber', max:100, min:-20, step:1,value:5}"/><span>% or more of total</span></div>
+                                    <label><input type= "radio" name="include-radio"/>Percentile Rank </label><br>
+                                    <div  class="inputnumber"><input id="inputnumber-3"   data-bind="ojComponent: {component: 'ojInputNumber', max:100, min:-20, step:1,value:5}"/><span>% or more</span></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class='top-bottom-editable'>
+                                    <label>By Attribute</label> 
+                                    <select id="by-attribute-select" >
+                                        <option value="none" ></option>
+                                        <option value="target-level">Target Level</option>
+                                    </select>
+                                </div>
+                                <div class='top-bottom-editable'>
+                                    <label>Measure</label>
+                                    <select name="measure" >
+                                        <option value="none" ></option>
+                                        <option value="measure">Average($dimension)</option>
+                                    </select>
+                                </div>
+                                <div class='value-div'>
+                                    <div >
+                                        <label>Value</label> 
+                                    </div>
+                                    <div class="top-bottom-editable">
+                                        <label><input type= "radio" name="val" />Sum</label><br>
+                                        <label><input type= "radio" name="val"/>Maximum</label><br>
+                                        <label><input type= "radio" name="val"/>Minimum</label><br>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="trending-forecasting-baseline">
+            <span>Trending,Forecasting and Baseline</span>
+            <table>
+                <tbody>
+                    <tr>
+                        <th >Display</th>
+                        <td><input type="checkbox" checked><label>Trending & Forecasting</label></td>
+                    </tr>
+                    <tr><th></th>
+                        <td><input type="checkbox"><label>Baseline</label></td>
+                    </tr>
+                    <tr><th></th>
+                        <td>* The minimum points for baseline is 50. Please adjust your time range and granularity</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p></p>
+        </div>
+        <div class="correlation">
+            <span>Correlation</span>
+            <p>
+                To correlate data in a chart, add the dimensions/members for comparison to the data series axis. 
+                When correlating data in a table, data series from either the rows or columns can be compared.
+            </p>
+            <div>
+                <div><span> Correlate</span></div>
+                <div>
+                    <label><input type= "radio" name="correlate" />None</label><br>
+                    <label><input type= "radio" name="correlate"/>One To Many</label><br>
+                    <label><input type= "radio" name="correlate"/>Many To One</label><br>
+                </div>
+            </div>
+            <div class="correlation-analyze">
+                <div><span>Analyze</span></div>
+                <div>
+                    <label><input type= "radio" name="Analyze" />All Data</label><br>
+                    <label><input type= "radio" name="Analyze"/>Data without Outliers</label><br>
+                </div>
+            </div>
+            <div>
+                <div><span>Correlation Coefficient</span></div>
+                <div>
+                    <label><input type= "radio" name="correlate" />Pearson (best for linear data series)</label><br>
+                    <label><input type= "radio" name="correlate"/>Spearman (best for non-linear data series)</label><br>
+                </div>
+            </div>
+
+        </div>            
+    </div>

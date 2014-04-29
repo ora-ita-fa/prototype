@@ -1,0 +1,25 @@
+<div class="timeseries-tool">
+    <h3 class="header">Forecast Region</h3>
+    <div class="main">
+        <div id="forecast-chart" class="chart" 
+             data-bind="
+            ojComponent: {
+                timeAxisType: 'enabled',
+                component: 'ojChart', 
+                type: chartType, 
+                selection: 'multiple', 
+                series: yAxisSeries, 
+                groups: xAxisValues, 
+                animationOnDisplay: 'auto',
+                animationOnDataChange: 'auto',
+                orientation: 'vertical',
+                xAxis: forecastArea,
+                yAxis: yAxisData,
+                legend: {
+                    rendered: 'on'
+                }
+            }">
+        </div>
+<!--        <div id="loading-pane" align="center">Fetching Data...<div data-bind="ojComponent:{component: 'ojProgressbar', value: progressValue}" style="width: 200px;height: 10px;"></div></div>-->
+    </div>
+</div>

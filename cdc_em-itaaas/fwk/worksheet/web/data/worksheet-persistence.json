@@ -1,0 +1,125 @@
+{
+    "Worksheet": {
+        "-xmlns": "http://www.oracle.com/sysman/core/emwanalytics/Worksheet",
+        "name": "ws1",
+        "displayName": "ws1",
+        "status": "1",
+        "type": "1",
+        "dashboard": "false",
+        "refreshFrequency": "0",
+        "published": "0",
+        "version": "13.1.0.0.0",
+        "created": "2014-04-08 05:42:28.723078",
+        "createdBy": "SYSMAN",
+        "updated": "2014-04-08 05:42:28.723078",
+        "updatedBy": "SYSMAN",
+        "id": "F6827313A01C56D6E0434B86F90A3333",
+        "QueryDescriptorGroups": [
+            {
+                "-identity": "REGION_1",
+                "QueryDescriptor": [{
+                        "-xmlns": "http://www.oracle.com/sysman/core/emwanalytics/Worksheet",
+                        "-identity": "query-126",
+                        "Subject": {
+                            "-name": "TVMDWFSUBJECT"
+                        },
+                        "Cube": {
+                            "-name": "TVMDWFDISKACTIVITY"
+                        },
+                        "Source": {
+                            "-type": "cube"
+                        },
+                        "Aggregations": {
+                            "MeasureAggregation": {
+                                "-alias": "AVG_ACTIVEREADS_",
+                                "Function": "Average",
+                                "Measure": "ACTIVE READS (PER SEC)"
+                            },
+                            "AggregationAggregation": {
+                                "-treatAsMeasure": "false",
+                                "-alias": "EMWC_TVMDWFDISKACT_END_TIME_ID",
+                                "Function": "Trunc with format",
+                                "FunctionParameters": {
+                                    "FunctionParameter": "'dd'"
+                                },
+                                "DateAggregation": {
+                                    "-cube": "TVMDWFDISKACTIVITY",
+                                    "-dimension": "END_TIME",
+                                    "Function": "Minimum"
+                                }
+                            }
+                        },
+                        "GroupByEntities": {
+                            "GroupByLevel": {
+                                "Level": {
+                                    "-name": "TARGETLEVELINSTANCE",
+                                    "Dimension": "TARGET",
+                                    "Hierarchy": "TARGETHIERBYCOSTCENTER"
+                                },
+                                "AttributeSelections": {
+                                    "AttributeSelection": {
+                                        "-alias": "TARGET_DISPLAYNAME",
+                                        "Attribute": {
+                                            "-name": "DISPLAYNAME",
+                                            "-type": "1",
+                                            "Level": {
+                                                "-name": "TARGETLEVELINSTANCE",
+                                                "Dimension": "TARGET",
+                                                "Hierarchy": "TARGETHIERBYCOSTCENTER"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "WhereExpression": {
+                            "-conjunction": "AND",
+                            "Filter": {
+                                "-type": "relative_time_range",
+                                "RelativeTimeRangeFilter": {
+                                    "offsetField": "1",
+                                    "offset": "1",
+                                    "dimensionName": "END_TIME"
+                                }
+                            }
+                        },
+                        "RollupLevels": {
+                            "Level": {
+                                "-name": "TIMELEVELDAYOFMONTH",
+                                "Dimension": "END_TIME",
+                                "Hierarchy": "TIMEHIERBYMONTHOFYEAR"
+                            }
+                        },
+                        "StartingRollupLevels": {
+                            "Level": {
+                                "-name": "TIMELEVELMONTHOFYEAR",
+                                "Dimension": "END_TIME",
+                                "Hierarchy": "TIMEHIERBYMONTHOFYEAR"
+                            }
+                        }
+                    }],
+                "Parameters": [
+                    {
+                        "Key": "FAUICONFIG",
+                        "Value": "rO0ABXNyAERvcmFjbGUuc3lzbWFuLmNvcmUuZW13ZmxleGlibGVhbmFseXplci51aW1vZGVsLm1ldGFkYXRhLkZBQ2hhcnRNb2RlbKpMGmDKBgiHAwAQWgAKbV9lZGl0YWJsZUkADm1fcmVnaW9uSGVpZ2h0SQAObV9yZWdpb25TdGF0dXNMAA9tX2ZhQ2hhcnRDb25maWd0AEdMb3JhY2xlL3N5c21hbi9jb3JlL2Vtd2ZsZXhpYmxlYW5hbHl6ZXIvdWltb2RlbC9tZXRhZGF0YS9GQUNoYXJ0Q29uZmlnO0wAFG1fZmFUb29sUmVnaW9uQ29uZmlndABXTG9yYWNsZS9zeXNtYW4vZW1JbnRlcm5hbFNESy9jb3JlL2Vtd2FuYWx5dGljc3Rvb2xzL21vZGVsL2dlbmVyaWN0b29sL1Rvb2xSZWdpb25Db25maWc7TAAabV9pbnRlcmFjdGl2ZUluZm9TdHJpbmdNYXB0AA9MamF2YS91dGlsL01hcDtMAAxtX3JlZ2lvbkd1aWR0ABJMamF2YS9sYW5nL1N0cmluZztMAA1tX3JlZ2lvblRmZElkcQB+AARMAA1tX3JlZ2lvblRpdGxlcQB+AARMAAxtX3JlZ2lvblR5cGVxAH4ABEwAFm1fc2VsZWN0ZWRBZ2dyZWdhdGlvbnN0ABBMamF2YS91dGlsL0xpc3Q7TAASbV9zZWxlY3RlZEN1YmVOYW1lcQB+AARMABNtX3NlbGVjdGVkRGltZW5zaW9udABFTG9yYWNsZS9zeXNtYW4vY29yZS9lbXdmbGV4aWJsZWFuYWx5emVyL3VpbW9kZWwvbWV0YWRhdGEvRkFEaW1lbnNpb247TAAUbV9zZWxlY3RlZERpbWVuc2lvbnNxAH4ABUwAFW1fc2VsZWN0ZWRTdWJqZWN0TmFtZXEAfgAETAAZbV9zZWxlY3RlZFRpbWVSYW5nZUZpbHRlcnQAS0xvcmFjbGUvc3lzbWFuL2NvcmUvZW13ZmxleGlibGVhbmFseXplci91aW1vZGVsL21ldGFkYXRhL0ZBVGltZVJhbmdlRmlsdGVyO3hwAf////8AAAABc3IARW9yYWNsZS5zeXNtYW4uY29yZS5lbXdmbGV4aWJsZWFuYWx5emVyLnVpbW9kZWwubWV0YWRhdGEuRkFDaGFydENvbmZpZ/nFi5v1/S0UAwAdWgASbV9hZHZhbmNlZEFuYWx5c2lzWgAUbV9hbmFseXNpc1BlcmNlbnRpbGVaAA9tX2FuYWx5c2lzUmF0aW9aAA5tX2FuYWx5c2lzVG9wTloACW1fYm90dG9tTloADm1fZGlzcGxheUNoYXJ0WgAUbV9kaXNwbGF5Q2hhcnRMZWdlbmRaAA5tX2Rpc3BsYXlUYWJsZVoAFm1fZGlzcGxheVRhYmxlT2ZDaGFydHNaABZtX2Rpc3BsYXlUYWJsZU9mVmFsdWVzWgAobV9lbmFibGVEaXNwbGF5QWdncmVnYXRpb25WYWx1ZXNGb3JUYWJsZVoAD21fZW5hYmxlT3ZlcmxheUkACG1fbnVtYmVyWgAJbV9wZXJjZW50WgANbV9zaW5nbGVDaGFydFoABm1fdG9wTloACW1fdHlwZUJhcloACm1fdHlwZUxpbmVaAAltX3R5cGVQaWVaAAttX3R5cGVUYWJsZUwADGFuYWx5c2lzVHlwZXEAfgAETAALbV9jaGFydFR5cGVxAH4ABEwAE21fY29ycmVsYXRpb25Db25maWd0AE1Mb3JhY2xlL3N5c21hbi9jb3JlL2Vtd2ZsZXhpYmxlYW5hbHl6ZXIvdWltb2RlbC9tZXRhZGF0YS9GQUNvcnJlbGF0aW9uQ29uZmlnO0wAGW1fZHJpbGxkb3duSGllcmFyY2h5TmFtZXNxAH4AA0wAEm1fZmFCYXNlbGluZUNvbmZpZ3QASkxvcmFjbGUvc3lzbWFuL2NvcmUvZW13ZmxleGlibGVhbmFseXplci91aW1vZGVsL21ldGFkYXRhL0ZBQmFzZWxpbmVDb25maWc7TAAWbV9mb3JlY2FzdFJlZ2lvbkNvbmZpZ3QAX0xvcmFjbGUvc3lzbWFuL2VtSW50ZXJuYWxTREsvY29yZS9lbXdhbmFseXRpY3N0b29scy9tb2RlbC9mb3JlY2FzdC9jb25maWcvRm9yZWNhc3RSZWdpb25Db25maWc7TAAkbV9zZWxlY3RlZERpc3BsYXlBZ2dyZWdhdGlvbkZ1bmN0aW9udABUTG9yYWNsZS9zeXNtYW4vZW1JbnRlcm5hbFNESy9jb3JlL2Vtd2FuYWx5dGljc3Rvb2xzL21vZGVsL3F1ZXJ5L0FnZ3JlZ2F0aW9uRnVuY3Rpb247TAANbV90b3BuQWdnRnVuY3EAfgAETAAJc29ydE9yZGVycQB+AAR4cAAAAAAAAQEAAQAAAAAAAAoAAQAAAQAAcHQABGxpbmVzcgBLb3JhY2xlLnN5c21hbi5jb3JlLmVtd2ZsZXhpYmxlYW5hbHl6ZXIudWltb2RlbC5tZXRhZGF0YS5GQUNvcnJlbGF0aW9uQ29uZmlnOOmO1Dgja+ECAANJAA1tX2NvZWZmaWNpZW50SQAJbV9vdXRsaWVySQAMbV9yZWdpb25UeXBleHAAAAAAAAAAAP////9wc3IASG9yYWNsZS5zeXNtYW4uY29yZS5lbXdmbGV4aWJsZWFuYWx5emVyLnVpbW9kZWwubWV0YWRhdGEuRkFCYXNlbGluZUNvbmZpZx9oZ/9IYxKRAgALSQAObV9iYXNlbGluZVR5cGVaABBtX2VuYWJsZUJhc2VsaW5lSQATbV90cmFpblBlcmlvZEFtb3VudEkAEm1fdHJhaW5QZXJpb2RGaWVsZEkAFm1fdHJhaW5TdGFydFRpbWVBbW91bnRJABVtX3RyYWluU3RhcnRUaW1lRmllbGRMABZtX2Jhc2VsaW5lQW5hbHlzaXNUeXBlcQB+AARMABptX2VuYWJsZVRpbWVBZ2dGb3JCYXNlbGluZXQAE0xqYXZhL2xhbmcvQm9vbGVhbjtMABVtX2dycGJ5VGltZUF0dHJJdHNlbGZxAH4AE0wAE21fdGltZUF0dHJpYnV0ZU5hbWVxAH4ABEwAFG1fdHJhaW5pbmdUYXJnZXROYW1lcQB+AAR4cAAAAAAAAAAAAQAAAAEAAAABAAAAAXQACmhpc3RvcmljYWxzcgARamF2YS5sYW5nLkJvb2xlYW7NIHKA1Zz67gIAAVoABXZhbHVleHABc3EAfgAWAHQACkRBWU9GTU9OVEhwc3IAXW9yYWNsZS5zeXNtYW4uZW1JbnRlcm5hbFNESy5jb3JlLmVtd2FuYWx5dGljc3Rvb2xzLm1vZGVsLmZvcmVjYXN0LmNvbmZpZy5Gb3JlY2FzdFJlZ2lvbkNvbmZpZ+vTg97NkYV3AgASRAAIY2FwYWNpdHlJAApjb25maWRlbmNlWgAOZW5hYmxlRm9yZWNhc3RJAA5mb3JlY2FzdFBlcmlvZFoAD2hpZGVDb25maWdQYW5lbEQAE2xvd2VyQm91bmRUaHJlc2hvbGRaAAxzaG93Q2hhbm5lbHNaABBzaG93SW5wdXRPcHRpb25zWgAOc2hvd1RocmVzaG9sZHNaAA5zaG93VG90YWxUcmVuZFoADnNob3dUcmVuZFRvdGFsWgAPc2luZ2xlQ2hhcnRNb2RlRAATdXBwZXJCb3VuZFRocmVzaG9sZEwAEGNoYXJ0RGlzcGxheVR5cGVxAH4ABEwAEGNoYXJ0SW5saW5lU3R5bGVxAH4ABEwAD2ZvcmVjYXN0RW5kRGF0ZXQAEExqYXZhL3V0aWwvRGF0ZTtMABFmb3JlY2FzdFN0YXJ0RGF0ZXEAfgAbTAAXc2VsZWN0ZWRSZWdyZXNzaW9uTW9kZWx0AFpMb3JhY2xlL3N5c21hbi9lbUludGVybmFsU0RLL2NvcmUvZW13YW5hbHl0aWNzdG9vbHMvbW9kZWwvZm9yZWNhc3QvY29uZmlnL1JlZ3Jlc3Npb25Nb2RlbDt4cgBVb3JhY2xlLnN5c21hbi5lbUludGVybmFsU0RLLmNvcmUuZW13YW5hbHl0aWNzdG9vbHMubW9kZWwuZ2VuZXJpY3Rvb2wuVG9vbFJlZ2lvbkNvbmZpZ08R6NgF5ty9AgAFWgAWZW5hYmxlR2xvYmFsVGltZVNsaWRlckwADWNoYXJ0VHlwZUxpc3RxAH4ABUwAC2Rlc2NyaXB0aW9ucQB+AARMAAV0aXRsZXEAfgAETAAEdHlwZXEAfgAEeHAAcHBwcAAAAAAAAAAAAAAAXwAAAAA8AQAAAAAAAAAAAAEAAAABAAAAAAAAAAB0AA1MSU5FX1ZFUlRfQUJTdAAXd2lkdGg6OTklOyBoZWlnaHQ6MjAwcHhwcH5yAFhvcmFjbGUuc3lzbWFuLmVtSW50ZXJuYWxTREsuY29yZS5lbXdhbmFseXRpY3N0b29scy5tb2RlbC5mb3JlY2FzdC5jb25maWcuUmVncmVzc2lvbk1vZGVsAAAAAAAAAAASAAB4cgAOamF2YS5sYW5nLkVudW0AAAAAAAAAABIAAHhwdAAGTElORUFSfnIAUm9yYWNsZS5zeXNtYW4uZW1JbnRlcm5hbFNESy5jb3JlLmVtd2FuYWx5dGljc3Rvb2xzLm1vZGVsLnF1ZXJ5LkFnZ3JlZ2F0aW9uRnVuY3Rpb24AAAAAAAAAABIAAHhxAH4AInQAA0FWR3BweHNyAGFvcmFjbGUuc3lzbWFuLmVtSW50ZXJuYWxTREsuY29yZS5lbXdhbmFseXRpY3N0b29scy5tb2RlbC50aW1lc2VyaWVzLmNvbmZpZy5UaW1lU2VyaWVzUmVnaW9uQ29uZmlncj9rLhY6OV0CAB5aABRtX2Rpc3BsYXlDaGFydExlZ2VuZFoAFG1fZGlzcGxheU1lYXN1cmVJbmZvWgAIbV9lbmFibGVaAA1tX2VuYWJsZUFzeW5jWgAQbV9lbmFibGVCYXNlbGluZVoAFG1fZW5hYmxlRXZlbnRPdmVybGF5WgAVbV9lbmFibGVNZXRyaWNPdmVybGF5WgAObV9lbmFibGVSb2xsdXBaABdtX2VuYWJsZVNlcmllc1NlbGVjdGlvbloAHG1fZW5hYmxlU3RhdGlzdGljQ29ycmVsYXRpb25aABhtX2VuYWJsZVN3aXRjaFRvRm9yZWNhc3RaABdtX2V2ZW50T3ZlcmxheURlbnNlVmlld1oAFG1fZXhwYW5kRGF0YU5hdlBhbmVsWgAcbV9yZWRpcmVjdFRvRW1iZWRkZWRGb3JlY2FzdFoADW1fc2luZ2xlQ2hhcnRMABBjaGFydElubGluZVN0eWxlcQB+AARMABZtX2Jhc2VsaW5lUmVnaW9uQ29uZmlndACCTG9yYWNsZS9zeXNtYW4vZW1JbnRlcm5hbFNESy9jb3JlL2Vtd2FuYWx5dGljc3Rvb2xzL21vZGVsL3RpbWVzZXJpZXMvY29uZmlnL1RpbWVTZXJpZXNSZWdpb25Db25maWckVGltZVNlcmllc0Jhc2VsaW5lUmVnaW9uQ29uZmlnO0wAEm1fY2hhcnREaXNwbGF5VHlwZXEAfgAETAAdbV9ldmVudE92ZWxheUNoYXJ0RGlzcGxheVR5cGVxAH4ABEwAE21fZXZlbnRPdmVybGF5VGl0bGVxAH4ABEwAFm1fZm9yZWNhc3RSZWdpb25Db25maWdxAH4ADEwACm1faW5uZXJEaW10AFBMb3JhY2xlL3N5c21hbi9lbUludGVybmFsU0RLL2NvcmUvZW13YW5hbHl0aWNzdG9vbHMvbW9kZWwvd2FyZWhvdXNlL0xldmVsU3RyaW5nO0wACW1fb3V0Y29tZXEAfgAETAAKbV9vdXRlckRpbXEAfgAqTAAVbV9xdWVyeURlc2NyaXB0b3JUeXBlcQB+AARMABBtX3JlZnJlc2hQYW5lbElkcQB+AARMABZtX3N0YXRDb3JyUmVnaW9uQ29uZmlndABpTG9yYWNsZS9zeXNtYW4vZW1JbnRlcm5hbFNESy9jb3JlL2Vtd2FuYWx5dGljc3Rvb2xzL21vZGVsL3Rvb2xjb25maWcvY29ycmVsYXRpb24vQ29ycmVsYXRpb25SZWdpb25Db25maWc7TAARbV90aW1lR3JhbnVsYXJpdHlxAH4AKkwADm1fdmlld0VuZFJhbmdlcQB+ABtMABBtX3ZpZXdTdGFydFJhbmdlcQB+ABt4cgBdb3JhY2xlLnN5c21hbi5lbUludGVybmFsU0RLLmNvcmUuZW13YW5hbHl0aWNzdG9vbHMubW9kZWwudGltZXNlcmllcy5jb25maWcuU2VyaWVzUmVnaW9uQ29uZmlnJeX06bb7HOACAAVaAA1tX2VuYWJsZVBpdm90TAAPbV9hZ2dyZWdhdGVUeXBlcQB+AARMABVtX2NvbHVtbkdyb3VwQnlWYWx1ZXNxAH4ABUwAEm1fcm93R3JvdXBCeVZhbHVlc3EAfgAFTAATbV94YXhpc0dyb3VwQnlWYWx1ZXEAfgAEeHEAfgAdAHNyABNqYXZhLnV0aWwuQXJyYXlMaXN0eIHSHZnHYZ0DAAFJAARzaXpleHAAAAAAdwQAAAAKeHQAGFRpbWVzZXJpZXMgQW5hbHlzaXMgRGVzY3QAE1RpbWVzZXJpZXMgQW5hbHlzaXN0AAp0aW1lc2VyaWVzAHBzcQB+AC4AAAAAdwQAAAAKeHNxAH4ALgAAAAB3BAAAAAp4cAEAAQEAAAAAAAAAAAEAAXEAfgAgcHEAfgAfcQB+AB9wcQB+AB5wdAAAcHQACnRpbWVTZXJpZXNwcHBzcgAOamF2YS51dGlsLkRhdGVoaoEBS1l0GQMAAHhwdwgAAAFFOvyJgHhzcQB+ADd3CAAAAT3jS12AeHNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAABdAAOY29udHJvbFBvcHVwSWR0ACVlbVQ6cmVnaW9uMTowOnJlZ2lvbjE6MDpmb3JlY2FzdFBvcHVweHQAGlJFR0lPTl8yMDE0LTA0LTA3IDIyOjQyOjA0dABlL1dFQi1JTkYvc2RrL2NvcmUvcmVnaW9ucy9lbXdhbmFseXRpY3N0b29scy90aW1lLXNlcmllcy10b29sLXRhc2stZmxvdy54bWwjdGltZS1zZXJpZXMtdG9vbC10YXNrLWZsb3d0AAhSRUdJT05fMXQAClRJTUVTRVJJRVNzcQB+AC4AAAABdwQAAAAKc3IARW9yYWNsZS5zeXNtYW4uY29yZS5lbXdmbGV4aWJsZWFuYWx5emVyLnVpbW9kZWwubWV0YWRhdGEuRkFBZ2dyZWdhdGlvbt6OdABJGVwqAwACSQAGbV90eXBlTAARbV9hZ2dyZWdhdGlvbk5hbWVxAH4ABHhwAAAAAHQALkVNV0NfVFZNRFdGRElTS0FDVElWSVRZLkFDVElWRV9SRUFEU19fUEVSX1NFQ194eHQAElRWTURXRkRJU0tBQ1RJVklUWXBzcQB+AC4AAAABdwQAAAAKc3IAQ29yYWNsZS5zeXNtYW4uY29yZS5lbXdmbGV4aWJsZWFuYWx5emVyLnVpbW9kZWwubWV0YWRhdGEuRkFEaW1lbnNpb26SB+PWGyeCmwMAGFoAC21fZGltSGFzVkJIWgARbV9lbmFibGVEcmlsbGRvd25aAA1tX3NlbGVjdGJ5QWxsWgATbV9zZWxlY3RieUF0dHJpYnV0ZVoAEm1fc2VsZWN0YnlJbnN0YW5jZVoADW1fc2VsZWN0YnlWQkhaAA5tX3Nlcmllc2ZvckFsbFoAFG1fc2VyaWVzZm9yQXR0cmlidXRlWgATbV9zZXJpZXNmb3JJbnN0YW5jZVoADm1fc2VyaWVzZm9yVkJITAAJbV9GaWx0ZXJzcQB+AAVMABNtX2F2YWlsYWJsZVZCSE5hbWVzcQB+AAVMAA9tX2RpbWVuc2lvbk5hbWVxAH4ABEwAE21fZmFHcm91cGJ5Tm9kZUxpc3RxAH4ABUwADm1fZ3JvdXBieU5vZGVzcQB+AAVMABBtX2xldmVsSGllck5hbWVzcQB+AAVMABNtX2xvd2VzdExldmVsRmlsdGVydABLTG9yYWNsZS9zeXNtYW4vY29yZS9lbXdmbGV4aWJsZWFuYWx5emVyL3VpbW9kZWwvbWV0YWRhdGEvRkFMZXZlbEZpbHRlck5vZGU7TAAKbV9wb3NpdGlvbnEAfgAETAATbV9zZWxlY3RlZEhpZXJhcmNoeXEAfgAETAARbV9zZWxlY3RlZFZCSE5hbWVxAH4ABEwAHHNlbGVjdGVkRHluSGllckxldmVsQXR0ckxpc3RxAH4ABUwACXZiaEZpbHRlcnEAfgAFTAAOdmJoRmlsdGVyTm9kZXNxAH4ABUwADHZiaEZpbHRlclN0cnEAfgAEeHABAAEAAAAAAAEAc3EAfgAuAAAAAHcEAAAACnhzcQB+AC4AAAACdwQAAAAKdAALQnkgRU0gR3JvdXB0AAxCeSBFTSBTeXN0ZW14dAAGVEFSR0VUcHNxAH4ALgAAAAB3BAAAAAp4c3EAfgAuAAAAA3cEAAAACnQAFlRBUkdFVEhJRVJCWUNPU1RDRU5URVJ0ABtUQVJHRVRISUVSQllMSUZFQ1lDTEVTVEFUVVN0ABBUQVJHRVRISUVSQllUWVBFeHNyAElvcmFjbGUuc3lzbWFuLmNvcmUuZW13ZmxleGlibGVhbmFseXplci51aW1vZGVsLm1ldGFkYXRhLkZBTGV2ZWxGaWx0ZXJOb2Rl//4QriTST5oDAANMABRtX2xldmVsSGllcmFyY2h5TmFtZXEAfgAETAALbV9sZXZlbE5hbWVxAH4ABEwADm1fdmFsdWVTdHJpbmdzcQB+AAV4cgBAb3JhY2xlLnN5c21hbi5jb3JlLmVtd2ZsZXhpYmxlYW5hbHl6ZXIudWltb2RlbC5tZXRhZGF0YS5GQUZpbHRlctsMB0G16FMcAgAAeHBwcHNxAH4ALgAAAAB3BAAAAAp4eHQACmRhdGFzZXJpZXNwcQB+AE1wcHBweHh0AA1UVk1EV0ZTVUJKRUNUc3IASW9yYWNsZS5zeXNtYW4uY29yZS5lbXdmbGV4aWJsZWFuYWx5emVyLnVpbW9kZWwubWV0YWRhdGEuRkFUaW1lUmFuZ2VGaWx0ZXLXMN7rax8NpAMAC1oACm1fYWJzb2x1dGVaABttX2Rpc2FibGVEcmlsbGRvd25Db21wb25lbnRaABFtX2VuYWJsZURyaWxsZG93bloACm1fcmVsYXRpdmVJAA5tX3RpbWVJbnRlcnZhbEkAEm1fdGltZUludGVydmFsVHlwZUwAD21fZGltZW5zaW9uTmFtZXEAfgAETAAJbV9lbmRUaW1lcQB+ABtMAAttX3N0YXJ0VGltZXEAfgAbTAAPbV90aW1lTGV2ZWxOYW1lcQB+ACpMABVtX3RpbWVMb3dlc3RMZXZlbE5hbWVxAH4AKnhwAAABAQAAAAEAAAABdAAEVElNRXEAfgA4cQB+ADlzcgBOb3JhY2xlLnN5c21hbi5lbUludGVybmFsU0RLLmNvcmUuZW13YW5hbHl0aWNzdG9vbHMubW9kZWwud2FyZWhvdXNlLkxldmVsU3RyaW5nbujSuFbSZWQCAANMAA1kaW1lbnNpb25OYW1lcQB+AARMAA1oaWVyYXJjaHlOYW1lcQB+AARMAAlsZXZlbE5hbWVxAH4ABHhwcQB+AF10ABVUSU1FSElFUkJZTU9OVEhPRllFQVJ0ABRUSU1FTEVWRUxNT05USE9GWUVBUnNxAH4AXnEAfgBdcQB+AGB0ABNUSU1FTEVWRUxEQVlPRk1PTlRIeHg="
+                    },
+                    {
+                        "Key": "AnalyticType",
+                        "Value": "timeseries"
+                    },
+                    {
+                        "Key": "QDG_TIMESERIES_REGION_CONFIG_KEY",
+                        "Value": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><timeSeriesRegionConfig><description>Timeseries Analysis Desc</description><enableGlobalTimeSlider>false</enableGlobalTimeSlider><title>Timeseries Analysis</title><type>timeseries</type><enablePivot>false</enablePivot><chartDisplayType>LINE_VERT_ABS</chartDisplayType><chartInlineStyle>width:99%; height:200px</chartInlineStyle><displayChartLegend>true</displayChartLegend><displayMeasureInfo>false</displayMeasureInfo><enable>true</enable><enableAsync>true</enableAsync><enableBaseline>false</enableBaseline><enableEventOverlay>false</enableEventOverlay><enableMetricOverlay>false</enableMetricOverlay><enableRollup>true</enableRollup><enableSeriesSelection>false</enableSeriesSelection><enableStatisticCorrelation>false</enableStatisticCorrelation><enableSwitchToForecast>false</enableSwitchToForecast><eventOvelayChartDisplayType>LINE_VERT_ABS</eventOvelayChartDisplayType><eventOverlayDenseView>false</eventOverlayDenseView><expandDataNavPanel>true</expandDataNavPanel><forecastRegionConfig><enableGlobalTimeSlider>false</enableGlobalTimeSlider><capacity>0.0</capacity><chartDisplayType>LINE_VERT_ABS</chartDisplayType><chartInlineStyle>width:99%; height:200px</chartInlineStyle><confidence>95</confidence><enableForecast>false</enableForecast><forecastPeriod>60</forecastPeriod><hideConfigPanel>true</hideConfigPanel><lowerBoundThreshold>0.0</lowerBoundThreshold><selectedRegressionModel>LINEAR</selectedRegressionModel><showChannels>false</showChannels><showInputOptions>true</showInputOptions><showThresholds>false</showThresholds><showTotalTrend>false</showTotalTrend><showTrendTotal>false</showTrendTotal><singleChartMode>true</singleChartMode><upperBoundThreshold>0.0</upperBoundThreshold></forecastRegionConfig><outcome></outcome><queryDescriptorType>timeSeries</queryDescriptorType><redirectToEmbeddedForecast>false</redirectToEmbeddedForecast><singleChart>true</singleChart><viewEndRange>2014-04-07T00:00:00-07:00</viewEndRange><viewStartRange>2013-04-07T00:00:00-07:00</viewStartRange></timeSeriesRegionConfig>"
+                    }
+                ]
+
+            }
+        ],
+        "Parameters": [
+            {
+                "Key": "LAYOUT",
+                "Value": "1"
+            }
+        ]
+    }
+}

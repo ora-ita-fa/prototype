@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Time Series Tool Testing</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/resources/css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="/resources/css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
+        <link rel="stylesheet" href="/analytics/css/analytics-all.css">
+        <script src="/resources/js/libs/require/require.js"></script>
+        <script src="/resources/js/main.js"></script>
+    </head>
+    <body>
+        <div class="chart-container" >  
+            <h2>Time Series Tool with "Remote Query Descriptor Group"</h2>
+            <div data-bind="
+                        itaComponent: {
+                            component: 'timeseries-tool', 
+                            dataSource: dataSource
+                            /* or any other parameters the region would accept */
+                        }" style="width: 600px;height: 250px">
+            </div> 
+            <hr>
+            <h2>Time Series Tool with "Local Data Set Group"</h2>
+            <div data-bind="
+                        itaComponent: {
+                            component: 'timeseries-tool', 
+                            dataSource: dataSource
+                            /* or any other parameters the region would accept */
+                        }" style="width: 600px;height: 250px">
+            </div> 
+        </div>
+        <script>
+        
+            require(['ojs/ojcore', 'knockout', 'jquery',
+                '/analytics/js/model/timeseries/itaToolRemoteDataSource.js', 
+                '/analytics/js/model/timeseries/itaToolLocalDataSource.js',
+                'ojs/ojknockout','ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
+                '/analytics/js/controller/timeseries/timeseries-tool.js'
+            ], function(oj, ko, $, itaToolRemoteDataSource,itaToolLocalDataSource) {
+                $(
+                    function() {
+                        var _remoteDataSource = new itaToolRemoteDataSource("/db_resource_planner/data/sample-qdg-db.json");
+
+                        ko.applyBindings({
+                            dataSource: _remoteDataSource
+                        }, $(".chart-container>div")[0]);
+
+
+                        var DAY = 24 * 60 * 60 * 1000;
+                        var nowStamp = new Date();
+
+                        function generateGroupWithinTime(startTime, endTime) {
+                            var groups = [];
+                            for (var timeCur = Math.floor(startTime.getTime() / DAY) * DAY;
+                                    timeCur < endTime.getTime();
+                                    timeCur += DAY) {
+                                groups.push(new Date(timeCur));
+                            }
+                            return groups;
+                        }
+
+
+                        function generatePointsWithRandomY(count) {
+                            var points = [];
+                            for (var i = 0; i < count; i++) {
+                                points.push(Math.floor(Math.random() * 1000));
+                            }
+                            return points;
+                        }
+
+                        var groups = generateGroupWithinTime(new Date(nowStamp - 8 * DAY), new Date());
+                        var series = ([{
+                                name: 'series1',
+                                items: generatePointsWithRandomY(groups.length)
+                            }, {
+                                name: 'series2',
+                                items: generatePointsWithRandomY(groups.length)
+                            },
+                            {
+                                name: 'series3',
+                                items: generatePointsWithRandomY(groups.length)
+                            }, {
+                                name: 'series4',
+                                items: generatePointsWithRandomY(groups.length)
+                            }]);
+                        var _localDataSource = new itaToolLocalDataSource(null,
+                                {
+                                    groups: groups,
+                                    series: series
+                                });
+
+                        ko.applyBindings({
+                            dataSource: _localDataSource
+                        }, $(".chart-container>div")[1]);
+                    }
+                );
+            });
+        </script>
+    </body>
+</html>

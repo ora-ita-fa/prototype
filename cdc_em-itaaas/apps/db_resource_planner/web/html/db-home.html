@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Database Analysis</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/resources/css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="/resources/css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
+        <link rel="stylesheet" href="/analytics/css/analytics-all.css">
+        <script src="/resources/js/libs/require/require.js"></script>
+        <script src="/resources/js/main.js"></script>
+        <script>
+            require(['../js/db-home']);
+        </script>
+        <style>
+            body > .chart-container > div  {
+                display: inline-block;
+                margin: 10px;
+            }
+            
+            body > .chart-container > div > div {
+                width: 750px;
+                height: 250px;
+            }
+            
+            #global-time-slider {
+                height:85px;
+                width:90%;
+                padding:20px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div id="demo-appheader-body"> 
+                <div id='demo_appheader_div' data-bind="template: {name: 'EMHeaderTemplate'}" title="Database Analysis"></div>
+            </div>
+        </header>
+
+        <div id="global-time-slider" data-bind="
+             itaComponent: {
+                 component: 'time-slider',
+                 totalStart: totalStart,
+                 totalEnd: totalEnd,
+                 viewStart: viewStart,
+                 viewEnd: viewEnd,
+                 viewRangeChange: viewRangeChange,
+                 slide: slide
+             }
+             "></div>
+
+        <div class="chart-container">
+            <div>
+                <h3>Avg Active Cores</h3>
+                
+                <!--
+                Below is a knockout data-bind. It plays a role of ADF region.
+                itaComponent: { component: 'timeseries-tool', ... } 
+                  means we are going to include a region named 'timeseries-tool'
+                -->
+                <div data-bind="
+                        itaComponent: {
+                            component: 'timeseries-tool', 
+                            dataSource: datasource1,
+                            timeWindow: timeWindow
+                            /* or any other parameters the region would accept */
+                        }
+                     "></div> 
+                <!--
+                The style of including a 'region' is like how we bind a JET component
+                
+                <div data-bind="
+                    ojComponent: {
+                        component: 'ojTree', 
+                        data: treedata}
+                ">
+               </div>
+                -->
+            </div>
+            <div>
+                <h3>Global Cache Busy</h3>
+                <div data-bind="
+                        itaComponent: {
+                            component: 'timeseries-tool',
+                            dataSource: datasource2
+                        }
+                     "></div>
+            </div>
+            <div>
+                <h3>I/O per second</h3>
+                <div data-bind="
+                        itaComponent: {
+                            component: 'timeseries-tool',
+                            dataSource: datasource3
+                        }
+                     "></div>
+            </div>
+            <div>
+                <h3>...</h3>
+                <div data-bind="
+                        itaComponent: {
+                            component: 'forecast-tool',
+                            dataSource: datasource4
+                        }
+                     "></div>
+            </div>
+        </div>
+    </body>
+</html>
