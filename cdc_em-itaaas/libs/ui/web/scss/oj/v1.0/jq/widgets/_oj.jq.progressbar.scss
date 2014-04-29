@@ -18,7 +18,7 @@ $includeProgressbarClasses: $includeAllClasses !default;
         text-align: left; 
         overflow: hidden; 
         background: #fcfdfe; 
-    	background-image: linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%);
+    	  @include oj-background-image(linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%));
         border: 1px solid #dfe4e7;
         @include oj-border-radius($mediumBorderRadius);
     }

@@ -20,8 +20,8 @@
 
     /* Styling for the component div container element. */
     .oj-table-container {
-       background-color: $background1Color;
-       border: $borderWidth solid $dataGridBorderColor;
+       background-color: $dataGridCellBgColor;
+       border: 1px solid $dataGridBorderColor;
        position: relative;
        display: inline-block;
     }
@@ -43,38 +43,19 @@
     }
 
     /* Styling for the column header elements in selected state when table focused. */
-    .oj-table.oj-focus .oj-table-column-header.oj-checked {
+    .oj-table.oj-focus .oj-table-column-header.oj-selected {
        background-color: $dataGridColumnHeaderBgColorSelected;
     }
 
     /* Styling for the column header elements in selected state when table not focused. */
-    .oj-table-column-header.oj-checked {
+    .oj-table-column-header.oj-selected {
        background-color: $dataGridColumnHeaderBgColorSelectedInactive;
     }
 
     /* Styling for the column header element in focused state. */
     .oj-table-column-header.oj-focus {
-       background-color: $interaction5Color;
+       background-color: $dataGridColumnHeaderBgColorFocus;
     }
-
-    /* Styling for the show required asterix in the column headers. */
-    .oj-table-column-header-show-required {
-       color: $colorRequired;
-       font-size: $dataGridColumnHeaderFontSize;
-       font-weight: $dataGridHeaderFontWeight;
-       line-height: $dataGridColumnHeaderFontSize;
-       cursor: text;
-
-       @include oj-ltr() {    
-         margin-right: 4px;
-       }
-
-       @include oj-rtl() {    
-         margin-left: 4px;
-       }
-    }
-
-
 
     /* Styling for the column header row element. */
     .oj-table-column-header-row {
@@ -171,12 +152,12 @@
     }
 
     /* Styling for the data cell elements in selected state when table focused. */
-    .oj-table.oj-focus .oj-table-data-cell.oj-checked {
+    .oj-table.oj-focus .oj-table-data-cell.oj-selected {
        background-color: $dataGridCellBgColorSelected;
     }
 
     /* Styling for the data cell elements in selected state when table not focused. */
-    .oj-table-data-cell.oj-checked {
+    .oj-table-data-cell.oj-selected {
        background-color: $dataGridCellBgColorSelectedInactive;
     }
 
@@ -199,13 +180,27 @@
     .oj-table-data-cell-hgrid-lines {
        border-bottom: 1px solid $dataGridCellBorderColor;
     }
-
+    
+    .oj-table-footer-cell {
+       background-color: $dataGridColumnHeaderBgColor;
+       float: none;
+       min-height: $dataGridColumnHeaderFontSize;
+       padding-top: $colHeaderPaddingTopBottom;
+       padding-bottom: $colHeaderPaddingTopBottom;
+       border-top: 1px solid $dataGridBorderColor;
+    }
+    
+        /* Styling for the vertical grid lines. */
+    .oj-table-footer-cell-vgrid-lines {
+       border-right: 1px solid $dataGridBorderColor;
+    }
+    
     /* Styling for the status message. */
     // InfoBackground & InfoText are CSS2 system colors
     .oj-table-status-message {
       background-color:InfoBackground;
       color:InfoText;
-      border: 1px $border5Color solid;
+      border: 1px $dataGridCellBorderColor solid;
       padding: $colHeaderPaddingTopBottom;
     } 
 

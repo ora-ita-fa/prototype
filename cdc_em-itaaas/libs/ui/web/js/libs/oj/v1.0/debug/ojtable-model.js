@@ -67,6 +67,7 @@ oj.ModelRow._init = function(row, model, options, properties)
   row.id = model.id;
   row.idAttribute = model.idAttribute;
   row.attributes = model.attributes;
+  row.index = model.index;
 
   options = options || {};
 
@@ -177,14 +178,6 @@ oj.CollectionRowSet = function(collection, options)
 
 /**
  * @export
- * @desc Sort direction for string-based field comparators.  A value of 1 (the default), indicates ascending sorts, -1 indicates descending
- * 
- * @type number
- */
-oj.CollectionRowSet.prototype.sortDirection = 1;
-
-/**
- * @export
  * @desc If set, sort the rowSet using the given attribute of a row (if string); function(Row) returning a string attribute
  * by which the sort should take place; function(Row1, Row2) if a user-defined function comparing Row1 and Row2 (see the
  * JavaScript array.sort() for details)
@@ -246,13 +239,28 @@ oj.CollectionRowSet._init = function(rowSet, collection, options, properties)
  *                  if deferred is specified and true, at will return a jQuery promise object which will call its done function,
  *                  passing the value at(index) 
  * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
 oj.CollectionRowSet.prototype.at = function(index, options)
 {
   var model = this._collection.at(index, options);
   if (model != null)
   {
-    return new oj.ModelRow(model);
+    if (model instanceof oj.Model)
+    {
+      return new oj.ModelRow(model);
+    }
+    else
+    {
+      var deferredModel = $.Deferred();
+      $.when(model).done(function(resolvedModel)
+                         {
+                           deferredModel.resolve(new oj.ModelRow(resolvedModel));
+                         });
+      return deferredModel;
+    }
   }
   return null;
 };
@@ -263,7 +271,7 @@ oj.CollectionRowSet.prototype.at = function(index, options)
  * @throws {Error}
  * @export
  * @expose
- * @memberof! oj.RowSet
+ * @memberof! oj.CollectionRowSet
  * @instance
  */
 oj.CollectionRowSet.prototype.fetch = function(options)
@@ -275,18 +283,13 @@ oj.CollectionRowSet.prototype.fetch = function(options)
     options = options || {};
     var self = this;
     var isPaged =  options.startIndex != null ? true : false;
-    var origStartIndex = this._startIndex;
     this._startIndex = isPaged ? options.startIndex : 0;
     var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
-    var origCollection = this._collection.clone();
     
     if (isPaged)
     {
-      this._collection.setRangeLocal(this._startIndex, pageSize).done(function(collection, response, options) 
+      this._collection.setRangeLocal(this._startIndex, pageSize).done(function() 
         {
-          var updates = self._compareCollection(origCollection, self._collection, origStartIndex, self._startIndex, pageSize);
-          self._addCollectionEventListeners.call(self);
-          self._processUpdates.call(self, updates, origCollection);
           self._endFetch.call(self, true);
         });
     }
@@ -295,9 +298,7 @@ oj.CollectionRowSet.prototype.fetch = function(options)
       this._collection.fetch({
         success: function(collection, response, options) 
         {
-          var updates = self._compareCollection(origCollection, collection, origStartIndex, self._startIndex, pageSize);
-          self._addCollectionEventListeners.call(self);
-          self._processUpdates.call(self, updates, origCollection);
+          self._collection = collection;
           self._endFetch.call(self, true);
         }
       });
@@ -315,6 +316,9 @@ oj.CollectionRowSet.prototype.fetch = function(options)
  * @return {Object} First row object in the collection where row.id = id. If none are found, returns null.
  *                  If deferred or virtual, return a promise passing the row when done
  * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
 oj.CollectionRowSet.prototype.get = function(id, options)
 {
@@ -324,8 +328,10 @@ oj.CollectionRowSet.prototype.get = function(id, options)
 /**
  * Return the oj.Collection object which was wrapped
  * @return {oj.Collection} oj.Collection object
- * 
  * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
 oj.CollectionRowSet.prototype.getCollection = function()
 {
@@ -333,9 +339,12 @@ oj.CollectionRowSet.prototype.getCollection = function()
 };
 
 /**
- * @export
  * Return whether there is more data which can be fetched.
  * @return {boolean} whether there is more data
+ * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
 oj.CollectionRowSet.prototype.hasMore = function()
 {
@@ -350,6 +359,9 @@ oj.CollectionRowSet.prototype.hasMore = function()
  * @return {number} The index of the given row object, or a promise that will call with the index when complete.
  *                  If the object is not found, returns -1.
  * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
 oj.CollectionRowSet.prototype.indexOf = function(row, options) 
 {
@@ -357,10 +369,13 @@ oj.CollectionRowSet.prototype.indexOf = function(row, options)
 };
 
 /**
- * @export
  * Determine if the rowset has any rows
  * 
  * @returns {boolean} true if collection is empty
+ * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
 oj.CollectionRowSet.prototype.isEmpty = function() 
 {
@@ -368,9 +383,12 @@ oj.CollectionRowSet.prototype.isEmpty = function()
 };
 
 /**
- * @export
  * Return the length of the collection
  * @returns {number} length of the collection
+ * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
 oj.CollectionRowSet.prototype.size = function() 
 {
@@ -378,17 +396,26 @@ oj.CollectionRowSet.prototype.size = function()
 };
 
 /**
- * @export
  * Sort the rows in the rowSet
- * 
- * @param {Object=} options
+ * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
  */
-oj.CollectionRowSet.prototype.sort = function(options) 
+oj.CollectionRowSet.prototype.sort = function() 
 {
   this._collection['comparator'] = this['comparator'];
   return this._collection.sort(null);
 };
 
+/**
+ * Return the total size of data available, including server side if not local.
+ * @returns {number} total size of data
+ * @export
+ * @expose
+ * @memberof! oj.CollectionRowSet
+ * @instance
+ */
 oj.CollectionRowSet.prototype.totalSize = function()
 {
   return this._collection.totalResults;
@@ -410,8 +437,11 @@ oj.CollectionRowSet.prototype._addCollectionEventListeners = function()
   this._collection.on(oj.Events.EventType['RESET'], function(event) {
     oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
   });
-  this._collection.on(oj.Events.EventType['SORT'], function(event) {
-    oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
+  this._collection.on(oj.Events.EventType['SORT'], function(event, eventOpts) {
+    if (!eventOpts['add'])
+    {
+      oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
+    }
   });
   this._collection.on(oj.Events.EventType['CHANGE'], function(event) {
     oj.CollectionRowSet.superclass._handleEvent.call(self, oj.RowSet.EventType['CHANGE'], {'rowIdx': self._collection.indexOf(event), 'row': new oj.ModelRow(event)});
@@ -427,158 +457,6 @@ oj.CollectionRowSet.prototype._addCollectionEventListeners = function()
     // call endfetch in case a fetch caused the error
     self._endFetch.call(self, false);
   });
-};
-
-/**
- * Compare updated collection
- * @param {Object} origCollection  Original collection
- * @param {Object} updCollection  Updated collection
- * @param {number} origStartIndex startIndex for the original collection
- * @param {number} startIndex startIndex for the updated collection
- * @throws {Error}
- * @private
- */
-oj.CollectionRowSet.prototype._compareCollection = function(origCollection, updCollection, origStartIndex, startIndex, pageSize)
-{
-  var updates = [];
-
-  // first check if the updated collection is empty
-  if (updCollection.size() > 0)
-  {
-    var i = 0;
-
-    // next delete rows in the original collection which are less than startIndex or greater than
-    // startIndex + pageSize
-    origCollection.each(function(model)
-    {
-      var rowIdx = origCollection.indexOf(model);
-      if (rowIdx < startIndex)
-      {
-        updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._DELETED};
-        i++;
-      }
-      else if (pageSize > 0)
-      {
-        if (rowIdx >= startIndex + pageSize)
-        {
-          updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._DELETED};
-          i++;
-        }
-      }
-    });
-
-    updCollection.each(function(model)
-    {
-      var rowIdx = updCollection.indexOf(model);
-
-      if ((pageSize > 0 && rowIdx >= startIndex &&
-        rowIdx < startIndex + pageSize) ||
-        pageSize < 0)
-      {
-        var origSize = origCollection.size();
-
-        if (rowIdx < origStartIndex ||
-          rowIdx > origSize - 1)
-        {
-          updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._ADDED};
-          i++;
-        }
-        else
-        {
-          var keys = model.keys();
-          var origModel = origCollection.at(rowIdx);
-          var updated = false;
-          var j;
-          for (j = 0; j < keys.length; j++)
-          {
-            if (model.get(keys[j]).toString() != origModel.get(keys[j]).toString())
-            {
-              updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._UPDATED};
-              updated = true;
-              i++;
-              break;
-            }
-          }
-          if (!updated)
-          {
-            updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._NONE};
-            i++;
-          }
-        }
-      }
-    });
-  }
-  else
-  {
-    var i = 0;
-    origCollection.each(function(model)
-    {
-      updates[i] = {'rowIdx': origCollection.indexOf(model), 'status': oj.RowSet._ROW_STATUSES._DELETED};
-      i++;
-    });
-  }
-  return updates;
-};
-
-/**
- * Process the updates array
- * @param {Array} updates Array of row updates
- * @param {Object} origCollection  Original collection
- * @private
- */
-oj.CollectionRowSet.prototype._processUpdates = function(updates, origCollection)
-{
-  // if all the rows are not updated then call end fetch without refresh
-  var noneUpdated = true;
-  var i;
-  for (i = 0; i < updates.length; i++)
-  {
-    if (updates[i]['status'] != oj.RowSet._ROW_STATUSES._NONE)
-    {
-      noneUpdated = false;
-      break;
-    }
-  }
-  if (noneUpdated)
-  {
-    this._endFetch.call(this, false);
-    return;
-  }
-
-  // if all the rows are added then refresh the entire table
-  var allAdded = true;
-  for (i = 0; i < updates.length; i++)
-  {
-    if (updates[i]['status'] != oj.RowSet._ROW_STATUSES._ADDED)
-    {
-      allAdded = false;
-      break;
-    }
-  }
-  if (allAdded)
-  {
-    this._endFetch.call(this, true);
-    return;
-  }
-
-  // process individual row statuses
-  for (i = 0; i < updates.length; i++)
-  {
-    var rowIdx = updates[i]['rowIdx'];
-    if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._ADDED)
-    {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': rowIdx, 'row':  this._collection.at(rowIdx)});
-    }
-    else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._DELETED)
-    {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], {'rowIdx': rowIdx, 'row':  origCollection.at(rowIdx)});
-    }
-    else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._UPDATED)
-    {
-      oj.CollectionRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], {'rowIdx': rowIdx, 'row':  this._collection.at(rowIdx)});
-    }
-  }
-  this._endFetch.call(this, false);
 };
 
 /**
@@ -657,6 +535,9 @@ oj.Object.createSubclass(oj.CollectionTableDataSource, oj.TableDataSource, "oj.C
 /**
  * Initializes the instance.
  * @export
+ * @expose
+ * @memberof! oj.CollectionTableDataSource
+ * @instance
  */
 oj.CollectionTableDataSource.prototype.Init = function()
 {
@@ -728,9 +609,9 @@ oj.CollectionTableDataSource.prototype.get = function(id)
 };
 
 /**
- * @export
  * Return whether there is more data which can be fetched.
  * @returns {boolean} whether there is more data
+ * @export
  * @expose
  * @memberof! oj.CollectionTableDataSource
  * @instance
@@ -760,10 +641,10 @@ oj.CollectionTableDataSource.prototype.indexOf = function(row)
 };
 
 /**
- * @export
  * Get the length of the RowSet.
  * limit it.
  * @returns {number} length of the RowSet
+ * @export
  * @expose
  * @memberof! oj.CollectionTableDataSource
  * @instance
@@ -774,25 +655,63 @@ oj.CollectionTableDataSource.prototype.size = function()
 };
 
 /**
- * Sort the Rows in the RowSet
- * @param {Object=} comparator
- * @param {Object=} options silent: if true, do not fire the sort event
- * @throws {Error}
+ * Performs a sort on the data source.
+ * @param {Object} criteria the sort criteria.
+ * @param {Object} criteria.key The key that identifies which field to sort
+ * @param {string} criteria.direction the sort direction, valid values are "ascending", "descending", "none" (default)
  * @export
  * @expose
  * @memberof! oj.CollectionTableDataSource
  * @instance
  */
-oj.CollectionTableDataSource.prototype.sort = function(comparator, options)
+oj.CollectionTableDataSource.prototype.sort = function(criteria)
 {
+  var key = criteria['key']; 
+  var direction = criteria['direction'];
+  var comparator = null;
+  
+  if (direction == 'ascending')
+  {
+    comparator = function(row) {
+      if ($.isFunction(row.get))
+      {
+        return row.get(key);
+      }
+      else
+      {
+        return row[key]();
+      }
+    };
+  }
+  else if (direction == 'descending')
+  {
+    comparator = function(rowA, rowB) {
+      var a, b;
+      if ($.isFunction(rowA.get))
+      {
+        a = rowA.get(key);
+        b = rowB.get(key);
+      }
+      else
+      {
+        a = rowA[key]();
+        b = rowB[key]();
+      }
+      if (a === b)
+      {
+        return 0;
+      }
+      return a > b ? -1 : 1;
+    };
+  }
   this._rowSet['comparator'] = comparator;
-  this._rowSet.sort(options);
+  this._rowSet.sort();
 };
 
 /**
- * @export
  * Return the total size of data available, including server side if not local.
  * @returns {number} total size of data
+ * @export
  * @expose
  * @memberof! oj.CollectionTableDataSource
  * @instance
@@ -810,27 +729,39 @@ oj.CollectionTableDataSource.prototype._addRowSetEventListeners = function()
 {
   var self = this;
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ADD'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ADD'], event);
   });
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['REMOVE'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['REMOVE'], event);
   });
+  (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['REQUEST'], function(event) {
+    self.isFetching = true;
+    oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['REQUEST'], event);
+  });
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['RESET'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['RESET'], event);
   });
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SORT'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SORT'], event);
   });
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['CHANGE'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['CHANGE'], event);
   });
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['DESTROY'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['DESTROY'], event);
   });
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['SYNC'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['SYNC'], event);
   });
   (/** @type {{on: Function}} */  (this._rowSet)).on(oj.RowSet.EventType['ERROR'], function(event) {
+    self.isFetching = false;
     oj.TableDataSource.superclass.handleEvent.call(self, oj.RowSet.EventType['ERROR'], event);
   });
 };

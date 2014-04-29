@@ -1,4 +1,5 @@
-define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojcomponents', 'ojs/ojvalidation'], 
+define(['ojs/ojcore', 'jquery', 'ojs/ojeditablevalue',
+        'ojs/ojinputtext', 'ojs/ojvalidation'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
@@ -27,7 +28,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojcomponents', 'ojs/
  */
 function bindHover(dpDiv)
 {
-  var selector = ".oj-datepicker-prev-icon, .oj-datepicker-prev-icon .oj-clickable-icon.oj-widget-icon, .oj-datepicker-next-icon, .oj-datepicker-next-icon .oj-clickable-icon.oj-widget-icon, .oj-datepicker-calendar td a";
+  var selector = ".oj-datepicker-prev-icon, .oj-datepicker-prev-icon .oj-clickable-icon.oj-component-icon, .oj-datepicker-next-icon, .oj-datepicker-next-icon .oj-clickable-icon.oj-component-icon, .oj-datepicker-calendar td a";
   return dpDiv.delegate(selector, "mouseout", function ()
   {
     $(this).removeClass("oj-hover");
@@ -77,7 +78,7 @@ var yearDisplay = oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_T
 /**
  * @class
  * @name oj.ojInputDate
- * @augments oj.editableValue
+ * @augments oj.inputBase
  * 
  * @classdesc
  * <h3 id="inputDateOverview-section">
@@ -212,30 +213,27 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 {
   version : "1.0.0", 
   widgetEventPrefix : "oj", 
-  APPEND_CLASS : "oj-datepicker-append",
-  TRIGGER_CLASS : "oj-inputdatetime-input-trigger", 
-  TRIGGER_CALENDAR_CLASS : "oj-datepicker-calendar-icon", 
   
-  CURRENT_CLASS : "oj-datepicker-current-day", 
-  DAYOVER_CLASS : "oj-datepicker-days-cell-over",
-  UNSELECTABLE_CLASS : "oj-datepicker-unselectable",
-  
-  DATEPICKER_DESCRIPTION_ID : "oj-datepicker-desc",
-  GRID_LABEL_ID : "oj-datepicker-grid", 
-  MAIN_DIV_ID : "oj-datepicker-div", 
-  
-  INPUT_LABELED_BY_ID : "oj-inputdate-input-description",
-  INPUT_CLASS : "oj-inputdatetime-input", 
-  HAS_TRIGGER_CLASS : "oj-has-trigger",
-  INLINE_CLASS : "oj-datepicker-inline",
-  WIDGET_CLASS : "oj-inputdatetime-date-only oj-widget",
-  INPUT_CONTAINER_CLASS : "oj-inputdatetime-input-container",
-  
-  /** 
-   * @expose
-   * @private
-   */
+  //-------------------------------------From base---------------------------------------------------//
+  _CLASS_NAMES : "oj-inputdatetime-input",
+  _WIDGET_CLASS_NAMES : "oj-inputdatetime-date-only oj-component oj-inputdatetime",
+  _INPUT_HELPER_KEY: "inputHelp",
   _ATTR_CHECK : [{"attr": "type", "setMandatory": "text"}],
+  //-------------------------------------End from base-----------------------------------------------//
+  
+  _TRIGGER_CLASS : "oj-inputdatetime-input-trigger", 
+  _TRIGGER_CALENDAR_CLASS : "oj-inputdatetime-calendar-icon", 
+  
+  _CURRENT_CLASS : "oj-datepicker-current-day", 
+  _DAYOVER_CLASS : "oj-datepicker-days-cell-over",
+  _UNSELECTABLE_CLASS : "oj-datepicker-unselectable",
+  
+  _DATEPICKER_DESCRIPTION_ID : "oj-datepicker-desc",
+  _GRID_LABEL_ID : "oj-datepicker-grid", 
+  _MAIN_DIV_ID : "oj-datepicker-div", 
+  
+  _INLINE_CLASS : "oj-datepicker-inline",
+  _INPUT_CONTAINER_CLASS : " oj-inputdatetime-input-container",
   
   options : 
   {
@@ -244,10 +242,12 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      *
      * This should be in the following JSON format with the year, month, day based on Date.getFullYear(), Date.getMonth(), and Date.getDate():
      * {year: {month: {day: {disabled: true|false, className: "additionalCSS", tooltip: 'Stuff to display'}}}
+     * 
+     * There also exists a special '*' character which represents ALL within that field [i.e. * within year, represents for ALL year].
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">null</code>
      * @example <code class="prettyprint">{2013: {11: {25: {disabled: true, className: 'holiday', tooltip: 'Stuff to display'}, 5: {disabled: true}}}}}</code>
      */
@@ -256,16 +256,12 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     /**
      * When the datepicker should be shown.
      *
-     * The datepicker can appear when:
-     * <ul>
-     *   <li> focus - the field receives focus
-     *   <li> image - when an image is clicked
-     *   <li> both - when either event occurs
-     * </ul>
-     *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
+     * @type {string}
+     * @ojvalue {string} "focus" when the element receives focus or when the trigger calendar image is clicked
+     * @ojvalue {string} "image" when the trigger calendar image is clicked
      * @default <code class="prettyprint">"image"</code>
      */
     showOn : "image", 
@@ -273,14 +269,12 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     /**
      * Whether the month should be rendered as a dropdown instead of text.
      *
-     * <ul>
-     *  <li> select - if month can be selected directly
-     *  <li> none - if only prev/next
-     * </ul>
-     *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
+     * @type {string}
+     * @ojvalue {string} "select" As a dropdown.
+     * @ojvalue {string} "none" As a text.
      * @default <code class="prettyprint">"select"</code>
      */
     changeMonth : "select", 
@@ -288,14 +282,12 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     /**
      * Whether the year should be rendered as a dropdown instead of text.
      *
-     * <ul>
-     *  <li> select - if year can be selected directly
-     *  <li> none - if only prev/next
-     * </ul>
-     *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
+     * @type {string}
+     * @ojvalue {string} "select" As a dropdown.
+     * @ojvalue {string} "none" As a text.
      * @default <code class="prettyprint">"select"</code>
      */
     changeYear : "select", 
@@ -308,15 +300,13 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     /**
      * Will dictate the behavior of days outside the current viewing month.
      *
-     * <ul>
-     *  <li> hidden - days outside the current viewing month will be hidden
-     *  <li> visible - days outside the current viewing month will be visible
-     *  <li> selectable - days outside the current viewing month will be visible + selectable
-     * </ul>
-     *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
+     * @type {string}
+     * @ojvalue {string} "hidden" Days outside the current viewing month will be hidden
+     * @ojvalue {string} "visible" Days outside the current viewing month will be visible
+     * @ojvalue {string} "selectable" Days outside the current viewing month will be visible + selectable
      * @default <code class="prettyprint">"hidden"</code>
      */
     daysOutsideMonth : "hidden", 
@@ -324,20 +314,23 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     /**
      * Whether week of the year will be shown.
      *
-     * <ul>
-     *  <li> number - will show the week of the year as a number
-     *  <li> none - nothing will be shown
-     * </ul>
-     *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
+     * @type {string}
+     * @ojvalue {string} "number" Will show the week of the year as a number
+     * @ojvalue {string} "none" Nothing will be shown
      * @default <code class="prettyprint">none</code>
      */
     weekDisplay : "none", // "number" to show week of the year, "none" to not show it
-    /** @expose */
-    calculateWeek : iso8601Week, // How to calculate the week of the year,
-    // takes a Date and returns the number of the week for it
+    
+    /** 
+     * How to calculate the week of the year, takes a Date and returns the number of the week for it
+     * 
+     * @expose 
+     */
+    calculateWeek : iso8601Week,
+    
     /**
      * The minimum selectable date. When set to null, there is no minimum.
      *
@@ -348,8 +341,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * </ul>
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">null</code>
      */
     min : null, 
@@ -364,8 +357,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * </ul>
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">null</code>
      */
     max : null, 
@@ -374,8 +367,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * The number of months to show at once.
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">1</code>
      */
     numberOfMonths : 1, 
@@ -384,8 +377,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * The position in multipe months at which to show the current month (starting at 0)
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">0</code>
      */
     currentMonthPos : 0, 
@@ -399,8 +392,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * </ul>
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">"block"</code>
      */
     stepMonths : "block", 
@@ -409,8 +402,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * Number of months to step back/forward for the (Alt + Page up) + (Alt + Page down) key strokes
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">12</code>
      */
     stepBigMonths : 12, 
@@ -418,14 +411,12 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     /**
      * Will dictate button pane behavior underneath the calendar.
      *
-     * <ul>
-     *   <li> none - Do not show anything
-     *   <li> default - The button pane contains two buttons, a Today button that links to the current day, and a Done button that closes the datepicker.
-     * </ul>
-     *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
+     * @type {string}
+     * @ojvalue {string} "none" Do not show anything
+     * @ojvalue {string} "default" The button pane contains two buttons, a Today button that links to the current day, and a Done button that closes the datepicker.
      * @default <code class="prettyprint">"none"</code>
      */
     buttonPanel : "none", 
@@ -437,119 +428,14 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME)
      *
      * @expose
-     * @memberof! oj.ojInputDate
      * @instance
+     * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter()</code>
      */
     converter : oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter(
     {
       "day" : "2-digit", "month" : "2-digit", "year" : "2-digit"
     })
-  },
-  
-  /**
-   * Return the subcomponent node represented by the documented locator attribute values.
-   * 
-   * <table class="props">
-   *   <thead>
-   *     <tr>
-   *       <th>Locator</th>
-   *       <th>Description</th>
-   *     </tr>
-   *   </thead>
-   *   <tbody>
-   *     <tr>
-   *       <td>oj-datepicker-content</td>
-   *       <td>Datepicker content div container</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-calendar-icon</td>
-   *       <td>Calendar icon that triggers the Datepicker content display</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-prev-icon</td>
-   *       <td>Previous month icon</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-next-icon</td>
-   *       <td>Next month icon</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-month</td>
-   *       <td>Month span or select element</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-year</td>
-   *       <td>Year span or select element</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-current</td>
-   *       <td>Current/Today button for button bar</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-close</td>
-   *       <td>Done/Close button for button bar</td>
-   *     </tr>
-   * </tbody></table>
-   * 
-   * @expose
-   * @override
-   * @memberof! oj.ojInputDate
-   * @instance
-   * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
-   *                        look up the subcomponent associated with that string.  It contains:<p>
-   *                        component: optional - in the future there may be more than one component contained within a page element<p>
-   *                        subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
-   * @returns {Object|null} the subcomponent located by the subId string passed in locator, if found.<p>
-   */
-  getNodeBySubId: function(locator)
-  {
-    
-    var ret = this._superApply(arguments);
-    if(ret) 
-    {
-      return ret;
-    }
-    
-    var subId = locator['subId'],
-        dpDiv = this._dpDiv;
-    
-    if(subId) 
-    {
-      switch(subId) 
-      {
-      case "oj-datepicker-content": return dpDiv;
-      case "oj-datepicker-calendar-icon": return $(".oj-datepicker-calendar-icon", this._triggerNode);
-      case "oj-datepicker-prev-icon": return $(".oj-datepicker-prev-icon", dpDiv);
-      case "oj-datepicker-next-icon": return $(".oj-datepicker-next-icon", dpDiv);
-      case "oj-datepicker-month": return $(".oj-datepicker-month", dpDiv);
-      case "oj-datepicker-year": return $(".oj-datepicker-year", dpDiv);
-      case "oj-datepicker-current": return $(".oj-datepicker-current", dpDiv);
-      case "oj-datepicker-close": return $(".oj-datepicker-close", dpDiv);
-      }
-    }
-    
-    return null;
-  },
-  
-  /**
-   * @override
-   * @protected
-   * @return {string}
-   */
-  _GetDefaultStyleClass : function ()
-  {
-    return "oj-inputdate";
-  },
-  
-  /**
-   * @ignore
-   * @protected
-   * @override
-   */
-  _GetEventList : function __GetEventList() 
-  {
-    return [];
   },
   
   /**
@@ -585,6 +471,25 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   },
   
   /**
+   * Overridden to set the default value for options.value when it's not set
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDate
+   */    
+  _InitOptions : function ()
+  {
+    this._super();
+    if (!this.options["value"]) 
+    {
+      // we are doing same as _GetElementValue. 
+      this.options["value"] = "";
+    }
+  },
+  
+  /**
    * @ignore
    * @protected
    */
@@ -600,7 +505,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     this._drawYear = this._currentYear = 0;
     
     this._inputKeyDownHandler = null;
-    this._inputSetFromFieldHandler = null;
     this._showDatePickerHandler = null;
     
     this._datePickerDefaultValidators = {};
@@ -610,21 +514,30 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     
     $(document).on("mousedown", $.proxy(this._checkExternalClick, this));
     
-    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this.MAIN_DIV_ID) + "' role='region' aria-labelledby='" + this._GetSubId(this.DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content'></div>"));
+    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this._MAIN_DIV_ID) + "' role='region' aria-labelledby='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content'></div>"));
     $("body").append(this._dpDiv);
     
-    //request to always wrap the element under a single root
-    $(this.element).wrap( $( $("<div>").addClass(this.WIDGET_CLASS) ) );
-    this._rootNode = this.element.parent();
-    
+    if(this._isInLine()) 
+    {
+      //if inline then there is not input element so reset _CLASS_NAMES
+      this._CLASS_NAMES = "";
+    }
+    else
+    {
+      //append input container class to be applied to the root node as well, since not inline
+      //[note the special case where input container class will NOT be on the widget node is when 
+      //ojInputDateTime is of inline and ojTime places container around the input element]
+      this._WIDGET_CLASS_NAMES += this._INPUT_CONTAINER_CLASS;
+    }
   },
   
   /**
-   * @ignore
    * @protected
    * @override
+   * @instance
+   * @memberof! oj.ojInputDate
    */
-  _create : function __create()
+  _ComponentCreate : function __ComponentCreate()
   {
     
     this._InitBase();
@@ -634,16 +547,129 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     //Need to set the currentDay, currentMonth, currentYear to either the value or the default of today's Date
     this._setCurrentDate(this._getDate());
     
-    if (!this.isInLine())
+    if (this._isInLine())
     {
-      this._inputDatepicker();
+      this.element.append(this._dpDiv);
+      this.element.addClass(this._INLINE_CLASS);
+      this._datepickerShowing = true;
+      
+      this._SetValue(this._getDate(), null, 
+      {
+        validationMode : this._VALIDATION_MODE.VALIDATORS_ONLY
+      });
+  
+      // Set display:block in place of inst._dpDiv.show() which won't work on disconnected elements
+      // http://bugs.jqueryui.com/ticket/7552 - A Datepicker created on a detached div has zero height
+      this._dpDiv.css("display", "block");
     }
     else 
     {
-      this._InlineDatepicker();
+      this._attachTrigger();
+      this._inputKeyDownHandler = $.proxy(this._doInputKeyDown, this);
+      this.element.on("keydown", this._inputKeyDownHandler);
     }
-
+    
+    return retVal;
+  },
+  
+  /**
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDate
+   */        
+  _AfterCreate : function () 
+  {
+    var ret = this._superApply(arguments);
+    
     this._disableEnable(this.options["disabled"]);
+    
+    return ret;
+  },
+  
+  _setOption : function __setOption(key, value)
+  {
+    
+    var retVal = null, 
+        dateTimeRangeOptions = {}, 
+        dateRestrictionOptions = {};
+    
+    if (key === "value")
+    {
+      //When a null, undefined, or "" value is passed in set to Today's value if element does not have val 
+      //[otherwise will be resetting due to how the framework works]
+      if(!value && this.element.val())
+      {
+        var temp = this._getTodayDate();
+        if(this.options['value']) 
+        {
+          this._copyTimeOver(this.options['value'], temp);
+        }
+        value = temp;
+      }
+      
+      retVal = this._super(key, value);
+      this._setCurrentDate(value);
+      return retVal;
+    }
+    
+    retVal = this._superApply(arguments);
+
+    if (key === "disabled")
+    {
+      this._disableEnable(value);
+    }
+    else if (key === "max" || key === "min") 
+    {
+      //since validators are immutable, they will contain min + max as local values. B/c of this will need to recreate
+      dateTimeRangeOptions = {'min': this.options['min'], 
+          'max': this.options['max'],
+          'converter': this._GetConverter()};
+
+      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE] = 
+        oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE).createValidator(dateTimeRangeOptions);
+      
+      this._ResetAllValidators();
+    }
+    else if (key === "dayMetaData") 
+    {
+      //since validators are immutable, they will contain dayMetaData as local values. B/c of this will need to recreate
+      dateRestrictionOptions = {'dayMetaData': this.options["dayMetaData"], 
+          'converter': this._GetConverter()};
+
+      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION] = 
+        oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION).createValidator(dateRestrictionOptions);
+      
+      this._ResetAllValidators();
+    }
+    
+    return retVal;
+  },
+  
+  /**
+   * @ignore
+   * @protected
+   * @override
+   */
+  _destroy : function __destroy()
+  {
+    var retVal = this._super();
+    
+    if (this._inputKeyDownHandler)
+    {
+      this.element.off("keydown", this._inputKeyDownHandler);
+    }
+    if (this._showDatePickerHandler)
+    {
+      this.element.off("focus", this._showDatePickerHandler);
+    }
+    
+    if (this._triggerNode)
+    {
+      this._triggerNode.remove();
+    }
+    
+    this._dpDiv.remove();
     return retVal;
   },
   
@@ -655,121 +681,45 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
    */
   _attachTrigger : function __attachTrigger()
   {
-    var showOn = this.options["showOn"], triggerContainer = $($("<span>").addClass(this.TRIGGER_CLASS));
+    var showOn = this.options["showOn"], 
+        triggerContainer = $($("<span>").addClass(this._TRIGGER_CLASS));
 
-    if (showOn === "focus" || showOn === "both")
+    if (showOn === "focus")
     {
       // pop-up date picker when in the marked field
       this._showDatePickerHandler = $.proxy(this.show, this);
       this.element.on("focus", this._showDatePickerHandler);
     }
 
-    if (showOn === "image" || showOn === "both")
-    {
-      // pop-up date picker when button clicked
-      var triggerCalendar = $($("<span/>").addClass(this.TRIGGER_CALENDAR_CLASS + " oj-clickable-icon oj-widget-icon"));
-      triggerContainer.append(triggerCalendar);
+    // pop-up date picker when button clicked
+    var triggerCalendar = $($("<span/>").addClass(this._TRIGGER_CALENDAR_CLASS + " oj-clickable-icon oj-component-icon"));
+    triggerContainer.append(triggerCalendar);
 
-      var self = this;
-      triggerCalendar.on("click", function ()
-      {
-        if (self._datepickerShowing)
-        {
-          self.hide();
-        }
-        else 
-        {
-          self.show();
-        }
-        return false;
-      });
-      triggerCalendar.on("mouseenter", function() 
-      {
-        $(this).addClass("oj-hover");
-      }).on("mousedown", function() 
-      {
-        $(this).addClass("oj-active");
-      }).on("mouseleave", function() 
-      {
-        $(this).removeClass("oj-hover oj-active");
-      });
-    }
-
-    if (triggerContainer.children().length > 0)
-    {
-      this._triggerNode = triggerContainer;
-      this.element.after(triggerContainer);
-      this.element.addClass(this.HAS_TRIGGER_CLASS);
-    }
-  },
-  
-  _attachInputHandlers : function __attachInputHandlers() 
-  {
     var self = this;
-    
-    this.element.on("paste", function ()
+    triggerCalendar.on("click", function ()
     {
-      self._SetValue($(this).val());
+      if (self._datepickerShowing)
+      {
+        self.hide();
+      }
+      else 
+      {
+        self.show();
+      }
+      return false;
+    }).on("mouseenter", function ()
+    {
+      $(this).addClass("oj-hover");
+    }).on("mousedown", function ()
+    {
+      $(this).addClass("oj-active");
+    }).on("mouseleave", function ()
+    {
+      $(this).removeClass("oj-hover oj-active");
     });
     
-    this._inputKeyDownHandler = $.proxy(this._doInputKeyDown, this);
-    this._inputSetFromFieldHandler = $.proxy(this._setFromField, this);
-    this.element.on("keydown", this._inputKeyDownHandler).on("blur", this._inputSetFromFieldHandler);
-  },
-  
-  _inputDatepicker : function __inputDatepicker()
-  {
-    this.element.addClass(this.INPUT_CLASS);
-    
-    this._AppendInputDetail(this.element);
-    
-    //since not inline, contains only input element + trigger so the root [above wrapper should contain the oj-date-input-container class as well]
-    this.widget().addClass(this.INPUT_CONTAINER_CLASS);
-    this._attachTrigger();
-    this._attachInputHandlers();
-    
-  },
-  
-  _AppendInputDetail : function __AppendInputDetail(element)
-  {
-    var detailId = this._GetSubId(this.INPUT_LABELED_BY_ID);
-    
-    element.attr("aria-labelledby", detailId);
-    this._inputDetail = $("<div class='oj-helper-hidden-accessible' id='" + detailId + "'>" + this.options["inputDetail"] + "</div>");
-    this.widget().append(this._inputDetail);
-  },
-  
-  /**
-   * Attach an inline date picker to a div.
-   * 
-   * @ignore
-   * @protected
-   */
-  _InlineDatepicker : function __InlineDatepicker()
-  {
-    this.element.append(this._dpDiv);
-    this.element.addClass(this.INLINE_CLASS);
-    this._datepickerShowing = true;
-    
-    this._SetValue(this._getDate(), null, 
-    {
-      validationMode : this._VALIDATION_MODE.VALIDATORS_ONLY
-    });
-
-    // Set display:block in place of inst._dpDiv.show() which won't work on disconnected elements
-    // http://bugs.jqueryui.com/ticket/7552 - A Datepicker created on a detached div has zero height
-    this._dpDiv.css("display", "block");
-  },
-
-  /**
-   * Whether the widget is inline or not
-   * 
-   * @private
-   * @expose
-   */
-  isInLine : function __isInLine()
-  {
-    return this._isInLineVal;
+    this._triggerNode = triggerContainer;
+    this.element.after(triggerContainer);
   },
   
   //This handler is for the case where an user keys down on the input text element
@@ -845,7 +795,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
           // hide on tab out
           break;
         case kc.ENTER:
-          sel = $("td." + this.DAYOVER_CLASS + ":not(." + this.CURRENT_CLASS + ")", this._dpDiv);
+          sel = $("td." + this._DAYOVER_CLASS + ":not(." + this._CURRENT_CLASS + ")", this._dpDiv);
           if (sel[0])
           {
             this._selectDay(this._currentMonth, this._currentYear, sel[0]);
@@ -945,114 +895,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   },
 
   /**
-   * This handler will set the value from the input text element. 
-   * Invoke setValue on it. 
-   * 
-   * @private
-   * @param {Event} event
-   */
-  _setFromField : function __setFromField(event)
-  {
-
-    try 
-    {
-      this._SetValue(this.element.val(), event);
-    }
-    catch (err)
-    {
-    }
-    
-    if (this._datepickerShowing)
-    {
-      this._dpDiv.find(".oj-datepicker-calendar").focus();
-    }
-  },
-
-  /**
-   * Updates the datepicker if it's showing in addition to delegating to super.
-   * 
-   * @ignore
-   * @protected
-   * @override
-   * @instance
-   */
-  _SetDisplayValue : function __setDisplayValue(displayValue)
-  {
-    this._superApply(arguments);
-
-    if (this._datepickerShowing)
-    {
-      this._updateDatepicker();
-    }
-
-  },
-
-  /**
-   * @ignore
-   * @protected
-   * @override
-   * @instance
-   */
-  _SetValue : function (newValue, event, options)
-  {
-    var valid = this._superApply(arguments);
-
-    if (valid)
-    {
-      this._setCurrentDate(this._getDate());
-    }
-
-    return valid;
-  },
-
-  /**
-   * @ignore
-   * @protected
-   * @override
-   * @instance
-   */
-  _GetElementValue : function ()
-  {
-    return this.options['value'] || "";
-  },
-
-  /**
-   * Sets up the default dateTimeRange and dateRestriction validators.
-   * 
-   * @ignore
-   * @protected
-   * @override
-   * @instance
-   */
-  _GetDefaultValidators : function ()
-  {
-    var ret = this._superApply(arguments),
-        minDate = this._getMinMaxDate("min"),
-        maxDate = this._getMinMaxDate("max"),
-        dateTimeRangeOptions = {}, dateRestrictionOptions = {};
-    
-    if(minDate != null || maxDate != null) 
-    {
-      //need to alter how the default validators work as validators are now immutable
-      dateTimeRangeOptions = {'min': this.options['min'], 
-                          'max': this.options['max'],
-                          'converter': this._GetConverter()};
-      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE] = 
-              oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE).createValidator(dateTimeRangeOptions);
-    }
-    
-    if(this.options["dayMetaData"] != null) 
-    {
-      dateRestrictionOptions = {'dayMetaData': this.options["dayMetaData"], 
-                                'converter': this._GetConverter()};
-      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION] = 
-            oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION).createValidator(dateRestrictionOptions);
-    }
-    
-    return $.extend(this._datePickerDefaultValidators, ret);
-  },
-
-  /**
    * Thie function will update the calendar display
    * 
    * @private
@@ -1076,13 +918,15 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     
     this._attachHandlers();
     
-    this._dpDiv.find("." + this.DAYOVER_CLASS + " a").mouseover();
+    this._dpDiv.find("." + this._DAYOVER_CLASS + " a").mouseover();
     if (generatedHtmlContent.dayOverId)
     {
       this._dpDiv.find(".oj-datepicker-calendar").attr("aria-activedescendant", generatedHtmlContent.dayOverId);
     }
 
-    var origyearshtml, numMonths = this._getNumberOfMonths(), cols = numMonths[1], width = 17;
+    var numMonths = this._getNumberOfMonths(), 
+        cols = numMonths[1], 
+        width = 17;
 
     this._dpDiv.removeClass("oj-datepicker-multi-2 oj-datepicker-multi-3 oj-datepicker-multi-4").width("");
     if (cols > 1)
@@ -1095,7 +939,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     // this breaks the change event in IE
     if (this._datepickerShowing && this.element.is(":visible") && !this.element.is(":disabled"))
     {
-      if (!focusOnCalendar && !this.isInLine())
+      if (!focusOnCalendar && !this._isInLine())
       {
         if (this.element[0] !== document.activeElement)
         {
@@ -1111,23 +955,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
         }
       }
     }
-
-    // deffered render of the years select (to avoid flashes on Firefox)
-    if (this.yearshtml)
-    {
-      origyearshtml = this.yearshtml;
-      var self = this;
-      setTimeout(function ()
-      {
-        //assure that inst.yearshtml didn't change.
-        if (origyearshtml === self.yearshtml && self.yearshtml)
-        {
-          self._dpDiv.find("select.oj-datepicker-year:first").replaceWith(self.yearshtml);
-        }
-        origyearshtml = self.yearshtml = null;
-      },
-0);
-    }
+    
   },
 
   /**
@@ -1174,7 +1002,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
    */
   _selectMonthYear : function __selectMonthYear(select, period)
   {
-
     var selected = parseInt(select.options[select.selectedIndex].value, 10);
 
     if (period === "M")
@@ -1185,22 +1012,17 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     {
       this._currentYear = this._drawYear = selected;
     }
+    
+    //Take care of accessibility
+    $("#" + this._GetSubId(this._GRID_LABEL_ID)).html(this.options["monthWide"][this._drawMonth] + " " + yearDisplay.format(new Date(this._drawYear, this._drawMonth, 1)));
 
     this._adjustDate();
   },
   
-  _copyTimeOver : function __copyTimeOver(from, to)
-  {
-    to.setHours(from.getHours());
-    to.setMinutes(from.getMinutes());
-    to.setSeconds(from.getSeconds());
-    to.setMilliseconds(from.getMilliseconds());
-  },
-
   //Action for selecting a day.
   _selectDay : function __selectDay(month, year, td)
   {
-    if ($(td).hasClass(this.UNSELECTABLE_CLASS) || this.options["disabled"])
+    if ($(td).hasClass(this._UNSELECTABLE_CLASS) || this.options["disabled"])
     {
       return;
     }
@@ -1231,32 +1053,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     this.hide();
   },
   
-  /**
-   * Gets today's date
-   * 
-   * @private
-   * @return {Object} date
-   */
-  _getTodayDate : function __getTodayDate()
-  {
-    var date = new Date();
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-    return date;
-  },
-
-  /**
-   * Retrieve the default date shown on opening.
-   * 
-   * @private
-   */
-  _getDate : function __getDate()
-  {
-    return this._determineDate(this.options['value'], this._getTodayDate());
-  },
-
   //A date may be specified as an exact value or a relative one.
   _determineDate : function __determineDate(date, defaultDate)
   {
@@ -1426,18 +1222,18 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     this._drawMonth = drawMonth;
     this._drawYear = drawYear;
 
-    prevText = this.options["prevText"];
+    prevText = this.getTranslatedString("prevText");
 
-    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-prev-icon oj-enabled oj-widget-icon oj-clickable-icon' data-handler='prev' data-event='click'" + " title='" + prevText + "'></a>" : "<a class='oj-datepicker-prev-icon oj-disabled oj-widget-icon oj-clickable-icon' title='" + prevText + "'></a>");
+    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-prev-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='prev' data-event='click'" + " title='" + prevText + "'></a>" : "<a class='oj-datepicker-prev-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + prevText + "'></a>");
 
-    nextText = this.options["nextText"];
+    nextText = this.getTranslatedString("nextText");
 
-    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-next-icon oj-enabled oj-widget-icon oj-clickable-icon' data-handler='next' data-event='click'" + " title='" + nextText + "'></a>" : "<a class='oj-datepicker-next-icon oj-disabled oj-widget-icon oj-clickable-icon' title='" + nextText + "'></a>");
+    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-next-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='next' data-event='click'" + " title='" + nextText + "'></a>" : "<a class='oj-datepicker-next-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + nextText + "'></a>");
 
-    currentText = this.options["currentText"];
+    currentText = this.getTranslatedString("currentText");
     gotoDate = today;
 
-    controls = (!this.isInLine() ? "<button type='button' class='oj-datepicker-close oj-enabled oj-priority-primary' data-handler='hide' data-event='click keyup'>" + this.options["closeText"] + "</button>" : "");
+    controls = (!this._isInLine() ? "<button type='button' class='oj-datepicker-close oj-enabled oj-priority-primary' data-handler='hide' data-event='click keyup'>" + this.getTranslatedString("closeText") + "</button>" : "");
 
     buttonPanel = (buttonPanelDisplay === "default") ? "<div class='oj-datepicker-buttonpane'>" + (isRTL ? controls : "") + (this._isInRange(gotoDate) ? "<button type='button' class='oj-datepicker-current oj-enabled oj-priority-secondary' data-handler='today' data-event='click keyup'" + ">" + currentText + "</button>" : "") + (isRTL ? "" : controls) + "</div>" : "";
 
@@ -1479,12 +1275,12 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
           calender += "'>";
         }
         calender += "<div class='oj-datepicker-header" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "'>" + (/all|left/.test(monthControl) && row === 0 ? (isRTL ? next : prev) : "") + (/all|right/.test(monthControl) && row === 0 ? (isRTL ? prev : next) : "") + this._generateMonthYearHeader(drawMonth, drawYear, minDate, maxDate, row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
-"</div><table class='oj-datepicker-calendar" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "' tabindex=-1 data-handler='calendarKey' data-event='keydown' aria-readonly='true' role='grid' " + "aria-labelledby='" + this._GetSubId(this.GRID_LABEL_ID) + "'><thead role='presentation'>" + "<tr role='row'>";
-        thead = (weekDisplay === "number" ? "<th class='oj-datepicker-week-col'>" + this.options["weekHeader"] + "</th>" : "");
+"</div><table class='oj-datepicker-calendar" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "' tabindex=-1 data-handler='calendarKey' data-event='keydown' aria-readonly='true' role='grid' " + "aria-labelledby='" + this._GetSubId(this._GRID_LABEL_ID) + "'><thead role='presentation'>" + "<tr role='row'>";
+        thead = (weekDisplay === "number" ? "<th class='oj-datepicker-week-col'>" + this.getTranslatedString("weekHeader") + "</th>" : "");
         for (dow = 0;dow < 7;dow++)
         {
           // days of the week
-          day = (dow + firstDay) % 7;
+          day = (dow + parseInt(firstDay, 10)) % 7;
           thead += "<th role='columnheader' aria-label='" + dayNames[day] + "'" + ((dow + firstDay + 6) % 7 >= 5 ? " class='oj-datepicker-week-end'" : "") + ">" + "<span title='" + dayNames[day] + "'>" + dayNamesMin[day] + "</span></th>";
         }
         calender += thead + "</tr></thead><tbody role='presentation'>";
@@ -1529,7 +1325,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 
             if (dayMetaData)
             {
-              currMetaData = getMetaData(dayMetaData, 0, [pYear, pMonth, pDate]);
+              currMetaData = getMetaData(dayMetaData, 0, [pYear, pMonth+1, pDate]); //request to start from 1 rather than 0
               if (currMetaData)
               {
                 //has content
@@ -1544,10 +1340,10 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
             unselectable = (otherMonth && daysOutsideMonth !== "selectable") || !daySettings[0] || (minDate && printDate < minDate) || (maxDate && printDate > maxDate);
             tbody += "<td role='gridcell' aria-disabled='" + !!unselectable + "' aria-selected='" + selected + "' id='" + rowCellId + "' " + "class='" + ((dow + firstDay + 6) % 7 >= 5 ? " oj-datepicker-week-end" : "") + // highlight weekends
 (otherMonth ? " oj-datepicker-other-month" : "") + // highlight days from other months
-(dayOverClass ? " " + this.DAYOVER_CLASS : "") + // highlight selected day
-(unselectable || wDisabled ? " " + this.UNSELECTABLE_CLASS + " oj-disabled" : " oj-enabled") + // highlight unselectable days
+(dayOverClass ? " " + this._DAYOVER_CLASS : "") + // highlight selected day
+(unselectable || wDisabled ? " " + this._UNSELECTABLE_CLASS + " oj-disabled" : " oj-enabled") + // highlight unselectable days
 (otherMonth && daysOutsideMonth === "hidden" ? "" : " " + daySettings[1] + // highlight custom dates
-(selected ? " " + this.CURRENT_CLASS : "") + // highlight selected day
+(selected ? " " + this._CURRENT_CLASS : "") + // highlight selected day
 (printDate.getTime() === today.getTime() ? " oj-datepicker-today" : "")) + "'" + // highlight today (if different)
 ((!otherMonth || daysOutsideMonth !== "hidden") && daySettings[2] ? " title='" + daySettings[2].replace(/'/g, "&#39;") + "'" : "") + // cell title
 (unselectable ? "" : " data-handler='selectDay' data-event='click' data-month='" + printDate.getMonth() + "' data-year='" + printDate.getFullYear() + "'") + ">" + // actions
@@ -1585,7 +1381,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     var inMinYear, inMaxYear, month, years, thisYear, determineYear, year, endYear, 
         changeMonth = this.options["changeMonth"], changeYear = this.options["changeYear"], 
         positionOfMonthToYear = oj.LocaleData.isMonthPriorToYear() ? "before" : "after", 
-        html = "<div id='" + this._GetSubId(this.GRID_LABEL_ID) + "' class='oj-datepicker-title' role='header'>", monthHtml = "", 
+        html = "<div class='oj-datepicker-title' role='header'>", monthHtml = "", 
         wDisabled = this.options["disabled"];
 
     // month selection
@@ -1651,8 +1447,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     {
       html += (secondary || !((changeMonth === "select") && (changeYear === "select")) ? "&#xa0;" : "") + monthHtml;
     }
-
-    html += "<span hidden id='" + this._GetSubId(this.DATEPICKER_DESCRIPTION_ID) + "'>" + this.options["datePicker"] + "</span>";
+    html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._GRID_LABEL_ID) + "'>" + monthNames[drawMonth] + " " + yearDisplay.format(new Date(drawYear, drawMonth, 1)) + "</span>";
+    html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "'>" + this.getTranslatedString("datePicker") + "</span>";
     html += "</div>";// Close datepicker_header
     return html;
   },
@@ -1801,50 +1597,348 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   },
   
   /**
-   * @ignore
-   * @override
-   * @protected
+   * This function is to hide the datepicker if the user clicks anywhere outside the datepicker 
+   * 
+   * @private
+   * @param {Event} event
    */
-  _destroy : function __destroy()
+  _checkExternalClick : function __checkExternalClick(event)
   {
-    var retVal = this._super();
-    
-    if (this._inputSetFromFieldHandler)
+
+    var $target = $(event.target);
+
+    if ((($target[0] !== this._dpDiv[0] && $target.parents("#" + this._GetSubId(this._MAIN_DIV_ID)).length === 0 
+        && !$target.closest("." + this._TRIGGER_CLASS).length 
+        && this._datepickerShowing)))
     {
-      this.element.off("blur", this._inputSetFromFieldHandler);
+      this.hide();
     }
-    if (this._inputKeyDownHandler)
-    {
-      this.element.off("keydown", this._inputKeyDownHandler);
-    }
-    if (this._showDatePickerHandler)
-    {
-      this.element.off("focus", this._showDatePickerHandler);
-    }
-    
-    if (this._triggerNode)
-    {
-      this._triggerNode.remove();
-    }
-    
-    if (this._inputDetail)
-    {
-      this.element.removeAttr("aria-labelledby");
-      this._inputDetail.remove();
-    }
-    
-    //need to unwrap always, since was wrapped with a root node [whether it be inline or not]
-    this.element.unwrap();
-    
-    this.element.removeClass(this.INPUT_CLASS).removeClass(this.HAS_TRIGGER_CLASS).removeClass(this.INLINE_CLASS).removeClass("oj-disabled");
-    this._dpDiv.remove();
-    return retVal;
   },
 
+  /**
+   * To disable or enable the widget
+   * 
+   * @private
+   * @instance
+   */
+  _disableEnable : function __disableEnable(val)
+  {
+    if (!this._isInLine() && this._triggerNode)
+    {
+      var filteredChildren = this._triggerNode.children().filter("span");
+
+      if (val)
+      {
+        filteredChildren.addClass("oj-disabled").removeClass("oj-enabled");
+      }
+      else 
+      {
+        filteredChildren.removeClass("oj-disabled").addClass("oj-enabled");
+      }
+    }
+    
+    if(this._datepickerShowing) 
+    {
+      this._updateDatepicker();
+    }
+  },
+  
+  /**
+   * Invoke super only if it is not inline
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDate
+   */
+  _AppendInputHelper : function __AppendInputHelper()
+  {
+    if (!this._isInLine())
+    {
+      this._superApply(arguments);
+    }
+  },
+  
+  /**
+   * This handler will set the value from the input text element. 
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @param {Event} event
+   * @instance
+   * @memberof! oj.ojInputDate
+   */
+  _onBlurHandler : function __onBlurHandler(event)
+  {
+    if(this._isInLine()) 
+    {
+      return;
+    }
+    
+    this._superApply(arguments);
+    
+    if (this._datepickerShowing)
+    {
+      this._dpDiv.find(".oj-datepicker-calendar").focus();
+    }
+  },
+
+  /**
+   * Updates the datepicker if it's showing in addition to delegating to super.
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDate
+   */
+  _SetDisplayValue : function __setDisplayValue(displayValue)
+  {
+    this._superApply(arguments);
+
+    if (this._datepickerShowing)
+    {
+      this._updateDatepicker();
+    }
+
+  },
+
+  /**
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDate
+   */
+  _SetValue : function (newValue, event, options)
+  {
+    var valid = this._superApply(arguments);
+
+    if (valid)
+    {
+      this._setCurrentDate(this._getDate());
+    }
+
+    return valid;
+  },
+
+  /**
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDate
+   */
+  _GetElementValue : function ()
+  {
+    return this.options['value'] || "";
+  },
+  
+  /**
+   * @protected
+   * @override
+   * @return {string}
+   */
+  _GetDefaultStyleClass : function ()
+  {
+    return "oj-inputdate";
+  },
+  
+  /**
+   * Sets up the default dateTimeRange and dateRestriction validators.
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDate
+   */
+  _GetDefaultValidators : function ()
+  {
+    var ret = this._superApply(arguments),
+        minDate = this._getMinMaxDate("min"),
+        maxDate = this._getMinMaxDate("max"),
+        dateTimeRangeOptions = {}, dateRestrictionOptions = {};
+    
+    if(minDate != null || maxDate != null) 
+    {
+      //need to alter how the default validators work as validators are now immutable
+      dateTimeRangeOptions = {'min': this.options['min'], 
+                          'max': this.options['max'],
+                          'converter': this._GetConverter()};
+      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE] = 
+              oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE).createValidator(dateTimeRangeOptions);
+    }
+    
+    if(this.options["dayMetaData"] != null) 
+    {
+      dateRestrictionOptions = {'dayMetaData': this.options["dayMetaData"], 
+                                'converter': this._GetConverter()};
+      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION] = 
+            oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION).createValidator(dateRestrictionOptions);
+    }
+    
+    return $.extend(this._datePickerDefaultValidators, ret);
+  },
+  
+  /**
+   * Copies the time portion over from one date to an another
+   * 
+   * @private
+   */
+  _copyTimeOver : function __copyTimeOver(from, to)
+  {
+    to.setHours(from.getHours());
+    to.setMinutes(from.getMinutes());
+    to.setSeconds(from.getSeconds());
+    to.setMilliseconds(from.getMilliseconds());
+  },
+  
+  /**
+   * Gets today's date w/o time
+   * 
+   * @private
+   * @return {Object} date
+   */
+  _getTodayDate : function __getTodayDate()
+  {
+    var date = new Date();
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  },
+
+  /**
+   * Retrieve the default date shown on opening.
+   * 
+   * @private
+   */
+  _getDate : function __getDate()
+  {
+    return this._determineDate(this.options['value'], this._getTodayDate());
+  },
+
+  /**
+   * Whether the widget is inline or not
+   * 
+   * @private
+   */
+  _isInLine : function __isInLine()
+  {
+    return this._isInLineVal;
+  },
+  
+  /**
+   * Return the subcomponent node represented by the documented locator attribute values.
+   * 
+   * <table class="props">
+   *   <thead>
+   *     <tr>
+   *       <th>Locator</th>
+   *       <th>Description</th>
+   *     </tr>
+   *   </thead>
+   *   <tbody>
+   *     <tr>
+   *       <td>oj-datepicker-content</td>
+   *       <td>Datepicker content div container</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-inputdatetime-calendar-icon</td>
+   *       <td>Calendar icon that triggers the Datepicker content display</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-datepicker-prev-icon</td>
+   *       <td>Previous month icon</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-datepicker-next-icon</td>
+   *       <td>Next month icon</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-datepicker-month</td>
+   *       <td>Month span or select element</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-datepicker-year</td>
+   *       <td>Year span or select element</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-datepicker-current</td>
+   *       <td>Current/Today button for button bar</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-datepicker-close</td>
+   *       <td>Done/Close button for button bar</td>
+   *     </tr>
+   * </tbody></table>
+   * 
+   * @expose
+   * @override
+   * @memberof! oj.ojInputDate
+   * @instance
+   * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
+   *                        look up the subcomponent associated with that string.  It contains:<p>
+   *                        component: optional - in the future there may be more than one component contained within a page element<p>
+   *                        subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
+   * @returns {Object|null} the subcomponent located by the subId string passed in locator, if found.<p>
+   */
+  getNodeBySubId: function(locator)
+  {
+    
+    var ret = this._superApply(arguments);
+    if(ret) 
+    {
+      return ret;
+    }
+    
+    var subId = locator['subId'],
+        dpDiv = this._dpDiv;
+    
+    if(subId) 
+    {
+      switch(subId) 
+      {
+      case "oj-datepicker-content": return dpDiv;
+      case "oj-inputdatetime-calendar-icon": return $(".oj-inputdatetime-calendar-icon", this._triggerNode);
+      case "oj-datepicker-prev-icon": return $(".oj-datepicker-prev-icon", dpDiv);
+      case "oj-datepicker-next-icon": return $(".oj-datepicker-next-icon", dpDiv);
+      case "oj-datepicker-month": return $(".oj-datepicker-month", dpDiv);
+      case "oj-datepicker-year": return $(".oj-datepicker-year", dpDiv);
+      case "oj-datepicker-current": return $(".oj-datepicker-current", dpDiv);
+      case "oj-datepicker-close": return $(".oj-datepicker-close", dpDiv);
+      }
+    }
+    
+    return null;
+  },
+  
+  /** 
+   * Hides the datepicker
+   * 
+   * @expose 
+   * @memberof! oj.ojInputDate
+   * @instance
+   */
+  hide : function __hide()
+  {
+
+    if (this._datepickerShowing && !this._isInLine())
+    {
+      this._dpDiv.hide();
+      this._datepickerShowing = false;
+    }
+
+    return this;
+  },
+  
   /** 
    * Redraws the calendar 
    * 
-   * @public
    * @expose
    * @memberof! oj.ojInputDate
    * @instance
@@ -1859,7 +1953,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   /**
    * Shows the datepicker
    * 
-   * @public
    * @expose
    * @memberof! oj.ojInputDate
    * @instance
@@ -1894,136 +1987,9 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     return this;
   },
   
-  /**
-   * This function is to hide the datepicker if the user clicks anywhere outside the datepicker 
-   * 
-   * @private
-   * @param {Event} event
-   */
-  _checkExternalClick : function __checkExternalClick(event)
-  {
-
-    var $target = $(event.target);
-
-    if ((($target[0] !== this._dpDiv[0] && $target.parents("#" + this._GetSubId(this.MAIN_DIV_ID)).length === 0 
-        && !$target.closest("." + this.TRIGGER_CLASS).length 
-        && this._datepickerShowing)))
-    {
-      this.hide();
-    }
-  },
-
-  /** 
-   * Hides the datepicker
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputDate
-   * @instance
-   */
-  hide : function __hide()
-  {
-
-    if (this._datepickerShowing && !this.isInLine())
-    {
-      this._dpDiv.hide();
-
-      this._datepickerShowing = false;
-    }
-
-    return this;
-  },
-  
-  /**
-   * To disable or enable the widget
-   * 
-   * @private
-   * @instance
-   */
-  _disableEnable : function __disableEnable(val)
-  {
-    if (!this.isInLine())
-    {
-      if (this._triggerNode)
-      {
-        var filteredChildren = this._triggerNode.children().filter("span");
-
-        if (val)
-        {
-          filteredChildren.addClass("oj-disabled").removeClass("oj-enabled");
-        }
-        else 
-        {
-          filteredChildren.removeClass("oj-disabled").addClass("oj-enabled");
-        }
-      }
-    }
-    
-    if(this._datepickerShowing) 
-    {
-      this._updateDatepicker();
-    }
-  },
-  
-  _setOption : function __setOption(key, value)
-  {
-    
-    var retVal = null, dateTimeRangeOptions = {}, dateRestrictionOptions = {};
-    
-    if (key === "value")
-    {
-      //When a null, undefined, or "" value is passed in set to Today's value if element does not have val [otherwise will be resetting due to 
-      //how the framework works]
-      if(!value && this.element.val())
-      {
-        var temp = this._getTodayDate();
-        this._copyTimeOver(this.options['value'] || temp, temp);
-        value = temp;
-      }
-      
-      retVal = this._super(key, value);
-      this._setCurrentDate(value);
-      return retVal;
-    }
-    
-    retVal = this._superApply(arguments);
-
-    if (key === "disabled")
-    {
-      this._disableEnable(value);
-      return retVal;
-    }
-    else if (key === "max" || key === "min") 
-    {
-      //since validators are immutable, they will contain min + max as local values. B/c of this will need to recreate
-      dateTimeRangeOptions = {'min': this.options['min'], 
-          'max': this.options['max'],
-          'converter': this._GetConverter()};
-
-      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE] = 
-        oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATETIMERANGE).createValidator(dateTimeRangeOptions);
-      
-      this._ResetAllValidators();
-    }
-    else if (key === "dayMetaData") 
-    {
-      //since validators are immutable, they will contain dayMetaData as local values. B/c of this will need to recreate
-      dateRestrictionOptions = {'dayMetaData': this.options["dayMetaData"], 
-          'converter': this._GetConverter()};
-
-      this._datePickerDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION] = 
-        oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_DATERESTRICTION).createValidator(dateRestrictionOptions);
-      
-      this._ResetAllValidators();
-    }
-    
-    return retVal;
-  },
-  
   /** 
    * Returns the calendar display node
    * 
-   * @public
    * @expose 
    * @memberof! oj.ojInputDate
    * @instance
@@ -2031,21 +1997,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   calendarDisplay : function __calendarDisplay()
   {
     return this._dpDiv;
-  },
-  
-  /** 
-   * Returns the root node
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputDate
-   * @instance
-   */
-  widget : function __widget()
-  {
-    return this._rootNode;
   }
-
+  
 });
 /*!
  * JET Input Time @VERSION
@@ -2061,7 +2014,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 /**
  * @class
  * @name oj.ojInputTime
- * @augments oj.editableValue
+ * @augments oj.inputBase
  * 
  * @classdesc
  * <h3 id="inputTimeOverview-section">
@@ -2110,22 +2063,16 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   version : "1.0.0", 
   widgetEventPrefix : "oj", 
   
-  TRIGGER_CLASS : "oj-inputdatetime-input-trigger",
-  TRIGGER_TIME_CLASS : "oj-datepicker-time-icon",
-  
-  TIME_PICKER_ID : "ojInputTime", 
-  
-  INPUT_LABELED_BY_ID : "oj-inputtime-input-description",
-  INPUT_CLASS : "oj-inputdatetime-input",
-  HAS_TRIGGER_CLASS : "oj-has-trigger", 
-  INPUT_CONTAINER_CLASS : "oj-inputdatetime-input-container",
-  WIDGET_CLASS: "oj-inputdatetime-time-only oj-widget",
-  
-  /** 
-   * @private
-   * @expose
-   */
+  //-------------------------------------From base---------------------------------------------------//
+  _CLASS_NAMES : "oj-inputdatetime-input",
+  _WIDGET_CLASS_NAMES : "oj-inputdatetime-time-only oj-component oj-inputdatetime oj-inputdatetime-input-container",
+  _INPUT_HELPER_KEY: "inputHelp",
   _ATTR_CHECK : [{"attr": "type", "setMandatory": "text"}],
+  //-------------------------------------End from base-----------------------------------------------//
+  
+  _TIME_PICKER_ID : "ojInputTime", 
+  _TRIGGER_CLASS : "oj-inputdatetime-input-trigger",
+  _TRIGGER_TIME_CLASS : "oj-inputdatetime-time-icon",
   
   options : 
   {
@@ -2156,322 +2103,210 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     timeIncrement : "T00:30:00:00", 
     
     /**
-     * Passed when the widget is of ojInputDateTime
+     * JSON data passed when the widget is of ojInputDateTime
      * 
-     * {widget : dateTimePickerInstance, converter: parsedTimePickerConverter}
+     * {
+     *  widget : dateTimePickerInstance, 
+     *  converter: parsedTimePickerConverter, 
+     *  inline: true|false
+     * }
      * 
      * @expose
+     * @memberof! oj.ojInputTime
+     * @instance
      * @private
      */
     datePicker : null
   },
   
   /**
-   * Return the subcomponent node represented by the documented locator attribute values. For Time
+   * Overridden to set the default value for options.value when it's not set
    * 
-   * <table class="props">
-   *   <thead>
-   *     <tr>
-   *       <th>Locator</th>
-   *       <th>Description</th>
-   *     </tr>
-   *   </thead>
-   *   <tbody>
-   *     <tr>
-   *       <td>oj-combobox-drop</td>
-   *       <td>Time drop down div container</td>
-   *     </tr>
-   *     <tr>
-   *       <td>oj-datepicker-time-icon</td>
-   *       <td>Time icon that triggers the Time drop down display</td>
-   *     </tr>
-   * </tbody></table>
-   * 
-   * @expose
-   * @override
-   * @memberof! oj.ojInputTime
-   * @instance
-   * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
-   *                        look up the subcomponent associated with that string.  It contains:<p>
-   *                        component: optional - in the future there may be more than one component contained within a page element<p>
-   *                        subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
-   * @returns {Object|null} the subcomponent located by the subId string passed in locator, if found.<p>
-   */
-  getNodeBySubId: function(locator)
-  {
-    var ret = this._superApply(arguments);
-    if(ret) 
-    {
-      return ret;
-    }
-    
-    var subId = locator['subId'];
-    if(subId === "oj-combobox-drop")
-    {
-      return this._timePickerDisplay;
-    }
-    else if(subId === "oj-datepicker-time-icon")
-    {
-      return $(".oj-datepicker-time-icon", this._triggerNode);
-    }
-    
-    return null;
-  },
-  
-  /** 
-   * Shows the timepicker
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputTime
-   * @instance
-   */
-  show : function __show()
-  {
-    if (this.options["disabled"])
-    {
-      return;
-    }
-
-    if (this._containedInDateTimePicker())
-    {
-      this._datePicker["widget"].hide();
-    }
-
-    if (this._timePickerDisplay.children().length === 0)
-    {
-      this._generateTime();
-    }
-
-    this._timePickerDisplay.css(
-    {
-      top : "", left : ""
-    });
-    
-    //Need to set the width as that is what combobox does
-    this._timePickerDisplay.width(this.element.parent().width());
-
-    var rtl = this._IsRTL();
-
-    this._timePickerDisplay["position"](
-    {
-      my : rtl ? "right top" : "left top", at : rtl ? "right bottom" : "left bottom", of : this.element, collision : "fit"
-    });
-
-    this._timepickerShowing = true;
-    this._timePickerDisplay.show();
-
-    var selected = $("[aria-selected]", this._timePickerDisplay);
-    if (selected.length === 1)
-    {
-      this._checkScrollTop($(selected));
-    }
-
-    $("ul", this._timePickerDisplay).focus();
-  },
-  
-  /** 
-   * Hides the timepicker
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputTime
-   * @instance
-   */
-  hide : function __hide()
-  {
-
-    if (this._timepickerShowing)
-    {
-      this._timePickerDisplay.hide();
-      this._timepickerShowing = false;
-    }
-  },
-
-  /** 
-   * Returns the time display node
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputTime
-   * @instance
-   */
-  timeDisplay : function __timeDisplay()
-  {
-    return this._timePickerDisplay;
-  },
-  
-  /** 
-   * Returns the root node
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputTime
-   * @instance
-   */
-  widget : function __widget()
-  {
-    return !this._containedInDateTimePicker() ? this._rootNode : this._datePicker["widget"].widget();
-  },
-  
-  /** 
-   * Redraws the time drop down
-   * 
-   * @public
-   * @expose 
-   * @memberof! oj.ojInputTime
-   * @instance
-   */
-  refresh : function __refresh()
-  {
-    this._superApply(arguments);
-    this._generateTime();
-    return this;
-  },
-  
-  /**
-   * @override
+   * @ignore
    * @protected
-   * @return {string}
-   */
-  _GetDefaultStyleClass : function ()
+   * @override
+   * @memberof! oj.ojInputTime
+   * @instance
+   */    
+  _InitOptions : function ()
   {
-    return "oj-inputtime";
+    this._super();
+    if (!this.options["value"]) 
+    {
+      // we are doing same as _GetElementValue. 
+      this.options["value"] = "";
+    }
   },
   
   /**
    * @ignore
-   * @override
-   * @protected
-   */
-  _GetEventList : function __GetEventList() 
-  {
-    return [];
-  },
-  
-  /**
-   * @ignore
-   * @protected
-   * @override
-   * @instance
-   */
-  _SetDisplayValue : function __setDisplayValue(displayValue)
-  {
-    if (!this._containedInDateTimePicker() || this._datePickerInline())
-    {
-      this._superApply(arguments);
-    }
-    this._generateTime();
-  },
-
-  /**
-   * @ignore
-   * @protected
-   * @override
-   * @instance
-   */
-  _GetElementValue : function ()
-  {
-    return this.options['value'] || "";
-  },
-  
-  /**
-   * @ignore
-   * @override
-   * @protected
    */
   _InitBase : function __InitBase() 
   {
     
     this._timeConverter = null; //set when is of datetimepicker
     this._timepickerShowing = false;
-    this._inputDetail = null;
     
     this._datePicker = this.options["datePicker"];
     
-    this._timePickerDisplay = $("<div id='" + this._GetSubId(this.TIME_PICKER_ID) + "' class='oj-combobox-drop oj-combobox-display-none'></div>");
+    this._timePickerDisplay = $("<div id='" + this._GetSubId(this._TIME_PICKER_ID) + "' class='oj-listbox-drop oj-listbox-display-none'></div>");
     $("body").append(this._timePickerDisplay);
     
     $(document).on("mousedown", $.proxy(this._checkExternalClick, this));
-    
-  },
-  
-  _AppendInputDetail : function __AppendInputDetail(element)
-  {
-    var detailId = this._GetSubId(this.INPUT_LABELED_BY_ID);
-    
-    element.attr("aria-labelledby", detailId);
-    this._inputDetail = $("<div style='display:none;' id='" + detailId + "'>" + this.options["inputDetail"] + "</div>");
-    this.widget().append(this._inputDetail);
-  },
-  
-  _containedInDateTimePicker : function __containedInDateTimePicker()
-  {
-    return this._datePicker !== null;
   },
   
   /**
-   * @ignore
-   * @override
    * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputTime
    */
-  _create : function __create()
+  _ComponentCreate : function __ComponentCreate()
   {
-    
     this._InitBase();
     
-    //if datepicker is null it means ojInputTime is not a part of ojInputDateTime so wrap it around a div element
-    if (!this._containedInDateTimePicker())
-    {
-      $(this.element).wrap( $( $("<div>").addClass(this.WIDGET_CLASS) ).addClass(this.INPUT_CONTAINER_CLASS) );
-      this._rootNode = this.element.parent();
-      
-      this.element.addClass(this.INPUT_CLASS);
-      
-      this._AppendInputDetail(this.element);
-    }
+    var ret = this._superApply(arguments);
     
-    if(!this._containedInDateTimePicker() || this._datePickerInline())
+    if (this._isContainedInDateTimePicker() && !this._isDatePickerInline())
     {
-      this._inputSetFromFieldHandler = $.proxy(this._setFromField, this);
-      this.element.on("blur", this._inputSetFromFieldHandler);
-      
-      var self = this;
-      this.element.on("paste", function ()
-      {
-        self._SetValue($(this).val());
-      });
+      //set to nothing since then of not inline and don't want to place two component classes to 
+      //the same input element
+      this._CLASS_NAMES = "";
     }
     
     this._attachTrigger();
     
-    var ret = this._super();
+    //only time to have ojInputTime handle the display of timepicker by keyDown is when datePicker reference is null or 
+    //when it is not null and is inline
+    if (this._isIndependentInput())
+    {
+      this._inputKeyDownHandler = $.proxy(this._doInputKeyDown, this);
+      this.element.on("keydown", this._inputKeyDownHandler);
+    }
     
-    this._setOption("disabled", this.options["disabled"]);
-
     return ret;
   },
   
   /**
-   * Helper function to determine whether the provided datePicker is inline or not
-   * 
-   * @private
-   */
-  _datePickerInline : function __datePickerInline()
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputTime
+   */        
+  _AfterCreate : function () 
   {
-    return this._datePicker["widget"].isInLine();
+    var ret = this._superApply(arguments);
+
+    this._setOption("disabled", this.options["disabled"]);
+    
+    return ret;
   },
   
   /**
-   * Logic condition of whether to create a trigger element
-   * 
-   * Only time to create one's own span element is when datePicker reference is null or when it is not null and is (inline or showOn is focus)
-   * 
-   * @private
+   * @ignore
+   * @protected
+   * @override
    */
-  _createTrigger : function __createTrigger() 
+  _setOption : function __setOption(key, value)
   {
-    return !this._containedInDateTimePicker() || this._datePickerInline() || this._datePicker["widget"].option("showOn") === "focus";
+    var retVal = null;
+    
+    if (key === "value")
+    {
+      //When a null, undefined, or "" value is passed in set to Today's value unless input element has value
+      if(!value && this.element.val())
+      {
+        value = new Date();
+      }
+      
+      retVal = this._super(key, value);
+      return retVal;
+    }
+    
+    retVal = this._superApply(arguments);
+
+    if(key === "disabled") 
+    {
+      var filteredChildren = this._triggerNode.children().filter("span");
+
+      if (value)
+      {
+        filteredChildren.addClass("oj-disabled").removeClass("oj-enabled");
+      }
+      else 
+      {
+        filteredChildren.removeClass("oj-disabled").addClass("oj-enabled");
+      }
+    }
+    else if(key === "timeIncrement") 
+    {
+      //changing back to original code of invoking _generateTime per discussion
+      this._generateTime();
+    }
+ 
+    return retVal;
+  },
+  
+  /**
+   * @ignore
+   * @protected
+   * @override
+   */
+  _destroy : function __destroy()
+  {
+    var retVal = this._super();
+    
+    if (this._triggerNode)
+    {
+      this._triggerNode.remove();
+    }
+
+    if (this._inputKeyDownHandler)
+    {
+      this.element.off("keydown", this._inputKeyDownHandler);
+    }
+    
+    this._timePickerDisplay.remove();
+    
+    return retVal;
+  },
+  
+  /**
+   * Invoke super only if it is standlone or if it is part of ojInputDateTime and ojInputDateTime is inline
+   * 
+   * @ignore
+   * @protected
+   * @override
+   */
+  _AppendInputHelper : function __AppendInputHelper()
+  {
+    if (this._isIndependentInput())
+    {
+      this._superApply(arguments);
+    }
+  },
+  
+  /**
+   * Handle it only when is standlone or is inline.
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @param {Event} event
+   */
+  _onBlurHandler : function __onBlurHandler(event) 
+  {
+    if(this._isIndependentInput()) 
+    {
+
+      this._superApply(arguments);
+      
+      if (this._timepickerShowing)
+      {
+        $("ul", this._timePickerDisplay).focus();
+      }
+
+    }
   },
   
   /**
@@ -2484,17 +2319,10 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   {
 
     //only time to create one's own span element is when datePicker reference is null or when it is not null and is inline
-    var createNewSpan = this._createTrigger(), 
-        triggerContainer = createNewSpan ? $($("<span>").addClass(this.TRIGGER_CLASS)) : $("+ span", this.element),
-        triggerTime = $($("<span/>").addClass(this.TRIGGER_TIME_CLASS + " oj-clickable-icon oj-widget-icon"));
+    var createNewSpan = this._isIndependentInput(), 
+        triggerContainer = createNewSpan ? $($("<span>").addClass(this._TRIGGER_CLASS)) : $("+ span", this.element),
+        triggerTime = $($("<span/>").addClass(this._TRIGGER_TIME_CLASS + " oj-clickable-icon oj-component-icon"));
 
-    //only time to allow display of timepicker by keyDown is when datePicker reference is null or when it is not null and is inline
-    if (!this._containedInDateTimePicker() || this._datePickerInline())
-    {
-      this._inputKeyDownHandler = $.proxy(this._doInputKeyDown, this);
-      this.element.on("keydown", this._inputKeyDownHandler);
-    }
-    
     triggerContainer.append(triggerTime);
     
     var self = this;
@@ -2507,9 +2335,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       }
 
       self.show();
-    });
-    
-    triggerTime.on("mouseenter", function() 
+    }).on("mouseenter", function() 
     {
       $(this).addClass("oj-hover");
     }).on("mousedown", function() 
@@ -2520,7 +2346,6 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       $(this).removeClass("oj-hover oj-active");
     });
     
-    this.element.addClass(this.HAS_TRIGGER_CLASS);
     this._triggerNode = triggerContainer;
     if (createNewSpan)
     {
@@ -2539,8 +2364,11 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       switch (event.keyCode)
       {
         case kc.TAB: ;
+          this.hide();
+          break;
         case kc.ESCAPE:
           this.hide();
+          handled = true;
           break;
         case kc.UP: ;
         case kc.DOWN:
@@ -2571,49 +2399,6 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   },
   
   /**
-   * This handler will set the value from the input text element. 
-   * Invoke setValue on it. 
-   * 
-   * @private
-   * @param {Event} event
-   */
-  _setFromField : function __setFromField(event)
-  {
-
-    try 
-    {
-      this._SetValue(this.element.val(), event);
-    }
-    catch (err)
-    {
-    }
-    
-    if (this._timepickerShowing)
-    {
-      $("ul", this._timePickerDisplay).focus();
-    }
-  },
-  
-  /**
-   * This function is to hide the timepicker if the user clicks anywhere outside the timepicker 
-   * 
-   * @private
-   * @param {Event} event
-   */
-  _checkExternalClick : function __checkExternalClick(event)
-  {
-
-    var $target = $(event.target);
-
-    if ((($target[0] !== this._timePickerDisplay[0] && 
-          $target.parents("#" + this._GetSubId(this.TIME_PICKER_ID)).length === 0) && 
-          !$target.closest("." + this.TRIGGER_CLASS).length && this._timepickerShowing))
-    {
-      this.hide();
-    }
-  },
-  
-  /**
    * This function will generate the time drop down 
    * 
    * @private
@@ -2621,8 +2406,8 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   _generateTime : function __generateTime()
   {
 
-    var processDate = this._getProcessDate(), 
-        timeNode = $("<ul class='oj-combobox-results' tabindex='-1' role='listbox'></ul>"), 
+    var processDate = this._getStubDate(), 
+        timeNode = $("<ul class='oj-listbox-results' tabindex='-1' role='listbox'></ul>"), 
         selectedDateFormat = this._getFormattedValue(), source = [], i, j;
 
     processDate.setHours(0);
@@ -2631,20 +2416,21 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     processDate.setMilliseconds(0);
 
     source = this._getTimeSource(processDate);
-    selectedDateFormat = selectedDateFormat || source[0].value;
+    selectedDateFormat = selectedDateFormat || source[0].value; //either choose the selected date or if it doesn't exist the first value
 
     this._timePickerDisplay.empty();
 
     for (i = 0, j = source.length;i < j;i++)
     {
       var value = source[i].value,
-          liNode = $("<li class='oj-combobox-result' role='presentation'>"),
-          node = $("<div class='oj-combobox-result-label' data-value='" + value + "' role='option' id='" + this["uuid"] + "_sel" + i + "'>" + source[i].label + "</li>");
+          liNode = $("<li class='oj-listbox-result' role='presentation'>"),
+          node = $("<div class='oj-listbox-result-label' data-value='" + value + "' role='option' id='" + 
+                    this["uuid"] + "_sel" + i + "'>" + source[i].label + "</li>");
 
       if (selectedDateFormat === value)
       {
         node.attr("aria-selected", "true");
-        liNode.addClass("oj-combobox-highlighted"); //TODO When combo box changes it's CSS to Jet specific [i.e. oj-checked or something else] make the same change
+        liNode.addClass("oj-listbox-highlighted"); //TODO When combo box changes it's CSS to Jet specific [i.e. oj-selected or something else] make the same change
       }
       
       liNode.append(node);
@@ -2653,12 +2439,12 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
 
     this._timePickerDisplay.append(timeNode);
 
-    $(".oj-combobox-result", timeNode).on("mousemove", function ()
+    $(".oj-listbox-result", timeNode).on("mousemove", function ()
     {
-      $(".oj-combobox-highlighted", timeNode).removeClass("oj-combobox-highlighted"); //TODO When combo box changes it's CSS to Jet specific [i.e. oj-checked or something else] make the same change
+      $(".oj-listbox-highlighted", timeNode).removeClass("oj-listbox-highlighted");
       
       var ref = $(this);
-      ref.addClass("oj-combobox-highlighted");
+      ref.addClass("oj-listbox-highlighted");
       
       timeNode.attr("aria-activedescendant", ref.first()[0].id);
     });
@@ -2668,18 +2454,11 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     {
       self.hide();
       self._processTimeSelection(event);
-    });
-
-    timeNode.on("keydown", function (event)
+    }).on("keydown", function (event)
     {
       self._timeNodeKeyDown(event);
     });
 
-  },
-  
-  _getTimeConverter : function __getTimeConverter() 
-  {
-    return this._containedInDateTimePicker() ? this._datePicker["converter"] : this._GetConverter();
   },
   
   /**
@@ -2692,46 +2471,44 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
    */
   _getTimeSource : function __getTimeSource(date)
   {
-    var source = [], converter = this._getTimeConverter();
+    var source = [], 
+        converter = this._getTimeConverter();
 
     if (date)
     {
       var timeIncrement = this.options["timeIncrement"];
+      
+      var splitted = timeIncrement.split(":");
 
-      if (timeIncrement)
+      if (splitted.length === 4)
       {
-        var splitted = timeIncrement.split(":");
+        var increments = this._getTimeIncrement(timeIncrement);
 
-        if (splitted.length === 4)
+        if (increments)
         {
-          var increments = this._getTimeIncrement(timeIncrement);
+          var processDate = new Date(date), formatted = "";
 
-          if (increments)
+          //continue until day differs
+          do 
           {
-            var processDate = new Date(date), formatted = "";
-
-            //continue until day differs
-            do 
+            formatted = converter.format(processDate);
+            source.push(
             {
-              formatted = converter.format(processDate);
-              source.push(
-              {
-                label : formatted, value : formatted
-              });
-              processDate.setHours(processDate.getHours() + increments.hourIncr);
-              processDate.setMinutes(processDate.getMinutes() + increments.minuteIncr);
-              processDate.setSeconds(processDate.getSeconds() + increments.secondIncr);
-              processDate.setMilliseconds(processDate.getMilliseconds() + increments.millisecondIncr);
-            }
-            while (processDate.getDate() === date.getDate());
+              label : formatted, value : formatted
+            });
+            processDate.setHours(processDate.getHours() + increments.hourIncr);
+            processDate.setMinutes(processDate.getMinutes() + increments.minuteIncr);
+            processDate.setSeconds(processDate.getSeconds() + increments.secondIncr);
+            processDate.setMilliseconds(processDate.getMilliseconds() + increments.millisecondIncr);
           }
-        }
-        else 
-        {
-          throw new Error("timeIncrement value should be in the format of Thh:mm:ss:SS");
+          while (processDate.getDate() === date.getDate());
         }
       }
-
+      else 
+      {
+        throw new Error("timeIncrement value should be in the format of Thh:mm:ss:SS");
+      }
+      
     }
 
     return source;
@@ -2754,27 +2531,17 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     {
       increments = 
       {
-        hourIncr : parseInt(splitted[0].substring(1), 10), minuteIncr : parseInt(splitted[1], 10), secondIncr : parseInt(splitted[2], 10), millisecondIncr : parseInt(splitted[3], 10)
+        hourIncr : parseInt(splitted[0].substring(1), 10), 
+        minuteIncr : parseInt(splitted[1], 10), 
+        secondIncr : parseInt(splitted[2], 10), 
+        millisecondIncr : parseInt(splitted[3], 10)
       };
     }
 
     return increments;
   },
   
-  /**
-   * This function will return a formattedValue of the date object
-   * 
-   * @private
-   * @return {string} increments
-   */
-  _getFormattedValue : function __getFormattedValue()
-  {
-    var converter = this._getTimeConverter(), date = this.options['value'];
-
-    return date ? converter.format(date) : "";
-  },
-  
-  //This handler is when an user keys down with the drop down having focus
+  //This handler is when an user keys down with the drop down has focus
   _timeNodeKeyDown : function __timeNodeKeyDown(event)
   {
 
@@ -2818,26 +2585,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
   },
   
   /**
-   * This helper function will check if the currently selected time entry is within the view and if not will scroll to it
-   * 
-   * @private
-   * @param {Object} node
-   */
-  _checkScrollTop : function (node)
-  {
-    var top = node.position().top, 
-        height = this._timePickerDisplay.height(), 
-        results = $(".oj-combobox-results", this._timePickerDisplay),
-        scrollTop = results.scrollTop();
-
-    if ((height + scrollTop) < top || top < scrollTop)
-    {
-      results.scrollTop(top);
-    }
-  },
-  
-  /**
-   * This function will set the oj-combobox-highlighted to the next or previous sibling due to key down or key up stroke
+   * This function will set the oj-listbox-highlighted to the next or previous sibling due to key down or key up stroke
    * 
    * @private
    * @param {Event} event
@@ -2845,17 +2593,16 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
    */
   _processNextPrevSibling : function __processNextPrevSibling(event, prevOrNext)
   {
-    var prevActive = $(".oj-combobox-highlighted", this._timePickerDisplay),
+    var prevActive = $(".oj-listbox-highlighted", this._timePickerDisplay),
         ulElement = $("ul", this._timePickerDisplay);
     
     if (prevActive.length === 1)
     {
-
       var node = $(prevActive)[prevOrNext]();
       if (node.length === 1)
       {
-        prevActive.removeClass("oj-combobox-highlighted");
-        node.addClass("oj-combobox-highlighted");
+        prevActive.removeClass("oj-listbox-highlighted");
+        node.addClass("oj-listbox-highlighted");
         ulElement.attr("aria-activedescendant", node.first()[0].id);
         this._checkScrollTop(node);
       }
@@ -2874,7 +2621,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     var timePickerDisplay = this._timePickerDisplay, 
         prevSelected = $("[aria-selected]", timePickerDisplay), 
         ulElement = $("ul", timePickerDisplay), 
-        selected = $(".oj-combobox-highlighted div", timePickerDisplay);
+        selected = $(".oj-listbox-highlighted div", timePickerDisplay);
 
     if (selected.length !== 1)
     {
@@ -2883,110 +2630,347 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     
     if(prevSelected.length === 1)
     {
+      //previous selection can be 0 so remove only when of size 1
       prevSelected.removeAttr("aria-selected");
-      prevSelected.parent().removeClass("oj-combobox-highlighted");
+      prevSelected.parent().removeClass("oj-listbox-highlighted");
     }
     
     selected.attr("aria-selected", "true");
-    selected.parent().addClass("oj-combobox-highlighted");
+    selected.parent().addClass("oj-listbox-highlighted");
     
-    this._SetDisplayValue(selected.attr("data-value"));
+    this._SetDisplayValue(selected.attr("data-value")); //requirement to invoke _SetDisplayValue since _SetValue doesn't invoke it
     this._SetValue(selected.attr("data-value"));
-    ulElement.attr("aria-activedescendant", selected[0].id);
+    ulElement.attr("aria-activedescendant", selected[0].id); //updated for Jaws accessibilty reader
     
-    //trigger selection so datepicker will know to update it's value
     this.hide();
     
     this.element.focus();
     
-    if (this._containedInDateTimePicker())
+    if (this._isContainedInDateTimePicker())
     {
-      //when focus is placed on the input, since datepicker w/ showOn of focus or both can display it
+      //when focus is placed on the input, since datepicker w/ showOn of focus can display it
       this._datePicker["widget"].hide();
     }
   },
   
-  _getProcessDate : function __getProcessDate()
+  /** 
+   * Shows the timepicker
+   * 
+   * @expose 
+   * @instance
+   * @memberof! oj.ojInputTime
+   */
+  show : function __show()
+  {
+    if (this.options["disabled"])
+    {
+      return;
+    }
+
+    if (this._isContainedInDateTimePicker())
+    {
+      //need to hide the datepicker prior to showing timepicker
+      this._datePicker["widget"].hide();
+    }
+    
+    //lazily generate
+    if (this._timePickerDisplay.children().length === 0)
+    {
+      this._generateTime();
+    }
+
+    this._timePickerDisplay.css(
+    {
+      top : "", left : ""
+    });
+    
+    //Need to set the width to align with what combobox does
+    this._timePickerDisplay.width(this.element.parent().width());
+
+    var rtl = this._IsRTL();
+
+    this._timePickerDisplay["position"](
+    {
+      my : rtl ? "right top" : "left top", at : rtl ? "right bottom" : "left bottom", of : this.element, collision : "fit"
+    });
+
+    this._timepickerShowing = true;
+    this._timePickerDisplay.show();
+
+    var selected = $("[aria-selected]", this._timePickerDisplay);
+    if (selected.length === 1)
+    {
+      this._checkScrollTop($(selected));
+    }
+
+    $("ul", this._timePickerDisplay).focus();
+  },
+  
+  /** 
+   * Hides the timepicker
+   * 
+   * @expose 
+   * @instance
+   * @memberof! oj.ojInputTime
+   */
+  hide : function __hide()
+  {
+    if (this._timepickerShowing)
+    {
+      this._timePickerDisplay.hide();
+      this._timepickerShowing = false;
+    }
+  },
+  
+  /** 
+   * Redraws the time drop down
+   * 
+   * @expose 
+   * @instance
+   * @memberof! oj.ojInputTime
+   */
+  refresh : function __refresh()
+  {
+    this._superApply(arguments);
+    this._generateTime();
+    return this;
+  },
+  
+  /**
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputTime
+   */
+  _SetDisplayValue : function __setDisplayValue(displayValue)
+  {
+    //Only time to set the display value to the this.element is when not of 
+    //ojInputDateTime [unless is inline]. Otherwise it will set only the time portion 
+    //for the ojInputDateTime
+    if (this._isIndependentInput())
+    {
+      this._superApply(arguments);
+    }
+    this._generateTime();
+  },
+  
+  /**
+   * Whether the this.element should be wrapped. Function so that additional conditions can be placed
+   * 
+   * @ignore
+   * @protected
+   * @override
+   * @return {boolean}
+   */
+  _DoWrapElement : function ()
+  {
+    return this._isIndependentInput();
+  },
+  
+  /**
+   * Whether the input element of ojInputTime is shared or not [i.e. not part of ojInputDateTime or if it has 
+   * been created by ojInputDateTime that ojInputDateTime
+   * 
+   * @ignore
+   * @return {boolean}
+   */
+  _isIndependentInput : function __isIndependentInput()
+  {
+    return !this._isContainedInDateTimePicker() || this._isDatePickerInline();
+  },
+  
+  /**
+   * @protected
+   * @override
+   * @return {string}
+   */
+  _GetDefaultStyleClass : function ()
+  {
+    return "oj-inputtime";
+  },
+  
+  /**
+   * @ignore
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputTime
+   */
+  _GetElementValue : function ()
+  {
+    return this.options['value'] || "";
+  },
+  
+  /**
+   * Returns a stub date with specific Year, Month, and Day [since only concerned with Time]
+   * 
+   * @private
+   * @return {Object}
+   */
+  _getStubDate : function __getStubDate()
   {
     var temp = new Date(1950, 0, 1);
     return temp;
   },
-
-  _destroy : function __destroy()
+  
+  /**
+   * This helper function will check if the currently selected time entry is within the view and if not will scroll to it
+   * 
+   * @private
+   * @param {Object} node
+   */
+  _checkScrollTop : function (node)
   {
-    var retVal = this._super();
-    
-    if (this._triggerNode)
-    {
-      this._triggerNode.remove();
-    }
+    var top = node.position().top, 
+        height = this._timePickerDisplay.height(), 
+        results = $(".oj-listbox-results", this._timePickerDisplay),
+        scrollTop = results.scrollTop();
 
-    if (this._inputSetFromFieldHandler)
+    if ((height + scrollTop) < top || top < scrollTop)
     {
-      this.element.off("blur", this._inputSetFromFieldHandler);
+      results.scrollTop(top);
     }
-
-    if (this._inputKeyDownHandler)
-    {
-      this.element.off("keydown", this._inputKeyDownHandler);
-    }
-    this._timePickerDisplay.remove();
-    
-    if (!this._containedInDateTimePicker())
-    {
-      this.element.unwrap();
-    }
-    
-    if(this._inputDetail) 
-    {
-      this.element.removeAttr("aria-labelledby");
-      this._inputDetail.remove();
-    }
-
-    this.element.removeClass(this.INPUT_CLASS).removeClass(this.HAS_TRIGGER_CLASS).removeClass("oj-disabled");
-    
-    return retVal;
   },
   
-  _setOption : function __setOption(key, value)
+  /**
+   * This function will return the correct converter for ojInputTime
+   * 
+   * @private
+   * @return {string} increments
+   */
+  _getTimeConverter : function __getTimeConverter() 
   {
-    
-    var retVal = null;
-    
-    if (key === "value")
-    {
-      //When a null, undefined, or "" value is passed in set to Today's value unless input element has value
-      if(!value && this.element.val())
-      {
-        value = new Date();
-      }
-      
-      retVal = this._super(key, value);
-      return retVal;
-    }
-    
-    retVal = this._superApply(arguments);
+    return this._isContainedInDateTimePicker() ? this._datePicker["converter"] : this._GetConverter();
+  },
+  
+  /**
+   * This function will return a formattedValue of the date object
+   * 
+   * @private
+   * @return {string} increments
+   */
+  _getFormattedValue : function __getFormattedValue()
+  {
+    var converter = this._getTimeConverter(), 
+        date = this.options['value'];
 
-    if(key === "disabled") 
-    {
-      var filteredChildren = this._triggerNode.children().filter("span");
+    return date ? converter.format(date) : "";
+  },
+  
+  /**
+   * Whether ojInputTime has been created by ojInputDateTime
+   * 
+   * @private
+   */
+  _isContainedInDateTimePicker : function __isContainedInDateTimePicker()
+  {
+    return this._datePicker !== null;
+  },
+  
+  /**
+   * Helper function to determine whether the provided datePicker is inline or not
+   * 
+   * @private
+   */
+  _isDatePickerInline : function __isDatePickerInline()
+  {
+    return this._datePicker["inline"];
+  },
+  
+  /**
+   * This function is to hide the timepicker if the user clicks anywhere outside the timepicker 
+   * 
+   * @private
+   * @param {Event} event
+   */
+  _checkExternalClick : function __checkExternalClick(event)
+  {
 
-      if (value)
-      {
-        filteredChildren.addClass("oj-disabled").removeClass("oj-enabled");
-      }
-      else 
-      {
-        filteredChildren.removeClass("oj-disabled").addClass("oj-enabled");
-      }
-    }
-    else if(key === "timeIncrement") 
+    var $target = $(event.target);
+
+    if ((($target[0] !== this._timePickerDisplay[0] && 
+          $target.parents("#" + this._GetSubId(this._TIME_PICKER_ID)).length === 0) && 
+          !$target.closest("." + this._TRIGGER_CLASS).length && this._timepickerShowing))
     {
-      //changing back to original code of invoking _generateTime per discussion
-      this._generateTime();
+      this.hide();
     }
- 
-    return retVal;
+  },
+  
+  /**
+   * Return the subcomponent node represented by the documented locator attribute values. For Time
+   * 
+   * <table class="props">
+   *   <thead>
+   *     <tr>
+   *       <th>Locator</th>
+   *       <th>Description</th>
+   *     </tr>
+   *   </thead>
+   *   <tbody>
+   *     <tr>
+   *       <td>oj-listbox-drop</td>
+   *       <td>Time drop down div container</td>
+   *     </tr>
+   *     <tr>
+   *       <td>oj-inputdatetime-time-icon</td>
+   *       <td>Time icon that triggers the Time drop down display</td>
+   *     </tr>
+   * </tbody></table>
+   * 
+   * @expose
+   * @override
+   * @instance
+   * @memberof! oj.ojInputTime
+   * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
+   *                        look up the subcomponent associated with that string.  It contains:<p>
+   *                        component: optional - in the future there may be more than one component contained within a page element<p>
+   *                        subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
+   * @returns {Object|null} the subcomponent located by the subId string passed in locator, if found.<p>
+   */
+  getNodeBySubId: function(locator)
+  {
+    var ret = this._superApply(arguments);
+    if(ret) 
+    {
+      return ret;
+    }
+    
+    var subId = locator['subId'];
+    if(subId === "oj-listbox-drop")
+    {
+      return this._timePickerDisplay;
+    }
+    else if(subId === "oj-inputdatetime-time-icon")
+    {
+      return $(".oj-inputdatetime-time-icon", this._triggerNode);
+    }
+    
+    return null;
+  },
+  
+  /** 
+   * Returns the time display node
+   * 
+   * @expose 
+   * @instance
+   * @memberof! oj.ojInputTime
+   */
+  timeDisplay : function __timeDisplay()
+  {
+    return this._timePickerDisplay;
+  },
+  
+  /** 
+   * Returns the root node
+   * 
+   * @expose 
+   * @instance
+   * @memberof! oj.ojInputTime
+   */
+  widget : function __widget()
+  {
+    return !this._isContainedInDateTimePicker() ? this._super() : this._datePicker["widget"].widget();
   }
   
 });
@@ -3029,6 +3013,56 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
  *     </tr>
  *   </thead>
  *   <tbody>
+ *     <tr>
+ *       <td><kbd>Enter</kbd></td>
+ *       <td>Select the currently focused day</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>UpArrow</kbd></td>
+ *       <td>Move up in the grid.</tr>
+ *     <tr>
+ *       <td><kbd>DownArrow</kbd></td>
+ *       <td>Move down in the grid.</tr>
+ *     <tr>
+ *       <td><kbd>RightArrow</kbd></td>
+ *       <td>Move right in the grid.</tr>
+ *     <tr>
+ *       <td><kbd>LeftArrow</kbd></td>
+ *       <td>Move left in the grid.</tr>
+ *     <tr>
+ *       <td><kbd>Esc</kbd></td>
+ *       <td>Close the grid.</tr>
+ *     <tr>
+ *       <td><kbd>Home</kbd></td>
+ *       <td>Move focus to first day of the month.</tr>
+ *     <tr>
+ *       <td><kbd>End</kbd></td>
+ *       <td>Move focus to last day of the month.</tr>
+ *     <tr>
+ *       <td><kbd>PageUp</kbd></td>
+ *       <td>Switch to previous month.</tr>
+ *     <tr>
+ *       <td><kbd>PageDown</kbd></td>
+ *       <td>Switch to next month.</tr>
+ *     <tr>
+ *       <td><kbd>Alt + PageUp</kbd></td>
+ *       <td>Switch to previous year.</tr>
+ *     <tr>
+ *       <td><kbd>Alt + PageDown</kbd></td>
+ *       <td>Switch to next year.</tr>
+ *     <tr>
+ *       <td><kbd>Ctrl + Alt + PageUp</kbd></td>
+ *       <td>Switch to previous by stepBigMonths.</tr>
+ *     <tr>
+ *       <td><kbd>Ctrl + Alt + PageDown</kbd></td>
+ *       <td>Switch to next by stepBigMonths.</tr>
+ *     <tr>
+ *       <td><kbd>Ctrl + Alt + T</kbd></td>
+ *       <td>Places focus on Today button if it exists.</tr>
+ *     <tr>
+ *       <td><kbd>Ctrl + Alt + D</kbd></td>
+ *       <td>Places focus on Done button if it exists.
+ *     </tr>
  *     <tr>
  *       <td><kbd>Alt + DownArrow or UpArrow</kbd></td>
  *       <td>Shows the timepicker and moves the focus into the expanded timepicker list</td>
@@ -3074,8 +3108,10 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
   version : "1.0.0", 
   widgetEventPrefix : "oj",
   
-  INPUT_LABELED_BY_ID : "oj-inputdatetime-input-description",
-  WIDGET_CLASS: "oj-inputdatetime-date-time oj-widget",
+  //-------------------------------------From base---------------------------------------------------//
+  _WIDGET_CLASS_NAMES : "oj-inputdatetime-date-time oj-component oj-inputdatetime",
+  _INPUT_HELPER_KEY: "inputHelpBoth",
+  //-------------------------------------End from base-----------------------------------------------//
   
   options : 
   {
@@ -3083,10 +3119,9 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
     /**
      * Time increment to be used for ojInputDateTime, the format is Thh:mm:ss:SS
      *
-     * @public
      * @expose
-     * @memberof! oj.ojInputDateTime
      * @instance
+     * @memberof! oj.ojInputDateTime
      * @default <code class="prettyprint">"T00:30:00:00"</code>
      */
     timeIncrement : "T00:30:00:00", 
@@ -3097,10 +3132,9 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
      * If one wishes to provide a custom converter for the ojInputDateTime override the factory returned for
      * oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME)
      *
-     * @public
      * @expose
-     * @memberof! oj.ojInputDateTime
      * @instance
+     * @memberof! oj.ojInputDateTime
      * @default <code class="prettyprint">oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter({"day": "2-digit", "month": "2-digit", "year": "2-digit", "hour": "2-digit", "hour12": true, "minute": "2-digit"})</code>
      */
     converter : oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter(
@@ -3110,141 +3144,77 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
   },
   
   /**
-   * Return the subcomponent node represented by the documented locator attribute values.
-   * 
-   * @expose
-   * @override
-   * @memberof! oj.ojInputDateTime
-   * @instance
-   * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
-   *                        look up the subcomponent associated with that string.  It contains:<p>
-   *                        component: optional - in the future there may be more than one component contained within a page element<p>
-   *                        subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
-   * @returns {Object|null} the subcomponent located by the subId string passed in locator, if found.<p>
-   */
-  getNodeBySubId: function(locator)
-  {
-    
-    var ret = this._superApply(arguments);
-    if(ret) 
-    {
-      return ret;
-    }
-    
-    var subId = locator['subId'];
-    if(subId === "oj-datepicker-time" || subId === "oj-datepicker-time-icon")
-    {
-      return this._timePicker.ojInputTime("getNodeBySubId", locator);
-    }
-    
-    return null;
-  },
-  
-  /**
-   * 
-   * @return {Object} jquery object 
-   * 
-   * @override
-   * @expose
-   * @memberof! oj.ojInputDateTime
-   * @instance
    * @protected
-   */
-  _GetMessagingTriggerElement : function ()
-  {
-    return !this.isInLine() ? this._super() : this._timePickerElement;
-  },
-  
-  /**
-   * @override
-   * @protected
-   * @return {string}
-   */
-  _GetDefaultStyleClass : function ()
-  {
-    return "oj-inputdatetime";
-  },
-  
-  /**
-   * @private
    * @override
    * @instance
-   */
-  _GetTranslationsSectionName: function()
-  {
-    return "oj-ojInputDate"; 
-  },
-  
-  /**
-   * @private
-   * @override
-   * @instance
+   * @memberof! oj.ojInputDateTime
    */
   _InitBase : function __InitBase() 
   {
     this._super();
     
-    this._timePickerElement = this.element;
+    this._timePickerElement = this.element; //if the ojInputDateTime is inline, then this ref will change to a NEW input element
     this._timePicker = null;
     this._timeSelectedHandler = null;
     this._timeConverter = null;
   },
   
   /**
-   * @private
+   * @protected
    * @override
    * @instance
+   * @memberof! oj.ojInputDateTime
    */
-  _InlineDatepicker : function __InlineDatepicker()
+  _ComponentCreate : function __ComponentCreate()
   {
-    this._super();
-    
-    //This gets freaking complicated, since DatePicker never intended to have timepicker associated to it
-    //Need to have an input element that is tied to the time selector
-    
-    this._origElement = this.element;
-    
-    var input = $("<input type='text'>");
-    input.insertAfter(this.element);
-    
-    //Now need to reset this.element to the newly created input element as the time trigger addition is based upon this.element
-    this._timePickerElement = input;
-    input.addClass(this.INPUT_CLASS);
-    
-    //Need to wrap the newly created input element
-    this._wrapInputElement();
-    
-    this._AppendInputDetail(input);
-  },
-  
-  _create : function __create()
-  {
-    var ret = this._super(), timeConverter = this._getTimePickerConverter(this._GetConverter());
+    var ret = this._super(), 
+        timeConverter = this._getTimePickerConverter(this._GetConverter());
     
     if (timeConverter === null)
     {
       throw new Error("Plase use ojInputDate if you do not have time portion");
     }
     
-    // DISCUSS W/ Pavitra when she comes back and the beforeCreate + afterCreate discussion is settled
-    // In nutshell component messaging needs to be initialized PRIOR to TimePicker being created
-    // Another thought is to pass in a null converter for timepicker; however it still needs to be initialized 
-    // within _create rather than current location of _init
-    this._initComponentMessaging();
+    if (this._isInLine())
+    {
+      //Since DatePicker never intended to have timepicker associated to it
+      //need to have an input element that is tied to the time selector
+      
+      var input = $("<input type='text'>");
+      input.insertAfter(this.element);
+      
+      //Now need to reset this._timePickerElement to the newly created input element
+      this._timePickerElement = input;
+    }
     
     //create time instance for the time portion
     this._timeSelectedHandler = $.proxy(this._timeSelected, this);
     this._timePicker = this._timePickerElement.ojInputTime(
     {
-      converter : null,
-      optionChange : this._timeSelectedHandler, 
-      timeIncrement : this.options["timeIncrement"], 
-      datePicker : {"widget": this, "converter": timeConverter} 
+      "converter" : null,
+      "optionChange" : this._timeSelectedHandler, 
+      "timeIncrement" : this.options["timeIncrement"], 
+      "placeholder" : timeConverter.getHint(),
+      "datePicker" : {"widget": this, "converter": timeConverter, "inline": this._isInLine()} 
     });
     
+    return ret;
+  },
+  
+  /**
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDateTime
+   */        
+  _AfterCreate : function () 
+  {
+    var ret = this._superApply(arguments),
+        timeConverter = this._getTimePickerConverter(this._GetConverter());
+
     this._timePicker.ojInputTime("option", "disabled", this.options["disabled"]);
     
-    if(this.isInLine()) 
+    if(this._isInLine()) 
     {
       this._timePickerElement.val(timeConverter.format(this._getDate()));
     }
@@ -3252,17 +3222,42 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
     return ret;
   },
   
-  /**
-   * Need to wrap the input + span elements around a div in the case that datepicker is inline [so to allow proper nesting]
-   * 
-   * @private
-   */
-  _wrapInputElement : function __wrapInputElement()
+  _setOption : function __setOption(key, value)
   {
-    $(this._timePickerElement).wrap( $( $("<div>").addClass(this.INPUT_CONTAINER_CLASS) ) );
     
-    //need to set the wrapper as the input container class since validation error should be associated to it
-    this._rootNode = this._timePickerElement.parent();
+    if(this._timePicker) 
+    {
+      if (key === "timeIncrement" || key === "disabled")
+      {
+        this._timePicker.ojInputTime("option", key, value);
+      }
+      else if (key === "converter")
+      {
+        this._timePicker.ojInputTime("option", key, this._getTimePickerConverter(value));
+      }
+    }
+    
+    return this._superApply(arguments);
+  },
+  
+  /**
+   * @ignore
+   * @protected
+   * @override
+   */
+  _destroy : function __destroy()
+  {
+    var ret = this._super();
+
+    this._timePicker.ojInputTime("destroy");
+
+    if (this._isInLine())
+    {
+      //note that this.element below would be of the TimePicker's input element
+      this._timePickerElement.remove();
+    }
+    
+    return ret;
   },
   
   /*
@@ -3307,7 +3302,8 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
     
     if(params["option"] === "value")
     {
-      var currDate = new Date(this._getDate()), selectedDate = this._timeConverter.parse(params["value"]);
+      var currDate = new Date(this._getDate()), 
+          selectedDate = this._timeConverter.parse(params["value"]);
       
       currDate.setHours(selectedDate.getHours());
       currDate.setMinutes(selectedDate.getMinutes());
@@ -3351,22 +3347,20 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
     return this._superApply(arguments);
   },
   
-  _destroy : function __destroy()
+  /**
+   * To disable or enable the widget
+   * 
+   * @private
+   */
+  _disableEnable : function __disableEnable(val)
   {
-    var ret = this._super();
+    var ret = this._superApply(arguments);
 
-    this._timePicker.ojInputTime("destroy");
-
-    if (this.isInLine())
+    if (this._isInLine() && this._timePicker)
     {
-      
-      this._origElement.unwrap();
-      this._origElement.removeClass(this.INLINE_CLASS);
-      
-      //note that this.element below would be of the TimePicker's input
-      this._timePickerElement.remove();
+      this._timePicker.ojInputTime("option", "disabled", val);
     }
-    
+
     return ret;
   },
   
@@ -3379,23 +3373,6 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
     this._timePicker.ojInputTime("hide");
 
     return this._super();
-  },
-  
-  /**
-   * To disable or enable the widget
-   * 
-   * @private
-   */
-  _disableEnable : function __disableEnable(val)
-  {
-    var ret = this._superApply(arguments);
-
-    if (this.isInLine() && this._timePicker)
-    {
-      this._timePicker.ojInputTime("option", "disabled", val);
-    }
-
-    return ret;
   },
   
   /** 
@@ -3412,23 +3389,72 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
     return this;
   },
   
-  _setOption : function __setOption(key, value)
+  /**
+   * Return the subcomponent node represented by the documented locator attribute values.
+   * 
+   * @expose
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDateTime
+   * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
+   *                        look up the subcomponent associated with that string.  It contains:<p>
+   *                        component: optional - in the future there may be more than one component contained within a page element<p>
+   *                        subId: the string, documented by the component, that the component expects in getNodeBySubId to locate a particular subcomponent
+   * @returns {Object|null} the subcomponent located by the subId string passed in locator, if found.<p>
+   */
+  getNodeBySubId: function(locator)
   {
     
-    if(this._timePicker) 
+    var ret = this._superApply(arguments);
+    if(ret) 
     {
-      if (key === "timeIncrement" || key === "disabled")
-      {
-        this._timePicker.ojInputTime("option", key, value);
-      }
-      else if (key === "converter")
-      {
-        this._timePicker.ojInputTime("option", key, this._getTimePickerConverter(value));
-      }
+      return ret;
     }
     
-    return this._superApply(arguments);
+    var subId = locator['subId'];
+    if(subId === "oj-datepicker-time" || subId === "oj-datepicker-time-icon")
+    {
+      return this._timePicker.ojInputTime("getNodeBySubId", locator);
+    }
+    
+    return null;
+  },
+  
+  /**
+   * 
+   * @return {Object} jquery object 
+   * 
+   * 
+   * @expose
+   * @protected
+   * @override
+   * @instance
+   * @memberof! oj.ojInputDateTime
+   */
+  _GetMessagingLauncherElement : function ()
+  {
+    return !this._isInLine() ? this._super() : this._timePickerElement;
+  },
+  
+  /**
+   * @protected
+   * @override
+   * @return {string}
+   */
+  _GetDefaultStyleClass : function ()
+  {
+    return "oj-inputdatetime";
+  },
+  
+  /**
+   * @protected
+   * @override
+   * @instance
+   */
+  _GetTranslationsSectionName: function()
+  {
+    return "oj-ojInputDate"; 
   }
-
+  
 });
 });

@@ -26,9 +26,9 @@ $includeDialogClasses:  $includeAllClasses !default;
         top: 0;
         left: 0;
         padding: 0; 
-        box-shadow: $largeBoxShadow;
+        @include oj-box-shadow($largeBoxShadow);
         background: $dialogWindowBgColor;
-        border: $borderWidth solid $dialogWindowBorderColor;
+        border: 1px solid $dialogWindowBorderColor;
         @include oj-border-radius($smallBorderRadius);
     }
 
@@ -83,16 +83,16 @@ $includeDialogClasses:  $includeAllClasses !default;
     //     padding: 10px 10px 5px 10px;
     //    padding: 0 0 0 0;
     //    background: $windowBgColor;
-    //    color: $windowTextColor;
+    //    color: $textColor;
     //    overflow: auto; 
     // }
 
     .oj-dialog .oj-dialog-body { 
         position: relative; 
         border: 0; 
-        padding: 10px 10px 10px 10px;
+        padding: $panelPadding;
         background: $windowBgColor;
-        color: $windowTextColor;
+        color: $textColor;
         overflow: auto; 
     }
 
@@ -135,9 +135,8 @@ $includeDialogClasses:  $includeAllClasses !default;
 
     .oj-dialog .oj-dialog-footer {
        padding: 10px 10px;
-       position: absolute; // needed to align buttons to bottom of dialog on resize
-       bottom: 0;
-       right: 0;
+       position: relative; // needed to align buttons to bottom of dialog on resize
+       float: right;
     }
 
     //.oj-dialog .oj-dialog-header {

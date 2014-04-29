@@ -1,7 +1,9 @@
 @import "../utilities/oj.utilities.mixins.urls";
 
-// PATHS
-//----------------------------------
+
+//----------------------------------------------------------------
+//  PATHS
+//----------------------------------------------------------------
 // these paths should be relative to the generated css file
 
 // path to alta images 
@@ -13,41 +15,26 @@ $fontDir: "fonts/" !default;
 // todo: add common image and font dir
 
 
+//----------------------------------------------------------------
+// GENERAL STYLING VARIABLES
+//----------------------------------------------------------------
 
-// COMPATIBILITY
-//----------------------------------
-// when $allowTagSelectors is true JET directly styles certain tags like 
-// <p> <a> <h1>, etc. However for developers trying to mix JET with other 
-// technologies styling these tags directly could cause issues on other parts of the page. 
-// In that case set $allowTagSelectors: false;.
-// See the "compatibility" section of the theming documentation for more information
-$allowTagSelectors: true !default;
-
-
-// DIRECTION
-//----------------------------------
-// Accepted value are null, ltr, rtl
-//    - null means ouput for both directions, 
-//    - ltr means output left to right only, 
-//    - rtl means output right to left only
-$textDirection: null !default;
-
-
-// UNIVERSAL 
+// font 
 //----------------------------------
 
-
-// Universal Font & Text Styling 
-//----------------------------------
-
-// font family and weight
+// font family 
 $fontFamily: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$fontWeight: normal !default; // TODO: do we really need a var for this?
 
 // font size
 
-// $rootFontSize should only be used set on the html element 
+// $rootFontSize is only used on the html element 
 // in order to support using rem units. 
+//
+// If you have $allowTagSelectors set to false you can 
+// use the class oj-html to get the JET html tag styling. 
+// If you are not generating classes for the html element in JET
+// you can still use rem's if you can set the font size on t
+// he html element with your own class or inline style.
 //
 // The browser usually uses 16px and the Alta default is 12px. 
 // Therefore set $rootFontValue to .75em to get 12px;
@@ -59,7 +46,10 @@ $mediumFontSize:  1.167rem !default;
 $largeFontSize:   1.333rem !default;  
 $largestFontSize: 1.5rem !default;    
 
+
+
 // text colors
+//----------------------------------
 $textColor:             #333333 !default;                                
 $primaryTextColor:      $textColor - #333333 !default; // = #000000;       
 $secondaryTextColor:    $textColor + #121212 !default; // = #454545;  
@@ -70,54 +60,65 @@ $contrastTextColor:     #ffffff !default;
 $textColorDisabled:     #9e9e9e !default; 
 
 // link colors
+//----------------------------------
 $linkTextColor:         #145c9e !default;   
 $linkTextColorVisited:  $linkTextColor !default; 
 $linkTextColorDisabled: $textColorDisabled !default;
 
 
-// Universal Interaction State Colors 
+// interaction state colors 
 //----------------------------------
+
+// $interaction1Color is often used to
+// indicate a selected state.
 $interaction1Color: #0572ce !default;  
+
+// $interaction2Color is often used to
+// indicate hover or focus on a row or item
 $interaction2Color: #ebeced !default;
+
+// $interaction3Color is often used to
+// indicate active or selected on a row or item
 $interaction3Color: #bfd4e5 !default;
+
+// $interaction4Color and $interaction5Color are
+// often used to indicate state in a "header",
+// for example a column header
 $interaction4Color: #d6d7d8 !default;
 $interaction5Color: #dae9f5 !default;
 
 
-// Universal Interaction Cue Colors 
+// interaction cue colors 
 //----------------------------------
-// todo: I think we should use borderColorError, borderColorWarning, for borders. 
-// Are colorError and colorWarning used elsewhere? 
-$colorError: #c70000 !default;
-$colorWarning: #ffaa2b !default;
+// todo: Are colorError and colorWarning used elsewhere other than borders? 
+$colorError:    #c70000 !default;
+$colorWarning:  #ffaa2b !default;
 $colorRequired: $interaction1Color !default;
-$colorDisabled:  #efeff1 !default;
+$colorDisabled: #efeff1 !default;
 
-// Icon Colors
+// icon colors
 //----------------------------------
-// TODO: needs review from Liza
-// todo: this should be $iconColorEnabled, 
-// because you might have a separate $iconColor variable.
+// these are used to control the color of icon font icons
 $iconColor:         $textColor !default;
-$iconColorEnabled:  #878c90 !default;
+$iconColorDefault:  #878c90 !default;
 $iconColorHover:    #85bbe7 !default;
 $iconColorActive:   $interaction1Color !default;
-$iconColorChecked:  $iconColorActive !default;
+$iconColorSelected: $iconColorActive !default;
 $iconColorDisabled: #d4d6d7 !default;
-
-// Universal Background and Border Styling 
-//----------------------------------
+// todo: talk to richard
+$iconColorSelectedDisabled: #B2B2B2 !default;
 
 // background colors
-// TODO, should these be named background or bg?
+//----------------------------------
 $background1Color: #ffffff !default;
 $background2Color: #f9f9f9 !default;
 $background3Color: #fcfdfe !default;
 $background4Color: #f0f0f0 !default; 
-$background5Color: #333333 !default;
-$background6Color: #fafafa !default;
+$background5Color: #fafafa !default;
+$background6Color: #e4e8ea !default;
 
 // border colors
+//----------------------------------
 // todo: show liza the border demos, these colors are so darn close
 $border1Color:       #d6dfe6 !default;
 $border2Color:       #d9dfe3 !default; 
@@ -126,21 +127,23 @@ $border4Color:       #dfe4e7 !default;
 $border5Color:       #eeeeee !default;
 $border6Color:       #000000 !default;
 $border7Color:       #ffffff !default;
+
 $borderColorError:   $colorError !default;
 $borderColorWarning: $colorWarning !default;
+// todo: is this generic?
+// label help def
+$helpBorderColor: $formControlLabelColor + #030303 !default; // = #525252
 
-// border width
-// todo: I just don't see anyone ever using this, can we remove?
-$borderWidth:        1px !default;
 
-// radius
+// border radius
+//----------------------------------
 $smallBorderRadius:  1px !default;
 $mediumBorderRadius: 2px !default;
 $largeBorderRadius:  3px !default;
 
 
 // shadow
-$shadowColor: #000000 !default;  // TODO - this isn't used anywhere, can we remove?
+//----------------------------------
 $smallBoxShadow:  1px 1px 3px 0 rgba(0, 0, 0, .35) !default; 
 $mediumBoxShadow: 1px 1px 5px 0 rgba(0, 0, 0, .40) !default;
 $largeBoxShadow:  1px 1px 10px 0 rgba(0, 0, 0, .45) !default;
@@ -148,10 +151,13 @@ $largeBoxShadow:  1px 1px 10px 0 rgba(0, 0, 0, .45) !default;
 
 // z-index hierarchy 
 //----------------------------------
+// todo: add modal dialog value?
 $dialogZindex:     1050 !default;
 $noteWindowZindex: 1030 !default;
 $popupZindex:      1000 !default;
 $dropdownZindex:   1000 !default;
+// todo: review resizableZindex
+$resizableZindex:  900 !default;
 
 // wrappable
 //----------------------------------
@@ -162,56 +168,151 @@ $wrappableMarginBottom:  4px !default;
 
 // disabled
 //----------------------------------
+// alta uses color and not opacity to indicate disabled, 
+// but you could set disabled colors to match enabled colors and
+// use opacity to indicate disabled instead
 $opacityDisabled: null !default;
 
-// BODY
+// animation
 //----------------------------------
+$animationDuration: .5s !default;
 
-$bodyBgImage:   if(variable-exists(bodyBgImage), $bodyBgImage, oj-image-url('texture.png'));
+
+//----------------------------------------------------------------
+// CATEGORY AND WIDGET VARIABLES
+//----------------------------------------------------------------
+
+
+
+// BODY
+//----------------------------------------------------------------
+$bodyBgImage:   oj-image-url('texture.png') !default;
 $bodyBgColor:   $background1Color !default;
 $bodyTextColor: $textColor !default;
 
 
-// WINDOW
-//----------------------------------
-$windowBorderColor: $border3Color !default;
-$windowBgColor:     $background2Color !default;
-$windowTextColor:   $textColor !default; 
+
+// PANEL
+//----------------------------------------------------------------
+
+// panel defaults:
+$panelBorderColor: $border1Color !default;
+$panelBgColor:     $background1Color !default;
+$panelPadding:     10px;
+
+// panel alternatives
+$panel1BgColor:    #eff2f5 !default;
+$panel2BgColor:    #e8f2fb !default;
+
 
 // HEADERS
-//----------------------------------
-$headerFontWeight:  bold !default;
-$headerBgColor:     #f5f5f5 !default;
-// TODO: calculate the end color from the start color? 
-$headerBgImage:     if(variable-exists(headerBgImage), $headerBgImage, linear-gradient(to bottom, $headerBgColor 0%,#f0f0f0 100%)); 
-$headerBorderColor: $border1Color !default;  // todo: added for completeness
+//----------------------------------------------------------------
+$headerFontWeight:      bold !default;
+$headerBorderColor:     $border1Color !default;  
 
-// TODO is there is a difference between the header text in the header section of an accordion, which uses $headerBgColor and a header in the content section of an accordion, which uses $background1Color? There's only one headerTextColor variable.
+// the background variables below are for a header "container", 
+// like the title bar of a dialog or an accordion header
+$headerBgColor:         #f5f5f5 !default;
+$headerBgColorDisabled: $background5Color !default;
+$headerBgImage:         linear-gradient(to bottom, $headerBgColor 0%,#f0f0f0 100%) !default; 
+// TODO: calculate the end color from the start color? 
+
+
+// WINDOW
+//----------------------------------------------------------------
+$windowBorderColor: $border3Color !default;
+$windowBgColor:     $background2Color !default;
+
+
+
+// DIALOG
+//----------------------------------------------------------------
+$dialogWindowBorderColor:  $windowBorderColor !default;
+$dialogWindowBgColor:      $windowBgColor !default;
+
+
+// NOTE WINDOW
+//----------------------------------------------------------------
+$noteWindowBorderColor:      $windowBorderColor;
+$noteWindowBgColor:          $windowBgColor;
+
+// tail width and height
+$noteWindowTailSimpleWidth:  14px;
+$noteWindowTailSimpleHeight: 13px;
+
+// POPUP
+//----------------------------------------------------------------
+// popups are sometimes called a "dropdown" or "inline selector"
+$popupBorderColor:  $windowBorderColor !default;
+$popupBgColor:      $background1Color !default;
+
+
+// MENU
+//----------------------------------------------------------------
+$menuBorderColor:       $popupBorderColor !default;
+$menuBgColor:           $popupBgColor !default;
+// todo: is this really the active color? the selected color?
+$menuItemBgColorActive: $interaction2Color;
+
+// LISTBOX
+//----------------------------------
+// listbox values used in drop down for 
+// inputTime, select, combobox
+$listboxBgColorHover:  $interaction2Color !default;
+$listboxBgColorActive: $interaction3Color !default;
+
+
+// DATEPICKER
+//----------------------------------
+$datepickerBgColorSelected:  $interaction1Color !default;
+$datepickerBorderColorToday: $interaction1Color !default;
+
 
 // FORM CONTROLS 
+//----------------------------------------------------------------
+
+// form control dimensions
 //----------------------------------
 
-$formControlBorderRadius:    $mediumBorderRadius !default;
-$formControlHeight:          2.34rem !default;
-// TODO: added. This controls the horizontal padding. Should it be called $formControlPaddingStart?
-$formControlPadding:         5px !default; 
+// controls the horizontal padding inside an input, we use height
+// so that buttons and form controls are the same height
+$formControlHeight: 2.34rem !default;
+
 
 // On form controls we use a width of 100% and then set a max and min width so that when 
 // there's less room for the form control it can automatically 
 // get smaller instead of overflowing its boundaries. 
-// This forces us to set some sort of default max-width. 
+// This forces us to set some sort of default max-width
+// which can be overridden on the instance by setting a style
+// or class using the rootAttributes option.
+//
 // In alta there are large width form controls, like input text, and
 // medium width form controls, like input number
 $formControlLargeMaxWidth:  18em;
 $formControlMediumMaxWidth: 15em;
 $formControlMinWidth:       8em;
 
-//default
+
+// form control common
+//----------------------------------
+$formControlBorderRadius:    $mediumBorderRadius !default;
+
+// controls the horizontal padding inside an input
+$formControlPaddingHorizontal: 5px !default; 
+
 $formControlPlaceholderColor: $tertiaryTextColor !default;
-$formControlBgColor:          $background3Color !default;
-$formControlValueColor:       $textColor !default; 
-$formControlBorderColor:      $border4Color !default;
-$formControlBorderWidth:      $borderWidth !default; // todo do we really need these border widths on the form controls? when will people use this? just use color transparent if we don't want a border
+
+// messaging border
+$formControlMessagingBorderWidth: 2px !default;
+
+
+// form control states
+//----------------------------------
+//default
+$formControlBgColor:             $background3Color !default;
+$formControlValueColor:          $textColor !default; 
+$formControlBorderColor:         $border4Color !default;
+$formControlBorderWidth:         1px !default; 
 
 //readonly
 $formControlBgColorReadOnly:     transparent !default;
@@ -226,69 +327,71 @@ $formControlBorderColorDisabled: $colorDisabled !default;
 $formControlBorderWidthDisabled: $formControlBorderWidth !default; 
 $formControlOpacityDisabled:     $opacityDisabled   !default;
 
-// messaging border
-$formControlMessagingBorderWidth: 2px !default;
-
-// FORM LAYOUT
+// form labels
 //----------------------------------
 
 // labels
 $formControlLabelFontWeight: bold !default;
 
-// by default labels are top aligned, so this controls
-// the vertical spacing between labels and fields 
+// top aligned labels:
+//    by default labels are dislplay: block and therefore
+//    render on top of the field. This variable controls
+//    the vertical spacing between labels and fields 
 $formControlLabelMarginBottom: .5em !default;
 
 // inline labels
 $formControlLabelInlineGutter:     .5em !default;
 $formControlLabelInlineMarginTop:  .5em !default;
 
-// In a form layout this is the space expected between form controls
+
+// form layout
+//----------------------------------
+// In a form layout this is the space expected between 
+// form controls in different rows
 $formLayoutMarginBottom: 10px !default;
 
-// label help def
-$helpBorderColor: $formControlLabelColor + #030303 !default; // = #525252
 
 // BUTTONS 
-//----------------------------------
-// we set button and form control heights to the same value so they will line up nicely
-$buttonHeight:  $formControlHeight; 
+//----------------------------------------------------------------
 
+// we set button and form control heights to the same value so they will line up nicely
+$buttonHeight:       $formControlHeight; 
+$buttonFontWeight:   bold !default;
+$buttonBorderRadius: $mediumBorderRadius !default;
+
+// button padding
+//----------------------------------
 $buttonTextToEdgePadding: 0.667em; // 8px in spec.  Horiz space between text and edge of button when no intervening icon.
 $buttonIconToTextPadding: 0.5em;   // 6px in spec.  Horiz space between text and icon.
 $buttonIconToEdgePadding: 0.5em;   // 6px in spec.  Horiz space between icon and edge of button.
 
-
-$buttonFontWeight:        bold !default;
-$buttonBorderRadius:      $mediumBorderRadius !default;
-$buttonTextShadow:        0 1px 0 $contrastTextColor !default;
-$buttonBoxShadow:         inset 0 1px 0 #ffffff; 
-
-
+// button states
+//----------------------------------
 // default
-$buttonBgColor:                   #e4e8ea !default;
+$buttonBgColor:                   $background6Color !default;
 $buttonTextColor:                 $primaryTextColor !default;
-$buttonIconColor:                 $iconColorEnabled !default;
+$buttonIconColor:                 $iconColorDefault !default;
 $buttonBorderColor:               $border3Color !default;
-$buttonBgImage:                   if(variable-exists(buttonBgImage), $buttonBgImage, 
-                                     linear-gradient(to bottom, #ffffff 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%));
+$buttonBgImage:                   linear-gradient(to bottom, #ffffff 0%, #f1f3f4 3.64%, #e8ebed 50%, $buttonBgColor 100%) !default;
+// todo: repeat these shadow vars for all the states but make null?                                  
+$buttonTextShadow:                0 1px 0 $contrastTextColor !default; 
+$buttonBoxShadow:                 inset 0 1px 0 #ffffff !default; 
 
 // hover
 $buttonBgColorHover:              #f7f8f9 !default;
 $buttonTextColorHover:            $interaction1Color !default;
 $buttonIconColorHover:            $iconColorHover !default;
 $buttonBorderHoverColor:          $buttonBorderColor !default;
-$buttonBgImageHover:              none !default; // todo: once you're using oj-default change this to null?
+$buttonBgImageHover:              null !default; 
 
 // active
 $buttonBgColorActive:             $interaction1Color !default; 
 $buttonTextColorActive:           $contrastTextColor !default;
 $buttonIconColorActive:           $buttonTextColorActive !default;
 $buttonBorderColorActive:         $buttonBgColorActive !default;
-$buttonBgImageActive:             none !default; // todo: once you're using oj-default change this to null?
+$buttonBgImageActive:             null !default; 
 
 // selected
-// todo: rename to checked?
 $buttonBgColorSelected:           $buttonBgColorActive !default; 
 $buttonTextColorSelected:         $buttonTextColorActive !default;
 $buttonIconColorSelected:         $buttonIconColorActive !default;
@@ -303,31 +406,118 @@ $buttonBorderColorDisabled:       #e0e6eb !default;
 $buttonOpacityDisabled:           $opacityDisabled !default;
 
 // selected and disabled
-// Per Alta bug 18038385 / JET Bug 17476396, Spec is silent on how checked disabled buttons should look.
+// todo: Per Alta bug 18038385 / JET Bug 17476396, Spec is silent on how selected disabled buttons should look.
 // Pending the UX guidance requested in that bug, I'm making up these 2 foreground colors which 
-// try to convey both the disabled and checked status, in both chromed and chromeless buttons.
+// try to convey both the disabled and selected status, in both chromed and chromeless buttons.
 // TODO: update colors when UX answer available.
-$buttonTextColorCheckedDisabled: #808080;
-$buttonIconColorCheckedDisabled: #B2B2B2;
+$buttonTextColorSelectedDisabled: #808080;
+$buttonIconColorSelectedDisabled: $iconColorSelectedDisabled;
 
 
 // TOOLBAR
+//----------------------------------------------------------------
+$toolbarBorderColor:  $panelBorderColor !default; 
+
+
+// COLLAPSIBLE
+//----------------------------------------------------------------
+$collapsibleAnimationDuration: $animationDuration !default;
+
+// ACCORDION
+//----------------------------------------------------------------
+// todo: all accordion variables need review
+
+// accordion content area
+//------------------------
+// todo: this is the content of the selected item
+//       should these have "selected" at the end?
+$accordionContentBgColor:               $panelBgColor !default;
+$accordionContentBorderColor:           $panelBorderColor !default;
+
+// TABS
+//----------------------------------------------------------------
+// todo: all tabs variables need review
+
+// tabs content area
 //----------------------------------
-$toolbarBorderColor:  $border1Color !default; 
 
+// todo: this is the content of the selected tab
+//       should these have "selected" at the end?
+$tabsContentBgColor:               $panelBgColor !default;
+$tabsContentBorderColor:           $panelBorderColor !default;
 
-
-// GRID 
+// individual tabs
 //----------------------------------
+$tabsNavTextColor:                 $linkTextColor !default;
+// todo: implement the border radius for vertical tabs
+$tabsNavBorderRadius:              0 !default;
+
+// unselected
+$tabsNavBgColor:                   null !default;
+$tabsNavBorderColor:               transparent !default;
+
+// unselected icon only
+$tabsNavIconOnlyBgColor:             $background4Color !default;
+$tabsNavIconOnlyBorderColor:         $tabsContentBorderColor!default;
+
+// selected
+$tabsNavBgColorSelected:           $tabsContentBgColor !default;
+// in alta this color and border width are used at the top 
+// of the selected tab when the tabs are horizontal 
+// (or on the start side when the tabs are vertical)
+$tabsNavBorderColorSelected:       $interaction1Color !default;
+$tabsNavBorderWidthSelected:       3px !default;
+// in alta this color is used on the sides of the selected tab
+$tabsNavAccentBorderColorSelected: $border3Color !default;
+
+// PROGRESSBAR
+//----------------------------------------------------------------
+$progressbarBgColor:      $background3Color !default;
+$progressbarValueBgColor: $interaction1Color !default;
+
+// TRAIN
+//----------------------------------------------------------------
+// todo: all the train vars need review, setting some colors 
+//       to the icon colors, good idea?
+
+// unvisited
+$trainBorderColorUnvisited: $border3Color;
+$trainBgColorUnvisited:     $background6Color;
+
+// visited
+$trainBorderColorVisited:   $interaction1Color !default;
+$trainBgColorVisited:       $background1Color !default;
+
+// hover
+$trainBorderColorHover:     $iconColorHover !default;
+$trainBgColorHover:         $trainBorderColorHover !default;
+
+// todo: support active?
+
+// selected
+$trainBorderColorSelected:  $iconColorSelected !default;
+$trainBgColorSelected:      $trainBorderColorSelected !default;
+
+// todo: support text colors or just let it use link colors?
+// todo: need vars for the connecting bar colors?
+
+
+// DATA GRID AND TABLE
+//----------------------------------------------------------------
 // Default 
 $dataGridBorderColor:                       $border1Color !default; 
-$dataGridBorderWidth:                       $borderWidth !default;
+$dataGridBorderWidth:                       1px !default;
+
 // Headers
 $dataGridHeaderFontWeight:                  $headerFontWeight !default;
 // Column Headers 
 $dataGridHeaderTextColor:                   $primaryTextColor !default;
 $dataGridColumnHeaderFontSize:              $mediumFontSize !default;
 $dataGridColumnHeaderBgColor:               #f2f4f7 !default;
+// Column Headers - Hover
+$dataGridColumnHeaderBgColorHover:          $interaction4Color !default;
+// Column Headers - Focus
+$dataGridColumnHeaderBgColorFocus:          $interaction5Color !default;
 // Column Headers - Selected 
 $dataGridColumnHeaderBgColorSelected:          #b4c8d8 !default;
 // Column Headers - Selected Inactive  
@@ -338,6 +528,7 @@ $dataGridRowHeaderBgColor:                  #f7f9fc !default;
 $dataGridRowHeaderBgColorSelected:          $dataGridColumnHeaderBgColorSelected !default;
 // Row Headers - Selected Inactive  
 $dataGridRowHeaderBgColorSelectedInactive:  $dataGridColumnHeaderBgColorSelectedInactive !default;
+
 // Grid Cells  
 $dataGridCellBorderColor:                   $border5Color !default;
 $dataGridCellTextColor:                     $textColor !default; 
@@ -353,34 +544,26 @@ $dataGridCellBgColorFocus:                  #e4f0fa !default;
 $dataGridCellBgColorSelectedInactive:       #fafaeb !default;
 
 // PAGING CONTROL
-//----------------------------------
-$pagingControlPageLinkBorder:               $border6Color !default;
+//----------------------------------------------------------------
+$pagingControlPageLinkBorder: $border6Color !default;
 
-
-// DIALOG
-//
-//----------------------------------
-//
-// todo: should the dialog just use the window colors directly?
-$dialogWindowBorderColor:	$windowBorderColor;
-$dialogWindowBgColor:	  	$windowBgColor;
-$dialogWindowTextColor:		$windowTextColor;
-// use $headerTextColor: for dialog title  font   
 
 // RESPONSIVE
-//----------------------------------
+//----------------------------------------------------------------
+
 // responsive screen sizes
+//----------------------------------
 $screenSmallRange:  0, 767px !default;
 $screenMediumRange: 768px, 1023px !default;
 $screenLargeRange:  1024px, 1279px !default;
 $screenXlargeRange: 1280px, 1440px !default;
 
 // responsive media queries
+//----------------------------------
 
 // in the media queries below you see print on any media query that affects 
 // large screens so that we print the large layout by default. If that isn't desired
 // use the print-specific styles to override the default behavior
-
 
 // the $responsiveQueryXYZ variables can be set to null if you don't want to render a particular set of classes, 
 // for example $responsiveQueryPrint can be set to null if print only classes aren't desired
@@ -415,15 +598,15 @@ $responsiveQueryPrint:      "print" !default;
 
 
 // GRID LAYOUT SYSTEM
-//----------------------------------
+//----------------------------------------------------------------
 $gridColumnGutter: 15px !default;
 $gridTotalColumns: 12 !default;
 $gridMaxWidth:     nth($screenXlargeRange, 2) !default;
 
 
-// DVT COMMON
-//----------------------------------
-$dvtAnimationDuration: 500ms !default;
+// DVT 
+//----------------------------------------------------------------
+$dvtAnimationDuration: $animationDuration !default;
 
 $dvtBorderColor: $border6Color !default;
 $dvtBorder2Color: $border7Color !default;
@@ -445,10 +628,11 @@ $dvtThreshold1Color: #EFEFF1 !default;
 $dvtThreshold2Color: #fad55c !default;
 $dvtThreshold3Color: #68c182 !default;
 
+// todo: should this be pointing to $panelBgColor instead of $background1Color?
 $dvtComponentBgColor: $background1Color !default;
 
 $dvtChartAxisTitleColor: $tertiaryTextColor !default;
-$dvtTreemapNodeHeaderBorderColor: $border1Color !default;
+$dvtTreemapNodeHeaderBorderColor: $headerBorderColor !default;
 $dvtTreemapNodeHeaderBorderColorHover: $interaction4Color !default;
 $dvtTreemapNodeHeaderBgColor: $interaction5Color !default;
 $dvtTreemapNodeBorderColorHover: $interaction2Color !default;
@@ -459,15 +643,55 @@ $dvtMapBgColor: #DDDDDD !default;
 $dvtMapMarkerBgColor: #333333 !default;
 
 
-// INCLUDES
+
+//----------------------------------------------------------------
+// LOGISTICAL VARIABLES
+//----------------------------------------------------------------
+
+
+
+
+// COMPATIBILITY
 //----------------------------------
+
+// when $allowTagSelectors is true JET directly styles certain tags like 
+// <p> <a> <h1>, etc. However for developers trying to mix JET with other 
+// technologies styling these tags directly could cause issues on other parts of the page. 
+// In that case set $allowTagSelectors: false;.
+// See the "compatibility" section of the theming documentation for more information
+$allowTagSelectors: true !default;
+// todo: move the normalize definition here?
+
+
+// DIRECTION
+//----------------------------------
+
+// Accepted values of $textDirection are null, ltr, rtl
+//    - null means ouput for both directions (default)
+//    - ltr means output left to right only 
+//    - rtl means output right to left only
+//
+// By default we support right to left without 
+// switching out the css file as long as dir="rtl"
+// is set on the html tag. However if you'd prefer 
+// to generate one css file per direction you can 
+// also set "$textDirection" to either "rtl" or "ltr".
+$textDirection: null !default;
+
+
+
+
+// INCLUDES
+//----------------------------------------------------------------
 
 // by default everything is included, but you can also start by setting 
 // $includeAllClasses to false and then just add in what you want.
+
 $includeAllClasses: true !default;
 $includeNormalize:  ($includeAllClasses and $allowTagSelectors) !default;
 
-// ---- GROUP INCLUDES 
+// group includes 
+//----------------------------------
 
 // whether to include classes for tags like headers, links, etc
 $includeTagClasses: $includeAllClasses !default;
@@ -478,6 +702,60 @@ $includeDvtClasses: $includeAllClasses !default;
 // whether to include form control classes
 $includeFormControlClasses: $includeAllClasses !default;
 
+
+// widget includes 
+//----------------------------------
+// Only the higher level include variables are defined in this file, 
+// widget specific variables are defined in the widget files.
+// For example at the top of the button file you'll see
+// $includeButtonClasses:  $includeAllClasses !default;
+
+
+// SLOW CSS
+//----------------------------------------------------------------
+// In certain browsers you may notice that by default we're not showing a  
+// border-radius, box-shadow, or gradient even if the browser supports the  
+// css property. In browsers where we feel the performance is unacceptably slow 
+// we will put a class oj-slow-borderradius, oj-slow-boxshadow, 
+// or oj-slow-cssgradients on the html element. 
+// This is similar to what modernizr does with classes like no-borderradius
+// browsers that don't support border radius.
+//
+// In the CSS you may see code like this:
+//
+//  .oj-button {
+//      border-radius: 2px;
+//  }
+//  
+//  html.oj-slow-borderradius .oj-button {
+//      @include oj-border-radius(0);
+//  }
+//
+// The main reason we need this is that IE has two rendering modes, 
+// GPU and software rendering mode. There is no known way for JET to 
+// detect which rendering mode is being used. Performance for  
+// border radius can be very slow in software rendering mode, 
+// and even GPU rendering has been slow in many cases. Therefore in 
+// JET the oj-slow-borderradius class is put on the html element in all 
+// current versions of IE (at the time of this writing IE 9-11).
+//
+// You may control output of the overrides, or choose not to generate 
+// border-radius/gradients/box-shadows at all, with the variables below.
+//
+// Valid values for the variables below are 
+//   
+//    - slowOverride: generate the regular value, but in addition generate 
+//            overrides for slow browsers to remove 
+//            border-radius/gradient/box-shadow on slow browsers. 
+//    - auto: no overrides, generate only the regular value
+//    - none: don't write out any value at all. If you wanted to generate 
+//            an IE only style sheet you might want to use "none" to
+//            just not write out any  border-radius/gradient/box-shadow 
+//            values in the first place.
+
+$borderRadiusGeneration: slowOverride !default;
+$boxShadowGeneration: slowOverride !default;
+$gradientGeneration: slowOverride !default;
 
 
 

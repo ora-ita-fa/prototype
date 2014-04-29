@@ -14,91 +14,104 @@ $includeDialogClasses:  $includeAllClasses !default;
 @if $includeDialogClasses != false {
   @include exports("dialog") {
 
-		/* dialog */
-		/* --------------------------------------------------------------- */
+        /* dialog */
+        /* --------------------------------------------------------------- */
 
     .oj-dialog-front {
        z-index: $dialogZindex;
     }
+    .oj-dialog { 
+        font-size: $fontSize;
+        font-family: $fontFamily;
+        font-weight: normal;
+        text-align: left;
+    }
+
     
-		.oj-dialog {
-		  @include ui-widget-content;
-		  @include ui-corner-all;
-			position: absolute;
-			top: 0;
-			left: 0;
-			padding: .2em;
-			outline: 0;
-		}
+        .oj-dialog {
+          @include ui-widget-content;
+          @include ui-corner-all;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: .2em;
+            outline: 0;
+        }
 
-		.oj-dialog .oj-dialog-titlebar {
-		  @include ui-widget-header;
-		  @include ui-corner-all;
-			padding: .4em 1em;
-			position: relative;
-		}
-		.oj-dialog .oj-dialog-title {
-			float: left;
-			margin: .1em 0;
-			white-space: nowrap;
-			width: 90%;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		.oj-dialog .oj-dialog-titlebar-close {
-			position: absolute;
-			right: .3em;
-			top: 50%;
-			width: 21px;
-			margin: -10px 0 0 0;
-			padding: 1px;
-		  // explicitly set box-sizing when height and padding both specified
-		  box-sizing: content-box;
-			height: 20px;
-		}
-		.oj-dialog .oj-dialog-content {
-			position: relative;
-			padding: .5em 1em;
-			overflow: auto;
-		}
-		.oj-dialog .oj-dialog-buttonpane {
-			text-align: left;
-			border-width: 1px 0 0 0;
-			background-image: none;
-			margin-top: .5em;
-			padding: .3em 1em .5em .4em;
-		}
-		.oj-dialog .oj-dialog-buttonpane .oj-dialog-buttonset {
-			float: right;
-		}
-		.oj-dialog .oj-dialog-buttonpane button {
-			margin: .5em .4em .5em 0;
-			cursor: pointer;
-		}
-		.oj-dialog .oj-resizable-se {
-			width: 12px;
-			height: 12px;
-			right: -5px;
-			bottom: -5px;
-			background-position: 16px 16px;
-		}
-		.oj-draggable .oj-dialog-titlebar {
-			cursor: move;
-		}
-
-
-		// icons
-		//------------------------------------------
-
-		.oj-dialog-titlebar-close .oj-icon-closethick:before {
-		  @extend .oj-fwk-icon-crossthick:before;
-		}
+        .oj-dialog .oj-dialog-titlebar {
+          @include ui-widget-header;
+          @include ui-corner-all;
+            padding: .4em 1em;
+            position: relative;
+        }
+        .oj-dialog .oj-dialog-title {
+            float: left;
+            margin: .1em 0;
+            white-space: nowrap;
+            width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .oj-dialog .oj-dialog-titlebar-close {
+            position: absolute;
+            right: .3em;
+            top: 50%;
+            width: 21px;
+            margin: -10px 0 0 0;
+            padding: 1px;
+          // explicitly set box-sizing when height and padding both specified
+          box-sizing: content-box;
+            height: 20px;
+        }
+        .oj-dialog .oj-dialog-content {
+            position: relative;
+            padding: .5em 1em;
+            overflow: auto;
+        }
+        .oj-dialog .oj-dialog-buttonpane {
+            text-align: left;
+            border-width: 1px 0 0 0;
+            background-image: none;
+            margin-top: .5em;
+            padding: .3em 1em .5em .4em;
+        }
+        .oj-dialog .oj-dialog-buttonpane .oj-dialog-buttonset {
+            float: right;
+        }
+        .oj-dialog .oj-dialog-buttonpane button {
+            margin: .5em .4em .5em 0;
+            cursor: pointer;
+        }
+        .oj-dialog .oj-resizable-se {
+            width: 12px;
+            height: 12px;
+            right: -5px;
+            bottom: -5px;
+            background-position: 16px 16px;
+        }
+        .oj-draggable .oj-dialog-titlebar {
+            cursor: move;
+        }
 
 
-		// todo: dialog uses resizable styles, need to look into this some more, 
-		// for now removing the icon, the cursor still changes.
-		.oj-resizable-handle.oj-icon:before {
-		    content: none;
-		}
-	}
+        // icons
+        //------------------------------------------
+
+        .oj-dialog-titlebar-close .oj-icon-closethick:before {
+          @extend .oj-fwk-icon-crossthick:before;
+        }
+
+
+        // todo: dialog uses resizable styles, need to look into this some more, 
+        // for now removing the icon, the cursor still changes.
+        .oj-resizable-handle.oj-icon:before {
+            content: none;
+        }
+
+        .oj-dialog .oj-dialog-footer {
+           padding: 10px 10px;
+           position: relative; // needed to align buttons to bottom of dialog on resize
+           float: right;
+       }
+    }
 }

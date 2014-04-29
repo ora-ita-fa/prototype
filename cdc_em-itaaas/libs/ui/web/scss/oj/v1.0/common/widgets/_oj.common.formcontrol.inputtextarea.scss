@@ -60,7 +60,7 @@
       @include oj-normalize-text-input;
       
       height: $formControlHeight;
-      padding: 0 $formControlPadding;
+      padding: 0 $formControlPaddingHorizontal;
     }
 
     // specific css for textarea-input
@@ -69,8 +69,8 @@
       @include oj-normalize-textarea;
       
       height: auto;
-      padding: $formControlPadding;
-      resize: none; //unfortunately we can not turn off resize per corner, so need to turn it off
+      padding: .5em $formControlPaddingHorizontal;
+      resize: none; //turning off as resizing can cause layout problems.
     }
 
     // Styling for invalid state

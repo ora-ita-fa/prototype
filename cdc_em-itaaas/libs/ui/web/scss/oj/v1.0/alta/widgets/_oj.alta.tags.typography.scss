@@ -42,110 +42,121 @@ $includeTagsTypographyClasses: $includeTagClasses !default;
     #{$currSelectors} {
         text-decoration: underline;
     }
-}
-$currSelectors: if($allowTagSelectors,
-  // tag selectors:  
-  "a:active", 
 
-  // class selectors: 
-  ".oj-link:active");
-#{$currSelectors} {
-    font-weight: bold;
-}
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "a:active", 
+
+      // class selectors: 
+      ".oj-link:active");
+    #{$currSelectors} {
+        font-weight: bold;
+    }
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "a.oj-disabled", 
+
+      // class selectors: 
+      ".oj-link.oj-disabled");
+    #{$currSelectors} {
+          color: $linkTextColorDisabled;
+          opacity: $opacityDisabled;
+          cursor: default;
+        }
+
+
+
+    /* header */
+    /* --------------------------------------------------------------- */
+
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "h1, h2, h3, h4", 
+
+      // class selectors: 
+      ".oj-header");
+    #{$currSelectors} {
+        color: $headerTextColor; 
+        font-family: inherit;
+        font-style: normal;
+        font-weight: $headerFontWeight; 
+        margin: $headerMargin 0;
+    }
+
+    @if $allowTagSelectors 
+    {
+
+      h1 {
+          font-size: $largestFontSize;
+      }
+
+      h2 {
+          font-size: $largeFontSize; 
+      }
+
+      h3 {
+          font-size: $mediumFontSize; 
+      }
+
+      h4 {
+          font-size: $fontSize; 
+      }
+    }
+    @else 
+    {
+      h1.oj-header {
+          font-size: $largestFontSize;
+      }
+
+      h2.oj-header {
+          font-size: $largeFontSize; 
+      }
+
+      h3.oj-header {
+          font-size: $mediumFontSize; 
+      }
+
+      h4.oj-header {
+          font-size: $fontSize; 
+      }
+    }
+
+
+    .oj-header-border {
+        border: solid $headerBorderColor;
+        border-width: 0 0 1px;
+    }
+
+
+    /* hr */
+    /* --------------------------------------------------------------- */
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "hr", 
+
+      // class selectors: 
+      ".oj-hr");
+    #{$currSelectors} {
+        border: solid $panelBorderColor;
+        border-width: 1px 0 0;
+        margin: $headerMargin 0;
+    }
 
 
 
 
+    /* p */
+    /* --------------------------------------------------------------- */
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "p", 
 
-/* header */
-/* --------------------------------------------------------------- */
-
-$currSelectors: if($allowTagSelectors,
-  // tag selectors:  
-  "h1, h2, h3, h4", 
-
-  // class selectors: 
-  ".oj-header");
-#{$currSelectors} {
-    color: $headerTextColor; 
-    font-family: inherit;
-    font-style: normal;
-    font-weight: $headerFontWeight; 
-    margin: $headerMargin 0;
-}
-
-@if $allowTagSelectors 
-{
-
-  h1 {
-      font-size: $largestFontSize;
+      // class selectors: 
+      ".oj-p ");
+    #{$currSelectors} {
+      margin: 0 0 12px 0;
+    }
   }
-
-  h2 {
-      font-size: $largeFontSize; 
-  }
-
-  h3 {
-      font-size: $mediumFontSize; 
-  }
-
-  h4 {
-      font-size: $fontSize; 
-  }
-}
-@else 
-{
-  h1.oj-header {
-      font-size: $largestFontSize;
-  }
-
-  h2.oj-header {
-      font-size: $largeFontSize; 
-  }
-
-  h3.oj-header {
-      font-size: $mediumFontSize; 
-  }
-
-  h4.oj-header {
-      font-size: $fontSize; 
-  }
-}
-
-
-.oj-header-border {
-    border: solid $border1Color;
-    border-width: 0 0 1px;
-}
-
-
-/* hr */
-/* --------------------------------------------------------------- */
-$currSelectors: if($allowTagSelectors,
-  // tag selectors:  
-  "hr", 
-
-  // class selectors: 
-  ".oj-hr");
-#{$currSelectors} {
-    border: solid $border1Color;
-    border-width: 1px 0 0;
-    margin: $headerMargin 0;
-}
-
-
-
-
-/* p */
-/* --------------------------------------------------------------- */
-$currSelectors: if($allowTagSelectors,
-  // tag selectors:  
-  "p", 
-
-  // class selectors: 
-  ".oj-p ");
-#{$currSelectors} {
-  margin: 0 0 12px 0;
-}
 
 }

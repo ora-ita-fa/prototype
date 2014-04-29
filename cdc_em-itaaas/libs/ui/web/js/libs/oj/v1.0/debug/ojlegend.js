@@ -96,13 +96,17 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
     categoryHighlight : null
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _createComponent : function(context, callback, callbackObj) {
+  /**
+   * @override
+   */
+  _CreateComponent : function(context, callback, callbackObj) {
     return DvtLegend.newInstance(context, callback, callbackObj);
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetChildStyleClasses : function() {
     var styleClasses = this._super();
     styleClasses['oj-legend'] = {'path' : 'textStyle', 'property' : 'CSS_TEXT_PROPERTIES'};
     styleClasses['oj-legendTitle'] = {'path' : 'titleStyle', 'property' : 'CSS_TEXT_PROPERTIES'};
@@ -111,8 +115,10 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _handleEvent : function(event) {
+  /**
+   * @override
+   */
+  _HandleEvent : function(event) {
     var type = event && event.getType ? event.getType() : null, filterType, highlightType;
     if(type === DvtCategoryHideShowEvent.TYPE_HIDE || type === DvtCategoryHideShowEvent.TYPE_SHOW) {
       filterType = (type === DvtCategoryHideShowEvent.TYPE_HIDE) ? 'out' : 'in';

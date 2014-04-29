@@ -10,77 +10,136 @@ $includePopupClasses:  $includeAllClasses !default;
     /* --------------------------------------------------------------- */
 
     .oj-popup {
-      border: $borderWidth solid $border5Color;
-      z-index: 98;
-      position:absolute;
+      border-style: solid;
+      border-color: $popupBorderColor;
+      border-width: 1px;
+      z-index: $popupZindex;
+      position: absolute;
       @include oj-border-radius($smallBorderRadius);
-      background-color: $background2Color;
-      box-shadow: 0 0 5px #aaa;
+      background-color: $popupBgColor;
+      @include oj-box-shadow($smallBoxShadow);
     }
     .oj-popup.oj-popup-tail-simple {
-      z-index: 200;
-      border-radius: 0;
-      box-shadow: 0 0 10px #aaa;
+      @include oj-box-shadow($mediumBoxShadow);
+      border-color: $noteWindowBorderColor;
+      background-color: $noteWindowBgColor;
+      z-index: $noteWindowZindex;
     }
-    .oj-popup-no-chrome {
+    .oj-popup.oj-popup-no-chrome {
       border-width: 0;
-      box-shadow: none;
-      border-radius: 0;
-    }  
+      @include oj-box-shadow(none);
+      @include oj-border-radius(0);
+      background-color: transparent;
+    }
     .oj-popup-content {
-      padding: 8px;
+      padding: $panelPadding;
+    }
+    .oj-popup-no-chrome > .oj-popup-content {
+      padding: 0;
     }
     .oj-popup-tail {
       position: absolute;
       pointer-events: none;
-      z-index: 99;
     }
-    .oj-popup-tail-simple  > .oj-popup-tail {
-      height: 0;
-      width: 0;
-      z-index: 201;
+    .oj-popup-tail.oj-popup-tail-simple {
+      position: absolute;
+      overflow: hidden;
     }
-    .oj-popup-tail-simple-start-top, .oj-popup-tail-simple-end-top {
-      top: 2px;
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-top,
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-top {
+      top: 0;
     }
-    .oj-popup-tail-simple-start-top, .oj-popup-tail-simple-start-middle, .oj-popup-tail-simple-start-bottom {
-      left:-14px;
-      border-top: 7px solid transparent;
-      border-bottom: 7px solid transparent;
-      border-left: 0 solid transparent;
-      border-right: 14px solid $border5Color;
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-top,
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-middle,
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-bottom {
+      left: -$noteWindowTailSimpleWidth;
     }
-    .oj-popup-tail-simple-center-top {
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-top,
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-middle,
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-bottom {
+      right: -$noteWindowTailSimpleWidth;
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-top,
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-bottom,
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-top,
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-bottom {
+      width: $noteWindowTailSimpleWidth;
+      height: 5px + $noteWindowTailSimpleHeight;
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-top,
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-bottom,
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-middle,
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-middle {
+      width: $noteWindowTailSimpleWidth;
+      height: $noteWindowTailSimpleHeight;
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-top,
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-bottom {
       left: 50%;
-      top: -14px;
-      border-top: 0 solid transparent;
-      border-bottom: 14px solid $border5Color;
-      border-left: 7px solid transparent; 
-      border-right: 7px solid transparent;
     }
-    .oj-popup-tail-simple-start-middle {
-      top:50%;
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-middle,
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-middle {
+      top: 50%;
     }
-    .oj-popup-tail-simple-end-top, .oj-popup-tail-simple-end-middle, .oj-popup-tail-simple-end-bottom {
-      right: -14px;
-      border-top: 7px solid transparent;
-      border-bottom: 7px solid transparent;
-      border-left: 14px solid $border5Color;
-      border-right: 0 solid transparent;
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-bottom,
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-bottom {
+      bottom: 0;
     }
-    .oj-popup-tail-simple-center-bottom {
-      left: 50%;
-      bottom: -14px;
-      border-top: 14px solid $border5Color;
-      border-bottom: 0 solid transparent;
-      border-left: 7px solid transparent; 
-      border-right: 7px solid transparent;
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-top {
+      top: -$noteWindowTailSimpleHeight;
     }
-    .oj-popup-tail-simple-end-middle {
-      top:50%;
+    .oj-popup-tail.oj-popup-tail-simple:after {
+      content: "";
+      position: absolute;
+      border-style: solid;
+      border-color: $noteWindowBorderColor;
+      border-width: 1px;
+      background-color: $noteWindowBgColor;
+      width: $noteWindowTailSimpleWidth;
+      height: $noteWindowTailSimpleHeight;
     }
-    .oj-popup-tail-simple-end-bottom, .oj-popup-tail-simple-start-bottom {
-      bottom: 2px;
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-top:after {
+      top: 13px;
+      left: 0;
+      @include oj-transform-property(rotate(45deg) skew(30deg,30deg));
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-bottom {
+      bottom: -$noteWindowTailSimpleHeight;
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-bottom:after {
+      bottom: 13px;
+      left: 0;
+      @include oj-transform-property(rotate(45deg) skew(30deg,30deg));
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-top:after {
+      top: 6px;
+      left: 7px;
+      @include oj-transform-property(skew(40deg,30deg));
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-middle:after {
+      top: 0;
+      left: 13px;
+      @include oj-transform-property(rotate(-45deg) skew(30deg,30deg));
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-left.oj-bottom:after {
+      bottom: 6px;
+      left: 7px;
+      @include oj-transform-property(skew(-40deg,-30deg));
+    }
+    .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-top:after {
+      top: 6px;
+      right: 7px;
+      @include oj-transform-property(skew(-40deg,-30deg));
+    }
+   .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-middle:after {
+     top: 0;
+     right: 13px;
+     @include oj-transform-property(rotate(-225deg) skew(30deg,30deg));
+   }
+   .oj-popup-tail.oj-popup-tail-simple.oj-right.oj-bottom:after {
+     bottom: 6px;
+     right: 7px;
+     @include oj-transform-property(skew(40deg,30deg));
     }
   }
 }

@@ -39,7 +39,7 @@ $includeIconClasses: $includeAllClasses !default;
            $color:      $iconColor); 
     }
 
-    .oj-widget-icon {
+    .oj-component-icon {
       @extend .oj-fwk-icon;
     }    
 

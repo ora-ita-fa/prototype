@@ -117,20 +117,26 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
     select : null
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _createComponent : function(context, callback, callbackObj) {
+  /**
+   * @override
+   */
+  _CreateComponent : function(context, callback, callbackObj) {
     return DvtSunburst.newInstance(context, callback, callbackObj);
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getComponentStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetComponentStyleClasses : function() {
     var styleClasses = this._super();
     styleClasses.push('oj-sunburst');
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getChildStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetChildStyleClasses : function() {
     var styleClasses = this._super();
     // TODO HZHANG fill in the urls after expand/collapse are supported
 // 		styleClasses['oj-sunburst-expand-icon'] = {'path' : '', 'property' : 'CSS_URL'};
@@ -152,12 +158,14 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getTranslationMap: function() {
+  /**
+   * @override
+   */
+  _GetTranslationMap: function() {
     var superMap = this._super();
     var selfMap = {
-      'oj-ojSunburst.labelColor': 'DvtSunburstBundle.COLOR',
-      'oj-ojSunburst.labelSize': 'DvtSunburstBundle.SIZE'
+      'DvtSunburstBundle.COLOR': this._GetTranslatedResource('labelColor'),
+      'DvtSunburstBundle.SIZE': this._GetTranslatedResource('labelSize')
     };
     
     // Combine with the map from the superclass
@@ -168,8 +176,10 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
     return ret;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _handleEvent : function(event) {
+  /**
+   * @override
+   */
+  _HandleEvent : function(event) {
     var type = event && event.getType ? event.getType() : null, selectedItems, selection, selectedItem, i;
     if(type === DvtSelectionEvent.TYPE) {
       selectedItems = [];
@@ -193,8 +203,10 @@ oj.__registerWidget('oj.ojSunburst', $['oj']['dvtBaseComponent'],
     }
   },
    
-  // Overrides $.oj.dvtBaseComponent
-  _loadResources : function() {
+  /**
+   * @override
+   */
+  _LoadResources : function() {
     // Ensure the resources object exists
     if(this.options['_resources'] == null)
       this.options['_resources'] = {};

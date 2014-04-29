@@ -18,13 +18,17 @@
     position: absolute;
     width: 1px;
   }
+
+  /* todo: DO NOT USE: this class will be removed */
   .oj-helper-reset {
     margin: 0;
     padding: 0;
     border: 0;
     line-height: 1.3;
     text-decoration: none;
+/*header level size
     font-size: 100%;
+ */
     list-style: none;
   }
 
@@ -32,17 +36,27 @@
     outline: 0;
   }
 
-  .oj-helper-clearfix:before,
-  .oj-helper-clearfix:after {
-    content: "";
-    display: table;
-    border-collapse: collapse;
+  // This class resets commonly inherited css properties.
+  // It is useful in cases like dialogs where the 
+  // content may happen to be in a certain dom structure on the page, 
+  // but visually you don't expect that base page 
+  // css (like text colors or text alignment) to affect the dialog. 
+  .oj-helper-reset-inheritable {
+    font-family:      $fontFamily;
+    font-size:        $fontSize;  
+    font-weight:      normal;
+    font-style:       normal;
+    line-height:      normal;
+    color:            $bodyTextColor;  
+    background-color: $bodyBgColor;
+    cursor:           auto;
+    @include oj-bidi-property(
+         $property: 'text-align', 
+         $startOrEnd: start);
   }
-  .oj-helper-clearfix:after {
-    clear: both;
-  }
+
   .oj-helper-clearfix {
-    min-height: 0; /* support: IE7 */
+    @include oj-clearfix();
   }
   
   /* Used by the framework's support for detecting resize */
@@ -53,7 +67,8 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0
+      bottom: 0;
+      direction: ltr
   }
 
 }

@@ -1,5 +1,17 @@
 
-// ********** jquery ui variables **********
+//----------------------------------------------------------------
+//  PATHS
+//----------------------------------------------------------------
+// these paths should be relative to the generated css file
+
+// path to alta images 
+$imageDir: "images/" !default;
+
+
+//----------------------------------------------------------------
+// JQUERY UI GENERAL STYLING VARIABLES
+//----------------------------------------------------------------
+
 // Component containers
 //----------------------------------
 // TODO: get rid of these?
@@ -15,7 +27,7 @@ $contentBgImage:           null !default;
 $headerBorderColor:       #aaaaaa !default;
 $headerBgColor:           #cccccc !default;
 $headerTextColor:         #222222 !default;
-$headerBgImage:           if(variable-exists(headerBgImage), $headerBgImage, linear-gradient(to top, #e3e3e3 0%,#e3e3e3 0%));
+$headerBgImage:           linear-gradient(to top, #e3e3e3 0%,#e3e3e3 0%) !default;
 
 
 // Interaction states
@@ -23,14 +35,12 @@ $headerBgImage:           if(variable-exists(headerBgImage), $headerBgImage, lin
 $clickableBorderColor:       #d3d3d3 !default;  
 $clickableBgColor:           #e6e6e6 !default;
 $clickableTextColor:         #555555 !default;
-$clickableBgImage:           if(variable-exists(clickableBgImage), $clickableBgImage, 
-                               linear-gradient(to top, #eeeeee 0%,#eeeeee 50%,#e6e6e6 50%,#f2f2f2 54%,#f2f2f2 100%)); 
+$clickableBgImage:           linear-gradient(to top, #eeeeee 0%,#eeeeee 50%,#e6e6e6 50%,#f2f2f2 54%,#f2f2f2 100%) !default; 
 
 $clickableBorderColorHover:  #999999 !default;
 $clickableBgColorHover:      #dadada !default;
 $clickableTextColorHover:    #212121 !default;
-$clickableBgImageHover:      if(variable-exists(clickableBgImageHover), $clickableBgImageHover, 
-                                linear-gradient(to top, #e5e5e5 0%,#e5e5e5 50%,#dadada 50%,#ebebeb 54%,#ebebeb 100%));
+$clickableBgImageHover:      linear-gradient(to top, #e5e5e5 0%,#e5e5e5 50%,#dadada 50%,#ebebeb 54%,#ebebeb 100%) !default;
 
 $clickableBorderColorActive: #aaaaaa !default;
 $clickableBgColorActive:     #ffffff !default;
@@ -72,20 +82,27 @@ $opacityDisabled: .35 !default;
 
 
 
+//----------------------------------------------------------------
+// JET GENERAL STYLING VARIABLES
+//----------------------------------------------------------------
 
 
+// font
+//----------------------------------
 
-
-
-
-
-// ********** JET VARIABLES **********
-$imageDir: "images/" !default;
-$textDirection: null !default;
-$allowTagSelectors: true !default;
-
+// font family 
 $fontFamily: Verdana,Arial,sans-serif !default;
 
+// font size
+
+// $rootFontSize is only used on the html element 
+// in order to support using rem units. 
+//
+// If you have $allowTagSelectors set to false you can 
+// use the class oj-html to get the JET html tag styling. 
+// If you are not generating classes for the html element in JET
+// you can still use rem's if you can set the font size on t
+// he html element with your own class or inline style.
 $rootFontSize:    12px !default;   
 $fontSize:        1rem !default;      
 $smallFontSize:   .917rem !default;   
@@ -94,106 +111,150 @@ $largeFontSize:   1.333rem !default;
 $largestFontSize: 1.5rem !default;    
 
 // text colors
-$textColor:          $contentTextColor !default;
-$secondaryTextColor: lighten($contentTextColor, 10%) !default;
+//----------------------------------
+$textColor:             $contentTextColor !default;
+$secondaryTextColor:    lighten($contentTextColor, 10%) !default;
+$formControlLabelColor: #4f4f4f !default;
 // in JQ opacity is used indicate disabled, so the disabled colors are the same as enabled colors
-$textColorDisabled:  $textColor !default; 
+$textColorDisabled:     $textColor !default; 
 
 
 
 // link colors
+//----------------------------------
 $linkTextColor:         #1466b2 !default;
 $linkTextColorVisited:  $linkTextColor !default;
 // in JQ opacity is used indicate disabled, so the disabled colors are the same as enabled colors
 $linkTextColorDisabled: $linkTextColor !default;
 
 
-// Universal Interaction State Colors 
-//----------------------------------
-$interaction1Color: $clickableBgColorActive !default;  
-$interaction2Color: $clickableBgColorHover !default;
-$interaction3Color: $clickableBgColorHover !default;
-$interaction4Color: $clickableBgColorHover !default;
-$interaction5Color: $clickableBgColorHover !default;
-
-
-// Universal Interaction Cue Colors 
+// interaction cue colors 
 //----------------------------------
 $colorRequired: #0572ce !default;
 
 // Icon Colors
 //----------------------------------
-$iconColor:         $contentTextColor !default;
-$iconColorEnabled:  $clickableTextColor !default;
-$iconColorHover:    $clickableTextColorHover !default;
-$iconColorActive:   $clickableTextColorActive !default;
-$iconColorChecked:  $iconColorActive !default;
+$iconColor:                 $contentTextColor !default;
+$iconColorDefault:          $clickableTextColor !default;
+$iconColorHover:            $clickableTextColorHover !default;
+$iconColorActive:           $clickableTextColorActive !default;
+$iconColorSelected:         $iconColorActive !default;
 // in JQ opacity is used indicate disabled, so the disabled colors are the same as enabled colors
-$iconColorDisabled: $clickableTextColor !default;
+$iconColorDisabled:         $clickableTextColor !default;
+$iconColorSelectedDisabled: $iconColorSelected !default;
 
-// Universal Background and Border Styling 
-//----------------------------------
 
 // background colors
-$background1Color: $contentBgColor !default;
-$background2Color: darken($contentBgColor, 3%) !default;
-$background3Color: $contentBgColor !default;
+//----------------------------------
+$contentAccentBgColor: darken($contentBgColor, 3%) !default;
 
-// border colors
-$border1Color: $contentBorderColor !default;
-$border5Color: $contentBorderColor !default;
-$border6Color: #000000 !default;
-$border7Color: #ffffff !default;
+// border color
+//----------------------------------
 $borderColorWarning: $borderColorHighlight !default;
+// todo: is this good? should it be labelhelpbordercolor?
+// label help def
+$helpBorderColor: $formControlLabelColor+ #030303 !default; // = #525252 
 
-// border width
-$borderWidth:     1px !default;
-
-// radius
+// border radius
+//----------------------------------
 $largeBorderRadius:  $borderRadius !default;
 $mediumBorderRadius: $borderRadius !default;
 $smallBorderRadius:  $borderRadius !default;
 
-// todo: use shadowBgColor somehow?
-$smallBoxShadow: 1px 1px 3px 0 rgba(0, 0, 0, .35) !default; 
-
-// body
-$bodyBgImage: null !default;
-$bodyBgColor:#ffffff !default;
-$bodyTextColor:#222222 !default;
-$bodyFontSize: 12px !default;
-
-
-// WINDOW
+// shadow
 //----------------------------------
-$windowBorderColor: $contentBorderColor !default;
-$windowBgColor:     $contentBgColor !default;
-$windowTextColor:   $textColor !default; 
+$smallBoxShadow: 1px 1px 3px 0 $shadowBgColor !default; 
+$mediumBoxShadow: 1px 1px 5px 0 $shadowBgColor !default;
+$largeBoxShadow:  1px 1px 10px 0$shadowBgColor !default;
+
+
+// z-index hierarchy 
+//----------------------------------
+$dialogZindex:     1050;
+$noteWindowZindex: 1030;
+$popupZindex:      1000;
+$dropdownZindex:   1000;
+$resizableZindex:  900;
+
+
+// wrappable
+//----------------------------------
+// this margin is needed so that if components are laid out
+// next to one another and wrap onto a new line there is 
+// some vertical space between the rows
+$wrappableMarginBottom:  4px !default;
+
+
+// animation
+//----------------------------------
+$animationDuration: .5s !default;
+
+
+//----------------------------------------------------------------
+// CATEGORY AND WIDGET VARIABLES
+//----------------------------------------------------------------
+
+
+// BODY
+//----------------------------------------------------------------
+$bodyBgImage:   null !default;
+$bodyBgColor:   $contentBgColor !default;
+$bodyTextColor: $contentTextColor !default;
+
+
+// PANEL
+//----------------------------------------------------------------
+$panelBorderColor: $contentBorderColor !default;
+$panelBgColor:     $contentBgColor !default;
+$panelPadding:     10px;
+
+// panel alternatives
+$panel1BgColor:    null !default;
+$panel2BgColor:    null !default;
 
 
 // HEADERS
+//----------------------------------------------------------------
+$headerFontWeight: bold !default;
+
+
+// WINDOW
+//----------------------------------------------------------------
+$windowBorderColor: $contentBorderColor !default;
+$windowBgColor:     $contentBgColor !default;
+
+
+// NOTE WINDOW
+//----------------------------------------------------------------
+$noteWindowBorderColor:  $windowBorderColor;
+$noteWindowBgColor:      $windowBgColor;
+
+// tail width and height
+$noteWindowTailSimpleWidth:  20px;
+$noteWindowTailSimpleHeight: 20px;
+
+// POPUP
+//----------------------------------------------------------------
+$popupBorderColor:  $windowBorderColor;
+$popupBgColor:      $windowBgColor;
+
+// listbox
 //----------------------------------
-$headerFontWeight:        bold !default;
+// currently used in drop down for 
+// inputTime, select, combobox
+$listboxBgColorHover:  $clickableBgColorHover !default;
+$listboxBgColorActive: $clickableBgColorHover !default;
 
-// form labels
-// labels
-$formControlLabelColor: #4f4f4f !default;
-$formControlLabelFontWeight: bold !default;
+// FORM CONTROLS 
+//----------------------------------------------------------------
 
-// top aligned labels
-$formControlLabelMarginBottom: .5em !default;
+// form control dimensions
+//----------------------------------
 
-// inline labels
-$formControlLabelInlineGutter:  .5em !default;
-$formControlLabelInlineMarginTop:  .34em !default;
-
-// label help def
-$helpBorderColor: $formControlLabelColor+ #030303 !default; // = #525252 
-
-$formControlBorderRadius:  2px !default;
-$formControlBottomMargin:  .8em !default;
-
+// controls the horizontal padding inside an input, we use height
+// so that buttons and form controls are the same height
 $formControlHeight:          2rem !default;
+
 
 // On form controls we use a width of 100% and then set a max and min width so that when 
 // there's less room for the form control it can automatically 
@@ -205,21 +266,27 @@ $formControlLargeMaxWidth:  18em;
 $formControlMediumMaxWidth: 15em;
 $formControlMinWidth:       8em;
 
-// this margin is needed so that if form controls 
-// wrap onto a new line there is space between the fields.
-$wrappableMarginBottom:  4px !default;
 
-$formLayoutMarginBottom: 10px !default;
+// form control common
+//----------------------------------
+// todo: change this to mediumBorderRadius
+$formControlBorderRadius:  $mediumBorderRadius !default;
 
-
-$formControlPadding:         5px !default; 
-
-//default
 $formControlPlaceholderColor: null !default;
-$formControlBgColor:     $contentBgColor !default;
-$formControlValueColor:  $contentTextColor !default; 
-$formControlBorderColor: $contentBorderColor !default;
-$formControlBorderWidth: 1px !default; 
+
+// controls the horizontal padding inside an input
+$formControlPaddingHorizontal: 5px !default; 
+
+// messaging border
+$formControlMessagingBorderWidth: 2px !default;
+
+// form control states
+//----------------------------------
+//default
+$formControlBgColor:             $contentBgColor !default;
+$formControlValueColor:          $contentTextColor !default; 
+$formControlBorderColor:         $contentBorderColor !default;
+$formControlBorderWidth:         1px !default; 
 
 //readonly
 $formControlBgColorReadOnly:     transparent !default;
@@ -232,42 +299,58 @@ $formControlBorderWidthReadOnly: $formControlBorderWidth !default;
 $formControlBgColorDisabled:     $formControlBgColor !default;
 $formControlValueColorDisabled:  $formControlValueColor !default;
 $formControlBorderColorDisabled: $formControlBorderColor !default;
-$formControlOpacityDisabled:     $opacityDisabled   !default;
 $formControlBorderWidthDisabled: $formControlBorderWidth !default; 
+$formControlOpacityDisabled:     $opacityDisabled   !default;
 
-// messaging border
-$formControlMessagingBorderWidth: 2px !default;
 
+
+// form labels
+//----------------------------------
+// labels
+$formControlLabelFontWeight: bold !default;
+
+// top aligned labels:
+//    by default labels are dislplay: block and therefore
+//    render on top of the field. This variable controls
+//    the vertical spacing between labels and fields 
+$formControlLabelMarginBottom: .5em !default;
+
+// inline labels
+$formControlLabelInlineGutter:  .5em !default;
+$formControlLabelInlineMarginTop:  .34em !default;
+
+// form layout
+//----------------------------------
+// In a form layout this is the space expected between 
+// form controls in different rows
+$formLayoutMarginBottom: 10px !default;
 
 
 // BUTTONS 
-//----------------------------------
+//----------------------------------------------------------------
 // we set button and form control heights to the same value so they will line up nicely
-$buttonHeight:  $formControlHeight;
+$buttonHeight:       $formControlHeight;
+$buttonFontWeight:   $widgetFontWeight !default;
+$buttonBorderRadius: $mediumBorderRadius !default;
 
+// button padding
+//----------------------------------
 $buttonTextToEdgePadding: 1em;     // same as JQUI.  Horiz space between text and edge of button when no intervening icon.
 $buttonIconToTextPadding: 0.267em; // in JQUI, is 2.1em - 0.5em - iconWidth = 1.6em - 16px = (@12px font) 1.6em - 1.333 em = 0.267em.  So ours scales better.  Horiz space between text and icon.
 $buttonIconToEdgePadding: 0.5em;   // same as JQUI.  Horiz space between icon and edge of button.
 
 
-// todo: these colors need to based on jq colors
-$buttonTextColorCheckedDisabled: #808080;
-$buttonIconColorCheckedDisabled: #B2B2B2;
 
-
-$buttonFontWeight:        $widgetFontWeight !default;
-$buttonBorderRadius:      $mediumBorderRadius !default;
-$buttonTextShadow:        null !default;
-$buttonBoxShadow:         null !default;
-
-
-
-// enabled
+// button states
+//----------------------------------
+// default
 $buttonBgColor:                  $clickableBgColor !default; 
 $buttonTextColor:                $clickableTextColor !default;
-$buttonIconColor:                $iconColorEnabled !default;
+$buttonIconColor:                $iconColorDefault !default;
 $buttonBorderColor:              $clickableBorderColor !default;
 $buttonBgImage:                  $clickableBgImage !default; 
+$buttonTextShadow:               null !default;
+$buttonBoxShadow:                null !default;
 
 // hover
 $buttonBgColorHover:             $clickableBgColorHover !default;
@@ -298,19 +381,27 @@ $buttonIconColorDisabled:         $buttonIconColor   !default;
 $buttonBorderColorDisabled:       $buttonBorderColor !default;
 $buttonOpacityDisabled:           $opacityDisabled   !default;
 
+// disabled and selected
+$buttonTextColorSelectedDisabled:  $buttonTextColorSelected;
+$buttonIconColorSelectedDisabled:  $iconColorSelectedDisabled;
 
 
-// GRID 
-//----------------------------------
+// DATA GRID AND TABLE
+//----------------------------------------------------------------
 // Default 
 $dataGridBorderColor:                       $contentBorderColor !default; 
-$dataGridBorderWidth:                       $borderWidth !default;
+$dataGridBorderWidth:                       1px !default;
+
 // Headers
 $dataGridHeaderFontWeight:                  $headerFontWeight !default;
 // Column Headers 
 $dataGridHeaderTextColor:                   $headerTextColor !default;
 $dataGridColumnHeaderFontSize:              $mediumFontSize !default;
 $dataGridColumnHeaderBgColor:               $headerBgColor !default;
+// Column Headers - Hover
+$dataGridColumnHeaderBgColorHover:          $clickableBgColorHover !default;
+// Column Headers - Focus
+$dataGridColumnHeaderBgColorFocus:          $clickableBgColorHover !default;
 // Column Headers - Selected 
 $dataGridColumnHeaderBgColorSelected:          $clickableBgColorActive !default;
 // Column Headers - Selected Inactive  
@@ -321,17 +412,16 @@ $dataGridRowHeaderBgColor:                  $headerBgColor !default;
 $dataGridRowHeaderBgColorSelected:          $clickableBgColorActive !default;
 // Row Headers - Selected Inactive  
 $dataGridRowHeaderBgColorSelectedInactive:  darken($bgColorHighlight, 5%) !default;
+
 // Grid Cells  
 $dataGridCellBorderColor:                   $dataGridBorderColor !default;
 $dataGridCellTextColor:                     $textColor !default; 
-$dataGridCellBgColor:                       $background1Color !default;
-$dataGridCellBandedBgColor:                 $background2Color !default;
-
-
+$dataGridCellBgColor:                       $contentBgColor !default;
+$dataGridCellBandedBgColor:                 $contentAccentBgColor !default;
 // Grid Cells - Hover
-$dataGridCellBgColorHover:                  $interaction2Color !default;
+$dataGridCellBgColorHover:                  $clickableBgColorHover !default;
 // Grid Cells - Selected 
-$dataGridCellBgColorSelected:               $interaction3Color !default;
+$dataGridCellBgColorSelected:               $clickableBgColorHover !default;
 // Grid Cells - Focus 
 $dataGridCellBgColorFocus:                  $dataGridCellBgColorHover !default;
 // Grid Cells - Selected Inactive 
@@ -339,20 +429,36 @@ $dataGridCellBgColorSelectedInactive:       $bgColorHighlight !default;
 
 
 // PAGING CONTROL
-//----------------------------------
-$pagingControlPageLinkBorder:               $border6Color !default;
+//----------------------------------------------------------------
+// todo: not yet used in jq theme
+$pagingControlPageLinkBorder:               $contentBorderColor !default;
 
 
 
 
 // RESPONSIVE
-//----------------------------------
+//----------------------------------------------------------------
 
+// responsive screen sizes
 $screenSmallRange:  0, 767px !default;
 $screenMediumRange: 768px, 1023px !default;
 $screenLargeRange:  1024px, 1279px !default;
 $screenXlargeRange: 1280px, null !default;
 
+
+// responsive media queries
+//----------------------------------
+
+// in the media queries below you see print on any media query that affects 
+// large screens so that we print the large layout by default. If that isn't desired
+// use the print-specific styles to override the default behavior
+
+// the $responsiveQueryXYZ variables can be set to null if you don't want to render a particular set of classes, 
+// for example $responsiveQueryPrint can be set to null if print only classes aren't desired
+// Another example is you don't want xlarge classes. In that case you don't really need 
+// large only classes either, so you could set:
+//    $responsiveQueryLargeOnly:  null;
+//    $responsiveQueryXlargeUp:   null;
 
 $responsiveQuerySmallUp:    "print, screen" !default;
 $responsiveQuerySmallOnly:  "screen and (max-width: #{nth($screenSmallRange,2)})" !default;
@@ -369,17 +475,19 @@ $responsiveQueryXlargeUp:   "screen and (min-width: #{nth($screenXlargeRange,1)}
 
 $responsiveQueryPrint:      "print" !default;
 
-// grid layout system
+
+// GRID LAYOUT SYSTEM
+//----------------------------------------------------------------
 $gridColumnGutter: 15px !default;
 $gridTotalColumns: 12 !default;
 $gridMaxWidth:     nth($screenXlargeRange, 2) !default;
 
 
-// DVT COMMON
-//----------------------------------
+// DVT 
+//----------------------------------------------------------------
 $dvtAnimationDuration: 500ms !default;
-$dvtBorderColor: $border6Color !default;
-$dvtBorder2Color: $border7Color !default;
+$dvtBorderColor: #000000 !default;
+$dvtBorder2Color: #ffffff !default;
 $dvtCategory1Color: #267db3 !default;
 $dvtCategory2Color: #68c182 !default;
 $dvtCategory3Color: #fad55c !default;
@@ -409,15 +517,52 @@ $dvtMapMarkerBgColor: $textColor !default;
 
 
 
-// INCLUDES
+//----------------------------------------------------------------
+// LOGISTICAL VARIABLES
+//----------------------------------------------------------------
+
+
+// COMPATIBILITY
 //----------------------------------
+
+// when $allowTagSelectors is true JET directly styles certain tags like 
+// <p> <a> <h1>, etc. However for developers trying to mix JET with other 
+// technologies styling these tags directly could cause issues on other parts of the page. 
+// In that case set $allowTagSelectors: false;.
+// See the "compatibility" section of the theming documentation for more information
+$allowTagSelectors: true !default;
+// todo: move the normalize definition here?
+
+
+// DIRECTION
+//----------------------------------
+
+// Accepted values of $textDirection are null, ltr, rtl
+//    - null means ouput for both directions (default)
+//    - ltr means output left to right only 
+//    - rtl means output right to left only
+//
+// By default we support right to left without 
+// switching out the css file as long as dir="rtl"
+// is set on the html tag. However if you'd prefer 
+// to generate one css file per direction you can 
+// also set "$textDirection" to either "rtl" or "ltr".
+$textDirection: null !default;
+
+
+
+
+// INCLUDES
+//----------------------------------------------------------------
 
 // by default everything is included, but you can also start by setting 
 // $includeAllClasses to false and then just add in what you want.
+
 $includeAllClasses: true !default;
 $includeNormalize:  ($includeAllClasses and $allowTagSelectors) !default;
 
-// ---- GROUP INCLUDES 
+// group includes 
+//----------------------------------
 
 // whether to include classes for tags like headers, links, etc
 $includeTagClasses: $includeAllClasses !default;
@@ -429,8 +574,58 @@ $includeDvtClasses: $includeAllClasses !default;
 $includeFormControlClasses: $includeAllClasses !default;
 
 
-// z-index hierarchy 
+// widget includes 
 //----------------------------------
-$dialogZindex: 1050;
-$popupZindex: 1030;
-$dropdownZindex: 1000;
+// Only the higher level include variables are defined in this file, 
+// widget specific variables are defined in the widget files.
+// For example at the top of the button file you'll see
+// $includeButtonClasses:  $includeAllClasses !default;
+
+
+// SLOW CSS
+//----------------------------------------------------------------
+// In certain browsers you may notice that by default we're not showing a  
+// border-radius, box-shadow, or gradient even if the browser supports the  
+// css property. In browsers where we feel the performance is unacceptably slow 
+// we will put a class oj-slow-borderradius, oj-slow-boxshadow, 
+// or oj-slow-cssgradients on the html element. 
+// This is similar to what modernizr does with classes like no-borderradius
+// browsers that don't support border radius.
+//
+// In the CSS you may see code like this:
+//
+//  .oj-button {
+//      border-radius: 2px;
+//  }
+//  
+//  html.oj-slow-borderradius .oj-button {
+//      @include oj-border-radius(0);
+//  }
+//
+// The main reason we need this is that IE has two rendering modes, 
+// GPU and software rendering mode. There is no known way for JET to 
+// detect which rendering mode is being used. Performance for  
+// border radius can be very slow in software rendering mode, 
+// and even GPU rendering has been slow in many cases. Therefore in 
+// JET the oj-slow-borderradius class is put on the html element in all 
+// current versions of IE (at the time of this writing IE 9-11).
+//
+// You may control output of the overrides, or choose not to generate 
+// border-radius/gradients/box-shadows at all, with the variables below.
+//
+// Valid values for the variables below are 
+//   
+//    - slowOverride: generate the regular value, but in addition generate 
+//            overrides for slow browsers to remove 
+//            border-radius/gradient/box-shadow on slow browsers. 
+//    - auto: no overrides, generate only the regular value
+//    - none: don't write out any value at all. If you wanted to generate 
+//            an IE only style sheet you might want to use "none" to
+//            just not write out any  border-radius/gradient/box-shadow 
+//            values in the first place.
+
+$borderRadiusGeneration: slowOverride !default;
+$boxShadowGeneration: slowOverride !default;
+$gradientGeneration: slowOverride !default;
+
+

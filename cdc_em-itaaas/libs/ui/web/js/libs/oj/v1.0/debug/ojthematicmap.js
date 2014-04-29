@@ -1,80 +1,6 @@
 define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojdvt-base', 'ojs/internal-deps/dvt/DvtThematicMap'], function(oj, $)
 {
 /**
- * An object used for automation verification of thematic map markers.
- * Applications should not create this object.
- * @param {Object} data An object containing verification data
- * @constructor
- * @export
- */  
-oj.ThematicMapMarker = function(data) {
-  this._data = data;
-}
-
-/**
- * Returns the color of a thematic map marker
- * @return {String} The marker color
- * @export
- */
-oj.ThematicMapMarker.prototype.getColor = function() {
-  return this._data ? this._data['color'] : null;
-}
-
-/**
- * Returns the label of a thematic map marker
- * @return {String} The marker tooltip
- * @export
- */
-oj.ThematicMapMarker.prototype.getTooltip = function() {
-  return this._data ? this._data['tooltip'] : null;
-}
-
-/**
- * Returns the tooltip of a thematic map marker
- * @return {String} The marker tooltip
- * @export
- */
-oj.ThematicMapMarker.prototype.getLabel = function() {
-  return this._data ? this._data['label'] : null;
-}
-/**
- * An object used for automation verification of thematic map areas.
- * Applications should not create this object.
- * @param {Object} data An object containing verification data
- * @constructor
- * @export
- */  
-oj.ThematicMapArea = function(data) {
-  this._data = data;
-}
-
-/**
- * Returns the color of a thematic map area
- * @returns {String} The area color
- * @export
- */
-oj.ThematicMapArea.prototype.getColor = function() {
-  return this._data ? this._data['color'] : null;
-}
-
-/**
- * Returns the tooltip of a thematic map area
- * @returns {String} The area tooltip
- * @export
- */
-oj.ThematicMapArea.prototype.getTooltip = function() {
-  return this._data ? this._data['tooltip'] : null;
-}
-
-/**
- * Returns the label of a thematic map area
- * @returns {String} The area label
- * @export
- */
-oj.ThematicMapArea.prototype.getLabel = function() {
-  return this._data ? this._data['label'] : null;
-}
-/**
  * @class 
  * @name oj.ojThematicMap
  * @augments oj.baseComponent
@@ -158,20 +84,26 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
   _loadedBasemaps : [],
   _checkBasemaps : [],
   
-  // Overrides $.oj.dvtBaseComponent
-  _createComponent : function(context, callback, callbackObj) {
+  /**
+   * @override
+   */
+  _CreateComponent : function(context, callback, callbackObj) {
     return DvtThematicMap.newInstance(context, callback, callbackObj);
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getComponentStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetComponentStyleClasses : function() {
     var styleClasses = this._super();
     styleClasses.push('oj-thematicmap');
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getChildStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetChildStyleClasses : function() {
     var styleClasses = this._super();
 	  styleClasses['oj-dvtbase oj-thematicmap'] = {'path' : 'animationDuration', 'property' : 'animation-duration'};
     styleClasses['oj-thematicmap-arealayer'] = [
@@ -194,13 +126,17 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
     return styleClasses;
   },
    
-  // Overrides $.oj.dvtBaseComponent
-  _loadResources : function() {
+  /**
+   * @override
+   */
+  _LoadResources : function() {
     this._loadBasemap();
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _render : function() {
+  /**
+   * @override
+   */
+  _Render : function() {
     // do not render until all basemaps are loaded
     for (var i=0; i<this._checkBasemaps.length; i++) {
       if (!this._loadedBasemaps[this._checkBasemaps[i]])
@@ -251,17 +187,19 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
     var thisRef = this;
     $.getScript(resolvedUrl, function( data, textStatus, jqxhr ) {
       loadedBasemaps[relativeUrl] = true;
-      thisRef._render();
+      thisRef._Render();
     });
 
     if (locale.indexOf('en') === -1) {
       var bundleName = basemap+layer+'Bundle';
-      this._loadResourceBundle('resources/internal-deps/dvt/thematicMap/resourceBundles/'+bundleName);
+      this._LoadResourceBundle('resources/internal-deps/dvt/thematicMap/resourceBundles/'+bundleName);
     }
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _handleEvent : function(event) {
+  /**
+   * @override
+   */
+  _HandleEvent : function(event) {
     var type = event && event.getType ? event.getType() : null, selectedItems, selection, i, selectedItem;
     if(type === DvtSelectionEvent.TYPE) {
       selectedItems = [];
@@ -312,4 +250,78 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
     return new oj.ThematicMapMarker(auto.getData(dataLayerId, 'marker', id));
   }
 });
+/**
+ * An object used for automation verification of thematic map markers.
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ThematicMapMarker = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the color of a thematic map marker
+ * @return {String} The marker color
+ * @export
+ */
+oj.ThematicMapMarker.prototype.getColor = function() {
+  return this._data ? this._data['color'] : null;
+};
+
+/**
+ * Returns the label of a thematic map marker
+ * @return {String} The marker tooltip
+ * @export
+ */
+oj.ThematicMapMarker.prototype.getTooltip = function() {
+  return this._data ? this._data['tooltip'] : null;
+};
+
+/**
+ * Returns the tooltip of a thematic map marker
+ * @return {String} The marker tooltip
+ * @export
+ */
+oj.ThematicMapMarker.prototype.getLabel = function() {
+  return this._data ? this._data['label'] : null;
+};
+/**
+ * An object used for automation verification of thematic map areas.
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ThematicMapArea = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the color of a thematic map area
+ * @returns {String} The area color
+ * @export
+ */
+oj.ThematicMapArea.prototype.getColor = function() {
+  return this._data ? this._data['color'] : null;
+};
+
+/**
+ * Returns the tooltip of a thematic map area
+ * @returns {String} The area tooltip
+ * @export
+ */
+oj.ThematicMapArea.prototype.getTooltip = function() {
+  return this._data ? this._data['tooltip'] : null;
+};
+
+/**
+ * Returns the label of a thematic map area
+ * @returns {String} The area label
+ * @export
+ */
+oj.ThematicMapArea.prototype.getLabel = function() {
+  return this._data ? this._data['label'] : null;
+};
 });

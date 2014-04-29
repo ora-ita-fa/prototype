@@ -1,0 +1,13 @@
+@import "../../utilities/oj.utilities";
+  
+
+$includePanelClasses:   $includeAllClasses !default;
+
+// definitions in the common panel file
+@import "../../common/widgets/oj.common.panel"; 
+
+@if $includePanelClasses != false {
+  @include exports("panel") {
+
+  }
+}

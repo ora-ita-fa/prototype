@@ -99,20 +99,26 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
     select : null
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _createComponent : function(context, callback, callbackObj) {
+  /**
+   * @override
+   */
+  _CreateComponent : function(context, callback, callbackObj) {
     return DvtTreemap.newInstance(context, callback, callbackObj);
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getComponentStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetComponentStyleClasses : function() {
     var styleClasses = this._super();
     styleClasses.push('oj-treemap');
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getChildStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetChildStyleClasses : function() {
   	var styleClasses = this._super();
    	styleClasses['oj-treemap-isolate-icon'] = {'path' : '_resources/isolate', 'property' : 'CSS_URL'};
    	styleClasses['oj-treemap-isolate-icon oj-hover'] = {'path' : '_resources/isolateOver', 'property' : 'CSS_URL'};
@@ -150,12 +156,14 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getTranslationMap: function() {
+  /**
+   * @override
+   */
+  _GetTranslationMap: function() {
     var superMap = this._super();
     var selfMap = {
-      'oj-ojTreemap.labelColor': 'DvtTreemapBundle.COLOR',
-      'oj-ojTreemap.labelSize': 'DvtTreemapBundle.SIZE'
+      'DvtTreemapBundle.COLOR': this._GetTranslatedResource('labelColor'),
+      'DvtTreemapBundle.SIZE': this._GetTranslatedResource('labelSize')
     };
     
     // Combine with the map from the superclass
@@ -166,8 +174,10 @@ oj.__registerWidget('oj.ojTreemap', $['oj']['dvtBaseComponent'],
     return ret;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _handleEvent : function(event) {
+  /**
+   * @override
+   */
+  _HandleEvent : function(event) {
     var type = event && event.getType ? event.getType() : null, selectedItems, selection, i, selectedItem,
         isolatedNodes, isolatedNode, isolateType;
     if(type === DvtSelectionEvent.TYPE) {

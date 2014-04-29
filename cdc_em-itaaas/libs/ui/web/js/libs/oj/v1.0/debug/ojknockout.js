@@ -347,7 +347,7 @@ oj.ComponentBinding.prototype._initComponent = function(element, jelem, valueAcc
       }
       
       var propertyMap = {};
-      tracker = new ComponentChangeTracker(comp, oj.ComponentBinding._changeQueue);
+      tracker = new ComponentChangeTracker(comp, element, oj.ComponentBinding._changeQueue);
       
       var writablePropMap = 
       {
@@ -874,22 +874,24 @@ GlobalChangeQueue.prototype._deliverChangesImpl = function()
  * @constructor
  * Keeps track of changes for a single component
  */
-function ComponentChangeTracker(component, queue)
+function ComponentChangeTracker(component, element, queue)
 {
-  this.Init(component, queue);
+  this.Init(component, element, queue);
 }
 
 // Subclass from oj.Object 
 oj.Object.createSubclass(ComponentChangeTracker, oj.Object, "ComponentBinding.ComponentChangeTracker");
 
 /**
- * @param {Object=} component
- * @param {Object=} queue
+ * @param {Function} component
+ * @param {Element} element
+ * @param {Object} queue
  */
-ComponentChangeTracker.prototype.Init = function(component, queue)
+ComponentChangeTracker.prototype.Init = function(component, element, queue)
 {
   ComponentChangeTracker.superclass.Init.call(this);
   this._component = component;
+  this._element = element;
   this._queue = queue;
   this._updateCallback = oj.Object.createCallback(this,this._applyUpdates);
   this._changes = {};
@@ -933,7 +935,11 @@ ComponentChangeTracker.prototype._applyUpdates = function()
 {
   try
   {
-    this._component("option", this._changes); 
+    // Check if the component is still "alive"
+    if (oj.Components.getWidgetConstructor(this._element) != null)
+    {
+      this._component("option", this._changes); 
+    }
   }
   finally
   {
@@ -951,189 +957,6 @@ oj.ComponentBinding._changeQueue = new GlobalChangeQueue();
  * @private
  */
 oj.ComponentBinding._INSTANCE = oj.ComponentBinding.create(["ojComponent", "jqueryUI"]);
-
-/*jslint browser: true, devel: true*/
-
-
-/** 
- * The column templates will be used to render the cell elements in the column. 
- * The row, status, columnId, and component objects will be available 
- * in the template context.
- * @private
- * @const
- */
-var _COLUMN_TEMPLATES_ATTR = 'columnTemplates';
-/** 
- * The footer template will be used to render the footer. 
- * @private
- * @const
- */
-var _FOOTER_TEMPLATE_ATTR = 'footerTemplate';
-/** 
- * The row template will be used to render the row elements. 
- * The row, status, and component objects will be available 
- * in the template context.
- * @private
- * @const
- */
-var _ROW_TEMPLATE_ATTR = 'rowTemplate';
-
-/**
- * Create and return a renderer which the component will call. That renderer
- * will render the template.
- * @param {Object} bindingContext  Binding Context
- * @param {string} columnId  Column Id
- * @param {string} type  'cell' or 'header' or 'row'
- * @param {string} template  template name
- * @return {Object} Renderer
- * @private
- */
-function _getTableColumnTemplateRenderer(bindingContext, columnId, type, template)
-{
-    var rendererOption = {};
-    (function(template, type) {
-        rendererOption['renderer'] = function(params) {
-                var childContext = null;
-                var parentElement = null;
-                if (type == 'header')
-                {
-                    // calling bindingContext.extend() creates a context with 
-                    // new properties without adding extra level to the parent hierarchy
-                    childContext = bindingContext['extend']({'$column': params['column'], 
-                                                             '$headerContext': params['headerContext']});
-                    parentElement = params['headerContext']['parentElement'];
-                }
-                else if (type == 'cell') 
-                {
-                    var childData = params['row'];
-                    childContext = bindingContext['createChildContext'](childData, null, 
-                                            function(binding)
-                                            {
-                                                binding['$column'] = params['column'];
-                                                binding['$cellContext'] = params['cellContext'];
-                                            }
-                                       );
-                    parentElement = params['cellContext']['parentElement'];
-                }
-                ko['renderTemplate'](template, childContext, null, parentElement, 'replaceNode');
-            };
-    }(template, type));
-    rendererOption['type'] = type;
-    rendererOption['columnId'] = columnId;
-
-    return rendererOption;
-}
-
-/**
- * Create and return a renderer which the component will call. That renderer
- * will render the template.
- * @param {string} template  template name
- * @return {Object} Renderer
- * @private
- */
-function _getTableFooterTemplateRenderer(bindingContext, template)
-{
-    return function(params) {
-        ko['renderTemplate'](template, bindingContext, null, params['footerContext']['parentElement'], 'replaceNode');
-    };
-}
-
-/**
- * Create and return a renderer which the component will call. That renderer
- * will render the template.
- * @param {string} template  template name
- * @return {Object} Renderer
- * @private
- */
-function _getTableRowTemplateRenderer(bindingContext, template)
-{
-    return function(params) {
-        var childData = params['row'];
-        var childContext = bindingContext['createChildContext'](childData, null, 
-                                function(binding)
-                                {
-                                    binding['$rowContext'] = params['rowContext'];
-                                }
-                           );
-        ko['renderTemplate'](template, childContext, null, params['rowContext']['parentElement'], 'replaceNode');
-    };
-}
-
-oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
-    {
-      'attributes': [_COLUMN_TEMPLATES_ATTR, _FOOTER_TEMPLATE_ATTR, _ROW_TEMPLATE_ATTR],
-      'init': function(name, value, element, widgetConstructor, valueAccessor, 
-                                       allBindingsAccessor, bindingContext)
-      {
-        var columnId, template, type;
-        if (name == _COLUMN_TEMPLATES_ATTR)
-        {
-            var columnRenderers = [], i;
-            for (i = 0; i < value.length; i++)
-            {
-                /** @type {{columnId:string, template: string, type: string}} */
-                var columnTemplate = value[i];
-                columnId = columnTemplate['columnId'];
-                template = columnTemplate['template'];
-                type = columnTemplate['type'];
-                if (template != null && columnId != null && type != null)
-                {
-                    columnRenderers[i] = _getTableColumnTemplateRenderer(bindingContext, columnId, type, template);
-                }
-            }
-            if (columnRenderers.length > 0) {
-                widgetConstructor({'columnRenderers': columnRenderers});
-            }
-        }
-        else if (name == _ROW_TEMPLATE_ATTR)
-        {
-            template = value['template'];
-            widgetConstructor({'rowRenderer': _getTableRowTemplateRenderer(bindingContext, template)});
-        }
-        else if (name == _FOOTER_TEMPLATE_ATTR)
-        {
-            template = value['template'];
-            widgetConstructor({'footerRenderer': _getTableFooterTemplateRenderer(bindingContext, template)});
-        }
-      },
-      'update': function(name, value, element, widgetConstructor, valueAccessor, 
-                                       allBindingsAccessor, bindingContext)
-      {
-        var columnId, template, type;
-        if (name == _COLUMN_TEMPLATES_ATTR)
-        {
-            var columnRenderers = [], i;
-            for (i = 0; i < value.length; i++)
-            {
-                /** @type {{columnId:string, template: string, type: string}} */
-                var columnTemplate = value[i];
-                columnId = columnTemplate['columnId'];
-                template = columnTemplate['template'];
-                type = columnTemplate['type'];
-                if (template != null && columnId != null && type != null)
-                {
-                    columnRenderers[i] = _getTableColumnTemplateRenderer(bindingContext, columnId, type, template);
-                }
-            }
-            if (columnRenderers.length > 0) {
-                return {'columnRenderers': columnRenderers};
-            }
-        }
-        else if (name == _ROW_TEMPLATE_ATTR)
-        {
-            template = value['template'];
-            return {'rowRenderer': _getTableRowTemplateRenderer(bindingContext, template)};
-        } 
-        else if (name == _FOOTER_TEMPLATE_ATTR)
-        {
-            template = value['template'];
-            return {'footerRenderer': _getTableFooterTemplateRenderer(bindingContext, template)};
-        }
-        return null;
-      },
-      
-      'for': 'ojTable'
-    });
 
 //
 // Define a template source that allows the use of a knockout array (ko[])
@@ -1403,31 +1226,31 @@ ko.bindingHandlers['ojContextMenu'] =
     $(element).off( eventNamespace );
 
     var menu = ko.utils.unwrapObservable(valueAccessor());
-    // now menu is {menu:"myMenuId"}, or null, or some malformed thing.
+    // menu is selector like "#myMenuId", or null, or some malformed thing.
 
-    if (menu)
-      menu = ko.utils.unwrapObservable(menu['menu']);
-    // now menu is "myMenuId", or null, or some malformed thing.
-
-    if (!menu)
+    if ($.type(menu) !== "string")
+    {
       menu = element.getAttribute("contextmenu");
+      if (menu)
+        menu = "#" + menu;
+    }
 
     if (menu) 
+      menu = $(menu).data( "oj-ojMenu" );// if selector finds >1 element, .data() uses the first one.
+                                            // if selector finds 0 elements, .data() returns nothing.
+    
+    if ( menu )
     {
-      menu = $("#"+menu).data( "oj-ojMenu" );
-      if ( menu )
-      {
-        var $element = $(element);
-        $element.on( "keydown" + eventNamespace + " " + "contextmenu" + eventNamespace, function( event ) {
-            if (event.type === "contextmenu" || (event.which == 121 && event.shiftKey)) // right-click or Shift-F10
-            {
-              menu.show(event, {"launcher": $element, "focus": "menu"});
-              return false; // Don't show native context menu
-            }
+      var $element = $(element);
+      $element.on( "keydown" + eventNamespace + " " + "contextmenu" + eventNamespace, function( event ) {
+        if (event.type === "contextmenu" || (event.which == 121 && event.shiftKey)) // right-click or Shift-F10
+        {
+          menu.show(event, {"launcher": $element, "focus": "menu"});
+          return false; // Don't show native context menu
+        }
 
-            return true;
-        });
-      }
+        return true;
+      });
     }
         
 //  if (!menu)
@@ -1437,5 +1260,187 @@ ko.bindingHandlers['ojContextMenu'] =
 };
 
 
+
+/*jslint browser: true, devel: true*/
+
+/** 
+ * @private
+ * @const
+ */
+var _COLUMNS_ATTR = 'columns';
+
+/** 
+ * @private
+ * @const
+ */
+var _COLUMNS_DEFAULT_ATTR = 'columnsDefault';
+
+/** 
+ * The row template will be used to render the row elements. 
+ * The row, status, and component objects will be available 
+ * in the template context.
+ * @private
+ * @const
+ */
+var _ROW_TEMPLATE_ATTR = 'rowTemplate';
+
+/**
+ * Create and return a renderer which the component will call. That renderer
+ * will render the template.
+ * @param {Object} bindingContext  Binding Context
+ * @param {string} type  'cell' or 'header' or 'row'
+ * @param {string} template  template name
+ * @return {Object} Renderer
+ * @private
+ */
+function _getTableColumnTemplateRenderer(bindingContext, type, template)
+{
+  var rendererOption = {};
+  (function(template, type) {
+    rendererOption = function(params) {
+      var childContext = null;
+      var parentElement = null;
+      if (type == 'header')
+      {
+        // calling bindingContext.extend() creates a context with 
+        // new properties without adding extra level to the parent hierarchy
+        childContext = bindingContext['extend']({'$column': params['column'],
+          '$headerContext': params['headerContext']});
+        parentElement = params['headerContext']['parentElement'];
+      }
+      else if (type == 'cell')
+      {
+        var childData = params['row'];
+        childContext = bindingContext['createChildContext'](childData, null,
+          function(binding)
+          {
+            binding['$column'] = params['column'];
+            binding['$cellContext'] = params['cellContext'];
+          }
+        );
+        parentElement = params['cellContext']['parentElement'];
+      }
+      if (type == 'footer')
+      {
+        // calling bindingContext.extend() creates a context with 
+        // new properties without adding extra level to the parent hierarchy
+        childContext = bindingContext['extend']({'$column': params['column'],
+          '$footerContext': params['footerContext']});
+        parentElement = params['footerContext']['parentElement'];
+      }
+      ko['renderTemplate'](template, childContext, null, parentElement, 'replaceNode');
+    };
+  }(template, type));
+
+  return rendererOption;
+}
+
+/**
+ * Create and return a renderer which the component will call. That renderer
+ * will render the template.
+ * @param {string} template  template name
+ * @return {Object} Renderer
+ * @private
+ */
+function _getTableRowTemplateRenderer(bindingContext, template)
+{
+  return function(params) {
+    var childData = params['row'];
+    var childContext = bindingContext['createChildContext'](childData, null,
+      function(binding)
+      {
+        binding['$rowContext'] = params['rowContext'];
+      }
+    );
+    ko['renderTemplate'](template, childContext, null, params['rowContext']['parentElement'], 'replaceNode');
+  };
+}
+
+oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
+  {
+    'attributes': [_COLUMNS_ATTR, _COLUMNS_DEFAULT_ATTR, _ROW_TEMPLATE_ATTR],
+    'init': function(name, value, element, widgetConstructor, valueAccessor,
+      allBindingsAccessor, bindingContext)
+    {
+      if (name == _COLUMNS_ATTR || name == _COLUMNS_DEFAULT_ATTR)
+      {
+        var i, template, footerTemplate, headerTemplate;
+        for (i = 0; i < value.length; i++)
+        {
+          var column = value[i];
+          template = column['template'];
+          footerTemplate = column['footerTemplate'];
+          headerTemplate = column['headerTemplate'];
+
+          if (template != null)
+          {
+            column['renderer'] = _getTableColumnTemplateRenderer(bindingContext, 'cell', template);
+          }
+          if (footerTemplate != null)
+          {
+            column['footerRenderer'] = _getTableColumnTemplateRenderer(bindingContext, 'footer', footerTemplate);
+          }
+          if (headerTemplate != null)
+          {
+            column['headerRenderer'] = _getTableColumnTemplateRenderer(bindingContext, 'header', headerTemplate);
+          }
+        }
+        if (name == _COLUMNS_ATTR)
+        {
+          widgetConstructor({'columns': value});
+        }
+        else
+        {
+          widgetConstructor({'columnsDefault': value});
+        }
+      }
+      else if (name == _ROW_TEMPLATE_ATTR)
+      {
+        widgetConstructor({'rowRenderer': _getTableRowTemplateRenderer(bindingContext, value)});
+      }
+    },
+    'update': function(name, value, element, widgetConstructor, valueAccessor,
+      allBindingsAccessor, bindingContext)
+    {
+      if (name == _COLUMNS_ATTR || name == _COLUMNS_DEFAULT_ATTR)
+      {
+        var i, template, footerTemplate, headerTemplate;
+        for (i = 0; i < value.length; i++)
+        {
+          var column = value[i];
+          template = column['template'];
+          footerTemplate = column['footerTemplate'];
+          headerTemplate = column['headerTemplate'];
+
+          if (template != null)
+          {
+            column['renderer'] = _getTableColumnTemplateRenderer(bindingContext, 'cell', template);
+          }
+          if (footerTemplate != null)
+          {
+            column['footerRenderer'] = _getTableColumnTemplateRenderer(bindingContext, 'footer', footerTemplate);
+          }
+          if (headerTemplate != null)
+          {
+            column['headerRenderer'] = _getTableColumnTemplateRenderer(bindingContext, 'header', headerTemplate);
+          }
+        }
+        if (name == _COLUMNS_ATTR)
+        {
+          widgetConstructor({'columns': value});
+        }
+        else
+        {
+          widgetConstructor({'columnsDefault': value});
+        }
+      }
+      else if (name == _ROW_TEMPLATE_ATTR)
+      {
+        return {'rowRenderer': _getTableRowTemplateRenderer(bindingContext, value)};
+      }
+      return null;
+    },
+    'for': 'ojTable'
+  });
 
 });

@@ -4,7 +4,7 @@
   @include exports("common.windows") {
 
     /* Overlays */
-    .oj-widget-overlay {
+    .oj-component-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -14,7 +14,7 @@
         opacity: .3;
         filter:Alpha(Opacity=30); 
     }
-    .oj-widget-shadow { 
+    .oj-component-shadow { 
         margin: -8px 0 0 -8px; 
         padding: 8px; 
         background: #aaaaaa oj-image-url("ui-bg_flat_0_aaaaaa_40x100.png") 50% 50% repeat-x; // TODO: do we want to use background images? var for color?

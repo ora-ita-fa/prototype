@@ -20,7 +20,7 @@ $includeIconClasses: $includeAllClasses !default;
       content: oj-image-url("ui-icons_222222_256x240.png");  
     }                                     
      
-    .oj-widget-icon {
+    .oj-component-icon {
       @extend .oj-fwk-icon;
     }    
 
@@ -44,8 +44,8 @@ $includeIconClasses: $includeAllClasses !default;
 
     .oj-active .oj-fwk-icon, 
     .oj-active.oj-fwk-icon,
-    .oj-checked .oj-fwk-icon,  
-    .oj-checked.oj-fwk-icon,
+    .oj-selected .oj-fwk-icon,  
+    .oj-selected.oj-fwk-icon,
     a:active.oj-fwk-icon, 
     a:active .oj-fwk-icon {
      @include oj-icon-content(
@@ -56,7 +56,7 @@ $includeIconClasses: $includeAllClasses !default;
 
     /* positioning */
 
-    //.oj-fwk-icon-caret-n:before {  } first icon, doesn't need anything
+    .oj-fwk-icon-caret-n:before { margin: 0 0 0 0; }
     .oj-fwk-icon-caret-ne:before { margin: 0 0 0 -16px; }
     .oj-fwk-icon-caret-e:before { margin: 0 0 0 -32px; }
     .oj-fwk-icon-caret-se:before { margin: 0 0 0 -48px; }

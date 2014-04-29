@@ -14,6 +14,7 @@ $includeRowExpanderClasses:   $includeAllClasses !default;
 @if $includeRowExpanderClasses != false {
   @include exports("rowexpander") {
 
+	/* Styling for the widget */
     .oj-rowexpander{
 		width:14px;
 		height:14px;
@@ -21,6 +22,7 @@ $includeRowExpanderClasses:   $includeAllClasses !default;
         vertical-align:top;
     }
 
+	/* Styling for the expand icon */
     .oj-rowexpander-expand-icon{
         @include oj-ltr() {
             @extend .oj-fwk-icon-arrow-e;  
@@ -33,7 +35,8 @@ $includeRowExpanderClasses:   $includeAllClasses !default;
         }    
 
     }
-
+	
+	/* Styling for the collapse icon */
     .oj-rowexpander-collapse-icon {
         @include oj-ltr() {
             @extend .oj-fwk-icon-arrow-se;  
@@ -45,7 +48,8 @@ $includeRowExpanderClasses:   $includeAllClasses !default;
             float:left;        
         }    
     }
-
+	
+	/* Styling for the leaf icon */
     .oj-rowexpander-leaf-icon {
         @include oj-ltr() {
             float:right;

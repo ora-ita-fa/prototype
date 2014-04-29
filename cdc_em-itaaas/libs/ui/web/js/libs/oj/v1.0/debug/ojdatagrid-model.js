@@ -11,9 +11,10 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojdatacollection-common', 'ojs/ojmodel'], f
  * @param {number} endColumn the end column index of the cell set
  * @param {Object} collection the OJ collection instance
  * @param {Array|null} columns the set of column keys
+ * @param {number=} offset the start index used for paging
  * @constructor
  */
-oj.CollectionCellSet = function(startRow, endRow, startColumn, endColumn, collection, columns)
+oj.CollectionCellSet = function(startRow, endRow, startColumn, endColumn, collection, columns, offset)
 {
     // assert startRow/startColumn are number
     oj.Assert.assertNumber(startRow, null);
@@ -28,6 +29,7 @@ oj.CollectionCellSet = function(startRow, endRow, startColumn, endColumn, collec
     this.m_endColumn = endColumn;
     this.m_collection = collection;
     this.m_columns = columns;
+    this.m_offset = offset;
 };
 
 /**
@@ -41,7 +43,7 @@ oj.CollectionCellSet = function(startRow, endRow, startColumn, endColumn, collec
  */
 oj.CollectionCellSet.prototype.getData = function(indexes)
 {
-    var row, column, model;
+    var column, model;
     var self = this;
     model = this._getModel(indexes);
     this._getModel(indexes).done(function (model) { self.model = model });
@@ -71,7 +73,7 @@ oj.CollectionCellSet.prototype.getData = function(indexes)
  */
 oj.CollectionCellSet.prototype.getMetadata = function(indexes)
 {
-    var row, column, model, keys;
+    var column, model, keys;
     var self = this;
     model = this._getModel(indexes);
     this._getModel(indexes).done(function (model) { self.model = model });
@@ -87,7 +89,7 @@ oj.CollectionCellSet.prototype.getMetadata = function(indexes)
     // make sure index are valid (row index is checked in _getModel
     oj.Assert.assert(column >= this.m_startColumn && column <= this.m_endColumn); 
 
-    keys = {"row": self.model.GetCid(), "column": this.m_columns[column]};
+    keys = {"row": oj.CollectionDataGridUtils._getModelKey(self.model), "column": this.m_columns[column]};
     return {"keys": keys};
 };
 
@@ -97,12 +99,16 @@ oj.CollectionCellSet.prototype.getMetadata = function(indexes)
  */
 oj.CollectionCellSet.prototype._getModel = function(indexes)
 {
-    var row, column, model;
+    var row, column;
 
     oj.Assert.assertObject(indexes);
 
     // extract row and column index
     row = indexes['row'];
+	if (this.m_offset != null)
+	{
+		row += this.m_offset;
+	}
     column = indexes['column'];
 
     // make sure index are valid
@@ -188,6 +194,30 @@ oj.CollectionCellSet.prototype.getColumns = function()
 
 
 /**
+ * This class contains all utility methods used by the data grid colelction model.
+ * @constructor
+ */
+oj.CollectionDataGridUtils = function()
+{
+};
+
+/**
+ * Returns the key of the model. It is the id if one is set otherwise
+ * it is the cId
+ * @param {Object} model the model to chececk for id and cid
+ * @return {String} the id or cid for the model
+ */
+oj.CollectionDataGridUtils._getModelKey = function(model)
+{
+    var key;
+    key = model.GetId();
+    if (key == null)
+    {
+        key = model.GetCid();
+    }
+    return key;
+};
+/**
  * @export
  * A HeaderSet represents a collection of headers.  The HeaderSet is an object returned by the success callback
  * of the fetchHeaders method on DataGridDataSource.  This is an oj collection specific implementation of the HeaderSet.
@@ -196,9 +226,10 @@ oj.CollectionCellSet.prototype.getColumns = function()
  * @param {Array} headers the array of headers
  * @param {Object=} collection the OJ collection.  Required for row headers.
  * @param {string=} rowHeader the id of the row header column.  Required for row headers.
+ * @param {number=} offset the start index used for paging. Required for row headers.
  * @constructor
  */
-oj.CollectionHeaderSet = function(start, end, headers, collection, rowHeader)
+oj.CollectionHeaderSet = function(start, end, headers, collection, rowHeader, offset)
 {
     // assert start/end are number
     oj.Assert.assertNumber(start, null);
@@ -210,6 +241,7 @@ oj.CollectionHeaderSet = function(start, end, headers, collection, rowHeader)
     this.m_headers = headers;
     this.m_collection = collection;
     this.m_rowHeader = rowHeader;
+	this.m_offset = offset;	
 };
 
 /**
@@ -227,6 +259,10 @@ oj.CollectionHeaderSet.prototype.getData = function(index)
     // row or column header
     if (this.m_rowHeader != null && this.m_collection != null)
     {
+		if (this.m_offset != null)
+		{
+			index += this.m_offset;
+		}
         this.m_collection.at(index, {'deferred':true}).done(function (model) { self.model = model });
         return self.model.get(this.m_rowHeader);
     }
@@ -252,6 +288,10 @@ oj.CollectionHeaderSet.prototype.getMetadata = function(index)
     if (this.m_rowHeader != null && this.m_collection != null)
     {
         self = this;
+		if (this.m_offset != null)
+		{
+			index += this.m_offset;
+		}		
         this.m_collection.at(index, {'deferred':true}).done(function (model) { self.model = model });
         
         if (self.model == null)
@@ -259,7 +299,7 @@ oj.CollectionHeaderSet.prototype.getMetadata = function(index)
             return null;
         }
         
-        return {'key':self.model.GetCid()};
+        return {'key':oj.CollectionDataGridUtils._getModelKey(self.model)};
     }    
     else
     {
@@ -330,7 +370,7 @@ oj.CollectionHeaderSet.prototype.getCollection = function()
  * An OJ Collection based implementation of the DataGridDataSource.
  * @param {Object} collection the oj collection to adapter the DataGridDataSource
  * @param {Object=} options optional settings on this oj collection data source
- * @param {string=} options.rowHeader the cid of the attribute designated as the row header
+ * @param {string=} options.rowHeader the key of the attribute designated as the row header
  * @param {Array.<string>=} options.columns explicitly specifies columns to display and in 
  *        what order.  These columns must be a subset of attributes from Model. * @constructor
  * @export
@@ -347,9 +387,7 @@ oj.CollectionDataGridDataSource = function(collection, options)
     }
     this._startIndex = 0;
     this._pageSize = -1;
-    this._totalSize = -1;
-    this.initialSync = false;    
-    this.syncing = false;
+    this._totalSize = -1;  
     oj.CollectionDataGridDataSource.superclass.constructor.call(this);
 };
 
@@ -367,13 +405,7 @@ oj.CollectionDataGridDataSource.prototype.Init = function()
 
     this.pendingHeaderCallback = {};
 
-    // start fetching from collection
-    if (this._isRemote())
-    {
-        this.initialSync = true;
-//        this.collection.fetch({success:this._handleCollectionFetched.bind(this, true)});        
-    }
-    else
+    if (!this._isRemote())
     {
         // extract column info for local collection
         if (this.columns == null && this.collection.length > 0)
@@ -398,7 +430,7 @@ oj.CollectionDataGridDataSource.prototype._registerEventListeners = function()
     this.collection.on("add", this._handleModelAdded.bind(this));
     this.collection.on("remove", this._handleModelDeleted.bind(this));
     this.collection.on("change", this._handleModelChanged.bind(this));
-    this.collection.on("sync", this._handleSync.bind(this));
+    this.collection.on("refresh", this._handleCollectionRefresh.bind(this));
 };
 
 /**
@@ -427,53 +459,30 @@ oj.CollectionDataGridDataSource.prototype._isDataAvailable = function()
 };
 
 /**
- * Callback after fetch
- * @param {boolean} isInit bound by callback of if it is the inital fetch
- * @param {Object=} collection the result collection
- * @param {Object=} response the response
- * @param {Object=} options any options
+ * Determines if header data is locally available.
+ * @param {string} axis the axis in which we inquire for the total count.  Valid values are "row" and "column".
+ * @return {boolean} true if data is locally available, false otherwise.
  * @private
  */
-oj.CollectionDataGridDataSource.prototype._handleCollectionFetched = function(isInit, collection, response, options)
+oj.CollectionDataGridDataSource.prototype._isHeaderAvailable = function(axis)
 {
-    var axis;
-    this.data = response;
-    if (isInit === true)
+    if (this._isRemote())
     {
-        this.initialSync = false;
-    }    
-    else
-    {
-        this.syncing = false;
-    }
-    this._totalSize = collection.totalResults === undefined ? collection.length : collection.totalResults;
-        
-    //call sync or fetchend on the datasource
-    oj.DataGridDataSource.superclass.handleEvent.call(this, 'sync', true);
-    
-    if (this.columns == null && this.collection['models'].length > 0)
-    {
-        this.columns = this.collection['models'][0].keys();
-        if (this.columns.indexOf(this.rowHeader) != -1)
+        if (axis === "column")
         {
-            this.columns.splice(this.columns.indexOf(this.rowHeader),1);
+            return (this.columns != null);
+        }
+        else if (axis === "row")
+        {
+            // only if row header is specified
+            if (this.rowHeader != null)
+            {
+                return (this.data != null);
+            }
         }
     }
-    
-    // if there is a pending callback from fetchCells or fetchHeaders call, handle it now
-    for (axis in this.pendingHeaderCallback)
-    {   
-        if (this.pendingHeaderCallback.hasOwnProperty(axis) && this.pendingHeaderCallback[axis] != null)
-        {
-            this.fetchHeaders(this.pendingHeaderCallback[axis].headerRange, this.pendingHeaderCallback[axis].callbacks, this.pendingHeaderCallback[axis].callbackObjects);
-        }
-    }
-    
-    if (this.pendingCellCallback != null)
-    {
-        this.fetchCells(this.pendingCellCallback.cellRanges, this.pendingCellCallback.callbacks, this.pendingCellCallback.callbackObjects);
-    }
- 
+    // for local collection, always return true;
+    return true;
 };
 
 /**
@@ -486,7 +495,7 @@ oj.CollectionDataGridDataSource.prototype._handleCollectionFetched = function(is
 oj.CollectionDataGridDataSource.prototype.getCount = function(axis)
 {
     // not done fetching yet, provide an estimate count
-    if (!this._isDataAvailable())
+    if (!this._isHeaderAvailable(axis))
     {
         this.precision = "estimate";
         return -1;
@@ -544,7 +553,7 @@ oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, c
     var axis, callback;
 
     axis = headerRange.axis;
-    if (this._isDataAvailable())
+    if (this._isHeaderAvailable(axis))
     {
         // headers are locally available
         this._handleHeaderFetchSuccess(headerRange, callbacks, callbackObjects);
@@ -552,7 +561,7 @@ oj.CollectionDataGridDataSource.prototype.fetchHeaders = function(headerRange, c
     else
     {
         // still fetching, just store the callback info
-        if (callbacks != null && this.pendingHeaderCallback[axis] == null)
+        if (callbacks != null)
         {
             callback = {};
             callback.headerRange = headerRange;
@@ -611,9 +620,13 @@ oj.CollectionDataGridDataSource.prototype._handleHeaderFetchSuccess = function(h
             if (this._pageSize > 0)
             {
                 end = Math.min(end, this._startIndex + this._pageSize);
-                end = Math.min(end, this.totalSize() - this._startIndex);                    
-            }                    
-            headerSet = new oj.CollectionHeaderSet(start, end, this.columns, this.collection, this.rowHeader);
+                end = Math.min(end, this.totalSize() - this._startIndex);
+                headerSet = new oj.CollectionHeaderSet(start, end, this.columns, this.collection, this.rowHeader, this._startIndex);                
+            }
+            else
+            {
+                headerSet = new oj.CollectionHeaderSet(start, end, this.columns, this.collection, this.rowHeader);
+            }
         }
         else
         {
@@ -695,10 +708,16 @@ oj.CollectionDataGridDataSource.prototype._handleCellFetchSuccess = function(cel
     rowEnd = Math.min(this.size(), rowStart + ranges['rowCount']);
     colStart = ranges['colStart'];
     colEnd = Math.min(this.columns.length, colStart + ranges['colCount']);       
-
-    // create CellSet and invoke callback
-    cellSet = new oj.CollectionCellSet(rowStart, rowEnd, colStart, colEnd, this.collection, this.columns);
-        
+    if (this._pageSize > 0)
+    {
+        rowEnd = Math.min(this._pageSize, this.totalSize() - this._startIndex);                    
+        cellSet = new oj.CollectionCellSet(rowStart, rowEnd, colStart, colEnd, this.collection, this.columns, this._startIndex);        
+    }
+    else
+    {
+        // create CellSet and invoke callback
+        cellSet = new oj.CollectionCellSet(rowStart, rowEnd, colStart, colEnd, this.collection, this.columns);
+    }   
     if (callbacks != null && callbacks['success'] != null)
     {
         if (callbacks != null && callbackObjects == null)
@@ -731,7 +750,7 @@ oj.CollectionDataGridDataSource.prototype._handleCellFetchSuccess = function(cel
  */
 oj.CollectionDataGridDataSource.prototype.fetchCells = function(cellRanges, callbacks, callbackObjects)
 {
-    var ranges, rowStart, rowEnd, colStart, colEnd, cellSet;
+    var rowEnd, colEnd, cellSet;
 
     rowEnd = 0;
     colEnd = 0;
@@ -744,14 +763,14 @@ oj.CollectionDataGridDataSource.prototype.fetchCells = function(cellRanges, call
     else
     {
         // still fetching, just store the callback info
-        if (callbacks != null && this.pendingCellCallback == null)
+        if (callbacks != null)
         {
             this.pendingCellCallback = {};
             this.pendingCellCallback.cellRanges = cellRanges;
             this.pendingCellCallback.callbacks = callbacks;
             this.pendingCellCallback.callbackObjects = callbackObjects;
         }
-
+        
         // kick start a setRangeLocal call on the collection
         this._fetchCells(cellRanges);
     }
@@ -810,7 +829,11 @@ oj.CollectionDataGridDataSource.prototype._fetchCells = function(cellRanges)
     var ranges, rowStart, rowCount;
 
     ranges = this._getRanges(cellRanges);
-    rowStart = ranges['rowStart'];
+    rowStart = ranges['rowStart']
+	if (this._pageSize > 0) 
+	{
+		rowStart += this._startIndex;
+	}
     rowCount = ranges['rowCount'];
 
     // set the range local for the requested range
@@ -843,6 +866,12 @@ oj.CollectionDataGridDataSource.prototype._fetchCells = function(cellRanges)
         {
             this._processPendingCellCallbacks();
         }        
+		
+		//communicates with paging control to indicate fetch end
+		if (this._pageSize > 0)
+		{
+			oj.DataGridDataSource.superclass.handleEvent.call(this, 'sync', true);    
+		}
     }.bind(this));
 };
 
@@ -856,8 +885,8 @@ oj.CollectionDataGridDataSource.prototype._fetchCells = function(cellRanges)
  */
 oj.CollectionDataGridDataSource.prototype.keys = function(indexes)
 {
-    var rowIndex = indexes['row'], columnIndex = indexes['column'], rowKey;
-    rowKey =  this.collection['models'][rowIndex] === undefined ? undefined:this.collection['models'][rowIndex]['cid'];	
+    var rowIndex = indexes['row'] + this._startIndex, columnIndex = indexes['column'], rowKey;
+    rowKey =  this.collection['models'][rowIndex] === undefined ? undefined:oj.CollectionDataGridUtils._getModelKey(this.collection['models'][rowIndex]);	
     return {"row": rowKey, "column": this.columns[columnIndex]};
 };
 
@@ -872,7 +901,7 @@ oj.CollectionDataGridDataSource.prototype.keys = function(indexes)
 oj.CollectionDataGridDataSource.prototype.indexes = function(keys)
 {
     var rowKey = keys['row'], columnKey = keys['column'];
-    return {"row": this.collection['models'].indexOf(this.collection.getByCid(rowKey)), "column": this.columns === undefined ? this.collection.first().keys().indexOf(columnKey):this.columns.indexOf(columnKey)};
+    return {"row": this.collection['models'].indexOf(this.collection.get(rowKey)), "column": this.columns === undefined ? this.collection.first().keys().indexOf(columnKey):this.columns.indexOf(columnKey)};
 };
 
 /**
@@ -913,7 +942,7 @@ oj.CollectionDataGridDataSource.prototype.getCapability = function(feature)
  */
 oj.CollectionDataGridDataSource.prototype.sort = function(criteria, callbacks, callbackObjects)
 {
-    var comparator, direction = criteria['direction'], header = criteria['key'], axis = criteria['axis'];
+    var comparator, direction = criteria['direction'], key = criteria['key'], axis = criteria['axis'];
 
     // make sure callbackObjects is not null
     if (callbackObjects == null)
@@ -922,89 +951,95 @@ oj.CollectionDataGridDataSource.prototype.sort = function(criteria, callbacks, c
     }
 
     if (axis === "column") {
-        if (direction === 'ascending') {
-            comparator = function(a, b) {
-                var as, bs;
-                //Get the values from the model objects
-                a = a.get(header);
-                b = b.get(header);
-                //Strings of numbers return false, so we can compare strings of numebers with numbers                
-                as = isNaN(a);
-                bs = isNaN(b);
-                //If they dates, turn them into sortable strings         
-                if (a instanceof Date) {
-                    a = a.toISOString();
-                    as = true;
-                }
-                if (b instanceof Date) {
-                    b = b.toISOString();
-                    bs = true;
-                }
-                //both are string
-                if (as && bs)
-                {
-                    return a < b ? -1 : a === b ? 0 : 1;
-                }
-                //only a is a string
-                if (as)
-                {
-                    return 1;
-                }
-                //only b is a string
-                if (bs)
-                {
-                    return -1;
-                }
-                //both are numbers
-                return a - b;
-            };
-        }
-        if (direction === 'descending') {
-            comparator = function(a, b) {
-                var as, bs;
-                a = a.get(header);
-                b = b.get(header);
-                as = isNaN(a);
-                bs = isNaN(b); 
-                if (a instanceof Date) {
-                    a = a.toISOString();
-                }
-                if (b instanceof Date) {
-                    b = b.toISOString();
-                }
-                if (as && bs)
-                {
-                    return a > b ? -1 : a === b ? 0 : 1;
-                }
-                if (as)
-                {
-                    return -1;
-                }
-                if (bs)
-                {
-                    return 1;
-                }
-                return b - a;
-            };
-        }
-
-        if (comparator !== undefined) 
+        //check to see if collection is virtual, if so set the comparator and direction
+        if (this.collection.fetchSize > -1 && this.collection.hasMore)
         {
-            //No setter on the comparator yet for oj.Collection
-            this.collection['comparator'] = comparator;
-            this.collection.sort();
-
-            if (callbacks != null && callbacks['success'] != null)
+            this.collection['comparator'] = key;
+            if (direction === 'ascending') 
             {
-                callbacks['success'].call(callbackObjects['success']);
+                this.collection['sortDirection'] = 1;
             }
-        } 
+            else
+            {
+                this.collection['sortDirection'] = -1;                
+            }
+        }
         else
         {
-            if (callbacks != null && callbacks['error'] != null)
-            {
-                callbacks['error'].call(callbackObjects['error'], "Direction value was invalid");
+            //if the collection is local supply a comparator to allow date sorting
+            if (direction === 'ascending') {
+                comparator = function(a, b) {
+                    var as, bs;
+                    //Get the values from the model objects
+                    a = a.get(key);
+                    b = b.get(key);
+                    //Strings of numbers return false, so we can compare strings of numebers with numbers                
+                    as = isNaN(a);
+                    bs = isNaN(b);
+                    //If they dates, turn them into sortable strings         
+                    if (a instanceof Date) {
+                        a = a.toISOString();
+                        as = true;
+                    }
+                    if (b instanceof Date) {
+                        b = b.toISOString();
+                        bs = true;
+                    }
+                    //both are string
+                    if (as && bs)
+                    {
+                        return a < b ? -1 : a === b ? 0 : 1;
+                    }
+                    //only a is a string
+                    if (as)
+                    {
+                        return 1;
+                    }
+                    //only b is a string
+                    if (bs)
+                    {
+                        return -1;
+                    }
+                    //both are numbers
+                    return a - b;
+                };
             }
+            if (direction === 'descending') {
+                comparator = function(a, b) {
+                    var as, bs;
+                    a = a.get(key);
+                    b = b.get(key);
+                    as = isNaN(a);
+                    bs = isNaN(b); 
+                    if (a instanceof Date) {
+                        a = a.toISOString();
+                    }
+                    if (b instanceof Date) {
+                        b = b.toISOString();
+                    }
+                    if (as && bs)
+                    {
+                        return a > b ? -1 : a === b ? 0 : 1;
+                    }
+                    if (as)
+                    {
+                        return -1;
+                    }
+                    if (bs)
+                    {
+                        return 1;
+                    }
+                    return b - a;
+                };
+            }                
+            this.collection['comparator'] = comparator;                
+        }
+
+        this.collection.sort();
+
+        if (callbacks != null && callbacks['success'] != null)
+        {
+            callbacks['success'].call(callbackObjects['success']);
         }
     }
     else
@@ -1023,7 +1058,7 @@ oj.CollectionDataGridDataSource.prototype.sort = function(criteria, callbacks, c
 oj.CollectionDataGridDataSource.prototype.move = function(moveKey, atKey)
 {
     var model, newIndex;    
-    model = this.collection.getByCid(moveKey);
+    model = this.collection.get(moveKey);
     if (atKey === null)
     {
         this.collection.remove(model);
@@ -1033,13 +1068,13 @@ oj.CollectionDataGridDataSource.prototype.move = function(moveKey, atKey)
     {
         if (moveKey === atKey)
         {
-            newIndex = this.collection.indexOf(this.collection.getByCid(atKey));
+            newIndex = this.collection.indexOf(this.collection.get(atKey));
             this.collection.remove(model);
         }
         else
         {
             this.collection.remove(model);            
-            newIndex = this.collection.indexOf(this.collection.getByCid(atKey));
+            newIndex = this.collection.indexOf(this.collection.get(atKey));
         }
         this.collection.add(model, {at:newIndex});         
     }
@@ -1072,13 +1107,9 @@ oj.CollectionDataGridDataSource.prototype._getModelEvent = function(operation, r
 oj.CollectionDataGridDataSource.prototype._handleModelAdded = function(model)
 {
     var event, rowKey;
-    //make sure there are no open fetch calls
-    if (this.syncing === false && this.initialSync === false)
-    {
-        rowKey = model.GetCid();
-        event = this._getModelEvent('insert', rowKey, null);
-        this.handleEvent("change", event);
-    }
+    rowKey = oj.CollectionDataGridUtils._getModelKey(model);
+    event = this._getModelEvent('insert', rowKey, null);
+    this.handleEvent("change", event);
 };
 
 /**
@@ -1089,12 +1120,9 @@ oj.CollectionDataGridDataSource.prototype._handleModelAdded = function(model)
 oj.CollectionDataGridDataSource.prototype._handleModelDeleted = function(model)
 {
     var event, rowKey;
-    if (this.syncing === false && this.initialSync === false)
-    {    
-        rowKey = model.GetCid();
-        event = this._getModelEvent('delete', rowKey, null);
-        this.handleEvent("change", event);
-    }
+    rowKey = oj.CollectionDataGridUtils._getModelKey(model);
+    event = this._getModelEvent('delete', rowKey, null);
+    this.handleEvent("change", event);
 };
 
 /**
@@ -1105,26 +1133,19 @@ oj.CollectionDataGridDataSource.prototype._handleModelDeleted = function(model)
 oj.CollectionDataGridDataSource.prototype._handleModelChanged = function(model)
 {
     var event, rowKey;
-    if (this.syncing === false && this.initialSync === false)
-    {
-        rowKey = model.GetCid();
-        event = this._getModelEvent('update', rowKey, null);
-        this.handleEvent("change", event);
-    }
+    rowKey = oj.CollectionDataGridUtils._getModelKey(model);
+    event = this._getModelEvent('update', rowKey, null);
+    this.handleEvent("change", event);
 };
 
 /**
- * Handle a sync or fetch end in the collection
+ * Handle a colelction reset, by passing refresh to the data grid
  * @protected
  */
-oj.CollectionDataGridDataSource.prototype._handleSync = function()
+oj.CollectionDataGridDataSource.prototype._handleCollectionRefresh = function()
 {
-    if (this._pageSize > 0)
-    {
-        this.pendingHeaderCallback = {};
-        this.pendingCellCallback = null;
-        this.handleEvent("change", {'operation': 'sync', 'pageSize': this._pageSize, 'rowIndex':this._startIndex});
-    }
+    var event = this._getModelEvent('refresh', null, null);
+    this.handleEvent("change", event);
 };
 
 /**
@@ -1133,7 +1154,7 @@ oj.CollectionDataGridDataSource.prototype._handleSync = function()
  * @param {number} n page size
  */
 oj.CollectionDataGridDataSource.prototype.setPageSize = function(n) {
-    this._pageSize = n;
+    this._pageSize = n; 
 };
 
 /**
@@ -1174,7 +1195,7 @@ oj.CollectionDataGridDataSource.prototype.totalSize = function()
 { 
     if (this.collection != null && this._totalSize < 0)
     {
-        return this.collection['totalResults'];
+		return this.collection['length'];
     }
     return this._totalSize;
 };
@@ -1197,7 +1218,6 @@ oj.CollectionDataGridDataSource.prototype.hasMore = function()
 };
 
 /**
- * @export
  * Perform a fetch call from the options specified
  * @expose
  * @memberof! oj.CollectionDataGridDataSource
@@ -1205,11 +1225,10 @@ oj.CollectionDataGridDataSource.prototype.hasMore = function()
  */
 oj.CollectionDataGridDataSource.prototype.fetch = function(options) 
 {    
-    this.syncing = true;
     this._startIndex = options != null ? (options['startIndex'] != null ? options['startIndex'] : 0) : 0;    
-    this.collection.fetch({success:this._handleCollectionFetched.bind(this, false), startIndex:this._startIndex});
+    this.handleEvent("change", {'operation': 'sync', 'pageSize': this._pageSize});    
 };
-    
+
 //////////////////////////////////// Property Getters  /////////////////////////////////////    
 /**
  * Gets the collection property

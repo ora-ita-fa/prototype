@@ -52,8 +52,17 @@ $includeTagsTypographyClasses: $includeTagClasses !default;
         font-weight: bold;
     }
 
+    $currSelectors: if($allowTagSelectors,
+      // tag selectors:  
+      "a.oj-disabled", 
 
-
+      // class selectors: 
+      ".oj-link.oj-disabled");
+    #{$currSelectors} {
+          color: $linkTextColorDisabled;
+          opacity: $opacityDisabled;
+          cursor: default;
+        }
 
 
     /* header */

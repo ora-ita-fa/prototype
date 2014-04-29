@@ -152,20 +152,26 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
     viewportChange : null
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _createComponent : function(context, callback, callbackObj) {
+  /**
+   * @override
+   */
+  _CreateComponent : function(context, callback, callbackObj) {
     return DvtChart.newInstance(context, callback, callbackObj);
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getComponentStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetComponentStyleClasses : function() {
     var styleClasses = this._super();
     styleClasses.push('oj-chart');
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _getChildStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetChildStyleClasses : function() {
     var styleClasses = this._super();
     styleClasses['oj-chart-footnote'] = {'path' : 'footnote/style', 'property' : 'CSS_TEXT_PROPERTIES'};
     styleClasses['oj-chart-subtitle'] = {'path' : 'subtitle/style', 'property' : 'CSS_TEXT_PROPERTIES'};
@@ -189,27 +195,31 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
     return styleClasses;
   },
     
-  // Overrides $.oj.dvtBaseComponent
-  _getTranslationMap: function() {
-    var superMap = this._super();
+  /**
+   * @override
+   */
+  _GetTranslationMap: function() {
+    var superMap = this._super();   
     var selfMap = {
-      'oj-ojDvtCommon.msgNoData': 'DvtChartBundle.EMPTY_TEXT',
-      
-      'oj-ojChart.labelDefaultGroupName': 'DvtChartBundle.DEFAULT_GROUP_NAME',
-      'oj-ojChart.labelSeries': 'DvtChartBundle.LABEL_SERIES',
-      'oj-ojChart.labelGroup': 'DvtChartBundle.LABEL_GROUP',
-      'oj-ojChart.labelValue': 'DvtChartBundle.LABEL_VALUE',
-      'oj-ojChart.labelTargetValue': 'DvtChartBundle.LABEL_TARGET_VALUE',
-      'oj-ojChart.labelX': 'DvtChartBundle.LABEL_X',
-      'oj-ojChart.labelY': 'DvtChartBundle.LABEL_Y',
-      'oj-ojChart.labelZ': 'DvtChartBundle.LABEL_Z',
-      'oj-ojChart.labelLow': 'DvtChartBundle.LABEL_LOW',
-      'oj-ojChart.labelHigh': 'DvtChartBundle.LABEL_HIGH',
-      'oj-ojChart.labelOther': 'DvtChartBundle.LABEL_OTHER',
-      'oj-ojChart.tooltipPan': 'DvtChartBundle.PAN',
-      'oj-ojChart.tooltipSelect': 'DvtChartBundle.MARQUEE_SELECT',
-      'oj-ojChart.tooltipZoom': 'DvtChartBundle.MARQUEE_ZOOM'
-    };
+      'DvtChartBundle.DEFAULT_GROUP_NAME': this._GetTranslatedResource('labelDefaultGroupName', ['groupName']),
+      'DvtChartBundle.EMPTY_TEXT': this._GetTranslatedResource('msgNoData'),
+      'DvtChartBundle.LABEL_SERIES': this._GetTranslatedResource('labelSeries', ['seriesName']),
+      'DvtChartBundle.LABEL_GROUP': this._GetTranslatedResource('labelGroup', ['groupName']),
+      'DvtChartBundle.LABEL_VALUE': this._GetTranslatedResource('labelValue', ['value']),
+      'DvtChartBundle.LABEL_TARGET_VALUE': this._GetTranslatedResource('labelTargetValue', ['targetValue']),
+      'DvtChartBundle.LABEL_X': this._GetTranslatedResource('labelX', ['x']),
+      'DvtChartBundle.LABEL_Y': this._GetTranslatedResource('labelY', ['y']),
+      'DvtChartBundle.LABEL_Z': this._GetTranslatedResource('labelZ', ['z']),
+      'DvtChartBundle.LABEL_LOW': this._GetTranslatedResource('labelLow', ['low']),
+      'DvtChartBundle.LABEL_HIGH': this._GetTranslatedResource('labelHigh', ['high']),
+      'DvtChartBundle.LABEL_OTHER': this._GetTranslatedResource('labelOther'),
+      'DvtChartBundle.PAN': this._GetTranslatedResource('tooltipPan'),
+      'DvtChartBundle.MARQUEE_SELECT': this._GetTranslatedResource('tooltipSelect'),
+      'DvtChartBundle.MARQUEE_ZOOM': this._GetTranslatedResource('tooltipZoom')
+    }
+    
+    // TODO Workaround for inheritance of resource from parent not working
+    selfMap['DvtChartBundle.EMPTY_TEXT'] = oj.Translations.getResource('oj-dvtBaseComponent.msgNoData');
     
     // Combine with the map from the superclass
     var ret = {};
@@ -219,8 +229,10 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
     return ret;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _handleEvent : function(event) {
+  /**
+   * @override
+   */
+  _HandleEvent : function(event) {
     var type = event && event.getType ? event.getType() : null;
     if(type === DvtSelectionEvent.TYPE) {
       var selection = event.getSelection();
@@ -252,8 +264,10 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
     }
   },
    
-  // Overrides $.oj.dvtBaseComponent
-  _loadResources : function() {
+  /**
+   * @override
+   */
+  _LoadResources : function() {
     // Ensure the resources object exists
     if(this.options['_resources'] == null)
       this.options['_resources'] = {};
@@ -268,7 +282,6 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
     resources['panCursorUp'] = oj.Config.getResourceUrl('resources/internal-deps/dvt/chart/hand-open.cur');
   }
 });
-
 /**
  * @class 
  * @name oj.ojSparkChart
@@ -319,20 +332,26 @@ oj.__registerWidget('oj.ojSparkChart', $['oj']['dvtBaseComponent'],
   version : "1.0.0", 
   widgetEventPrefix : "oj", 
   
-  // Overrides $.oj.dvtBaseComponent
-  _createComponent : function(context, callback, callbackObj) {
+  /**
+   * @override
+   */
+  _CreateComponent : function(context, callback, callbackObj) {
     return DvtSparkChart.newInstance(context, callback, callbackObj);
   },  
   
-  // Overrides $.oj.dvtBaseComponent
-  _getComponentStyleClasses : function() {
+  /**
+   * @override
+   */
+  _GetComponentStyleClasses : function() {
     var styleClasses = this._super();
     styleClasses.push('oj-sparkchart');
     return styleClasses;
   },
   
-  // Overrides $.oj.dvtBaseComponent
-  _render : function() {
+  /**
+   * @override
+   */
+  _Render : function() {
     // Display the title of the surrounding div as the tooltip
     this.options['shortDesc'] = this.element.attr('title');
   

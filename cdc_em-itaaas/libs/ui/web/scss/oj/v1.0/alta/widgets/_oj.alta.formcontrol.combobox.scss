@@ -14,7 +14,6 @@ $includeComboboxClasses:   $includeFormControlClasses !default;
 
 @import "../../common/helpers/oj.common.helpers"; 
 @import "oj.alta.icons";
-@import "oj.alta.tooltip";
 @import "oj.alta.messaging";
 @import "oj.alta.formcontrol.label";
 @import "oj.alta.formcontrol.common";
@@ -122,137 +121,9 @@ $includeComboboxClasses:   $includeFormControlClasses !default;
     .oj-combobox-search input {
       width: 100%;
       border: 0;
-      box-shadow: none;
+      @include oj-box-shadow(none);
       outline: 0; 
       background-color: $formControlBgColor;
-    }
-
-    .oj-combobox-drop {
-      position: absolute;
-      // todo: please talk to lory and gary about this zindex
-      // http://aseng-wiki.us.oracle.com/asengwiki/display/ASDevJDeveloper/JET+Popup+Framework
-      z-index: 9999;
-      top: 100%;
-      background: $background1Color;
-      border: $borderWidth solid $windowBorderColor;
-      border-top: 0;
-      box-shadow: $smallBoxShadow; 
-    }
-
-    .oj-combobox-drop-auto-width {
-      border-top: $borderWidth solid $windowBorderColor;
-      width: auto; 
-    }
-
-    .oj-combobox-drop.oj-combobox-drop-above {
-      border-top: $borderWidth solid $windowBorderColor;
-      border-bottom: 0;
-      box-shadow: $smallBoxShadow; 
-    }
-
-    /* results */
-    .oj-combobox-results {
-      max-height: 200px;
-      padding: 0;
-      margin: 4px 0 4px 0;
-      position: relative;
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0); 
-    }
-
-    .oj-combobox-results ul.oj-combobox-result-sub {
-      margin: 0;
-      padding-left: 0; 
-    }
-
-    // todo: there seems to be a lot of hard coded px values. Please try testing your widget in the giant theme
-    // Currently you can change the theme on the style lab page (this may move to another location)
-    // look for "giant" here:
-    // http://slc01hih.us.oracle.com:8080/hudson/job/OJET_Build/lastSuccessfulBuild/artifact/apps/components/public_html/globalStyleLab.html
-    .oj-combobox-results ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-      padding-left: 20px; 
-    }
-
-    .oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-      padding-left: 40px; 
-    }
-
-    .oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-      padding-left: 60px; 
-    }
-
-    .oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-      padding-left: 80px; 
-    }
-
-    .oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-      padding-left: 100px; 
-    }
-
-    .oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-      padding-left: 110px; 
-    }
-
-    .oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-      padding-left: 120px; 
-    }
-
-    .oj-combobox-results li {
-      list-style: none;
-      display: list-item;
-      background-image: none; 
-    }
-
-    // why are you using ">" here, is it needed?
-    .oj-combobox-results li.oj-combobox-result-with-children > .oj-combobox-result-label {
-      font-weight: bold; 
-    }
-
-    // why are you using contextual selectors? Can you remove the ".oj-combobox-results " 
-    // from the front here and just use .oj-combobox-result-label, 
-    // same comment for all css in this file, if you don't need a contextual selector please remove it.
-    .oj-combobox-results .oj-combobox-result-label {
-      padding-left: 5px;
-      line-height: 24px;
-      margin: 0;
-      cursor: pointer;
-      min-height: 1em;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none; 
-    }
-
-    .oj-combobox-results .oj-combobox-highlighted {
-      background: $interaction2Color;
-    }
-
-    .oj-combobox-results .oj-combobox-highlighted:active {
-      background: $interaction3Color;
-    }
-
-    .oj-combobox-results li em {
-      background: #feffde;
-      font-style: normal; 
-    }
-
-    .oj-combobox-results .oj-combobox-highlighted em {
-      background: transparent; 
-    }
-
-    /*
-    disabled look for disabled choices in the results dropdown
-    */
-    .oj-combobox-results .oj-disabled {
-      color: $textColorDisabled;
-      display: list-item;
-      cursor: default; 
-    }
-
-    .oj-combobox-results .oj-combobox-selected {
-      display: none; 
     }
 
     /* disabled styles */
@@ -426,24 +297,6 @@ $includeComboboxClasses:   $includeFormControlClasses !default;
       outline: 0;
       left: 0;
       top: 0; 
-    }
-
-    .oj-combobox-drop-mask {
-      border: 0;
-      margin: 0;
-      padding: 0;
-      position: fixed;
-      left: 0;
-      top: 0;
-      min-height: 100%;
-      min-width: 100%;
-      height: auto;
-      width: auto;
-      opacity: 0;
-      z-index: 9998;
-      /* styles required for IE to work */
-      background-color: $background1Color;
-      filter: alpha(opacity=0); 
     }
 
     .oj-combobox-display-none {

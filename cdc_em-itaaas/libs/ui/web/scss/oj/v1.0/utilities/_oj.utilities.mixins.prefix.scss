@@ -13,6 +13,7 @@
 }
 
 
+// todo: this needs review
 @mixin oj-transition-property ($transitionValue...) {
   -webkit-transition: $transitionValue;
   -moz-transition: $transitionValue;
@@ -55,3 +56,34 @@
    @content
   }
 }
+
+// todo: this needs review
+@mixin oj-user-select-property ($userSelectValue)
+{
+    -ms-user-select: $userSelectValue;
+    -webkit-user-select: $userSelectValue;
+    -moz-user-select: $userSelectValue;    
+    user-select:$userSelectValue;
+}
+
+// todo: this needs review
+@mixin oj-transition-timing-property ($transitionTimingValue)
+{
+	-webkit-transition-timing-function: $transitionTimingValue;
+	transition-timing-function: $transitionTimingValue;
+}
+
+// todo: this needs review
+@mixin oj-backface-visibility-property ($backfaceVisibilityValue)
+{
+	-webkit-backface-visibility: $backfaceVisibilityValue;
+	backface-visibility: $backfaceVisibilityValue;
+}
+
+// todo: this needs review
+@mixin oj-perspective-property ($perspectiveValue)
+{
+	-webkit-perspective: $perspectiveValue;
+	perspective: $perspectiveValue;
+}
+

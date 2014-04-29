@@ -27,7 +27,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
 
 @mixin oj-collapsible-content-common {
   color: $textColor;
-  background-color: $background1Color;
+  background-color: $accordionContentBgColor;
 }
 
 @if $includeAccordionClasses != false {
@@ -43,10 +43,13 @@ $includeAccordionClasses:  $includeAllClasses !default;
      */
     .oj-collapsible-header {
       @include oj-collapsible-header-common;
-      font-size: $fontSize;
-      padding: 4px 0 4px 0;
+      padding: 4px 0;
       background-image: none;
+      margin: 0;
+/*header level size
+      font-size: $fontSize;
       border: 0;
+ */
     }
 
     /*
@@ -62,10 +65,11 @@ $includeAccordionClasses:  $includeAllClasses !default;
     .oj-collapsible-content {
       @include oj-collapsible-content-common;
       background-color: transparent;
-      padding-top: 1px;
-      padding-bottom: 5px;
+      padding: 4px 0;
       border: 0;
+      margin: 0;
 
+/*no indentation
       @include oj-ltr() {
         padding-left: 24px;
         padding-right: 10px;
@@ -74,6 +78,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
         padding-right: 24px;
         padding-left: 10px;
       }
+*/
 
     }
 
@@ -86,7 +91,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
     {
       @include oj-collapsible-header-common;
       font-size: $mediumFontSize;
-      border: $borderWidth solid $headerBorderColor;
+      border: 1px solid $headerBorderColor;
       background-color: $headerBgColor;
       @include oj-background-image($headerBgImage);
 
@@ -98,7 +103,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
     .oj-collapsible.oj-disabled.oj-accordion-collapsible > .oj-collapsible-header
     {
       @include oj-collapsible-disabled-header-common;
-      background-color: #FAFAFA;
+      background-color: $headerBgColorDisabled;
     }
 
 
@@ -109,65 +114,16 @@ $includeAccordionClasses:  $includeAllClasses !default;
     {
       @include oj-collapsible-content-common;
 
-      padding: 10px;
-      border: $borderWidth solid $border1Color;
+      padding: $panelPadding;
+      border: 1px solid $accordionContentBorderColor;
       border-top: 0;
     }
 
-
-    /* collapsible with "box" style */
-    /* -----------------------------*/
-    /* 
-     * applied to the box style header but not to any nested collapsible headers
-     */
-    .oj-collapsible.oj-box > .oj-collapsible-header {
-      @include oj-collapsible-header-common;
-
-      font-size: $mediumFontSize;
-      padding: 5px;
-      border: $borderWidth solid $headerBorderColor;
-      border-bottom: 0;
-
-      background-image: none;
-    }
-
-    /*
-     * applied to the disabled box style header 
-     */
-    .oj-collapsible.oj-disabled.oj-box > .oj-collapsible-header {
-      @include oj-collapsible-disabled-header-common;
-    }
-
-
-    /* 
-     * applied to the box style wrapper but not to any nested collapsible wrapper
-     * make sure border appear even when it's collapsed
-     */
-    .oj-collapsible.oj-box > .oj-collapsible-wrapper {
-      border: $borderWidth solid $border1Color;
-      border-top: 0;
-    }
-
-    /*
-     * applied to the box style content but not to any nested collapsible content
-     */
-    .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible-content {
-      @include oj-collapsible-content-common;
-
-      @include oj-ltr() {
-        padding-left: 5px;
-      }
-      @include oj-rtl() {
-        padding-right: 5px;
-      }
-    }
 
     /*
      * applied to the nested collapsible content
      * reduce padding in the case of nested collapsible
-     */
-    .oj-collapsible > .oj-collapsible-wrapper > .oj-collapsible,
-    .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible.oj-box,
+
     .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible.oj-accordion-collapsible,
     .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-accordion
     {
@@ -179,6 +135,11 @@ $includeAccordionClasses:  $includeAllClasses !default;
         padding-right: 24px;
       }
     }
+     */
+
+    .oj-collapsible > .oj-collapsible-wrapper > .oj-collapsible {
+      padding: 0;
+    }
 
 
     /* collapsible content transition effects */
@@ -188,14 +149,17 @@ $includeAccordionClasses:  $includeAllClasses !default;
      * transtion properties and duration
      */
     .oj-collapsible-transition {
-      @include oj-transition-property(max-height 0.5s);
+      @include oj-transition-property(max-height $collapsibleAnimationDuration);
     }
 
     /*
      * hide any collapsed content
      */
     .oj-collapsible-wrapper {
-      overflow: hidden;
+/*      overflow: hidden; */
+      border: 0;
+      padding: 0;
+      margin:0;
     }
 
 
@@ -217,25 +181,36 @@ $includeAccordionClasses:  $includeAllClasses !default;
      * For disabled headers
      */
     .oj-collapsible.oj-disabled .oj-collapsible-header-icon {
-/*      display: none; */
       color: $iconColorDisabled;
       opacity: $opacityDisabled;
     }
 
+    .oj-collapsible-header a,
     .oj-collapsible-header .oj-collapsible-header-icon {
+      // todo: for a basic collapsible (not in an accordion)
+      // the closed font icon has some whitespace on the left side, 
+      // use a negative margin to move over the icon?
+      @include oj-ltr() {
+        margin-left: -5px;
+      }
       @include oj-rtl() {
         margin-left: 4px;
+        margin-right: -5px;
+      }
+    }
+
+    .oj-accordion-collapsible > .oj-collapsible-header > .oj-collapsible-header-icon {
+      @include oj-ltr() {
+        margin-left: 0;
+      }
+      @include oj-rtl() {
+        margin-right: 0;
       }
     }
 
     .oj-collapsible-header-icon {
       font-size: $mediumFontSize;
       padding: 5px;
-
-      // todo: for a basic collapsible (not in an accordion)
-      // the closed font icon has some whitespace on the left side, 
-      // use a negative margin to move over the icon?
-      // margin-left: -2px;
     }
 
     .oj-collapsible-close-icon:before {
@@ -278,7 +253,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
      * display all borders and put radius on top border
      */
     .oj-accordion > .oj-accordion-collapsible:first-child > .oj-collapsible-header {
-      border: $borderWidth solid $headerBorderColor;
+      border: 1px solid $headerBorderColor;
       @include oj-border-top-left-radius($smallBorderRadius); 
       @include oj-border-top-right-radius($smallBorderRadius);
     }
@@ -289,7 +264,7 @@ $includeAccordionClasses:  $includeAllClasses !default;
      */
     .oj-accordion > .oj-accordion-collapsible > .oj-collapsible-header {
       margin-top: 0; 
-      border: $borderWidth solid $headerBorderColor;
+      border: 1px solid $headerBorderColor;
       border-top: 0;
     }
 

@@ -10,8 +10,7 @@ $includeRadioCheckboxClasses:   $includeFormControlClasses !default;
   $includeFormControlCommonClasses: true !global;
 }
 
-@import "../../common/helpers/oj.common.helpers"; 
-@import "oj.alta.tooltip";
+@import "../../common/helpers/oj.common.helpers";
 @import "oj.alta.messaging";
 @import "oj.alta.formcontrol.label";
 @import "oj.alta.formcontrol.common";

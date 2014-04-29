@@ -5,8 +5,7 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
-    '/analytics/js/controller/timeseries/grid-barchart.js'],
+define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui'],
         function(oj, ko, $) {
                 ko.applyBindings(null, $('.grid-barchart-test')[0]);
         });

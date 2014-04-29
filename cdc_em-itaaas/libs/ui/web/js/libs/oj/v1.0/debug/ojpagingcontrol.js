@@ -145,14 +145,14 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
        */
       _MARKER_STYLE_CLASSES:
         {
-          _WIDGET:                                        'oj-widget',
+          _WIDGET:                                        'oj-component',
           _ACTIVE:                                        'oj-active',
           _CLICKABLE_ICON:                                'oj-clickable-icon',
           _DISABLED:                                      'oj-disabled',
           _ENABLED:                                       'oj-enabled',
           _FOCUS:                                         'oj-focus',
           _HOVER:                                         'oj-hover',
-          _SELECTED:                                      'oj-checked'
+          _SELECTED:                                      'oj-selected'
         },
       /**
        * @private
@@ -189,7 +189,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           _PAGING_CONTROL_NAV_PREVIOUS_ICON_CLASS:        'oj-pagingcontrol-nav-previous-icon',
           _PAGING_CONTROL_NAV_NEXT_ICON_CLASS:            'oj-pagingcontrol-nav-next-icon',
           _PAGING_CONTROL_NAV_LAST_ICON_CLASS:            'oj-pagingcontrol-nav-last-icon',
-          _WIDGET_ICON_CLASS:                             'oj-widget-icon',
+          _WIDGET_ICON_CLASS:                             'oj-component-icon',
           _HIDDEN_CONTENT_ACC_CLASS:                      'oj-helper-hidden-accessible'
         },
       /**
@@ -247,8 +247,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
         {
           try
           {
-            data.fetch({startIndex: 0});
             this._startIndex = 0;
+            data.fetch({startIndex: 0});
           }
           catch (err)
           {
@@ -459,8 +459,6 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
         // add main css class to element
         this.element.addClass(this._CSS_CLASSES._PAGING_CONTROL_CLASS);
         this.element.addClass(this._MARKER_STYLE_CLASSES._WIDGET);
-        // set the tabindex
-        this.element.attr('tabindex', '0');
         this._startIndex = 0;
 
         this._createPagingControlAccLabel();
@@ -663,16 +661,16 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
       _getItemRangeText: function()
       {
         var data = this._getData();
-        var itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, this._startIndex, 0, 0);
+        var itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, {'pageFrom': this._startIndex, 'pageTo': 0, 'pageTotal': 0});
         if (data != null)
         {
           if (data.totalSize() != -1)
           {
-            itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, this._startIndex + 1, this._startIndex + data.size(), data.totalSize());
+            itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE, {'pageFrom': this._startIndex + 1, 'pageTo': this._startIndex + data.size(), 'pageTotal': data.totalSize()});
           }
           else
           {
-            itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE_UNKNOWN, this._startIndex + 1, this._startIndex + data.size());
+            itemRangeText = this.getTranslatedString(this._BUNDLE_KEY._MSG_ITEM_RANGE_UNKNOWN, {'pageFrom': this._startIndex + 1, 'pageTo': this._startIndex + data.size()});
           }
         }
         return itemRangeText;
@@ -817,11 +815,13 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           {
             pagingControlNavFirst.addClass(this._MARKER_STYLE_CLASSES._DISABLED);
             pagingControlNavFirst.removeClass(this._MARKER_STYLE_CLASSES._ENABLED);
+            pagingControlNavFirst.attr('tabindex', '-1');
           }
           else
           {
             pagingControlNavFirst.addClass(this._MARKER_STYLE_CLASSES._ENABLED);
             pagingControlNavFirst.removeClass(this._MARKER_STYLE_CLASSES._DISABLED);
+            pagingControlNavFirst.attr('tabindex', '0');
           }
         }
         var pagingControlNavPrevious = pagingControlNavArrowSection.children('.' + this._CSS_CLASSES._PAGING_CONTROL_NAV_PREVIOUS_CLASS);
@@ -833,11 +833,13 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           {
             pagingControlNavPrevious.addClass(this._MARKER_STYLE_CLASSES._DISABLED);
             pagingControlNavPrevious.removeClass(this._MARKER_STYLE_CLASSES._ENABLED);
+            pagingControlNavPrevious.attr('tabindex', '-1');
           }
           else
           {
             pagingControlNavPrevious.addClass(this._MARKER_STYLE_CLASSES._ENABLED);
             pagingControlNavPrevious.removeClass(this._MARKER_STYLE_CLASSES._DISABLED);
+            pagingControlNavPrevious.attr('tabindex', '0');
           }
         }
         var pagingControlNavLast = pagingControlNavArrowSection.children('.' + this._CSS_CLASSES._PAGING_CONTROL_NAV_LAST_CLASS);
@@ -849,11 +851,13 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           {
             pagingControlNavLast.addClass(this._MARKER_STYLE_CLASSES._DISABLED);
             pagingControlNavLast.removeClass(this._MARKER_STYLE_CLASSES._ENABLED);
+            pagingControlNavLast.attr('tabindex', '-1');
           }
           else
           {
             pagingControlNavLast.addClass(this._MARKER_STYLE_CLASSES._ENABLED);
             pagingControlNavLast.removeClass(this._MARKER_STYLE_CLASSES._DISABLED);
+            pagingControlNavLast.attr('tabindex', '0');
           }
         }
         var pagingControlNavNext = pagingControlNavArrowSection.children('.' + this._CSS_CLASSES._PAGING_CONTROL_NAV_NEXT_CLASS);
@@ -865,11 +869,13 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           {
             pagingControlNavNext.addClass(this._MARKER_STYLE_CLASSES._DISABLED);
             pagingControlNavNext.removeClass(this._MARKER_STYLE_CLASSES._ENABLED);
+            pagingControlNavNext.attr('tabindex', '-1');
           }
           else
           {
             pagingControlNavNext.addClass(this._MARKER_STYLE_CLASSES._ENABLED);
             pagingControlNavNext.removeClass(this._MARKER_STYLE_CLASSES._DISABLED);
+            pagingControlNavNext.attr('tabindex', '0');
           }
         }
       },
@@ -1112,7 +1118,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           {
             var pagingControlNavMaxLabel = $(document.createElement('span'));
             pagingControlNavMaxLabel.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_INPUT_MAX_CLASS);
-            var navInputPageMaxLabel = this.getTranslatedString(this._BUNDLE_KEY._LABEL_NAV_INPUT_PAGE_MAX, this._getTotalPages());
+            var navInputPageMaxLabel = this.getTranslatedString(this._BUNDLE_KEY._LABEL_NAV_INPUT_PAGE_MAX, {'pageMax': this._getTotalPages()});
             pagingControlNavMaxLabel.append(navInputPageMaxLabel);
             pagingControlNavInputSection.append(pagingControlNavMaxLabel);
           }
@@ -1123,7 +1129,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
             var pagingControlNavSummaryLabel = $(document.createElement('span'));
             pagingControlNavSummaryLabel.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_INPUT_SUMMARY_CLASS);
             var itemRangeText = this._getItemRangeText();
-            var navInputPageSummaryLabel = this.getTranslatedString(this._BUNDLE_KEY._LABEL_NAV_INPUT_PAGE_SUMMARY, itemRangeText);
+            var navInputPageSummaryLabel = this.getTranslatedString(this._BUNDLE_KEY._LABEL_NAV_INPUT_PAGE_SUMMARY, {'pageSummary': itemRangeText});
             pagingControlNavSummaryLabel.append(navInputPageSummaryLabel);
             pagingControlNavInputSection.append(pagingControlNavSummaryLabel);
           }
@@ -1368,7 +1374,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
           }
           pagingControlNavPage.attr('data-oj-pagenum', pageNum);
           pagingControlNavPage.addClass(this._CSS_CLASSES._PAGING_CONTROL_NAV_PAGE_CLASS);
-          var pageTitle = this.getTranslatedString(this._BUNDLE_KEY._TIP_NAV_PAGE_LINK, pageNum.toString());
+          var pageTitle = this.getTranslatedString(this._BUNDLE_KEY._TIP_NAV_PAGE_LINK, {'pageNum': pageNum.toString()});
           this._hoverable(pagingControlNavPage);
           this._focusable(pagingControlNavPage);
           pagingControlNavPage.attr('title', pageTitle);

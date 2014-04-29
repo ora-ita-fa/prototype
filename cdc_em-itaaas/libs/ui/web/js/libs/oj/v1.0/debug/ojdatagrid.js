@@ -1,4 +1,4 @@
-define(['ojs/ojcore', 'jquery','ojs/internal-deps/datagrid/DvtDataGrid', 'ojs/ojcomponentcore', 'ojs/ojdatacollection-common','ojs/ojpagingcontrol'], function(oj, $, DvtDataGrid)
+define(['ojs/ojcore', 'jquery','ojs/internal-deps/datagrid/DvtDataGrid', 'ojs/ojcomponentcore', 'ojs/ojdatacollection-common','ojs/ojinputnumber', 'ojs/ojmenu', 'ojs/ojdialog'], function(oj, $, DvtDataGrid)
 {
 /**
  * An array based implementation of the DataGridDataSource.
@@ -623,28 +623,31 @@ oj.DataGridResources = function(rtlMode, translationFunction)
     this.styles['status'] = "oj-datagrid-status";
     this.styles['emptytext'] = "oj-datagrid-empty-text";
     this.styles['header'] = "oj-datagrid-header";                
-    this.styles['headercell'] = "oj-datagrid-headercell";
-    this.styles['rowheader'] = "oj-datagrid-rowheader";
-    this.styles['colheader'] = "oj-datagrid-colheader";
-    this.styles['colheadercell'] = "oj-datagrid-colheadercell";
-    this.styles['rowheadercell'] = "oj-datagrid-rowheadercell";
-    this.styles['scroller-mobile'] = "oj-datagrid-scroller-mobile";
+    this.styles['headercell'] = "oj-datagrid-header-cell";
+    this.styles['headercellcontent'] = "oj-datagrid-header-cell-content";
+    this.styles['rowheader'] = "oj-datagrid-row-header";
+    this.styles['colheader'] = "oj-datagrid-column-header";
+    this.styles['colheadercell'] = "oj-datagrid-column-header-cell";
+    this.styles['rowheadercell'] = "oj-datagrid-row-header-cell";
+    this.styles['scroller-mobile'] = "oj-datagrid-scroller-touch";
     this.styles['scroller'] = "oj-datagrid-scroller";
     this.styles['scrollers'] = "oj-datagrid-scrollers";
     this.styles['hover'] = "oj-hover";
     this.styles['active'] = "oj-active";
-    this.styles['selected'] = "oj-checked";
+    this.styles['selected'] = "oj-selected";
     this.styles['disabled'] = "oj-disabled";
-    this.styles['sortindicators'] = "oj-datagrid-sort-indicators";
+    this.styles['enabled'] = "oj-enabled";
+    this.styles['default'] = "oj-default";
+    this.styles['sortcontainer'] = "oj-datagrid-sort-icon-container";
     this.styles['sortascending'] = "oj-datagrid-sort-ascending-icon";
     this.styles['sortdescending'] = "oj-datagrid-sort-descending-icon";
-    this.styles['icon'] = "oj-widget-icon";
-    this.styles['clickableicon'] = "oj-clickable-icon";    
+    this.styles['icon'] = "oj-component-icon";
+    this.styles['clickableicon'] = "oj-clickable-icon-nocontext";    
     this.styles['info'] = "oj-helper-hidden-accessible";
     this.styles['rowexpander'] = "oj-rowexpander";
     this.styles['cut'] = "oj-datagrid-cut";
     this.styles['move'] = "oj-datagrid-move";
-    this.styles['droptarget'] = "oj-datagrid-droptarget";
+    this.styles['droptarget'] = "oj-datagrid-drop-target";
     
     this.commands = {};
     this.commands['sortCol'] = "oj-datagrid-sortCol";
@@ -828,21 +831,6 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                  */
                 gridlines: {"horizontal": "visible", "vertical": "visible"},
                 /**
-                 * Specifies the mechanism used to scroll the data inside the data grid. possible values are: auto(datagrid will decide), loadMoreOnScroll, and scroll.
-                 * When loadMoreOnScroll is specified, additional data are fetched when the user scrolls to the bottom of the data grid.
-                 * When scroll is specified, then virtual scrolling is used meaning only rows/columns visibile in the viewport are fetched.
-                 * 
-                 * @expose 
-                 * @memberof! oj.ojDataGrid
-                 * @instance
-                 * @type {string|null}
-                 * @default <code class="prettyprint">null</code>
-                 * 
-                 * @example <caption>Initialize the data grid to use virtualized scrolling:</caption>
-                 * $( ".selector" ).ojDataGrid({ "data":data, "scrollPolicy": "scroll"});
-                 */
-                scrollPolicy: "auto",
-                /**
                  * The index or key of the row and/or column to display initially in the data grid.
                  * 
                  * @expose 
@@ -875,6 +863,23 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                  * $( ".selector" ).ojDataGrid({ "data":data, "selectionMode": {"cell":"multiple"}});
                  */
                 selectionMode: null,
+                /**
+                 * Specifies whether the user is permitted to reorder the rows within the same datagrid using drag and drop.</br></br>
+                 * Specify an object with the property "reorder" set to <code class="prettyprint">'disable'</code> to enable
+                 * reordering.  Setting the <code class="prettyprint">"reorder"</code> property to <code class="prettyprint">'disable'</code>,
+                 * or setting the <code class="prettyprint">"dnd"</code> property to <code class="prettyprint">'null</code> (or omitting
+                 * it), disables reordering support. 
+                 * 
+                 * @example <caption>Initialize the data grid to enable single row reorder:</caption>
+                 * $( ".selector" ).ojDataGrid({ "data":data, "dnd" : {"reorder":"enable"}});
+                 * 
+                 * @type {Object}
+                 * @default <code class="prettyprint">false</code>
+                 * @expose
+                 * @instance
+                 * @memberof! oj.ojDataGrid
+                 */
+                dnd : {reorder:'disable'},             
                 /** @expose */
                 header: {
                     /** @expose */
@@ -928,18 +933,18 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                         resizable: {width: 'disable', height: 'disable'},
                         /**
                          * Whether or not the field bounded by this header is sortable. The 
-                         * data source associated with the DataGrid must have the sort function defined.
+                		 * data source associated with the DataGrid must have the sort function defined.
                          * 
                          * @expose 
                          * @memberof! oj.ojDataGrid
                          * @instance
                          * @type {string}
-                         * @default <code class="prettyprint">"default"</code>
+                         * @default <code class="prettyprint">"auto"</code>
                          * 
                          * @example <caption>Initialize the data grid with row header sort disabled:</caption>
-                         * $( ".selector" ).ojDataGrid({ "data":data, "header": { "row": {"sortable": null}}});
+                         * $( ".selector" ).ojDataGrid({ "data":data, "header": { "row": {"sortable": "disable"}}});
                          */
-                        sortable: "default",
+                        sortable: "auto",
                         /**
                          * The CSS style to set on the header element.
                          * 
@@ -1028,12 +1033,12 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                          * @memberof! oj.ojDataGrid
                          * @instance
                          * @type {string}
-                         * @default <code class="prettyprint">"default"</code>
+                         * @default <code class="prettyprint">"auto"</code>
                          * 
                          * @example <caption>Initialize the data grid with column header sort disabled:</caption>
-                         * $( ".selector" ).ojDataGrid({ "data":data, "header": { "column": {"sortable": null}}});
+                         * $( ".selector" ).ojDataGrid({ "data":data, "header": { "column": {"sortable": "disable"}}});
                          */
-                        sortable: "default",
+                        sortable: "auto",
                         /**
                          * The CSS style to set on the header element.
                          * 
@@ -1204,11 +1209,12 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
      */
     _create: function()
     {
-        $(this.root).addClass("oj-widget");
+        $(this.root).addClass("oj-component");
         this._super();
         this.root = this.element[0];
         this.rootId = this.root.getAttribute('id');        
-        this.grid = new DvtDataGrid();        
+        this.grid = new DvtDataGrid();    
+	this.redrawSet = {'data':'all', 'header':['className','renderer','style','template']}; //vvc    
     },
     /**
      * Initialize the grid
@@ -1222,7 +1228,6 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         this._super();          
         this.resources = new oj.DataGridResources(this._GetReadingDirection(), this._getTranslation.bind(self));
         this._setDataSource();
-        this._registerDataSourceListeners();
 
         this._addContextMenu();    
         if (this.datasource != null)
@@ -1246,7 +1251,26 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         {
             self._trigger('sort', details['event'], details['ui']);
         });
-
+        this.grid.addListener('keydown', function(details)
+        {
+            self._trigger('keydown', details['event'], details['ui']);
+        });
+        this.grid.addListener('active', function(details)
+        {
+            self._trigger('active', details['event'], details['ui']);
+        });
+        
+        //  Possible handler for contextmenu touch support
+        // _showContextMenu requires a jquery event object
+        //this.grid.addListener('contextmenu', function(details)
+        //{
+             //contextmenu 
+        //   var menu = $("#" + self.options.contextMenu['menu']).data( "oj-ojMenu" );
+        //   var e = jQuery.Event( "touchend" );
+        //   e.originalEvent = details['event'];
+        //  self._showContextMenu(menu,  e);
+        //});
+        
         this.grid.render(this.root);   
     },
     /**
@@ -1284,49 +1308,117 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         this.grid.destroy();
         $(this.root).empty();
     },
-            
+
+
     /**
-     * Register data source event handlers that are JET specific
+     * Sets multiple options 
+     * @param {Object} options the options object
+     * @override
      * @private
      */
-    _registerDataSourceListeners: function()
-    {
-        if (this.datasource != null)
-        {
-            this.datasource.on("expand", this._handleExpandEvent.bind(this), this);
-            this.datasource.on("collapse", this._handleCollapseEvent.bind(this), this);
-        }
-    },            
-            
-    /**
-     * Handle an expand event coming from the datasource, 
-     * tell the rowexpander to handle expand
-     * @param {Object} event an object which should contain the rowKey
-     * @private
-     */            
-    _handleExpandEvent: function(event)
-    {
-        var rowKey, rowExpander;
-        rowKey = event['rowKey'];
-        rowExpander = this._getDatabody().find('[' + this._getMappedAttribute('key') + '="' + rowKey + '"]').find('.' + this._getMappedStyle('rowexpander'));
-        rowExpander.ojRowExpander('handleExpandEvent');
+    _setOptions: function( options ) //vvc
+    { 
+	var key;
 
+        if(!this.datasource)
+        {
+            for ( key in options ) 
+            {
+                this._setOption(key, options[key]);           
+            }
+        }
+        else
+        {            
+            this._setUpdatedOptions(options); 
+        }
     },
 
     /**
-     * Handle a collapse event coming from the datasource, 
-     * tell the rowexpander to handle collapse
+     * Updates multiple options 
+     * @param {Object} options the options object
      * @private
-     * @param {Object} event an object which should contain the rowKey
-     */                        
-    _handleCollapseEvent: function(event)
+     */
+    _setUpdatedOptions: function( options ) //vvc
+    { 
+        var i, key, isRefresh, elm, itm;
+
+        //Traversing through the header object to retreave option value 
+        //header -> column/row -> resizable -> width/heigh
+
+        isRefresh = false;
+
+        for (key in options) 
+        {
+            if(key  in this.redrawSet)
+            {
+                //Walk through the header object to retrieve the option value 
+                if(key == "header")
+                {
+                    for(elm in options["header"])
+                    {
+                        if(elm == "column" || elm == "row" || elm == "cell")
+                        {
+                            for(itm in options["header"][elm])
+                            {
+                                //And check this option against the redraw list,
+                                //if the option is in it isRefresh flag is true
+                                for(i =0; i < this.redrawSet["header"].length; i++)
+                                {
+                                    if(itm == this.redrawSet["header"][i])
+                                    {
+                                        isRefresh = true;
+                                        break;
+                                    }
+                                }
+                                if(isRefresh)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                        if(isRefresh)
+                        {
+                            break;
+                        }
+                    }
+                } 
+                else 
+                {
+                    isRefresh = true;
+                }
+            }
+        }
+        
+        //Set updated option
+	for ( key in options ) 
+        {
+            this._setOption(key, options[key]);           
+	}
+          
+        if(isRefresh)
+        {
+            //redraw whole grid if required 
+            this.refresh();
+        }
+        else
+        {
+            //or process updated option(s) through the DvtDataGrid
+            this.grid.UpdateOptions(options);
+        }
+    },
+
+    /**
+     * Sets a single option value
+     * @param {Object} key the option key
+     * @param {Object} value the option value
+     * @override
+     * @private
+     */
+    _setOption: function(key, value)
     {
-        var rowKey, rowExpander;
-        rowKey = event['rowKey'];
-        rowExpander = this._getDatabody().find('[' + this._getMappedAttribute('key') + '="' + rowKey + '"]').find('.' + this._getMappedStyle('rowexpander'));
-        rowExpander.ojRowExpander('handleCollapseEvent');    
-    },                        
-            
+        this._super(key, value);
+    },
+                        
     /**
      * Checks if resize is enabled along a given axis width/height
      * @private	 
@@ -1350,7 +1442,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         var self, menuContainer, rootId, resizeMenu = null, sortMenu = null, moveMenu = null, listItems, temp;
         self = this;
 
-        if (this.options["contextMenu"]['menu'] == null)
+        if (this.options["contextMenu"] == null)
         {
             if (this.datasource != null) {
                 menuContainer = $('<ul>');
@@ -1375,23 +1467,27 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                         temp = this._buildContextMenuItem('sortCol');
                         sortMenu = temp.add(this._buildContextMenuItem('sortRow'));
                 }
-                switch (this.datasource.getCapability('move'))
+
+                if (this.options['dnd']['reorder'] === 'enable')
                 {
-                    case 'none':
-                        break;
-                    default:
-                        moveMenu = $(this._buildContextMenuListItem('cut')).add($(this._buildContextMenuListItem('paste')));
-                }                
+                    switch (this.datasource.getCapability('move'))
+                    {
+                        case 'none':
+                            break;
+                        default:
+                            moveMenu = $(this._buildContextMenuListItem('cut')).add($(this._buildContextMenuListItem('paste')));
+                    }
+                }
                 menuContainer.append(resizeMenu).append(sortMenu).append(moveMenu);
                 menuContainer.ojMenu();
-                this._setOption("contextMenu", {menu: menuContainer.attr('id')});
+                this._setOption("contextMenu", '#' + menuContainer.attr('id'));
                 menuContainer.on("ojbeforeshow", this._handleContextMenuBeforeShow.bind(this));
                 menuContainer.on("ojselect", this._handleContextMenuSelect.bind(this));
             }
         }
         else
         {
-            menuContainer = $('#'+this.options["contextMenu"]['menu']);
+            menuContainer = $(this.options["contextMenu"]);
             listItems = menuContainer.find('[data-oj-command]');
             listItems.each(function(){
                 var command;
@@ -1449,17 +1545,19 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
      */
     _buildContextMenuLabel: function(command)
     {
-        return '<a href="#">' + this._getTranslation(command) + '</a>';
+        // convert to the translation key convention
+        var key = 'label' + command.charAt(0).toUpperCase() + command.slice(1);
+        return '<a href="#">' + this._getTranslation(key) + '</a>';
     },        
             
     /**
      * Get the context menu from the grid
-     * @return {Element} the context menu element that is set in the options
+     * @return {Array.<Element>|Element} the context menu element that is set in the options
      * @private	 
      */
     _getContextMenu: function()
     {
-        return document.getElementById(this.options["contextMenu"]["menu"]);
+        return $(this.options["contextMenu"]).get(0);
     },
     /**
      * Get a translation from the translation resources or one the user set
@@ -1481,8 +1579,44 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     {
         var value = $('#' + this.rootId + 'spinner').ojInputNumber("option", "value");
         $('#' + this.rootId + 'dialog').ojDialog('destroy');
+        $('#' + this.rootId + 'spinner').ojInputNumber('destroy');
         this.grid.handleContextMenuReturn(this.contextMenuEvent, this.menuItemFunction, value);
         this.contextMenuEvent['target'].focus();
+    },
+    /**
+     * Build the html for the resize dialog and add it to the root node
+     * @param {string} title the header title for the dialog
+     * @param {number} initialSize the initial size to put in the spinner
+     * @private	 
+     */            
+    _buildResizeDialog: function(title, initialSize)
+    {
+        var dialog, dialogBody, spinner, dialogFooter, dialogOKButton;
+        //create the base dialog
+        dialog =  $('#' + this.rootId + 'dialog');
+        spinner = $('#' + this.rootId + 'spinner');
+        if (dialog.length === 0 || spinner.length === 0)
+        {
+            dialog = $('<div>');
+            dialog.attr('id', this.rootId + 'dialog');
+            dialog.attr('title', title);
+            dialogBody = $('<div class="oj-dialog-body"></div>');
+            dialogFooter = $('<div class="oj-dialog-footer"></div>');
+            dialog.append(dialogBody).append(dialogFooter);
+
+            //create the dialog content
+            spinner = $('<input id="' + this.rootId + 'spinner"/>');
+            dialogOKButton = $('<button>');
+
+            dialogBody.append(spinner);
+            dialogFooter.append(dialogOKButton);
+            $(this.root).append(dialog);
+        
+            dialogOKButton.ojButton({component: 'ojButton', label: 'OK'});
+            dialogOKButton.on('click', this._handleResizeDialog.bind(this));
+        }
+        spinner.ojInputNumber({component: 'ojInputNumber', max:1000, min:20, step:1, value:initialSize});
+        dialog.ojDialog({initialVisibility:'show', position:{my: "center center", at: "center center", collision:"none", of:$(this.root)}});
     },
     /**
      * Handle an ojselect event on a menu item, if sort call the handler on the core.
@@ -1491,9 +1625,8 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
      */
     _handleContextMenuSelect: function(event, ui)
     {
-        var dialog, spinner, rootId, initialSize, parent;
+        var initialSize, parent;
         
-        rootId = $(this.root).attr('id');
         this.menuItemFunction = ui.item.attr('data-oj-command');
         if (this.menuItemFunction === this._getMappedCommand('sortColAsc') || this.menuItemFunction === this._getMappedCommand('sortColDsc')
             || this.menuItemFunction === this._getMappedCommand('cut') || this.menuItemFunction === this._getMappedCommand('paste'))
@@ -1512,13 +1645,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
             {
                 initialSize = this.menuItemFunction === this._getMappedCommand('resizeWidth') ? $(this.contextMenuEvent['target']).outerWidth() : $(this.contextMenuEvent['target']).outerHeight();
             }
-            spinner = $('<input>');
-            spinner.attr('id', rootId + 'spinner');
-            dialog = $('<div>');
-            dialog.attr('id', rootId + 'dialog');
-            dialog.append(spinner);
-            spinner.ojInputNumber({'value': initialSize, 'max': 250, 'min': 20, 'step': 1});
-            dialog.ojDialog({buttons: {OK: this._handleResizeDialog.bind(this)}, title: ui.item.text(), appendTo: this.root});
+            this._buildResizeDialog(ui.item.text(), initialSize);
         }
     },
     /**
@@ -1529,8 +1656,8 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     {
         var contextMenu, cell, header, capabilities;
         contextMenu = $(this._getContextMenu());
-
-        this.contextMenuEvent = event['originalEvent']['originalEvent'];
+        
+		this.contextMenuEvent = event['originalEvent']['originalEvent'];
         if (this.contextMenuEvent['type'] === 'keydown')
         {
             contextMenu.ojMenu("option", "menuPosition", {"my": "left top", "at": "left bottom", "of": this.contextMenuEvent['target']});
@@ -1552,7 +1679,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         }
 
         this._manageContextMenu(capabilities);
-    },
+    },    
     /**
      * Add the disabled class to the menu item with a given command
      * @param {string} command the command to add the diabled attribute to
@@ -1614,7 +1741,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
         {
             return element;
         }
-        parents = element.parents(className);
+        parents = element.parents("."+className);
         if (parents.length != 0)
         {
             return parents.eq(0);
@@ -1762,7 +1889,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     {
         if (this.options['data'] != null)
         {
-			this.datasource = this.options['data'];
+            this.datasource = this.options['data'];
         }
         else
         {
@@ -1779,19 +1906,16 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
     {
         context['component'] = this;
     },
+
     /**
-     * Register a row expander widget.
-     * @param {Object} rowExpander the row expander widget.
+     * Sets accessible context information about the current active cell.
+     * Invoked by row expander to set accessible context info on the datagrid (and
+     * the info is then read by the screen reader)
      * @private
      */
-    _registerRowExpander: function(rowExpander)
+    _setAccessibleContext: function(context)
     {
-        var self = this;
-        if (self.grid != null && rowExpander != null)
-        {
-            // the datagrid should update internal state for screenreader
-            self.grid.registerRowExpander(rowExpander.element[0]);
-        }
+        this.grid.SetAccessibleContext(context);
     },
 
     /**
@@ -2793,11 +2917,20 @@ oj.FlattenedTreeDataGridDataSource.prototype.insertRows = function(insertAtIndex
  */
 oj.FlattenedTreeDataGridDataSource.prototype.removeRows = function(rowKeys)
 {
+    var keys, i, event;
+    
+    // extract the keys
+    keys = [];
+    for (i=0; i<rowKeys.length; i++)
+    {
+        keys.push({"row": rowKeys[i]['key']});
+    }
+
     // construct model delete event with a set of row keys to delete
-    var event = {};
+    event = {};
     event['source'] = this;
     event['operation'] = 'delete';
-    event['keys'] = rowKeys;
+    event['keys'] = keys;
 
     oj.FlattenedTreeDataGridDataSource.superclass.handleEvent.call(this, "change", event);
 };

@@ -12,6 +12,89 @@
     /* tree */
     /* --------------------------------------------------------------- */
 
+    .oj-tree-list, .oj-tree-list ul, .oj-tree-list li {
+       display:block;
+       margin:0 0 0 0;
+       padding:0 0 0 0;
+      list-style-type:none;
+    }
+    .oj-tree-list li {
+       display:block;
+       min-height:22px;
+       line-height:22px;
+       white-space:nowrap;
+       margin-left:18px;
+       min-width:18px;
+    }
+    .oj-tree-rtl li {
+       margin-left:0;
+       margin-right:18px;
+    }
+    .oj-tree-list > ul > li {
+       margin-left:0;
+    }
+    .oj-tree-rtl > ul > li {
+       margin-right:0;
+    }
+    .oj-tree-list ins {
+       display:inline-block;
+       text-decoration:none;
+       width:18px;
+       height:18px;
+       margin:0 0 0 0;
+       padding:0;
+    }
+    .oj-tree-list a {
+       box-sizing: content-box;
+       display:inline-block;
+       line-height:22px;
+       color:black;
+       white-space:nowrap;
+       text-decoration:none;
+       padding:1px 2px;
+       margin:0;
+    }
+    .oj-tree-list a:focus {
+       outline: none;
+    }
+    .oj-tree-list a > ins {
+       height:18px;
+       width:16px;
+    }
+    .oj-tree-list a > .oj-tree-icon {
+       margin-right:3px;
+    }
+    .oj-tree-rtl a > .oj-tree-icon {
+       margin-left:3px;
+       margin-right:0;
+    }
+    li.oj-tree-open > ul {
+       display:block;
+    }
+    li.oj-tree-closed > ul {
+       display:none;
+    }
+
+    li.oj-tree-open > ins {
+       cursor:pointer;
+    }
+    li.oj-tree-closed > ins {
+       cursor:pointer;
+    }
+    li.oj-tree-open > ins {
+       cursor:pointer;
+    }
+    li.oj-tree-closed > ins {
+       cursor:pointer;
+    }
+    li.oj-tree-leaf > ins {
+       cursor: pointer;
+    }
+    .oj-tree-hovered span.oj-tree-title {
+       cursor: pointer;
+    }
+
+
     .oj-tree-default .oj-tree-list li, 
     .oj-tree-default .oj-tree-list ins {
         background-image: oj-image-url("d.png");
@@ -35,20 +118,31 @@
         background-position:-36px 0;
     }
     .oj-tree-default .oj-tree-list a {
-        font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; color:#145c9e;
+        font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+        color: #145c9e;
+        line-height:22px;
     }
-    .oj-tree-default .oj-tree-hovered {
-       background:#e7f4f9;
-       border:1px solid #d8f0fa;
+    .oj-tree-default .oj-tree-hovered span.oj-tree-title {
+       font-weight:bold;
+       background-color:#E4F0FA;
+       padding:0 2px 0 1px;
+       border:1px solid transparent;
+    }
+    .oj-tree-default a.oj-tree-clicked  span.oj-tree-title {
+       background-color:#FAFAEB;
+       font-weight:bold;
+       border:1px solid #F6F6E0;
        padding:0 2px 0 1px;
     }
-    .oj-tree-default .oj-tree-clicked {
-       background:#beebff;
-       border:1px solid #99defd;
+    .oj-tree-default a.oj-tree-hovered.oj-tree-clicked span.oj-tree-title {
+       font-weight:bold;
+       background-color:#BFD4E5;
        padding:0 2px 0 1px;
+       border:1px solid #145C9E;
+       cursor:default;
     }
     .oj-tree-default .oj-tree-list a .oj-tree-icon {
-       background-position:-56px -19px;
+       background-position:-55px -19px;
     }
     .oj-tree-default a.oj-tree-loading .oj-tree-icon {
        background: oj-image-url("ojtreeload.gif") center center no-repeat;
@@ -59,6 +153,9 @@
     .oj-tree-default .oj-tree-no-dots li, 
     .oj-tree-default .oj-tree-no-dots .oj-tree-leaf > ins {
        background:transparent;
+    }
+    .oj-tree-default .oj-tree-no-dots .oj-tree-leaf a ins.oj-tree-icon {
+       background-position:-72px -91px;
     }
     .oj-tree-default .oj-tree-no-dots .oj-tree-open > ins {
        background-position:-18px 0;
@@ -77,7 +174,7 @@
     }
     .oj-tree-default .oj-tree-no-checkboxes .oj-tree-checkbox {
        display:none
-     }
+    }
     .oj-tree-default .oj-tree-checked > a > .oj-tree-checkbox {
        background-position:-38px -19px;
     }
@@ -148,7 +245,7 @@
       text-shadow:1px 1px 1px white;
       color:black;
       line-height:10px;
-      background:oj-image-url("d.png") -41px -57px no-repeat;
+      background:oj-image-url("d.png") -41px -56px no-repeat;
       text-indent:-100px;
     }
     .oj-tree-marker-line {
@@ -164,12 +261,9 @@
        z-index:10000;
        background-repeat:no-repeat;
        display:none;
-       background-color:#456c43;
+       background-color:#0572CE;
        cursor:pointer;
        border-left:0;
-       -moz-box-shadow:0 0 2px #666;
-       -webkit-box-shadow: 0 0 2px #666;
-       box-shadow: 0 0 2px #666;
        // todo: we have border radius variables
        @include oj-border-radius(1px);
      }

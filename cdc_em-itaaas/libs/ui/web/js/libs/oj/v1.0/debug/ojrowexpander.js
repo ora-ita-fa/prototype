@@ -79,7 +79,7 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
     classNames:
             {
                 'root': 'oj-rowexpander',
-                'icon': 'oj-widget-icon',
+                'icon': 'oj-component-icon',
                 'clickable': 'oj-clickable-icon',
                 'expand': 'oj-rowexpander-expand-icon',
                 'collapse': 'oj-rowexpander-collapse-icon',
@@ -110,15 +110,15 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
         context = this.options['context'];
         this.component = context['component'];
         this.datasource = context['datasource'];
-        if (this.component._registerRowExpander)
-        {
-            this.component._registerRowExpander(this);
-        }
 
         //root hidden so subtract 1
         this.indentation = (context['depth'] - 1) * this.options['indent'];
         this.iconState = context['state'];
         this.rowKey = context['key'];
+
+        // description of row expander for screen reader
+        this.desc = this.getTranslatedString('accessibleRowDescription', {'level': context['depth'], 'num': context['index']+1, 'total': this.datasource.getWrappedDataSource().getChildCount(context['parentKey'])});
+
         this._setIndentationWidth();
         this._setIconStateClass();
 
@@ -134,6 +134,31 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
                     self._fireExpandCollapse();
                 }
             });
+
+            // listen for key down event from host component
+            if (this.component != null)
+            {
+                this.handleKeyDownCallback = this._handleKeyDownEvent.bind(this);
+                $(this.component.element).on('ojkeydown', this.handleKeyDownCallback);
+            }
+
+            // listens for expand and collapse event from flattened datasource
+            // this could be due to user clicks, keyboard shortcuts or programmatically
+            if (this.datasource != null)
+            {
+                this.handleExpandCallback = this._handleExpandEvent.bind(this);
+                this.handleCollapseCallback = this._handleCollapseEvent.bind(this);
+
+                this.datasource.on("expand", this.handleExpandCallback, this);
+                this.datasource.on("collapse", this.handleCollapseCallback, this);
+            }
+        }
+
+        // listen for active key change event from host component
+        if (this.component != null)
+        {
+            this.handleActiveKeyChangeCallback = this._handleActiveKeyChangeEvent.bind(this);
+            $(this.component.element).on('ojactive', this.handleActiveKeyChangeCallback);
         }
     },
     /**
@@ -167,6 +192,20 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
      */
     _destroy: function()
     {
+        // unregister keydown and active key change handlers
+        if (this.component != null)
+        {
+            $(this.component.element).off('ojkeydown', this.handleKeyDownCallback);
+            $(this.component.element).off('ojactive', this.handleActiveKeyChangeCallback);
+        }
+
+        // unregister expand/collapse events
+        if (this.datasource != null)
+        {
+            this.datasource.off("expand", this.handleExpandCallback, this);
+            this.datasource.off("collapse", this.handleCollapseCallback, this);
+        }
+
         this.removeClass(this.classNames['root']);
         this.element.empty();
     },
@@ -240,30 +279,93 @@ oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
 
     },
     /**
+     * Handles active key change event from host component (ojDataGrid or ojTable)
+     * @param {Event} event
+     * @param {Object} ui
+     * @private
+     */
+    _handleActiveKeyChangeEvent: function(event, ui)
+    {
+        var rowKey, message;
+
+        if (ui['activeKey'] != null)
+        {
+            rowKey = ui['activeKey']['rowKey'];
+            // if the event is for this row and the active key change event is triggered
+            // by row change and not column change
+            if (this.rowKey === rowKey && (ui['previousActiveKey'] == null || ui['previousActiveKey']['row'] != ui['activeKey']['row']))
+            {   
+                // if the component allows AccessibleContext to be set
+                if (this.component._setAccessibleContext)
+                {
+                    this.component._setAccessibleContext({'message': this.desc});
+                }
+            }
+        }
+    },
+    /**
+     * Handles keydown event from host component (ojDataGrid or ojTable)
+     * @param {Event} event
+     * @param {Object} ui
+     * @private
+     */
+    _handleKeyDownEvent: function(event, ui)
+    {
+        var rowKey, code;
+
+        rowKey = ui['rowKey'];
+        if (this.rowKey === rowKey)
+        {
+            code = event.keyCode || event.which;
+            // ctrl (or equivalent) is pressed
+            if (event.ctrlKey)
+            {
+                // Ctrl+Right expands, Ctrl+Left collapse in accordance with WAI-ARIA best practice
+                // consume the event as it's processed
+                if (code == $.ui.keyCode.RIGHT)
+                {
+                    this.datasource.expand(this.rowKey);
+                }
+                else if (code == $.ui.keyCode.LEFT)
+                {
+                    this.datasource.collapse(this.rowKey);
+                }
+            }
+        }
+    },
+    /**
      * Handle an expand event coming from the datasource, 
      * update the icon and the aria-expand property
-     * @expose
+     * @private
      */
-    handleExpandEvent: function()
+    _handleExpandEvent: function(event)
     {
-        this._removeIconStateClass();
-        this.iconState = 'expanded';
-        this._setIconStateClass();
-        this._ariaExpanded(true);
-        this._trigger('expand');
+        var rowKey = event['rowKey'];
+        if (rowKey === this.rowKey)
+        {
+            this._removeIconStateClass();
+            this.iconState = 'expanded';
+            this._setIconStateClass();
+            this._ariaExpanded(true);
+            this._trigger('expand');
+        }
     },
     /**
      * Handle a collapse event coming from the datasource, 
      * update the icon and the aria-expand property
-     * @expose
+     * @private
      */
-    handleCollapseEvent: function()
+    _handleCollapseEvent: function(event)
     {
-        this._removeIconStateClass();
-        this.iconState = 'collapsed';
-        this._setIconStateClass();
-        this._ariaExpanded(false);
-        this._trigger('collapse');        
+        var rowKey = event['rowKey'];
+        if (rowKey === this.rowKey)
+        {
+            this._removeIconStateClass();
+            this.iconState = 'collapsed';
+            this._setIconStateClass();
+            this._ariaExpanded(false);
+            this._trigger('collapse');        
+        }
     },
     /**
      * Fire the expand or collapse on the datasource and the oj event on the widget 

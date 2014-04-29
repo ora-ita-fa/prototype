@@ -290,16 +290,10 @@ oj.KnockoutUtils._getModel = function(val) {
 };
 
 
-// Attempt to hide original object from enumeration of properties (can't be done on IE8)
+// Attempt to hide original object from enumeration of properties
 oj.KnockoutUtils._storeOriginalObject = function(object, value) {
     // Store any callback along with model for use in event-driven mapping of new additions
-    try {
        Object.defineProperty(object, oj.KnockoutUtils.internalObjectProperty, {value: value, enumerable:false});
-    }
-    catch (e) {
-        // IE8 failure
-        object[oj.KnockoutUtils.internalObjectProperty] = value;
-    }    
 };
 
 /*oj.KnockoutUtils._createArray = function(collection, getCallback) {

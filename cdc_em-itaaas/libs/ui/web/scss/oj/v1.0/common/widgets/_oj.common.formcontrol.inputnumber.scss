@@ -16,7 +16,7 @@
     /* --------------------------------------------------------------- */
     
     /* Root dom element for inputnumber. 
-     It wraps the input and the up/down buttons */
+     It wraps the input and the down/up buttons */
     .oj-inputnumber { 
       // do not allow the buttons to wrap to the next line
       white-space: nowrap;
@@ -50,13 +50,13 @@
 
       // we override border-radius that is in the oj-form-control-content.
       // For inputnumber, we want the radius only on the 'start' of the input
-      // not the end. After the 'end' comes the up/down buttons, so we don't
-      // want a curved edge next to the up/down buttons
+      // not the end. After the 'end' comes the down/up buttons, so we don't
+      // want a curved edge next to the down/up buttons
       @include oj-border-radius( $formControlBorderRadius 0 0 $formControlBorderRadius, $textDirection:ltr);
       @include oj-border-radius( 0 $formControlBorderRadius $formControlBorderRadius 0, $textDirection:rtl);
       
       @include oj-box-sizing-property(border-box);
-      padding: 0 $formControlPadding; 
+      padding: 0 $formControlPaddingHorizontal; 
       height: $formControlHeight;
       width: 100%;
       display: table-cell;
@@ -154,10 +154,10 @@
     /* Warning/error styling for the widget.  Spec calls for border around entire
      component, not just input. We make sure the border is only on the outside
      of the buttons by setting border-left/right to none as appropriate.
-     The 'down' button is the outside button.
+     The 'up' button is the outside button.
     */
-    .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down,
-    .oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+    .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up,
+    .oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up{
        @include oj-ltr() {
         border-left: none;
        }
@@ -165,29 +165,30 @@
          border-right: none;
        }
     }
-    // The 'up' button is the inside button in both ltr and rtl, so we don't
+    // The 'down' button is the inside button in both ltr and rtl, so we don't
     // want it to have left or right border for error/warnings 
     // since we want the border around the entire component, not just input.
-    .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up,
-    .oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up {
+    .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down,
+    .oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
          border-left: none;
          border-right: none;
     }
     
-    // according to the alta spec, the up button is before the down button
-    // in the layout. The up button should have no border-radius. The 
-    // down ('end') button should have an 'end' border-radius. 
-    .oj-inputnumber-up.oj-button { 
-      border-radius: 0;
+    // according to the design review meeting, 
+    // the up button is after the down button (down/up)
+    // in the layout. The down ('inside') button should have no border-radius.  
+    // The up ('end') button should have an 'end' border-radius. 
+    .oj-inputnumber-down.oj-button { 
+      @include oj-border-radius(0);
     }
 
-    .oj-inputnumber-down.oj-button { 
+    .oj-inputnumber-up.oj-button { 
       @include oj-border-radius( 0 $formControlBorderRadius $formControlBorderRadius 0, $textDirection:ltr);
       @include oj-border-radius( $formControlBorderRadius 0 0 $formControlBorderRadius, $textDirection:rtl);
     }
 
-    .oj-inputnumber .oj-inputnumber-up-icon,
-    .oj-inputnumber .oj-inputnumber-down-icon {
+    .oj-inputnumber .oj-inputnumber-down-icon,
+    .oj-inputnumber .oj-inputnumber-up-icon {
       font-size: 1rem;
     }
     

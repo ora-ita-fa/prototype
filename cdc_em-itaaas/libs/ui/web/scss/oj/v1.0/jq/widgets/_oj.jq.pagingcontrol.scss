@@ -99,7 +99,7 @@ $navArrowPadding: 5px !default;
     }
 
     /* Styling for the page mode page link when selected. */
-    .oj-pagingcontrol-nav-page.oj-checked {
+    .oj-pagingcontrol-nav-page.oj-selected {
        @include ui-corner-all;
        display: inline;
     }

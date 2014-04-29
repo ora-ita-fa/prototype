@@ -3,22 +3,23 @@ define(['./DvtToolkit', './DvtPanZoomCanvas', './DvtSubcomponent'], function() {
   /**
  * @export
  */
-var DvtAmxThematicMap = function (context, callback, callbackObj) {
+var DvtAmxThematicMap = function(context, callback, callbackObj) {
   this.Init(context, callback, callbackObj);
-}
+};
 
-DvtObj.createSubclass(DvtAmxThematicMap, DvtContainer, "DvtAmxThematicMap");
+DvtObj.createSubclass(DvtAmxThematicMap, DvtContainer, 'DvtAmxThematicMap');
 
 DvtAmxThematicMap._LEGEND_COMPONET_GAP = 10;
 
-DvtAmxThematicMap.prototype.Init = function (context, callback, callbackObj) {
+DvtAmxThematicMap.prototype.Init = function(context, callback, callbackObj) {
   DvtAmxThematicMap.superclass.Init.call(this, context);
   this._tmap = new DvtThematicMap(context, callback, callbackObj);
   this._tmapContainer = new DvtContainer(context);
   this._tmapContainer.addChild(this._tmap);
   this.addChild(this._tmapContainer);
   this.Defaults = new DvtThematicMapDefaults();
-}
+};
+
 
 /**
  * Returns a new instance of DvtAmxThematicMap.
@@ -28,9 +29,10 @@ DvtAmxThematicMap.prototype.Init = function (context, callback, callbackObj) {
  * @return {DvtAmxThematicMap}
  * @export
  */
-DvtAmxThematicMap.newInstance = function (context, callback, callbackObj) {
+DvtAmxThematicMap.newInstance = function(context, callback, callbackObj) {
   return new DvtAmxThematicMap(context, callback, callbackObj);
-}
+};
+
 
 /**
  * Renders the component with the specified data.  If no data is supplied to a component
@@ -40,17 +42,18 @@ DvtAmxThematicMap.newInstance = function (context, callback, callbackObj) {
  * @param {number} height The height of the component.
  * @export
  */
-DvtAmxThematicMap.prototype.render = function (options, width, height) {
+DvtAmxThematicMap.prototype.render = function(options, width, height) {
   this.Options = this.Defaults.calcOptions(options);
   this._width = width;
   this._height = height;
-  
+
   // render legend
   var availSpace = new DvtRectangle(0, 0, width, height);
   this._renderLegend(this, availSpace);
   // render thematic map
   this._tmap.render(options, availSpace.w, availSpace.h);
-}
+};
+
 
 /**
  * Renders legend and updates the available space.
@@ -65,67 +68,67 @@ DvtAmxThematicMap.prototype._renderLegend = function(container, availSpace) {
     this._legend = null;
   }
 
-  var availLegendSpace = new DvtRectangle(DvtAmxThematicMap._LEGEND_COMPONET_GAP, DvtAmxThematicMap._LEGEND_COMPONET_GAP, 
-                                    availSpace.w-2*DvtAmxThematicMap._LEGEND_COMPONET_GAP, availSpace.h-2*DvtAmxThematicMap._LEGEND_COMPONET_GAP);
+  var availLegendSpace = new DvtRectangle(DvtAmxThematicMap._LEGEND_COMPONET_GAP, DvtAmxThematicMap._LEGEND_COMPONET_GAP,
+      availSpace.w - 2 * DvtAmxThematicMap._LEGEND_COMPONET_GAP, availSpace.h - 2 * DvtAmxThematicMap._LEGEND_COMPONET_GAP);
 
   var options = this.Options;
-  
+
   var rendered = options['legend']['rendered'];
   var scrolling = options['legend']['scrolling'];
-	
+
   // Create the options object for the legend
   var legendOptions = DvtJSONUtils.clone(options['legend']);
   this._addLegendData(this.Options, legendOptions);
-  
+
   // Done not rendered or nothing to render
-  if(!rendered || (legendOptions.sections && legendOptions.sections.length == 0))
+  if (!rendered || (legendOptions.sections && legendOptions.sections.length == 0))
     return;
 
   var position = options['legend']['position'];
-  delete legendOptions["position"];
+  delete legendOptions['position'];
   legendOptions['layout']['gapRatio'] = this.getGapRatio();
   legendOptions['hideAndShowBehavior'] = 'none';
   legendOptions['rolloverBehavior'] = 'none';
   legendOptions['scrolling'] = options['legend']['scrolling'];
-  
+
   // Create and add the legend to the display list for calc and rendering
   // TODO handle chart event procissing i.e. hide show/ rollover
   var legend = DvtLegend.newInstance(this._tmap.getCtx(), null, null);
-  if(this._tmap.getId() != null){
+  if (this._tmap.getId() != null) {
     //create and set legend id based on parent id
-    legend.setId(this._tmap.getId()+"legend");
+    legend.setId(this._tmap.getId() + 'legend');
   }
   container.addChild(legend);
-	
+
   var maxWidth;
   var maxHeight;
-  
+
   // Evaluate the automatic position
   // If scrolling is off, default legend position to bottom
-  if(position == "auto" && scrolling !== "asNeeded") {
-    position = "bottom";
+  if (position == 'auto' && scrolling !== 'asNeeded') {
+    position = 'bottom';
   }
   // If scrolling is on, auto will always render vertical legend
-  else if(position == "auto" && scrolling == "asNeeded") {
-    position = "end";
+  else if (position == 'auto' && scrolling == 'asNeeded') {
+    position = 'end';
   }
-  
+
   // Convert "start" and "end" to absolute position
   var isRTL = DvtAgent.isRightToLeft(container.getCtx());
-  if(position == "start")
-    position = isRTL ? "right" : "left";
-  else if(position == "end")
-    position = isRTL ? "left" : "right";
-	
+  if (position == 'start')
+    position = isRTL ? 'right' : 'left';
+  else if (position == 'end')
+    position = isRTL ? 'left' : 'right';
+
   // Add legend orientation
-  legendOptions['orientation'] = (position == "left" || position == "right" ? "vertical" : "horizontal");
-	
+  legendOptions['orientation'] = (position == 'left' || position == 'right' ? 'vertical' : 'horizontal');
+
   // Evaluate non-auto position
-  var isHoriz = (position == "top" || position == "bottom");
+  var isHoriz = (position == 'top' || position == 'bottom');
   maxWidth = isHoriz ? availLegendSpace.w : options['layout']['legendMaxSize'] * availLegendSpace.w;
   maxHeight = isHoriz ? options['layout']['legendMaxSize'] * availLegendSpace.h : availLegendSpace.h;
   var actualSize = legend.getPreferredSize(legendOptions, maxWidth, maxHeight);
-  
+
   if (actualSize.w > 0 && actualSize.h > 0) {
     legend.render(legendOptions, actualSize.w, actualSize.h);
     this._legend = legend;
@@ -133,7 +136,7 @@ DvtAmxThematicMap.prototype._renderLegend = function(container, availSpace) {
     DvtLayoutUtils.position(availLegendSpace, position, legend, actualSize.w, actualSize.h, gap);
 
     // update availSpace
-    switch(position) {
+    switch (position) {
       case 'top':
         this._tmapContainer.setTranslateY(actualSize.h + DvtAmxThematicMap._LEGEND_COMPONET_GAP);
       case 'bottom':
@@ -148,18 +151,19 @@ DvtAmxThematicMap.prototype._renderLegend = function(container, availSpace) {
         break;
     }
   }
-}
+};
 
 DvtAmxThematicMap.prototype.getGapRatio = function() {
   // If defined in the options, use that instead
-  if(this.Options['layout']['gapRatio'] !== null && !isNaN(this.Options['layout']['gapRatio']))
+  if (this.Options['layout']['gapRatio'] !== null && !isNaN(this.Options['layout']['gapRatio']))
     return this.Options['layout']['gapRatio'];
   else {
-    var wRatio = Math.min(this._width/400, 1);
-    var hRatio = Math.min(this._height/300, 1);
+    var wRatio = Math.min(this._width / 400, 1);
+    var hRatio = Math.min(this._height / 300, 1);
     return Math.min(wRatio, hRatio);
   }
-}
+};
+
 
 /**
  * Added data into the options object to be passed to the legend.
@@ -171,29 +175,29 @@ DvtAmxThematicMap.prototype._addLegendData = function(data, legendOptions) {
   legendOptions['title'] = data['legend'] ? data['legend']['title'] : null;
   legendOptions['sections'] = [];
 
-  if(data && data['legend'] && data['legend']['sections']) {
+  if (data && data['legend'] && data['legend']['sections']) {
     // Iterate through any sections defined with attribute groups
-    for(var i=0; i<data['legend']['sections'].length; i++) {
+    for (var i = 0; i < data['legend']['sections'].length; i++) {
       var dataSection = data['legend']['sections'][i];
-      if(dataSection) 
+      if (dataSection)
         legendOptions['sections'].push({'title': dataSection['title'], 'items': dataSection['items'], 'sections': dataSection['sections']});
     }
   }
-    
+
   return legendOptions;
-}
+};
 /**
  * DVT Toolkit based thematic map component
- * @extends DvtContainer
+ * @extends {DvtContainer}
  * @class DVT Toolkit based thematic map component
  * @constructor
  * @export
  */
-var DvtThematicMap = function (context, callback, callbackObj) {
+var DvtThematicMap = function(context, callback, callbackObj) {
   this.Init(context, callback, callbackObj);
-}
+};
 
-DvtObj.createSubclass(DvtThematicMap, DvtAbstractPanZoomComponent, "DvtThematicMap");
+DvtObj.createSubclass(DvtThematicMap, DvtAbstractPanZoomComponent, 'DvtThematicMap');
 
 DvtThematicMap._FEATURES_OFF_PAN = 1;
 DvtThematicMap._FEATURES_OFF_ZOOM = 2;
@@ -205,11 +209,13 @@ DvtThematicMap._FEATURES_OFF_ALL = 7;
 
 DvtThematicMap._COLLAPSIBLE_PANEL_OFFSET = 5;
 
-DvtThematicMap._ELEM_RESOURCES_CONTROLPANEL = "controlPanelResources";
-DvtThematicMap._ELEM_RESOURCES_LEGEND = "legendResources";
-DvtThematicMap._ELEM_RESOURCES_PANEL_DRAWER = "panelDrawerResources";
+DvtThematicMap._ELEM_RESOURCES_CONTROLPANEL = 'controlPanelResources';
+DvtThematicMap._ELEM_RESOURCES_LEGEND = 'legendResources';
+DvtThematicMap._ELEM_RESOURCES_PANEL_DRAWER = 'panelDrawerResources';
+DvtThematicMap._ELEM_RESOURCES = 'resources';
 
 DvtThematicMap.DEFAULT_MAX_ZOOM_FACTOR = 6;
+
 
 /**
  * Initializes the thematicMap
@@ -218,7 +224,7 @@ DvtThematicMap.DEFAULT_MAX_ZOOM_FACTOR = 6;
  * @param {AdfDhtmlThematicMapPeer} callbackObj The object to dispatch component events to
  * @protected
  */
-DvtThematicMap.prototype.Init = function (context, callback, callbackObj) {
+DvtThematicMap.prototype.Init = function(context, callback, callbackObj) {
   DvtThematicMap.superclass.Init.call(this, context);
   this._callback = callback;
   this._callbackObj = callbackObj;
@@ -241,23 +247,24 @@ DvtThematicMap.prototype.Init = function (context, callback, callbackObj) {
 
   this._childToParent = new Object();
   this._drilled = [];
-  
+
   this._areaLayers = new DvtContainer(this.getCtx());
   this._dataAreaLayers = new DvtContainer(this.getCtx());
   this._dataPointLayers = new DvtContainer(this.getCtx());
   this._labelLayers = new DvtContainer(this.getCtx());
-  
+
   this._initialZooming = false;
   this._zooming = true;
   this._panning = true;
   this._maxZoomFactor = DvtThematicMap.DEFAULT_MAX_ZOOM_FACTOR;
   this._isMarkerZoomBehaviorFixed = true;
   this._selectedAreas = {};
-  
+
   this.setDisplayedControls(DvtPanZoomControlPanel.CONTROLS_ALL);
-  
+
   this.Defaults = new DvtThematicMapDefaults();
-}
+};
+
 
 /**
  * Returns a new instance of DvtJsonThematicMap. Currently only called by json supported platforms.
@@ -267,177 +274,187 @@ DvtThematicMap.prototype.Init = function (context, callback, callbackObj) {
  * @return {DvtThematicMap}
  * @export
  */
-DvtThematicMap.newInstance = function (context, callback, callbackObj) {
+DvtThematicMap.newInstance = function(context, callback, callbackObj) {
   return new DvtThematicMap(context, callback, callbackObj);
-}
+};
+
 
 /**
  * Specifies the non-data options for this component. Currently only called by json supported platforms.
  * @param {object} options The object containing options specifications for this component.
  * @protected
  */
-DvtThematicMap.prototype.SetOptions = function (options) {
+DvtThematicMap.prototype.SetOptions = function(options) {
   this.Options = this.Defaults.calcOptions(options);
-  
+
   if (!DvtAgent.isEnvironmentBrowser()) {
     this.Options['animationOnDisplay'] = 'none';
     this.Options['animationOnMapChange'] = 'none';
     this.Options['animationOnDrill'] = 'none';
   }
-  
+
   if (!this.Options['skin'])
     this.Options['skin'] = 'alta';
-}
+};
+
 
 /**
  * Sets the style defaults for this component.
- * @param {Object} defaults The json object containing style defaults 
+ * @param {Object} defaults The json object containing style defaults
  */
-DvtThematicMap.prototype.setStyleDefaults = function (defaults) {
+DvtThematicMap.prototype.setStyleDefaults = function(defaults) {
   this._styleDefaults = defaults;
-}
+};
+
 
 /**
  * Returns the style defaults for this component.
- * @return {Object} The json object containing style defaults 
+ * @return {Object} The json object containing style defaults
  */
-DvtThematicMap.prototype.getStyleDefaults = function () {
+DvtThematicMap.prototype.getStyleDefaults = function() {
   return this._styleDefaults;
-}
+};
+
 
 /**
  * @override
  * @export
  */
-DvtThematicMap.prototype.render = function (options, width, height) {
+DvtThematicMap.prototype.render = function(options, width, height) {
   if (options && typeof options == 'object')
     this.SetOptions(options);
-    
+
   DvtThematicMap.superclass.render.call(this, options, width, height);
-}
+};
 
-DvtThematicMap.prototype.getMaxZoomFactor = function () {
+DvtThematicMap.prototype.getMaxZoomFactor = function() {
   return (this._zooming ? this._maxZoomFactor : 1);
-}
+};
 
-DvtThematicMap.prototype.setMaxZoomFactor = function (maxZoomFactor) {
+DvtThematicMap.prototype.setMaxZoomFactor = function(maxZoomFactor) {
   this._maxZoomFactor = maxZoomFactor;
-}
+};
+
 
 /**
  * Returns whether the marker zoom behavior is 'fixed'. Valid values are fixed (default) and zoom.
  * @return {boolean} True if the marker zoom behavior is fixed
  */
-DvtThematicMap.prototype.isMarkerZoomBehaviorFixed = function () {
+DvtThematicMap.prototype.isMarkerZoomBehaviorFixed = function() {
   return this._isMarkerZoomBehaviorFixed;
-}
+};
+
 
 /**
  * Sets the marker behavior when zooming. Valid values are fixed (default) and zoom.
  * @param {string} behavior The marker behavior on zoom
  */
-DvtThematicMap.prototype.setMarkerZoomBehavior = function (behavior) {
+DvtThematicMap.prototype.setMarkerZoomBehavior = function(behavior) {
   this._isMarkerZoomBehaviorFixed = (behavior == 'fixed');
-}
+};
+
 
 /**
  * Returns the default css style properties to apply to all map markers and text.
  * @return {DvtCSSStyle} The css marker style properties
  */
-DvtThematicMap.prototype.getMarkerStyle = function () {
+DvtThematicMap.prototype.getMarkerStyle = function() {
   return this._markerStyle;
-}
+};
+
 
 /**
  * Sets the default css style properties to apply to all map markers and text.
  * @param {DvtCSSStyle} style The css marker style properties
  */
-DvtThematicMap.prototype.setMarkerStyle = function (style) {
+DvtThematicMap.prototype.setMarkerStyle = function(style) {
   this._markerStyle = style;
-}
+};
 
-DvtThematicMap.prototype.getEventHandler = function () {
+DvtThematicMap.prototype.getEventHandler = function() {
   return this._eventHandler;
-}
+};
 
-DvtThematicMap.prototype.addPointLayer = function (layer) {
+DvtThematicMap.prototype.addPointLayer = function(layer) {
   this._layers.push(layer);
-}
+};
 
-DvtThematicMap.prototype.addLayer = function (layer) {
+DvtThematicMap.prototype.addLayer = function(layer) {
   this._layers.push(layer);
-}
+};
 
-DvtThematicMap.prototype.getLayer = function (layerName) {
-  for (var i = 0;i < this._layers.length;i++) {
+DvtThematicMap.prototype.getLayer = function(layerName) {
+  for (var i = 0; i < this._layers.length; i++) {
     if (this._layers[i].getLayerName() == layerName)
       return this._layers[i];
   }
-}
+};
+
 
 /**
  * Returns the array of area layer and top level point data layers for this map
  * @return {Array} The array of map layers
  */
-DvtThematicMap.prototype.getAllLayers = function () {
+DvtThematicMap.prototype.getAllLayers = function() {
   return this._layers;
-}
+};
 
-DvtThematicMap.prototype.getAreaLayerContainer = function () {
+DvtThematicMap.prototype.getAreaLayerContainer = function() {
   return this._areaLayers;
-}
+};
 
-DvtThematicMap.prototype.getDataAreaContainer = function () {
+DvtThematicMap.prototype.getDataAreaContainer = function() {
   return this._dataAreaLayers;
-}
+};
 
-DvtThematicMap.prototype.getDataPointContainer = function () {
+DvtThematicMap.prototype.getDataPointContainer = function() {
   return this._dataPointLayers;
-}
+};
 
-DvtThematicMap.prototype.getLabelContainer = function () {
+DvtThematicMap.prototype.getLabelContainer = function() {
   return this._labelLayers;
-}
+};
 
-DvtThematicMap.prototype.setMapName = function (attr) {
+DvtThematicMap.prototype.setMapName = function(attr) {
   this._bBaseMapChanged = (this._mapName && this._mapName != attr);
   this._mapName = attr;
-}
+};
 
-DvtThematicMap.prototype.setAnimationOnDisplay = function (attr) {
+DvtThematicMap.prototype.setAnimationOnDisplay = function(attr) {
   this._animationOnDisplay = attr;
-}
+};
 
-DvtThematicMap.prototype.setAnimationOnMapChange = function (attr) {
+DvtThematicMap.prototype.setAnimationOnMapChange = function(attr) {
   this._animationOnMapChange = attr;
-}
+};
 
-DvtThematicMap.prototype.setAnimationDuration = function (attr) {
+DvtThematicMap.prototype.setAnimationDuration = function(attr) {
   this._animationDuration = parseFloat(attr);
-}
+};
+
 
 /**
  * Returns the animation duration for this component
  * @return {Number} The animation duration in milliseconds
  */
-DvtThematicMap.prototype.getAnimationDuration = function () {
+DvtThematicMap.prototype.getAnimationDuration = function() {
   return this._animationDuration;
-}
+};
 
-DvtThematicMap.prototype.setDisplayTooltips = function (attr) {
+DvtThematicMap.prototype.setDisplayTooltips = function(attr) {
   this._displayTooltips = attr;
-}
+};
 
-DvtThematicMap.prototype.getDisplayTooltips = function () {
+DvtThematicMap.prototype.getDisplayTooltips = function() {
   return this._displayTooltips;
-}
+};
 
-DvtThematicMap.prototype.setFeaturesOff = function (attr) {
+DvtThematicMap.prototype.setFeaturesOff = function(attr) {
   this._featuresOff = parseInt(attr);
   DvtThematicMap.superclass.setFeaturesOff.call(this, this._featuresOff);
-  
+
   var controls = this.getDisplayedControls();
-  if (this._featuresOff ==  DvtThematicMap._FEATURES_OFF_PAN || this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN_ZOOM ||
+  if (this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN || this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN_ZOOM ||
       this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN_ZOOMTOFIT || this._featuresOff == DvtThematicMap._FEATURES_OFF_ALL) {
     controls = controls & ~DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON;
     this.setPanning(false);
@@ -451,50 +468,51 @@ DvtThematicMap.prototype.setFeaturesOff = function (attr) {
       this._featuresOff == DvtThematicMap._FEATURES_OFF_ZOOM_ZOOMTOFIT || this._featuresOff == DvtThematicMap._FEATURES_OFF_ALL) {
     controls = controls & ~DvtPanZoomControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON;
   }
-    
+
   this.setDisplayedControls(controls);
-}
+};
 
-DvtThematicMap.prototype.setInitialCenterX = function (attr) {
+DvtThematicMap.prototype.setInitialCenterX = function(attr) {
   this._initialCenterX = parseFloat(attr);
-}
+};
 
-DvtThematicMap.prototype.setInitialCenterY = function (attr) {
+DvtThematicMap.prototype.setInitialCenterY = function(attr) {
   this._initialCenterY = parseFloat(attr);
-}
+};
 
-DvtThematicMap.prototype.setInitialZoom = function (attr) {
+DvtThematicMap.prototype.setInitialZoom = function(attr) {
   this._initialZoom = parseFloat(attr);
-}
+};
 
-DvtThematicMap.prototype.setAnimationOnDrill = function (attr) {
+DvtThematicMap.prototype.setAnimationOnDrill = function(attr) {
   if (attr == 'alphaFade')
     this._animationOnDrill = attr;
-}
+};
 
-DvtThematicMap.prototype.setDrillMode = function (attr) {
-    this._drillMode = attr;
-    this._eventHandler.setDrillMode(attr);
-}
+DvtThematicMap.prototype.setDrillMode = function(attr) {
+  this._drillMode = attr;
+  this._eventHandler.setDrillMode(attr);
+};
 
-DvtThematicMap.prototype.setInitialZooming = function (attr) {
-    this._initialZooming = attr;
-}
+DvtThematicMap.prototype.setInitialZooming = function(attr) {
+  this._initialZooming = attr;
+};
 
-DvtThematicMap.prototype.setDrillZoomToFit = function (attr) {
+DvtThematicMap.prototype.setDrillZoomToFit = function(attr) {
   this._drillZoomToFit = (attr == 'true');
-}
+};
 
-DvtThematicMap.prototype.getLegendPanel = function (node) {
+DvtThematicMap.prototype.getLegendPanel = function(node) {
   return this._legendPanel;
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMap.prototype.loadXml = function (xmlString, eventType, paramKeys, paramValues) {
+DvtThematicMap.prototype.loadXml = function(xmlString, eventType, paramKeys, paramValues) {
   //TODO remove once DvtAbstractComponent supports json
-  if (this.Options) {
+  if ((typeof xmlString == 'object') && this.Options) {
     var parser = new DvtThematicMapJsonParser(this);
     parser.parse(this.Options);
     return;
@@ -503,12 +521,13 @@ DvtThematicMap.prototype.loadXml = function (xmlString, eventType, paramKeys, pa
   if (xmlString == null || xmlString.length == 0)
     return;
   DvtThematicMap.superclass.loadXml.call(this, xmlString, eventType, paramKeys, paramValues);
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMap.prototype.LoadXmlInitial = function (eventType, rootXmlNode, paramKeys, paramValues) {
+DvtThematicMap.prototype.LoadXmlInitial = function(eventType, rootXmlNode, paramKeys, paramValues) {
   // 3 cases we need to handle
   // 1. Initial render
   // 2. New area layer
@@ -522,7 +541,7 @@ DvtThematicMap.prototype.LoadXmlInitial = function (eventType, rootXmlNode, para
     this._drillDataLayer = new Object();
     this._childToParent = new Object();
     this._drilled = [];
-    
+
     this.removeChild(this._legendPanel);
     this._legendPanel = null;
     this._legend = null;
@@ -532,7 +551,7 @@ DvtThematicMap.prototype.LoadXmlInitial = function (eventType, rootXmlNode, para
     this.setDisplayedControls(DvtPanZoomControlPanel.CONTROLS_ALL);
     this._zooming = true;
     this._panning = true;
-    
+
     // save a copy of the old pzc for animation
     this._oldPzc = this._pzc;
 
@@ -540,20 +559,21 @@ DvtThematicMap.prototype.LoadXmlInitial = function (eventType, rootXmlNode, para
     this._dataAreaLayers = new DvtContainer(this.getCtx());
     this._dataPointLayers = new DvtContainer(this.getCtx());
     this._labelLayers = new DvtContainer(this.getCtx());
-    
+
     this._createHandlers();
   }
-  
+
   // clear data tips from previous event handlers
   this._eventHandler.hideTooltip();
   this.GetXmlDomParser().loadXmlInitial(rootXmlNode);
-}
+};
+
 
 /**
  * Creates all the event handlers that this component needs
  * @private
  */
-DvtThematicMap.prototype._createHandlers = function () {
+DvtThematicMap.prototype._createHandlers = function() {
   // Each Tmap has only one keyboard handler. Each layer has its own event manager
   // because selection modes can differ between layers.
   this._eventHandler = new DvtThematicMapEventManager(this.getCtx(), this.__dispatchEvent, this);
@@ -564,43 +584,44 @@ DvtThematicMap.prototype._createHandlers = function () {
   } else {
     this._keyboardHandler = null;
   }
-}
+};
 
-DvtThematicMap.prototype.HandleLegendResize = function (event) {
+DvtThematicMap.prototype.HandleLegendResize = function(event) {
   if (!DvtAgent.isRightToLeft(this.getCtx())) {
     var x = this.GetWidth() - 5 - event.getWidth();
     this._legendPanel.setTranslateX(x);
   }
-}
+};
+
 
 /**
  * Creates, renders, and positions a DvtCommonLegend and its parent container within this component.
  * @private
  */
-DvtThematicMap.prototype._renderLegend = function () {
+DvtThematicMap.prototype._renderLegend = function() {
   if (this._legendXml) {
     // Cleanup previoius legend
     if (this._legendPanel) {
       this._legendPanel.destroy();
       this.removeChild(this._legendPanel);
     }
-  
+
     var disclosed = this._legendXml.getAttr('disclosed') == 'true';
     var isFixed = this._legendXml.getAttr('display') == 'fixed' || DvtAgent.isEnvironmentBatik();
     if ((isFixed && !disclosed))
       return;
-    
+
     // determine the max width of the legend container
     var maxWidth = this._legendXml.getAttr('maxWidth');
     // check if max legend width is given as a % or px
     var percentIndex = maxWidth.indexOf('%');
     var isPercent = (percentIndex != -1);
     if (isPercent)
-      maxWidth = parseFloat(maxWidth.substring(0,percentIndex))/100 * this.GetWidth();
+      maxWidth = parseFloat(maxWidth.substring(0, percentIndex)) / 100 * this.GetWidth();
     else
       maxWidth = parseFloat(maxWidth);
-    var maxHeight = this.GetHeight() - 2*DvtThematicMap._COLLAPSIBLE_PANEL_OFFSET;
-    
+    var maxHeight = this.GetHeight() - 2 * DvtThematicMap._COLLAPSIBLE_PANEL_OFFSET;
+
     // create the legend container based on the skin
     if (this.getSkinName() == DvtCSSStyle.SKIN_ALTA) {
       this._legendPanel = new DvtPanelDrawer(this.getCtx(), null, this, 'pd');
@@ -617,8 +638,8 @@ DvtThematicMap.prototype._renderLegend = function () {
         this._legendPanel.setTranslateX(0);
       }
     } else {
-      this._legendPanel = new DvtCollapsiblePanel(this.getCtx(), maxWidth, maxHeight, legendCollapseDir, 
-                                                this.getLegendButtonImages(), this.getControlPanelStyleMap(), disclosed, isFixed);
+      this._legendPanel = new DvtCollapsiblePanel(this.getCtx(), maxWidth, maxHeight, legendCollapseDir,
+          this._getLegendButtonImages(), this.getControlPanelStyleMap(), disclosed, isFixed);
       this._legendPanel.addEvtListener(DvtCollapsiblePanelEvent.TYPE, this.HandleLegendEvent, false, this);
       this._legendPanel.addEvtListener(DvtResizeEvent.RESIZE_EVENT, this.HandleLegendResize, false, this);
       var expandTooltip = this._legendXml.getAttr('expandTooltip');
@@ -626,26 +647,26 @@ DvtThematicMap.prototype._renderLegend = function () {
       var legendCollapseDir = DvtAgent.isRightToLeft(this.getCtx()) ? DvtCollapsiblePanel.COLLAPSE_NORTHWEST : DvtCollapsiblePanel.COLLAPSE_NORTHEAST;
       this._legendPanel.setButtonTooltips(expandTooltip, collapseTooltip);
     }
-    
+
     // create and render the legend
-    this._legend = new DvtCommonLegend(this.getCtx(), this._legendPanel.getMaxContentWidth(), 
-                                        this._legendPanel.getMaxContentHeight(), this.getLegendButtonImages(), this.getLegendStyleMap());
+    this._legend = new DvtCommonLegend(this.getCtx(), this._legendPanel.getMaxContentWidth(),
+        this._legendPanel.getMaxContentHeight(), this._getLegendButtonImages(), this.getLegendStyleMap());
     this._legend.setXML(this._legendXml);
     this.addChild(this._legendPanel);
     this.addChild(this._legend); // temp add for rendering
     this._legend.render();
-    
+
     // add the legend to its container
     var legendPanelDim;
     if (this.getSkinName() == DvtCSSStyle.SKIN_ALTA) {
       var dim = this._legend.getDimensions();
       this._legendPanel.setMaxContainerHeight(dim.h);
       this.removeChild(this._legend);
-      
-      var upState = new DvtImage(this.getCtx(), this.getResourcesMap()[DvtPanelDrawer.PANEL_LEGEND_ICON_ENA], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
-      var overState = new DvtImage(this.getCtx(), this.getResourcesMap()[DvtPanelDrawer.PANEL_LEGEND_ICON_OVR], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
-      var downState = new DvtImage(this.getCtx(), this.getResourcesMap()[DvtPanelDrawer.PANEL_LEGEND_ICON_DWN], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
-      var tip = this.getResourcesMap()[DvtPanelDrawer.PANEL_LEGEND_TIP];
+
+      var upState = new DvtImage(this.getCtx(), this._getPanelDrawerImages()[DvtPanelDrawer.PANEL_LEGEND_ICON_ENA], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
+      var overState = new DvtImage(this.getCtx(), this._getPanelDrawerImages()[DvtPanelDrawer.PANEL_LEGEND_ICON_OVR], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
+      var downState = new DvtImage(this.getCtx(), this._getPanelDrawerImages()[DvtPanelDrawer.PANEL_LEGEND_ICON_DWN], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
+      var tip = this._getPanelDrawerTranslations()[DvtPanelDrawer.PANEL_LEGEND_TIP];
       this._legendPanel.addPanel(this._legend, upState, overState, downState, tip, DvtPanelDrawer.PANEL_LEGEND);
       this._legendPanel.renderComponent();
       if (disclosed)
@@ -657,66 +678,67 @@ DvtThematicMap.prototype._renderLegend = function () {
       var x = DvtAgent.isRightToLeft(this.getCtx()) ? 5 : this.GetWidth() - 5 - legendPanelDim.w - legendPanelDim.x;
       this._legendPanel.setTranslate(x, 5);
       // add on the 5 px border gap to account for legend size when resetting pzc size for fixed legend
-      legendPanelDim.w += 5; 
+      legendPanelDim.w += 5;
     }
-    
+
     this._isFixedLegend = isFixed;
     if (isFixed) {
       if (!legendPanelDim)
         legendPanelDim = this._legendPanel.getDimensions();
       this._legendWidth = legendPanelDim.w;
     }
-    
-  }
-}
 
-DvtThematicMap.prototype.InitComponentInternal = function () {
+  }
+};
+
+DvtThematicMap.prototype.InitComponentInternal = function() {
   DvtThematicMap.superclass.InitComponentInternal.call(this);
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMap.prototype.RenderComponentInternal = function () {
+DvtThematicMap.prototype.RenderComponentInternal = function() {
   DvtThematicMap.superclass.RenderComponentInternal.call(this);
-  
+
   // Create a new container and render the component into it
   var pzcContainer = new DvtContainer(this.getCtx());
   var cpContainer = new DvtContainer(this.getCtx());
   this._pzc.addChild(pzcContainer);
   this._pzc.getContentPane().addChild(cpContainer);
-  this._render(pzcContainer, cpContainer);  
-  
+  this._render(pzcContainer, cpContainer);
+
   if (!this._topLayer)
     return;
-  
+
   // Re-add the control panel on top of any rendered layers
   this._controlPanel = this._pzc.getControlPanel();
   if (this._controlPanel)
     this._pzc.addChild(this._controlPanel);
-  
+
   // Animation Support
   // Stop any animation in progress
   this._stopAnimation();
-  var bBlackBoxUpdate = false
+  var bBlackBoxUpdate = false;
   var bounds = new DvtRectangle(0, 0, this.GetWidth(), this.GetHeight());
   // 3 types of animations can occur
   // 1) animation on display
   // 2) animation on base map change
   // 3) animation on area layer change
-  
+
   if (!this._bRendered && !this._oldPzc) { // Case 1
     // animation on display
     if (DvtBlackBoxAnimationHandler.isSupported(this._animationOnDisplay)) {
-      this._animation = DvtBlackBoxAnimationHandler.getInAnimation(this.getCtx(), this._animationOnDisplay, 
-                                                                  this._pzc, bounds, 
-                                                                  this._animationDuration);
+      this._animation = DvtBlackBoxAnimationHandler.getInAnimation(this.getCtx(), this._animationOnDisplay,
+          this._pzc, bounds,
+          this._animationDuration);
     }
   }
-  else { 
-    // Trying to match Flash. If the layer changes for example from country to states then we should display the data 
-    // layer's animationOnDataChange. However an area layer can have multiple data layers (area and points). We will 
-    // just use the animation of the first data layer. 
+  else {
+    // Trying to match Flash. If the layer changes for example from country to states then we should display the data
+    // layer's animationOnDataChange. However an area layer can have multiple data layers (area and points). We will
+    // just use the animation of the first data layer.
     var anim = null;
     if (this._bBaseMapChanged && !this._bRenderNullXml) { // Case 2
       anim = this._animationOnMapChange;
@@ -731,12 +753,12 @@ DvtThematicMap.prototype.RenderComponentInternal = function () {
           }
         }
       }
-    }    
+    }
     if (anim && DvtBlackBoxAnimationHandler.isSupported(anim)) {
-      this._animation = DvtBlackBoxAnimationHandler.getCombinedAnimation(this.getCtx(), anim, 
-                                                                        this._oldPzc, 
-                                                                        this._pzc, bounds, 
-                                                                        this._animationDuration);        
+      this._animation = DvtBlackBoxAnimationHandler.getCombinedAnimation(this.getCtx(), anim,
+          this._oldPzc,
+          this._pzc, bounds,
+          this._animationDuration);
       if (this._animation)
         this.addChild(this._oldPzc);
       bBlackBoxUpdate = true;
@@ -761,29 +783,31 @@ DvtThematicMap.prototype.RenderComponentInternal = function () {
   // Update the pointers
   this._pzcContainer = pzcContainer;
   this._cpContainer = cpContainer;
-  
-  if(this._topLayer){
+
+  if (this._topLayer) {
     this._oldTopLayerName = this._topLayer.getLayerName();
   }
-  
+
   this._bRendered = true;
-}
+};
+
 
 /**
  * Calculate the minimum zoom for this basemap taking into account the pan zoom canvas size
  * @return {number} The minimum zoom for this basemap
  * @private
  */
-DvtThematicMap.prototype._calcMinZoom = function () {
-    var zoomPadding = this._pzc.getZoomToFitPadding();
-    var mapDim = this._topLayer.getLayerDim();
-    var pzcDim = this._pzc.getSize();
-    pzcDim.w = this._isFixedLegend ? pzcDim.w - this._legendWidth : pzcDim.w;
-    var dzx = (pzcDim.w - 2 * zoomPadding) / mapDim.w;
-    var dzy = (pzcDim.h - 2 * zoomPadding) / mapDim.h;
-    var dz = Math.min(dzx, dzy);
-    return dz;
-}
+DvtThematicMap.prototype._calcMinZoom = function() {
+  var zoomPadding = this._pzc.getZoomToFitPadding();
+  var mapDim = this._topLayer.getLayerDim();
+  var pzcDim = this._pzc.getSize();
+  pzcDim.w = this._isFixedLegend ? pzcDim.w - this._legendWidth : pzcDim.w;
+  var dzx = (pzcDim.w - 2 * zoomPadding) / mapDim.w;
+  var dzy = (pzcDim.h - 2 * zoomPadding) / mapDim.h;
+  var dz = Math.min(dzx, dzy);
+  return dz;
+};
+
 
 /**
  * Renders all layers and subcomponents for this component
@@ -791,10 +815,10 @@ DvtThematicMap.prototype._calcMinZoom = function () {
  * @param {DvtContainer} cpContainer A child container of the pan zoom canvas content pane
  * @private
  */
-DvtThematicMap.prototype._render = function (pzcContainer, cpContainer) {
+DvtThematicMap.prototype._render = function(pzcContainer, cpContainer) {
   // render legend first since a fixed legend will affect the canvas size
   this._renderLegend();
-    
+
   // Add all containers
   cpContainer.addChild(this._areaLayers);
   cpContainer.addChild(this._dataAreaLayers);
@@ -803,11 +827,11 @@ DvtThematicMap.prototype._render = function (pzcContainer, cpContainer) {
   else
     cpContainer.addChild(this._dataPointLayers);
   pzcContainer.addChild(this._labelLayers);
-  
+
   // Render all point layers and the first area layer
   var pzcMatrix = this._pzc.getContentPane().getMatrix();
   this._topLayerRendered = false;
-  for (var i = 0;i < this._layers.length;i++) {
+  for (var i = 0; i < this._layers.length; i++) {
     var layer = this._layers[i];
     if ((!this._topLayerRendered && layer instanceof DvtMapAreaLayer) || !(layer instanceof DvtMapAreaLayer)) {
       layer.render(pzcMatrix);
@@ -817,26 +841,26 @@ DvtThematicMap.prototype._render = function (pzcContainer, cpContainer) {
       }
     }
   }
-  
+
   if (!this._topLayer)
     return;
-  
+
   // Set initially focused area
   var navigables = this.getNavigableAreas();
   if (navigables.length == 0)
     navigables = this.getNavigableObjects();
-  
+
   // just use the first object as the focus
   if (this._keyboardHandler)
     this._eventHandler.setInitialFocus(navigables[0]);
-  
+
   // do not set min and max zoom before calling zoom to fit on map
   this._pzc.setMinZoom(null);
-  this._pzc.setMaxZoom(null);  
+  this._pzc.setMaxZoom(null);
   this._pzc.setZoomingEnabled(true);
   this._pzc.setPanningEnabled(true);
-  
-  //Check to see if zoom and pan was intitially set, otherwise fit and center to area 
+
+  //Check to see if zoom and pan was intitially set, otherwise fit and center to area
   // On resize and basemap change we want to refit the map to the viewport so ignore any saved zoom state
   if (!this._bBaseMapChanged && !this._bRenderNullXml && this._initialZoom != null) {
     this._pzc.zoomTo(this._initialZoom);
@@ -845,28 +869,29 @@ DvtThematicMap.prototype._render = function (pzcContainer, cpContainer) {
     this._zoomData();
   } else {
     // Only zoom to fit on initial render
-    this._pzc.zoomToFit(null, this._topLayer.getLayerDim()); 
+    this._pzc.zoomToFit(null, this._topLayer.getLayerDim());
   }
-  
+
   // Set initially drilled regions
   this._processInitialDrilled();
-  
+
   // Get the current zoom of the canvas to set min canvas zoom to fit component in viewport
   this._updateZoomLimits();
-  
+
   this._pzc.setZoomingEnabled(this._zooming);
   this._pzc.setPanningEnabled(this._panning);
-}
+};
+
 
 /**
  * Called on data layer ppr to render a data layer with new data.
  * @param {String} xmlString The xml string containing data layer information.
  */
-DvtThematicMap.prototype.updateLayer = function (xmlString) {
+DvtThematicMap.prototype.updateLayer = function(xmlString) {
   // Stop any animations before starting layer animations
   this._bRendered = false;
   this._stopAnimation();
-  
+
   // Parse new data layer
   var parser = this.GetXmlStringParser();
   if (parser) {
@@ -877,134 +902,148 @@ DvtThematicMap.prototype.updateLayer = function (xmlString) {
       this._bRendered = true;
     }
   }
-  
+
   // reset zoom limits since we could now have an isolated area after data layer update
   this._updateZoomLimits();
-}
+};
+
 
 /**
  * Determines and sets the min and max zoom for the component.
  * @private
  */
-DvtThematicMap.prototype._updateZoomLimits = function () {
+DvtThematicMap.prototype._updateZoomLimits = function() {
   var fittedZoom = this._calcMinZoom();
   this._pzc.setMinZoom(fittedZoom);
   this._pzc.setMaxZoom(fittedZoom * this.getMaxZoomFactor());
-}
+};
 
-DvtThematicMap.prototype.OnUpdateLayerEnd = function () {
+DvtThematicMap.prototype.OnUpdateLayerEnd = function() {
   this._processInitialDrilled();
-  
+
   if (this._initialZooming)
     this._zoomData();
   else if (this._initialZoom == null)
-    this._pzc.zoomToFit(null, this._topLayer.getLayerDim()); 
-}
+    this._pzc.zoomToFit(null, this._topLayer.getLayerDim());
+};
 
-DvtThematicMap.prototype.getMapName = function () {
+DvtThematicMap.prototype.getMapName = function() {
   return this._mapName;
-}
+};
 
-DvtThematicMap.prototype.getDrillMode = function () {
+DvtThematicMap.prototype.getDrillMode = function() {
   return this._drillMode;
-}
+};
+
+
+/**
+ * @private
+ */
+DvtThematicMap.prototype._getPanelDrawerImages = function() {
+  return this.Options[DvtThematicMap._ELEM_RESOURCES]['images'][DvtThematicMap._ELEM_RESOURCES_PANEL_DRAWER];
+};
+
+/**
+ * @private
+ */
+DvtThematicMap.prototype._getPanelDrawerTranslations = function() {
+  return this.Options[DvtThematicMap._ELEM_RESOURCES]['translations'][DvtThematicMap._ELEM_RESOURCES_PANEL_DRAWER];
+};
+
+/**
+ * @private
+ */
+DvtThematicMap.prototype._getLegendButtonImages = function() {
+  return this.Options[DvtThematicMap._ELEM_RESOURCES]['images'][DvtThematicMap._ELEM_RESOURCES_LEGEND];
+};
 
 /**
  * @override
- * @param {DvtXmlNode} resources The xml node containing component resources
  */
-DvtThematicMap.prototype.setResources = function (resources) {
-  var childNodes = resources.getChildNodes();
-  for (var i = 0;i < childNodes.length;i++) {
-    var node = childNodes[i];
-    var nodeName = node.getName();
-    if (nodeName == DvtThematicMap._ELEM_RESOURCES_CONTROLPANEL)
-      DvtThematicMap.superclass.setButtonImages.call(this, node);
-    else if (nodeName == DvtThematicMap._ELEM_RESOURCES_LEGEND)
-      this._legendButtonImages = node;
-    else if (nodeName == DvtThematicMap._ELEM_RESOURCES_PANEL_DRAWER) {
-      var arAttrs = node.getAttributes();
-      for (var j = 0; j < arAttrs.length; j++) {
-        var pair = arAttrs[j];
-        this.getResourcesMap()[pair.name] = pair.value;
-      }
-    }
-  }
-}
+DvtThematicMap.prototype.getButtonImages = function() {
+  return this.Options[DvtThematicMap._ELEM_RESOURCES]['images'][DvtThematicMap._ELEM_RESOURCES_CONTROLPANEL];
+};
 
-DvtThematicMap.prototype.getLegendButtonImages = function () {
-  return this._legendButtonImages;
-}
+/**
+ * @override
+ */
+DvtThematicMap.prototype.getPanZoomResources = function() {
+  return this.Options[DvtThematicMap._ELEM_RESOURCES]['translations'][DvtThematicMap._ELEM_RESOURCES_CONTROLPANEL];
+};
 
-DvtThematicMap.prototype.setLegendXml = function (legendXml) {
+DvtThematicMap.prototype.setLegendXml = function(legendXml) {
   this._legendXml = legendXml;
-}
+};
 
-DvtThematicMap.prototype.setRolloverBehavior = function (rolloverBehavior) {
+DvtThematicMap.prototype.setRolloverBehavior = function(rolloverBehavior) {
   //  if (this._legend) {
   //    if ("dim" == rolloverBehavior && "dim" != this._rolloverBehavior) {
-  //      this._legend.getDisplayObj().addEvtListener('legendItemRollOver', this._rolloverCallback, false, this);      
+  //      this._legend.getDisplayObj().addEvtListener('legendItemRollOver', this._rolloverCallback, false, this);
   //    }
   //    if ("dim" != rolloverBehavior && "dim" == this._rolloverBehavior) {
   //      this._legend.getDisplayObj().removeEvtListener('legendItemRollOver', this._rolloverCallback, false, this);
   //    }
   //  }
   this._rolloverBehavior = rolloverBehavior;
-}
+};
 
-DvtThematicMap.prototype.getRolloverBehavior = function () {
+DvtThematicMap.prototype.getRolloverBehavior = function() {
   return this._rolloverBehavior;
-}
+};
 
-DvtThematicMap.prototype.GetXmlDomParser = function () {
+DvtThematicMap.prototype.GetXmlDomParser = function() {
   return new DvtThematicMapParser(this);
-}
+};
+
 
 /**
  * Handles transforms for containers that aren't updated by the pan zoom canvas
  * @param {DvtMatrix} pzcMatrix The pan zoom canvas transform
  * @private
  */
-DvtThematicMap.prototype._transformContainers = function (pzcMatrix) {
+DvtThematicMap.prototype._transformContainers = function(pzcMatrix) {
   // this._areaLayers, and this._dataAreaLayers transforms handled by pzc
-  
+
   // update point and label layers with new panX/panY
   var mat = new DvtMatrix();
   mat.translate(pzcMatrix.getTx(), pzcMatrix.getTy());
-  
+
   // this._dataPointLayers zoom transforms handled by markers to avoid scaling marker filter effects
   // tx/ty transforms are handled by tmap for better interactivity
   if (this.isMarkerZoomBehaviorFixed())
     this._dataPointLayers.setMatrix(mat);
   this._labelLayers.setMatrix(mat);
-}
+};
+
 
 /**
  * Creates and sends a DvtSetPropertyEvent to the peer for control panel state saving
- * @param {DvtPanZoomControlPanelEvent) event The event fired by the control panel on collapse/expand
+ * @param {DvtPanZoomControlPanelEvent) event The event fired by the control panel on collapse/expand}
  * @protected
  */
-DvtThematicMap.prototype.HandleControlPanelEvent = function (event) {
+DvtThematicMap.prototype.HandleControlPanelEvent = function(event) {
   DvtThematicMap.superclass.HandleControlPanelEvent.call(this, event);
   var spEvent = new DvtSetPropertyEvent();
-  spEvent.addParam(DvtPanZoomControlPanel.CONTROL_PANEL_BEHAVIOR_KEY, 
-                  event.getSubType() == DvtPanZoomControlPanelEvent.SUBTYPE_SHOW ?
-                  DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_INIT_EXPANDED :
-                  DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_INIT_COLLAPSED);
+  spEvent.addParam(DvtPanZoomControlPanel.CONTROL_PANEL_BEHAVIOR_KEY,
+      event.getSubType() == DvtPanZoomControlPanelEvent.SUBTYPE_SHOW ?
+      DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_INIT_EXPANDED :
+      DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_INIT_COLLAPSED);
   this.__dispatchEvent(spEvent);
-}
+};
+
 
 /**
  * Creates and sends a DvtSetPropertyEvent to the peer for legend state saving
- * @param {DvtBaseComponentEvent) event The event fired by the legend container panel on collapse/expand
+ * @param {DvtBaseComponentEvent) event The event fired by the legend container panel on collapse/expand}
  * @protected
  */
-DvtThematicMap.prototype.HandleLegendEvent = function (event) {
+DvtThematicMap.prototype.HandleLegendEvent = function(event) {
   // Currently only one collapsible container which contains a legend
   var spEvent = new DvtSetPropertyEvent();
   spEvent.addParam(DvtCommonLegend.LEGEND_DISCLOSED_KEY, event.getSubType() == DvtCollapsiblePanelEvent.SUBTYPE_SHOW);
   this.__dispatchEvent(spEvent);
-}
+};
+
 
 /**
  * Constrain the component panning so that we only allow panning when zoomed beyond the current viewport and we don't
@@ -1012,19 +1051,19 @@ DvtThematicMap.prototype.HandleLegendEvent = function (event) {
  * @param {number} zoom The current component zoom
  * @private
  */
-DvtThematicMap.prototype._constrainPanning = function (zoom) {
+DvtThematicMap.prototype._constrainPanning = function(zoom) {
   var padding = this._pzc.getZoomToFitPadding();
   var pzcDim = this._pzc.getSize();
-  var viewportDim = new DvtRectangle(padding, padding, pzcDim.w-2*padding, pzcDim.h-2*padding);
+  var viewportDim = new DvtRectangle(padding, padding, pzcDim.w - 2 * padding, pzcDim.h - 2 * padding);
   var mapDim = this._topLayer.getLayerDim();
-  var zoomedMapX = mapDim.x*zoom;
-  var zoomedMapY = mapDim.y*zoom;
-  var zoomedMapW = mapDim.w*zoom;
-  var zoomedMapH = mapDim.h*zoom;
-  
-  if (zoomedMapW>viewportDim.w) {
-    this._pzc.setMinPanX((viewportDim.x+viewportDim.w) - (zoomedMapX+zoomedMapW));
-    this._pzc.setMaxPanX(viewportDim.x-zoomedMapX);
+  var zoomedMapX = mapDim.x * zoom;
+  var zoomedMapY = mapDim.y * zoom;
+  var zoomedMapW = mapDim.w * zoom;
+  var zoomedMapH = mapDim.h * zoom;
+
+  if (zoomedMapW > viewportDim.w) {
+    this._pzc.setMinPanX((viewportDim.x + viewportDim.w) - (zoomedMapX + zoomedMapW));
+    this._pzc.setMaxPanX(viewportDim.x - zoomedMapX);
   } else {
     // if smaller, center it in the viewport
     var legendAdjust = 0;
@@ -1032,27 +1071,28 @@ DvtThematicMap.prototype._constrainPanning = function (zoom) {
       if (DvtAgent.isRightToLeft(this.getCtx())) {
         if (this._isZoomingToFit)
           legendAdjust = -this._legendWidth * 2;
-        else 
+        else
           legendAdjust = -this._legendWidth;
       } else {
         if (!this._isZoomingToFit)
           legendAdjust = this._legendWidth;
       }
     }
-    var minMaxX = (viewportDim.x+viewportDim.w-legendAdjust)/2 - (zoomedMapX+zoomedMapW/2);
+    var minMaxX = (viewportDim.x + viewportDim.w - legendAdjust) / 2 - (zoomedMapX + zoomedMapW / 2);
     this._pzc.setMinPanX(minMaxX);
     this._pzc.setMaxPanX(minMaxX);
   }
 
-  if (zoomedMapH>viewportDim.h) {
-    this._pzc.setMinPanY((viewportDim.y+viewportDim.h) - (zoomedMapY+zoomedMapH));
-    this._pzc.setMaxPanY(viewportDim.y-zoomedMapY);
+  if (zoomedMapH > viewportDim.h) {
+    this._pzc.setMinPanY((viewportDim.y + viewportDim.h) - (zoomedMapY + zoomedMapH));
+    this._pzc.setMaxPanY(viewportDim.y - zoomedMapY);
   } else {
-    var minMaxY = (viewportDim.y+viewportDim.h)/2 - (zoomedMapY+zoomedMapH/2);
+    var minMaxY = (viewportDim.y + viewportDim.h) / 2 - (zoomedMapY + zoomedMapH / 2);
     this._pzc.setMinPanY(minMaxY);
     this._pzc.setMaxPanY(minMaxY);
   }
-}
+};
+
 
 /**
  * Updates the DvtAnimator associated with a pan or zoom event with additional properties for containers not added to the content pane.
@@ -1069,25 +1109,26 @@ DvtThematicMap.prototype._updateAnimator = function(event, bRecenterObjs) {
       this._currentAnimMatrix = contentPane.getMatrix();
       animator.addProp(DvtAnimator.TYPE_MATRIX, this, this._getCenteredObjsMatrix, this._setCenteredObjsMatrix, mat);
     }
-    var transMat = new DvtMatrix(1,0,0,1,mat.getTx(),mat.getTy());
+    var transMat = new DvtMatrix(1, 0, 0, 1, mat.getTx(), mat.getTy());
     if (this.isMarkerZoomBehaviorFixed())
       animator.addProp(DvtAnimator.TYPE_MATRIX, this._dataPointLayers, this._dataPointLayers.getMatrix, this._dataPointLayers.setMatrix, transMat);
     animator.addProp(DvtAnimator.TYPE_MATRIX, this._labelLayers, this._labelLayers.getMatrix, this._labelLayers.setMatrix, transMat);
   }
-}
+};
+
 
 /**
  * Processes a zoom event for this component and subcomponents.
  * @param {DvtZoomEvent} event The event to process
  * @protected
  */
-DvtThematicMap.prototype.HandleZoomEvent = function (event) {
+DvtThematicMap.prototype.HandleZoomEvent = function(event) {
   var type = event.getSubType();
-  switch(type) {
+  switch (type) {
     case DvtZoomEvent.SUBTYPE_ADJUST_PAN_CONSTRAINTS:
       // Calculate the new content dimensions based on the new zoom
       if (this._panning)
-        this._constrainPanning(event.getNewZoom());    
+        this._constrainPanning(event.getNewZoom());
       break;
     case DvtZoomEvent.SUBTYPE_ZOOMING:
     case DvtZoomEvent.SUBTYPE_ELASTIC_ANIM_BEGIN:
@@ -1102,10 +1143,10 @@ DvtThematicMap.prototype.HandleZoomEvent = function (event) {
         // null out animator for Flash. Temp fix until bug 17080391 is done.
         event._animator = null;
         DvtEventDispatcher.dispatchEvent(this._callback, this._callbackObj, this, event);
-  
+
         this._transformContainers(pzcMatrix);
-        
-        for (var i = 0;i < this._layers.length;i++)
+
+        for (var i = 0; i < this._layers.length; i++)
           this._layers[i].HandleZoomEvent(event, pzcMatrix);
       }
       break;
@@ -1123,20 +1164,21 @@ DvtThematicMap.prototype.HandleZoomEvent = function (event) {
       this._isZoomingToFit = false;
       if (this._isFixedLegend)
         this._pzc.setSize(this.GetWidth(), this.GetHeight(), true);
-        
-      DvtEventDispatcher.dispatchEvent(this._callback, this._callbackObj, this,  new DvtZoomEvent());
+
+      DvtEventDispatcher.dispatchEvent(this._callback, this._callbackObj, this, new DvtZoomEvent());
       break;
     default:
       break;
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMap.prototype.HandlePanEvent = function (event) {
+DvtThematicMap.prototype.HandlePanEvent = function(event) {
   var subType = event.getSubType();
-  if (subType == DvtPanEvent.SUBTYPE_ELASTIC_ANIM_BEGIN) {   
+  if (subType == DvtPanEvent.SUBTYPE_ELASTIC_ANIM_BEGIN) {
     this._updateAnimator(event, false);
   }
   else if (subType == DvtPanEvent.SUBTYPE_PANNED) {
@@ -1148,14 +1190,14 @@ DvtThematicMap.prototype.HandlePanEvent = function (event) {
       // null out animator for Flash. Temp fix until bug 17080391 is done.
       event._animator = null;
       DvtEventDispatcher.dispatchEvent(this._callback, this._callbackObj, this, event);
-      
+
       this._transformContainers(pzcMatrix);
-      
-      for (var i = 0;i < this._layers.length;i++)
+
+      for (var i = 0; i < this._layers.length; i++)
         this._layers[i].HandlePanEvent(pzcMatrix);
     }
   }
-  
+
   if (this._legendPanel) {
     // Handle DvtPanelDrawer fade
     if (this.getSkinName() == DvtCSSStyle.SKIN_ALTA) {
@@ -1177,7 +1219,7 @@ DvtThematicMap.prototype.HandlePanEvent = function (event) {
           this._legendPanel._buttonFrame.setAlpha(styleMap[DvtPanZoomControlPanel.FRAME_DRAG_ALPHA]);
         this._legendPanel.setMouseEnabled(false);
       }
-      else if (subType === DvtPanEvent.SUBTYPE_DRAG_PAN_END){
+      else if (subType === DvtPanEvent.SUBTYPE_DRAG_PAN_END) {
         this._legend.setAlpha(1);
         stroke.setAlpha(styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
         this._legendPanel._background.setStroke(stroke);
@@ -1187,46 +1229,46 @@ DvtThematicMap.prototype.HandlePanEvent = function (event) {
       }
     }
   }
-}
+};
 
-DvtThematicMap.prototype.CreatePanZoomCanvas = function (ww, hh) {
-  if (this._drillMode == 'none' && 
-     (this._featuresOff == DvtThematicMap._FEATURES_OFF_ALL || (!this._zooming && this.getSkinName() == DvtCSSStyle.SKIN_ALTA)))
+DvtThematicMap.prototype.CreatePanZoomCanvas = function(ww, hh) {
+  if (this._drillMode == 'none' &&
+      (this._featuresOff == DvtThematicMap._FEATURES_OFF_ALL || (!this._zooming && this.getSkinName() == DvtCSSStyle.SKIN_ALTA)))
     this.setControlPanelBehavior(DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_HIDDEN);
-    
+
   this._pzc = DvtThematicMap.superclass.CreatePanZoomCanvas.call(this, ww, hh);
   // Create control panel with drilling buttons if drilling is on
   if (this.getControlPanelBehavior() != DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_HIDDEN && this._drillMode != 'none') {
-    var callbacks = [DvtObj.createCallback(this, this.drillUp), DvtObj.createCallback(this, this.drillDown), DvtObj.createCallback(this, this.resetMap)]
-    var controlPanel = new DvtThematicMapControlPanel(this.getCtx(), this._drillMode, this._buttonImages, 
-                                                        callbacks, this._pzc, this.getPanZoomResources(), 
-                                                        this.getDisplayedControls(), this);
-    this._pzc.setControlPanel(controlPanel);  
+    var callbacks = [DvtObj.createCallback(this, this.drillUp), DvtObj.createCallback(this, this.drillDown), DvtObj.createCallback(this, this.resetMap)];
+    var controlPanel = new DvtThematicMapControlPanel(this.getCtx(), this._drillMode, this.getButtonImages(),
+        callbacks, this._pzc, this.getPanZoomResources(),
+        this.getDisplayedControls(), this);
+    this._pzc.setControlPanel(controlPanel);
   }
-  
+
   this._eventHandler.setPanZoomCanvas(this._pzc);
   return this._pzc;
-}
+};
 
-DvtThematicMap.prototype.setZooming = function (attr) {
+DvtThematicMap.prototype.setZooming = function(attr) {
   this._zooming = attr;
-}
+};
 
-DvtThematicMap.prototype.setPanning = function (attr) {
+DvtThematicMap.prototype.setPanning = function(attr) {
   this._panning = attr;
-}
+};
 
-DvtThematicMap.prototype.addDisclosedRowKey = function (drilled) {
+DvtThematicMap.prototype.addDisclosedRowKey = function(drilled) {
   this._drilledRowKeys.push(drilled);
-}
+};
 
-DvtThematicMap.prototype.addDrilledLayer = function (layerName, drilled) {
+DvtThematicMap.prototype.addDrilledLayer = function(layerName, drilled) {
   this._initDrilled[layerName] = drilled;
-}
+};
 
-DvtThematicMap.prototype._processInitialDrilled = function () {
+DvtThematicMap.prototype._processInitialDrilled = function() {
   this._processingInitDrilled = true;
-  for (var i=0; i< this._layers.length; i++) {
+  for (var i = 0; i < this._layers.length; i++) {
     var layerName = this._layers[i].getLayerName();
     if (layerName in this._initDrilled) {
       this._selectedAreas[layerName] = this._initDrilled[layerName][1];
@@ -1236,22 +1278,22 @@ DvtThematicMap.prototype._processInitialDrilled = function () {
     }
   }
   this._processingInitDrilled = false;
-}
+};
 
-DvtThematicMap.prototype.resetMap = function () {
+DvtThematicMap.prototype.resetMap = function() {
   // stop previous animation
   this._stopAnimation();
-  
+
   //Clear selection and drilled starting from the lowest layer
   var removeObjs = [];
   var addObjs = [];
-  for (var i = this._layers.length-1; i > -1; i--) {
+  for (var i = this._layers.length - 1; i > -1; i--) {
     if (this._layers[i].getLayerName() == this._topLayer.getLayerName())
       this._layers[i].reset(addObjs);
     else
       this._layers[i].reset(removeObjs);
   }
-  for (var j=0; j<removeObjs.length; j++) {
+  for (var j = 0; j < removeObjs.length; j++) {
     if (removeObjs[j]) {
       var parent = removeObjs[j].getParent();
       if (parent)
@@ -1259,7 +1301,7 @@ DvtThematicMap.prototype.resetMap = function () {
     }
   }
   // addObjs have opacity set to 0
-  for (var j=0; j<addObjs.length; j++) {
+  for (var j = 0; j < addObjs.length; j++) {
     if (addObjs[j]) {
       addObjs[j].setAlpha(1);
     }
@@ -1273,13 +1315,14 @@ DvtThematicMap.prototype.resetMap = function () {
     this._controlPanel.setEnabledDrillUpButton(false);
   }
 
-}
+};
+
 
 /**
  * Zooms map to fit the current rendered data
  * @private
  */
-DvtThematicMap.prototype._zoomData = function () {
+DvtThematicMap.prototype._zoomData = function() {
   var areaBounds = this._dataAreaLayers.getDimensions();
   var pointBounds = this._dataPointLayers.getDimensions();
   if (this.isMarkerZoomBehaviorFixed()) {
@@ -1289,7 +1332,7 @@ DvtThematicMap.prototype._zoomData = function () {
     pointBounds.x /= mat.getA();
     pointBounds.y /= mat.getD();
   }
-  
+
   var bounds = areaBounds.getUnion(pointBounds);
   this._stopAnimation();
   if (DvtAgent.isEnvironmentBrowser())
@@ -1300,30 +1343,33 @@ DvtThematicMap.prototype._zoomData = function () {
     this._pzc.zoomToFit(this._animation, this._topLayer.getLayerDim());
   if (this._animation)
     this._animation.play();
-}
+};
+
 
 /**
  * Zooms the component to fit the passed in bounds
- * @param {DvtRectangle} bounds The bounds to zoom 
+ * @param {DvtRectangle} bounds The bounds to zoom
  * @private
  */
-DvtThematicMap.prototype._zoomToFitBounds = function (bounds) {
+DvtThematicMap.prototype._zoomToFitBounds = function(bounds) {
   var animator = new DvtAnimator(this.getCtx(), .3);
   this._pzc.zoomToFit(animator, bounds);
   animator.play();
-}
+};
+
 
 /**
  * Zooms the component to fit a passed in or last clicked area
  * @param {DvtMapDataArea} toFit The area to zoom to fit to
  */
-DvtThematicMap.prototype.fitRegion = function (toFit) {
+DvtThematicMap.prototype.fitRegion = function(toFit) {
   if (!toFit)
     toFit = this._zoomToFitObject;
   if (!toFit)
     toFit = this._clickedObject;
   this._zoomToFitBounds(toFit.getDimensions());
-}
+};
+
 
 /**
  * Zooms the component to fit the currently selected areas
@@ -1335,56 +1381,56 @@ DvtThematicMap.prototype.fitSelectedRegions = function() {
       var selectionHandler = dataLayer._selectionHandler;
       if (selectionHandler) {
         var selection = selectionHandler.getSelection();
-        for (var i=0; i<selection.length; i++) {
+        for (var i = 0; i < selection.length; i++) {
           selection[i] = selection[i].getDisplayable();
         }
         if (selection.length > 0) {
           var bounds = selection[0].getDimensions();
-          for (var i=1; i< selection.length; i++)
+          for (var i = 1; i < selection.length; i++)
             bounds = bounds.getUnion(selection[i].getDimensions());
           this._zoomToFitBounds(bounds);
         }
       }
     }
   }
-}
+};
 
-DvtThematicMap.prototype.fitMap = function () {
+DvtThematicMap.prototype.fitMap = function() {
   var animator = new DvtAnimator(this.getCtx(), .3);
   this._pzc.zoomToFit(animator);
   animator.play();
-}
+};
 
-DvtThematicMap.prototype.getDrillParentLayer = function (layerName) {
+DvtThematicMap.prototype.getDrillParentLayer = function(layerName) {
   var parentLayerName = DvtBaseMapManager.getParentLayerName(this._mapName, layerName);
   return this.getLayer(parentLayerName);
-}
+};
 
-DvtThematicMap.prototype.getDrillChildLayer = function (layerName) {
+DvtThematicMap.prototype.getDrillChildLayer = function(layerName) {
   var childLayerName = DvtBaseMapManager.getChildLayerName(this._mapName, layerName);
   return this.getLayer(childLayerName);
-}
+};
 
-DvtThematicMap.prototype.getNavigableAreas = function () {
+DvtThematicMap.prototype.getNavigableAreas = function() {
   var disclosed = [];
-  if (this._topLayer){
-    for (var i = 0;i < this._layers.length;i++) {
+  if (this._topLayer) {
+    for (var i = 0; i < this._layers.length; i++) {
       var dataLayers = this._layers[i].getDataLayers();
       for (var id in dataLayers) {
         if (this._topLayer.getLayerName() == this._layers[i].getLayerName())
           disclosed = disclosed.concat(dataLayers[id].getNavigableAreaObjects());
-        else 
+        else
           disclosed = disclosed.concat(dataLayers[id].getNavigableDisclosedAreaObjects());
       }
     }
   }
   return disclosed;
-}
+};
 
-DvtThematicMap.prototype.getNavigableObjects = function () {
+DvtThematicMap.prototype.getNavigableObjects = function() {
   var navigable = [];
   if (this._topLayer) {
-    for (var i = 0;i < this._layers.length;i++) {
+    for (var i = 0; i < this._layers.length; i++) {
       var dataLayers = this._layers[i].getDataLayers();
       if (this._topLayer.getLayerName() == this._layers[i].getLayerName() || !(this._layers[i] instanceof DvtMapAreaLayer)) {
         for (var id in dataLayers)
@@ -1393,33 +1439,35 @@ DvtThematicMap.prototype.getNavigableObjects = function () {
     }
   }
   return navigable;
-}
+};
+
 
 /**
  * Used for updating the positions of centered objects like markers, images, and labels during animation.
  * @param {DvtMatrix} matrix The current animation matrix to use for updating the centered objects
  * @private
  */
-DvtThematicMap.prototype._setCenteredObjsMatrix = function (matrix) {
+DvtThematicMap.prototype._setCenteredObjsMatrix = function(matrix) {
   this._currentAnimMatrix = matrix;
   // update centered markers and images
   if (this.isMarkerZoomBehaviorFixed()) {
     var objs = this.getNavigableObjects();
-    for (var i=0; i<objs.length; i++) 
+    for (var i = 0; i < objs.length; i++)
       objs[i].HandleZoomEvent(matrix);
     // update centered labels for area and area data layers
     var numLabelLayers = this._labelLayers.getNumChildren();
-    for (var j=0; j<numLabelLayers; j++) {
+    for (var j = 0; j < numLabelLayers; j++) {
       var labelLayer = this._labelLayers.getChildAt(j);
       var numLabels = labelLayer.getNumChildren();
-      for (var k=0; k<numLabels; k++) {
+      for (var k = 0; k < numLabels; k++) {
         var label = labelLayer.getChildAt(k);
         if (label instanceof DvtMapLabel)
           label.update(matrix);
       }
     }
   }
-}
+};
+
 
 /**
  * Returns the current animation matrix used for updating centered objects
@@ -1428,9 +1476,9 @@ DvtThematicMap.prototype._setCenteredObjsMatrix = function (matrix) {
  */
 DvtThematicMap.prototype._getCenteredObjsMatrix = function() {
   return this._currentAnimMatrix;
-}
+};
 
-DvtThematicMap.prototype.drillDown = function () {
+DvtThematicMap.prototype.drillDown = function() {
   // stop previous animation
   this._stopAnimation();
 
@@ -1440,7 +1488,7 @@ DvtThematicMap.prototype.drillDown = function () {
 
   if (childLayer) {
     this._drillDataLayer[this._clickedLayerName] = this._clickedDataLayerId;
-    
+
     //Reset other disclosed regions in this layer
     var selectedAreas = this._selectedAreas[this._clickedLayerName];
     // do not reset if just processing initiallly drilled row keys
@@ -1451,13 +1499,13 @@ DvtThematicMap.prototype.drillDown = function () {
     }
 
     var newSelectedAreas = [];
-    for (var i = 0;i < selectedAreas.length;i++) {
+    for (var i = 0; i < selectedAreas.length; i++) {
       var parentArea = selectedAreas[i];
       var childrenToDisclose = parentLayer.getChildrenForArea(parentArea);
       newSelectedAreas.push(childrenToDisclose[0]);
-      
-      //Update child to parent mapping 
-      for (var j = 0;j < childrenToDisclose.length;j++)
+
+      //Update child to parent mapping
+      for (var j = 0; j < childrenToDisclose.length; j++)
         this._childToParent[childrenToDisclose[j]] = selectedAreas[i];
 
       //Add disclosed child areas of drilled region
@@ -1476,23 +1524,23 @@ DvtThematicMap.prototype.drillDown = function () {
     this._clickedLayerName = childLayer.getLayerName();
     this._selectedAreas[this._clickedLayerName] = newSelectedAreas;
   }
-}
+};
 
-DvtThematicMap.prototype.drillUp = function () {
+DvtThematicMap.prototype.drillUp = function() {
   // stop previous animation
   this._stopAnimation();
-  
+
   var childLayer = this.getLayer(this._clickedLayerName);
   var parentLayer = this.getDrillParentLayer(this._clickedLayerName);
   //For fade in/out animation
   var fadeInObjs = [];
   var newSelectedAreas = [];
   var selectedAreas = this._selectedAreas[this._clickedLayerName];
-  for (var i = 0;i < selectedAreas.length;i++) {
+  for (var i = 0; i < selectedAreas.length; i++) {
     var parentArea = this._childToParent[selectedAreas[i]];
     newSelectedAreas.push(parentArea);
     //Don't add a parent area multiple times if many children are selected
-    if (DvtArrayUtils.getIndex(this._drilled, parentArea) !=  - 1) {
+    if (DvtArrayUtils.getIndex(this._drilled, parentArea) != - 1) {
       var childrenToUndisclose = parentLayer.getChildrenForArea(parentArea);
 
       //Remove disclosed child areas of drilled region
@@ -1501,7 +1549,7 @@ DvtThematicMap.prototype.drillUp = function () {
       parentLayer.getDataLayer(this._drillDataLayer[parentLayer.getLayerName()]).undrill(parentArea, fadeInObjs);
       //Update list of disclosed areas
       var index = DvtArrayUtils.getIndex(this._drilled, parentArea);
-      if (index !=  - 1)
+      if (index != - 1)
         this._drilled.splice(index, 1);
     }
   }
@@ -1512,15 +1560,16 @@ DvtThematicMap.prototype.drillUp = function () {
   this._clickedDataLayerId = this._drillDataLayer[this._clickedLayerName];
   this._selectedAreas[this._clickedLayerName] = newSelectedAreas;
   this._updateDrillButton(this._clickedLayerName);
-}
+};
 
 
-DvtThematicMap.prototype._stopAnimation = function () {
+DvtThematicMap.prototype._stopAnimation = function() {
   if (this._animation) {
     this._animation.stop(true);
     this._animation = null;
   }
-}
+};
+
 
 /**
  * Handles drilling animations
@@ -1529,7 +1578,7 @@ DvtThematicMap.prototype._stopAnimation = function () {
  * @param {boolean} isDrillUp True if this is a drill up animation
  * @private
  */
-DvtThematicMap.prototype._handleDrillAnimations = function (oldObjs, newObjs, isDrillUp) {
+DvtThematicMap.prototype._handleDrillAnimations = function(oldObjs, newObjs, isDrillUp) {
   var pzcMatrix = this._pzc.getContentPane().getMatrix();
   //Zoom to fit selection only if not proccessing initially drilled on initial render
   if (this._drillZoomToFit && !this._processingInitDrilled) {
@@ -1541,7 +1590,7 @@ DvtThematicMap.prototype._handleDrillAnimations = function (oldObjs, newObjs, is
     else
       this.fitSelectedRegions();
     if (animator)
-        animator.play();
+      animator.play();
   }
 
   //Stop previous animation
@@ -1560,24 +1609,25 @@ DvtThematicMap.prototype._handleDrillAnimations = function (oldObjs, newObjs, is
   } else {
     this._cleanUpDrilledObjects();
   }
-}
+};
 
-DvtThematicMap.prototype.setClickInfo = function (clientId, layerName, obj) {
+DvtThematicMap.prototype.setClickInfo = function(clientId, layerName, obj) {
   this._clickedLayerName = layerName;
   this._clickedDataLayerId = clientId;
   this._clickedObject = obj;
-}
+};
 
-DvtThematicMap.prototype.setEventClientId = function (clientId) {
+DvtThematicMap.prototype.setEventClientId = function(clientId) {
   this._eventClientId = clientId;
-}
+};
+
 
 /**
  * Dispatches the event to the callback function.
  * @param {object} event The event to be dispatched.
  * @protected
  */
-DvtThematicMap.prototype.__dispatchEvent = function (event) {
+DvtThematicMap.prototype.__dispatchEvent = function(event) {
   var type = event.getType();
   if (type == DvtSelectionEvent.TYPE) {
     this._handleSelectionEvent(event);
@@ -1589,58 +1639,59 @@ DvtThematicMap.prototype.__dispatchEvent = function (event) {
     event.addParam('clientId', this._eventClientId);
   }
   DvtEventDispatcher.dispatchEvent(this._callback, this._callbackObj, this, event);
-}
+};
+
 
 /**
  * Process a selection event before sending it to the peer
  * @param {DvtSelectionEvent} event The selection event to process
  * @private
  */
-DvtThematicMap.prototype._handleSelectionEvent = function (event) {
+DvtThematicMap.prototype._handleSelectionEvent = function(event) {
   if (this._clickedDataLayerId) {
     this._selectedRowKeys = event.getSelection();
     var dataLayer = this.getLayer(this._clickedLayerName).getDataLayer(this._clickedDataLayerId);
     this._selectedAreas[this._clickedLayerName] = dataLayer.getSelectedAreas(this._selectedRowKeys);
     this._updateDrillButton(this._clickedLayerName);
     event.addParam('clientId', this._clickedDataLayerId);
-    
+
     // Save fit to region object
     if (this._clickedObject && !(this._clickedObject instanceof DvtMarker))
-      this._zoomToFitObject = this._clickedObject;    
+      this._zoomToFitObject = this._clickedObject;
   } else {
     this._updateDrillButton(null);
     this._zoomToFitObject = null;
   }
-}
+};
 
 DvtThematicMap.prototype._hideSelectionMenu = function() {
   if (this._selectionText) {
     this.removeChild(this._selectionText);
     this._selectionText = null;
   }
-}
+};
 
-DvtThematicMap.prototype._updateDrillButton = function (layerName) {
+DvtThematicMap.prototype._updateDrillButton = function(layerName) {
   if (this._controlPanel && this._drillMode && this._drillMode != 'none') {
     var childLayer = this.getDrillChildLayer(layerName);
     var parentLayer = this.getDrillParentLayer(layerName);
     if (childLayer)
       this._controlPanel.setEnabledDrillDownButton(true);
-    else 
+    else
       this._controlPanel.setEnabledDrillDownButton(false);
 
     if (parentLayer)
       this._controlPanel.setEnabledDrillUpButton(true);
-    else 
+    else
       this._controlPanel.setEnabledDrillUpButton(false);
   }
-}
+};
 
-DvtThematicMap.prototype._handleDrillEvent = function (event) {
+DvtThematicMap.prototype._handleDrillEvent = function(event) {
   event.addParam('clientId', this._eventClientId);
   if (this._drillMode == 'multiple')
     this._drilledRowKeys = this._drilledRowKeys.concat(this._selectedRowKeys);
-  else 
+  else
     this._drilledRowKeys = this._selectedRowKeys;
 
   var drillType = event.getDrillType();
@@ -1652,25 +1703,26 @@ DvtThematicMap.prototype._handleDrillEvent = function (event) {
     this.resetMap();
 
   event.setDisclosed(this._drilledRowKeys);
-}
+};
 
-DvtThematicMap.prototype.destroy = function () {
+DvtThematicMap.prototype.destroy = function() {
   DvtThematicMap.superclass.destroy.call(this);
   if (this._eventHandler) {
     this._eventHandler.destroy();
     this._eventHandler = null;
   }
-}
+};
+
 
 /**
  * Hook for cleaning up animation behavior at the end of the animation.
  * @protected
  */
-DvtThematicMap.prototype.OnAnimationEnd = function () {
+DvtThematicMap.prototype.OnAnimationEnd = function() {
   // Add control panel back to pzc
   if (this._controlPanel)
     this._pzc.addChild(this._controlPanel);
-  
+
   if (this._oldPzc) {
     this.removeChild(this._oldPzc);
     this._oldPzc = null;
@@ -1681,23 +1733,24 @@ DvtThematicMap.prototype.OnAnimationEnd = function () {
 
   // Restore event listeners
   this._eventHandler.addListeners(this);
-}
+};
 
-DvtThematicMap.prototype.OnDrillAnimationEnd = function () {
+DvtThematicMap.prototype.OnDrillAnimationEnd = function() {
   this._cleanUpDrilledObjects();
   // Remove the animation reference
   this._animation = null;
   // Restore event listeners
   this._eventHandler.addListeners(this);
-}
+};
+
 
 /**
  * Removes the drilled objects from the map
  * @private
  */
-DvtThematicMap.prototype._cleanUpDrilledObjects = function () {
+DvtThematicMap.prototype._cleanUpDrilledObjects = function() {
   if (this._drillAnimFadeOutObjs.length > 0) {
-    for (var i=0; i<this._drillAnimFadeOutObjs.length; i++) {
+    for (var i = 0; i < this._drillAnimFadeOutObjs.length; i++) {
       var obj = this._drillAnimFadeOutObjs[i];
       if (obj) {
         if (obj instanceof DvtMapLabel) {
@@ -1715,9 +1768,9 @@ DvtThematicMap.prototype._cleanUpDrilledObjects = function () {
     }
     this._drillAnimFadeOutObjs = [];
   }
-}
+};
 
-DvtThematicMap.prototype._rolloverCallback = function (event) {
+DvtThematicMap.prototype._rolloverCallback = function(event) {
   var category = event.getHideAttributes();
   //  var hiddenAttrGroups = this.getHiddenAttributeGroups();
   //  if (!hiddenAttrGroups) {
@@ -1729,9 +1782,9 @@ DvtThematicMap.prototype._rolloverCallback = function (event) {
   //  }
   var type = DvtLegendItemRollOverEvent.MOUSEOVER == event.getMouseState() ? DvtCategoryRolloverEvent.TYPE_OVER : DvtCategoryRolloverEvent.TYPE_OUT;
   this._fireRolloverEvent(type, category);
-}
+};
 
-DvtThematicMap.prototype._fireRolloverEvent = function (type, category) {
+DvtThematicMap.prototype._fireRolloverEvent = function(type, category) {
   var rolloverEvent = new DvtCategoryRolloverEvent(type, category);
   // Build object list
   var objects = new Array();
@@ -1756,17 +1809,17 @@ DvtThematicMap.prototype._fireRolloverEvent = function (type, category) {
     objects.push(wrapper);
   }
   DvtCategoryRolloverHandler.processEvent(rolloverEvent, objects, 0.1);
-}
+};
 
 /*
- * Prototype for view switcher. Currently gets the only the area data objects from the top layer 
+ * Prototype for view switcher. Currently gets the only the area data objects from the top layer
  */
 DvtThematicMap.prototype.getShapesForViewSwitcher = function(bOld) {
   var shapes = {};
   var dataLayers = this._topLayer.getDataLayers();
   for (var id in dataLayers) {
     var areaObjs = dataLayers[id].getAreaObjects();
-    for (var i=0; i<areaObjs.length; i++) {
+    for (var i = 0; i < areaObjs.length; i++) {
       var areaObj = areaObjs[i];
       var disp = areaObj.getDisplayable();
       shapes[areaObj.getId()] = disp; //path
@@ -1774,7 +1827,8 @@ DvtThematicMap.prototype.getShapesForViewSwitcher = function(bOld) {
     break;
   }
   return shapes;
-}
+};
+
 
 /**
  * Returns the automation object for this thematic map
@@ -1785,25 +1839,25 @@ DvtThematicMap.prototype.getAutomation = function() {
   if (!this.Automation)
     this.Automation = new DvtThematicMapAutomation(this);
   return this.Automation;
-}
+};
 /**
  * Default values and utility functions for thematic map component versioning.
  * @class
  * @constructor
  * @extends {DvtBaseComponentDefaults}
  */
-var DvtThematicMapDefaults = function () {
-  this.Init({'fusion':DvtThematicMapDefaults.DEFAULT, 
-              'skyros':DvtThematicMapDefaults.SKIN_SKYROS, 
-              'alta':DvtThematicMapDefaults.SKIN_ALTA});
-}
+var DvtThematicMapDefaults = function() {
+  this.Init({'fusion': DvtThematicMapDefaults.DEFAULT,
+    'skyros': DvtThematicMapDefaults.SKIN_SKYROS,
+    'alta': DvtThematicMapDefaults.SKIN_ALTA});
+};
 
-DvtObj.createSubclass(DvtThematicMapDefaults, DvtBaseComponentDefaults, "DvtThematicMapDefaults");
+DvtObj.createSubclass(DvtThematicMapDefaults, DvtBaseComponentDefaults, 'DvtThematicMapDefaults');
 
 DvtThematicMapDefaults.DEFAULT = {
-  'skin' : null, 
-  'animationDuration' : 500, 
-  'animationOnDisplay' : 'none', 
+  'skin' : null,
+  'animationDuration' : 500,
+  'animationOnDisplay' : 'none',
   'animationOnDrill' : 'none',
   'animationOnMapChange' : 'none',
   'controlPanelBehavior' : 'hidden',
@@ -1811,8 +1865,8 @@ DvtThematicMapDefaults.DEFAULT = {
   'initialZooming' : 'none',
   'maintainDrill' : 'off',
   'markerZoomBehavior' : 'fixed',
-  'panning' : 'none', 
-  'tooltipDisplay' : 'auto', 
+  'panning' : 'none',
+  'tooltipDisplay' : 'auto',
   'zooming' : 'none',
   'styleDefaults' : {
     'areaStyle' : 'background-color:#B8CDEC;border-color:#FFFFFF;',
@@ -1829,7 +1883,7 @@ DvtThematicMapDefaults.DEFAULT = {
       'borderColor' : '#FFFFFF',
       'borderStyle' : 'solid',
       'borderWidth' : '0.5px',
-      'color' : '#000000', 
+      'color' : '#000000',
       'height' : 8,
       'labelStyle' : 'font-family:Tahoma;font-size:13pt;color:#000000',
       'opacity' : 0.4,
@@ -1841,15 +1895,19 @@ DvtThematicMapDefaults.DEFAULT = {
     'labelStyle' : 'font-family:Tahoma;font-size:11pt;'
   },
   // for amx only
-  'legend' :  {
-    'position' : "auto", 'rendered' : true, 'layout' :  {
+  'legend' : {
+    'position' : 'auto', 'rendered' : true, 'layout' : {
       'gapRatio' : 1.0
     }
   },
-  'layout' :  {
+  'layout' : {
     'gapRatio' : null, // gapRatio is dynamic based on the component size
     // TODO, the following are internal and should be moved to a _layout object
-  'legendMaxSize' : 0.3, 'legendGap' : 10
+    'legendMaxSize' : 0.3, 'legendGap' : 10
+  },
+  'resources' : {
+    'images' : {},
+    'translations' : {}
   }
 };
 
@@ -1857,10 +1915,10 @@ DvtThematicMapDefaults.SKIN_SKYROS = {
   'styleDefaults' : {
     'backgroundColor' : '#FFFFFF'
   }
-}
+};
 
 DvtThematicMapDefaults.SKIN_ALTA = {
-  'skin' : DvtCSSStyle.SKIN_ALTA, 
+  'skin' : DvtCSSStyle.SKIN_ALTA,
   'styleDefaults' : {
     'areaStyle' : 'background-color:#DDDDDD;border-color:#FFFFFF;',
     'backgroundColor' : '#FFFFFF',
@@ -1868,7 +1926,7 @@ DvtThematicMapDefaults.SKIN_ALTA = {
       'drilledOuterColor' : '#0572CE'
     },
     'dataMarkerDefaults' : {
-      'color' : 'rgb(51,51,51)', 
+      'color' : 'rgb(51,51,51)',
       'labelStyle' : 'font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;color:#333333',
       'opacity' : 1
     },
@@ -1877,37 +1935,40 @@ DvtThematicMapDefaults.SKIN_ALTA = {
 };
 
 DvtThematicMapDefaults.DEFAULT_AREA_LAYER = {
-  'animationOnLayerChange' : 'none', 
+  'animationOnLayerChange' : 'none',
   'labelDisplay' : 'auto',
   'labelType' : 'short'
 };
 
 DvtThematicMapDefaults.DEFAULT_DATA_LAYER = {
-  'animationOnDataChange' : 'none', 
+  'animationOnDataChange' : 'none',
   'selection' : 'none'
-}
+};
+
 
 /**
- * Combines the user options with the defaults for the specified version for an area layer.  
- * Returns the combined options object.  This object will contain internal attribute values and should be 
+ * Combines the user options with the defaults for the specified version for an area layer.
+ * Returns the combined options object.  This object will contain internal attribute values and should be
  * accessed in internal code only.
  * @param {object} userOptions The object containing options specifications for this component.
  * @return {object} The combined options object.
  */
 DvtThematicMapDefaults.prototype.calcAreaLayerOptions = function(userOptions) {
   return DvtJSONUtils.merge(userOptions, DvtThematicMapDefaults.DEFAULT_AREA_LAYER);
-}
+};
+
 
 /**
- * Combines the user options with the defaults for the specified version for a data layer.  
- * Returns the combined options object.  This object will contain internal attribute values and should be 
+ * Combines the user options with the defaults for the specified version for a data layer.
+ * Returns the combined options object.  This object will contain internal attribute values and should be
  * accessed in internal code only.
  * @param {object} userOptions The object containing options specifications for this component.
  * @return {object} The combined options object.
  */
 DvtThematicMapDefaults.prototype.calcDataLayerOptions = function(userOptions) {
   return DvtJSONUtils.merge(userOptions, DvtThematicMapDefaults.DEFAULT_DATA_LAYER);
-}
+};
+
 
 /**
  * Scales down gap sizes based on the size of the component.
@@ -1915,13 +1976,13 @@ DvtThematicMapDefaults.prototype.calcDataLayerOptions = function(userOptions) {
  * @param {Number} defaultSize The default gap size.
  * @return {Number}
  */
-DvtThematicMapDefaults.getGapSize = function (tmap, defaultSize) {
+DvtThematicMapDefaults.getGapSize = function(tmap, defaultSize) {
   return Math.ceil(defaultSize * tmap.getGapRatio());
-}
+};
 // APIs called by the ADF Faces drag source for DvtThematicMap
 
-DvtThematicMap.prototype._getCurrentDragSource = function () {
-  for (var i = 0;i < this._layers.length;i++) {
+DvtThematicMap.prototype._getCurrentDragSource = function() {
+  for (var i = 0; i < this._layers.length; i++) {
     var dataLayers = this._layers[i].getDataLayers();
     for (var id in dataLayers) {
       var dataLayer = dataLayers[id];
@@ -1931,7 +1992,8 @@ DvtThematicMap.prototype._getCurrentDragSource = function () {
     }
   }
   return null;
-}
+};
+
 
 /**
  * If this object supports drag, returns the client id of the drag component.
@@ -1940,98 +2002,109 @@ DvtThematicMap.prototype._getCurrentDragSource = function () {
  * @param mouseY the x coordinate of the mouse
  * @param clientIds the array of client ids of the valid drag components
  */
-DvtThematicMap.prototype.isDragAvailable = function (mouseX, mouseY, clientIds) {
+DvtThematicMap.prototype.isDragAvailable = function(mouseX, mouseY, clientIds) {
   this._dragAllowed = false;
   var dragSource = this._getCurrentDragSource();
   return dragSource ? dragSource.isDragAvailable(clientIds) : false;
-}
+};
+
 
 /**
  * Returns the transferable object for a drag initiated at these coordinates.
  */
-DvtThematicMap.prototype.getDragTransferable = function (mouseX, mouseY) {
+DvtThematicMap.prototype.getDragTransferable = function(mouseX, mouseY) {
   var dragSource = this._getCurrentDragSource();
   return dragSource ? dragSource.getDragTransferable(mouseX, mouseY) : null;
-}
+};
+
 
 /**
  * Returns the feedback for the drag operation.
  */
-DvtThematicMap.prototype.getDragOverFeedback = function (mouseX, mouseY) {
+DvtThematicMap.prototype.getDragOverFeedback = function(mouseX, mouseY) {
   var dragSource = this._getCurrentDragSource();
   return dragSource ? dragSource.getDragOverFeedback(mouseX, mouseY) : null;
-}
+};
+
 
 /**
  * Returns an Object containing the drag context info.
  */
-DvtThematicMap.prototype.getDragContext = function (mouseX, mouseY) {
+DvtThematicMap.prototype.getDragContext = function(mouseX, mouseY) {
   var dragSource = this._getCurrentDragSource();
-  return dragSource ? dragSource.getDragContext(mouseX, mouseY) : null; 
-}
+  return dragSource ? dragSource.getDragContext(mouseX, mouseY) : null;
+};
+
 
 /**
  * Returns the offset to use for the drag feedback. This positions the drag
  * feedback relative to the pointer.
  */
-DvtThematicMap.prototype.getDragOffset = function (mouseX, mouseY) {
+DvtThematicMap.prototype.getDragOffset = function(mouseX, mouseY) {
   var dragSource = this._getCurrentDragSource();
-  return dragSource ? dragSource.getDragOffset(mouseX, mouseY) : null; 
-}
+  return dragSource ? dragSource.getDragOffset(mouseX, mouseY) : null;
+};
+
 
 /**
  * Returns the offset from the mouse pointer where the drag is considered to be located.
  */
-DvtThematicMap.prototype.getPointerOffset = function (xOffset, yOffset) {
+DvtThematicMap.prototype.getPointerOffset = function(xOffset, yOffset) {
   var dragSource = this._getCurrentDragSource();
   return dragSource ? dragSource.getPointerOffset(xOffset, yOffset) : null;
-}
+};
+
 
 /**
  * Notifies the component that a drag started.
  */
-DvtThematicMap.prototype.initiateDrag = function () {
+DvtThematicMap.prototype.initiateDrag = function() {
   var dragSource = this._getCurrentDragSource();
   if (dragSource)
     dragSource.initiateDrag();
-}
+};
+
 
 /**
  * Clean up after the drag is completed.
  */
-DvtThematicMap.prototype.dragDropEnd = function () {
+DvtThematicMap.prototype.dragDropEnd = function() {
   var dragSource = this._getCurrentDragSource();
   if (dragSource)
     dragSource.dragDropEnd();
-}
+};
+
 
 /**
  * Implemented for DvtDragRecognizer
  * @override
  */
-DvtThematicMap.prototype.prepDrag = function () {
+DvtThematicMap.prototype.prepDrag = function() {
   if (this._panning)
     this._startDragDropTimer(1000);
   else
     this._dragAllowed = true;
-}
+};
+
 
 /**
  * Implemented for DvtDragRecognizer
  * @override
  */
-DvtThematicMap.prototype.abortPrep = function () {
+DvtThematicMap.prototype.abortPrep = function() {
   this._stopDragDropTimer();
-}
+};
+
 
 /**
  * Implemented for DvtDragRecognizer
  * @override
  */
-DvtThematicMap.prototype.recognizeDrag = function () {
-  this._stopDragDropTimer();	
-  return this._dragAllowed;	
-}
+DvtThematicMap.prototype.recognizeDrag = function() {
+  this._stopDragDropTimer();
+  return this._dragAllowed;
+};
+
 
 /**
  * Starts the drag timer to prevent immediately initiating a drag action when panning is available
@@ -2041,7 +2114,8 @@ DvtThematicMap.prototype.recognizeDrag = function () {
 DvtThematicMap.prototype._startDragDropTimer = function(time) {
   this._dragDropTimer = new DvtTimer(this.getCtx(), time, this._handleDragDropTimer, this, 1);
   this._dragDropTimer.start();
-}
+};
+
 
 /**
  * Stops the drag timer and allows a drag action to initiate
@@ -2050,7 +2124,8 @@ DvtThematicMap.prototype._startDragDropTimer = function(time) {
 DvtThematicMap.prototype._handleDragDropTimer = function() {
   this._stopDragDropTimer();
   this._dragAllowed = true;
-}
+};
+
 
 /**
  * Stops the drag timer
@@ -2061,11 +2136,11 @@ DvtThematicMap.prototype._stopDragDropTimer = function() {
     this._dragDropTimer.stop();
     this._dragDropTimer = null;
   }
-}
+};
 // APIs called by the ADF Faces drop target for DvtThematicMap
 
-DvtThematicMap.prototype._getCurrentDropTarget = function (mouseX, mouseY) {
-  for (var i = 0;i < this._layers.length;i++) {
+DvtThematicMap.prototype._getCurrentDropTarget = function(mouseX, mouseY) {
+  for (var i = 0; i < this._layers.length; i++) {
     if (this._layers[i].getDropTarget) {
       var dropTarget = this._layers[i].getDropTarget();
       if (dropTarget && dropTarget.getDropSite(mouseX, mouseY))
@@ -2073,110 +2148,117 @@ DvtThematicMap.prototype._getCurrentDropTarget = function (mouseX, mouseY) {
     }
   }
   return null;
-}
+};
+
 
 /**
  * If a drop is possible at these mouse coordinates, returns the client id
  * of the drop component. Returns null if drop is not possible.
  */
-DvtThematicMap.prototype.acceptDrag = function (mouseX, mouseY, clientIds) {
+DvtThematicMap.prototype.acceptDrag = function(mouseX, mouseY, clientIds) {
   var zoom = this._pzc.getZoom();
-  mouseX = (mouseX-this._pzc.getPanX())/zoom;
-  mouseY = (mouseY-this._pzc.getPanY())/zoom;
+  mouseX = (mouseX - this._pzc.getPanX()) / zoom;
+  mouseY = (mouseY - this._pzc.getPanY()) / zoom;
   this._dropTarget = this._getCurrentDropTarget(mouseX, mouseY);
   if (this._dropTarget)
     return this._dropTarget.acceptDrag(mouseX, mouseY, clientIds);
   else
     return null;
-}
+};
+
 
 /**
  * Paints drop site feedback as a drag enters the drop site.
  */
-DvtThematicMap.prototype.dragEnter = function () {
+DvtThematicMap.prototype.dragEnter = function() {
   if (this._dropTarget)
     return this._dropTarget.dragEnter();
   else
     return null;
-}
+};
+
 
 /**
  * Cleans up drop site feedback as a drag exits the drop site.
  */
-DvtThematicMap.prototype.dragExit = function () {
+DvtThematicMap.prototype.dragExit = function() {
   if (this._dropTarget)
     return this._dropTarget.dragExit();
   else
     return null;
-}
+};
+
 
 /**
  * Returns the object representing the drop site. This method is called when a valid
  * drop is performed.
  */
-DvtThematicMap.prototype.getDropSite = function (mouseX, mouseY) {
+DvtThematicMap.prototype.getDropSite = function(mouseX, mouseY) {
   var zoom = this._pzc.getZoom();
-  mouseX = (mouseX-this._pzc.getPanX())/zoom;
-  mouseY = (mouseY-this._pzc.getPanY())/zoom;
+  mouseX = (mouseX - this._pzc.getPanX()) / zoom;
+  mouseY = (mouseY - this._pzc.getPanY()) / zoom;
   if (this._dropTarget)
     return this._dropTarget.getDropSite(mouseX, mouseY);
   else
     return null;
-}
+};
 /**
  * Drop Target event handler for DvtThematicMap
  * @param {DvtMapAreaLayer} areaLayer The area layer this drop target belongs to
- * @param {String} basemap The basemap name 
- * @extends DvtDropTarget
+ * @param {String} basemap The basemap name
+ * @extends {DvtDropTarget}
  * @constructor
  */
 var DvtThematicMapDropTarget = function(areaLayer, basemap) {
-  this._areaLayer = areaLayer;  
+  this._areaLayer = areaLayer;
   this._basemap = basemap;
 };
 
-DvtObj.createSubclass(DvtThematicMapDropTarget, DvtDropTarget, "DvtThematicMapDropTarget");
+DvtObj.createSubclass(DvtThematicMapDropTarget, DvtDropTarget, 'DvtThematicMapDropTarget');
+
 
 /**
  * @override
  */
-DvtThematicMapDropTarget.prototype.acceptDrag = function (mouseX, mouseY, clientIds) {
+DvtThematicMapDropTarget.prototype.acceptDrag = function(mouseX, mouseY, clientIds) {
   // If there is no obj under the point, then don't accept the drag
   var obj = this._areaLayer.__getObjectUnderPoint(mouseX, mouseY);
-  if(!obj) {
+  if (!obj) {
     this._areaLayer.__showDropSiteFeedback(null);
     return null;
   }
-  else if(obj != this._dropSite) {
-    this._areaLayer.__showDropSiteFeedback(obj); 
+  else if (obj != this._dropSite) {
+    this._areaLayer.__showDropSiteFeedback(obj);
     this._dropSite = obj;
   }
-  
+
   // Return the first clientId, since this component has only a single drag source
   return this._areaLayer.getClientId();
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapDropTarget.prototype.dragExit = function () {
+DvtThematicMapDropTarget.prototype.dragExit = function() {
   // Remove drop site feedback
-  this._areaLayer.__showDropSiteFeedback(null); 
+  this._areaLayer.__showDropSiteFeedback(null);
   this._dropSite = null;
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapDropTarget.prototype.getDropSite = function (mouseX, mouseY) {
+DvtThematicMapDropTarget.prototype.getDropSite = function(mouseX, mouseY) {
   var obj = this._areaLayer.__getObjectUnderPoint(mouseX, mouseY);
-  if(obj) {
+  if (obj) {
     var projPoint = DvtThematicMapProjections.inverseProject(mouseX, mouseY, this._basemap);
     return {regionId: obj.getAreaName(), localX: projPoint.x, localY: projPoint.y};
   } else {
     return null;
   }
-}
+};
 /**
  *  Provides automation services for a DVT component.
  *  @class  DvtThematicMapAutomation
@@ -2184,11 +2266,12 @@ DvtThematicMapDropTarget.prototype.getDropSite = function (mouseX, mouseY) {
  *  @implements {DvtAutomation}
  *  @constructor
  */
-var DvtThematicMapAutomation = function (dvtComponent) {
+var DvtThematicMapAutomation = function(dvtComponent) {
   this._tmap = dvtComponent;
-}
+};
 
-DvtObj.createSubclass(DvtThematicMapAutomation, DvtAutomation, "DvtThematicMapAutomation");
+DvtObj.createSubclass(DvtThematicMapAutomation, DvtAutomation, 'DvtThematicMapAutomation');
+
 
 /**
  * Valid subIds inlcude:
@@ -2203,7 +2286,8 @@ DvtThematicMapAutomation.prototype.GetSubIdForDomElement = function(displayable)
   if (logicalObj && (logicalObj instanceof DvtMapDataArea || logicalObj instanceof DvtMapDataMarker))
     return this._getSubId(logicalObj);
   return null;
-}
+};
+
 
 /**
  * Valid subIds inlcude:
@@ -2216,14 +2300,15 @@ DvtThematicMapAutomation.prototype.GetSubIdForDomElement = function(displayable)
 DvtThematicMapAutomation.prototype.getDomElementForSubId = function(subId) {
   var colonIdx = subId.indexOf(':');
   var parenIdx = subId.indexOf('[');
-  if (colonIdx>0 && parenIdx>0) {
+  if (colonIdx > 0 && parenIdx > 0) {
     var dataLayerId = subId.substring(0, colonIdx);
     var dataObjType = subId.substring(colonIdx + 1, parenIdx);
-    var dataObjId = subId.substring(parenIdx + 1, subId.length-1);
+    var dataObjId = subId.substring(parenIdx + 1, subId.length - 1);
     return this._getDomElement(dataLayerId, dataObjType, dataObjId);
   }
   return null;
-}
+};
+
 
 /**
  * Returns an object containing data for a thematic map data object. Used for verification.
@@ -2245,12 +2330,13 @@ DvtThematicMapAutomation.prototype.getData = function(dataLayerId, dataObjType, 
     var data = {};
     data['color'] = dataObj.getDatatipColor();
     data['tooltip'] = dataObj.getDatatip();
-    var label = dataObj.getLabel()
+    var label = dataObj.getLabel();
     data['label'] = label ? label.getTextString() : null;
     return data;
   }
   return null;
-}
+};
+
 
 /**
  * Returns the SVG DOM Element for a given subId
@@ -2265,7 +2351,8 @@ DvtThematicMapAutomation.prototype._getDomElement = function(dataLayerId, dataOb
   if (dataObj)
     return dataObj.getDisplayable().getElem();
   return null;
-}
+};
+
 
 /**
  * Returns the subId for a thematic map data object
@@ -2275,19 +2362,19 @@ DvtThematicMapAutomation.prototype._getDomElement = function(dataLayerId, dataOb
  */
 DvtThematicMapAutomation.prototype._getSubId = function(dataObject) {
   var layers = this._tmap.getAllLayers();
-  for (var i=0; i<layers.length; i++) {
-    var dataLayers = layers[i].getDataLayers();  
+  for (var i = 0; i < layers.length; i++) {
+    var dataLayers = layers[i].getDataLayers();
     for (var id in dataLayers) {
       if (dataObject instanceof DvtMapDataArea) {
         var areas = dataLayers[id].getAreaObjects();
-        for (var k=0; k<areas.length; k++) {
+        for (var k = 0; k < areas.length; k++) {
           if (areas[k] === dataObject)
             return this._getDataLayerId(id) + ':' + 'area[' + dataObject.getId() + ']';
         }
-      } 
+      }
       else if (dataObject instanceof DvtMapDataMarker) {
         var markers = dataLayers[id].getDataObjects();
-        for (var k=0; k<markers.length; k++) {
+        for (var k = 0; k < markers.length; k++) {
           if (markers[k] === dataObject)
             return this._getDataLayerId(id) + ':' + 'marker[' + dataObject.getId() + ']';
         }
@@ -2295,7 +2382,8 @@ DvtThematicMapAutomation.prototype._getSubId = function(dataObject) {
     }
   }
   return null;
-}
+};
+
 
 /**
  * Returns the DvtMapDataObject for the given data layer and data object id
@@ -2307,20 +2395,20 @@ DvtThematicMapAutomation.prototype._getSubId = function(dataObject) {
  */
 DvtThematicMapAutomation.prototype._getDataObject = function(dataLayerId, dataObjType, dataObjId) {
   var layers = this._tmap.getAllLayers();
-  for (var i=0; i<layers.length; i++) {
-    var dataLayers = layers[i].getDataLayers();  
+  for (var i = 0; i < layers.length; i++) {
+    var dataLayers = layers[i].getDataLayers();
     for (var id in dataLayers) {
       if (this._getDataLayerId(id) == dataLayerId) {
         if (dataObjType == 'area') {
           var areas = dataLayers[id].getAreaObjects();
-          for (var k=0; k<areas.length; k++) {
+          for (var k = 0; k < areas.length; k++) {
             if (areas[k].getId() === dataObjId)
               return areas[k];
           }
         }
         else if (dataObjType == 'marker') {
           var markers = dataLayers[id].getDataObjects();
-          for (var k=0; k<markers.length; k++) {
+          for (var k = 0; k < markers.length; k++) {
             if (markers[k].getId() === dataObjId)
               return markers[k];
           }
@@ -2329,10 +2417,11 @@ DvtThematicMapAutomation.prototype._getDataObject = function(dataLayerId, dataOb
     }
   }
   return null;
-}
+};
+
 
 /**
- * Returns the data layer id in the expected subId format. 
+ * Returns the data layer id in the expected subId format.
  * @param {String} dataLayerId The id of the data layer
  * @return {String} The id of the data layer in subId format
  * @private
@@ -2343,18 +2432,18 @@ DvtThematicMapAutomation.prototype._getDataLayerId = function(dataLayerId) {
   if (colonIdx > 0)
     return dataLayerId.substring(colonIdx + 1);
   return dataLayerId;
-}
-// Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+};
+// Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
 /**
   *  Creates a map selectable shape that also supports drilling.
-  *  @extends DvtDrillablePath
+  *  @extends {DvtDrillablePath}
   *  @constructor
   */
-var DvtDrillablePath = function (context, bSupportsVectorEffects) {
-  this.Init(context, bSupportsVectorEffects)
-}
+var DvtDrillablePath = function(context, bSupportsVectorEffects) {
+  this.Init(context, bSupportsVectorEffects);
+};
 
-DvtObj.createSubclass(DvtDrillablePath, DvtPath, "DvtDrillablePath");
+DvtObj.createSubclass(DvtDrillablePath, DvtPath, 'DvtDrillablePath');
 
 // if not defined, stroke width is 1 for border effects
 DvtDrillablePath.HOVER_STROKE_WIDTH = 2;
@@ -2364,32 +2453,33 @@ DvtDrillablePath.SELECTED_HOVER_OUTER_STROKE_WIDTH = 6;
 DvtDrillablePath.DISCLOSED_INNER_STROKE_WIDTH = 2;
 DvtDrillablePath.DISCLOSED_OUTER_STROKE_WIDTH = 4;
 
+
 /**
  *  Object initializer.
  *  @protected
  */
-DvtDrillablePath.prototype.Init = function (context, bSupportsVectorEffects) {
+DvtDrillablePath.prototype.Init = function(context, bSupportsVectorEffects) {
   DvtDrillablePath.superclass.Init.call(this, context);
   this._disclosedInnerStroke = null;
   this._disclosedOuterStroke = null;
   this._disclosedInnerShape = null;
   this._disclosedOuterShape = null;
   this._isDrilled = false;
-  this.Zoom =  1;
+  this.Zoom = 1;
   //IE10, Flash/XML toolkit do not support vector-effects=non-scaling-stroke so we still need to set stroke width based on zoom
   this._bSupportsVectorEffects = bSupportsVectorEffects;
-}
+};
 
-DvtDrillablePath.prototype.isDrilled = function () {
+DvtDrillablePath.prototype.isDrilled = function() {
   return this._isDrilled;
-}
+};
 
-DvtDrillablePath.prototype.setDrilled = function (drilled) {
+DvtDrillablePath.prototype.setDrilled = function(drilled) {
   if (this._isDrilled == drilled)
     return;
-    
+
   this._isDrilled = drilled;
-  
+
   if (this.isDrilled()) {
     this._disclosedInnerShape = this.copyShape();
     this._disclosedInnerShape.setFill(null);
@@ -2404,6 +2494,8 @@ DvtDrillablePath.prototype.setDrilled = function (drilled) {
     this._disclosedInnerShape.setStroke(this._adjustStrokeZoomWidth(this._disclosedInnerStroke, DvtDrillablePath.DISCLOSED_INNER_STROKE_WIDTH));
     this._disclosedOuterShape.setStroke(this._adjustStrokeZoomWidth(this._disclosedOuterStroke, DvtDrillablePath.DISCLOSED_OUTER_STROKE_WIDTH));
     this.setMouseEnabled(false);
+    // after object is drilled, it is removed from the DOM and does not recieve the hideHoverEffect call to set this flag
+    this.IsShowingHoverEffect = false;
   }
   else {
     if (this.isHoverEffectShown()) {
@@ -2415,12 +2507,13 @@ DvtDrillablePath.prototype.setDrilled = function (drilled) {
     this.setMouseEnabled(true);
     this.setAlpha(1);
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtDrillablePath.prototype.setSelected = function (selected) {
+DvtDrillablePath.prototype.setSelected = function(selected) {
   if (this.IsSelected == selected)
     return;
   if (selected) {
@@ -2434,12 +2527,13 @@ DvtDrillablePath.prototype.setSelected = function (selected) {
     }
   }
   DvtDrillablePath.superclass.setSelected.call(this, selected);
-}
+};
+
 
 /**
  * @override
  */
-DvtDrillablePath.prototype.showHoverEffect = function () {
+DvtDrillablePath.prototype.showHoverEffect = function() {
   if (this.isSelected()) {
     this.CreateSelectedHoverStrokes();
     this.SelectedHoverInnerStroke = this._adjustStrokeZoomWidth(this.SelectedHoverInnerStroke, DvtDrillablePath.HOVER_STROKE_WIDTH);
@@ -2448,7 +2542,8 @@ DvtDrillablePath.prototype.showHoverEffect = function () {
     this.HoverInnerStroke = this._adjustStrokeZoomWidth(this.HoverInnerStroke, DvtDrillablePath.HOVER_STROKE_WIDTH);
   }
   DvtDrillablePath.superclass.showHoverEffect.call(this);
-}
+};
+
 
 /**
  * @override
@@ -2466,23 +2561,25 @@ DvtDrillablePath.prototype.CreateSelectedHoverStrokes = function() {
     if (this._bSupportsVectorEffects)
       this.SelectedHoverOuterStroke.setFixedWidth(true);
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtDrillablePath.prototype.hideHoverEffect = function () {
+DvtDrillablePath.prototype.hideHoverEffect = function() {
   if (this.isSelected()) {
     this.SelectedInnerStroke = this._adjustStrokeZoomWidth(this.SelectedInnerStroke, DvtDrillablePath.SELECTED_INNER_STROKE_WIDTH);
     this.SelectedOuterStroke = this._adjustStrokeZoomWidth(this.SelectedOuterStroke, DvtDrillablePath.SELECTED_OUTER_STROKE_WIDTH);
   }
   DvtDrillablePath.superclass.hideHoverEffect.call(this);
-}
+};
+
 
 /**
  * @override
  */
-DvtDrillablePath.prototype.setHoverStroke = function (innerStroke, outerStroke) {
+DvtDrillablePath.prototype.setHoverStroke = function(innerStroke, outerStroke) {
   DvtDrillablePath.superclass.setHoverStroke.call(this, innerStroke, outerStroke);
   if (this._bSupportsVectorEffects) {
     if (this.HoverInnerStroke)
@@ -2491,12 +2588,13 @@ DvtDrillablePath.prototype.setHoverStroke = function (innerStroke, outerStroke) 
       this.HoverOuterStroke.setFixedWidth(true);
   }
   return this;
-}
+};
+
 
 /**
  * @override
  */
-DvtDrillablePath.prototype.setSelectedStroke = function (innerStroke, outerStroke) {
+DvtDrillablePath.prototype.setSelectedStroke = function(innerStroke, outerStroke) {
   DvtDrillablePath.superclass.setSelectedStroke.call(this, innerStroke, outerStroke);
   if (this._bSupportsVectorEffects) {
     if (this.SelectedInnerStroke)
@@ -2505,12 +2603,13 @@ DvtDrillablePath.prototype.setSelectedStroke = function (innerStroke, outerStrok
       this.SelectedOuterStroke.setFixedWidth(true);
   }
   return this;
-}
+};
+
 
 /**
  * @override
  */
-DvtDrillablePath.prototype.setSelectedHoverStroke = function (innerStroke, outerStroke) {
+DvtDrillablePath.prototype.setSelectedHoverStroke = function(innerStroke, outerStroke) {
   DvtDrillablePath.superclass.setSelectedHoverStroke.call(this, innerStroke, outerStroke);
   if (this._bSupportsVectorEffects) {
     if (this.SelectedHoverInnerStroke)
@@ -2519,13 +2618,14 @@ DvtDrillablePath.prototype.setSelectedHoverStroke = function (innerStroke, outer
       this.SelectedHoverOuterStroke.setFixedWidth(true);
   }
   return this;
-}
+};
+
 
 /**
  * Sets the disclosed stroke for this shape.
  * @return DvtDrillablePath To be used for chaining
  */
-DvtDrillablePath.prototype.setDisclosedStroke = function (innerStroke, outerStroke) {
+DvtDrillablePath.prototype.setDisclosedStroke = function(innerStroke, outerStroke) {
   this._disclosedInnerStroke = innerStroke;
   if (this._disclosedInnerStroke && this._bSupportsVectorEffects)
     this._disclosedInnerStroke.setFixedWidth(true);
@@ -2533,37 +2633,37 @@ DvtDrillablePath.prototype.setDisclosedStroke = function (innerStroke, outerStro
   if (this._disclosedOuterStroke && this._bSupportsVectorEffects)
     this._disclosedOuterStroke.setFixedWidth(true);
   return this;
-}
+};
 
-DvtDrillablePath.prototype.savePatternFill = function (fill) {
+DvtDrillablePath.prototype.savePatternFill = function(fill) {
   this._ptFill = fill;
-}
+};
 
-DvtDrillablePath.prototype.getSavedPatternFill = function () {
+DvtDrillablePath.prototype.getSavedPatternFill = function() {
   return this._ptFill;
-}
+};
 
-DvtDrillablePath.prototype._updateStrokeZoomWidth = function (shape, fixedWidth) {
+DvtDrillablePath.prototype._updateStrokeZoomWidth = function(shape, fixedWidth) {
   if (!this._bSupportsVectorEffects) {
     var stroke = shape.getStroke();
     if (stroke) {
       stroke = stroke.clone();
-      stroke.setWidth(fixedWidth/this.Zoom);
+      stroke.setWidth(fixedWidth / this.Zoom);
       shape.setStroke(stroke);
     }
   }
-}
+};
 
-DvtDrillablePath.prototype._adjustStrokeZoomWidth = function (stroke, fixedWidth) {
+DvtDrillablePath.prototype._adjustStrokeZoomWidth = function(stroke, fixedWidth) {
   if (!this._bSupportsVectorEffects) {
     var adjustedStroke = stroke.clone();
-    adjustedStroke.setWidth(fixedWidth/this.Zoom);
+    adjustedStroke.setWidth(fixedWidth / this.Zoom);
     return adjustedStroke;
   }
   return stroke;
-}
+};
 
-DvtDrillablePath.prototype.handleZoomEvent = function (pzcMatrix) {
+DvtDrillablePath.prototype.handleZoomEvent = function(pzcMatrix) {
   this.Zoom = pzcMatrix.getA();
   if (this.isDrilled()) {
     this._updateStrokeZoomWidth(this._disclosedInnerShape, DvtDrillablePath.DISCLOSED_INNER_STROKE_WIDTH);
@@ -2584,35 +2684,35 @@ DvtDrillablePath.prototype.handleZoomEvent = function (pzcMatrix) {
   else {
     this._updateStrokeZoomWidth(this, 1);
   }
-}
+};
 var DvtBaseMapManager = this['DvtBaseMapManager'];
 if (!DvtBaseMapManager) {
   DvtBaseMapManager = {};
-  DvtBaseMapManager._UNPROCESSED_MAPS = [[],[],[]];
-  DvtBaseMapManager._UNPROCESSED_PARENT_UPDATES = [[],[],[]];
+  DvtBaseMapManager._UNPROCESSED_MAPS = [[], [], []];
+  DvtBaseMapManager._UNPROCESSED_PARENT_UPDATES = [[], [], []];
 } else {
   DvtBaseMapManager._UNPROCESSED_MAPS = DvtBaseMapManager['_UNPROCESSED_MAPS'];
   DvtBaseMapManager._UNPROCESSED_PARENT_UPDATES = DvtBaseMapManager['_UNPROCESSED_PARENT_UPDATES'];
 }
 
 
-if(typeof(DVT_ADVANCED_CLOSURE) != 'undefined') {
+if (typeof(DVT_ADVANCED_CLOSURE) != 'undefined') {
   goog.exportSymbol('DvtBaseMapManager', DvtBaseMapManager);
   goog.exportProperty(DvtBaseMapManager, '_UNPROCESSED_MAPS', DvtBaseMapManager._UNPROCESSED_MAPS);
   goog.exportProperty(DvtBaseMapManager, '_UNPROCESSED_PARENT_UPDATES', DvtBaseMapManager._UNPROCESSED_PARENT_UPDATES);
 }
 
-DvtObj.createSubclass(DvtBaseMapManager, DvtObj, "DvtBaseMapManager");
+DvtObj.createSubclass(DvtBaseMapManager, DvtObj, 'DvtBaseMapManager');
 
 DvtBaseMapManager.TYPE_LABELS = 0;// contain region labels
 DvtBaseMapManager.TYPE_PATH = 1;// contain region paths
-DvtBaseMapManager.TYPE_PARENTREGION_CHILDREN = 2;// contains parent region id to current region id mappings.  Stored this way since mapping is only needed if child layer is present. 
+DvtBaseMapManager.TYPE_PARENTREGION_CHILDREN = 2;// contains parent region id to current region id mappings.  Stored this way since mapping is only needed if child layer is present.
 DvtBaseMapManager.TYPE_LABELINFO = 3;// contains leaderline info
 DvtBaseMapManager.TYPE_DIM = 4; //basemap dimensions
 DvtBaseMapManager._INDEX = '__index';
 DvtBaseMapManager._GLOBAL_MAPS = new Object();
 
-DvtBaseMapManager.getBaseMapDim = function (baseMapName, layerName) {
+DvtBaseMapManager.getBaseMapDim = function(baseMapName, layerName) {
   DvtBaseMapManager._processUnprocessedMaps();
   var layer = DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
   if (layer) {
@@ -2621,27 +2721,27 @@ DvtBaseMapManager.getBaseMapDim = function (baseMapName, layerName) {
       return new DvtRectangle(dimAr[0], dimAr[1], dimAr[2], dimAr[3]);
   }
   return null;
-}
+};
 
-DvtBaseMapManager.getAreaLabelInfo = function (baseMapName, layerName) {
+DvtBaseMapManager.getAreaLabelInfo = function(baseMapName, layerName) {
   DvtBaseMapManager._processUnprocessedMaps();
   var layer = DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
   if (layer)
     return layer[DvtBaseMapManager.TYPE_LABELINFO];
   else
     return null;
-}
+};
 
-DvtBaseMapManager.getAreaNames = function (baseMapName, layerName) {
+DvtBaseMapManager.getAreaNames = function(baseMapName, layerName) {
   DvtBaseMapManager._processUnprocessedMaps();
   var layer = DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
   if (layer)
     return layer[DvtBaseMapManager.TYPE_LABELS];
   else
     return null;
-}
+};
 
-DvtBaseMapManager.getLongAreaLabel = function (baseMapName, layerName, areaId) {
+DvtBaseMapManager.getLongAreaLabel = function(baseMapName, layerName, areaId) {
   DvtBaseMapManager._processUnprocessedMaps();
   var layer = DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
   var labels;
@@ -2651,23 +2751,23 @@ DvtBaseMapManager.getLongAreaLabel = function (baseMapName, layerName, areaId) {
     return labels[areaId][1];
   else
     return null;
-}
+};
 
-DvtBaseMapManager.getCityCoordinates = function (baseMapName, city) {
+DvtBaseMapManager.getCityCoordinates = function(baseMapName, city) {
   DvtBaseMapManager._processUnprocessedMaps();
   var basemap = DvtBaseMapManager._GLOBAL_MAPS[baseMapName];
   if (basemap) {
     var cityLayer = basemap['cities'];
     if (cityLayer) {
-      var coords =  cityLayer[DvtBaseMapManager.TYPE_PATH][city];
+      var coords = cityLayer[DvtBaseMapManager.TYPE_PATH][city];
       if (coords)
-          return new DvtPoint(coords[0], coords[1]);
+        return new DvtPoint(coords[0], coords[1]);
     }
   }
   return null;
-}
+};
 
-DvtBaseMapManager.getCityLabel = function (baseMapName, city) {
+DvtBaseMapManager.getCityLabel = function(baseMapName, city) {
   DvtBaseMapManager._processUnprocessedMaps();
   var basemap = DvtBaseMapManager._GLOBAL_MAPS[baseMapName];
   if (basemap) {
@@ -2679,9 +2779,9 @@ DvtBaseMapManager.getCityLabel = function (baseMapName, city) {
     }
   }
   return null;
-}
+};
 
-DvtBaseMapManager.getAreaCenter = function (baseMapName, layerName, areaId) {
+DvtBaseMapManager.getAreaCenter = function(baseMapName, layerName, areaId) {
   DvtBaseMapManager._processUnprocessedMaps();
   var basemap = DvtBaseMapManager._GLOBAL_MAPS[baseMapName];
   if (basemap) {
@@ -2704,16 +2804,17 @@ DvtBaseMapManager.getAreaCenter = function (baseMapName, layerName, areaId) {
     }
   }
   return null;
-}
+};
 
-DvtBaseMapManager.getChildLayerName = function (baseMapName, layerName) {
+DvtBaseMapManager.getChildLayerName = function(baseMapName, layerName) {
   DvtBaseMapManager._processUnprocessedMaps();
-  var layer =  DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
+  var layer = DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
   if (layer)
     return DvtBaseMapManager._GLOBAL_MAPS[baseMapName][DvtBaseMapManager._INDEX][layer['__index'] + 1];
   else
     return null;
-}
+};
+
 
 /**
  * Returns the parent layer name of the passed in layer or null if none exists
@@ -2721,26 +2822,26 @@ DvtBaseMapManager.getChildLayerName = function (baseMapName, layerName) {
  * @param {String} layerName The layer name
  * @return {String} The parent layer name of the passed in layer
  */
-DvtBaseMapManager.getParentLayerName = function (baseMapName, layerName) {
+DvtBaseMapManager.getParentLayerName = function(baseMapName, layerName) {
   DvtBaseMapManager._processUnprocessedMaps();
-  var layer =  DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
+  var layer = DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName];
   if (layer)
     return DvtBaseMapManager._GLOBAL_MAPS[baseMapName][DvtBaseMapManager._INDEX][DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName]['__index'] - 1];
   else
     return null;
-}
+};
 
-DvtBaseMapManager.getAreaPaths = function (baseMapName, layerName) {
+DvtBaseMapManager.getAreaPaths = function(baseMapName, layerName) {
   DvtBaseMapManager._processUnprocessedMaps();
   return DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName][DvtBaseMapManager.TYPE_PATH];
-}
+};
 
-DvtBaseMapManager.getPathForArea = function (baseMapName, layerName, area) {
+DvtBaseMapManager.getPathForArea = function(baseMapName, layerName, area) {
   DvtBaseMapManager._processUnprocessedMaps();
   return DvtBaseMapManager._GLOBAL_MAPS[baseMapName][layerName][DvtBaseMapManager.TYPE_PATH][area];
-}
+};
 
-DvtBaseMapManager.getChildrenForLayerAreas = function (baseMapName, layerName) {
+DvtBaseMapManager.getChildrenForLayerAreas = function(baseMapName, layerName) {
   DvtBaseMapManager._processUnprocessedMaps();
   var childLayerName = DvtBaseMapManager.getChildLayerName(baseMapName, layerName);
   if (childLayerName) {
@@ -2749,21 +2850,22 @@ DvtBaseMapManager.getChildrenForLayerAreas = function (baseMapName, layerName) {
       return children;
     else
       return [];
-  } 
+  }
   return [];
-}
+};
 
-DvtBaseMapManager.getMapLayerName = function (baseMapName, index) {
+DvtBaseMapManager.getMapLayerName = function(baseMapName, index) {
   DvtBaseMapManager._processUnprocessedMaps();
   return DvtBaseMapManager._GLOBAL_MAPS[baseMapName][DvtBaseMapManager._INDEX][index];
-}
+};
+
 
 /**
  * @export
  * called at the end of the base map JS metadata files to register new base map layer metadata
  */
-DvtBaseMapManager.registerBaseMapLayer = function (baseMapName, layerName, labelMetadata, pathMetadata, parentsRegionMetadata, labelInfoMetadata, index, dim) {
-  // bootstrap global base map metadata  
+DvtBaseMapManager.registerBaseMapLayer = function(baseMapName, layerName, labelMetadata, pathMetadata, parentsRegionMetadata, labelInfoMetadata, index, dim) {
+  // bootstrap global base map metadata
   // find or create basemap metadata
   var basemapMetadata = DvtBaseMapManager._GLOBAL_MAPS[baseMapName];
   if (!basemapMetadata) {
@@ -2779,7 +2881,7 @@ DvtBaseMapManager.registerBaseMapLayer = function (baseMapName, layerName, label
     basemapMetadata[layerName] = layerMetadata;
     // custom area layers don't have indicies when registered
     if (index != null)
-    basemapMetadata[DvtBaseMapManager._INDEX][index] = layerName;
+      basemapMetadata[DvtBaseMapManager._INDEX][index] = layerName;
   }
 
   // register layer metadata base on type
@@ -2789,12 +2891,13 @@ DvtBaseMapManager.registerBaseMapLayer = function (baseMapName, layerName, label
   layerMetadata[DvtBaseMapManager.TYPE_LABELINFO] = labelInfoMetadata;
   layerMetadata[DvtBaseMapManager.TYPE_DIM] = dim;
   layerMetadata[DvtBaseMapManager._INDEX] = index;
-}
+};
+
 
 /**
  * @export
  */
-DvtBaseMapManager.registerResourceBundle = function (baseMapName, layerName, labelMetadata) {
+DvtBaseMapManager.registerResourceBundle = function(baseMapName, layerName, labelMetadata) {
   var basemapMetadata = DvtBaseMapManager._GLOBAL_MAPS[baseMapName];
   if (!basemapMetadata) {
     basemapMetadata = new Object();
@@ -2807,38 +2910,40 @@ DvtBaseMapManager.registerResourceBundle = function (baseMapName, layerName, lab
     layerMetadata = new Object();
     basemapMetadata[layerName] = layerMetadata;
   }
-  
+
   var layerMetadata = basemapMetadata[layerName];
   // Overwrite english labels with resource bundle language
   if (layerMetadata)
     layerMetadata[DvtBaseMapManager.TYPE_LABELS] = labelMetadata;
-}
+};
+
 
 /**
  * @export
  */
-DvtBaseMapManager.updateResourceBundle = function (baseMapName, layerName, labelMetadata) {
+DvtBaseMapManager.updateResourceBundle = function(baseMapName, layerName, labelMetadata) {
   var basemapMetadata = DvtBaseMapManager._GLOBAL_MAPS[baseMapName];
   if (basemapMetadata) {
-      var layerMetadata = basemapMetadata[layerName];
-      // Overwrite english labels with resource bundle language
-      if (layerMetadata) {
-          for(var prop in labelMetadata){
-              layerMetadata[DvtBaseMapManager.TYPE_LABELS][prop] = labelMetadata[prop];
-          }
+    var layerMetadata = basemapMetadata[layerName];
+    // Overwrite english labels with resource bundle language
+    if (layerMetadata) {
+      for (var prop in labelMetadata) {
+        layerMetadata[DvtBaseMapManager.TYPE_LABELS][prop] = labelMetadata[prop];
       }
+    }
   }
-}
+};
+
 
 /**
  * Called only by Flash thematic map to load basemaps
  * @export
  */
 DvtBaseMapManager.loadUnprocessedMaps = function(unprocessedMaps, hierarchyUpdates) {
-  DvtBaseMapManager._UNPROCESSED_MAPS = unprocessedMaps;  
+  DvtBaseMapManager._UNPROCESSED_MAPS = unprocessedMaps;
   DvtBaseMapManager._UNPROCESSED_PARENT_UPDATES = hierarchyUpdates;
   DvtBaseMapManager._processUnprocessedMaps();
-}
+};
 
 DvtBaseMapManager._processUnprocessedMaps = function() {
   var i;
@@ -2858,7 +2963,7 @@ DvtBaseMapManager._processUnprocessedMaps = function() {
     }
     DvtBaseMapManager._UNPROCESSED_MAPS = null;
   }
-  
+
   // update custom area layers and update hierarchy indicies
   if (DvtBaseMapManager._UNPROCESSED_PARENT_UPDATES) {
     for (i = 0; i < DvtBaseMapManager._UNPROCESSED_PARENT_UPDATES[0].length; i++) {
@@ -2880,13 +2985,13 @@ DvtBaseMapManager._processUnprocessedMaps = function() {
           var indicies = basemapMetadata[DvtBaseMapManager._INDEX];
           indicies.splice(index, 0, layerName);
           basemapMetadata[layerName][DvtBaseMapManager._INDEX] = index;
-          for (var i=(index+1); i<indicies.length; i++) {
+          for (var i = (index + 1); i < indicies.length; i++) {
             var lowerLayer = basemapMetadata[indicies[i]];
             if (lowerLayer)
               lowerLayer[DvtBaseMapManager._INDEX]++;
           }
         }
-        
+
         // update custom layer dimensions from extending layer
         layerMetadata = basemapMetadata[args[2]];
         if (layerMetadata) {
@@ -2895,15 +3000,15 @@ DvtBaseMapManager._processUnprocessedMaps = function() {
       }
     }
   }
-}
+};
 
 DvtBaseMapManager.simplifyAreaPaths = function(paths, basemapW, basemapH, viewportW, viewportH, zoomFactor) {
   // determine the scale factor for the map given the viewport
   if (zoomFactor > 0) {
-    var dzx = viewportW/basemapW;
-    var dzy = viewportH/basemapH;
+    var dzx = viewportW / basemapW;
+    var dzy = viewportH / basemapH;
     var dz = Math.min(dzx, dzy);
-    var scale = 1/(dz*zoomFactor); // 6 is the current max zoom
+    var scale = 1 / (dz * zoomFactor); // 6 is the current max zoom
     if (scale <= 1)
       return paths;
     // If scale = 10 that means 10 pixels in the map coordinate space = 1 pixel in the current viewport
@@ -2921,7 +3026,7 @@ DvtBaseMapManager.simplifyAreaPaths = function(paths, basemapW, basemapH, viewpo
   } else {
     return paths;
   }
-}
+};
 /**
  * @constructor
  */
@@ -2930,31 +3035,32 @@ var DvtThematicMapCategoryWrapper = function(displayable, category)
   this.Init(displayable, category);
 };
 
-DvtObj.createSubclass(DvtThematicMapCategoryWrapper, DvtObj, "DvtThematicMapCategoryWrapper");
+DvtObj.createSubclass(DvtThematicMapCategoryWrapper, DvtObj, 'DvtThematicMapCategoryWrapper');
 
 DvtThematicMapCategoryWrapper.prototype.Init = function(displayable, category) {
   this._displayable = displayable;
   this._category = category;
-}
+};
 
 DvtThematicMapCategoryWrapper.prototype.getCategories = function() {
   return this._category;
-}
+};
 
 DvtThematicMapCategoryWrapper.prototype.getDisplayables = function() {
   return [this._displayable];
-}
+};
 var DvtMapDrillEvent = function(drillType) {
   this.Init(DvtMapDrillEvent.TYPE);
   this._drillType = drillType;
-}
+};
 
-DvtObj.createSubclass(DvtMapDrillEvent, DvtBaseComponentEvent, "DvtMapDrillEvent");
+DvtObj.createSubclass(DvtMapDrillEvent, DvtBaseComponentEvent, 'DvtMapDrillEvent');
 
-DvtMapDrillEvent.TYPE = "drill";
+DvtMapDrillEvent.TYPE = 'drill';
 DvtMapDrillEvent.DRILL_UP = 0;
 DvtMapDrillEvent.DRILL_DOWN = 1;
 DvtMapDrillEvent.RESET = 2;
+
 
 /**
  * Returns the array of currently drilled ids for the component.
@@ -2962,15 +3068,15 @@ DvtMapDrillEvent.RESET = 2;
  */
 DvtMapDrillEvent.prototype.getDisclosed = function() {
   return this._disclosed;
-}
+};
 
 DvtMapDrillEvent.prototype.setDisclosed = function(disclosed) {
   this._disclosed = disclosed;
-}
+};
 
 DvtMapDrillEvent.prototype.getDrillType = function() {
   return this._drillType;
-}
+};
 /**
  * Map action event.
  * @param {string} [clientId] The client id associated with this action event.
@@ -2985,14 +3091,16 @@ var DvtMapActionEvent = function(clientId, rowKey, action) {
   this._clientId = clientId;
   this._rowKey = rowKey;
   this._action = action;
-}
+};
 
-DvtObj.createSubclass(DvtMapActionEvent, DvtBaseComponentEvent, "DvtMapActionEvent");
+DvtObj.createSubclass(DvtMapActionEvent, DvtBaseComponentEvent, 'DvtMapActionEvent');
+
 
 /**
  * @export
  */
-DvtMapActionEvent.TYPE = "action";
+DvtMapActionEvent.TYPE = 'action';
+
 
 /**
  * Returns the clientId associated with this event.
@@ -3001,7 +3109,8 @@ DvtMapActionEvent.TYPE = "action";
  */
 DvtMapActionEvent.prototype.getClientId = function() {
   return this._clientId;
-}
+};
+
 
 /**
  * Returns the rowKey of the object associated with this event.
@@ -3010,7 +3119,8 @@ DvtMapActionEvent.prototype.getClientId = function() {
  */
 DvtMapActionEvent.prototype.getRowKey = function() {
   return this._rowKey;
-}
+};
+
 
 /**
  * Returns the action name.
@@ -3019,13 +3129,13 @@ DvtMapActionEvent.prototype.getRowKey = function() {
  */
 DvtMapActionEvent.prototype.getAction = function() {
   return this._action;
-}
+};
 /**
  * Base map layer metadata
- * @extends DvtObj
+ * @extends {DvtObj}
  * @class base map layer metadata
  * @constructor
- * 
+ *
  * @param {DvtContext} context The rendering context
  * @param {String} label Text for label
  * @param {Array} labelInfo Contains the label bounding box at different zoom levels and leader line info
@@ -3033,15 +3143,16 @@ DvtMapActionEvent.prototype.getAction = function() {
  * @param {DvtContainer} parentContainer The container to add the label to
  * @param {boolean} bSupportsVectorEffects Whether the rendering platform supports vector effects
  */
-var DvtMapLabel = function (context, label, labelInfo, labelDisplay, parentContainer, bSupportsVectorEffects) {
+var DvtMapLabel = function(context, label, labelInfo, labelDisplay, parentContainer, bSupportsVectorEffects) {
   this.Init(context, label, labelInfo, labelDisplay, parentContainer, bSupportsVectorEffects);
-}
+};
 
-DvtObj.createSubclass(DvtMapLabel, DvtOutputText, "DvtMapLabel");
+DvtObj.createSubclass(DvtMapLabel, DvtOutputText, 'DvtMapLabel');
+
 
 /**
  * Initializes label.  Sets bounding rectangle for label and draws leaderlines if present.
- * 
+ *
  * @param {DvtContext} context The rendering context
  * @param {String} label Text for label
  * @param {Array} labelInfo Contains the label bounding box at different zoom levels and leader line info
@@ -3050,7 +3161,7 @@ DvtObj.createSubclass(DvtMapLabel, DvtOutputText, "DvtMapLabel");
  * @param {boolean} bSupportsVectorEffects Whether the rendering platform supports vector effects
  * @protected
  */
-DvtMapLabel.prototype.Init = function (context, label, labelInfo, labelDisplay, parentContainer, bSupportsVectorEffects) {
+DvtMapLabel.prototype.Init = function(context, label, labelInfo, labelDisplay, parentContainer, bSupportsVectorEffects) {
   DvtMapLabel.superclass.Init.call(this, context, label, 0, 0);
   //IE10, Flash/XML toolkit do not support vector-effects=non-scaling-stroke so we still need to set stroke width based on zoom
   this._bSupportsVectorEffects = bSupportsVectorEffects;
@@ -3061,16 +3172,16 @@ DvtMapLabel.prototype.Init = function (context, label, labelInfo, labelDisplay, 
   this._center = null;
   this._labelDisplay = labelDisplay;
   this._parentContainer = parentContainer;
-  
+
   if (labelInfo) {
     this._boundRectangle.push(DvtRectangle.create(labelInfo[0]));
     if (labelInfo.length > 1) {
       this._leaderLines = new Array();
-  
-      for (var i = 1;i < labelInfo.length;i++) {
+
+      for (var i = 1; i < labelInfo.length; i++) {
         var line = labelInfo[i];
         this._boundRectangle.push(DvtRectangle.create(line[0]));
-  
+
         var polyline = new DvtPolyline(context, line[1]);
         polyline.setPixelHinting(true);
         var stroke = new DvtSolidStroke('#000000');
@@ -3081,29 +3192,30 @@ DvtMapLabel.prototype.Init = function (context, label, labelInfo, labelDisplay, 
       }
     }
   }
-}
+};
 
-DvtMapLabel.prototype.addBounds = function (boundsRect) {
+DvtMapLabel.prototype.addBounds = function(boundsRect) {
   this._boundRectangle.push(boundsRect);
-}
+};
 
-DvtMapLabel.prototype.hasBounds = function () {
+DvtMapLabel.prototype.hasBounds = function() {
   return this._boundRectangle.length > 0;
-}
+};
+
 
 /**
- * Updates this label's position, adding and 
+ * Updates this label's position, adding and
  * removing it as needed.
  * @param {DvtMatrix} pzcMatrix zoom matrix
  */
-DvtMapLabel.prototype.update = function (pzcMatrix) {
+DvtMapLabel.prototype.update = function(pzcMatrix) {
   var zoom = pzcMatrix.getA();
   var state = -1;
   var estimatedDims = DvtTextUtils.guessTextDimensions(this);
   var remove = false;
-  for (var i = 0;i < this._boundRectangle.length;i++) {
+  for (var i = 0; i < this._boundRectangle.length; i++) {
     var zoomW = this._boundRectangle[i].w * zoom;
-    if (estimatedDims.w <= zoomW ) {
+    if (estimatedDims.w <= zoomW) {
       state = i;
       break;
     } else {
@@ -3113,21 +3225,21 @@ DvtMapLabel.prototype.update = function (pzcMatrix) {
         this._parentContainer.addChild(this);
       }
       if (this.getDimensions().w <= zoomW) {
-        state = i
+        state = i;
         break;
       }
     }
   }
-  
+
   // if labels are always displayed, use the last available bounding box
   if (state == -1 && this._labelDisplay == 'on')
-    state = this._boundRectangle.length-1;
-    
+    state = this._boundRectangle.length - 1;
+
   if (this._currentState != state) {
     if (state == -1) {
       this.reset();
     } else {
-      if (!this.getParent()) 
+      if (!this.getParent())
         this._parentContainer.addChild(this);
       var center = this._boundRectangle[state].getCenter();
       this.setCenter(center);
@@ -3144,29 +3256,29 @@ DvtMapLabel.prototype.update = function (pzcMatrix) {
           var labelBox = this._boundRectangle[state];
           var leaderLinePoints = this._leaderLine.getPoints();
           var numPoints = leaderLinePoints.length;
-          if (labelBox.x > leaderLinePoints[numPoints-2]) {
+          if (labelBox.x > leaderLinePoints[numPoints - 2]) {
             // leaderline position: left
             this.alignLeft();
             this.alignMiddle();
             this.setCenter(new DvtPoint(labelBox.x, center.y));
           }
-          else if (labelBox.y > leaderLinePoints[numPoints-1]) {
+          else if (labelBox.y > leaderLinePoints[numPoints - 1]) {
             // leaderline position: top
             this.alignTop();
             this.alignCenter();
             this.setCenter(new DvtPoint(center.x, labelBox.y));
           }
-          else if ((labelBox.x+labelBox.w) < leaderLinePoints[numPoints-2]) {
+          else if ((labelBox.x + labelBox.w) < leaderLinePoints[numPoints - 2]) {
             // leaderline position: right
             this.alignRight();
             this.alignMiddle();
-            this.setCenter(new DvtPoint(labelBox.x+labelBox.w, center.y));
+            this.setCenter(new DvtPoint(labelBox.x + labelBox.w, center.y));
           }
-          else if ((labelBox.y+labelBox.h) < leaderLinePoints[numPoints-1]) {
+          else if ((labelBox.y + labelBox.h) < leaderLinePoints[numPoints - 1]) {
             // leaderline position: bottom
             this.alignBottom();
             this.alignCenter();
-            this.setCenter(new DvtPoint(center.x, labelBox.y+labelBox.h));
+            this.setCenter(new DvtPoint(center.x, labelBox.y + labelBox.h));
           }
         } else {
           // reset label alignment if label now fits without leader line
@@ -3184,67 +3296,68 @@ DvtMapLabel.prototype.update = function (pzcMatrix) {
   else if (state == -1 && remove) { // remove label if we added it to call getDimensions and it wasn't already removed
     this._parentContainer.removeChild(this);
   }
-    
+
   if (this._currentState != -1) {
     var mat = new DvtMatrix();
-    mat.translate(zoom*this._center.x-this._center.x, zoom*this._center.y-this._center.y);
+    mat.translate(zoom * this._center.x - this._center.x, zoom * this._center.y - this._center.y);
     this.setMatrix(mat);
     if (this._leaderLine) {
       this._leaderLine.setMatrix(new DvtMatrix(zoom, 0, 0, zoom));
       if (!this._bSupportsVectorEffects) {
         var stroke = this._leaderLine.getStroke().clone();
-        stroke.setWidth(1/zoom);
+        stroke.setWidth(1 / zoom);
         this._leaderLine.setStroke(stroke);
       }
     }
   }
-  
-}
 
-DvtMapLabel.prototype.setCenter = function (p) {
+};
+
+DvtMapLabel.prototype.setCenter = function(p) {
   this._center = p;
   this.setX(p.x);
   this.setY(p.y);
-}
+};
 
-DvtMapLabel.prototype.getLeaderLine = function () {
+DvtMapLabel.prototype.getLeaderLine = function() {
   return this._leaderLine;
-}
+};
 
-DvtMapLabel.prototype.getCenter = function () {
+DvtMapLabel.prototype.getCenter = function() {
   return this._center;
-}
-DvtMapLabel.prototype.setCSSStyle = function (cssStyle) {
+};
+DvtMapLabel.prototype.setCSSStyle = function(cssStyle) {
   DvtMapLabel.superclass.setCSSStyle.call(this, cssStyle);
   if (!this._labelColor) // save the label color for leader lines
     this._labelColor = cssStyle.getStyle(DvtCSSStyle.COLOR);
-}
+};
+
 
 /**
  * Removes the label from the map and resets it current state
  */
-DvtMapLabel.prototype.reset = function () { 
+DvtMapLabel.prototype.reset = function() {
   this._parentContainer.removeChild(this);
   this._currentState = -1;
   if (this._leaderLine) {
     this._parentContainer.removeChild(this._leaderLine);
     this._leaderLine = null;
   }
-}
+};
 
 /**
  * Base map layer metadata
- * @extends DvtObj
+ * @extends {DvtObj}
  * @class base map layer metadata
  * @constructor
  */
-var DvtMapDataObject = function (context, dataLayer, rowKey, clientId, regionId) {
+var DvtMapDataObject = function(context, dataLayer, rowKey, clientId, regionId) {
   this.Init(context, dataLayer, rowKey, clientId, regionId);
-}
+};
 
-DvtObj.createSubclass(DvtMapDataObject, DvtContainer, "DvtMapDataObject");
+DvtObj.createSubclass(DvtMapDataObject, DvtContainer, 'DvtMapDataObject');
 
-DvtMapDataObject.prototype.Init = function (context, dataLayer, rowKey, clientId, regionId) {
+DvtMapDataObject.prototype.Init = function(context, dataLayer, rowKey, clientId, regionId) {
   DvtMapDataObject.superclass.Init.call(this, context, null, clientId);
   this._categories = [];
   this.Shape = null;
@@ -3257,223 +3370,239 @@ DvtMapDataObject.prototype.Init = function (context, dataLayer, rowKey, clientId
   this.Zoom = 1;
   this._hasAction = false;
   this._dataLayer = dataLayer;
-}
+};
 
-DvtMapDataObject.prototype.getId = function () {
+DvtMapDataObject.prototype.getId = function() {
   return this._id;
-}
+};
 
-DvtMapDataObject.prototype.getClientId = function () {
+DvtMapDataObject.prototype.getClientId = function() {
   return this._clientId;
-}
+};
 
-DvtMapDataObject.prototype.getAreaId = function () {
+DvtMapDataObject.prototype.getAreaId = function() {
   return this.AreaId;
-}
+};
 
-DvtMapDataObject.prototype.setDisplayable = function (disp) {
+DvtMapDataObject.prototype.setDisplayable = function(disp) {
   this.Shape = disp;
-  
+
   // WAI-ARIA
   if (this.Shape)
     this.Shape.setAriaRole('img');
-}
+};
 
-DvtMapDataObject.prototype.setCenter = function (center) {
+DvtMapDataObject.prototype.setCenter = function(center) {
   this.Center = center;
-}
+};
+
 
 /**
  * Returns the center of the map data object in relation to the actual size of the base map
  * @return {DvtPoint} The center of the map data object
  */
-DvtMapDataObject.prototype.getCenter = function () {
+DvtMapDataObject.prototype.getCenter = function() {
   return this.Center;
-}
+};
 
-DvtMapDataObject.prototype.getDisplayable = function () {
+DvtMapDataObject.prototype.getDisplayable = function() {
   return this.Shape;
-}
+};
 
-DvtMapDataObject.prototype.setLabel = function (label) {
+DvtMapDataObject.prototype.setLabel = function(label) {
   this.Label = label;
-}
+};
 
-DvtMapDataObject.prototype.getLabel = function () {
+DvtMapDataObject.prototype.getLabel = function() {
   return this.Label;
-}
+};
 
-DvtMapDataObject.prototype.setLabelPosition = function (labelPos) {
+DvtMapDataObject.prototype.setLabelPosition = function(labelPos) {
   this.LabelPos = labelPos;
-}
+};
 
-DvtMapDataObject.prototype.setHasAction = function (bool) {
+DvtMapDataObject.prototype.setHasAction = function(bool) {
   this._hasAction = bool;
-}
+};
 
-DvtMapDataObject.prototype.hasAction = function () {
+DvtMapDataObject.prototype.hasAction = function() {
   return this._hasAction;
-}
+};
 
-DvtMapDataObject.prototype.setAction = function (action) {
+DvtMapDataObject.prototype.setAction = function(action) {
   this._action = action;
-}
+};
 
-DvtMapDataObject.prototype.getAction = function () {
+DvtMapDataObject.prototype.getAction = function() {
   return this._action;
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataObject.prototype.setVisible = function (bVisible) {
+DvtMapDataObject.prototype.setVisible = function(bVisible) {
   DvtMapDataObject.superclass.setVisible.call(this, bVisible);
   if (this.Label)
     this.Label.setVisible(bVisible);
-}
+};
+
 
 /**
  * Implemented for DvtLogicalObject
  * @override
  */
-DvtMapDataObject.prototype.getDisplayables = function () {
+DvtMapDataObject.prototype.getDisplayables = function() {
   return [this.Shape];
-}
+};
+
 
 /**
  * Implemented for DvtLogicalODvtCategoricalObject
  * @override
  */
-DvtMapDataObject.prototype.getCategories = function () {
+DvtMapDataObject.prototype.getCategories = function() {
   return this._categories;
-}
+};
 
-DvtMapDataObject.prototype.addCategory = function (cat) {
+DvtMapDataObject.prototype.addCategory = function(cat) {
   this._categories.push(cat);
-}
+};
+
 
 /**
  * Implemented for DvtTooltipSource
  * @override
  */
-DvtMapDataObject.prototype.getDatatip = function () {
+DvtMapDataObject.prototype.getDatatip = function() {
   return this._datatip;
-}
+};
+
 
 /**
  * Implemented for DvtTooltipSource
  * @override
  */
-DvtMapDataObject.prototype.getDatatipColor = function () {
+DvtMapDataObject.prototype.getDatatipColor = function() {
   return this._datatipColor;
-}
+};
 
-DvtMapDataObject.prototype.setDatatipColor = function (color) {
+DvtMapDataObject.prototype.setDatatipColor = function(color) {
   this._datatipColor = color;
   if (this.Shape && this.Shape.setDataColor)
     this.Shape.setDataColor(color);
-}
+};
 
-DvtMapDataObject.prototype.setDatatip = function (datatip) {
+DvtMapDataObject.prototype.setDatatip = function(datatip) {
   this._datatip = datatip;
-  
+
   // WAI-ARIA
   if (this.Shape)
     this.Shape.setAriaProperty('label', datatip);
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataObject.prototype.isSelectable = function () {
+DvtMapDataObject.prototype.isSelectable = function() {
   return this.Shape.isSelectable();
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataObject.prototype.isSelected = function () {
+DvtMapDataObject.prototype.isSelected = function() {
   return this.Shape.isSelected();
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataObject.prototype.showHoverEffect = function () {
+DvtMapDataObject.prototype.showHoverEffect = function() {
   //subclasses should override
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataObject.prototype.hideHoverEffect = function () {
+DvtMapDataObject.prototype.hideHoverEffect = function() {
   if (!this._isShowingKeyboardFocusEffect)
     this.HideHoverEffect();
-} 
+};
 
-DvtMapDataObject.prototype.HideHoverEffect = function () {
+DvtMapDataObject.prototype.HideHoverEffect = function() {
   //subclasses should override
-}
+};
+
 
 /**
  * Implemented for DvtPopupSource.
  * Specifies the array of showPopupBehaviors for this node.
  * @param {array} behaviors The array of showPopupBehaviors for this node.
  */
-DvtMapDataObject.prototype.setShowPopupBehaviors = function (behaviors) {
+DvtMapDataObject.prototype.setShowPopupBehaviors = function(behaviors) {
   this._showPopupBehaviors = behaviors;
-}
+};
+
 
 /**
  * Implemented for DvtPopupSource.
  * @override
  */
-DvtMapDataObject.prototype.getShowPopupBehaviors = function () {
+DvtMapDataObject.prototype.getShowPopupBehaviors = function() {
   return this._showPopupBehaviors;
-}
+};
+
 
 /**
  * Implemented for DvtDraggable.
  * @override
  */
-DvtMapDataObject.prototype.isDragAvailable = function (clientIds) {
+DvtMapDataObject.prototype.isDragAvailable = function(clientIds) {
   var parentId = this._dataLayer.getClientId();
-  for (var i = 0;i < clientIds.length;i++) {
+  for (var i = 0; i < clientIds.length; i++) {
     if (clientIds[i] == parentId)
       return parentId;
   }
   return parentId;
-}
+};
 
-DvtMapDataObject.prototype.getDataLayer = function () {
+DvtMapDataObject.prototype.getDataLayer = function() {
   return this._dataLayer;
-}
+};
+
 
 /**
  * Implemented for DvtDraggable.
  * @override
  */
-DvtMapDataObject.prototype.getDragTransferable = function (mouseX, mouseY) {
+DvtMapDataObject.prototype.getDragTransferable = function(mouseX, mouseY) {
   return this._dataLayer.__getDragTransferable(this);
-}
+};
+
 
 /**
  * Implemented for DvtDraggable.
  * @override
  */
-DvtMapDataObject.prototype.getDragFeedback = function (mouseX, mouseY) {
+DvtMapDataObject.prototype.getDragFeedback = function(mouseX, mouseY) {
   return this._dataLayer.__getDragFeedback();
-}
+};
+
 
 /**
  * Implemented for DvtKeyboardNavigable.
  * @override
  */
-DvtMapDataObject.prototype.getNextNavigable = function (event) {
+DvtMapDataObject.prototype.getNextNavigable = function(event) {
   if (event.type == DvtMouseEvent.CLICK) {
     return this;
   } else if (event.keyCode == DvtKeyboardEvent.SPACE && event.ctrlKey) {
@@ -3483,73 +3612,88 @@ DvtMapDataObject.prototype.getNextNavigable = function (event) {
   } else {
     return DvtKeyboardHandler.getNextAdjacentNavigable(this, event, this.GetNavigables());
   }
-}
+};
+
 
 /**
  * Returns the possible keyboard navigables
  * @return {array} The array of DvtMapDataObjects that are possible candidates for keyboard navigation
  */
-DvtMapDataObject.prototype.GetNavigables = function () {
+DvtMapDataObject.prototype.GetNavigables = function() {
   // subclasses should override
   return null;
-}
+};
+
 
 /**
  * Implemented for DvtKeyboardNavigable.
  * @override
  */
-DvtMapDataObject.prototype.getKeyboardBoundingBox = function () {
+DvtMapDataObject.prototype.getKeyboardBoundingBox = function() {
   if (this.Shape && this.Shape.getParent())
     return this.Shape.getDimensions();
-  else 
+  else
     return new DvtRectangle(0, 0, 0, 0);
-}
+};
+
 
 /**
  * Implemented for DvtKeyboardNavigable.
  * @override
  */
-DvtMapDataObject.prototype.showKeyboardFocusEffect = function () {
+DvtMapDataObject.prototype.showKeyboardFocusEffect = function() {
   this._isShowingKeyboardFocusEffect = true;
   this.showHoverEffect();
-}
+};
+
 
 /**
  * Implemented for DvtKeyboardNavigable.
  * @override
  */
-DvtMapDataObject.prototype.hideKeyboardFocusEffect = function () {
+DvtMapDataObject.prototype.hideKeyboardFocusEffect = function() {
   if (this._isShowingKeyboardFocusEffect) {
     this._isShowingKeyboardFocusEffect = false;
     this.hideHoverEffect();
   }
-}
+};
+
 
 /**
  * Implemented for DvtKeyboardNavigable.
  * @override
  */
-DvtMapDataObject.prototype.isShowingKeyboardFocusEffect = function () {
+DvtMapDataObject.prototype.isShowingKeyboardFocusEffect = function() {
   return this._isShowingKeyboardFocusEffect;
-}
+};
+
 
 /**
  * Rescale and translate
  */
-DvtMapDataObject.prototype.HandleZoomEvent = function (pzcMatrix) {
+DvtMapDataObject.prototype.HandleZoomEvent = function(pzcMatrix) {
   if (!this.Shape.getParent())
     return;
   this.Zoom = pzcMatrix.getA();
   this.recenter();
-}
+};
 
-DvtMapDataObject.prototype.PositionLabel = function (pzcMatrix) {
+DvtMapDataObject.prototype.PositionLabel = function(pzcMatrix) {
   //subclasses should override if needed
-}
+};
 
-DvtMapDataObject.prototype.recenter = function () {
+DvtMapDataObject.prototype.recenter = function() {
   //subclasses should override if needed
-}
+};
+
+
+/**
+ * Returns the size of this data object. Data object size is used for sorting.
+ * @return {Number} The data object size which is its width * height.
+ */
+DvtMapDataObject.prototype.getSize = function() {
+  return 0;
+};
 /**
  * Thematic Map custom area layer
  * @param {DvtContext} tmap The rendering context
@@ -3559,11 +3703,12 @@ DvtMapDataObject.prototype.recenter = function () {
  * @param {String} regionId The area id for this data object
  * @constructor
  */
-var DvtMapDataArea = function (context, dataLayer, rowKey, clientId, regionId) {
+var DvtMapDataArea = function(context, dataLayer, rowKey, clientId, regionId) {
   this.Init(context, dataLayer, rowKey, clientId, regionId);
-}
+};
 
-DvtObj.createSubclass(DvtMapDataArea, DvtMapDataObject, "DvtMapDataArea");
+DvtObj.createSubclass(DvtMapDataArea, DvtMapDataObject, 'DvtMapDataArea');
+
 
 /**
  * Helper method to initialize this DvtMapDataArea object
@@ -3574,149 +3719,159 @@ DvtObj.createSubclass(DvtMapDataArea, DvtMapDataObject, "DvtMapDataArea");
  * @param {String} regionId The area id for this data object
  * @protected
  */
-DvtMapDataArea.prototype.Init = function (context, dataLayer, rowKey, clientId, regionId) {
+DvtMapDataArea.prototype.Init = function(context, dataLayer, rowKey, clientId, regionId) {
   DvtMapDataArea.superclass.Init.call(this, context, dataLayer, rowKey, clientId, regionId);
   this._isHoverEffectShowing = false;
-}
+};
 
-DvtMapDataArea.prototype.setDisplayable = function (disp) {
+DvtMapDataArea.prototype.setDisplayable = function(disp) {
   DvtMapDataArea.superclass.setDisplayable.call(this, disp);
-}
+};
 
-DvtMapDataArea.prototype.setAreaLayer = function (layer) {
+DvtMapDataArea.prototype.setAreaLayer = function(layer) {
   this._dataAreaLayer = layer;
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataArea.prototype.setSelected = function (selected) {
+DvtMapDataArea.prototype.setSelected = function(selected) {
   // for initial selection where hover effect isn't shown on selection
   if (selected && !this._isHoverEffectShowing)
     this._dataAreaLayer.addChild(this.Shape);
   this.Shape.setSelected(selected);
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataArea.prototype.showHoverEffect = function () {
+DvtMapDataArea.prototype.showHoverEffect = function() {
   this._dataAreaLayer.addChild(this.Shape);
   this.Shape.showHoverEffect();
   this._isHoverEffectShowing = true;
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataArea.prototype.HideHoverEffect = function () {
+DvtMapDataArea.prototype.HideHoverEffect = function() {
   if (this.isSelected())
     this._dataAreaLayer.addChild(this.Shape);
   else
     this._dataAreaLayer.addChildAt(this.Shape, 0);
   this.Shape.hideHoverEffect();
   this._isHoverEffectShowing = false;
-}
+};
 
-DvtMapDataArea.prototype.isDrilled = function () {
+DvtMapDataArea.prototype.isDrilled = function() {
   return this.Shape.isDrilled();
-}
+};
 
-DvtMapDataArea.prototype.setDrilled = function (drilled) {
+DvtMapDataArea.prototype.setDrilled = function(drilled) {
   this._isDrilled = drilled;
   if (drilled)
     this._dataAreaLayer.addChild(this.Shape);
   else
     this._dataAreaLayer.addChildAt(this.Shape, 0);
   this.Shape.setDrilled(drilled);
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataArea.prototype.HandleZoomEvent = function (pzcMatrix) {
+DvtMapDataArea.prototype.HandleZoomEvent = function(pzcMatrix) {
   if (!this.Shape.getParent())
     return;
   DvtMapDataArea.superclass.HandleZoomEvent.call(this, pzcMatrix);
   this.Shape.handleZoomEvent(pzcMatrix);
   if (!this.isDrilled())
     this.PositionLabel(pzcMatrix);
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataArea.prototype.PositionLabel = function (pzcMatrix) {
+DvtMapDataArea.prototype.PositionLabel = function(pzcMatrix) {
   if (this.Label)
     this.Label.update(pzcMatrix);
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataArea.prototype.GetNavigables = function () {
+DvtMapDataArea.prototype.GetNavigables = function() {
   return this.getDataLayer().getMap().getNavigableAreas();
-}
+};
 /**
  * Base map layer metadata
- * @extends DvtObj
+ * @extends {DvtObj}
  * @class base map layer metadata
  * @constructor
  */
-var DvtMapDataMarker = function (context, dataLayer, rowKey, clientId, regionId) {
+var DvtMapDataMarker = function(context, dataLayer, rowKey, clientId, regionId) {
   this.Init(context, dataLayer, rowKey, clientId, regionId);
-}
+};
 DvtMapDataMarker.DEFAULT_MARKER_ALPHA = 1;
 DvtMapDataMarker.DEFAULT_MARKER_SIZE = 8.0;
 DvtMapDataMarker.DEFAULT_MARKER_SHAPE = 'c';
 DvtMapDataMarker.DEFAULT_MARKER_SCALE = 1.0;
 
-DvtObj.createSubclass(DvtMapDataMarker, DvtMapDataObject, "DvtMapDataMarker");
+DvtObj.createSubclass(DvtMapDataMarker, DvtMapDataObject, 'DvtMapDataMarker');
 
-DvtMapDataMarker.prototype.Init = function (context, dataLayer, rowKey, clientId, regionId) {
+DvtMapDataMarker.prototype.Init = function(context, dataLayer, rowKey, clientId, regionId) {
   DvtMapDataMarker.superclass.Init.call(this, context, dataLayer, rowKey, clientId, regionId);
   this.InitCanvasZoom = 1.0;
   this._size = 0;
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataMarker.prototype.setSelected = function (selected) {
+DvtMapDataMarker.prototype.setSelected = function(selected) {
   this.Shape.setSelected(selected);
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataMarker.prototype.showHoverEffect = function () {
+DvtMapDataMarker.prototype.showHoverEffect = function() {
   this.Shape.showHoverEffect();
-}
+};
+
 
 /**
  * Implemented for DvtSelectable
  * @override
  */
-DvtMapDataMarker.prototype.HideHoverEffect = function () {
+DvtMapDataMarker.prototype.HideHoverEffect = function() {
   this.Shape.hideHoverEffect();
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataMarker.prototype.PositionLabel = function (pzcMatrix) {
+DvtMapDataMarker.prototype.PositionLabel = function(pzcMatrix) {
   if (this.Label) {
     this.Label.alignCenter();
-    var x = (this.Shape.getX() + this.Shape.getScaledWidth()/2)*this.Zoom;
-    var markerY = this.Shape.getY()*this.Zoom;
+    var x = (this.Shape.getX() + this.Shape.getScaledWidth() / 2) * this.Zoom;
+    var markerY = this.Shape.getY() * this.Zoom;
     var markerH = this.Shape.getScaledHeight();
     var markerType = this.Shape.getType();
-    
+
     var y;
     if (this.LabelPos == 'top') {
       y = markerY - 4;
@@ -3726,255 +3881,390 @@ DvtMapDataMarker.prototype.PositionLabel = function (pzcMatrix) {
       this.Label.alignTop();
     } else if (markerType == DvtMarker.TRIANGLE_UP) {
       // we need to move center of the label to the center of gravity, it looks much better
-      y = markerY + 2 * markerH/3;
-      // in this special case we need special alignment since standard baseline has to be higher than 
+      y = markerY + 2 * markerH / 3;
+      // in this special case we need special alignment since standard baseline has to be higher than
       // in other cases to be preciesly in the center of gravity
       this.Label.alignMiddle();
     } else if (markerType == DvtMarker.TRIANGLE_DOWN) {
       // we need to move center of the label to the center of gravity, it looks much better
-      y = markerY + markerH/3;
+      y = markerY + markerH / 3;
       this.Label.alignMiddle();
     } else {
-      y = markerY + markerH/2;
+      y = markerY + markerH / 2;
       this.Label.alignMiddle();
     }
-    
+
     this.Label.setX(x);
     this.Label.setY(y);
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataMarker.prototype.recenter = function () {
+DvtMapDataMarker.prototype.recenter = function() {
   var parent = this.Shape.getParent();
   var width = this.Shape.getScaledWidth();
   var height = this.Shape.getScaledHeight();
   if (width != null && height != null && parent) {
     var rotation = this.Shape.getRotation();
     if (this.Label && this.Shape.getRotation()) {
-      parent.setTranslate(this.Center.x*this.Zoom-this.Center.x, this.Center.y*this.Zoom-this.Center.y);
+      parent.setTranslate(this.Center.x * this.Zoom - this.Center.x, this.Center.y * this.Zoom - this.Center.y);
       DvtAgent.workaroundFirefoxRepaint(parent);
     } else {
-      var rotatedCenterX = this.Center.x*Math.cos(rotation)-this.Center.y*Math.sin(rotation);
-      var rotatedCenterY = this.Center.x*Math.sin(rotation)+this.Center.y*Math.cos(rotation);
-      this.Shape.setTranslate(this.Center.x*this.Zoom-rotatedCenterX, this.Center.y*this.Zoom-rotatedCenterY);
+      var rotatedCenterX = this.Center.x * Math.cos(rotation) - this.Center.y * Math.sin(rotation);
+      var rotatedCenterY = this.Center.x * Math.sin(rotation) + this.Center.y * Math.cos(rotation);
+      this.Shape.setTranslate(this.Center.x * this.Zoom - rotatedCenterX, this.Center.y * this.Zoom - rotatedCenterY);
       DvtAgent.workaroundFirefoxRepaint(this.Shape);
     }
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataMarker.prototype.GetNavigables = function () {
+DvtMapDataMarker.prototype.GetNavigables = function() {
   return this.getDataLayer().getMap().getNavigableObjects();
-}
+};
+
 
 /**
  * Sets the size of this marker. Marker size is used for marker sorting.
  * @param {Number} size The marker size which is its width * height.
  */
-DvtMapDataMarker.prototype.setSize = function (size) {
+DvtMapDataMarker.prototype.setSize = function(size) {
   this._size = size;
-}
+};
+
 
 /**
- * Returns the size of this marker. Marker size is used for marker sorting.
- * @return {Number} The marker size which is its width * height.
+ * @override
  */
-DvtMapDataMarker.prototype.getSize = function () {
+DvtMapDataMarker.prototype.getSize = function() {
   return this._size;
-}
-var DvtMapDataImage = function (context, dataLayer, rowKey, clientId, regionId) {
+};
+var DvtMapDataImage = function(context, dataLayer, rowKey, clientId, regionId) {
   this.Init(context, dataLayer, rowKey, clientId, regionId);
-}
+};
 
-DvtObj.createSubclass(DvtMapDataImage, DvtMapDataObject, "DvtMapDataImage");
+DvtObj.createSubclass(DvtMapDataImage, DvtMapDataObject, 'DvtMapDataImage');
 
-DvtMapDataImage.prototype.Init = function (context, dataLayer, rowKey, clientId, regionId) {
+DvtMapDataImage.prototype.Init = function(context, dataLayer, rowKey, clientId, regionId) {
   DvtMapDataImage.superclass.Init.call(this, context, dataLayer, rowKey, clientId, regionId);
-}
+};
+
 
 /**
  * For DvtImage loading only
  */
-DvtMapDataImage.prototype.onImageLoaded = function (image) {
+DvtMapDataImage.prototype.onImageLoaded = function(image) {
   if (image && image.width && image.height) {
     if (!this.Shape.getWidth())
       this.Shape.setWidth(image.width);
     if (!this.Shape.getHeight())
       this.Shape.setHeight(image.height);
-    this.setSize(image.width*image.height);
-    this.Shape.setX(this.Center.x-image.width/2);
-    this.Shape.setY(this.Center.y-image.height/2);
+    this.setSize(image.width * image.height);
+    this.Shape.setX(this.Center.x - image.width / 2);
+    this.Shape.setY(this.Center.y - image.height / 2);
     this.recenter();
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtMapDataImage.prototype.recenter = function () {
+DvtMapDataImage.prototype.recenter = function() {
   var width = this.Shape.getWidth();
   var height = this.Shape.getHeight();
   if (width != null && height != null && this.Shape.getParent()) {
     // Calculate the current (transformed) center point
-    var curCenterX = this.Shape.getX() + width/2;
-    var curCenterY = this.Shape.getY() + height/2;
-    this.Shape.setTranslate(curCenterX*this.Zoom-this.Center.x, curCenterY*this.Zoom-this.Center.y);
+    var curCenterX = this.Shape.getX() + width / 2;
+    var curCenterY = this.Shape.getY() + height / 2;
+    this.Shape.setTranslate(curCenterX * this.Zoom - this.Center.x, curCenterY * this.Zoom - this.Center.y);
   }
-}
+};
+
 
 /**
  * Sets the size of this marker. Marker size is used for marker sorting.
  * @param {Number} size The marker size which is its width * height.
  */
-DvtMapDataImage.prototype.setSize = function (size) {
+DvtMapDataImage.prototype.setSize = function(size) {
   this._size = size;
-}
+};
+
 
 /**
- * Returns the size of this marker. Marker size is used for marker sorting.
- * @return {Number} The marker size which is its width * height.
+ * @override
  */
-DvtMapDataImage.prototype.getSize = function () {
+DvtMapDataImage.prototype.getSize = function() {
   return this._size;
-}
+};
+/**
+ * DvtMapDataObject extension for a DVT toolkit based json component associated with a DvtMapDataLayer used for
+ * Thematic Map mashups.
+ * @param {DvtContext} context The rendering context
+ * @param {DvtMapDataLayer} dataLayer The parent map data layer
+ * @param {String} rowKey This data object's row key
+ * @param {String} clientId This data object's client id
+ * @param {String} regionId This data object's region id. Null if not associated with a region.
+ * @constructor
+ */
+var DvtMapDataComponent = function(context, dataLayer, rowKey, clientId, regionId) {
+  this.Init(context, dataLayer, rowKey, clientId, regionId);
+};
+
+DvtMapDataComponent.DEFAULT_SIZE = 50.0;
+
+DvtObj.createSubclass(DvtMapDataComponent, DvtMapDataObject, 'DvtMapDataComponent');
+
+
+/**
+ * Initializes this DvtMapDataComponent object
+ * @param {DvtContext} context The rendering context
+ * @param {DvtMapDataLayer} dataLayer The parent map data layer
+ * @param {String} rowKey This data object's row key
+ * @param {String} clientId This data object's client id
+ * @param {String} regionId This data object's region id. Null if not associated with a region.
+ * @protected
+ */
+DvtMapDataComponent.prototype.Init = function(context, dataLayer, rowKey, clientId, regionId) {
+  DvtMapDataComponent.superclass.Init.call(this, context, dataLayer, rowKey, clientId, regionId);
+};
+
+
+/**
+ * Sets the width for this object
+ * @param {number} width The object width
+ */
+DvtMapDataComponent.prototype.setWidth = function(width) {
+  this._width = width;
+};
+
+
+/**
+ * Gets the width for this object
+ * @return {number} The object width
+ */
+DvtMapDataComponent.prototype.getWidth = function() {
+  return this._width;
+};
+
+
+/**
+ * Sets the height for this object
+ * @param {number} height The object height
+ */
+DvtMapDataComponent.prototype.setHeight = function(height) {
+  this._height = height;
+};
+
+
+/**
+ * Gets the height for this object
+ * @return {number} The object height
+ */
+DvtMapDataComponent.prototype.getHeight = function() {
+  return this._height;
+};
+
+
+/**
+ * Sets the starting x coordinate for this object
+ * @param {number} x The x coordinate of this object
+ */
+DvtMapDataComponent.prototype.setX = function(x) {
+  this._x = x;
+};
+
+
+/**
+ * Sets the starting y coordinate for this object
+ * @param {number} y The y coordinate of this object
+ */
+DvtMapDataComponent.prototype.setY = function(y) {
+  this._y = y;
+};
+
+
+/**
+ * Sets the json object for this object
+ * @param {Object} json The json object to set
+ */
+DvtMapDataComponent.prototype.setJson = function(json) {
+  this._json = json;
+};
+
+
+/**
+ * @return {Object} The json object for this object
+ */
+DvtMapDataComponent.prototype.getJson = function() {
+  return this._json;
+};
+
+
+/**
+ * @override
+ */
+DvtMapDataComponent.prototype.recenter = function() {
+  if (this.Shape.getParent()) {
+    // Calculate the current (transformed) center point
+    var curCenterX = this._x + this._width / 2;
+    var curCenterY = this._y + this._height / 2;
+    this.Shape.setTranslateX(this._x + curCenterX * this.Zoom - this.Center.x);
+    this.Shape.setTranslateY(this._y + curCenterY * this.Zoom - this.Center.y);
+  }
+};
+
+
+/**
+ * @override
+ */
+DvtMapDataImage.prototype.getSize = function() {
+  return this._width * this._height;
+};
 /**
  * Base map layer metadata
- * @extends DvtObj
+ * @extends {DvtObj}
  * @class base map layer metadata
  * @constructor
  */
-var DvtMapArea = function (context, dvtShape, areaName, bSupportsVectorEffects) {
+var DvtMapArea = function(context, dvtShape, areaName, bSupportsVectorEffects) {
   this.Init(context, dvtShape, areaName, bSupportsVectorEffects);
-}
+};
 
-DvtObj.createSubclass(DvtMapArea, DvtContainer, "DvtMapArea");
+DvtObj.createSubclass(DvtMapArea, DvtContainer, 'DvtMapArea');
 
 DvtMapArea._DEFAULT_STROKE_WIDTH = 1;
 
-DvtMapArea.prototype.Init = function (context, dvtShape, areaName, bSupportsVectorEffects) {
+DvtMapArea.prototype.Init = function(context, dvtShape, areaName, bSupportsVectorEffects) {
   DvtMapArea.superclass.Init.call(this, context);
   this._bSelectable = false;
   this._isSelected = false;
   this._areaName = areaName;
   this._shape = dvtShape;
   this.addChild(this._shape);
-  
+
   //IE10, Flash/XML toolkit do not support vector-effects=non-scaling-stroke so we still need to set stroke width based on zoom
   this._bSupportsVectorEffects = bSupportsVectorEffects;
   var stroke = dvtShape.getStroke();
   if (stroke)
     this._areaStrokeWidth = stroke.getWidth();
-  
+
   // WAI-ARIA
   if (this._shape)
     this._shape.setAriaRole('img');
-}
+};
 
-DvtMapArea.prototype.getAreaName = function () {
+DvtMapArea.prototype.getAreaName = function() {
   return this._areaName;
-}
+};
+
 
 /**
  * Implemented for DvtTooltipSource
  * @override
  */
-DvtMapArea.prototype.getTooltip = function () {
+DvtMapArea.prototype.getTooltip = function() {
   return this._tooltip;
-}
+};
+
 
 /**
  * Implemented for DvtTooltipSource
  */
-DvtMapArea.prototype.setTooltip = function (tooltip) {
+DvtMapArea.prototype.setTooltip = function(tooltip) {
   this._tooltip = tooltip;
-  
+
   // WAI-ARIA
   if (this._shape)
     this._shape.setAriaProperty('label', tooltip);
-}
+};
 
-DvtMapArea.prototype.getStroke = function () {
+DvtMapArea.prototype.getStroke = function() {
   if (this._shape instanceof DvtShape)
     return this._shape.getStroke();
   return null;
-}
+};
 
-DvtMapArea.prototype.setStroke = function (stroke) {
+DvtMapArea.prototype.setStroke = function(stroke) {
   if (this._shape instanceof DvtShape)
     this._shape.setStroke(stroke);
-}
+};
 
-DvtMapArea.prototype.setFill = function (fill) {
+DvtMapArea.prototype.setFill = function(fill) {
   if (this._shape instanceof DvtShape) {
     this._shape.setFill(fill);
   }
-}
+};
 
-DvtMapArea.prototype.getFill = function () {
+DvtMapArea.prototype.getFill = function() {
   if (this._shape instanceof DvtShape) {
     return this._shape.getFill();
   }
   return null;
-}
+};
 
-DvtMapArea.prototype.getCmds = function () {
+DvtMapArea.prototype.getCmds = function() {
   if (this._shape instanceof DvtPath) {
     return this._shape.getCmds();
   }
   return null;
-}
+};
 
-DvtMapArea.prototype.setCmds = function (cmds) {
+DvtMapArea.prototype.setCmds = function(cmds) {
   if (this._shape instanceof DvtPath) {
     this._shape.setCmds(cmds);
   }
-}
+};
 
-DvtMapArea.prototype.setSrc = function (src) {
+DvtMapArea.prototype.setSrc = function(src) {
   if (this._shape instanceof DvtImage) {
     this._shape.setSrc(src);
   }
-}
+};
+
 
 /**
  * @override
  */
 DvtMapArea.prototype.getDropSiteFeedback = function() {
   return this._shape.copyShape();
-}
+};
+
 
 /**
  * @override
  */
 DvtMapArea.prototype.contains = function(x, y) {
   var dims = this.getDimensions();
-  return x >= dims.x && x <= dims.x + dims.w && 
+  return x >= dims.x && x <= dims.x + dims.w &&
          y >= dims.y && y <= dims.y + dims.h;
-}
+};
 
-DvtMapArea.prototype.HandleZoomEvent = function (pzcMatrix) {
+DvtMapArea.prototype.HandleZoomEvent = function(pzcMatrix) {
   if (!this._bSupportsVectorEffects && this._shape && this._areaStrokeWidth) {
     var zoomStroke = this._shape.getStroke().clone();
-    zoomStroke.setWidth(this._areaStrokeWidth/pzcMatrix.getA());
+    zoomStroke.setWidth(this._areaStrokeWidth / pzcMatrix.getA());
     this._shape.setStroke(zoomStroke);
   }
-}
+};
 /**
  * Thematic Map map layer
  * @param {DvtThematicMap} tmap The thematic map this map layer belongs to
  * @param {DvtEventManager} eventHandler The thematic map event manager
  * @constructor
  */
-var DvtMapLayer = function (tmap, eventHandler) {
+var DvtMapLayer = function(tmap, eventHandler) {
   this.Init(tmap, eventHandler);
-}
+};
 
-DvtObj.createSubclass(DvtMapLayer, DvtObj, "DvtMapLayer");
+DvtObj.createSubclass(DvtMapLayer, DvtObj, 'DvtMapLayer');
+
 
 /**
  * Initializes this map layera
@@ -3982,30 +4272,32 @@ DvtObj.createSubclass(DvtMapLayer, DvtObj, "DvtMapLayer");
  * @param {DvtEventManager} eventHandler The thematic map event manager
  * @protected
  */
-DvtMapLayer.prototype.Init = function (tmap, eventHandler) {
+DvtMapLayer.prototype.Init = function(tmap, eventHandler) {
   this._tmap = tmap;
   this.LayerName = 'cities';
   this.ClientId = null;
   this.EventHandler = eventHandler;
   this.DataLayers = {};
   this.PzcMatrix = new DvtMatrix();
-}
+};
+
 
 /**
  * Registers a data layer to this map layer
  * @param {DvtMapDataLayer} dataLayer The data layer to add to this map layer
  */
-DvtMapLayer.prototype.addDataLayer = function (dataLayer) {
+DvtMapLayer.prototype.addDataLayer = function(dataLayer) {
   this.DataLayers[dataLayer.getClientId()] = dataLayer;
-}
+};
 
-DvtMapLayer.prototype.PreDataLayerUpdate = function () {
+DvtMapLayer.prototype.PreDataLayerUpdate = function() {
   //subclasses to override
-}
+};
 
-DvtMapLayer.prototype.PostDataLayerUpdate = function () {
+DvtMapLayer.prototype.PostDataLayerUpdate = function() {
   //subclasses to override
-}
+};
+
 
 /**
  * Renders a data layer on ppr with new data if currently visible.
@@ -4013,13 +4305,13 @@ DvtMapLayer.prototype.PostDataLayerUpdate = function () {
  * @param {DvtMatrix} pzcMatrix The current map transform
  * @param {String} topLayerName The layer name of the current top layer
  */
-DvtMapLayer.prototype.updateDataLayer = function (dataLayer, pzcMatrix, topLayerName) { 
+DvtMapLayer.prototype.updateDataLayer = function(dataLayer, pzcMatrix, topLayerName) {
   // stop previous animation
   if (this._animation) {
     this._animationStopped = true;
     this._animation.stop(true);
   }
-    
+
   this.PzcMatrix = pzcMatrix;
   // Get old data layer
   this._oldDataLayer = this.getDataLayer(dataLayer.getClientId());
@@ -4027,62 +4319,62 @@ DvtMapLayer.prototype.updateDataLayer = function (dataLayer, pzcMatrix, topLayer
   dataLayer.render(this.PzcMatrix);
   // create a zoom event so we can update the data objects with the current zoom
   dataLayer.HandleZoomEvent(new DvtZoomEvent(DvtZoomEvent.SUBTYPE_ZOOMED), this.PzcMatrix);
-  
+
   if (this._oldDataLayer) {
     var anim = dataLayer.getAnimation();
     var animDur = dataLayer.getAnimationDuration();
     if (DvtBlackBoxAnimationHandler.isSupported(anim)) {
-      // since certain animations like zoom and cubeToLeft/Right will use the bounding box of the object we need to 
+      // since certain animations like zoom and cubeToLeft/Right will use the bounding box of the object we need to
       // ensure all animated objects are the same dimensions by adding an invisible rect to all of them during animation
-      var bounds1 = new DvtRectangle(0,0,this._tmap.GetWidth(),this._tmap.GetHeight());
+      var bounds1 = new DvtRectangle(0, 0, this._tmap.GetWidth(), this._tmap.GetHeight());
       var oldNonScaledContainers = this._oldDataLayer.getNonScaledContainers();
-      for (var i=0; i<oldNonScaledContainers.length; i++) {
-        var rect = new DvtRect(this._tmap.getCtx(),0,0,this._tmap.GetWidth(),this._tmap.GetHeight());
+      for (var i = 0; i < oldNonScaledContainers.length; i++) {
+        var rect = new DvtRect(this._tmap.getCtx(), 0, 0, this._tmap.GetWidth(), this._tmap.GetHeight());
         rect.setFill(null);
         oldNonScaledContainers[i].addChild(rect);
       }
       var newNonScaledContainers = dataLayer.getNonScaledContainers();
-      for (var i=0; i<newNonScaledContainers.length; i++) {
-        var rect = new DvtRect(this._tmap.getCtx(),0,0,this._tmap.GetWidth(),this._tmap.GetHeight());
+      for (var i = 0; i < newNonScaledContainers.length; i++) {
+        var rect = new DvtRect(this._tmap.getCtx(), 0, 0, this._tmap.GetWidth(), this._tmap.GetHeight());
         rect.setFill(null);
         newNonScaledContainers[i].addChild(rect);
       }
-      var anim1 = DvtBlackBoxAnimationHandler.getCombinedAnimation(this._tmap.getCtx(), anim, 
-                                                                        oldNonScaledContainers, 
-                                                                        newNonScaledContainers, bounds1, animDur);
-      
-      var bounds2 = new DvtRectangle(0,0,this._tmap.GetWidth()/this.PzcMatrix.getA(),this._tmap.GetHeight()/this.PzcMatrix.getA());
+      var anim1 = DvtBlackBoxAnimationHandler.getCombinedAnimation(this._tmap.getCtx(), anim,
+          oldNonScaledContainers,
+          newNonScaledContainers, bounds1, animDur);
+
+      var bounds2 = new DvtRectangle(0, 0, this._tmap.GetWidth() / this.PzcMatrix.getA(), this._tmap.GetHeight() / this.PzcMatrix.getA());
       var oldScaledContainers = this._oldDataLayer.getScaledContainers();
-      for (var i=0; i<oldScaledContainers.length; i++) {
-        var rect = new DvtRect(this._tmap.getCtx(),0,0,this._tmap.GetWidth()/this.PzcMatrix.getA(),this._tmap.GetHeight()/this.PzcMatrix.getA());
+      for (var i = 0; i < oldScaledContainers.length; i++) {
+        var rect = new DvtRect(this._tmap.getCtx(), 0, 0, this._tmap.GetWidth() / this.PzcMatrix.getA(), this._tmap.GetHeight() / this.PzcMatrix.getA());
         rect.setFill(null);
         oldScaledContainers[i].addChild(rect);
       }
       var newScaledContainers = dataLayer.getScaledContainers();
-      for (var i=0; i<newScaledContainers.length; i++) {
-        var rect = new DvtRect(this._tmap.getCtx(),0,0,this._tmap.GetWidth()/this.PzcMatrix.getA(),this._tmap.GetHeight()/this.PzcMatrix.getA());
+      for (var i = 0; i < newScaledContainers.length; i++) {
+        var rect = new DvtRect(this._tmap.getCtx(), 0, 0, this._tmap.GetWidth() / this.PzcMatrix.getA(), this._tmap.GetHeight() / this.PzcMatrix.getA());
         rect.setFill(null);
         newScaledContainers[i].addChild(rect);
       }
-      
-      var anim2 = DvtBlackBoxAnimationHandler.getCombinedAnimation(this._tmap.getCtx(), anim, 
-                                                                        oldScaledContainers, 
-                                                                        newScaledContainers, bounds2, animDur);
-      this._animation = new DvtParallelPlayable(this._tmap.getCtx(), [anim1, anim2]);                                                                        
+
+      var anim2 = DvtBlackBoxAnimationHandler.getCombinedAnimation(this._tmap.getCtx(), anim,
+          oldScaledContainers,
+          newScaledContainers, bounds2, animDur);
+      this._animation = new DvtParallelPlayable(this._tmap.getCtx(), [anim1, anim2]);
     } else {
       var oldContainers = this._oldDataLayer.getContainers();
-      for (var i=0; i<oldContainers.length; i++) {
-        var parent = oldContainers[i].getParent(); 
+      for (var i = 0; i < oldContainers.length; i++) {
+        var parent = oldContainers[i].getParent();
         parent.removeChild(oldContainers[i]);
       }
       this.PostDataLayerUpdate();
     }
-  
+
     // If an animation was created, play it
     if (this._animation) {
       // Disable event listeners temporarily
       this.EventHandler.removeListeners(this._callbackObj);
-  
+
       // Start the animation
       var thisRef = this;
       this._animation.setOnEnd(function() {thisRef.OnAnimationEnd(dataLayer)}, this);
@@ -4093,77 +4385,79 @@ DvtMapLayer.prototype.updateDataLayer = function (dataLayer, pzcMatrix, topLayer
     this.PostDataLayerUpdate();
     this._tmap.OnUpdateLayerEnd();
   }
-}
+};
 
-DvtMapLayer.prototype.getDataLayers = function () {
+DvtMapLayer.prototype.getDataLayers = function() {
   return this.DataLayers;
-}
+};
 
-DvtMapLayer.prototype.getDataLayer = function (clientId) {
+DvtMapLayer.prototype.getDataLayer = function(clientId) {
   return this.DataLayers ? this.DataLayers[clientId] : null;
-}
+};
 
-DvtMapLayer.prototype.getClientId = function () {
+DvtMapLayer.prototype.getClientId = function() {
   return this.ClientId;
-}
+};
+
 
 /**
  * Returns the name of this map layer i.e. continents, countries, states for built-in basemaps
  * @return {String} The name of this map layer
  */
-DvtMapLayer.prototype.getLayerName = function () {
+DvtMapLayer.prototype.getLayerName = function() {
   return this.LayerName;
-}
+};
 
-DvtMapLayer.prototype.render = function (pzcMatrix) {
+DvtMapLayer.prototype.render = function(pzcMatrix) {
   this.PzcMatrix = pzcMatrix;
   for (var id in this.DataLayers)
     this.DataLayers[id].render(pzcMatrix);
-}
+};
 
 DvtMapLayer.prototype.reset = function(fadeOutContainer, doNotResetAreas) {
   for (var id in this.DataLayers)
     this.DataLayers[id].reset(fadeOutContainer, doNotResetAreas);
-}
+};
 
-DvtMapLayer.prototype.HandleZoomEvent = function (event, pzcMatrix) {
+DvtMapLayer.prototype.HandleZoomEvent = function(event, pzcMatrix) {
   this.PzcMatrix = pzcMatrix;
   for (var id in this.DataLayers)
     this.DataLayers[id].HandleZoomEvent(event, pzcMatrix);
-}
+};
 
-DvtMapLayer.prototype.HandlePanEvent = function (pzcMatrix) {
+DvtMapLayer.prototype.HandlePanEvent = function(pzcMatrix) {
   this.PzcMatrix = pzcMatrix;
   for (var id in this.DataLayers)
     this.DataLayers[id].HandlePanEvent(pzcMatrix);
-}
+};
+
 
 /**
  * Cleans up animated objects after animation finishes
  * @param {DvtMapDataLayer} dataLayer The animated data layere
  * @protected
  */
-DvtMapLayer.prototype.OnAnimationEnd = function (dataLayer) {
+DvtMapLayer.prototype.OnAnimationEnd = function(dataLayer) {
   // Clean up the old container used by black box updates
   if (this._oldDataLayer) {
     var oldContainers = this._oldDataLayer.getContainers();
-    for (var i=0; i<oldContainers.length; i++) {
+    for (var i = 0; i < oldContainers.length; i++) {
       var parent = oldContainers[i].getParent();
       if (parent)
         parent.removeChild(oldContainers[i]);
     }
   }
-  
+
   // remove invisible rect added for animation
   var newNonScaledContainers = dataLayer.getNonScaledContainers();
-  for (var i=0; i<newNonScaledContainers.length; i++)
+  for (var i = 0; i < newNonScaledContainers.length; i++)
     newNonScaledContainers[i].removeChildAt(newNonScaledContainers[i].getNumChildren() - 1);
   var newScaledContainers = dataLayer.getScaledContainers();
-  for (var i=0; i<newScaledContainers.length; i++)
+  for (var i = 0; i < newScaledContainers.length; i++)
     newScaledContainers[i].removeChildAt(newScaledContainers[i].getNumChildren() - 1);
-        
+
   this.PostDataLayerUpdate();
-  
+
   this._tmap.OnUpdateLayerEnd();
   // Reset the animation stopped flag
   this._animationStopped = false;
@@ -4171,7 +4465,7 @@ DvtMapLayer.prototype.OnAnimationEnd = function (dataLayer) {
   this._animation = null;
   // Restore event listeners
   this.EventHandler.addListeners(this._callbackObj);
-}
+};
 /**
  * Thematic Map area layer
  * @param {DvtThematicMap} tmap The thematic map this map layer belongs to
@@ -4182,14 +4476,15 @@ DvtMapLayer.prototype.OnAnimationEnd = function (dataLayer) {
  * @param {DvtEventManager} eventHandler The thematic map event manager
  * @constructor
  */
-var DvtMapAreaLayer = function (tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
+var DvtMapAreaLayer = function(tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
   this.Init(tmap, layerName, clientId, labelDisplay, labelType, eventHandler);
-}
+};
 
-DvtObj.createSubclass(DvtMapAreaLayer, DvtMapLayer, "DvtMapAreaLayer");
+DvtObj.createSubclass(DvtMapAreaLayer, DvtMapLayer, 'DvtMapAreaLayer');
 
 DvtMapAreaLayer._SHORT_NAME = 0;
 DvtMapAreaLayer._LONG_NAME = 1;
+
 
 /**
  * Helper method to initialize this DvtMapAreaLayer object
@@ -4201,9 +4496,9 @@ DvtMapAreaLayer._LONG_NAME = 1;
  * @param {DvtEventManager} eventHandler The thematic map event manager
  * @protected
  */
-DvtMapAreaLayer.prototype.Init = function (tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
+DvtMapAreaLayer.prototype.Init = function(tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
   DvtMapAreaLayer.superclass.Init.call(this, tmap, eventHandler);
-  this._labelDisplay = labelDisplay;  
+  this._labelDisplay = labelDisplay;
   this.LayerName = layerName;
   this.ClientId = clientId;
   this._labelType = labelType;
@@ -4215,138 +4510,138 @@ DvtMapAreaLayer.prototype.Init = function (tmap, layerName, clientId, labelDispl
   this._disclosed = [];
   this._renderArea = {}; // keep track of whether or not to render an area
   this._renderLabel = {}; // keep track of whether or not to render a label
-  this._renderedLabels = {} // keep track of the labels that are actually added to the DOM
-  
+  this._renderedLabels = {}; // keep track of the labels that are actually added to the DOM
+
   this.AreaContainer = new DvtContainer(this._tmap.getCtx());
   this.LabelContainer = new DvtContainer(this._tmap.getCtx());
   this._tmap.getAreaLayerContainer().addChildAt(this.AreaContainer, 0);
   this._tmap.getLabelContainer().addChildAt(this.LabelContainer, 0);
-  
-  this._dropTarget = new DvtThematicMapDropTarget(this, this._tmap.getMapName()); 
-}
 
-DvtMapAreaLayer.prototype.setAnimation = function (animType) {
+  this._dropTarget = new DvtThematicMapDropTarget(this, this._tmap.getMapName());
+};
+
+DvtMapAreaLayer.prototype.setAnimation = function(animType) {
   this._animType = animType;
-}
+};
 
-DvtMapAreaLayer.prototype.getAnimation = function () {
+DvtMapAreaLayer.prototype.getAnimation = function() {
   return this._animType;
-}
+};
 
-DvtMapAreaLayer.prototype.setAnimationDuration = function (animDur) {
+DvtMapAreaLayer.prototype.setAnimationDuration = function(animDur) {
   this._animDur = animDur;
-}
+};
 
-DvtMapAreaLayer.prototype.getAnimationDuration = function () {
+DvtMapAreaLayer.prototype.getAnimationDuration = function() {
   return this._animDur;
-}
+};
 
-DvtMapAreaLayer.prototype.getDropTarget = function () {
+DvtMapAreaLayer.prototype.getDropTarget = function() {
   return this._dropTarget;
-}
+};
 
-DvtMapAreaLayer.prototype.getLabelType = function () {
+DvtMapAreaLayer.prototype.getLabelType = function() {
   return this._labelType;
-}
+};
 
-DvtMapAreaLayer.prototype.setAreaShapes = function (shapes) {
+DvtMapAreaLayer.prototype.setAreaShapes = function(shapes) {
   this.AreaShapes = shapes;
-}
+};
 
-DvtMapAreaLayer.prototype.setAreaNames = function (values) {
+DvtMapAreaLayer.prototype.setAreaNames = function(values) {
   this.AreaNames = values;
   for (var area in this.AreaNames) {
-    this.setAreaRendered(area, true)
+    this.setAreaRendered(area, true);
     this.setLabelRendered(area, true);
   }
-}
+};
 
-DvtMapAreaLayer.prototype.getShortAreaName = function (area) {
-  return this.AreaNames[area][DvtMapAreaLayer._SHORT_NAME]
-}
+DvtMapAreaLayer.prototype.getShortAreaName = function(area) {
+  return this.AreaNames[area][DvtMapAreaLayer._SHORT_NAME];
+};
 
-DvtMapAreaLayer.prototype.getLongAreaName = function (area) {
-  return this.AreaNames[area][DvtMapAreaLayer._LONG_NAME]
-}
+DvtMapAreaLayer.prototype.getLongAreaName = function(area) {
+  return this.AreaNames[area][DvtMapAreaLayer._LONG_NAME];
+};
 
-DvtMapAreaLayer.prototype.setAreaLabelInfo = function (values) {
+DvtMapAreaLayer.prototype.setAreaLabelInfo = function(values) {
   this._labelInfo = values;
-}
+};
 
-DvtMapAreaLayer.prototype.getLabelInfoForArea = function (area) {
+DvtMapAreaLayer.prototype.getLabelInfoForArea = function(area) {
   if (!this._labelInfo)
     return null;
   return this._labelInfo[area];
-}
+};
 
-DvtMapAreaLayer.prototype.setAreaChildren = function (children) {
+DvtMapAreaLayer.prototype.setAreaChildren = function(children) {
   this._children = children;
-}
+};
 
-DvtMapAreaLayer.prototype.getChildrenForArea = function (area) {
+DvtMapAreaLayer.prototype.getChildrenForArea = function(area) {
   if (this._children[area])
     return this._children[area].split(',');
   else
     return [];
-}
+};
 
-DvtMapAreaLayer.prototype.getArea = function (id) {
+DvtMapAreaLayer.prototype.getArea = function(id) {
   return this.Areas[id];
-}
+};
 
-DvtMapAreaLayer.prototype.getAreaShape = function (id) {
+DvtMapAreaLayer.prototype.getAreaShape = function(id) {
   return this.AreaShapes[id];
-}
+};
 
-DvtMapAreaLayer.prototype.getLabelDisplay = function () {
+DvtMapAreaLayer.prototype.getLabelDisplay = function() {
   return this._labelDisplay;
-}
+};
 
-DvtMapAreaLayer.prototype.setDropSiteCSSStyle = function (style) {
+DvtMapAreaLayer.prototype.setDropSiteCSSStyle = function(style) {
   this._dropSiteCSSStyle = style;
-}
+};
 
-DvtMapAreaLayer.prototype.setLayerCSSStyle = function (style) {
+DvtMapAreaLayer.prototype.setLayerCSSStyle = function(style) {
   this._layerCSSStyle = style;
-}
+};
 
-DvtMapAreaLayer.prototype.getLayerCSSStyle = function () {
+DvtMapAreaLayer.prototype.getLayerCSSStyle = function() {
   return this._layerCSSStyle;
-}
+};
 
-DvtMapAreaLayer.prototype.setAreaHoverStyle = function (style) {
+DvtMapAreaLayer.prototype.setAreaHoverStyle = function(style) {
   this._areaHoverStyle = style;
-}
+};
 
-DvtMapAreaLayer.prototype.getAreaHoverStyle = function () {
+DvtMapAreaLayer.prototype.getAreaHoverStyle = function() {
   return this._areaHoverStyle;
-}
+};
 
-DvtMapAreaLayer.prototype.setAreaSelectStyle = function (style) {
+DvtMapAreaLayer.prototype.setAreaSelectStyle = function(style) {
   this._areaSelectStyle = style;
-}
+};
 
-DvtMapAreaLayer.prototype.getAreaSelectStyle = function () {
+DvtMapAreaLayer.prototype.getAreaSelectStyle = function() {
   return this._areaSelectStyle;
-}
+};
 
-DvtMapAreaLayer.prototype.setAreaDiscloseStyle = function (style) {
+DvtMapAreaLayer.prototype.setAreaDiscloseStyle = function(style) {
   this._areaDiscloseStyle = style;
-}
+};
 
-DvtMapAreaLayer.prototype.getAreaDiscloseStyle = function () {
+DvtMapAreaLayer.prototype.getAreaDiscloseStyle = function() {
   return this._areaDiscloseStyle;
-}
+};
 
-DvtMapAreaLayer.prototype.setAreaRendered = function (area, bRender) {
+DvtMapAreaLayer.prototype.setAreaRendered = function(area, bRender) {
   this._renderArea[area] = bRender;
-}
+};
 
-DvtMapAreaLayer.prototype.setLabelRendered = function (area, bRender) {
+DvtMapAreaLayer.prototype.setLabelRendered = function(area, bRender) {
   this._renderLabel[area] = bRender;
-}
+};
 
-DvtMapAreaLayer.prototype.setIsolatedArea = function (isolatedArea) {
+DvtMapAreaLayer.prototype.setIsolatedArea = function(isolatedArea) {
   this._isolatedArea = isolatedArea;
   // reset the layer dimensions in case of data layer update
   this._layerDim = null;
@@ -4354,14 +4649,15 @@ DvtMapAreaLayer.prototype.setIsolatedArea = function (isolatedArea) {
     if (area != isolatedArea)
       this._renderArea[area] = false;
   }
-}
+};
+
 
 /**
  * Returns the dimensions for this area layer.  Used for retrieving saved layer dimensions from built-in basemaps
  * and caching the layer dimensions
  * @return {DvtRectangle} The bounding box for this area layer
  */
-DvtMapAreaLayer.prototype.getLayerDim = function () {
+DvtMapAreaLayer.prototype.getLayerDim = function() {
   if (!this._layerDim) {
     if (this._isolatedArea)
       this._layerDim = DvtPathUtils.getDimensions(DvtPathUtils.createPathArray(DvtBaseMapManager.getPathForArea(this._tmap.getMapName(), this.LayerName, this._isolatedArea)));
@@ -4371,12 +4667,15 @@ DvtMapAreaLayer.prototype.getLayerDim = function () {
       if (!this._layerDim) {
         // all layers for a basemap should have the same dimensions
         // need to combine area, data area and selected data area dimensions bc they are in separate containers
-        this._layerDim = this.AreaContainer.getDimensions().getUnion(this._tmap.getDataAreaContainer().getDimensions());
+        var dim = this.AreaContainer.getDimensions().getUnion(this._tmap.getDataAreaContainer().getDimensions());
+        // if we don't have cached dims and no objects have been rendered yet, dim will have 0 dimensions
+        if (dim.w > 0 && dim.h > 0)
+          this._layerDim = dim;
       }
     }
   }
   return this._layerDim;
-}
+};
 
 DvtMapAreaLayer.prototype._createAreaAndLabel = function(area, bForceUpdateArea) {
   var areaShape = this.AreaShapes[area];
@@ -4385,13 +4684,13 @@ DvtMapAreaLayer.prototype._createAreaAndLabel = function(area, bForceUpdateArea)
       this.updateAreaShape(area);
     if (!this.Areas[area]) {
       var context = this._tmap.getCtx();
-      var mapArea =  new DvtMapArea(context, areaShape, area, this._tmap.supportsVectorEffects());
+      var mapArea = new DvtMapArea(context, areaShape, area, this._tmap.supportsVectorEffects());
       this.Areas[area] = mapArea;
       this.EventHandler.associate(areaShape, mapArea);
       var tooltip = (this.AreaNames && this.AreaNames[area]) ? this.AreaNames[area][DvtMapAreaLayer._LONG_NAME] : null;
       mapArea.setTooltip(tooltip);
     }
-    
+
     if (this._renderLabel[area]) {
       var label = this._areaLabels[area];
       if (!label) {
@@ -4400,22 +4699,23 @@ DvtMapAreaLayer.prototype._createAreaAndLabel = function(area, bForceUpdateArea)
                                                          this.AreaNames[area][DvtMapAreaLayer._LONG_NAME];
           if (labelText) {
             if (this._labelInfo && this._labelInfo[area])
-              label = new DvtMapLabel(this._tmap.getCtx(), labelText, this._labelInfo[area], this._labelDisplay, 
+              label = new DvtMapLabel(this._tmap.getCtx(), labelText, this._labelInfo[area], this._labelDisplay,
                                       this.LabelContainer, this._tmap.supportsVectorEffects());
             else {
               var areaDim = DvtDisplayableUtils.getDimensionsForced(this._tmap.getCtx(), areaShape);
-              label = new DvtMapLabel(this._tmap.getCtx(), labelText, [[areaDim.x, areaDim.y, areaDim.w, areaDim.h]], 
+              label = new DvtMapLabel(this._tmap.getCtx(), labelText, [[areaDim.x, areaDim.y, areaDim.w, areaDim.h]],
                                       this._labelDisplay, this.LabelContainer, this._tmap.supportsVectorEffects());
             }
             this._areaLabels[area] = label;
             if (this._layerCSSStyle)
-              label.setCSSStyle(this._layerCSSStyle)
+              label.setCSSStyle(this._layerCSSStyle);
           }
         }
       }
-    } 
+    }
   }
-}
+};
+
 
 /**
  * Adds and area and its label
@@ -4425,7 +4725,7 @@ DvtMapAreaLayer.prototype._createAreaAndLabel = function(area, bForceUpdateArea)
 DvtMapAreaLayer.prototype._addAreaAndLabel = function(area, fadeInObjs) {
   if (this.AreaShapes[area]) {
     this.AreaContainer.addChild(this.Areas[area]);
-    
+
     var label = this._areaLabels[area];
     if (label) {
       if (this._renderLabel[area])
@@ -4434,7 +4734,7 @@ DvtMapAreaLayer.prototype._addAreaAndLabel = function(area, fadeInObjs) {
         label.reset();
       this._renderedLabels[area] = this._renderLabel[area];
     }
-    
+
     if (fadeInObjs) {
       fadeInObjs.push(this.Areas[area]);
       if (label) {
@@ -4443,17 +4743,18 @@ DvtMapAreaLayer.prototype._addAreaAndLabel = function(area, fadeInObjs) {
       }
     }
   }
-}
+};
+
 
 /**
  * Updates an area layer area's path commands based
  * @param {String} area The area id that needs to be updated
  */
-DvtMapAreaLayer.prototype.updateAreaShape = function (area) {
+DvtMapAreaLayer.prototype.updateAreaShape = function(area) {
   if (!this._paths || this._bUpdateShapesForRender) {
     this._bUpdateShapesForRender = false;
     var layerDim;
-    if (this._tmap.getMapName() == 'world'  || this._tmap.getMapName() == 'worldRegions')
+    if (this._tmap.getMapName() == 'world' || this._tmap.getMapName() == 'worldRegions')
       layerDim = DvtBaseMapManager.getBaseMapDim(this._tmap.getMapName(), this.LayerName);
     else
       layerDim = this.getLayerDim();
@@ -4461,7 +4762,7 @@ DvtMapAreaLayer.prototype.updateAreaShape = function (area) {
     if (!layerDim) {
       this._paths = DvtBaseMapManager.getAreaPaths(this._tmap.getMapName(), this.LayerName);
     } else {
-      this._paths = DvtBaseMapManager.simplifyAreaPaths(DvtBaseMapManager.getAreaPaths(this._tmap.getMapName(), this.LayerName), 
+      this._paths = DvtBaseMapManager.simplifyAreaPaths(DvtBaseMapManager.getAreaPaths(this._tmap.getMapName(), this.LayerName),
                                                   layerDim.w, layerDim.h, this._tmap.GetWidth(), this._tmap.GetHeight(),
                                                   this._tmap.getMaxZoomFactor());
     }
@@ -4472,20 +4773,21 @@ DvtMapAreaLayer.prototype.updateAreaShape = function (area) {
   } else {
     delete this.AreaShapes[area];
   }
-}
+};
 
-DvtMapAreaLayer.prototype.resetRenderedAreas = function () {
+DvtMapAreaLayer.prototype.resetRenderedAreas = function() {
   // reset rendered areas on data layer update
   for (var area in this.AreaNames) {
-    this.setAreaRendered(area, true)
+    this.setAreaRendered(area, true);
     this.setLabelRendered(area, true);
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtMapAreaLayer.prototype.updateDataLayer = function (dataLayer, pzcMatrix, topLayerName) {
+DvtMapAreaLayer.prototype.updateDataLayer = function(dataLayer, pzcMatrix, topLayerName) {
   DvtMapAreaLayer.superclass.updateDataLayer.call(this, dataLayer, pzcMatrix, topLayerName);
   if (topLayerName == this.getLayerName()) {
     for (var area in this.AreaShapes) {
@@ -4494,10 +4796,10 @@ DvtMapAreaLayer.prototype.updateDataLayer = function (dataLayer, pzcMatrix, topL
         this._addAreaAndLabel(area);
     }
   }
-}
+};
 
-DvtMapAreaLayer.prototype.render = function (pzcMatrix) {
-  // create areashapes and then create the DvtMapArea object for all areas 
+DvtMapAreaLayer.prototype.render = function(pzcMatrix) {
+  // create areashapes and then create the DvtMapArea object for all areas
   this._bUpdateShapesForRender = true;
   for (var area in this.AreaShapes) {
     this._createAreaAndLabel(area, true);
@@ -4505,12 +4807,13 @@ DvtMapAreaLayer.prototype.render = function (pzcMatrix) {
       this._addAreaAndLabel(area);
   }
   DvtMapAreaLayer.superclass.render.call(this, pzcMatrix);
-}
+};
+
 
 /**
  * @override
  */
-DvtMapAreaLayer.prototype.PreDataLayerUpdate = function () {
+DvtMapAreaLayer.prototype.PreDataLayerUpdate = function() {
   // Create and render areas that were originally not created because the area was already created in the data layer
   for (var area in this._renderArea) {
     if (!this._renderArea[area]) {
@@ -4518,12 +4821,13 @@ DvtMapAreaLayer.prototype.PreDataLayerUpdate = function () {
       this._addAreaAndLabel(area);
     }
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtMapAreaLayer.prototype.PostDataLayerUpdate = function () {
+DvtMapAreaLayer.prototype.PostDataLayerUpdate = function() {
   // remove areas that were rendered in the data layer or created for the animation
   for (var area in this._renderArea) {
     if (!this._renderArea[area]) {
@@ -4538,23 +4842,24 @@ DvtMapAreaLayer.prototype.PostDataLayerUpdate = function () {
       }
     }
   }
-}
+};
 
 DvtMapAreaLayer.prototype._renderSelectedAreasAndLabels = function(areas, fadeInObjs) {
-  for (var i=0; i<areas.length; i++) {
+  for (var i = 0; i < areas.length; i++) {
     this._createAreaAndLabel(areas[i], false);
     // Do not render areas that were rendered in the data layer
     if (this._renderArea[areas[i]])
       this._addAreaAndLabel(areas[i], fadeInObjs);
   }
-}
+};
 
-DvtMapAreaLayer.prototype.discloseAreas = function (areas, fadeInObjs) {
+DvtMapAreaLayer.prototype.discloseAreas = function(areas, fadeInObjs) {
   this._renderSelectedAreasAndLabels(areas, fadeInObjs);
   for (var id in this.DataLayers)
     this.DataLayers[id].discloseAreas(areas, fadeInObjs, this.PzcMatrix);
   this._disclosed = this._disclosed.concat(areas);
-}
+};
+
 
 /**
  * @param {Array} Array of objects that will be removed once undisclosed
@@ -4564,7 +4869,7 @@ DvtMapAreaLayer.prototype.undiscloseAreas = function(areas, fadeOutObjs) {
   for (var id in this.DataLayers)
     this.DataLayers[id].undiscloseAreas(areas, fadeOutObjs);
   var childAreaLayer = this._tmap.getDrillChildLayer(this.LayerName);
-  for (var i=0; i<areas.length; i++) {
+  for (var i = 0; i < areas.length; i++) {
     var areaName = areas[i];
     if (this.Areas[areaName]) {
       var idx = DvtArrayUtils.getIndex(this._disclosed, areaName);
@@ -4577,7 +4882,8 @@ DvtMapAreaLayer.prototype.undiscloseAreas = function(areas, fadeOutObjs) {
     if (childAreaLayer)
       childAreaLayer.undiscloseAreas(this.getChildrenForArea(areaName), fadeOutObjs);
   }
-}
+};
+
 
 /**
  * @override
@@ -4588,7 +4894,8 @@ DvtMapAreaLayer.prototype.reset = function(fadeOutObjs, doNotResetAreas) {
     this.undiscloseAreas(this._disclosed, fadeOutObjs);
     this._disclosed = [];
   }
-}
+};
+
 
 /**
  * Returns the node under the specified coordinates.
@@ -4603,7 +4910,8 @@ DvtMapAreaLayer.prototype.__getObjectUnderPoint = function(x, y) {
   }
   // No object found, return null
   return null;
-}
+};
+
 
 /**
  * Displays drop site feedback for the specified node.
@@ -4612,18 +4920,18 @@ DvtMapAreaLayer.prototype.__getObjectUnderPoint = function(x, y) {
  */
 DvtMapAreaLayer.prototype.__showDropSiteFeedback = function(obj) {
   // Remove any existing drop site feedback
-  if(this._dropSiteFeedback) {
+  if (this._dropSiteFeedback) {
     this.AreaContainer.removeChild(this._dropSiteFeedback);
     this._dropSiteFeedback = null;
   }
 
   // Create feedback for the node
-  if(obj) {
+  if (obj) {
     this._dropSiteFeedback = obj.getDropSiteFeedback();
-    if(this._dropSiteFeedback) {
+    if (this._dropSiteFeedback) {
       this._dropSiteFeedback.setFill(new DvtSolidFill(this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BACKGROUND_COLOR)));
-      var strokeWidth = this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BORDER_WIDTH) ? 
-                   this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BORDER_WIDTH).substring(0, this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BORDER_WIDTH).indexOf('px')) : 1;
+      var strokeWidth = this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BORDER_WIDTH) ?
+          this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BORDER_WIDTH).substring(0, this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BORDER_WIDTH).indexOf('px')) : 1;
       if (!this._tmap.supportsVectorEffects())
         strokeWidth /= this.PzcMatrix.getA();
       var stroke = new DvtSolidStroke(this._dropSiteCSSStyle.getStyle(DvtCSSStyle.BORDER_COLOR), 1, strokeWidth);
@@ -4634,17 +4942,17 @@ DvtMapAreaLayer.prototype.__showDropSiteFeedback = function(obj) {
       this.AreaContainer.addChild(this._dropSiteFeedback);
     }
   }
-  
-  return this._dropSiteFeedback;
-}
 
-DvtMapAreaLayer.prototype.HandleZoomEvent = function (event, pzcMatrix) {
+  return this._dropSiteFeedback;
+};
+
+DvtMapAreaLayer.prototype.HandleZoomEvent = function(event, pzcMatrix) {
   DvtMapAreaLayer.superclass.HandleZoomEvent.call(this, event, pzcMatrix);
   if (!this._tmap.supportsVectorEffects()) {
-   for (var area in this.Areas)
-     this.Areas[area].HandleZoomEvent(pzcMatrix);
+    for (var area in this.Areas)
+      this.Areas[area].HandleZoomEvent(pzcMatrix);
   }
-  
+
   for (var area in this._renderedLabels) {
     if (this._renderedLabels[area]) {
       var label = this._areaLabels[area];
@@ -4652,7 +4960,7 @@ DvtMapAreaLayer.prototype.HandleZoomEvent = function (event, pzcMatrix) {
         label.update(pzcMatrix);
     }
   }
-}
+};
 /**
  * Thematic Map custom area layer
  * @param {DvtThematicMap} tmap The thematic map this map layer belongs to
@@ -4663,11 +4971,12 @@ DvtMapAreaLayer.prototype.HandleZoomEvent = function (event, pzcMatrix) {
  * @param {DvtEventManager} eventHandler The thematic map event manager
  * @constructor
  */
-var DvtMapCustomAreaLayer = function (tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
+var DvtMapCustomAreaLayer = function(tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
   this.Init(tmap, layerName, clientId, labelDisplay, labelType, eventHandler);
-}
+};
 
-DvtObj.createSubclass(DvtMapCustomAreaLayer, DvtMapAreaLayer, "DvtMapCustomAreaLayer");
+DvtObj.createSubclass(DvtMapCustomAreaLayer, DvtMapAreaLayer, 'DvtMapCustomAreaLayer');
+
 
 /**
  * Helper method to initialize this DvtMapCustomAreaLayer object
@@ -4679,75 +4988,76 @@ DvtObj.createSubclass(DvtMapCustomAreaLayer, DvtMapAreaLayer, "DvtMapCustomAreaL
  * @param {DvtEventManager} eventHandler The thematic map event manager
  * @protected
  */
-DvtMapCustomAreaLayer.prototype.Init = function (tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
+DvtMapCustomAreaLayer.prototype.Init = function(tmap, layerName, clientId, labelDisplay, labelType, eventHandler) {
   DvtMapCustomAreaLayer.superclass.Init.call(this, tmap, layerName, clientId, labelDisplay, labelType, eventHandler);
-}
-
-/**
- * @override
- */
-DvtMapCustomAreaLayer.prototype.updateAreaShape = function (area) {
-}
+};
 
 
 /**
  * @override
  */
-DvtMapCustomAreaLayer.prototype.getLayerDim = function () {
-  return new DvtRectangle(0,0, this._layerWidth, this._layerHeight);
-}
+DvtMapCustomAreaLayer.prototype.updateAreaShape = function(area) {
+};
+
+
+/**
+ * @override
+ */
+DvtMapCustomAreaLayer.prototype.getLayerDim = function() {
+  return new DvtRectangle(0, 0, this._layerWidth, this._layerHeight);
+};
 
 DvtMapCustomAreaLayer.prototype._selectImageBasedOnResolution = function() {
   var widthRes = this._tmap.GetWidth();
   var heightRes = this._tmap.GetHeight();
   var images = this._areaLayerImages;
   // Iterate and use the first image with enough detail
-  for(var i=0; i<images.length; i++) {
+  for (var i = 0; i < images.length; i++) {
     var image = images[i];
     var source = image['source'];
     var width = image['width'];
     var height = image['height'];
-    var isSvg = (source && source.search(".svg") > -1);
-    
+    var isSvg = (source && source.search('.svg') > -1);
+
     // Use the image if it's SVG, a PNG whose size > resolution, or the last image provided.
-    if(isSvg || (width >= widthRes && height >= heightRes) || i == images.length-1) {
+    if (isSvg || (width >= widthRes && height >= heightRes) || i == images.length - 1) {
       //Since points are given in the coordinate space of the original image size, we always set the image we choose
       //to that size.  The <image> tag will scale image as necessary.
-      return source; 
+      return source;
     }
   }
-}
+};
 
 DvtMapCustomAreaLayer.prototype.setAreaLayerImage = function(images) {
   var shape = null;
   var isRTL = DvtAgent.isRightToLeft(this._tmap.getCtx());
   // Use the images from the list provided
-  if(images && images.length > 0) {
+  if (images && images.length > 0) {
     var refWidth = images[0]['width'];
     var refHeight = images[0]['height'];
     this._layerWidth = refWidth;
     this._layerHeight = refHeight;
-  
-    // Filter the list to images matching the locale type. 
+
+    // Filter the list to images matching the locale type.
     var locImages = [];
-    for(var i=0; i<images.length; i++) {
-      if(isRTL && images[i]['dir'] == 'rtl') 
+    for (var i = 0; i < images.length; i++) {
+      if (isRTL && images[i]['dir'] == 'rtl')
         locImages.push(images[i]);
-      else if(!isRTL && images[i]['dir'] == 'ltr')
+      else if (!isRTL && images[i]['dir'] == 'ltr')
         locImages.push(images[i]);
     }
     this._areaLayerImages = locImages.length > 0 ? locImages : images; // Use all images if none match the bidi flag
-    this._imageSrc = this._selectImageBasedOnResolution();   
-    shape = new DvtImage(this._tmap.getCtx(), this._imageSrc, 0, 0, refWidth, refHeight); 
+    this._imageSrc = this._selectImageBasedOnResolution();
+    shape = new DvtImage(this._tmap.getCtx(), this._imageSrc, 0, 0, refWidth, refHeight);
 
   }
   if (shape) {
     this.setAreaNames({'image': [null, null]});
     this.setAreaShapes({'image': shape});
   }
-}
+};
 
-DvtMapCustomAreaLayer.prototype.HandleZoomEvent = function (event, pzcMatrix) {
+DvtMapCustomAreaLayer.prototype.HandleZoomEvent = function(event, pzcMatrix) {
   DvtMapCustomAreaLayer.superclass.HandleZoomEvent.call(this, event, pzcMatrix);
   if (this.Areas['image']) {
     var newImageSrc = this._selectImageBasedOnResolution();
@@ -4756,29 +5066,30 @@ DvtMapCustomAreaLayer.prototype.HandleZoomEvent = function (event, pzcMatrix) {
       this.Areas[areaName].setSrc(this._imageSrc);
     }
   }
-}
-var DvtMapDataLayer = function (tmap, parentLayer, clientId, eventHandler) {
+};
+var DvtMapDataLayer = function(tmap, parentLayer, clientId, eventHandler) {
   this.Init(tmap, parentLayer, clientId, eventHandler);
-}
+};
 
-DvtObj.createSubclass(DvtMapDataLayer, DvtObj, "DvtMapDataLayer");
+DvtObj.createSubclass(DvtMapDataLayer, DvtObj, 'DvtMapDataLayer');
+
 
 /**
  * @param {string} layerId The client ID of the layer
  */
-DvtMapDataLayer.prototype.Init = function (tmap, parentLayer, clientId, eventHandler) {
+DvtMapDataLayer.prototype.Init = function(tmap, parentLayer, clientId, eventHandler) {
   this._tmap = tmap;
   this._clientId = clientId;
-  
+
   this._areaObjs = [];
   this._dataObjs = [];
-  
+
   this._eventHandler = eventHandler;
-  
+
   // Drag and drop support
   this._dragSource = new DvtDragSource(tmap.getCtx());
   this._eventHandler.setDragSource(this._dragSource);
-  
+
   this._dataAreaLayer = new DvtContainer(this._tmap.getCtx());
   this._dataPointLayer = new DvtContainer(this._tmap.getCtx());
   this._dataLabelLayer = new DvtContainer(this._tmap.getCtx());
@@ -4786,93 +5097,100 @@ DvtMapDataLayer.prototype.Init = function (tmap, parentLayer, clientId, eventHan
   this._tmap.getDataAreaContainer().addChildAt(this._dataAreaLayer, 0);
   this._tmap.getDataPointContainer().addChildAt(this._dataPointLayer, 0);
   this._tmap.getLabelContainer().addChildAt(this._dataLabelLayer, 0);
-  
+
   this._parentLayer = parentLayer;
-  
+
   this._disclosed = [];
   this._drilled = [];
-}
+};
 
-DvtMapDataLayer.prototype.getDragSource = function () {
+DvtMapDataLayer.prototype.getDragSource = function() {
   return this._dragSource;
-}
+};
+
 
 /**
  * Returns the DvtContainers for this data layer
- * @return {Array} Array of DvtContainers 
+ * @return {Array} Array of DvtContainers
  */
-DvtMapDataLayer.prototype.getContainers = function () {
+DvtMapDataLayer.prototype.getContainers = function() {
   var containers = [this._dataAreaLayer, this._dataPointLayer, this._dataLabelLayer];
   return containers;
-}
+};
+
 
 /**
  * Returns an array of scaled containers for data layer animation
  * @return {array} The array of scaled containers
  */
-DvtMapDataLayer.prototype.getScaledContainers = function () {
+DvtMapDataLayer.prototype.getScaledContainers = function() {
   return [this._dataAreaLayer];
-}
+};
+
 
 /**
  * Returns an array of non scaled containers for data layer animation
  * @return {array} The array of non scaled containers
  */
-DvtMapDataLayer.prototype.getNonScaledContainers = function () {
+DvtMapDataLayer.prototype.getNonScaledContainers = function() {
   var containers = [this._dataLabelLayer];
   if (this._tmap.isMarkerZoomBehaviorFixed())
     containers.push(this._dataPointLayer);
   return containers;
-}
+};
+
 
 /**
  * Returns the label container for this data layer
  * @return {DvtContainer} container for labels
  */
-DvtMapDataLayer.prototype.getDataLabelContainer = function () {
+DvtMapDataLayer.prototype.getDataLabelContainer = function() {
   return this._dataLabelLayer;
-}
+};
 
-DvtMapDataLayer.prototype.getMapLayer = function () {
+DvtMapDataLayer.prototype.getMapLayer = function() {
   return this._parentLayer;
-}
+};
 
-DvtMapDataLayer.prototype.getMap = function () {
+DvtMapDataLayer.prototype.getMap = function() {
   return this._tmap;
-}
+};
 
-DvtMapDataLayer.prototype.getAllObjects = function () {
+DvtMapDataLayer.prototype.getAllObjects = function() {
   return this._dataObjs.concat(this._areaObjs);
-}
+};
+
+
 /**
  * Returns the area data objects in a data layer
  * @return {Array} The array of area objects
  */
-DvtMapDataLayer.prototype.getAreaObjects = function () {
+DvtMapDataLayer.prototype.getAreaObjects = function() {
   return this._areaObjs;
-}
+};
+
 
 /**
  * Returns the marker and image data objects in a data layer
  * @return {Array} The array of marker and image objects
  */
-DvtMapDataLayer.prototype.getDataObjects = function () {
+DvtMapDataLayer.prototype.getDataObjects = function() {
   return this._dataObjs;
-}
+};
 
-DvtMapDataLayer.prototype.getNavigableAreaObjects = function () {
+DvtMapDataLayer.prototype.getNavigableAreaObjects = function() {
   var navigables = [];
-  for (var i=0; i< this._areaObjs.length; i++) {
+  for (var i = 0; i < this._areaObjs.length; i++) {
     if (!this._areaObjs[i].isDrilled())
       navigables.push(this._areaObjs[i]);
   }
   return navigables;
-}
+};
 
-DvtMapDataLayer.prototype.getNavigableDisclosedAreaObjects = function () {
+DvtMapDataLayer.prototype.getNavigableDisclosedAreaObjects = function() {
   var navigables = [];
-  for (var i=0; i<this._areaObjs.length; i++) {
-    for (var j=0; j<this._disclosed.length; j++) {
+  for (var i = 0; i < this._areaObjs.length; i++) {
+    for (var j = 0; j < this._disclosed.length; j++) {
       if (this._areaObjs[i].getAreaId() == this._disclosed[j]) {
         if (!this._areaObjs[i].isDrilled())
           navigables.push(this._areaObjs[i]);
@@ -4880,89 +5198,94 @@ DvtMapDataLayer.prototype.getNavigableDisclosedAreaObjects = function () {
     }
   }
   return navigables;
-}
-      
-DvtMapDataLayer.prototype.addDataObject = function (obj) {
+};
+
+DvtMapDataLayer.prototype.addDataObject = function(obj) {
   this._dataObjs.push(obj);
   this._eventHandler.associate(obj.getDisplayable(), obj);
-}
+};
+
 
 /**
  * Adds an area object to this data layer
  * @param {DvtMapDataArea} obj The map area to add
  */
-DvtMapDataLayer.prototype.addAreaObject = function (obj) {
+DvtMapDataLayer.prototype.addAreaObject = function(obj) {
   this._areaObjs.push(obj);
   this._eventHandler.associate(obj.getDisplayable(), obj);
   obj.setAreaLayer(this._dataAreaLayer);
-}
+};
+
 
 /**
  * Removes an area object from this data layer
  * @param {DvtMapDataArea} obj The map area to remove
  * @private
  */
-DvtMapDataLayer.prototype._removeAreaObject = function (obj) {
+DvtMapDataLayer.prototype._removeAreaObject = function(obj) {
   var idx = this._areaObjs.indexOf(obj);
   if (idx !== -1)
     this._areaObjs.splice(idx, 1);
-}
+};
 
-DvtMapDataLayer.prototype.getClientId = function () {
+DvtMapDataLayer.prototype.getClientId = function() {
   return this._clientId;
-}
+};
 
-DvtMapDataLayer.prototype.setAnimation = function (animType) {
+DvtMapDataLayer.prototype.setAnimation = function(animType) {
   this._animType = animType;
-}
+};
 
-DvtMapDataLayer.prototype.getAnimation = function () {
+DvtMapDataLayer.prototype.getAnimation = function() {
   return this._animType;
-}
+};
 
-DvtMapDataLayer.prototype.setAnimationDuration = function (animDur) {
+DvtMapDataLayer.prototype.setAnimationDuration = function(animDur) {
   this._animDur = animDur;
-}
+};
 
-DvtMapDataLayer.prototype.getAnimationDuration = function () {
+DvtMapDataLayer.prototype.getAnimationDuration = function() {
   return this._animDur;
-}
+};
+
 
 /**
  * Sets the selection mode for this data layer
  * @param {String} mode The selection mode. Valid values are 's' and 'm'
  */
-DvtMapDataLayer.prototype.setSelectionMode = function (mode) {
+DvtMapDataLayer.prototype.setSelectionMode = function(mode) {
   this._selectionMode = mode;
   if (this._selectionMode) {
     this._selectionHandler = new DvtSelectionHandler(this._selectionMode);
     this._eventHandler.setSelectionHandler(this._clientId, this._selectionHandler);
   }
-}
+};
 
-DvtMapDataLayer.prototype.isSelectable = function () {
+DvtMapDataLayer.prototype.isSelectable = function() {
   return this._selectionMode != null;
-}
+};
 
-DvtMapDataLayer.prototype.setIsolatedAreaRowKey = function (isolated) {
+DvtMapDataLayer.prototype.setIsolatedAreaRowKey = function(isolated) {
   this._isolatedAreaRowKey = isolated;
-}
+};
+
 
 /**
  * Since we don't set the area path commands until render time, we create an empty DvtDrillablePath when parsing the xml
  * so we can still set the area color and other info.  This path with no commands needs to be updated before adding to DOM.
  */
 DvtMapDataLayer.prototype._updateAreaShape = function(areaObj) {
-    var displayable = areaObj.getDisplayable();
-    var pathToCopy = this._parentLayer.getAreaShape(areaObj.getAreaId());
-    if (!pathToCopy) {
-      this._removeAreaObject(areaObj);
-      return false;
-    } else {
-      displayable.setCmds(pathToCopy.getCmds());
-      return true;
-    }
-}
+  var displayable = areaObj.getDisplayable();
+  var pathToCopy = this._parentLayer.getAreaShape(areaObj.getAreaId());
+  if (!pathToCopy) {
+    this._removeAreaObject(areaObj);
+    return false;
+  } else {
+    displayable.setCmds(pathToCopy.getCmds());
+    return true;
+  }
+};
+
 
 /**
  * Renders a specific DvtMapDataArea and updates the label
@@ -4985,19 +5308,20 @@ DvtMapDataLayer.prototype._renderAreaAndLabel = function(areaIndex) {
     return true;
   }
   return false;
-}
+};
+
 
 /**
  * Render the data layer objects
  * @param {DvtMatrix} pzcMatrix The matrix to use when rendering the data layer
  */
-DvtMapDataLayer.prototype.render = function (pzcMatrix) {
+DvtMapDataLayer.prototype.render = function(pzcMatrix) {
   this._bFixPatterns = true;
   this._pzcMatrix = pzcMatrix;
   var areaLabelsToRemove = {};
   // first sort markers by size to prevent overlapping
-  this._dataObjs.sort(function compare(a,b) {if (a.getSize() < b.getSize()) return 1; else if (a.getSize() > b.getSize()) return -1; else return 0;})
-  for (var i=0; i<this._dataObjs.length; i++) {
+  this._dataObjs.sort(function compare(a,b) {if (a.getSize() < b.getSize()) return 1; else if (a.getSize() > b.getSize()) return -1; else return 0;});
+  for (var i = 0; i < this._dataObjs.length; i++) {
     var dataObj = this._dataObjs[i];
     var displayable = dataObj.getDisplayable();
     var label = dataObj.getLabel();
@@ -5019,23 +5343,31 @@ DvtMapDataLayer.prototype.render = function (pzcMatrix) {
     } else {
       this._dataPointLayer.addChild(displayable);
     }
+    if (dataObj instanceof DvtMapDataComponent) {
+      var json = dataObj.getJson();
+      if (json)
+        displayable.render(JSON.parse(json), dataObj.getWidth(), dataObj.getHeight());
+      else
+        continue;
+    }
     // if area marker, do not display area label
     var regionId = dataObj.getAreaId();
     if (regionId)
-     areaLabelsToRemove[regionId] = true;
+      areaLabelsToRemove[regionId] = true;
   }
-  for (var i=0; i<this._areaObjs.length; i++) {
+  for (var i = 0; i < this._areaObjs.length; i++) {
     if (areaLabelsToRemove[this._areaObjs[i].getAreaId()])
       this._areaObjs[i].setLabel(null);
-    // areaObjs array can be modified by _renderAreaAndLabel if area has 
+    // areaObjs array can be modified by _renderAreaAndLabel if area has
     // been removed from parent area layer due to path simplification routine
     if (!this._renderAreaAndLabel(i))
       i--;
   }
-  
+
   if (this._initSelections)
     this._processInitialSelections();
-}
+};
+
 
 /**
  * Discloses the children of the current drilled parent area.
@@ -5046,8 +5378,8 @@ DvtMapDataLayer.prototype.render = function (pzcMatrix) {
 DvtMapDataLayer.prototype.discloseAreas = function(areas, fadeInObjs, pzcMatrix) {
   this._pzcMatrix = pzcMatrix;
   var drilledAreas = [];
-  for (var j=0; j<areas.length; j++) {
-    for (var i=0; i<this._areaObjs.length; i++) {
+  for (var j = 0; j < areas.length; j++) {
+    for (var i = 0; i < this._areaObjs.length; i++) {
       if (this._areaObjs[i].getAreaId() == areas[j]) {
         drilledAreas.push(this._areaObjs[i].getAreaId());
         this._renderAreaAndLabel(i);
@@ -5067,8 +5399,8 @@ DvtMapDataLayer.prototype.discloseAreas = function(areas, fadeInObjs, pzcMatrix)
     }
   }
   //If data layer contains markers or images, just add to data layer regardless of what area it is in if no id
-  for (var i=0; i<this._dataObjs.length; i++) {
-    for (var j=0; j<areas.length; j++) {
+  for (var i = 0; i < this._dataObjs.length; i++) {
+    for (var j = 0; j < areas.length; j++) {
       var regionId = this._dataObjs[i].getAreaId();
       var displayable = this._dataObjs[i].getDisplayable();
       if (regionId != null) {
@@ -5083,11 +5415,11 @@ DvtMapDataLayer.prototype.discloseAreas = function(areas, fadeInObjs, pzcMatrix)
     }
   }
   this._disclosed = this._disclosed.concat(drilledAreas);
-}
+};
 
-DvtMapDataLayer.prototype.undiscloseAreas = function(areas, fadeOutObjs) { 
-  for (var j=0; j<areas.length; j++) {
-    for (var i=0; i<this._areaObjs.length; i++) {
+DvtMapDataLayer.prototype.undiscloseAreas = function(areas, fadeOutObjs) {
+  for (var j = 0; j < areas.length; j++) {
+    for (var i = 0; i < this._areaObjs.length; i++) {
       if (this._areaObjs[i].getAreaId() == areas[j]) {
         if (this._areaObjs[i].isDrilled())
           this._areaObjs[i].setDrilled(false);
@@ -5107,10 +5439,10 @@ DvtMapDataLayer.prototype.undiscloseAreas = function(areas, fadeOutObjs) {
       }
     }
   }
-}
+};
 
-DvtMapDataLayer.prototype.drill = function(areaName, fadeOutObjs) { 
-  for (var i=0; i<this._areaObjs.length; i++) {
+DvtMapDataLayer.prototype.drill = function(areaName, fadeOutObjs) {
+  for (var i = 0; i < this._areaObjs.length; i++) {
     if (this._areaObjs[i].getAreaId() == areaName) {
       this._areaObjs[i].setDrilled(true);
       this._drilled.push(areaName);
@@ -5125,16 +5457,16 @@ DvtMapDataLayer.prototype.drill = function(areaName, fadeOutObjs) {
       break;
     }
   }
-  for (var i=0; i<this._dataObjs.length; i++) {
+  for (var i = 0; i < this._dataObjs.length; i++) {
     if (this._dataObjs[i].getAreaId() == areaName) {
       fadeOutObjs.push(this._dataObjs[i].getDisplayable());
       break;
     }
   }
-}
+};
 
-DvtMapDataLayer.prototype.undrill = function(areaName, fadeInObjs) { 
-  for (var i=0; i<this._areaObjs.length; i++) {
+DvtMapDataLayer.prototype.undrill = function(areaName, fadeInObjs) {
+  for (var i = 0; i < this._areaObjs.length; i++) {
     if (this._areaObjs[i].getAreaId() == areaName) {
       var idx = DvtArrayUtils.getIndex(this._drilled, areaName);
       this._drilled.splice(idx, 1);
@@ -5151,7 +5483,7 @@ DvtMapDataLayer.prototype.undrill = function(areaName, fadeInObjs) {
       break;
     }
   }
-  for (var i=0; i<this._dataObjs.length; i++) {
+  for (var i = 0; i < this._dataObjs.length; i++) {
     if (this._dataObjs[i].getAreaId() == areaName) {
       var displayable = this._dataObjs[i].getDisplayable();
       this._dataPointLayer.addChild(displayable);
@@ -5159,7 +5491,8 @@ DvtMapDataLayer.prototype.undrill = function(areaName, fadeInObjs) {
       break;
     }
   }
-}
+};
+
 
 /**
  * Resets the data layer to its initial condition.
@@ -5170,16 +5503,16 @@ DvtMapDataLayer.prototype.reset = function(fadeOutObjs, doNotResetAreas) {
   // Clear selected
   if (this._selectionHandler) {
     var selectedObjs = this._selectionHandler.getSelection();
-    for (var i=0; i<selectedObjs.length; i++) {
+    for (var i = 0; i < selectedObjs.length; i++) {
       if (!doNotResetAreas || (doNotResetAreas && DvtArrayUtils.getIndex(doNotResetAreas, selectedObjs[i].getAreaId()) == -1))
         this._selectionHandler.removeFromSelection(selectedObjs[i]);
     }
   }
-   
+
   // Clear drilled if drilling is on
   if (this._tmap.getDrillMode() != 'none') {
-    for (var j=0; j<this._drilled.length; j++) {
-      for (var i=0; i<this._areaObjs.length; i++) {
+    for (var j = 0; j < this._drilled.length; j++) {
+      for (var i = 0; i < this._areaObjs.length; i++) {
         if (this._areaObjs[i].getAreaId() == this._drilled[j]) {
           this._areaObjs[i].setDrilled(false);
           var displayable = this._areaObjs[i].getDisplayable();
@@ -5194,7 +5527,7 @@ DvtMapDataLayer.prototype.reset = function(fadeOutObjs, doNotResetAreas) {
           break;
         }
       }
-      for (var i=0; i<this._dataObjs.length; i++) {
+      for (var i = 0; i < this._dataObjs.length; i++) {
         if (this._dataObjs[i].getAreaId() == this._drilled[j]) {
           var displayable = this._dataObjs[i].getDisplayable();
           this._dataPointLayer.addChild(displayable);
@@ -5204,9 +5537,10 @@ DvtMapDataLayer.prototype.reset = function(fadeOutObjs, doNotResetAreas) {
       }
     }
   }
-      
+
   this._drilled = [];
-}
+};
+
 
 /**
  * Handles zoom events for the data layer objects
@@ -5214,58 +5548,61 @@ DvtMapDataLayer.prototype.reset = function(fadeOutObjs, doNotResetAreas) {
  * @param {DvtMatrix} pzcMatrix The pan zoom canvas matrix
  * @protected
  */
-DvtMapDataLayer.prototype.HandleZoomEvent = function (event, pzcMatrix) {
+DvtMapDataLayer.prototype.HandleZoomEvent = function(event, pzcMatrix) {
   this._pzcMatrix = pzcMatrix;
   var zoom = pzcMatrix.getA();
   // If this is initial zoom to fit need to set transform on pattern gradients
   var type = event.getSubType();
   if (this._bFixPatterns && type == DvtZoomEvent.SUBTYPE_ZOOMED) {
     this._bFixPatterns = false;
-    for(var j=0; j<this._areaObjs.length; j++) {
+    for (var j = 0; j < this._areaObjs.length; j++) {
       var displayable = this._areaObjs[j].getDisplayable();
       var fill = displayable.getSavedPatternFill();
       if (fill) {
         var scaledFill = new DvtPatternFill();
         fill.mergeProps(scaledFill);
-        scaledFill.setMatrix(new DvtMatrix(1/zoom, null, null, 1/zoom));
+        scaledFill.setMatrix(new DvtMatrix(1 / zoom, null, null, 1 / zoom));
         displayable.setFill(scaledFill);
       }
     }
   }
   var areaObjs = this.getAreaObjects();
-  for (var i=0; i<areaObjs.length; i++)
+  for (var i = 0; i < areaObjs.length; i++)
     areaObjs[i].HandleZoomEvent(pzcMatrix);
-  
+
   if (this._tmap.isMarkerZoomBehaviorFixed()) {
     var dataObjs = this.getDataObjects();
-    for (var i=0; i<dataObjs.length; i++)
+    for (var i = 0; i < dataObjs.length; i++)
       dataObjs[i].HandleZoomEvent(pzcMatrix);
   }
-}
+};
+
 
 /**
  * Processes a pan event for this data layer and updates the locations of its data objects
  * @param {DvtMatrix} pzcMatrix The matrix to use for updating data object locations
  * @protected
  */
-DvtMapDataLayer.prototype.HandlePanEvent = function (pzcMatrix) {
+DvtMapDataLayer.prototype.HandlePanEvent = function(pzcMatrix) {
   this._pzcMatrix = pzcMatrix;
-}
+};
 
 
 DvtMapDataLayer.prototype.setInitialSelections = function(selections) {
   this._initSelections = selections;
-}
+};
+
 
 /**
  * Update the selection handler with the initial selections.
  */
 DvtMapDataLayer.prototype._processInitialSelections = function() {
-  if(this._selectionHandler) {
+  if (this._selectionHandler) {
     this._selectionHandler.processInitialSelections(this._initSelections, this.getAllObjects());
     this._initSelections = null;
   }
-}
+};
+
 
 /**
  * Returns the row keys for the current drag.
@@ -5275,23 +5612,24 @@ DvtMapDataLayer.prototype._processInitialSelections = function() {
 DvtMapDataLayer.prototype.__getDragTransferable = function(obj) {
   if (this._selectionHandler) {
     // Select the node if not already selected
-    if(!obj.isSelected()) {
+    if (!obj.isSelected()) {
       this._selectionHandler.processClick(obj, false);
       this._eventHandler.fireSelectionEvent(obj);
     }
-    
+
     // Gather the rowKeys for the selected objects
     var rowKeys = [];
     var selection = this._selectionHandler.getSelection();
-    for(var i=0; i<selection.length; i++) {
+    for (var i = 0; i < selection.length; i++) {
       rowKeys.push(selection[i].getId());
     }
-    
+
     return rowKeys;
   } else {
     return null;
   }
-}
+};
+
 
 /**
  * Returns the displayables to use for drag feedback for the current drag.
@@ -5302,23 +5640,24 @@ DvtMapDataLayer.prototype.__getDragFeedback = function() {
   // Gather the displayables for the selected objects
   var displayables = [];
   var selection = this._selectionHandler.getSelection();
-  for(var i=0; i<selection.length; i++) {
+  for (var i = 0; i < selection.length; i++) {
     displayables.push(selection[i].getDisplayable());
   }
-  
+
   return displayables;
-}
+};
+
 
 /**
  * Given a list of area row keys, looks up and returns a list of their area ids
  * @param {Array} Row keys of areas to retrieve area ids for
  * @preturn {Array} Area ids
  */
-DvtMapDataLayer.prototype.getSelectedAreas = function (selectedObjs) {
-  var selectedAreas = []
+DvtMapDataLayer.prototype.getSelectedAreas = function(selectedObjs) {
+  var selectedAreas = [];
   var areaObjs = this.getAreaObjects();
-  for(var i=0; i<selectedObjs.length; i++) {
-    for(var j=0; j<areaObjs.length; j++) {
+  for (var i = 0; i < selectedObjs.length; i++) {
+    for (var j = 0; j < areaObjs.length; j++) {
       if (areaObjs[j].getId() == selectedObjs[i]) {
         selectedAreas.push(areaObjs[j].getAreaId());
         break;
@@ -5326,38 +5665,41 @@ DvtMapDataLayer.prototype.getSelectedAreas = function (selectedObjs) {
     }
   }
   return selectedAreas;
-}
+};
 /**
  *  @param {DvtEventManager} manager The owning DvtEventManager
  *  @class DvtThematicMapKeyboardHandler
- *  @extends DvtKeyboardHandler
+ *  @extends {DvtKeyboardHandler}
  *  @constructor
  */
-var DvtThematicMapKeyboardHandler = function (tmap, manager) {
+var DvtThematicMapKeyboardHandler = function(tmap, manager) {
   this.Init(tmap, manager);
 };
 
-DvtObj.createSubclass(DvtThematicMapKeyboardHandler, DvtPanZoomCanvasKeyboardHandler, "DvtThematicMapKeyboardHandler");
+DvtObj.createSubclass(DvtThematicMapKeyboardHandler, DvtPanZoomCanvasKeyboardHandler, 'DvtThematicMapKeyboardHandler');
+
 
 /**
  * @override
  */
-DvtThematicMapKeyboardHandler.prototype.Init = function (tmap, manager) {
+DvtThematicMapKeyboardHandler.prototype.Init = function(tmap, manager) {
   DvtThematicMapKeyboardHandler.superclass.Init(tmap, manager);
   this._tmap = tmap;
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapKeyboardHandler.prototype.isSelectionEvent = function (event) {
+DvtThematicMapKeyboardHandler.prototype.isSelectionEvent = function(event) {
   return this.isNavigationEvent(event) && !event.ctrlKey;
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapKeyboardHandler.prototype.processKeyDown = function (event) {
+DvtThematicMapKeyboardHandler.prototype.processKeyDown = function(event) {
   var keyCode = event.keyCode;
 
   if (keyCode == DvtKeyboardEvent.CLOSE_BRACKET) {
@@ -5385,19 +5727,21 @@ DvtThematicMapKeyboardHandler.prototype.processKeyDown = function (event) {
       this._eventManager.SetClickInfo(focusObj);
     return focusObj;
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapKeyboardHandler.prototype.isMultiSelectEvent = function (event) {
+DvtThematicMapKeyboardHandler.prototype.isMultiSelectEvent = function(event) {
   return event.keyCode == DvtKeyboardEvent.SPACE && event.ctrlKey;
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapKeyboardHandler.prototype.isNavigationEvent = function (event) {
+DvtThematicMapKeyboardHandler.prototype.isNavigationEvent = function(event) {
   var isNavigable = DvtThematicMapKeyboardHandler.superclass.isNavigationEvent.call(this, event);
 
   if (!isNavigable) {
@@ -5407,8 +5751,10 @@ DvtThematicMapKeyboardHandler.prototype.isNavigationEvent = function (event) {
   }
 
   return isNavigable;
-}
-// Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+};
+// Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
+
+
 
 /**
  * @constructor
@@ -5417,14 +5763,15 @@ var DvtThematicMapEventManager = function(context, callback, callbackObj) {
   this.Init(context, callback, callbackObj);
 };
 
-DvtObj.createSubclass(DvtThematicMapEventManager, DvtEventManager, "DvtThematicMapEventManager");
+DvtObj.createSubclass(DvtThematicMapEventManager, DvtEventManager, 'DvtThematicMapEventManager');
 
 DvtThematicMapEventManager.prototype.Init = function(context, callback, callbackObj) {
   DvtThematicMapEventManager.superclass.Init.call(this, context, callback, callbackObj);
   this._selectionHandlers = new Object();
   this._tmap = callbackObj;
   this._bDragged = false;
-}
+};
+
 
 /**
  * @override
@@ -5434,79 +5781,84 @@ DvtThematicMapEventManager.prototype.getSelectionHandler = function(logicalObj) 
     var clientId = logicalObj.getDataLayer().getClientId();
     return this._selectionHandlers[clientId];
   }
-}
+};
+
 
 /**
  * @override
  */
 DvtThematicMapEventManager.prototype.setSelectionHandler = function(dataLayerId, handler) {
   this._selectionHandlers[dataLayerId] = handler;
-}
+};
 
-DvtThematicMapEventManager.prototype.setDrillMode = function (mode) {
+DvtThematicMapEventManager.prototype.setDrillMode = function(mode) {
   this._drillMode = mode;
-}
+};
 
-DvtThematicMapEventManager.prototype.setPanZoomCanvas = function (pzc) {
+DvtThematicMapEventManager.prototype.setPanZoomCanvas = function(pzc) {
   this._pzc = pzc;
-}
+};
 
-DvtThematicMapEventManager.prototype.removeFromSelection = function (clientId, obj) {
+DvtThematicMapEventManager.prototype.removeFromSelection = function(clientId, obj) {
   var selectionHandler = this._selectionHandlers[clientId];
   if (selectionHandler)
     selectionHandler.removeFromSelection(obj);
-}
+};
 
-DvtThematicMapEventManager.prototype.clearSelection = function (clientId) {
+DvtThematicMapEventManager.prototype.clearSelection = function(clientId) {
   var selectionHandler = this._selectionHandlers[clientId];
   if (selectionHandler)
     selectionHandler.clearSelection();
-}
+};
 
-DvtThematicMapEventManager.prototype.setInitialFocus = function (navigable) {
+DvtThematicMapEventManager.prototype.setInitialFocus = function(navigable) {
   //focus object will be set on child layers
   if (navigable) {
     DvtThematicMapEventManager.superclass.setFocus.call(this, navigable);
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapEventManager.prototype.OnMouseOver = function (event) {
+DvtThematicMapEventManager.prototype.OnMouseOver = function(event) {
   var obj = this.GetLogicalObject(event.target);
   if (obj && obj.getShowPopupBehaviors && obj.getDataLayer) {
     this._tmap.setEventClientId(obj.getDataLayer().getClientId());
   }
   DvtThematicMapEventManager.superclass.OnMouseOver.call(this, event);
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapEventManager.prototype.OnMouseDown = function (event) {
+DvtThematicMapEventManager.prototype.OnMouseDown = function(event) {
   this._bDragged = false;
   DvtThematicMapEventManager.superclass.OnMouseDown.call(this, event);
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapEventManager.prototype.OnMouseMove = function (event) {
+DvtThematicMapEventManager.prototype.OnMouseMove = function(event) {
   this._bDragged = true;
   DvtThematicMapEventManager.superclass.OnMouseMove.call(this, event);
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapEventManager.prototype.OnClick = function (event) {
+DvtThematicMapEventManager.prototype.OnClick = function(event) {
   if (this._bDragged)
     return;
-    
+
   var obj = this.GetLogicalObject(event.target);
   this.SetClickInfo(obj);
-  
+
   // Clear all selection handlers if something not selectable is clicked
   if (!(obj && obj.isSelectable && obj.isSelectable())) {
     for (var clientId in this._selectionHandlers) {
@@ -5519,19 +5871,20 @@ DvtThematicMapEventManager.prototype.OnClick = function (event) {
       }
     }
   }
-  
+
   DvtThematicMapEventManager.superclass.OnClick.call(this, event);
   this._handleClick(obj);
-}
+};
+
 
 /**
  * Performs thematic map specific events on click called by the mouse and touch click handlers
  * @param {DvtDisplayable} obj The displayable that was clicked
  * @private
  */
-DvtThematicMapEventManager.prototype._handleClick = function (obj) {
+DvtThematicMapEventManager.prototype._handleClick = function(obj) {
   if (obj instanceof DvtMapDataObject) {
-    if (obj.hasAction()){
+    if (obj.hasAction()) {
       var actionEvent = new DvtMapActionEvent(obj.getClientId(), obj.getId(), obj.getAction());
       actionEvent.addParam('clientId', obj.getDataLayer().getClientId());
       this.hideTooltip();
@@ -5540,25 +5893,26 @@ DvtThematicMapEventManager.prototype._handleClick = function (obj) {
       this._tmap.setEventClientId(obj.getDataLayer().getClientId());
     }
   }
-}
+};
 
 DvtThematicMapEventManager.prototype.SetClickInfo = function(obj) {
   var clientId = null;
   var mapLayer = null;
   var area = null;
   if (obj) {
-    if (obj instanceof DvtMapDataObject) 
+    if (obj instanceof DvtMapDataObject)
       area = obj.getDisplayable();
     else if (obj instanceof DvtMapArea)
       area = obj;
-    if  (obj.getDataLayer) {
+    if (obj.getDataLayer) {
       var dataLayer = obj.getDataLayer();
       clientId = dataLayer.getClientId();
       mapLayer = dataLayer.getMapLayer().getLayerName();
     }
   }
   this._tmap.setClickInfo(clientId, mapLayer, area);
-}
+};
+
 
 /**
  * @override
@@ -5571,7 +5925,8 @@ DvtThematicMapEventManager.prototype.OnDblClick = function(event) {
     var drillEvent = new DvtMapDrillEvent(DvtMapDrillEvent.DRILL_DOWN);
     this._callback.call(this._callbackObj, drillEvent);
   }
-}
+};
+
 
 /**
  * Keyboard event handler. Handles keyboard navigation and triggering of context menus
@@ -5602,7 +5957,7 @@ DvtThematicMapEventManager.prototype.ProcessKeyboardEvent = function(event)
   else if (keyCode == DvtKeyboardEvent.ENTER) {
     if (event.shiftKey)
       this._tmap.drillUp();
-    else 
+    else
       this._tmap.drillDown();
     event.preventDefault();
   }
@@ -5612,7 +5967,7 @@ DvtThematicMapEventManager.prototype.ProcessKeyboardEvent = function(event)
     this.SetClickInfo(logicalObj);
     this.ProcessSelectionEventHelper(logicalObj, true);
     event.preventDefault();
-  }  
+  }
   // Zoom to fit
   else if ((keyCode == DvtKeyboardEvent.ZERO || keyCode == DvtKeyboardEvent.NUMPAD_ZERO) && event.ctrlKey) {
     var focusObj = this.getFocus();
@@ -5625,17 +5980,18 @@ DvtThematicMapEventManager.prototype.ProcessKeyboardEvent = function(event)
   else {
     eventConsumed = DvtThematicMapEventManager.superclass.ProcessKeyboardEvent.call(this, event);
   }
-  
+
   return eventConsumed;
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapEventManager.prototype.OnComponentTouchClick = function (event) {
+DvtThematicMapEventManager.prototype.OnComponentTouchClick = function(event) {
   var obj = this.GetLogicalObject(event.target);
   this.SetClickInfo(obj);
-  
+
   // If no logical objects then pass on to all selection handlers to clear selection
   if (!obj || obj.isClearSelection) {
     for (var clientId in this._selectionHandlers) {
@@ -5644,34 +6000,36 @@ DvtThematicMapEventManager.prototype.OnComponentTouchClick = function (event) {
       if (bSelectionChanged) {
         var selectedObjs = this._selectionHandlers[clientId].getSelection();
         var selectedIds = [];
-        for(var i=0; i<selectedObjs.length; i++)
+        for (var i = 0; i < selectedObjs.length; i++)
           selectedIds.push(selectedObjs[i].getId());
         var selectionEvent = new DvtSelectionEvent(selectedIds);
         this._callback.call(this._callbackObj, selectionEvent);
       }
     }
   }
-  
+
   DvtThematicMapEventManager.superclass.OnComponentTouchClick.call(this, event);
   this._handleClick(obj);
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapEventManager.prototype.HandleTouchHoverOverInternal = function (event) {
+DvtThematicMapEventManager.prototype.HandleTouchHoverOverInternal = function(event) {
   var obj = this.GetLogicalObject(event.target);
   if (obj && obj.getShowPopupBehaviors && obj.getDataLayer) {
     this._tmap.setEventClientId(obj.getDataLayer().getClientId());
   }
-}
+};
+
 
 /**
  * @override
  */
-DvtThematicMapEventManager.prototype.OnComponentTouchDblClick = function(event) {       
+DvtThematicMapEventManager.prototype.OnComponentTouchDblClick = function(event) {
   var obj = this.GetLogicalObject(event.target);
-  if(!obj)
+  if (!obj)
     return;
   if (this.getSelectionHandler(obj) && this._drillMode && this._drillMode != 'none') {
     // First make sure a selection event is fired to support drilling on double click. Touch doesn't send click event
@@ -5680,100 +6038,101 @@ DvtThematicMapEventManager.prototype.OnComponentTouchDblClick = function(event) 
     var drillEvent = new DvtMapDrillEvent(DvtMapDrillEvent.DRILL_DOWN);
     this._callback.call(this._callbackObj, drillEvent);
   }
-}
+};
 
 // Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
 /**
  * @constructor
  */
-var DvtThematicMapParser = function (tmap) {
+var DvtThematicMapParser = function(tmap) {
   this.Init(tmap);
-}
+};
 
-DvtObj.createSubclass(DvtThematicMapParser, DvtObj, "DvtThematicMapParser");
+DvtObj.createSubclass(DvtThematicMapParser, DvtObj, 'DvtThematicMapParser');
 
-DvtThematicMapParser._ELEM_MAP_PROPERTIES = "mapProperties";
-DvtThematicMapParser._ELEM_LAYERS = "layers";
-DvtThematicMapParser._ELEM_LAYER = "layer";
-DvtThematicMapParser._ELEM_POINTS = "points";
-DvtThematicMapParser._ELEM_POINT = "point";
-DvtThematicMapParser._ELEM_LEGEND = "legend";
-DvtThematicMapParser._ELEM_RESOURCES = "resources";
-DvtThematicMapParser._ELEM_MAP_HIERARCHY = "mapHierarchy";
-DvtThematicMapParser._ELEM_MENUS = "menus";
-DvtThematicMapParser.ELEM_COLOR_STYLES = "colorStyles";
-DvtThematicMapParser.ELEM_GRADUATED_SYMBOL = "graduatedSymbol";
-DvtThematicMapParser.ELEM_IMAGE = "image";
-DvtThematicMapParser._ELEM_MARKER_DEF = "markerDef";
-DvtThematicMapParser._ELEM_ROW = "row";
-DvtThematicMapParser._ELEM_CUSTOM_LAYER = "customLayer";
-DvtThematicMapParser._ELEM_AREA_LAYER = "areaLayer";
-DvtThematicMapParser._ELEM_POINT_LAYER = "pointLayer";
-DvtThematicMapParser._ELEM_SPB = "spb";
-DvtThematicMapParser._ELEM_CUSTOM_REGION = "customRegion";
-DvtThematicMapParser._ELEM_P = "p";
-DvtThematicMapParser._ELEM_STYLES = "styles";
-DvtThematicMapParser._ELEM_REGION_LAYER ="regionLayer";
-DvtThematicMapParser._ELEM_MARKER_STYLE ="markerStyle";
-DvtThematicMapParser._ELEM_TMAP_RESOURCES = "tmapResources";
+DvtThematicMapParser._ELEM_MAP_PROPERTIES = 'mapProperties';
+DvtThematicMapParser._ELEM_LAYERS = 'layers';
+DvtThematicMapParser._ELEM_LAYER = 'layer';
+DvtThematicMapParser._ELEM_POINTS = 'points';
+DvtThematicMapParser._ELEM_POINT = 'point';
+DvtThematicMapParser._ELEM_LEGEND = 'legend';
+DvtThematicMapParser._ELEM_RESOURCES = 'resources';
+DvtThematicMapParser._ELEM_MAP_HIERARCHY = 'mapHierarchy';
+DvtThematicMapParser._ELEM_MENUS = 'menus';
+DvtThematicMapParser.ELEM_COLOR_STYLES = 'colorStyles';
+DvtThematicMapParser.ELEM_GRADUATED_SYMBOL = 'graduatedSymbol';
+DvtThematicMapParser.ELEM_IMAGE = 'image';
+DvtThematicMapParser._ELEM_MARKER_DEF = 'markerDef';
+DvtThematicMapParser._ELEM_ROW = 'row';
+DvtThematicMapParser._ELEM_CUSTOM_LAYER = 'customLayer';
+DvtThematicMapParser._ELEM_AREA_LAYER = 'areaLayer';
+DvtThematicMapParser._ELEM_POINT_LAYER = 'pointLayer';
+DvtThematicMapParser._ELEM_SPB = 'spb';
+DvtThematicMapParser._ELEM_CUSTOM_REGION = 'customRegion';
+DvtThematicMapParser._ELEM_P = 'p';
+DvtThematicMapParser._ELEM_STYLES = 'styles';
+DvtThematicMapParser._ELEM_REGION_LAYER = 'regionLayer';
+DvtThematicMapParser._ELEM_MARKER_STYLE = 'markerStyle';
+DvtThematicMapParser._ELEM_TMAP_RESOURCES = 'tmapResources';
 
-DvtThematicMapParser._ATTR_ANIM_DATA_CHANGE = "animationDataChange";
-DvtThematicMapParser._ATTR_ANIM_ON_LAYER_CHANGE = "animationOnLayerChange";
-DvtThematicMapParser.ATTR_ID = "id";
-DvtThematicMapParser._ATTR_CLIENT_ID = "clientId";
-DvtThematicMapParser._ATTR_SELECTION_MODE = "selectionMode";
-DvtThematicMapParser._ATTR_STYLE_ID = "styleId";
-DvtThematicMapParser._ATTR_LAYER_NAME = "layerName";
-DvtThematicMapParser._ATTR_LABEL = "label";
-DvtThematicMapParser._ATTR_LABEL_DISPLAY = "labelDisplay";
-DvtThematicMapParser._ATTR_LABEL_TYPE = "labelType";
-DvtThematicMapParser._ATTR_LABEL_POSITION = "labelPosition";
-DvtThematicMapParser._ATTR_ROW_KEY = "rowKey";
-DvtThematicMapParser._ATTR_GROUP_ID = "groupID";
-DvtThematicMapParser._ATTR_SHORT_NAME = "shortName";
-DvtThematicMapParser._ATTR_LONG_NAME = "longName";
-DvtThematicMapParser._ATTR_PATH = "d";
-DvtThematicMapParser._ATTR_ALIGN_ID = "alignId";
-DvtThematicMapParser._ATTR_SHOW_WITH = "showWith";
-DvtThematicMapParser._ATTR_SUB_REGIONS ="subRegions";
-DvtThematicMapParser._ATTR_INLINE_STYLE ="inlineStyle";
-DvtThematicMapParser._ATTR_HOVER_STYLE ="hoverStyle";
-DvtThematicMapParser._ATTR_SELECT_STYLE ="selectStyle";
-DvtThematicMapParser._ATTR_DISCLOSED_STYLE ="disclosedStyle";
-DvtThematicMapParser._ATTR_LABEL_STYLE ="labelStyle";
-DvtThematicMapParser._ATTR_DROP_SITE_STYLE ="dropTargetStyle";
-DvtThematicMapParser._ATTR_BASEMAP_NAME = "baseMapName";
-DvtThematicMapParser._ATTR_ANIM_ON_DISP = "animationOnDisplay";
-DvtThematicMapParser._ATTR_ANIM_ON_MAP_CHANGE = "animationOnMapChange";
-DvtThematicMapParser._ATTR_ANIM_DUR = "animationDuration";
-DvtThematicMapParser._ATTR_ANIM_ON_MAP_CHANGE = "animationOnMapChange";
-DvtThematicMapParser._ATTR_ANIM_ON_DRILL = "animationOnDrill";
-DvtThematicMapParser._ATTR_DRILL_ZOOM_TO_FIT = "drillZoomToFit";
-DvtThematicMapParser._ATTR_DRILL_MODE = "drillMode";
-DvtThematicMapParser._ATTR_INITIAL_ZOOMING = "initialZooming";
-DvtThematicMapParser._ATTR_CTRLPANEL_BEHAVIOR = "controlPanelBehavior";
+DvtThematicMapParser._ATTR_ANIM_DATA_CHANGE = 'animationDataChange';
+DvtThematicMapParser._ATTR_ANIM_ON_LAYER_CHANGE = 'animationOnLayerChange';
+DvtThematicMapParser.ATTR_ID = 'id';
+DvtThematicMapParser._ATTR_CLIENT_ID = 'clientId';
+DvtThematicMapParser._ATTR_SELECTION_MODE = 'selectionMode';
+DvtThematicMapParser._ATTR_STYLE_ID = 'styleId';
+DvtThematicMapParser._ATTR_LAYER_NAME = 'layerName';
+DvtThematicMapParser._ATTR_LABEL = 'label';
+DvtThematicMapParser._ATTR_LABEL_DISPLAY = 'labelDisplay';
+DvtThematicMapParser._ATTR_LABEL_TYPE = 'labelType';
+DvtThematicMapParser._ATTR_LABEL_POSITION = 'labelPosition';
+DvtThematicMapParser._ATTR_ROW_KEY = 'rowKey';
+DvtThematicMapParser._ATTR_GROUP_ID = 'groupID';
+DvtThematicMapParser._ATTR_SHORT_NAME = 'shortName';
+DvtThematicMapParser._ATTR_LONG_NAME = 'longName';
+DvtThematicMapParser._ATTR_PATH = 'd';
+DvtThematicMapParser._ATTR_ALIGN_ID = 'alignId';
+DvtThematicMapParser._ATTR_SHOW_WITH = 'showWith';
+DvtThematicMapParser._ATTR_SUB_REGIONS = 'subRegions';
+DvtThematicMapParser._ATTR_INLINE_STYLE = 'inlineStyle';
+DvtThematicMapParser._ATTR_HOVER_STYLE = 'hoverStyle';
+DvtThematicMapParser._ATTR_SELECT_STYLE = 'selectStyle';
+DvtThematicMapParser._ATTR_DISCLOSED_STYLE = 'disclosedStyle';
+DvtThematicMapParser._ATTR_LABEL_STYLE = 'labelStyle';
+DvtThematicMapParser._ATTR_DROP_SITE_STYLE = 'dropTargetStyle';
+DvtThematicMapParser._ATTR_BASEMAP_NAME = 'baseMapName';
+DvtThematicMapParser._ATTR_ANIM_ON_DISP = 'animationOnDisplay';
+DvtThematicMapParser._ATTR_ANIM_ON_MAP_CHANGE = 'animationOnMapChange';
+DvtThematicMapParser._ATTR_ANIM_DUR = 'animationDuration';
+DvtThematicMapParser._ATTR_ANIM_ON_MAP_CHANGE = 'animationOnMapChange';
+DvtThematicMapParser._ATTR_ANIM_ON_DRILL = 'animationOnDrill';
+DvtThematicMapParser._ATTR_DRILL_ZOOM_TO_FIT = 'drillZoomToFit';
+DvtThematicMapParser._ATTR_DRILL_MODE = 'drillMode';
+DvtThematicMapParser._ATTR_INITIAL_ZOOMING = 'initialZooming';
+DvtThematicMapParser._ATTR_CTRLPANEL_BEHAVIOR = 'controlPanelBehavior';
 //DvtThematicMapParser._ATTR_ISBUILTINMAP = "isBuiltInMap";
-DvtThematicMapParser._ATTR_TOOLTIP_DISPLAY = "displayTooltips";
-DvtThematicMapParser._ATTR_FEATURES_OFF = "featuresOff";
-DvtThematicMapParser._ATTR_LOCALE_L2R = "localeL2R";
-DvtThematicMapParser._ATTR_CENTER_X = "centerX";
-DvtThematicMapParser._ATTR_CENTER_Y = "centerY";
-DvtThematicMapParser._ATTR_CUR_ZOOM = "curZoom";
-DvtThematicMapParser._ATTR_IS_FLASH_POSITION = "isFlashPosition";
-DvtThematicMapParser._ATTR_INLINE_STYLE = "inlineStyle";
-DvtThematicMapParser._ATTR_ISOLATED_ROW_KEY = "isolatedRowKey";
-DvtThematicMapParser._ATTR_SOURCE = "source";
-DvtThematicMapParser._ATTR_ZOOMING = "zooming";
-DvtThematicMapParser._ATTR_PANNING = "panning";
-DvtThematicMapParser._ATTR_EXTENDS_LAYER = "extendsLayer";
+DvtThematicMapParser._ATTR_TOOLTIP_DISPLAY = 'displayTooltips';
+DvtThematicMapParser._ATTR_FEATURES_OFF = 'featuresOff';
+DvtThematicMapParser._ATTR_LOCALE_L2R = 'localeL2R';
+DvtThematicMapParser._ATTR_CENTER_X = 'centerX';
+DvtThematicMapParser._ATTR_CENTER_Y = 'centerY';
+DvtThematicMapParser._ATTR_CUR_ZOOM = 'curZoom';
+DvtThematicMapParser._ATTR_IS_FLASH_POSITION = 'isFlashPosition';
+DvtThematicMapParser._ATTR_INLINE_STYLE = 'inlineStyle';
+DvtThematicMapParser._ATTR_ISOLATED_ROW_KEY = 'isolatedRowKey';
+DvtThematicMapParser._ATTR_SOURCE = 'source';
+DvtThematicMapParser._ATTR_ZOOMING = 'zooming';
+DvtThematicMapParser._ATTR_PANNING = 'panning';
+DvtThematicMapParser._ATTR_EXTENDS_LAYER = 'extendsLayer';
 
-DvtThematicMapParser._SEMICOLON = ";";
+DvtThematicMapParser._SEMICOLON = ';';
+
 
 /**
  * Initializes this thematic map xml parser
  * @param {DvtThematicMap} tmap The thematic map this parser belongs to
  */
-DvtThematicMapParser.prototype.Init = function (tmap) {
+DvtThematicMapParser.prototype.Init = function(tmap) {
   this._tmap = tmap;
   this._customMarkerDefs = new Object();
   this._areaLayerStyle = null;
@@ -5781,16 +6140,17 @@ DvtThematicMapParser.prototype.Init = function (tmap) {
   this._areaSelectStyle = null;
   this._areaDiscloseStyle = null;
   this._isMobile = DvtAgent.isTouchDevice();
-}
+};
+
 
 /**
  * Parses an xml node containing thematic map layer and style information.
  * @param {DvtXmlNode} rootXmlNode The xml node to parse
  */
-DvtThematicMapParser.prototype.loadXmlInitial = function (rootXmlNode) {
+DvtThematicMapParser.prototype.loadXmlInitial = function(rootXmlNode) {
   var childNodes = rootXmlNode.getChildNodes();
   var node, nodeName;
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     if (nodeName == DvtThematicMapParser._ELEM_MAP_PROPERTIES)
@@ -5801,28 +6161,43 @@ DvtThematicMapParser.prototype.loadXmlInitial = function (rootXmlNode) {
       this.ParseDataLayers(node);
     else if (nodeName == DvtThematicMapParser._ELEM_LEGEND)
       this.ParseLegend(node);
+    else if (nodeName == 'childResources')
+      this.ParseChildResources(node);
   }
-}
+};
+
+
+/**
+ * Parses child component resources
+ * @param {DvtXmlNode} xmlNode The xml node to parse
+ */
+DvtThematicMapParser.prototype.ParseChildResources = function(xmlNode) {
+  var childNodes = xmlNode.getChildNodes();
+  for (var i = 0; i < childNodes.length; i++) {
+    var resourceBundle = childNodes[i].getTextContent();
+    if (resourceBundle)
+      DvtBundle.addLocalizedStrings(JSON.parse(resourceBundle));
+  }
+};
+
 
 /**
  * Parses map properties
  * @param {DvtXmlNode} xmlNode The xml node to parse
  */
-DvtThematicMapParser.prototype.ParseMapProperties = function (xmlNode) {
+DvtThematicMapParser.prototype.ParseMapProperties = function(xmlNode) {
   this._setMapProps(xmlNode);
   this._tmap.parseComponentAttrs(xmlNode);
-  
+
   var childNodes = xmlNode.getChildNodes();
   var node, nodeName;
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     if (nodeName == DvtThematicMapParser._ELEM_RESOURCES)
       this.ParseResources(node);
     else if (nodeName == DvtThematicMapParser._ELEM_MAP_HIERARCHY)
       this.ParseMapHierarchy(node);
-    else if (nodeName == "panZoomCanvasProperties")
-      this.ParsePanZoomResources(node);
     else if (nodeName == DvtThematicMapParser._ELEM_REGION_LAYER) {
       var attr = node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE);
       if (attr)
@@ -5838,35 +6213,36 @@ DvtThematicMapParser.prototype.ParseMapProperties = function (xmlNode) {
         this._areaDiscloseStyle = new DvtCSSStyle(attr);
     }
     else if (nodeName == DvtThematicMapParser._ELEM_MARKER_STYLE) {
-      this._tmap.setMarkerStyle(new DvtCSSStyle(node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE)))
+      this._tmap.setMarkerStyle(new DvtCSSStyle(node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE)));
     }
     else if (nodeName == 'basemap') {
       // check to see if this is the correct basemap metadata
-      if (this._tmap.getMapName() == ('$'+node.getAttr(DvtThematicMapParser.ATTR_ID)))
+      if (this._tmap.getMapName() == ('$' + node.getAttr(DvtThematicMapParser.ATTR_ID)))
         this.ParseCustomBasemap(node);
     }
   }
-}
+};
+
 
 /**
- * Parses data layers for initial render or for data layer ppr.  On a data layer ppr the current pan zoom canvas 
+ * Parses data layers for initial render or for data layer ppr.  On a data layer ppr the current pan zoom canvas
  * matrix will be passed in to render the data layer at the current zoom level.
  * @param {DvtXmlNode} xmlNode The xml node to parse
  * @param {DvtMatrix} pzcMatrix The current map transform
  * @param {String} topLayerName The layer name of the current top layer
  */
-DvtThematicMapParser.prototype.ParseDataLayers = function (xmlNode, pzcMatrix, topLayerName) {
+DvtThematicMapParser.prototype.ParseDataLayers = function(xmlNode, pzcMatrix, topLayerName) {
   var layers = xmlNode.getElementsByTagName(DvtThematicMapParser._ELEM_LAYER);
   var legend = xmlNode.getElementsByTagName(DvtThematicMapParser._ELEM_LEGEND);
   // When only a data layer is updated the new legend xml is sent down in the same div.
   // Two legend elements will be returned bc the xml looks like: <legend><style><legend></legend></legend>
   // where the inner <legend> refers to the styles applied to the legend.
-  // We need to check to see if this is a data layer update or initial render by checking to see if a pzcMatrix was 
+  // We need to check to see if this is a data layer update or initial render by checking to see if a pzcMatrix was
   // passed in.
   if (pzcMatrix && legend && legend[0])
     this.ParseLegend(legend[0]);
-    
-  for (var i = 0;i < layers.length;i++) {
+
+  for (var i = 0; i < layers.length; i++) {
     var clientId = layers[i].getAttr(DvtThematicMapParser._ATTR_CLIENT_ID);
     var id = layers[i].getAttr(DvtThematicMapParser.ATTR_ID);
     var layer = this._tmap.getLayer(id);
@@ -5883,7 +6259,7 @@ DvtThematicMapParser.prototype.ParseDataLayers = function (xmlNode, pzcMatrix, t
       }
     }
     var dataLayer = new DvtMapDataLayer(this._tmap, layer, clientId, this._tmap.getEventHandler());
-  
+
     // Set data layer attributes
     //Set selection
     var selectionMode = layers[i].getAttr(DvtThematicMapParser._ATTR_SELECTION_MODE);
@@ -5891,42 +6267,43 @@ DvtThematicMapParser.prototype.ParseDataLayers = function (xmlNode, pzcMatrix, t
       dataLayer.setSelectionMode(DvtSelectionHandler.TYPE_SINGLE);
     else if (selectionMode == 'multiple')
       dataLayer.setSelectionMode(DvtSelectionHandler.TYPE_MULTIPLE);
-      
+
     // Set Animation
     var animOnDataChange = layers[i].getAttr(DvtThematicMapParser._ATTR_ANIM_DATA_CHANGE);
     if (animOnDataChange) {
       var animDur = layers[i].getAttr(DvtThematicMapParser._ATTR_ANIM_DUR);
       if (animDur)
         animDur = parseFloat(animDur);
-      if (!animDur || isNaN(animDur)) 
+      if (!animDur || isNaN(animDur))
         animDur = 1.0;
       dataLayer.setAnimation(animOnDataChange);
       dataLayer.setAnimationDuration(animDur);
     }
-    
+
     //Add initially isolated area
     var isolatedRowKey = null;
     if (layer instanceof DvtMapAreaLayer)
       isolatedRowKey = layers[i].getAttr(DvtThematicMapParser._ATTR_ISOLATED_ROW_KEY);
-      
+
     // Add layer data objects
     var initSelections = [];
     var initDrilled = [];
     var styles = this._parseStyles(layers[i].getElementsByTagName(DvtThematicMapParser._ELEM_STYLES));
     var data = layers[i].getElementsByTagName(DvtThematicMapParser._ELEM_ROW);
-    
+
     //Show popup behavior
     var spb = this._parseShowPopupBehavior(layers[i], styles);
-    
+
     // Create dataobject using sytle id that matches
-    for (var j = 0;j < data.length;j++) {
+    for (var j = 0; j < data.length; j++) {
       var styleId = data[j].getAttr(DvtThematicMapParser._ATTR_STYLE_ID);
       var dataObj = this._parseDataObject(layer, dataLayer, id, data[j], styles[styleId], initSelections, initDrilled, isolatedRowKey);
       if (dataObj) {
         // Selection support
         var displayable = dataObj.getDisplayable();
-        displayable.setSelectable(dataLayer.isSelectable() && !(dataObj instanceof DvtMapDataImage));
-        
+        if (displayable.setSelectable)
+          displayable.setSelectable(dataLayer.isSelectable() && !(dataObj instanceof DvtMapDataImage));
+
         //Show popup support
         if (spb.length > 0)
           dataObj.setShowPopupBehaviors(spb);
@@ -5936,47 +6313,48 @@ DvtThematicMapParser.prototype.ParseDataLayers = function (xmlNode, pzcMatrix, t
           dataLayer.addDataObject(dataObj);
       }
     }
-    
+
     // After processing all data objects we should have the area ID of the isolated area
     if (isolatedRowKey && this._isolatedArea) {
       dataLayer.setIsolatedAreaRowKey(isolatedRowKey);
       layer.setIsolatedArea(this._isolatedArea);
     }
-    
+
     // Process initial data layer selections
     if (dataLayer.isSelectable() && initSelections.length > 0)
       dataLayer.setInitialSelections(initSelections);
     if (initDrilled.length > 0)
-      this._tmap.addDrilledLayer(layer.getLayerName(), [dataLayer.getClientId(),initDrilled]);
-    
+      this._tmap.addDrilledLayer(layer.getLayerName(), [dataLayer.getClientId(), initDrilled]);
+
     // If layer already exists, update
     if (pzcMatrix || layer.getDataLayer(dataLayer.getClientId()))
       layer.updateDataLayer(dataLayer, pzcMatrix, topLayerName);
     else
       layer.addDataLayer(dataLayer);
   }
-}
+};
 
-DvtThematicMapParser.prototype.ParseLegend = function (xmlNode) {
+DvtThematicMapParser.prototype.ParseLegend = function(xmlNode) {
   this._tmap.setLegendXml(xmlNode);
-}
+};
 
-DvtThematicMapParser.prototype.ParseResources = function (xmlNode) {
+DvtThematicMapParser.prototype.ParseResources = function(xmlNode) {
   this._tmap.setResources(xmlNode);
-}
+};
+
 
 /**
  * Parses and creates the map layers
  * @param {DvtXmlNode} xmlNode The xml node to parse
  * @protected
  */
-DvtThematicMapParser.prototype.ParseMapHierarchy = function (xmlNode) {
+DvtThematicMapParser.prototype.ParseMapHierarchy = function(xmlNode) {
   var layerNodes = xmlNode.getChildNodes();
 
   var baseMapName = this._tmap.getMapName();
   var layerName, labelDisplay, clientId, labelType, layer;
 
-  for (var i = 0;i < layerNodes.length;i++) {
+  for (var i = 0; i < layerNodes.length; i++) {
     var node = layerNodes[i];
     var nodeName = node.getName();
 
@@ -5989,7 +6367,7 @@ DvtThematicMapParser.prototype.ParseMapHierarchy = function (xmlNode) {
       // merge css set area layer styles with tag attribute set css area layer and area layer font styles
       var attr = node.getAttr('areaStyle');
       if (attr)
-        this._areaLayerStyle.merge(new DvtCSSStyle(attr));  
+        this._areaLayerStyle.merge(new DvtCSSStyle(attr));
       attr = node.getAttr(DvtThematicMapParser._ATTR_LABEL_STYLE);
       if (attr)
         this._areaLayerStyle.merge(new DvtCSSStyle(attr));
@@ -6006,32 +6384,32 @@ DvtThematicMapParser.prototype.ParseMapHierarchy = function (xmlNode) {
         layer.setAreaHoverStyle(this._areaHoverStyle);
         layer.setAreaSelectStyle(this._areaSelectStyle);
         layer.setAreaDiscloseStyle(this._areaDiscloseStyle);
-      }  
-      layer.setLayerCSSStyle(this._areaLayerStyle);  
+      }
+      layer.setLayerCSSStyle(this._areaLayerStyle);
       layer.setDropSiteCSSStyle(this._areaDropSiteStyle);
-        
+
       // Set Animation
       attr = node.getAttr(DvtThematicMapParser._ATTR_ANIM_ON_LAYER_CHANGE);
       if (attr) {
         var animDur = node.getAttr(DvtThematicMapParser._ATTR_ANIM_DUR);
         if (animDur)
           animDur = parseFloat(animDur);
-        if (!animDur || isNaN(animDur)) 
+        if (!animDur || isNaN(animDur))
           animDur = 1.0;
         layer.setAnimation(attr);
         layer.setAnimationDuration(animDur);
       }
-      
+
       if (layer)
         this._tmap.addLayer(layer);
     }
   }
-}
+};
 
-DvtThematicMapParser.prototype.ParseCustomBasemap = function (xmlNode) {
+DvtThematicMapParser.prototype.ParseCustomBasemap = function(xmlNode) {
   var childNodes = xmlNode.getChildNodes();
   var node, nodeName;
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     if (nodeName == DvtThematicMapParser._ELEM_LAYER)
@@ -6039,42 +6417,42 @@ DvtThematicMapParser.prototype.ParseCustomBasemap = function (xmlNode) {
     else if (nodeName == DvtThematicMapParser._ELEM_POINTS)
       this._parseCustomPoints(node);
   }
-}
+};
 
-DvtThematicMapParser.prototype._parseCustomLayer = function (xmlNode) {
+DvtThematicMapParser.prototype._parseCustomLayer = function(xmlNode) {
   var childNodes = xmlNode.getChildNodes();
   var layerName = xmlNode.getAttr(DvtThematicMapParser.ATTR_ID);
   var node, nodeName;
   var images = [];
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     // currently only images are supported
     if (nodeName == DvtThematicMapParser.ELEM_IMAGE) {
-     var image = {};
-     image['source'] = node.getAttr('source');
-     image['width'] = node.getAttr('width');
-     image['height'] = node.getAttr('height');
-     var bidi = node.getAttr('bidi');
-     var dir = node.getAttr('dir');
-     // The bidi attribute is deprecated and dir="ltr/rtl" should be used instead.
-     if (bidi == 'true' || dir == 'rtl')
-       image['dir'] = 'rtl';
-     else
-       image['dir'] = 'ltr';
-     images.push(image);
+      var image = {};
+      image['source'] = node.getAttr('source');
+      image['width'] = node.getAttr('width');
+      image['height'] = node.getAttr('height');
+      var bidi = node.getAttr('bidi');
+      var dir = node.getAttr('dir');
+      // The bidi attribute is deprecated and dir="ltr/rtl" should be used instead.
+      if (bidi == 'true' || dir == 'rtl')
+        image['dir'] = 'rtl';
+      else
+        image['dir'] = 'ltr';
+      images.push(image);
     }
   }
   var customLayer = this._tmap.getLayer(layerName);
   customLayer.setAreaLayerImage(images);
-}
+};
 
-DvtThematicMapParser.prototype._parseCustomPoints = function (xmlNode) {
+DvtThematicMapParser.prototype._parseCustomPoints = function(xmlNode) {
   var childNodes = xmlNode.getChildNodes();
   var node, nodeName;
   var points = {};
   var labels = {};
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     if (nodeName == DvtThematicMapParser._ELEM_POINT) {
@@ -6085,11 +6463,7 @@ DvtThematicMapParser.prototype._parseCustomPoints = function (xmlNode) {
   // register points with base map manager
   // index will change once we allow more layers besides point
   DvtBaseMapManager.registerBaseMapLayer(this._tmap.getMapName(), 'cities', labels, points, null, null, 1);
-}
-
-DvtThematicMapParser.prototype.ParsePanZoomResources = function (xmlNode) {
-  this._tmap.setPanZoomResources(xmlNode);
-}
+};
 
 DvtThematicMapParser.prototype._createPathShapes = function(areaNames) {
   // create empty DvtPath objects as placeholders
@@ -6097,47 +6471,48 @@ DvtThematicMapParser.prototype._createPathShapes = function(areaNames) {
   var context = this._tmap.getCtx();
   for (var area in areaNames) {
     shapes[area] = new DvtPath(context);
-    this._parseDataObjectFill(DvtThematicMapParser.ELEM_COLOR_STYLES, this._areaLayerStyle, shapes[area])
+    this._parseDataObjectFill(DvtThematicMapParser.ELEM_COLOR_STYLES, this._areaLayerStyle, shapes[area]);
   }
   return shapes;
-}
+};
+
 
 /**
  * Parses map attributes
  * @param {DvtXmlNode} xmlNode The xml node containing map attributes
  * @private
  */
-DvtThematicMapParser.prototype._setMapProps = function (xmlNode) {
+DvtThematicMapParser.prototype._setMapProps = function(xmlNode) {
   var attr;
 
   //Basemap attributes
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_SOURCE);
   if (attr)
     this._isCustomBasemap = true;
-    
+
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_BASEMAP_NAME);
   // prepend custom basemap name with a symbol so we don't overwrite built-in basemap data
   if (attr)
-    this._tmap.setMapName(this._isCustomBasemap ? '$'+attr : attr);
+    this._tmap.setMapName(this._isCustomBasemap ? '$' + attr : attr);
 
   //Animation attributes
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_ANIM_ON_DISP);
   if (attr)
     this._tmap.setAnimationOnDisplay(attr);
-    
+
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_ANIM_ON_MAP_CHANGE);
   if (attr)
     this._tmap.setAnimationOnMapChange(attr);
-  
+
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_ANIM_DUR);
   if (attr)
     this._tmap.setAnimationDuration(attr);
-  
+
   //Tooltip behavior: auto, none, shortDescOnly
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_TOOLTIP_DISPLAY);
   if (attr)
     this._tmap.setDisplayTooltips(attr);
-    
+
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_DROP_SITE_STYLE);
   if (attr)
     this._areaDropSiteStyle = new DvtCSSStyle(attr);
@@ -6163,7 +6538,7 @@ DvtThematicMapParser.prototype._setMapProps = function (xmlNode) {
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_CUR_ZOOM);
   if (attr)
     this._tmap.setInitialZoom(attr);
-    
+
   //Drilling attributes
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_ANIM_ON_DRILL);
   if (attr)
@@ -6176,49 +6551,49 @@ DvtThematicMapParser.prototype._setMapProps = function (xmlNode) {
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_DRILL_ZOOM_TO_FIT);
   if (attr)
     this._tmap.setDrillZoomToFit(attr);
-  
+
   // Even if attributes aren't defined they
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_INITIAL_ZOOMING);
   // initial zooming is set to false by default
   if (attr == 'auto')
     this._tmap.setInitialZooming(true);
-  
+
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_ZOOMING);
   // zooming is on by default
   if (attr == 'none')
     this._tmap.setZooming(false);
-  
+
   attr = xmlNode.getAttr(DvtThematicMapParser._ATTR_PANNING);
   // panning is on by default
   if (attr == 'none')
     this._tmap.setPanning(false);
-   
-  attr = parseFloat(xmlNode.getAttr("maxZoom"));
-  if (!isNaN(attr))
-    this._tmap.setMaxZoomFactor(attr); 
-    
-  attr = xmlNode.getAttr("markerZoomBehavior");
-  if (attr)
-    this._tmap.setMarkerZoomBehavior(attr); 
-}
 
-DvtThematicMapParser.prototype._parseStyles = function (node) {
+  attr = parseFloat(xmlNode.getAttr('maxZoom'));
+  if (!isNaN(attr))
+    this._tmap.setMaxZoomFactor(attr);
+
+  attr = xmlNode.getAttr('markerZoomBehavior');
+  if (attr)
+    this._tmap.setMarkerZoomBehavior(attr);
+};
+
+DvtThematicMapParser.prototype._parseStyles = function(node) {
   var styles = new Object();
   if (node && node.length > 0) {
     var styleNodes = node[0].getChildNodes();
-    for (var i = 0;i < styleNodes.length;i++) {
+    for (var i = 0; i < styleNodes.length; i++) {
       var styleId = styleNodes[i].getAttr(DvtThematicMapParser.ATTR_ID);
       styles[styleId] = styleNodes[i];
     }
   }
   return styles;
-}
+};
 
-DvtThematicMapParser.prototype._parseShowPopupBehavior = function (node, styles) {
+DvtThematicMapParser.prototype._parseShowPopupBehavior = function(node, styles) {
   // Tmap allows alignId set to a marker, image, or area tag. Need to remove before creating the DvtShowPopupBehavior
   var spbNodes = node.getElementsByTagName(DvtThematicMapParser._ELEM_SPB);
   var spbs = new Array();
-  for (var i = 0;i < spbNodes.length;i++) {
+  for (var i = 0; i < spbNodes.length; i++) {
     var alignId = spbNodes[i].getAttr(DvtThematicMapParser._ATTR_ALIGN_ID);
     var popup = DvtShowPopupBehavior.newInstance(spbNodes[i]);
     for (var styleId in styles) {
@@ -6230,9 +6605,10 @@ DvtThematicMapParser.prototype._parseShowPopupBehavior = function (node, styles)
     spbs.push(popup);
   }
   return spbs;
-}
- 
- /**
+};
+
+
+/**
   * Parses xml to create a map data object for a data layer
   * @param {DvtMapLayer} layer The map layer that this object belongs to
   * @param {DvtMapDataLayer} datalayer The data layer that this object belongs to
@@ -6244,19 +6620,19 @@ DvtThematicMapParser.prototype._parseShowPopupBehavior = function (node, styles)
   * @param {string} isolatedRowKey The row key of the isolated object
   * @return {DvtMapDataObject} The created map data object
   */
-DvtThematicMapParser.prototype._parseDataObject = function (layer, dataLayer, layerName, node, style, initSelections, initDrilled, isolatedRowKey) {
+DvtThematicMapParser.prototype._parseDataObject = function(layer, dataLayer, layerName, node, style, initSelections, initDrilled, isolatedRowKey) {
   var context = this._tmap.getCtx();
   var id = node.getAttr(DvtThematicMapParser._ATTR_ROW_KEY);
   var clientId = node.getAttr(DvtThematicMapParser._ATTR_CLIENT_ID);
   var areaId = node.getAttr(DvtThematicMapParser.ATTR_ID);
-  
+
   var dataObj;
   var styleType = style.getName();
   if (styleType == DvtThematicMapParser.ELEM_COLOR_STYLES) {//Data object is a DvtMapArea
     if (isolatedRowKey) {
       if (isolatedRowKey != id)
         return null;
-      else 
+      else
         this._isolatedArea = areaId;
     }
     layer.setAreaRendered(areaId, false);
@@ -6265,82 +6641,87 @@ DvtThematicMapParser.prototype._parseDataObject = function (layer, dataLayer, la
   }
   else if (styleType == DvtThematicMapParser.ELEM_GRADUATED_SYMBOL) {//Data object is a DvtMapMarker
     dataObj = new DvtMapDataMarker(context, dataLayer, id, clientId, areaId);
-    this._parseMapMarker(context, style, layerName, node, dataObj)
+    this._parseMapMarker(context, style, layerName, node, dataObj);
   }
   else if (styleType == DvtThematicMapParser.ELEM_IMAGE) {//Data object is a DvtMapImage
     dataObj = new DvtMapDataImage(context, dataLayer, id, clientId, areaId);
-    this._parseMapImage(context, layerName, node, dataObj)
+    this._parseMapImage(context, layerName, node, dataObj);
   }
+  else {
+    dataObj = new DvtMapDataComponent(context, dataLayer, id, clientId, areaId);
+    this._parseGauge(context, layerName, node, dataObj, styleType);
+  }
+
   var displayable = dataObj.getDisplayable();
   if (!displayable) {
     return null;
   }
   var rotation = parseInt(node.getAttr('rotation'));
   if (rotation) {
-    var radianRot = rotation*Math.PI/180;
+    var radianRot = rotation * Math.PI / 180;
     displayable.setRotation(radianRot);
     var center = dataObj.getCenter();
     // shape rotates around origin so need to find out current location after rotation and move back to the correct center
-    displayable.setTranslate(center.x-(center.x*Math.cos(radianRot)-center.y*Math.sin(radianRot)), center.y-(center.x*Math.sin(radianRot)+center.y*Math.cos(radianRot)));
+    displayable.setTranslate(center.x - (center.x * Math.cos(radianRot) - center.y * Math.sin(radianRot)), center.y - (center.x * Math.sin(radianRot) + center.y * Math.cos(radianRot)));
   }
-  
+
   // disable labels in area layer if data layer exists and has labels
   if (areaId && layer instanceof DvtMapAreaLayer)
     layer.setLabelRendered(areaId, false);
-  
+
   var hasAction = node.getAttr('hasAction') == 'true'; //TODO check actionListener
   dataObj.setHasAction(hasAction);
   if (hasAction)
     dataObj.setAction(node.getAttr('action'));
-    
+
   var destination = node.getAttr('destination');
   if (destination) {
     var linkObj = [];
-    linkObj["destination"] = destination;
-    linkObj["targetFrame"] = "_blank";
-    linkObj["focusable"] = true;
+    linkObj['destination'] = destination;
+    linkObj['targetFrame'] = '_blank';
+    linkObj['focusable'] = true;
     displayable.setHyperlink(linkObj);
   }
-  
+
   // Initially selected nodes
   var bSelected = node.getAttr('selected') == 'true';
   if (bSelected)
     initSelections.push(id);
-    
+
   //Initially drilled nodes
   var bDrilled = node.getAttr('drilled') == 'true';
   if (bDrilled) {
     initDrilled.push(node.getAttr(DvtThematicMapParser.ATTR_ID));
     this._tmap.addDisclosedRowKey(id);
   }
-  
+
   //Set label on data object
   var labelText = node.getAttr(DvtThematicMapParser._ATTR_LABEL);
   // assume label display is off unless label text is provided
   // for areas if no label is provided, we need to check if we should be using the area layer label
-  var labelDisplay = 'off'; 
+  var labelDisplay = 'off';
   if (labelText)
     labelDisplay = 'on';
-  else if (styleType == DvtThematicMapParser.ELEM_COLOR_STYLES) 
+  else if (styleType == DvtThematicMapParser.ELEM_COLOR_STYLES)
     labelDisplay = layer.getLabelDisplay();
-    
+
   // If object is a DvtMapDataArea see if label is provided, if not, use the DvtMapAreaLayer label type
   if (!labelText && areaId && labelDisplay != 'off')
     labelText = (layer.getLabelType() == 'long' ? layer.getLongAreaName(areaId) : layer.getShortAreaName(areaId));
-    
+
   if (labelText) {
     var labelInfo;
-    if(layer.getLabelInfoForArea) {
+    if (layer.getLabelInfoForArea) {
       labelInfo = layer.getLabelInfoForArea(areaId);
     }
     var label;
     if (labelInfo) {
       label = new DvtMapLabel(context, labelText, labelInfo, labelDisplay, dataLayer.getDataLabelContainer(), this._tmap.supportsVectorEffects());
     } else {
-      if (styleType != DvtThematicMapParser.ELEM_COLOR_STYLES)  
+      if (styleType != DvtThematicMapParser.ELEM_COLOR_STYLES)
         label = new DvtOutputText(context, labelText, 0, 0);
       else
-        label = new DvtMapLabel(context, labelText, null, labelDisplay, dataLayer.getDataLabelContainer(), this._tmap.supportsVectorEffects());    
+        label = new DvtMapLabel(context, labelText, null, labelDisplay, dataLayer.getDataLabelContainer(), this._tmap.supportsVectorEffects());
     }
     //BUG 14667560 we need to resolve label position in all cases
     var labelPosition = node.getAttr(DvtThematicMapParser._ATTR_LABEL_POSITION);
@@ -6365,11 +6746,11 @@ DvtThematicMapParser.prototype._parseDataObject = function (layer, dataLayer, la
   }
 
   dataObj.setLabel(label);
-  
+
   // Set datatip
   var displayTooltips = this._tmap.getDisplayTooltips();
   if (displayTooltips != 'none') {
-    var datatip = node.getAttr("shortDesc");
+    var datatip = node.getAttr('shortDesc');
     if (displayTooltips == 'auto') {
       var preDatatip;
       // For data objects associated with supported areas or cities we prepend the area/city name before the datatip
@@ -6377,17 +6758,17 @@ DvtThematicMapParser.prototype._parseDataObject = function (layer, dataLayer, la
         if (layerName == 'cities' || this._isCustomBasemap)  // for AMX V1, custom basemaps only support points
           preDatatip = DvtBaseMapManager.getCityLabel(this._tmap.getMapName(), areaId);
         else
-          preDatatip = DvtBaseMapManager.getLongAreaLabel(this._tmap.getMapName(),layerName,areaId)
+          preDatatip = DvtBaseMapManager.getLongAreaLabel(this._tmap.getMapName(), layerName, areaId);
       }
       if (preDatatip)
-        datatip = (datatip ? preDatatip + ": " + datatip : preDatatip);
+        datatip = (datatip ? preDatatip + ': ' + datatip : preDatatip);
     }
     if (datatip)
-      dataObj.setDatatip(datatip); 
+      dataObj.setDatatip(datatip);
   }
 
   return dataObj;
-}
+};
 
 DvtThematicMapParser.prototype._parseCenter = function(layerName, node, isAreaMarker) {
   // We can get the coordiantes for a marker if they are:
@@ -6402,19 +6783,19 @@ DvtThematicMapParser.prototype._parseCenter = function(layerName, node, isAreaMa
     else
       return DvtBaseMapManager.getCityCoordinates(mapName, areaId);
   } else {
-    var x = parseFloat(node.getAttr("x"));
-    var y = parseFloat(node.getAttr("y"));
+    var x = parseFloat(node.getAttr('x'));
+    var y = parseFloat(node.getAttr('y'));
     return new DvtPoint(x, y);
   }
-}
+};
 
-DvtThematicMapParser.prototype._parseMapImage = function (context, layerName, node, dataObj) {
-  var source = node.getAttr("url");
-  var image = null;  
+DvtThematicMapParser.prototype._parseMapImage = function(context, layerName, node, dataObj) {
+  var source = node.getAttr('url');
+  var image = null;
   var isAreaMarker = layerName != 'cities';
   var center = this._parseCenter(layerName, node, isAreaMarker);
-  
-  if (!center) { // no city matching 
+
+  if (!center) { // no city matching
     return;
   } else {
     image = new DvtImage(context, source);
@@ -6427,26 +6808,74 @@ DvtThematicMapParser.prototype._parseMapImage = function (context, layerName, no
   var inlineStyle = node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE);
   if (inlineStyle) {
     var cssStyle = new DvtCSSStyle(inlineStyle);
-    width = cssStyle.getStyle('width').substring(0, cssStyle.getStyle('width').indexOf('px'));
+    width = cssStyle.getStyle(DvtCSSStyle.WIDTH).substring(0, cssStyle.getStyle(DvtCSSStyle.WIDTH).indexOf('px'));
     if (width)
       image.setWidth(width);
-    height = cssStyle.getStyle('height').substring(0, cssStyle.getStyle('height').indexOf('px'));
+    height = cssStyle.getStyle(DvtCSSStyle.HEIGHT).substring(0, cssStyle.getStyle(DvtCSSStyle.HEIGHT).indexOf('px'));
     if (height)
       image.setHeight(height);
     // set x/y only if both width and height are set, otherwise x/y will be set in the callback
     if (width != null && height != null) {
-      image.setX(center.x-width/2);
-      image.setY(center.y-height/2);
-      dataObj.setSize(width*height);
+      image.setX(center.x - width / 2);
+      image.setY(center.y - height / 2);
+      dataObj.setSize(width * height);
     }
   }
   //If user does not specify image dimensions via inlineStyle then use the default image size.
   if (!width || !height) {
     DvtImageLoader.loadImage(context, source, DvtObj.createCallback(dataObj, dataObj.onImageLoaded));
   }
-}
+};
 
-DvtThematicMapParser.prototype._parseMapArea = function (context, areaId, layer, node, dataObj) {  
+
+/**
+ * Parses and initiates a DvtGauge component from a DvtXmlNode
+ * @param {DvtContext} context The rendering context
+ * @param {String} layerName The layer name
+ * @param {DvtXmlNode} node The xml node to parse gauge attributes from
+ * @param {DvtMapDataObject} dataObj The DvtMapDataObject this displayable belongs to
+ * @param {String} gaugeType The gauge subtype
+ * @private
+ */
+DvtThematicMapParser.prototype._parseGauge = function(context, layerName, node, dataObj, gaugeType) {
+  var isAreaMarker = layerName != 'cities';
+  var center = this._parseCenter(layerName, node, isAreaMarker);
+
+  if (!center) { // no city matching
+    return;
+  } else {
+    if (gaugeType == 'statusMeterGauge')
+      gauge = DvtStatusMeterGauge.newInstance(context, null, null);
+    else if (gaugeType == 'ledGauge')
+      gauge = DvtLedGauge.newInstance(context, null, null);
+    else if (gaugeType == 'dialGauge')
+      gauge = DvtDialGauge.newInstance(context, null, null);
+    else if (gaugeType == 'ratingGauge')
+      gauge = DvtRatingGauge.newInstance(context, null, null);
+  }
+  dataObj.setCenter(center);
+  dataObj.setDisplayable(gauge);
+
+  var width, height;
+  //Get image dimensions via inlineStyle
+  var inlineStyle = node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE);
+  if (inlineStyle) {
+    var cssStyle = new DvtCSSStyle(inlineStyle);
+    width = cssStyle['width'] ? parseInt(cssStyle['width'].substring(0, cssStyle['width'].indexOf('px'))) : DvtMapDataComponent.DEFAULT_SIZE;
+    dataObj.setWidth(width);
+    height = cssStyle['height'] ? parseInt(cssStyle['height'].substring(0, cssStyle['height'].indexOf('px'))) : DvtMapDataComponent.DEFAULT_SIZE;
+    dataObj.setHeight(height);
+    // set x/y only if both width and height are set, otherwise x/y will be set in the callback
+    dataObj.setX(center.x - width / 2);
+    dataObj.setY(center.y - height / 2);
+  }
+
+  var json = node.getAttr('json');
+  if (json)
+    dataObj.setJson(json);
+};
+
+DvtThematicMapParser.prototype._parseMapArea = function(context, areaId, layer, node, dataObj) {
   var areaShape = layer.getAreaShape(areaId);
   if (areaShape) {
     var cssStyle = new DvtCSSStyle(node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE));
@@ -6467,27 +6896,27 @@ DvtThematicMapParser.prototype._parseMapArea = function (context, areaId, layer,
     dataObj.setDisplayable(path);
     this._parseDataObjectFill(DvtThematicMapParser.ELEM_COLOR_STYLES, cssStyle, path, dataObj);
   }
-}
+};
 
-DvtThematicMapParser.prototype._parseMapMarker = function (context, style, layerName, node, dataObj) {
+DvtThematicMapParser.prototype._parseMapMarker = function(context, style, layerName, node, dataObj) {
   var marker = null;
   var isAreaMarker = layerName != 'cities';
   var center = this._parseCenter(layerName, node, isAreaMarker);
-  if (!center) // no city matching 
+  if (!center) // no city matching
     return;
-    
+
   var shapeType;
   var imgSrc = node.getAttr(DvtThematicMapParser._ATTR_SOURCE);
   // if marker image source is set, ignore the shape type value which is set for custom svg and built in markers
   if (imgSrc) {
-    shapeType = [imgSrc, node.getAttr("sourceSelected"), node.getAttr("sourceHover"), node.getAttr("sourceHoverSelected")];
+    shapeType = [imgSrc, node.getAttr('sourceSelected'), node.getAttr('sourceHover'), node.getAttr('sourceHoverSelected')];
   } else {
-    var shapeType = node.getAttr("shapeType");
+    var shapeType = node.getAttr('shapeType');
     if (!shapeType)
       shapeType = DvtMapDataMarker.DEFAULT_MARKER_SHAPE;
     if (!DvtMarker.isBuiltInShape(shapeType)) {
       var markerDefs = style.getElementsByTagName(DvtThematicMapParser._ELEM_MARKER_DEF);
-      for (var i=0; i<markerDefs.length; i++) {
+      for (var i = 0; i < markerDefs.length; i++) {
         if (!this._customMarkerDefs[shapeType] && markerDefs[i].getAttr(DvtThematicMapParser.ATTR_ID) == shapeType)
           this._customMarkerDefs[shapeType] = DvtMarkerUtils.createMarkerDef(context, markerDefs[i]);
       }
@@ -6495,54 +6924,55 @@ DvtThematicMapParser.prototype._parseMapMarker = function (context, style, layer
   }
 
   // Parse data object scales. Save original scale to maintain size despite zoom.
-  var sx = node.getAttr("scaleX");
+  var sx = node.getAttr('scaleX');
   if (isNaN(sx))
     sx = DvtMapDataMarker.DEFAULT_MARKER_SCALE;
   else
     sx = parseFloat(sx);
-  
-  var sy = node.getAttr("scaleY");
+
+  var sy = node.getAttr('scaleY');
   if (isNaN(sy))
     sy = DvtMapDataMarker.DEFAULT_MARKER_SCALE;
   else
     sy = parseFloat(sy);
- 
-  var w = node.getAttr("width"); 
-  var h = node.getAttr("height");
-  
+
+  var w = node.getAttr('width');
+  var h = node.getAttr('height');
+
   if (!w || isNaN(w))
     w = DvtMapDataMarker.DEFAULT_MARKER_SIZE;
   else
     w = parseInt(w);
-    
+
   if (!h || isNaN(h))
     h = DvtMapDataMarker.DEFAULT_MARKER_SIZE;
   else
     h = parseInt(h);
 
   var x, y;
-   
-  x = center.x - ((w*sx)/2);
-  y = center.y - ((h*sy)/2);
-  
+
+  x = center.x - ((w * sx) / 2);
+  y = center.y - ((h * sy) / 2);
+
   // id is used for custom marker definition lookup
   marker = new DvtMarker(context, shapeType, this._tmap.getSkinName(), x, y, w, h, null, sx, sy);
   dataObj.setCenter(center);
   dataObj.setDisplayable(marker);
-  dataObj.setSize(w*sx*h*sy);
-  
+  dataObj.setSize(w * sx * h * sy);
+
   var inlineStyle = node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE);
   if (inlineStyle) {
     var cssStyle = new DvtCSSStyle(inlineStyle);
     this._parseDataObjectFill(DvtThematicMapParser.ELEM_GRADUATED_SYMBOL, cssStyle, marker, dataObj);
   }
-  
+
   //  marker.addCategory(strShapeType);
-//  if (data && data['hideAttrColor']) {
-//    marker.addCategory(data['hideAttrColor'])
-//    marker.addCategory(strShapeType + ',' + data['hideAttrColor']);
-//  }
-}
+  //  if (data && data['hideAttrColor']) {
+  //    marker.addCategory(data['hideAttrColor'])
+  //    marker.addCategory(strShapeType + ',' + data['hideAttrColor']);
+  //  }
+};
+
 
 /**
  * Styles a DvtMapDataObject displayable
@@ -6556,132 +6986,137 @@ DvtThematicMapParser.prototype._parseDataObjectFill = function(styleType, cssSty
     cssStyle = {};
   var pattern = cssStyle.getStyle('pattern');
   var patternColor = cssStyle.getStyle('pattern-color');
-  var backgroundColor = cssStyle.getStyle('background-color');
+  var backgroundColor = cssStyle.getStyle(DvtCSSStyle.BACKGROUND_COLOR);
   var gradient = (this._isMobile || this._tmap.getSkinName() == DvtCSSStyle.SKIN_ALTA) ? false : cssStyle.getStyle('gradient');
-  
+
   if (backgroundColor && dataObj)
     dataObj.addCategory(backgroundColor);
   else if (patternColor && dataObj)
     dataObj.addCategory(patternColor);
-  
+
   var opacity;
   if (cssStyle.getStyle('opacity')) {
     opacity = parseFloat(cssStyle.getStyle('opacity'));
   } else {
-    if (styleType == DvtThematicMapParser.ELEM_GRADUATED_SYMBOL) 
+    if (styleType == DvtThematicMapParser.ELEM_GRADUATED_SYMBOL)
       opacity = DvtMapDataMarker.DEFAULT_MARKER_ALPHA;
     else
       opacity = 1;
   }
-  
-  if (dataObj)  
+
+  if (dataObj)
     dataObj.setDatatipColor(backgroundColor ? backgroundColor : patternColor);
-  
+
   // handle custom svg where color is set by user
   if (styleType == DvtThematicMapParser.ELEM_GRADUATED_SYMBOL && DvtMarker.isBuiltInShape(displayable.getType())) {
     var markerStyle = this._tmap.getMarkerStyle();
-    var strokeStyle = cssStyle.getStyle('border-style') ? cssStyle.getStyle('border-style') : markerStyle.getStyle('border-style');
+    var strokeStyle = cssStyle.getStyle(DvtCSSStyle.BORDER_STYLE) ? cssStyle.getStyle(DvtCSSStyle.BORDER_STYLE) : markerStyle.getStyle(DvtCSSStyle.BORDER_STYLE);
     if (strokeStyle != 'none') {
-      var strokeColor = cssStyle.getStyle('border-color') ? cssStyle.getStyle('border-color') : markerStyle.getStyle('border-color');
-      var strokeWidth = cssStyle.getStyle('border-width') ? cssStyle.getStyle('border-width') : markerStyle.getStyle('border-width');
+      var strokeColor = cssStyle.getStyle(DvtCSSStyle.BORDER_COLOR) ? cssStyle.getStyle(DvtCSSStyle.BORDER_COLOR) : markerStyle.getStyle(DvtCSSStyle.BORDER_COLOR);
+      var strokeWidth = cssStyle.getStyle(DvtCSSStyle.BORDER_WIDTH) ? cssStyle.getStyle(DvtCSSStyle.BORDER_WIDTH) : markerStyle.getStyle(DvtCSSStyle.BORDER_WIDTH);
       if (strokeWidth)
         strokeWidth = parseFloat(strokeWidth.substring(0, strokeWidth.indexOf('px')));
       var stroke = new DvtSolidStroke(strokeColor, DvtMapDataMarker.DEFAULT_MARKER_ALPHA, strokeWidth);
+      stroke.setType(DvtStroke.convertTypeString(strokeStyle));
+
       if (!this._tmap.isMarkerZoomBehaviorFixed())
         stroke.setFixedWidth(true);
       displayable.setStroke(stroke);
     }
-    
+
     if (gradient == 'true' && backgroundColor)
       displayable.setFill(new DvtMarkerGradient.createMarkerGradient(backgroundColor, displayable, opacity));
     else if (pattern)
       displayable.setFill(new DvtPatternFill(pattern, patternColor, backgroundColor));
     else if (backgroundColor)
-      displayable.setSolidFill(backgroundColor, opacity);  
+      displayable.setSolidFill(backgroundColor, opacity);
     else
-      displayable.setSolidFill(markerStyle.getStyle('background-color'), opacity);
-  } 
-  else if (styleType == DvtThematicMapParser.ELEM_COLOR_STYLES) {  
-    var borderColor = cssStyle.getStyle('border-color');
+      displayable.setSolidFill(markerStyle.getStyle(DvtCSSStyle.BACKGROUND_COLOR), opacity);
+  }
+  else if (styleType == DvtThematicMapParser.ELEM_COLOR_STYLES) {
+    var borderColor = cssStyle.getStyle(DvtCSSStyle.BORDER_COLOR);
     if (borderColor && borderColor != 'transparent') {
       var stroke = new DvtSolidStroke(borderColor);
       if (this._tmap.supportsVectorEffects())
         stroke.setFixedWidth(true);
       displayable.setStroke(stroke);
     }
-    
+
     if (pattern)
       displayable.savePatternFill(new DvtPatternFill(pattern, patternColor, backgroundColor));
     else if (backgroundColor && backgroundColor != 'transparent')
       displayable.setSolidFill(backgroundColor, opacity);
     else
       displayable.setFill(null);
-      
-  } 
-}
+
+  }
+};
 // Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
 /**
  * Thematic Map JSON parser
  * @param {DvtThematicMap} tmap The thematic map to update
  * @constructor
  */
-var DvtThematicMapJsonParser = function (tmap) {
+var DvtThematicMapJsonParser = function(tmap) {
   this.Init(tmap);
-}
+};
 
-DvtObj.createSubclass(DvtThematicMapJsonParser, DvtObj, "DvtThematicMapJsonParser");
+DvtObj.createSubclass(DvtThematicMapJsonParser, DvtObj, 'DvtThematicMapJsonParser');
+
 
 /**
  * Initializes this thematic map JSON parser
  * @param {DvtThematicMap} tmap The thematic map to update
  */
-DvtThematicMapJsonParser.prototype.Init = function (tmap) {
+DvtThematicMapJsonParser.prototype.Init = function(tmap) {
   this._tmap = tmap;
   this._isCustomBasemap = false;
   this._areaLayerStyle = null;
   this._isMobile = DvtAgent.isTouchDevice();
   this._customAreaLayerImages = {};
-}
+};
+
 
 /**
- * Parses a JSON object containing map attributes and data 
+ * Parses a JSON object containing map attributes and data
  * @param {Object} options The JSON object to parse
  */
-DvtThematicMapJsonParser.prototype.parse = function (options) {
+DvtThematicMapJsonParser.prototype.parse = function(options) {
   options['skin'] = 'alta';
   this.ParseMapProperties(options);
   this.ParseStyles(options['styleDefaults']);
-    // temporary code until JSON API approved for custom basemap
+  // temporary code until JSON API approved for custom basemap
   if (this._isCustomBasemap) {
     var xmlParser = new DvtXmlParser(this._tmap.getCtx());
     var xmlNode = xmlParser.parse(options['sourceXml']);
     if (xmlNode)
-        this.ParseCustomBasemap(xmlNode);
+      this.ParseCustomBasemap(xmlNode);
   }
   this.ParseAreaLayers(options['areaLayers']);
   this.ParseDataLayers(options['pointDataLayers'], null, false);
-}
+};
+
 
 /**
- * Parses a JSON object containing map attributes 
+ * Parses a JSON object containing map attributes
  * @param {Object} options The JSON object to parse
  * @protected
  */
-DvtThematicMapJsonParser.prototype.ParseMapProperties = function (options) {
-  this._tmap.setAnimationDuration(options['animationDuration']/1000);
+DvtThematicMapJsonParser.prototype.ParseMapProperties = function(options) {
+  this._tmap.setAnimationDuration(options['animationDuration'] / 1000);
   this._tmap.setAnimationOnDisplay(options['animationOnDisplay'] == 'auto' ? 'alphaFade' : options['animationOnDisplay']);
   this._tmap.setAnimationOnMapChange(options['animationOnMapChange'] == 'auto' ? 'alphaFade' : options['animationOnMapChange']);
-  
+
   this._isCustomBasemap = options['source'] != null;
   // prepend custom basemap name with a symbol so we don't overwrite built-in basemap data
-  this._tmap.setMapName(this._isCustomBasemap ? '$'+options['basemap'] : options['basemap']);
-  
+  this._tmap.setMapName(this._isCustomBasemap ? '$' + options['basemap'] : options['basemap']);
+
   // No control panel for first json tmap release
   this._tmap.setControlPanelBehavior(options['controlPanelBehavior']);
   // No drilling for first json tmap release
   this._tmap.setDrillMode('none');
   this._tmap.setInitialZooming(options['initialZooming'] == 'auto');
-  this._tmap.setMarkerZoomBehavior(options['markerZoomBehavior']); 
+  this._tmap.setMarkerZoomBehavior(options['markerZoomBehavior']);
   this._tmap.setPanning(options['panning'] == 'auto');
   var tooltipDisplay = options['tooltipDisplay'];
   if (tooltipDisplay == 'shortDesc')
@@ -6690,16 +7125,17 @@ DvtThematicMapJsonParser.prototype.ParseMapProperties = function (options) {
     tooltipDisplay = 'auto';
   this._tmap.setDisplayTooltips(tooltipDisplay);
   this._tmap.setZooming(options['zooming'] == 'auto');
-}
+};
+
 
 /**
  * Parses a JSON object containing map area layer attributes and data
  * @param {Object} areaLayers The JSON object to parse
  * @protected
  */
-DvtThematicMapJsonParser.prototype.ParseAreaLayers = function (areaLayers) {
+DvtThematicMapJsonParser.prototype.ParseAreaLayers = function(areaLayers) {
   var basemap = this._tmap.getMapName();
-  for (var i = 0;i < areaLayers.length;i++) {
+  for (var i = 0; i < areaLayers.length; i++) {
     var areaLayer = this._tmap.Defaults.calcAreaLayerOptions(areaLayers[i]);
     var layer = areaLayer['layer'];
     if (!layer)
@@ -6708,7 +7144,7 @@ DvtThematicMapJsonParser.prototype.ParseAreaLayers = function (areaLayers) {
     var mapLayer;
     if (areaLayer['areaStyle'])
       this._areaLayerStyle.parseInlineStyle(areaLayer['areaStyle']);
-    
+
     if (this._isCustomBasemap) {
       mapLayer = new DvtMapCustomAreaLayer(this._tmap, layer, null, areaLayer['labelDisplay'], areaLayer['labelType'], this._tmap.getEventHandler());
       mapLayer.setAreaLayerImage(this._customAreaLayerImages[layer]);
@@ -6721,10 +7157,10 @@ DvtThematicMapJsonParser.prototype.ParseAreaLayers = function (areaLayers) {
       mapLayer.setAreaChildren(DvtBaseMapManager.getChildrenForLayerAreas(this._tmap.getMapName(), layer));
     }
     mapLayer.setLayerCSSStyle(this._areaLayerStyle);
-          
+
     mapLayer.setAnimation(areaLayer['animationOnLayerChange'] == 'auto' ? 'alphaFade' : areaLayer['animationOnLayerChange']);
     mapLayer.setAnimationDuration(this._tmap.getAnimationDuration());
-    
+
     this._tmap.addLayer(mapLayer);
     // parse data layers
     if (areaLayer['areaDataLayer'])
@@ -6732,7 +7168,8 @@ DvtThematicMapJsonParser.prototype.ParseAreaLayers = function (areaLayers) {
     if (areaLayer['pointDataLayers'])
       this.ParseDataLayers(areaLayer['pointDataLayers'], mapLayer, false);
   }
-}
+};
+
 
 /**
  * Parses JSON objects containing map data layer attributes and data
@@ -6741,11 +7178,11 @@ DvtThematicMapJsonParser.prototype.ParseAreaLayers = function (areaLayers) {
  * @param {boolean} isAreaDataLayer Whether a data layer is an area data layer
  * @protected
  */
-DvtThematicMapJsonParser.prototype.ParseDataLayers = function (dataLayers, parentLayer, isAreaDataLayer) {
+DvtThematicMapJsonParser.prototype.ParseDataLayers = function(dataLayers, parentLayer, isAreaDataLayer) {
   if (!dataLayers)
     return;
-  
-  for (var i = 0;i < dataLayers.length;i++) {
+
+  for (var i = 0; i < dataLayers.length; i++) {
     var dataLayerOptions = this._tmap.Defaults.calcDataLayerOptions(dataLayers[i]);
     if (parentLayer) {
       if (parentLayer instanceof DvtMapAreaLayer)
@@ -6755,7 +7192,7 @@ DvtThematicMapJsonParser.prototype.ParseDataLayers = function (dataLayers, paren
       this._tmap.addPointLayer(parentLayer);
     }
     var dataLayer = new DvtMapDataLayer(this._tmap, parentLayer, dataLayerOptions['id'], this._tmap.getEventHandler());
-  
+
     var selectionMode = dataLayerOptions['selection'];
     if (selectionMode == 'single')
       dataLayer.setSelectionMode(DvtSelectionHandler.TYPE_SINGLE);
@@ -6764,31 +7201,31 @@ DvtThematicMapJsonParser.prototype.ParseDataLayers = function (dataLayers, paren
 
     dataLayer.setAnimation(dataLayerOptions['animationOnDataChange'] == 'auto' ? 'alphaFade' : dataLayerOptions['animationOnDataChange']);
     dataLayer.setAnimationDuration(this._tmap.getAnimationDuration());
-    
+
     //Add initially isolated area
     var isolatedRowKey = null;
     if (parentLayer instanceof DvtMapAreaLayer)
       isolatedRowKey = dataLayerOptions['isolatedItem'];
-    
+
     var disclosedItems = dataLayerOptions['disclosedItems'];
     var initDisclosed = [];
     var isolatedAreaId;
     // Parse data objects
     var areas = dataLayerOptions['areas'];
     if (areas) {
-      for (var j = 0;j < areas.length;j++) {
+      for (var j = 0; j < areas.length; j++) {
         var areaId = areas[j]['location'];
-        
+
         if (isolatedRowKey) {
           if (isolatedRowKey != areas[j]['id'])
             continue;
           else
             isolatedAreaId = areaId;
         }
-          
+
         if (disclosedItems && disclosedItems.indexOf(areas[j]['id']) != -1)
           initDisclosed.push(areaId);
-          
+
         var dataObj = this._parseMapArea(parentLayer, dataLayer, areas[j]);
         if (dataObj) {
           // Selection support
@@ -6800,19 +7237,19 @@ DvtThematicMapJsonParser.prototype.ParseDataLayers = function (dataLayers, paren
         }
       }
     }
-    
+
     var markers = dataLayerOptions['markers'];
     if (markers) {
-      for (var j = 0;j < markers.length;j++) {
+      for (var j = 0; j < markers.length; j++) {
         var areaId = markers[j]['location'];
-        
+
         if (isAreaDataLayer && isolatedRowKey) {
           if (isolatedRowKey != markers[j]['id'])
             continue;
           else
             isolatedAreaId = areaId;
         }
-          
+
         var dataObj = this._parseMapMarker(parentLayer, dataLayer, markers[j], isAreaDataLayer);
         if (dataObj) {
           // Selection support
@@ -6824,48 +7261,50 @@ DvtThematicMapJsonParser.prototype.ParseDataLayers = function (dataLayers, paren
         }
       }
     }
-    
+
     // After processing all data objects we should have the area ID of the isolated area
     if (isolatedAreaId) {
       dataLayer.setIsolatedAreaRowKey(isolatedRowKey);
       parentLayer.setIsolatedArea(isolatedAreaId);
     }
-    
+
     // Process initial data layer selections
     var initSelections = dataLayerOptions['selectedItems'];
     if (initSelections && initSelections.length > 0)
       dataLayer.setInitialSelections(initSelections);
-      
+
     if (initDisclosed && initDisclosed.length > 0)
       this._tmap.addDrilledLayer(parentLayer.getLayerName(), [dataLayer.getClientId(), initDisclosed]);
-      
+
     parentLayer.addDataLayer(dataLayer);
   }
-}
+};
 
 //DvtThematicMapJsonParser.prototype.ParseResources = function (xmlNode) {
 //  this._tmap.setButtonImages(xmlNode);
 //}
+
 
 /**
  * Parses a JSON object containing style defaults
  * @param {Object} styles The style default JSON object
  * @protected
  */
-DvtThematicMapJsonParser.prototype.ParseStyles = function (styles) {
-  this._areaLayerStyle = new DvtCSSStyle(styles['areaStyle']+styles['labelStyle']);
-  this._tmap.setComponentStyle(new DvtCSSStyle('fill-type:solid;background-color:'+styles['backgroundColor']));
+DvtThematicMapJsonParser.prototype.ParseStyles = function(styles) {
+  this._areaLayerStyle = new DvtCSSStyle(styles['areaStyle'] + styles['labelStyle']);
+  this._tmap.setComponentStyle(new DvtCSSStyle('fill-type:solid;background-color:' + styles['backgroundColor']));
   this._tmap.setStyleDefaults(styles);
-}
+};
+
 
 /**
  * Temporary method for parsing custom basemap xml for AMX and ADF until JET JSON API is approved.
  * @param {DvtXmlNode} xmlNode The xml node containing custom basemap metadata
  */
-DvtThematicMapJsonParser.prototype.ParseCustomBasemap = function (xmlNode) {
+DvtThematicMapJsonParser.prototype.ParseCustomBasemap = function(xmlNode) {
   var childNodes = xmlNode.getChildNodes();
   var node, nodeName;
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     if (nodeName == DvtThematicMapParser._ELEM_LAYER)
@@ -6873,51 +7312,53 @@ DvtThematicMapJsonParser.prototype.ParseCustomBasemap = function (xmlNode) {
     else if (nodeName == DvtThematicMapParser._ELEM_POINTS)
       this._parseCustomPoints(node);
   }
-}
+};
+
 
 /**
  * Temporary method for parsing custom basemap xml for AMX and ADF until JET JSON API is approved.
  * @param {DvtXmlNode} xmlNode The xml node containing custom layer metadata
  * @private
  */
-DvtThematicMapJsonParser.prototype._parseCustomLayer = function (xmlNode) {
+DvtThematicMapJsonParser.prototype._parseCustomLayer = function(xmlNode) {
   var childNodes = xmlNode.getChildNodes();
   var layerName = xmlNode.getAttr(DvtThematicMapParser.ATTR_ID);
   var node, nodeName;
   var images = [];
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     // currently only images are supported
     if (nodeName == DvtThematicMapParser.ELEM_IMAGE) {
-     var image = {};
-     image['source'] = node.getAttr('source');
-     image['width'] = node.getAttr('width');
-     image['height'] = node.getAttr('height');
-     var bidi = node.getAttr('bidi');
-     var dir = node.getAttr('dir');
-     // The bidi attribute is deprecated and dir="ltr/rtl" should be used instead.
-     if (bidi == 'true' || dir == 'rtl')
-       image['dir'] = 'rtl';
-     else
-       image['dir'] = 'ltr';
-     images.push(image);
+      var image = {};
+      image['source'] = node.getAttr('source');
+      image['width'] = node.getAttr('width');
+      image['height'] = node.getAttr('height');
+      var bidi = node.getAttr('bidi');
+      var dir = node.getAttr('dir');
+      // The bidi attribute is deprecated and dir="ltr/rtl" should be used instead.
+      if (bidi == 'true' || dir == 'rtl')
+        image['dir'] = 'rtl';
+      else
+        image['dir'] = 'ltr';
+      images.push(image);
     }
   }
   this._customAreaLayerImages[layerName] = images;
-}
+};
+
 
 /**
  * Temporary method for parsing custom basemap xml for AMX and ADF until JET JSON API is approved.
  * @param {DvtXmlNode} xmlNode The xml node containing custom points metadata
  * @private
  */
-DvtThematicMapJsonParser.prototype._parseCustomPoints = function (xmlNode) {
+DvtThematicMapJsonParser.prototype._parseCustomPoints = function(xmlNode) {
   var childNodes = xmlNode.getChildNodes();
   var node, nodeName;
   var points = {};
   var labels = {};
-  for (var i = 0;i < childNodes.length;i++) {
+  for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
     if (nodeName == DvtThematicMapParser._ELEM_POINT) {
@@ -6928,7 +7369,8 @@ DvtThematicMapJsonParser.prototype._parseCustomPoints = function (xmlNode) {
   // register points with base map manager
   // index will change once we allow more layers besides point
   DvtBaseMapManager.registerBaseMapLayer(this._tmap.getMapName(), 'cities', labels, points, null, null, 1);
-}
+};
+
 
 /**
  * Creates a map of area displayables for an area layer
@@ -6944,7 +7386,8 @@ DvtThematicMapJsonParser.prototype._createPathShapes = function(areaNames) {
     this._styleDisplayable(this._areaLayerStyle, shapes[area]);
   }
   return shapes;
-}
+};
+
 
 /**
  * Creates a DvtMapDataArea
@@ -6953,20 +7396,20 @@ DvtThematicMapJsonParser.prototype._createPathShapes = function(areaNames) {
  * @param {Object} data The JSON object containing data object attributes
  * @return {DvtMapDataArea} The data object
  */
-DvtThematicMapJsonParser.prototype._parseMapArea = function (layer, dataLayer, data) {
+DvtThematicMapJsonParser.prototype._parseMapArea = function(layer, dataLayer, data) {
   var areaId = data['location'];
   var areaShape = layer.getAreaShape(areaId);
   // only render data area if we have the path info for it and if it has a data color
   if (areaShape && data['color']) {
     // create an empty DvtPath for now and will set the cmd at render time
-    layer.setAreaRendered(areaId, false);  
+    layer.setAreaRendered(areaId, false);
     var context = this._tmap.getCtx();
     var path = new DvtDrillablePath(context, this._tmap.supportsVectorEffects());
-    
+
     data = DvtJSONUtils.merge(data, this._tmap.getStyleDefaults()['dataAreaDefaults']);
     if (!data['labelStyle'])
       data['labelStyle'] = this._tmap.getStyleDefaults()['labelStyle'];
-  
+
     var hs = new DvtSolidStroke(data['hoverColor'], 1, DvtDrillablePath.HOVER_STROKE_WIDTH);
     var sis = new DvtSolidStroke(data['selectedInnerColor'], 1, DvtDrillablePath.SELECTED_INNER_STROKE_WIDTH);
     var sos = new DvtSolidStroke(data['selectedOuterColor'], 1, DvtDrillablePath.SELECTED_OUTER_STROKE_WIDTH);
@@ -6974,7 +7417,7 @@ DvtThematicMapJsonParser.prototype._parseMapArea = function (layer, dataLayer, d
     var dis = new DvtSolidStroke(data['drilledInnerColor'], 1, DvtDrillablePath.DISCLOSED_INNER_STROKE_WIDTH);
     var dos = new DvtSolidStroke(data['drilledOuterColor'], 1, DvtDrillablePath.DISCLOSED_OUTER_STROKE_WIDTH);
     path.setDisclosedStroke(dis, dos);
-  
+
     // clientId field currently only used for MAF and ADF. JET uses data object and data layer ids for events
     var dataObj = new DvtMapDataArea(context, dataLayer, data['id'], data['clientId'], areaId);
     dataObj.setDisplayable(path);
@@ -6982,7 +7425,8 @@ DvtThematicMapJsonParser.prototype._parseMapArea = function (layer, dataLayer, d
     return dataObj;
   }
   return null;
-}
+};
+
 
 /**
  * Creates a DvtMapDataMarker
@@ -6991,19 +7435,19 @@ DvtThematicMapJsonParser.prototype._parseMapArea = function (layer, dataLayer, d
  * @param {Object} data The JSON object containing data object attributes
  * @return {DvtMapDataMarker} The data object
  */
-DvtThematicMapJsonParser.prototype._parseMapMarker = function (layer, dataLayer, data, isParentAreaDataLayer) {
+DvtThematicMapJsonParser.prototype._parseMapMarker = function(layer, dataLayer, data, isParentAreaDataLayer) {
   var center = this._getCenter(layer.getLayerName(), data, isParentAreaDataLayer);
   if (!center) // no matching city
     return null;
-  
+
   var context = this._tmap.getCtx();
   var areaId = data['location'];
   // clientId field currently only used for MAF and ADF. JET uses data object and data layer ids for events
   dataObj = new DvtMapDataMarker(context, dataLayer, data['id'], data['clientId'], areaId);
   dataObj.setCenter(center);
-  
+
   data = DvtJSONUtils.merge(data, this._tmap.getStyleDefaults()['dataMarkerDefaults']);
-  
+
   var shapeType;
   var imgSrc = data['source'];
   // if marker image source is set, ignore the shape type value which is set for custom svg and built in markers
@@ -7013,50 +7457,51 @@ DvtThematicMapJsonParser.prototype._parseMapMarker = function (layer, dataLayer,
     var shapeType = data['shape'];
     if (!shapeType)
       shapeType = DvtMapDataMarker.DEFAULT_MARKER_SHAPE;
-     // TODO handle custom markers
+    // TODO handle custom markers
   }
 
   // Parse data object scales. Save original scale to maintain size despite zoom.
   var sx = data['scaleX'];
   if (isNaN(sx))
     sx = DvtMapDataMarker.DEFAULT_MARKER_SCALE;
-  
+
   var sy = data['scaleY'];
   if (isNaN(sy))
     sy = DvtMapDataMarker.DEFAULT_MARKER_SCALE;
- 
+
   var w = data['width'];
   var h = data['height'];
-  
+
   if (!w || isNaN(w))
     w = DvtMapDataMarker.DEFAULT_MARKER_SIZE;
-    
+
   if (!h || isNaN(h))
     h = DvtMapDataMarker.DEFAULT_MARKER_SIZE;
 
   var x, y;
-  x = center.x - ((w*sx)/2);
-  y = center.y - ((h*sy)/2);
-  
+  x = center.x - ((w * sx) / 2);
+  y = center.y - ((h * sy) / 2);
+
   // id is used for custom marker definition lookup
   marker = new DvtMarker(context, shapeType, 'alta', x, y, w, h, null, sx, sy);
   dataObj.setDisplayable(marker);
-  dataObj.setSize(w*sx*h*sy);
-  
+  dataObj.setSize(w * sx * h * sy);
+
   dataObj.setLabelPosition(data['labelPosition']);
-  
+
   var rotation = data['rotation'];
   if (rotation) {
-    var radianRot = rotation*Math.PI/180;
+    var radianRot = rotation * Math.PI / 180;
     marker.setRotation(radianRot);
     var center = dataObj.getCenter();
     // shape rotates around origin so need to find out current location after rotation and move back to the correct center
-    marker.setTranslate(center.x-(center.x*Math.cos(radianRot)-center.y*Math.sin(radianRot)), center.y-(center.x*Math.sin(radianRot)+center.y*Math.cos(radianRot)));
+    marker.setTranslate(center.x - (center.x * Math.cos(radianRot) - center.y * Math.sin(radianRot)), center.y - (center.x * Math.sin(radianRot) + center.y * Math.cos(radianRot)));
   }
-  
+
   this._parseCommonData(layer, dataLayer, data, marker, dataObj, isParentAreaDataLayer);
   return dataObj;
-}
+};
+
 
 /**
  * Parses attributes common amonst all data objects
@@ -7066,27 +7511,27 @@ DvtThematicMapJsonParser.prototype._parseMapMarker = function (layer, dataLayer,
  * @param {DvtMapDataObject} dataObj
  * @private
  */
-DvtThematicMapJsonParser.prototype._parseCommonData = function (layer, dataLayer, data, displayable, dataObj, isParentAreaDataLayer) {
+DvtThematicMapJsonParser.prototype._parseCommonData = function(layer, dataLayer, data, displayable, dataObj, isParentAreaDataLayer) {
   var areaId = data['location'];
-  
+
   // disable labels in area layer if data layer exists and has label
   if (isParentAreaDataLayer && layer.getLabelDisplay() == 'auto')
     layer.setLabelRendered(areaId, false);
-  
+
   if (data['action']) {
     dataObj.setHasAction(true);
     dataObj.setAction(data['action']);
   }
-  
+
   var destination = data['destination'];
   if (destination) {
     var linkObj = [];
-    linkObj["destination"] = destination;
-    linkObj["targetFrame"] = "_blank";
-    linkObj["focusable"] = true;
+    linkObj['destination'] = destination;
+    linkObj['targetFrame'] = '_blank';
+    linkObj['focusable'] = true;
     displayable.setHyperlink(linkObj);
   }
-  
+
   this._setDatatip(layer, dataLayer, data, dataObj, isParentAreaDataLayer);
   var cssStyle = new DvtCSSStyle();
   cssStyle.setStyle('background-color', data['color']);
@@ -7094,11 +7539,12 @@ DvtThematicMapJsonParser.prototype._parseCommonData = function (layer, dataLayer
   cssStyle.setStyle('border-color', data['borderColor']);
   cssStyle.setStyle('border-style', data['borderStyle']);
   if (data['borderWidth'])
-    cssStyle.setStyle('border-width', data['borderWidth']);  
+    cssStyle.setStyle('border-width', data['borderWidth']);
   cssStyle.setStyle('opacity', data['opacity']);
   this._styleDisplayable(cssStyle, displayable, dataObj);
   this._setLabel(layer, dataLayer, data, dataObj, isParentAreaDataLayer);
-}
+};
+
 
 /**
  * Sets a label for a map data object
@@ -7112,34 +7558,35 @@ DvtThematicMapJsonParser.prototype._parseCommonData = function (layer, dataLayer
 DvtThematicMapJsonParser.prototype._setLabel = function(layer, dataLayer, data, dataObj, isParentAreaDataLayer) {
   var areaId = data['location'];
   var labelText = data['label'];
-  // if data label is provided, assume label display is on and if is from an area data layer, use area layer's label display 
+  // if data label is provided, assume label display is on and if is from an area data layer, use area layer's label display
   var labelDisplay = labelText ? 'on' : 'off';
-  if (isParentAreaDataLayer) 
+  if (isParentAreaDataLayer)
     labelDisplay = layer.getLabelDisplay();
 
   // If object is a DvtMapDataArea see if label is provided, if not, use the DvtMapAreaLayer label type
   if (!labelText && (dataObj instanceof DvtMapDataArea) && labelDisplay != 'off')
     labelText = (layer.getLabelType() == 'long' ? layer.getLongAreaName(areaId) : layer.getShortAreaName(areaId));
-    
+
   if (labelText) {
     var context = this._tmap.getCtx();
     var label;
     if (dataObj instanceof DvtMapDataMarker)
       label = new DvtOutputText(context, labelText, 0, 0);
     else
-      label = new DvtMapLabel(context, labelText, layer.getLabelInfoForArea ? layer.getLabelInfoForArea(areaId) : null, 
+      label = new DvtMapLabel(context, labelText, layer.getLabelInfoForArea ? layer.getLabelInfoForArea(areaId) : null,
                               labelDisplay, dataLayer.getDataLabelContainer(), this._tmap.supportsVectorEffects());
 
     var labelStyle = new DvtCSSStyle(data['labelStyle']);
     if (label instanceof DvtMapLabel) {// color label to contrast with data color
-        if (!labelStyle.getStyle(DvtCSSStyle.COLOR))
-          labelStyle.setStyle(DvtCSSStyle.COLOR, DvtColorUtils.getContrastingTextColor(dataObj.getDatatipColor()));
+      if (!labelStyle.getStyle(DvtCSSStyle.COLOR))
+        labelStyle.setStyle(DvtCSSStyle.COLOR, DvtColorUtils.getContrastingTextColor(dataObj.getDatatipColor()));
     }
     label.setCSSStyle(labelStyle);
   }
 
   dataObj.setLabel(label);
-}
+};
+
 
 /**
  * Sets a datatip for a map data object
@@ -7153,7 +7600,7 @@ DvtThematicMapJsonParser.prototype._setLabel = function(layer, dataLayer, data, 
 DvtThematicMapJsonParser.prototype._setDatatip = function(layer, dataLayer, data, dataObj, isParentAreaDataLayer) {
   var displayTooltips = this._tmap.getDisplayTooltips();
   if (displayTooltips != 'none') {
-    var datatip = data["shortDesc"];
+    var datatip = data['shortDesc'];
     if (displayTooltips == 'auto') {
       var preDatatip;
       var areaId = data['location'];
@@ -7162,15 +7609,16 @@ DvtThematicMapJsonParser.prototype._setDatatip = function(layer, dataLayer, data
         if (!isParentAreaDataLayer || this._isCustomBasemap)  // for AMX V1, custom basemaps only support points
           preDatatip = DvtBaseMapManager.getCityLabel(this._tmap.getMapName(), areaId);
         else
-          preDatatip = DvtBaseMapManager.getLongAreaLabel(this._tmap.getMapName(),layer.getLayerName(),areaId)
+          preDatatip = DvtBaseMapManager.getLongAreaLabel(this._tmap.getMapName(), layer.getLayerName(), areaId);
       }
       if (preDatatip)
-        datatip = (datatip ? preDatatip + ": " + datatip : preDatatip);
+        datatip = (datatip ? preDatatip + ': ' + datatip : preDatatip);
     }
     if (datatip)
-      dataObj.setDatatip(datatip); 
+      dataObj.setDatatip(datatip);
   }
-}
+};
+
 
 /**
  * Styles a map data object's displayable
@@ -7184,49 +7632,51 @@ DvtThematicMapJsonParser.prototype._styleDisplayable = function(cssStyle, displa
   if (!cssStyle)
     cssStyle = {};
   var pattern = cssStyle.getStyle('pattern');
-  var backgroundColor = cssStyle.getStyle('background-color');
+  var backgroundColor = cssStyle.getStyle(DvtCSSStyle.BACKGROUND_COLOR);
   var gradient = false; // only adf supports graident
-  
-  
-  if (dataObj)  
+
+
+  if (dataObj)
     dataObj.setDatatipColor(backgroundColor);
-    
+
   // handle custom svg where color is set by user
   if (displayable instanceof DvtMarker && DvtMarker.isBuiltInShape(displayable.getType())) {
-    if (cssStyle.getStyle('border-style') != 'none') {
-      var stroke = new DvtSolidStroke(cssStyle.getStyle('border-color'), DvtMapDataMarker.DEFAULT_MARKER_ALPHA, cssStyle.getStyle('border-width'));
+    if (cssStyle.getStyle(DvtCSSStyle.BORDER_STYLE) != 'none') {
+      var stroke = new DvtSolidStroke(cssStyle.getStyle(DvtCSSStyle.BORDER_COLOR), DvtMapDataMarker.DEFAULT_MARKER_ALPHA, cssStyle.getStyle(DvtCSSStyle.BORDER_WIDTH));
       if (!this._tmap.isMarkerZoomBehaviorFixed())
         stroke.setFixedWidth(true);
+      stroke.setType(DvtStroke.convertTypeString(cssStyle.getStyle(DvtCSSStyle.BORDER_STYLE)));
       displayable.setStroke(stroke);
     }
-                  
-    var opacity = cssStyle.getStyle('opacity');                
+
+    var opacity = cssStyle.getStyle('opacity');
     if (gradient == 'true' && backgroundColor)
       displayable.setFill(new DvtMarkerGradient.createMarkerGradient(backgroundColor, displayable, opacity));
     else if (pattern)
       displayable.setFill(new DvtPatternFill(pattern, backgroundColor, '#FFFFFF'));
     else if (backgroundColor)
-      displayable.setSolidFill(backgroundColor, opacity);  
+      displayable.setSolidFill(backgroundColor, opacity);
     else
-      displayable.setSolidFill(cssStyle.getStyle('background-color'), opacity);
-  } 
-  else if (displayable instanceof DvtPath) {  
-    var borderColor = cssStyle.getStyle('border-color');
+      displayable.setSolidFill(cssStyle.getStyle(DvtCSSStyle.BACKGROUND_COLOR), opacity);
+  }
+  else if (displayable instanceof DvtPath) {
+    var borderColor = cssStyle.getStyle(DvtCSSStyle.BORDER_COLOR);
     if (borderColor && borderColor != 'transparent') {
       var stroke = new DvtSolidStroke(borderColor);
       if (this._tmap.supportsVectorEffects())
         stroke.setFixedWidth(true);
       displayable.setStroke(stroke);
     }
-    
+
     if (pattern)
       displayable.savePatternFill(new DvtPatternFill(pattern, backgroundColor, '#FFFFFF'));
     else if (backgroundColor != 'transparent')
       displayable.setSolidFill(backgroundColor, opacity);
     else //TODO set on area layer instead
       displayable.setFill(null);
-  } 
-}
+  }
+};
+
 
 /**
  * Retrieves the x/y coordinates for this data object if they exist
@@ -7250,56 +7700,57 @@ DvtThematicMapJsonParser.prototype._getCenter = function(layerName, data, isArea
   } else {
     return DvtThematicMapProjections.project(data['x'], data['y'], this._tmap.getMapName());
   }
-}
+};
 var DvtThematicMapProjections = {
 };
 
-DvtObj.createSubclass(DvtThematicMapProjections, DvtObj, "DvtThematicMapProjections");
+DvtObj.createSubclass(DvtThematicMapProjections, DvtObj, 'DvtThematicMapProjections');
 
 DvtThematicMapProjections._VIEWPORT_BOUNDS = new DvtRectangle(0, 0, 800, 500);
 DvtThematicMapProjections._RADIUS = 6378206.4;
 
 DvtThematicMapProjections._NEW_ZEALAND_RECT = new DvtRectangle(500, 200, 200, 200);
-DvtThematicMapProjections._NEW_ZEALAND_BOUNDS = new DvtRectangle(163,  - 49, 17, 17);
-DvtThematicMapProjections._AFRICA_BOUNDS = new DvtRectangle( - 17.379205428479874,  - 37.201510854305546, 68.66391442808313, 77.50071544582713);
-DvtThematicMapProjections._ASIA_BOUNDS = new DvtRectangle( - 0.8436866097568272,  - 0.7626456732012923, 1.8336308036296942, 1.5748427214611724);
-DvtThematicMapProjections._AUSTRALIA_BOUNDS = new DvtRectangle(113.29667079927977,  - 52.89550592498755, 65.25257389065216, 42.123114617504626);
-DvtThematicMapProjections._EUROPE_BOUNDS = new DvtRectangle( - 0.47944476148667076,  - 0.0014669405958800579, 0.7364925893845453, 0.6293972741802124);
-DvtThematicMapProjections._N_AMERICA_BOUNDS = new DvtRectangle( - 0.6154469465354344,  - 0.24589767758847714, 1.2448236795108683, 1.2631535127174947);
-DvtThematicMapProjections._S_AMERICA_BOUNDS = new DvtRectangle( - 80.60817722658722,  - 60.796273249672765, 46.608687602908056, 66.96595767361796);
-DvtThematicMapProjections._APAC_BOUNDS = new DvtRectangle(68.20516856593524,  - 52.89892708045518, 111.65739821771903, 116.55460214469134);
-DvtThematicMapProjections._EMEA_BOUNDS = new DvtRectangle( - 24.543831069368586,  - 37.202500659225905, 204.54283106936856, 164.9634493690208);
-DvtThematicMapProjections._L_AMERICA_BOUNDS = new DvtRectangle( - 117.12451221229134,  - 54.95921623126266, 82.33223251442891, 87.67786623127876);
-DvtThematicMapProjections._USA_CANADA_BOUNDS = new DvtRectangle( - 0.6154656300926513, 0.0507209798775865, 1.0153104799231851, 0.966537441082997);
-DvtThematicMapProjections._WORLD_BOUNDS = new DvtRectangle( - 171.9,  - 62.6, 349.8, 150.8);
+DvtThematicMapProjections._NEW_ZEALAND_BOUNDS = new DvtRectangle(163, - 49, 17, 17);
+DvtThematicMapProjections._AFRICA_BOUNDS = new DvtRectangle(- 17.379205428479874, - 37.201510854305546, 68.66391442808313, 77.50071544582713);
+DvtThematicMapProjections._ASIA_BOUNDS = new DvtRectangle(- 0.8436866097568272, - 0.7626456732012923, 1.8336308036296942, 1.5748427214611724);
+DvtThematicMapProjections._AUSTRALIA_BOUNDS = new DvtRectangle(113.29667079927977, - 52.89550592498755, 65.25257389065216, 42.123114617504626);
+DvtThematicMapProjections._EUROPE_BOUNDS = new DvtRectangle(- 0.47944476148667076, - 0.0014669405958800579, 0.7364925893845453, 0.6293972741802124);
+DvtThematicMapProjections._N_AMERICA_BOUNDS = new DvtRectangle(- 0.6154469465354344, - 0.24589767758847714, 1.2448236795108683, 1.2631535127174947);
+DvtThematicMapProjections._S_AMERICA_BOUNDS = new DvtRectangle(- 80.60817722658722, - 60.796273249672765, 46.608687602908056, 66.96595767361796);
+DvtThematicMapProjections._APAC_BOUNDS = new DvtRectangle(68.20516856593524, - 52.89892708045518, 111.65739821771903, 116.55460214469134);
+DvtThematicMapProjections._EMEA_BOUNDS = new DvtRectangle(- 24.543831069368586, - 37.202500659225905, 204.54283106936856, 164.9634493690208);
+DvtThematicMapProjections._L_AMERICA_BOUNDS = new DvtRectangle(- 117.12451221229134, - 54.95921623126266, 82.33223251442891, 87.67786623127876);
+DvtThematicMapProjections._USA_CANADA_BOUNDS = new DvtRectangle(- 0.6154656300926513, 0.0507209798775865, 1.0153104799231851, 0.966537441082997);
+DvtThematicMapProjections._WORLD_BOUNDS = new DvtRectangle(- 171.9, - 62.6, 349.8, 150.8);
 DvtThematicMapProjections._ALASKA1_RECT = new DvtRectangle(172, 51, 8, 3);
-DvtThematicMapProjections._ALASKA2_RECT = new DvtRectangle( - 180, 51, 51, 21);
-DvtThematicMapProjections._HAWAII_RECT = new DvtRectangle( - 178.5, 18.9, 35, 11);
-DvtThematicMapProjections._USA_RECT = new DvtRectangle( - 124.8, 24.4, 58, 25.5);
-DvtThematicMapProjections._ALASKA_BOUNDS = new DvtRectangle( - 187.5517578125, 59.82610321044922, 57.562225341796875, 43.83738708496094);
-DvtThematicMapProjections._HAWAII_BOUNDS = new DvtRectangle( - 160.23606872558594, 18.91549301147461, 5.4374847412109375, 3.3189010620117188);
-DvtThematicMapProjections._USA_BOUNDS = new DvtRectangle( - 2386803.25,  - 1183550.5, 4514111, 2908402);
+DvtThematicMapProjections._ALASKA2_RECT = new DvtRectangle(- 180, 51, 51, 21);
+DvtThematicMapProjections._HAWAII_RECT = new DvtRectangle(- 178.5, 18.9, 35, 11);
+DvtThematicMapProjections._USA_RECT = new DvtRectangle(- 124.8, 24.4, 58, 25.5);
+DvtThematicMapProjections._ALASKA_BOUNDS = new DvtRectangle(- 187.5517578125, 59.82610321044922, 57.562225341796875, 43.83738708496094);
+DvtThematicMapProjections._HAWAII_BOUNDS = new DvtRectangle(- 160.23606872558594, 18.91549301147461, 5.4374847412109375, 3.3189010620117188);
+DvtThematicMapProjections._USA_BOUNDS = new DvtRectangle(- 2386803.25, - 1183550.5, 4514111, 2908402);
 DvtThematicMapProjections._HAWAII_WINDOW = new DvtRectangle(165.0, 400.0, 100.0, 100.0);
 DvtThematicMapProjections._ALASKA_WINDOW = new DvtRectangle(-75.0, 350.0, 240.0, 150.0);
 
 DvtThematicMapProjections._ROBINSON_COORDINATES = [[1, 0], [0.9986, 0.0314], [0.9954, 0.0629], [0.9900, 0.0943], [0.9822, 0.1258], [0.9730, 0.1572], [0.9600, 0.1887], [0.9427, 0.2201], [0.9216, 0.2515], [0.8962, 0.2826], [0.8679, 0.3132], [0.8350, 0.3433], [0.7986, 0.3726], [0.7597, 0.4008], [0.6732, 0.4532], [0.6213, 0.4765], [0.5722, 0.4951], [0.5322, 0.5072]];
 
+
 /**
- * Gets the projection for built-in basemaps to be used for JET/AMX 
+ * Gets the projection for built-in basemaps to be used for JET/AMX
  * @param {number} x Longitude
  * @param {number} y Latitude
  * @param {String} basemap The basemap name
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  */
-DvtThematicMapProjections.project = function (x, y, basemap) {
+DvtThematicMapProjections.project = function(x, y, basemap) {
   var point;
   switch (basemap) {
     case 'africa':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._AFRICA_BOUNDS, 
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._AFRICA_BOUNDS,
                                                              DvtThematicMapProjections._getMercatorProjection(x, y));
       break;
     case 'asia':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._ASIA_BOUNDS, 
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._ASIA_BOUNDS,
                                                              DvtThematicMapProjections._getAlbersEqualAreaConicProjection(40, 95, 20, 60, x, y),
                                                              DvtThematicMapProjections.toRadians(5));
       break;
@@ -7307,34 +7758,34 @@ DvtThematicMapProjections.project = function (x, y, basemap) {
       point = DvtThematicMapProjections._getAustraliaProjection(x, y);
       break;
     case 'europe':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._EUROPE_BOUNDS, 
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._EUROPE_BOUNDS,
                                                              DvtThematicMapProjections._getAlbersEqualAreaConicProjection(35, 25, 40, 65, x, y),
                                                              DvtThematicMapProjections.toRadians(10));
       break;
     case 'northAmerica':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._N_AMERICA_BOUNDS, 
-                                                             DvtThematicMapProjections._getAlbersEqualAreaConicProjection(23,  - 96, 20, 60, x, y));
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._N_AMERICA_BOUNDS,
+                                                             DvtThematicMapProjections._getAlbersEqualAreaConicProjection(23, - 96, 20, 60, x, y));
       break;
     case 'southAmerica':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._S_AMERICA_BOUNDS, 
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._S_AMERICA_BOUNDS,
                                                              new DvtPoint(x, y),
                                                              DvtThematicMapProjections.toRadians(5));
       break;
     case 'apac':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._APAC_BOUNDS, 
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._APAC_BOUNDS,
                                                              DvtThematicMapProjections._getMercatorProjection(x, y));
       break;
     case 'emea':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._EMEA_BOUNDS, 
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._EMEA_BOUNDS,
                                                              DvtThematicMapProjections._getMercatorProjection(x, y));
       break;
     case 'latinAmerica':
-        point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._L_AMERICA_BOUNDS, 
-                                                               new DvtPoint(x, y));
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._L_AMERICA_BOUNDS,
+          new DvtPoint(x, y));
       break;
     case 'usaAndCanada':
-      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._USA_CANADA_BOUNDS, 
-                                                             DvtThematicMapProjections._getAlbersEqualAreaConicProjection(23,  - 96, 20, 60, x, y));
+      point = DvtThematicMapProjections._getAffineProjection(DvtThematicMapProjections._USA_CANADA_BOUNDS,
+                                                             DvtThematicMapProjections._getAlbersEqualAreaConicProjection(23, - 96, 20, 60, x, y));
       break;
     case 'worldRegions':
       point = DvtThematicMapProjections._getWorldProjection(x, y);
@@ -7350,19 +7801,20 @@ DvtThematicMapProjections.project = function (x, y, basemap) {
   }
   if (point)
     return new DvtPoint(point.x * 10, point.y * 10);// multiply by 10 because basemaps are 10x bigger
-  else 
+  else
     return new DvtPoint(x, y);
-}
+};
+
 
 /**
  * Returns the projected long/lat point in the usa basemap coordinate system
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._getUSAProjection = function (x, y) {
-  var viewPortTransform
+DvtThematicMapProjections._getUSAProjection = function(x, y) {
+  var viewPortTransform;
   if (DvtThematicMapProjections._ALASKA1_RECT.containsPoint(x, y) || DvtThematicMapProjections._ALASKA2_RECT.containsPoint(x, y)) {
     viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._ALASKA_BOUNDS, DvtThematicMapProjections._ALASKA_WINDOW);
     return DvtThematicMapProjections._applyAffineTransform(viewPortTransform, DvtThematicMapProjections._getMercatorProjection(x, y));
@@ -7373,39 +7825,42 @@ DvtThematicMapProjections._getUSAProjection = function (x, y) {
   }
   else if (DvtThematicMapProjections._USA_RECT.containsPoint(x, y)) {
     viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._USA_BOUNDS, DvtThematicMapProjections._VIEWPORT_BOUNDS);
-    return DvtThematicMapProjections._applyAffineTransform(viewPortTransform, DvtThematicMapProjections._getOrthographicProjection(new DvtPoint( - 95, 36), x, y));
+    return DvtThematicMapProjections._applyAffineTransform(viewPortTransform, DvtThematicMapProjections._getOrthographicProjection(new DvtPoint(- 95, 36), x, y));
   }
   return new DvtPoint(x, y);
-}
+};
+
 
 /**
  * Returns the projected long/lat point in the world basemap coordinate system
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._getWorldProjection = function (x, y) {
+DvtThematicMapProjections._getWorldProjection = function(x, y) {
   var viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._WORLD_BOUNDS, DvtThematicMapProjections._VIEWPORT_BOUNDS);
   return DvtThematicMapProjections._applyAffineTransform(viewPortTransform, DvtThematicMapProjections._getRobinsonProjection(x, y));
-}
+};
+
 
 /**
  * Returns the projected long/lat point in the australia basemap coordinate system
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._getAustraliaProjection = function (x, y) {
+DvtThematicMapProjections._getAustraliaProjection = function(x, y) {
   var viewPortTransform;
   if (DvtThematicMapProjections._NEW_ZEALAND_BOUNDS.containsPoint(x, y))
     viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._NEW_ZEALAND_BOUNDS, DvtThematicMapProjections._NEW_ZEALAND_RECT);
-  else 
+  else
     viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._AUSTRALIA_BOUNDS, DvtThematicMapProjections._VIEWPORT_BOUNDS);
 
   return DvtThematicMapProjections._applyAffineTransform(viewPortTransform, DvtThematicMapProjections._getMercatorProjection(x, y));
-}
+};
+
 
 /**
  * Applies an affine transform to a point
@@ -7414,7 +7869,7 @@ DvtThematicMapProjections._getAustraliaProjection = function (x, y) {
  * @param {number} rotRadians The rotation to apply to the transform matrix in radians
  * @private
  */
-DvtThematicMapProjections._getAffineProjection = function (mapBounds, point, rotRadians) {
+DvtThematicMapProjections._getAffineProjection = function(mapBounds, point, rotRadians) {
   var viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(mapBounds, DvtThematicMapProjections._VIEWPORT_BOUNDS);
   if (rotRadians) {
     var rotMatrix = new DvtMatrix();
@@ -7422,7 +7877,8 @@ DvtThematicMapProjections._getAffineProjection = function (mapBounds, point, rot
     viewPortTransform = DvtThematicMapProjections._concatAffineTransforms(viewPortTransform, rotMatrix);
   }
   return viewPortTransform.transformPoint(point);
-}
+};
+
 
 /**
  * Returns the projected long/lat point using the albers equal area conic projection
@@ -7432,10 +7888,10 @@ DvtThematicMapProjections._getAffineProjection = function (mapBounds, point, rot
  * @param {number} sP2 standard parallel 2, in degrees
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._getAlbersEqualAreaConicProjection = function (latOfOrigin, lonOfOrigin, sP1, sP2, x, y) {
+DvtThematicMapProjections._getAlbersEqualAreaConicProjection = function(latOfOrigin, lonOfOrigin, sP1, sP2, x, y) {
   var lambda0 = DvtThematicMapProjections.toRadians(lonOfOrigin);
   var phi0 = DvtThematicMapProjections.toRadians(latOfOrigin);
   sP1 = DvtThematicMapProjections.toRadians(sP1);
@@ -7459,28 +7915,30 @@ DvtThematicMapProjections._getAlbersEqualAreaConicProjection = function (latOfOr
   var pY = rho0 - (rho * Math.cos(theta));
 
   return new DvtPoint(pX, pY);
-}
+};
+
 
 /**
  * Returns the projected long/lat point using the mercator projection assuming center is at 0,0
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._getMercatorProjection = function (x, y) {
+DvtThematicMapProjections._getMercatorProjection = function(x, y) {
   var pY = Math.log(Math.tan(0.25 * Math.PI + 0.5 * DvtThematicMapProjections.toRadians(y)));
   return new DvtPoint(x, DvtThematicMapProjections.toDegrees(pY));
-}
+};
+
 
 /**
  * Returns the projected long/lat point using the orthographic projection
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._getOrthographicProjection = function (center, x, y) {
+DvtThematicMapProjections._getOrthographicProjection = function(center, x, y) {
   var radX = DvtThematicMapProjections.toRadians(x);
   var radY = DvtThematicMapProjections.toRadians(y);
   var centerX = DvtThematicMapProjections.toRadians(center.x);
@@ -7488,16 +7946,17 @@ DvtThematicMapProjections._getOrthographicProjection = function (center, x, y) {
   var px = Math.cos(radY) * Math.sin(radX - centerX);
   var py = Math.cos(centerY) * Math.sin(radY) - Math.sin(centerY) * Math.cos(radY) * Math.cos(radX - centerX);
   return new DvtPoint(px * DvtThematicMapProjections._RADIUS, py * DvtThematicMapProjections._RADIUS);
-}
+};
+
 
 /**
  * Returns the projected long/lat point using the robinson projection assuming center is at 0,0
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._getRobinsonProjection = function (x, y) {
+DvtThematicMapProjections._getRobinsonProjection = function(x, y) {
   var ycriteria = Math.floor(Math.abs(y) / 5);
   if (ycriteria >= DvtThematicMapProjections._ROBINSON_COORDINATES.length - 1)
     ycriteria = DvtThematicMapProjections._ROBINSON_COORDINATES.length - 2;
@@ -7511,10 +7970,11 @@ DvtThematicMapProjections._getRobinsonProjection = function (x, y) {
   var newY = (DvtThematicMapProjections._ROBINSON_COORDINATES[ycriteria][1] + yInterval * yLength);
 
   if (y < 0)
-    newY =  - 1 * newY;
+    newY = - 1 * newY;
 
   return new DvtPoint(newX, newY * 180);
-}
+};
+
 
 /**
  * Applies an affine transformation to a DvtPoint
@@ -7523,18 +7983,19 @@ DvtThematicMapProjections._getRobinsonProjection = function (x, y) {
  * @return {DvtPoint} The transformed point
  * @private
  */
-DvtThematicMapProjections._applyAffineTransform = function (matrix, point) {
+DvtThematicMapProjections._applyAffineTransform = function(matrix, point) {
   return new DvtPoint(point.x * matrix.getA() + matrix.getTx(), point.y * matrix.getD() + matrix.getTy());
-}
+};
+
 
 /**
  * Returns the projected long/lat point using the robinson projection assuming center is at 0,0
  * @param {number} x Longitude
  * @param {number} y Latitude
- * @returns {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
+ * @return {DvtPoint} The projected point in the basemap coordinate system for built-in basemaps or the original point
  * @private
  */
-DvtThematicMapProjections._concatAffineTransforms = function (transform1, transform2) {
+DvtThematicMapProjections._concatAffineTransforms = function(transform1, transform2) {
   var t1A = transform1.getA();
   var a = transform2.getA() * t1A;
   var b = transform2.getB() * t1A;
@@ -7546,16 +8007,17 @@ DvtThematicMapProjections._concatAffineTransforms = function (transform1, transf
   var ty = transform1.getTy() + transform2.getTy() * t1D;
 
   return new DvtMatrix(a, b, c, d, tx, ty);
-}
+};
+
 
 /**
- * Gets the viewport transformation matrix 
+ * Gets the viewport transformation matrix
  * @param {DvtRectangle} mapBound The map bounds
  * @param {DvtRectangle} deviceView The viewport bounds
- * @returns {DvtMatrix} The viewport transform matrix
+ * @return {DvtMatrix} The viewport transform matrix
  * @private
  */
-DvtThematicMapProjections._getViewPortTransformation = function (mapBound, deviceView) {
+DvtThematicMapProjections._getViewPortTransformation = function(mapBound, deviceView) {
   var i = deviceView.x;
   var j = deviceView.y;
 
@@ -7570,47 +8032,50 @@ DvtThematicMapProjections._getViewPortTransformation = function (mapBound, devic
   d5 += (deviceView.w - d * d2) / 2;
   d6 += deviceView.h - (deviceView.h - d1 * d2) / 2;
 
-  return new DvtMatrix(d2, 0, 0,  - d2, d5, d6);
-}
+  return new DvtMatrix(d2, 0, 0, - d2, d5, d6);
+};
+
 
 /**
  * Converts a number to radians
  * @param {number} x The number to convert to radians
  * @return {number} The number converted to radians
  */
-DvtThematicMapProjections.toRadians = function (x) {
+DvtThematicMapProjections.toRadians = function(x) {
   return x * (Math.PI / 180);
-}
+};
+
 
 /**
  * Converts a number to degrees
  * @param {number} x The number to convert to degrees
  * @return {number} The number converted to degrees
  */
-DvtThematicMapProjections.toDegrees = function (x) {
+DvtThematicMapProjections.toDegrees = function(x) {
   return x * (180 / Math.PI);
-}
+};
+
 
 /**
  * Gets the inverse projection for built-in basemaps to be used for drag and drop
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
  * @param {String} basemap The basemap name
- * @returns {DvtPoint} The inversely projected point in longitude/latitude for built-in basemaps or the original point
+ * @return {DvtPoint} The inversely projected point in longitude/latitude for built-in basemaps or the original point
  */
-DvtThematicMapProjections.inverseProject = function (x, y, basemap) {
+DvtThematicMapProjections.inverseProject = function(x, y, basemap) {
   var point;
   // divide by 10 because basemaps are 10x larger than original projected maps
-  x/=10;
-  y/=10;
+  x /= 10;
+  y /= 10;
   switch (basemap) {
     case 'africa':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._AFRICA_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._AFRICA_BOUNDS,
                                                                     new DvtPoint(x, y));
       point = DvtThematicMapProjections._getInverseMercatorProjection(point.x, point.y);
       break;
     case 'asia':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._ASIA_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._ASIA_BOUNDS,
                                                                     new DvtPoint(x, y),
                                                                     DvtThematicMapProjections.toRadians(5));
       point = DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection(40, 95, 20, 60, point.x, point.y);
@@ -7619,39 +8084,39 @@ DvtThematicMapProjections.inverseProject = function (x, y, basemap) {
       point = DvtThematicMapProjections._getInverseAustraliaProjection(x, y);
       break;
     case 'europe':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._EUROPE_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._EUROPE_BOUNDS,
                                                                     new DvtPoint(x, y),
                                                                     DvtThematicMapProjections.toRadians(10));
       point = DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection(35, 25, 40, 65, point.x, point.y);
       break;
     case 'northAmerica':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._N_AMERICA_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._N_AMERICA_BOUNDS,
                                                                     new DvtPoint(x, y));
-      point = DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection(23,  - 96, 20, 60, point.x, point.y);
+      point = DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection(23, - 96, 20, 60, point.x, point.y);
       break;
     case 'southAmerica':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._S_AMERICA_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._S_AMERICA_BOUNDS,
                                                                     new DvtPoint(x, y),
                                                                     DvtThematicMapProjections.toRadians(5));
       break;
     case 'apac':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._APAC_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._APAC_BOUNDS,
                                                                     new DvtPoint(x, y));
       point = DvtThematicMapProjections._getInverseMercatorProjection(point.x, point.y);
       break;
     case 'emea':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._EMEA_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._EMEA_BOUNDS,
                                                                     new DvtPoint(x, y));
       point = DvtThematicMapProjections._getInverseMercatorProjection(point.x, point.y);
       break;
     case 'latinAmerica':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._L_AMERICA_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._L_AMERICA_BOUNDS,
                                                                     new DvtPoint(x, y));
       break;
     case 'usaAndCanada':
-      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._USA_CANADA_BOUNDS, 
+      point = DvtThematicMapProjections._getInverseAffineProjection(DvtThematicMapProjections._USA_CANADA_BOUNDS,
                                                                     new DvtPoint(x, y));
-      point = DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection(23,  - 96, 20, 60, point.x, point.y);
+      point = DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection(23, - 96, 20, 60, point.x, point.y);
       break;
     case 'worldRegions':
       point = DvtThematicMapProjections._getInverseWorldProjection(x, y);
@@ -7667,19 +8132,20 @@ DvtThematicMapProjections.inverseProject = function (x, y, basemap) {
   }
   if (point)
     return point;
-  else 
+  else
     return new DvtPoint(x, y);
-}
+};
+
 
 /**
  * Returns the inversely projected long/lat point in the usa basemap coordinate system
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
- * @returns {DvtPoint} The projected point in longitude/latitude using the basemap projection
+ * @return {DvtPoint} The projected point in longitude/latitude using the basemap projection
  * @private
  */
-DvtThematicMapProjections._getInverseUSAProjection = function (x, y) {
-  var viewPortTransform
+DvtThematicMapProjections._getInverseUSAProjection = function(x, y) {
+  var viewPortTransform;
   if (DvtThematicMapProjections._ALASKA_WINDOW.containsPoint(x, y)) {
     viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._ALASKA_BOUNDS, DvtThematicMapProjections._ALASKA_WINDOW);
     viewPortTransform.invert();
@@ -7695,33 +8161,35 @@ DvtThematicMapProjections._getInverseUSAProjection = function (x, y) {
     viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._USA_BOUNDS, DvtThematicMapProjections._VIEWPORT_BOUNDS);
     viewPortTransform.invert();
     var point = viewPortTransform.transformPoint(new DvtPoint(x, y));
-    return DvtThematicMapProjections._getInverseOrthographicProjection(new DvtPoint( - 95, 36), point.x, point.y);
+    return DvtThematicMapProjections._getInverseOrthographicProjection(new DvtPoint(- 95, 36), point.x, point.y);
   }
   return new DvtPoint(x, y);
-}
+};
+
 
 /**
  * Returns the inversely projected long/lat point in the world basemap coordinate system
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
- * @returns {DvtPoint} The projected point in longitude/latitude using the basemap projection
+ * @return {DvtPoint} The projected point in longitude/latitude using the basemap projection
  * @private
  */
-DvtThematicMapProjections._getInverseWorldProjection = function (x, y) {
+DvtThematicMapProjections._getInverseWorldProjection = function(x, y) {
   var viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._WORLD_BOUNDS, DvtThematicMapProjections._VIEWPORT_BOUNDS);
   viewPortTransform.invert();
   var point = viewPortTransform.transformPoint(new DvtPoint(x, y));
   return DvtThematicMapProjections._getInverseRobinsonProjection(point.x, point.y);
-}
+};
+
 
 /**
  * Returns the inversely projected long/lat point in the australia basemap coordinate system
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
- * @returns {DvtPoint} The projected point in longitude/latitude using the basemap projection
+ * @return {DvtPoint} The projected point in longitude/latitude using the basemap projection
  * @private
  */
-DvtThematicMapProjections._getInverseAustraliaProjection = function (x, y) {
+DvtThematicMapProjections._getInverseAustraliaProjection = function(x, y) {
   var viewPortTransform;
   if (DvtThematicMapProjections._NEW_ZEALAND_RECT.containsPoint(x, y))
     viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(DvtThematicMapProjections._NEW_ZEALAND_BOUNDS, DvtThematicMapProjections._NEW_ZEALAND_RECT);
@@ -7731,7 +8199,8 @@ DvtThematicMapProjections._getInverseAustraliaProjection = function (x, y) {
   viewPortTransform.invert();
   var point = viewPortTransform.transformPoint(new DvtPoint(x, y));
   return DvtThematicMapProjections._getInverseMercatorProjection(point.x, point.y);
-}
+};
+
 
 /**
  * Applies an inverse affine transform to a point
@@ -7740,7 +8209,7 @@ DvtThematicMapProjections._getInverseAustraliaProjection = function (x, y) {
  * @param {number} rotRadians The rotation to apply to the transform matrix in radians
  * @private
  */
-DvtThematicMapProjections._getInverseAffineProjection = function (mapBounds, point, rotRadians) {
+DvtThematicMapProjections._getInverseAffineProjection = function(mapBounds, point, rotRadians) {
   var viewPortTransform = DvtThematicMapProjections._getViewPortTransformation(mapBounds, DvtThematicMapProjections._VIEWPORT_BOUNDS);
   if (rotRadians) {
     var rotMatrix = new DvtMatrix();
@@ -7749,16 +8218,17 @@ DvtThematicMapProjections._getInverseAffineProjection = function (mapBounds, poi
   }
   viewPortTransform.invert();
   return viewPortTransform.transformPoint(point);
-}
+};
+
 
 /**
  * Returns the inversely projected long/lat point using the albers equal area conic projection
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
- * @returns {DvtPoint} The projected point in longitude/latitude using the basemap projection
+ * @return {DvtPoint} The projected point in longitude/latitude using the basemap projection
  * @private
  */
-DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection = function (latOfOrigin, lonOfOrigin, sP1, sP2, x, y) {
+DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection = function(latOfOrigin, lonOfOrigin, sP1, sP2, x, y) {
   var lambda0 = DvtThematicMapProjections.toRadians(lonOfOrigin);
   var phi0 = DvtThematicMapProjections.toRadians(latOfOrigin);
   sP1 = DvtThematicMapProjections.toRadians(sP1);
@@ -7777,50 +8247,53 @@ DvtThematicMapProjections._getInverseAlbersEqualAreaConicProjection = function (
   var px = lambda0 + pheta / n;
 
   return new DvtPoint(DvtThematicMapProjections.toDegrees(px), DvtThematicMapProjections.toDegrees(py));
-}
+};
+
 
 /**
  * Returns the inversely projected long/lat point using the mercator projection, assuming center at 0,0
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
- * @returns {DvtPoint} The projected point in longitude/latitude using the basemap projection
+ * @return {DvtPoint} The projected point in longitude/latitude using the basemap projection
  * @private
  */
-DvtThematicMapProjections._getInverseMercatorProjection = function (x, y) {
+DvtThematicMapProjections._getInverseMercatorProjection = function(x, y) {
   var py = 2 * Math.atan(Math.exp(DvtThematicMapProjections.toRadians(y))) - 0.5 * Math.PI;
-  return new DvtPoint(x, DvtThematicMapProjections.toDegrees(py));	
-}
+  return new DvtPoint(x, DvtThematicMapProjections.toDegrees(py));
+};
+
 
 /**
  * Returns the inversely projected long/lat point using the orthographic projection, assuming center at 0,0
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
- * @returns {DvtPoint} The projected point in longitude/latitude using the basemap projection
+ * @return {DvtPoint} The projected point in longitude/latitude using the basemap projection
  * @private
  */
-DvtThematicMapProjections._getInverseOrthographicProjection = function (center, x, y) {
-  var radX = x/DvtThematicMapProjections._RADIUS;
-  var radY = y/DvtThematicMapProjections._RADIUS;
+DvtThematicMapProjections._getInverseOrthographicProjection = function(center, x, y) {
+  var radX = x / DvtThematicMapProjections._RADIUS;
+  var radY = y / DvtThematicMapProjections._RADIUS;
   var centerX = DvtThematicMapProjections.toRadians(center.x);
   var centerY = DvtThematicMapProjections.toRadians(center.y);
-  
+
   var p = Math.sqrt((radX * radX) + (radY * radY));
-  var c = Math.asin (p);
-  
+  var c = Math.asin(p);
+
   var py = Math.asin(Math.cos(c) * Math.sin(centerY) + (radY * Math.sin(c) * Math.cos(centerY) / p));
   var px = centerX + Math.atan(radX * Math.sin(c) / (p * Math.cos(centerY) * Math.cos(c) - radY * Math.sin(centerY) * Math.sin(c)));
-  
+
   return new DvtPoint(DvtThematicMapProjections.toDegrees(px), DvtThematicMapProjections.toDegrees(py));
-}
+};
+
 
 /**
  * Returns the inversely projected long/lat point using the robinson projection, assuming center at 0,0
  * @param {number} x The x coordinate in the basemap coordinate system
  * @param {number} y The y coordinate in the basemap coordinate system
- * @returns {DvtPoint} The projected point in longitude/latitude using the basemap projection
+ * @return {DvtPoint} The projected point in longitude/latitude using the basemap projection
  * @private
  */
-DvtThematicMapProjections._getInverseRobinsonProjection = function (x, y) {
+DvtThematicMapProjections._getInverseRobinsonProjection = function(x, y) {
   var criteria = Math.floor(Math.abs(y) / 5.0);
   if (criteria >= DvtThematicMapProjections._ROBINSON_COORDINATES.length - 1)
     criteria = DvtThematicMapProjections._ROBINSON_COORDINATES.length - 2;
@@ -7833,26 +8306,27 @@ DvtThematicMapProjections._getInverseRobinsonProjection = function (x, y) {
   var originalX = x / (DvtThematicMapProjections._ROBINSON_COORDINATES[criteria][0] + yInterval * xLength);
 
   if (y < 0.0)
-    originalY =  - 1 * originalY;
+    originalY = - 1 * originalY;
 
   return new DvtPoint(originalX, originalY);
-}
+};
 /**
  * @constructor
  * ZoomInButton for use with Diagram.
  */
-var DvtMapControlButton = function (context, button, mapCallback, panZoomCanvas, btype, resources, eventManager) {
+var DvtMapControlButton = function(context, button, mapCallback, panZoomCanvas, btype, resources, eventManager) {
   this.Init(context, button, mapCallback, panZoomCanvas, btype, resources, eventManager);
 };
 
 /*
  * make DvtMapControlButton a subclass of DvtBasePanZoomControl
  */
-DvtObj.createSubclass(DvtMapControlButton, DvtBasePanZoomControl, "DvtMapControlButton");
+DvtObj.createSubclass(DvtMapControlButton, DvtBasePanZoomControl, 'DvtMapControlButton');
 
 DvtMapControlButton.BUTTON_TYPE_DRILLUP = 0;
-DvtMapControlButton.BUTTON_TYPE_DRILLDOWN  = 1;
+DvtMapControlButton.BUTTON_TYPE_DRILLDOWN = 1;
 DvtMapControlButton.BUTTON_TYPE_RESET = 2;
+
 
 /**
  * Helper method called by the constructor to initialize this object.
@@ -7864,61 +8338,63 @@ DvtMapControlButton.BUTTON_TYPE_RESET = 2;
  * @param {DvtXmlNode} resources The map of translated resource strings
  * @param {DvtEventManager} eventManager An event manager to handle events for the control
  */
-DvtMapControlButton.prototype.Init = function (context, button, mapCallback, panZoomCanvas, btype, resources, eventManager) {
+DvtMapControlButton.prototype.Init = function(context, button, mapCallback, panZoomCanvas, btype, resources, eventManager) {
   DvtMapControlButton.superclass.Init.call(this, context, panZoomCanvas, resources);
 
   this._btype = btype;
   this._button = button;
   this._eventManager = eventManager;
   this._button.setCallback(this.HandleOnClick, this);
-  this._button.setCursor(DvtSelectionEffectUtils.getSelectingCursor());  
-  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, null, 
-                                                    null, null, null,
-                                                    this._getTooltipText());
+  this._button.setCursor(DvtSelectionEffectUtils.getSelectingCursor());
+  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, null,
+      null, null, null,
+      this._getTooltipText());
   this._eventManager.associate(this._button, proxy);
 
   this.addChild(this._button);
-  
+
   this._mapCallback = mapCallback;
   this._isEnabled = true;
-}
+};
+
 
 /**
  * Sets button state
  * @param {boolean} enabled True to enable the button
  */
-DvtMapControlButton.prototype.setEnabled = function (enabled)
+DvtMapControlButton.prototype.setEnabled = function(enabled)
 {
   this.setAlpha(enabled ? 1.0 : 0.4);
   this._button.setCursor(enabled ? DvtSelectionEffectUtils.getSelectingCursor() : null);
   this._isEnabled = enabled;
   this._button.setEnabled(enabled);
   this._button.initState();
-}
+};
 
-DvtMapControlButton.prototype.HandleOnClick = function (event)
+DvtMapControlButton.prototype.HandleOnClick = function(event)
 {
   DvtEventManager.consumeEvent(event);
-  if (this._isEnabled && this._mapCallback){
+  if (this._isEnabled && this._mapCallback) {
     this._mapCallback();
   }
-}
+};
+
 
 /**
- * @returns tooltip text for current buton type.
+ * @return tooltip text for current buton type.
  */
-DvtMapControlButton.prototype._getTooltipText = function(){
+DvtMapControlButton.prototype._getTooltipText = function() {
 
-    if(this._btype == DvtMapControlButton.BUTTON_TYPE_DRILLUP){
-        return this.getResources().getControlPanelDrillUpTooltip();
-    }else  if(this._btype == DvtMapControlButton.BUTTON_TYPE_DRILLDOWN){
-        return this.getResources().getControlPanelDrillDownTooltip();
-    }else  if(this._btype == DvtMapControlButton.BUTTON_TYPE_RESET){
-        return this.getResources().getControlPanelResetTooltip();
-    }else{
-        return null;
-    }
-}
+  if (this._btype == DvtMapControlButton.BUTTON_TYPE_DRILLUP) {
+    return this.getResources().getControlPanelDrillUpTooltip();
+  }else if (this._btype == DvtMapControlButton.BUTTON_TYPE_DRILLDOWN) {
+    return this.getResources().getControlPanelDrillDownTooltip();
+  }else if (this._btype == DvtMapControlButton.BUTTON_TYPE_RESET) {
+    return this.getResources().getControlPanelResetTooltip();
+  }else {
+    return null;
+  }
+};
 
 /**
  * @constructor
@@ -7926,16 +8402,16 @@ DvtMapControlButton.prototype._getTooltipText = function(){
  * This panel contains tools for zooming and panning.
  * By default, the panel is initially collapsed.
  */
-var DvtThematicMapControlPanel = function (context, drillMode, buttonImages, callbacks, canvas, resources, controls, view) {
+var DvtThematicMapControlPanel = function(context, drillMode, buttonImages, callbacks, canvas, resources, controls, view) {
   this.Init(context, drillMode, buttonImages, callbacks, canvas, resources, controls, view);
 };
 
 /*
  * make DvtPanZoomControlPanel a subclass of DvtContainer
  */
-DvtObj.createSubclass(DvtThematicMapControlPanel, DvtPanZoomControlPanel, "DvtThematicMapControlPanel");
+DvtObj.createSubclass(DvtThematicMapControlPanel, DvtPanZoomControlPanel, 'DvtThematicMapControlPanel');
 
-DvtThematicMapControlPanel.prototype.Init = function (context, drillMode, buttonImages, callbacks, canvas, resources, controls, view) {
+DvtThematicMapControlPanel.prototype.Init = function(context, drillMode, buttonImages, callbacks, canvas, resources, controls, view) {
   DvtThematicMapControlPanel.superclass.Init.call(this, context, canvas, buttonImages, resources, controls, view);
   this.setResources(new DvtThematicMapControlPanelResources(resources));
   this._drillMode = drillMode;
@@ -7951,56 +8427,57 @@ DvtThematicMapControlPanel.prototype.Init = function (context, drillMode, button
   this._styleMap = view.getControlPanelStyleMap();
 };
 
-DvtThematicMapControlPanel.prototype.setEnabledDrillDownButton = function (enable) {
+DvtThematicMapControlPanel.prototype.setEnabledDrillDownButton = function(enable) {
   this._drillDownButtonEnabled = enable;
   if (this._drillDownButton)
     this._drillDownButton.setEnabled(enable);
-}
+};
 
-DvtThematicMapControlPanel.prototype.setEnabledDrillUpButton = function (enable) {
+DvtThematicMapControlPanel.prototype.setEnabledDrillUpButton = function(enable) {
   this._drillUpButtonEnabled = enable;
   if (this._drillUpButton)
     this._drillUpButton.setEnabled(enable);
-}
-DvtThematicMapControlPanel.prototype.setResources = function(resources){
-    DvtThematicMapControlPanel.superclass.setResources.call(this, resources);
-    if(this._drillDownButton){
-        this._drillDownButton.setResources(resources);
-    }
-    if(this._drillUpButton){
-        this._drillUpButton.setResources(resources);
-    }
-    if(this._resetButton){
-        this._resetButton.setResources(resources);
-    }
-}
+};
+DvtThematicMapControlPanel.prototype.setResources = function(resources) {
+  DvtThematicMapControlPanel.superclass.setResources.call(this, resources);
+  if (this._drillDownButton) {
+    this._drillDownButton.setResources(resources);
+  }
+  if (this._drillUpButton) {
+    this._drillUpButton.setResources(resources);
+  }
+  if (this._resetButton) {
+    this._resetButton.setResources(resources);
+  }
+};
+
 
 /**
   *  Populate the horizontal part of the control panel
   *  @param {DvtContainer} contentSprite Container for holding additional buttons
   */
-DvtThematicMapControlPanel.prototype.PopulateHorzContentBar = function (contentSprite) {
+DvtThematicMapControlPanel.prototype.PopulateHorzContentBar = function(contentSprite) {
   if (this._drillMode && this._drillMode != 'none') {
-    var buttonOffset = DvtStyleUtils.getStyle(this._styleMap,DvtPanZoomControlPanel.CP_BUTTON_WIDTH,0);
-    this._resetButton = DvtButtonLAFUtils.createResetButton(this.getCtx(), this._resetCallback, this._panZoomCanvas, 
-                                                            DvtMapControlButton.BUTTON_TYPE_RESET, this.getResources(), 
+    var buttonOffset = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_BUTTON_WIDTH, 0);
+    this._resetButton = DvtButtonLAFUtils.createResetButton(this.getCtx(), this._resetCallback, this._panZoomCanvas,
+                                                            DvtMapControlButton.BUTTON_TYPE_RESET, this.getResources(),
                                                             this._buttonImages, this._eventManager, this._styleMap);
     contentSprite.addChild(this._resetButton);
-    this._drillDownButton = DvtButtonLAFUtils.createDrillDownButton(this.getCtx(), this._drillDownCallback, 
-                                                                    this._panZoomCanvas, 
-                                                                    DvtMapControlButton.BUTTON_TYPE_DRILLDOWN, 
-                                                                    this.getResources(), this._buttonImages, 
+    this._drillDownButton = DvtButtonLAFUtils.createDrillDownButton(this.getCtx(), this._drillDownCallback,
+                                                                    this._panZoomCanvas,
+                                                                    DvtMapControlButton.BUTTON_TYPE_DRILLDOWN,
+                                                                    this.getResources(), this._buttonImages,
                                                                     this._eventManager, this._styleMap);
     this._drillDownButton.setTranslateX(buttonOffset);
     this._drillDownButton.setEnabled(this._drillDownButtonEnabled);
     contentSprite.addChild(this._drillDownButton);
-    this._drillUpButton = DvtButtonLAFUtils.createDrillUpButton(this.getCtx(), this._drillUpCallback, 
-                                                                this._panZoomCanvas, 
-                                                                DvtMapControlButton.BUTTON_TYPE_DRILLUP, 
-                                                                this.getResources(), this._buttonImages, 
+    this._drillUpButton = DvtButtonLAFUtils.createDrillUpButton(this.getCtx(), this._drillUpCallback,
+                                                                this._panZoomCanvas,
+                                                                DvtMapControlButton.BUTTON_TYPE_DRILLUP,
+                                                                this.getResources(), this._buttonImages,
                                                                 this._eventManager, this._styleMap);
 
-    this._drillUpButton.setTranslateX(buttonOffset*2);
+    this._drillUpButton.setTranslateX(buttonOffset * 2);
     this._drillUpButton.setEnabled(this._drillUpButtonEnabled);
     contentSprite.addChild(this._drillUpButton);
 
@@ -8010,7 +8487,7 @@ DvtThematicMapControlPanel.prototype.PopulateHorzContentBar = function (contentS
  * @constructor
  * Class used to maintain translated resources used by the ThematicMapControlPanel.
  */
-var DvtThematicMapControlPanelResources = function (parent) {
+var DvtThematicMapControlPanelResources = function(parent) {
   this.Init(parent);
 };
 
@@ -8018,74 +8495,80 @@ var DvtThematicMapControlPanelResources = function (parent) {
 /*
  * make DvtThematicMapControlPanelResources a subclass of DvtPanZoomControlPanelResources
  */
-DvtObj.createSubclass(DvtThematicMapControlPanelResources, DvtPanZoomControlPanelResources, "DvtThematicMapControlPanelResources");
+DvtObj.createSubclass(DvtThematicMapControlPanelResources, DvtPanZoomControlPanelResources, 'DvtThematicMapControlPanelResources');
 
 
-DvtThematicMapControlPanelResources.prototype.Init = function (parent) {
-   DvtThematicMapControlPanelResources.superclass.Init.call(this, parent);
- 
-  if(!parent){
-      this._controlPanelDrillUpTooltip = "Show Control Panel (/)";
-      this._controlPanelDrillDownTooltip = "Hide (/)";
-      this._controlPanelResetTooltip = "Zoom and Center (Ctrl+Alt+0)";      
+DvtThematicMapControlPanelResources.prototype.Init = function(parent) {
+  DvtThematicMapControlPanelResources.superclass.Init.call(this, parent);
+
+  if (!parent) {
+    this._controlPanelDrillUpTooltip = 'Show Control Panel (/)';
+    this._controlPanelDrillDownTooltip = 'Hide (/)';
+    this._controlPanelResetTooltip = 'Zoom and Center (Ctrl+Alt+0)';
   } else {
-      this._controlPanelDrillUpTooltip = parent.getAttr("pdu");
-      this._controlPanelDrillDownTooltip = parent.getAttr("pdd");
-      this._controlPanelResetTooltip = parent.getAttr("res");    
+    this._controlPanelDrillUpTooltip = parent['pdu'];
+    this._controlPanelDrillDownTooltip = parent['pdd'];
+    this._controlPanelResetTooltip = parent['res'];
   }
-}
+};
+
 
 /**
  * Get the ControlPanelDrillUpTooltip to use.
- * 
+ *
  * @return controlPanelDrillUpToolTip being used
  */
-DvtThematicMapControlPanelResources.prototype.getControlPanelDrillUpTooltip = function () {
+DvtThematicMapControlPanelResources.prototype.getControlPanelDrillUpTooltip = function() {
   return this._controlPanelDrillUpTooltip;
-}
-    
+};
+
+
 /**
  * Set the PanControlDrillUpTooltip to use.
- * 
+ *
  * @param panControlDrillUpToolTip to use
  */
-DvtThematicMapControlPanelResources.prototype.setPanControlDrillUpTooltip = function (s) {
+DvtThematicMapControlPanelResources.prototype.setPanControlDrillUpTooltip = function(s) {
   this._controlPanelDrillUpTooltip = s;
-}
+};
+
 
 /**
  * Get the ControlPanelDrillDownTooltip to use.
- * 
+ *
  * @return controlPanelDrillDownToolTip being used
  */
-DvtThematicMapControlPanelResources.prototype.getControlPanelDrillDownTooltip = function () {
+DvtThematicMapControlPanelResources.prototype.getControlPanelDrillDownTooltip = function() {
   return this._controlPanelDrillDownTooltip;
-}
-    
+};
+
+
 /**
  * Set the PanControlDrillDownTooltip to use.
- * 
+ *
  * @param panControlDrillDownToolTip to use
  */
-DvtThematicMapControlPanelResources.prototype.setPanControlDrillDownTooltip = function (s) {
+DvtThematicMapControlPanelResources.prototype.setPanControlDrillDownTooltip = function(s) {
   this._controlPanelDrillDownTooltip = s;
-}
+};
+
 
 /**
  * Get the ControlPanelResetTooltip to use.
- * 
+ *
  * @return controlPanelResetToolTip being used
  */
-DvtThematicMapControlPanelResources.prototype.getControlPanelResetTooltip = function () {
+DvtThematicMapControlPanelResources.prototype.getControlPanelResetTooltip = function() {
   return this._controlPanelResetTooltip;
-}
-    
+};
+
+
 /**
  * Set the PanControlResetTooltip to use.
- * 
+ *
  * @param panControlResetToolTip to use
  */
-DvtThematicMapControlPanelResources.prototype.setPanControlResetTooltip = function (s) {
+DvtThematicMapControlPanelResources.prototype.setPanControlResetTooltip = function(s) {
   this._controlPanelResetTooltip = s;
-}
+};
 });

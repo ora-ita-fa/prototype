@@ -19,9 +19,9 @@ $includeToolbarClasses: $includeAllClasses !default;
 
     // todo: review with Gab
     // We use .oj-toolbar .oj-button, even though toolbar might support more than just buttons in the future, because:
-    // - If we use .oj-toolbar .oj-widget, then when toolbar contains a buttonset, it's too tall bacause both the 
+    // - If we use .oj-toolbar .oj-component, then when toolbar contains a buttonset, it's too tall bacause both the 
     //   buttonset and its buttons get this margin.  Then toolbar contents like a separator look too short.
-    // - Using .oj-toolbar>.oj-widget, to avoid that problem, is undesirable because we prefer to avoid child selectors, 
+    // - Using .oj-toolbar>.oj-component, to avoid that problem, is undesirable because we prefer to avoid child selectors, 
     //   and because it fails to override .oj-button's bottom margin, for which we'd need another rule.
     // - We're likely to need similar fine control over future toolbar contents, e.g. in similar cases of nested containers.  
     //   And Toolbar is likely to always have an explicit whitelist of contents that it supports, for focus management purposes.

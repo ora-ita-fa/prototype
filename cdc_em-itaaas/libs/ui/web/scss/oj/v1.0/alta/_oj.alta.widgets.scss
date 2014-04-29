@@ -11,10 +11,10 @@
 // shared
 @import "widgets/oj.alta.icons";
 @import "widgets/oj.alta.resizable";
-@import "widgets/oj.alta.selectable";
 @import "widgets/oj.alta.windows";
 
 // layout
+@import "widgets/oj.alta.panel";
 @import "widgets/oj.alta.accordion";
 @import "widgets/oj.alta.conveyorbelt";
 @import "widgets/oj.alta.tabs";
@@ -25,7 +25,6 @@
 // secondary windows
 @import "widgets/oj.alta.dialog";
 @import "widgets/oj.alta.popup";
-@import "widgets/oj.alta.tooltip";
 
 // button and menu
 @import "widgets/oj.alta.menu";

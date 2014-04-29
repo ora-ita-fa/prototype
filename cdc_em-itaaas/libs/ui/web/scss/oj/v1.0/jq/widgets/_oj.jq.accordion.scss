@@ -49,8 +49,8 @@ $includeAccordionClasses:  $includeAllClasses !default;
 
     .oj-collapsible-header.oj-active {
       @include ui-state-active;
-      border-bottom-left-radius: 0; 
-      border-bottom-right-radius: 0;
+      @include oj-border-bottom-left-radius(0); 
+      @include oj-border-bottom-right-radius(0);
     }
 
     .oj-collapsible-header a.oj-active {

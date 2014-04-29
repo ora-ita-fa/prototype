@@ -233,9 +233,13 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
   _checkResources : [],
   _supportedLocales : ['ar','cs','da','de','el','es','fi','fr','hu','it','iw','ja','ko','nl','no','pl','pt','pt_BR','ro','ru','sk','sv','th','tr','zh_CN','zh_TW'],
   
-  // Override of protected function in base component.
-  // Called when the widget is initialized
+  /** 
+   * @override
+   * @protected
+   */
   _create : function() {
+    this._super();
+  
     // Create the DvtContext, which creates the svg element and adds it to the DOM.
     this._context = new DvtContext(this.element[0]);
     
@@ -246,31 +250,63 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     this.element.attr("tabIndex", 0);
     
     // Create and cache the component instance
-    this._component = this._createComponent(this._context, this._handleEvent, this);
+    this._component = this._CreateComponent(this._context, this._HandleEvent, this);
 
     // Add the component to the display tree of the rendering context.
     this._context.getStage().addChild(this._component);  
     
     // Create dummy divs for style classes and merge style class values with json options object
-    this._processStyles(this._getChildStyleClasses());
+    this._processStyles(this._GetChildStyleClasses());
     
     // Retrieve and apply the translated strings onto the component bundle
     this._processTranslations();
 
     // Load component resources
-    this._loadResources();
+    this._LoadResources();
     
     // Add options object to hidden div
     this._addOptionsDiv();
 
     // Render the component
-    this._render();
+    this._Render();
     
     // Add resize listener
     oj.DomUtils.addResizeListener(this.element[0], $.proxy(this._handleResize, this));
   },
   
-  // add options object to a hidden div for debugging
+  /** 
+   * @override
+   */
+  refresh : function() {
+    this._super();
+  
+    // Update the reading direction on the context
+    this._context.setReadingDirection(this._GetReadingDirection());
+    
+    // Retrieve and apply the translated strings onto the component bundle
+    this._processTranslations();
+  
+    // Render the component with any changes
+    this._Render();
+  },
+  
+  /** 
+   * @override
+   */
+  getNodeBySubId : function(locator) {
+    // subcomponents should override for jsDoc to list subId values
+    var automation;
+    if (this._component && this._component.getAutomation)
+      automation = this._component.getAutomation();
+    if (automation)
+      return automation.getDomElementForSubId(locator);
+    return null;
+  },
+  
+  /**
+   * Add options object to a hidden div for debugging.
+   * @private
+   */
   _addOptionsDiv : function() {
     var optionsDiv = $(document.createElement("div"));
     optionsDiv.attr("style", "display:none;");
@@ -278,20 +314,33 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     this.element.append(optionsDiv);
   },
   
-  // Gets the style classes associated with a component
-  _getComponentStyleClasses : function() {
+  /**
+   * Returns the style classes associated with the component.
+   * @return {Array}
+   * @protected
+   */
+  _GetComponentStyleClasses : function() {
     return ['oj-dvtbase'];
   },
   
-  // Gets the style classes associated with a component's children
-  _getChildStyleClasses : function() {
+  /**
+   * Returns a map of the style classes associated with a component's children.
+   * @return {Object}
+   * @protected
+   */
+  _GetChildStyleClasses : function() {
     return {};
   },
   
-   // Creates dummy divs for each component style class and merges their values with the component options object
+  /**
+   * Creates dummy divs for each component style class and merges their values with the component options object.
+   * @param {Array} styleClasses
+   * @private
+   */ 
   _processStyles : function(styleClasses) {
+    // TODO AMDAI Consider refactoring to DvtStyleProcessor
     // Add the common css properties
-    var componentClasses = this._getComponentStyleClasses();
+    var componentClasses = this._GetComponentStyleClasses();
     var oldClasses = this.element.attr("class");
 		var newClasses = '';
     for (var i=0; i<componentClasses.length; i++)
@@ -317,8 +366,14 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     }
   },
 
-  // Resolves the css properties within a dummy div
+  /**
+   * Resolves the css properties within a dummy div
+   * @param {Object} cssDiv
+   * @param {Object} definition
+   * @private
+   */ 
   _processStyle : function(cssDiv, definition) {
+    // TODO AMDAI Consider refactoring to DvtStyleProcessor
     if (definition instanceof Array) {
       for (var i=0;i<definition.length; i++) 
         this._resolveStyle(cssDiv, definition[i]);
@@ -327,8 +382,14 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     }
   },
   
-  // Helper function to resolve the css properties within a dummy div
+  /**
+   * Helper function to resolve the css properties within a dummy div.
+   * @param {Object} cssDiv
+   * @param {Object} definition
+   * @private
+   */ 
   _resolveStyle : function(cssDiv, definition) { 
+    // TODO AMDAI Consider refactoring to DvtStyleProcessor
     var path = new DvtJsonPath(this.options, definition['path']);
     var value;
     if(definition['property']) {
@@ -342,91 +403,144 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
        && !(typeof value == 'string' && value.replace(/^\s+/g, '') == '')) {
       path.setValue(value);
     }
-     
   },
   
-  // Protected function.
-  // Returns a map containing keys corresponding to the string ids in ojtranslations.js and values corresponding to the 
-  // toolkit constants for the DvtBundle objects.
-  _getTranslationMap: function() {
-    return {
+  /**
+   * Returns a map containing keys corresponding to the string ids in ojtranslations.js and values corresponding to the 
+   * toolkit constants for the DvtBundle objects.  This map must be guaranteed to be a new instance so that subclasses can
+   * add their translations to it.
+   * @return {Object}
+   * @protected
+   */
+  _GetTranslationMap: function() {
+    // TODO This function is a mess and we shouldn't define our own months.  
+    // Will fix once the inheritance of resources is fixed via 18545592.
+    var map = {
       'oj-ojDvtCommon.labelClearSelection': 'DvtUtilBundle.CLEAR_SELECTION',
-      'oj-ojDvtCommon.labelMonthShortJanuary': 'DvtUtilBundle.MONTH_SHORT_JANUARY',
-      'oj-ojDvtCommon.labelMonthShortFebruary': 'DvtUtilBundle.MONTH_SHORT_FEBRUARY',
-      'oj-ojDvtCommon.labelMonthShortMarch': 'DvtUtilBundle.MONTH_SHORT_MARCH',
-      'oj-ojDvtCommon.labelMonthShortApril': 'DvtUtilBundle.MONTH_SHORT_APRIL',
-      'oj-ojDvtCommon.labelMonthShortMay': 'DvtUtilBundle.MONTH_SHORT_MAY',
-      'oj-ojDvtCommon.labelMonthShortJune': 'DvtUtilBundle.MONTH_SHORT_JUNE',
-      'oj-ojDvtCommon.labelMonthShortJuly': 'DvtUtilBundle.MONTH_SHORT_JULY',
-      'oj-ojDvtCommon.labelMonthShortAugust': 'DvtUtilBundle.MONTH_SHORT_AUGUST',
-      'oj-ojDvtCommon.labelMonthShortSeptember': 'DvtUtilBundle.MONTH_SHORT_SEPTEMBER',
-      'oj-ojDvtCommon.labelMonthShortOctober': 'DvtUtilBundle.MONTH_SHORT_OCTOBER',
-      'oj-ojDvtCommon.labelMonthShortNovember': 'DvtUtilBundle.MONTH_SHORT_NOVEMBER',
-      'oj-ojDvtCommon.labelMonthShortDecember': 'DvtUtilBundle.MONTH_SHORT_DECEMBER',
-      'oj-ojDvtCommon.labelScalingSuffixThousand': 'DvtUtilBundle.SCALING_SUFFIX_THOUSAND',
-      'oj-ojDvtCommon.labelScalingSuffixMillion': 'DvtUtilBundle.SCALING_SUFFIX_MILLION',
-      'oj-ojDvtCommon.labelScalingSuffixBillion': 'DvtUtilBundle.SCALING_SUFFIX_BILLION',
-      'oj-ojDvtCommon.labelScalingSuffixTrillion': 'DvtUtilBundle.SCALING_SUFFIX_TRILLION',
-      'oj-ojDvtCommon.labelScalingSuffixQuadrillion': 'DvtUtilBundle.SCALING_SUFFIX_QUADRILLION'
+      
+      // TODO: Should try to get all of these from common translations not specific to DVT
+      'oj-dvtBaseComponent.labelMonthShortJanuary': 'DvtUtilBundle.MONTH_SHORT_JANUARY',
+      'oj-dvtBaseComponent.labelMonthShortFebruary': 'DvtUtilBundle.MONTH_SHORT_FEBRUARY',
+      'oj-dvtBaseComponent.labelMonthShortMarch': 'DvtUtilBundle.MONTH_SHORT_MARCH',
+      'oj-dvtBaseComponent.labelMonthShortApril': 'DvtUtilBundle.MONTH_SHORT_APRIL',
+      'oj-dvtBaseComponent.labelMonthShortMay': 'DvtUtilBundle.MONTH_SHORT_MAY',
+      'oj-dvtBaseComponent.labelMonthShortJune': 'DvtUtilBundle.MONTH_SHORT_JUNE',
+      'oj-dvtBaseComponent.labelMonthShortJuly': 'DvtUtilBundle.MONTH_SHORT_JULY',
+      'oj-dvtBaseComponent.labelMonthShortAugust': 'DvtUtilBundle.MONTH_SHORT_AUGUST',
+      'oj-dvtBaseComponent.labelMonthShortSeptember': 'DvtUtilBundle.MONTH_SHORT_SEPTEMBER',
+      'oj-dvtBaseComponent.labelMonthShortOctober': 'DvtUtilBundle.MONTH_SHORT_OCTOBER',
+      'oj-dvtBaseComponent.labelMonthShortNovember': 'DvtUtilBundle.MONTH_SHORT_NOVEMBER',
+      'oj-dvtBaseComponent.labelMonthShortDecember': 'DvtUtilBundle.MONTH_SHORT_DECEMBER',
+      'oj-dvtBaseComponent.labelScalingSuffixThousand': 'DvtUtilBundle.SCALING_SUFFIX_THOUSAND',
+      'oj-dvtBaseComponent.labelScalingSuffixMillion': 'DvtUtilBundle.SCALING_SUFFIX_MILLION',
+      'oj-dvtBaseComponent.labelScalingSuffixBillion': 'DvtUtilBundle.SCALING_SUFFIX_BILLION',
+      'oj-dvtBaseComponent.labelScalingSuffixTrillion': 'DvtUtilBundle.SCALING_SUFFIX_TRILLION',
+      'oj-dvtBaseComponent.labelScalingSuffixQuadrillion': 'DvtUtilBundle.SCALING_SUFFIX_QUADRILLION',
+      
+      'oj-dvtBaseComponent.stateSelected': 'DvtUtilBundle.STATE_SELECTED',
+      'oj-dvtBaseComponent.stateUnselected': 'DvtUtilBundle.STATE_UNSELECTED',
+      'oj-dvtBaseComponent.stateMaximized': 'DvtUtilBundle.STATE_MAXIMIZED',
+      'oj-dvtBaseComponent.stateMinimized': 'DvtUtilBundle.STATE_MINIMIZED',
+      'oj-dvtBaseComponent.stateExpanded': 'DvtUtilBundle.STATE_EXPANDED',
+      'oj-dvtBaseComponent.stateCollapsed': 'DvtUtilBundle.STATE_COLLAPSED',
+      'oj-dvtBaseComponent.stateIsolated': 'DvtUtilBundle.STATE_ISOLATED',
+      'oj-dvtBaseComponent.stateHidden': 'DvtUtilBundle.STATE_HIDDEN',
+      'oj-dvtBaseComponent.stateVisible': 'DvtUtilBundle.STATE_VISIBLE'
     };
-  },
-  
-  // Private function.
-  // Called to process the translated strings for this widget.  
-  _processTranslations: function() {
-    // Retrieve the map of translation keys + DvtBundle identifiers
-    var translationMap = this._getTranslationMap();
     
     // Retrieve the resources and map to the DvtBundle identifiers
-    var bundle = {};
-    for(var key in translationMap) {
-      var bundleKey = translationMap[key];
+    var ret = {};
+    for(var key in map) {
+      var bundleKey = map[key];
       var resource = oj.Translations.getResource(key);
-      bundle[bundleKey] = resource;
+      ret[bundleKey] = resource;
     }
-    
-    // Register with the DvtBundle
-    DvtBundle.addLocalizedStrings(bundle);
+    return ret;
   },
   
-  // Override of protected function in base component.
-  // Called to clean up any modifications performed by this widget
+  /**
+   * Retrieves the translated resource with the specified 
+   * @param {string} key The key used to retrieve the translated resource.
+   * @param {Array.<string>} params The array of named parameters that need to be converted into index based parameters.
+   * @protected
+   */
+  _GetTranslatedResource: function(key, params) {
+    var translatedResource = this.options[key];
+    
+    // If named parameters are defined, replace with index based params
+    if(params) {
+      var paramMap = {};
+      for(var i=0; i<params.length; i++) {
+        paramMap[params[i]] = '{' + i + '}';
+      }
+      translatedResource = oj.Translations.applyParameters(translatedResource, paramMap);
+    }
+
+    return translatedResource;
+  },
+   
+  /**
+   * Called to process the translated strings for this widget.  
+   * @private
+   */
+  _processTranslations: function() {
+    // Retrieve the map of translation keys + DvtBundle identifiers
+    var translationMap = this._GetTranslationMap();
+    
+    // Register with the DvtBundle
+    DvtBundle.addLocalizedStrings(translationMap);
+  },
+  
+  /**
+   * @override
+   * @protected
+   */
   _destroy : function() {
     this.element.children().remove();
+    
+    // Call super last for destroy
+    this._super();
   },
 
-  // Override of protected function in base component.
-  // Called when one or more options are being set.
+  /**
+   * @override
+   * @protected
+   */
   _setOptions : function(options) {
     // Call the super to update the property values
     this._superApply(arguments);
     
     // Render the component with the changes
-    this._render();
+    this._Render();
   },
   
-  // Protected function.
-  // Called by _create to create the specific component instance.  Subclasses must override.
-  _createComponent : function(context, callback, callbackObj) {
+  /**
+   * Called by _create to instantiate the specific component instance.  Subclasses must override.
+   * @param {DvtContext} context
+   * @param {Function} callback
+   * @param {Object} callbackObj
+   * @protected
+   */
+  _CreateComponent : function(context, callback, callbackObj) {
     return null; // subclasses must override
   },
   
-  // Protected function.
-  // Called by the component to process events.  Subclasses should override to delegate DVT component
-  // events to their JQuery listeners.
-  _handleEvent : function(event) {
-    var type = event && event.getType ? event.getType() : null;
-    if (type == DvtActiveElementChangeEvent.TYPE) {
-      var id = event.getId();
-      this.element.attr("aria-activedescendant", id);
-    }
-    else {
-      return null;
-    }
+  /**
+   * Called by the component to process events.  Subclasses should override to delegate DVT component events to their 
+   * JQuery listeners.
+   * @param {Object} event
+   * @protected
+   */
+  _HandleEvent : function(event) {
+    // subclasses should override to delegate component events to their listeners
   },
   
-  // Protected function.
-  // Called when the component is resized. 
+  /**
+   * Called when the component is resized.
+   * @param {number} width
+   * @param {number} height
+   * @private
+   */
   _handleResize : function(width, height) {
     // Render the component at the new size if it changed enough
     var newWidth = this.element.width();
@@ -440,16 +554,20 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     }
   },
   
-  // Protected function.
-  // Called by our implementation to load component resources like images, 
-  // resource bundles, or basemaps.
-  _loadResources : function() {
+  /**
+   * Called by our implementation to load component resources like images, resource bundles, or basemaps.
+   * @protected
+   */
+  _LoadResources : function() {
     // subcomponents should override
   }, 
   
-  // Protected function
-  // Utility function for loading resource bundles
-  _loadResourceBundle : function(url) {
+  /**
+   * Utility function for loading resource bundles.
+   * @protected
+   */
+  _LoadResourceBundle : function(url) {
+    // TODO AMDAI Move this to thematic map since the other DVTs are not likely to use.
     var locale = oj.Config.getLocale();
     if (locale.indexOf("en") === 0) {
       this._loadResourceBundleByUrl(url + ".js");
@@ -475,9 +593,12 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     }
   },
   
-  // Protected function
-  // Utility function for loading resource bundles by url
+  /**
+   * Utility function for loading resource bundles by url.
+   * @private
+   */
   _loadResourceBundleByUrl : function(url) {
+    // TODO AMDAI Move this to thematic map since the other DVTs are not likely to use.
     // resource is already loaded or function tried to load this resource but failed
     if(this._loadedResources[url])
       return;
@@ -487,52 +608,34 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     var loadedBundles = this._loadedResources;
     $.getScript(resolvedUrl, function( data, textStatus, jqxhr ) {
       loadedBundles[url] = true;
-      thisRef._render();
+      thisRef._Render();
     });
   },
           
-  // Protected function.
-  // Called by our implementation to render the component at the current size.
-  _render : function() {
+  /**
+   * Called to render the component at the current size.
+   * @protected
+   */
+  _Render : function() {
     // do not render until all resources are loaded
     for (var i=0; i<this._checkResources.length; i++) {
       if (!this._loadedResources[this._checkResources[i]])
         return;
     }
     
-    // Render the component
-    this._width = this.element.width();
-    this._height = this.element.height();
-    this._component.render(this.options, this._width, this._height);
-  },
-  
-  // Override of public function in base component.
-  // Called by the application to re-render the component, commonly at a new size.
-  refresh : function() {
-    // Update the reading direction on the context
-    this._context.setReadingDirection(this._GetReadingDirection());
-    
-    // Retrieve and apply the translated strings onto the component bundle
-    this._processTranslations();
-  
-    // Render the component with any changes
-    this._render();
-  },
-  
-  /**
-   * @override
-   */
-  getNodeBySubId : function(locator) {
-    // subcomponents should override for jsDoc to list subId values
-    var automation;
-    if (this._component && this._component.getAutomation)
-      automation = this._component.getAutomation();
-    if (automation)
-      return automation.getDomElementForSubId(locator);
-    return null;
+    // Fix 18498656: If the component is not attached to a visible subtree of the DOM, rendering will fail because 
+    // getBBox calls will not return the correct values.  Log an error message in this case and avoid rendering.
+    if(!this._context.isReadyToRender())
+      // TODO This resource should be retrieved off of the options object
+      oj.Logger.error(oj.Translations.getResource('oj-dvtBaseComponent.notReadyToRender')['summary']);
+    else {
+      // Render the component
+      this._width = this.element.width();
+      this._height = this.element.height();
+      this._component.render(this.options, this._width, this._height);
+    }
   }
 });
-
 /**
  * Creates a shape attribute group handler that will generate shape attribute values.
  * @param {Object} matchRules A map of key value pairs for categories and the matching attribute value e.g. {"soda" : "square", "water" : "circle", "iced tea" : "triangleUp"}.

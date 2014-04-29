@@ -42,8 +42,8 @@ var _oldVal = _scope['oj'];
 var oj = _scope['oj'] =
 {
   'version': "1.0",
-  'build' : "2163",
-  'revision': "6153",
+  'build' : "2448",
+  'revision': "7027",
           
   // This function is only meant to be used outside the library, so quoting the name
   // to avoid renaming is appropriate
@@ -752,6 +752,84 @@ oj.Object._initClasses = function(currClass)
   }
 };
 
+/**
+ * Compares 2 values using strict equality except for the case of 
+ * 1) Specific API invocation for Array [order matters], Date, and Object 
+ * 
+ * @expose
+ */
+oj.Object.compareValues = function (obj1, obj2)
+{
+  if (obj1 === obj2) 
+  {
+    return true;
+  }
+  
+  var obj1Type = typeof obj1,
+      obj2Type = typeof obj2;
+  
+  if (obj1Type !== obj2Type) 
+  {
+    //of different type so consider them unequal
+    return false;
+  }
+  
+  //At this point means the types are equal
+  
+  //note that if the operand is an array or a null then typeof is an object
+  //check if either is null and if so return false [i.e. case where one might be a null and another an object]
+  //and one wishes to avoid the null pointer in the following checks. Note that null === null has been already tested 
+  if(obj1 === null || obj2 === null) 
+  {
+    return false;
+  }
+  
+  //now check for constructor since I think by here one has ruled out primitive values and if the constructors 
+  //aren't equal then return false
+  if(obj1.constructor === obj2.constructor) 
+  {
+    
+    //these are special cases and will need to be modded on a need to have basis
+    if(Array.isArray(obj1))
+    {
+      return oj.Object._compareArrayValues(obj1, obj2);
+    }
+    else if(obj1.constructor === Object)
+    {
+      //for now invoke innerEquals and in the future if there are issues then resolve them
+      return oj.Object.innerEquals(obj1, obj2);
+    }
+    else if(obj1["valueOf"] && typeof obj1["valueOf"] === "function") 
+    {
+      //test cases for Boolean, String, Number, Date
+      //Note if some future JavaScript constructors 
+      //do not impl it then it's their fault
+      return obj1.valueOf() === obj2.valueOf();
+    }
+    
+  }
+  
+  return false;
+};
+
+oj.Object._compareArrayValues = function (array1, array2) 
+{
+  if (array1.length !== array2.length)
+  {
+    return false;
+  }
+
+  for (var i = 0, j = array1.length;i < j;i++)
+  {
+    //recurse on each of the values, order does matter for our case since do not wish to search 
+    //for the value [expensive]
+    if (!oj.Object.compareValues(array1[i], array2[i]))
+    {
+      return false;
+    }
+  }
+  return true;
+}
 
 oj.Object.innerEquals = function (obj1, obj2) {
   var prop, hasProperties = false;

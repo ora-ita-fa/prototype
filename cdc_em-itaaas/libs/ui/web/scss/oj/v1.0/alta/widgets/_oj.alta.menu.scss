@@ -19,14 +19,13 @@ $includeMenuClasses: $includeAllClasses !default;
     
     .oj-menu {
         color: $textColor; 
-        // todo: we have $window vars available, should menu use those?
-        border: 1px solid $border3Color;
-        background: $background1Color;
+        border: 1px solid $menuBorderColor;
+        background: $menuBgColor;
         list-style: none;
         padding: 1px 0;
         margin: 0;
         display: inline-block; 
-        box-shadow: $smallBoxShadow;
+        @include oj-box-shadow($smallBoxShadow);
         font-size: $fontSize;
         white-space: nowrap;
     }
@@ -48,7 +47,7 @@ $includeMenuClasses: $includeAllClasses !default;
         font-size: 0;
         line-height: 0;
         border-width: 1px 0 0 0;
-        border-color: $border3Color;
+        border-color: $menuBorderColor;
         border-style: solid;
     }
     .oj-menu-item a { 
@@ -74,7 +73,7 @@ $includeMenuClasses: $includeAllClasses !default;
     .oj-menu-item a.oj-active {
         font-weight: normal; 
         margin: 0;
-        background: $interaction2Color;
+        background: $menuItemBgColorActive;
         border: 0;
     }
 
@@ -109,10 +108,10 @@ $includeMenuClasses: $includeAllClasses !default;
         height: auto;
         
         // Spec says submenu icon is 16px wide, and in its illustration the icon is small
-        // within the 16px space.  oj-widget-icon makes the width 1.34rem = 16px as 
+        // within the 16px space.  oj-component-icon makes the width 1.34rem = 16px as 
         // desired, and this 1rem font size makes the icon small within the 16px space as 
         // desired.  Without this line the icon subjectively looks huge.
-        font-size: 1rem; // override oj-widget-icon's 1.34rem, making the icon 12px not 16.  
+        font-size: 1rem; // override oj-component-icon's 1.34rem, making the icon 12px not 16.  
     }
     html:not([dir="rtl"]) .oj-menu-submenu-icon { 
         right: 0; // end-aligned per spec

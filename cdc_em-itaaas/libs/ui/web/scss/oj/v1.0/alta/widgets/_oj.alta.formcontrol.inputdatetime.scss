@@ -15,7 +15,6 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
 
 @import "../../common/helpers/oj.common.helpers"; 
 @import "oj.alta.icons";
-@import "oj.alta.tooltip";
 @import "oj.alta.button";
 @import "oj.alta.messaging";
 @import "oj.alta.formcontrol.label";
@@ -34,12 +33,13 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     .oj-datepicker-content 
     { 
       @include oj-box-sizing-property(border-box);
-      background-color: $background1Color;
-      border: $formControlBorderWidth solid $border1Color; 
+      background-color: $popupBgColor;
+      border: $formControlBorderWidth solid $popupBorderColor; 
       display: none;
       padding: 5px 3px 0 4px;
       z-index: $dropdownZindex;
-      width: $formControlMediumMaxWidth;
+      width: $formControlLargeMaxWidth;
+      // todo: the year dropdown is cutting off text on chrome on mac, might need to be bigger?
       @include oj-rtl()
       {
         direction: rtl;
@@ -62,7 +62,7 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
       top: 2px;
     }
 	
-    //positioned absolutely so need to include it. Thought about making code change, but it is rather impactful [sucks how it uses absolute]
+    //positioned absolutely so need to include it. Thought about making code change, but it is rather impactful
     .oj-datepicker-prev-icon 
     { 
       @include oj-ltr()
@@ -88,7 +88,8 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
 	
     .oj-datepicker-title 
     { 
-      margin: 0 2.3em; 
+      //decreased the margin slightly for chrome on mac
+      margin: 0 2.2em; 
       line-height: 1.8em; 
       text-align: center; 
     }
@@ -167,7 +168,7 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     }
     .oj-datepicker-calendar td a.oj-selected 
     {
-      background: $interaction1Color; 
+      background: $datepickerBgColorSelected; 
       color: $contrastTextColor; 
     }
     .oj-datepicker-calendar td.oj-disabled span 
@@ -178,7 +179,7 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     //Today
     .oj-datepicker-today
     {
-      border: $formControlBorderWidth solid $interaction1Color; 
+      border: $formControlBorderWidth solid $datepickerBorderColorToday; 
       text-decoration: none;
     }
 
@@ -188,7 +189,8 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
       
       margin: 2px 0 0;    
       padding: 0 3px;
-      border: $formControlBorderWidth solid $border1Color; 
+      // below is to add the border around the button pane area [contains Today + Done buttons
+      border: $formControlBorderWidth solid $popupBorderColor; 
       border-width: $formControlBorderWidth 0 0;
       
       display: inline-block;
@@ -283,7 +285,7 @@ $includeInputDateTimeClasses:   $includeFormControlClasses !default;
     }
     th.oj-datepicker-week-col 
     {
-      background-color: $background6Color;
+      background-color: $background5Color;
     }
     td.oj-datepicker-week-col 
     {

@@ -1,150 +1,144 @@
-define(["ojs/ojcore", "jquery", "knockout"], function($oj$$4$$, $$$$4$$, $ko$$1$$) {
-  function $_extractValueFromChangeEvent$$($event$$38$$, $eventData$$1$$) {
+define(["ojs/ojcore", "jquery", "knockout"], function($oj$$6$$, $$$$6$$, $ko$$1$$) {
+  function $_extractValueFromChangeEvent$$($event$$35$$, $eventData$$1$$) {
     var $nameVal$$ = {};
     $nameVal$$.value = $eventData$$1$$.value;
     return $nameVal$$
   }
-  function $_extractOptionChange$$($event$$39$$, $eventData$$2$$) {
+  function $_extractOptionChange$$($event$$36$$, $eventData$$2$$) {
     var $nameVal$$1$$ = {}, $metadata$$ = $eventData$$2$$.optionMetadata;
     $metadata$$ && "shouldWrite" === $metadata$$.writeback && ($nameVal$$1$$[$eventData$$2$$.option] = $eventData$$2$$.value);
     return $nameVal$$1$$
   }
   function $GlobalChangeQueue$$() {
-    this.$Init$()
+    this.Init()
   }
-  function $ComponentChangeTracker$$($component$$6$$, $queue$$) {
-    this.$Init$($component$$6$$, $queue$$)
+  function $ComponentChangeTracker$$($component$$6$$, $element$$21$$, $queue$$) {
+    this.Init($component$$6$$, $element$$21$$, $queue$$)
   }
-  function $_getTableColumnTemplateRenderer$$($bindingContext$$, $columnId$$, $type$$67$$, $template$$) {
+  function $_getDataGridHeaderRenderer$$($bindingContext$$, $template$$) {
+    return function($context$$32$$) {
+      var $parent$$2$$, $childContext$$;
+      $parent$$2$$ = $context$$32$$.parentElement;
+      $childContext$$ = $bindingContext$$.createChildContext($context$$32$$.data, null, function($binding$$) {
+        $binding$$.$key = $context$$32$$.key;
+        $binding$$.$metadata = $context$$32$$.metadata;
+        $binding$$.$headerContext = $context$$32$$
+      });
+      $ko$$1$$.renderTemplate($template$$, $childContext$$, null, $parent$$2$$);
+      return null
+    }
+  }
+  function $_getDataGridCellRenderer$$($bindingContext$$1$$, $template$$1$$) {
+    return function($context$$33$$) {
+      var $parent$$3$$, $childContext$$1$$;
+      $parent$$3$$ = $context$$33$$.parentElement;
+      $childContext$$1$$ = $bindingContext$$1$$.createChildContext($context$$33$$.data, null, function($binding$$1$$) {
+        $binding$$1$$.$keys = $context$$33$$.keys;
+        $binding$$1$$.$metadata = $context$$33$$.metadata;
+        $binding$$1$$.$cellContext = $context$$33$$
+      });
+      $ko$$1$$.renderTemplate($template$$1$$, $childContext$$1$$, null, $parent$$3$$);
+      return null
+    }
+  }
+  function $_getTableColumnTemplateRenderer$$($bindingContext$$2$$, $type$$68$$, $template$$2$$) {
     var $rendererOption$$ = {};
-    (function($template$$1$$, $type$$68$$) {
-      $rendererOption$$.renderer = function $$rendererOption$$$renderer$($params$$9$$) {
-        var $childContext$$ = null, $parentElement$$ = null;
-        "header" == $type$$68$$ ? ($childContext$$ = $bindingContext$$.extend({$column:$params$$9$$.column, $headerContext:$params$$9$$.headerContext}), $parentElement$$ = $params$$9$$.headerContext.parentElement) : "cell" == $type$$68$$ && ($childContext$$ = $bindingContext$$.createChildContext($params$$9$$.row, null, function($binding$$) {
-          $binding$$.$column = $params$$9$$.column;
-          $binding$$.$cellContext = $params$$9$$.cellContext
+    (function($template$$3$$, $type$$69$$) {
+      $rendererOption$$ = function $$rendererOption$$$($params$$9$$) {
+        var $childContext$$2$$ = null, $parentElement$$ = null;
+        "header" == $type$$69$$ ? ($childContext$$2$$ = $bindingContext$$2$$.extend({$column:$params$$9$$.column, $headerContext:$params$$9$$.headerContext}), $parentElement$$ = $params$$9$$.headerContext.parentElement) : "cell" == $type$$69$$ && ($childContext$$2$$ = $bindingContext$$2$$.createChildContext($params$$9$$.row, null, function($binding$$2$$) {
+          $binding$$2$$.$column = $params$$9$$.column;
+          $binding$$2$$.$cellContext = $params$$9$$.cellContext
         }), $parentElement$$ = $params$$9$$.cellContext.parentElement);
-        $ko$$1$$.renderTemplate($template$$1$$, $childContext$$, null, $parentElement$$, "replaceNode")
+        "footer" == $type$$69$$ && ($childContext$$2$$ = $bindingContext$$2$$.extend({$column:$params$$9$$.column, $footerContext:$params$$9$$.footerContext}), $parentElement$$ = $params$$9$$.footerContext.parentElement);
+        $ko$$1$$.renderTemplate($template$$3$$, $childContext$$2$$, null, $parentElement$$, "replaceNode")
       }
-    })($template$$, $type$$67$$);
-    $rendererOption$$.type = $type$$67$$;
-    $rendererOption$$.columnId = $columnId$$;
+    })($template$$2$$, $type$$68$$);
     return $rendererOption$$
   }
-  function $_getTableFooterTemplateRenderer$$($bindingContext$$1$$, $template$$2$$) {
+  function $_getTableRowTemplateRenderer$$($bindingContext$$3$$, $template$$4$$) {
     return function($params$$10$$) {
-      $ko$$1$$.renderTemplate($template$$2$$, $bindingContext$$1$$, null, $params$$10$$.footerContext.parentElement, "replaceNode")
-    }
-  }
-  function $_getTableRowTemplateRenderer$$($bindingContext$$2$$, $template$$3$$) {
-    return function($params$$11$$) {
-      var $childContext$$1$$ = $bindingContext$$2$$.createChildContext($params$$11$$.row, null, function($binding$$1$$) {
-        $binding$$1$$.$rowContext = $params$$11$$.rowContext
+      var $childContext$$3$$ = $bindingContext$$3$$.createChildContext($params$$10$$.row, null, function($binding$$3$$) {
+        $binding$$3$$.$rowContext = $params$$10$$.rowContext
       });
-      $ko$$1$$.renderTemplate($template$$3$$, $childContext$$1$$, null, $params$$11$$.rowContext.parentElement, "replaceNode")
+      $ko$$1$$.renderTemplate($template$$4$$, $childContext$$3$$, null, $params$$10$$.rowContext.parentElement, "replaceNode")
     }
   }
-  function $_getDataGridHeaderRenderer$$($bindingContext$$3$$, $template$$4$$) {
-    return function($context$$32$$) {
-      var $parent$$2$$, $childContext$$2$$;
-      $parent$$2$$ = $context$$32$$.parentElement;
-      $childContext$$2$$ = $bindingContext$$3$$.createChildContext($context$$32$$.data, null, function($binding$$2$$) {
-        $binding$$2$$.$key = $context$$32$$.key;
-        $binding$$2$$.$metadata = $context$$32$$.metadata;
-        $binding$$2$$.$headerContext = $context$$32$$
-      });
-      $ko$$1$$.renderTemplate($template$$4$$, $childContext$$2$$, null, $parent$$2$$);
-      return null
-    }
-  }
-  function $_getDataGridCellRenderer$$($bindingContext$$4$$, $template$$5$$) {
-    return function($context$$33$$) {
-      var $parent$$3$$, $childContext$$3$$;
-      $parent$$3$$ = $context$$33$$.parentElement;
-      $childContext$$3$$ = $bindingContext$$4$$.createChildContext($context$$33$$.data, null, function($binding$$3$$) {
-        $binding$$3$$.$keys = $context$$33$$.keys;
-        $binding$$3$$.$metadata = $context$$33$$.metadata;
-        $binding$$3$$.$cellContext = $context$$33$$
-      });
-      $ko$$1$$.renderTemplate($template$$5$$, $childContext$$3$$, null, $parent$$3$$);
-      return null
-    }
-  }
-  $oj$$4$$.$ComponentBinding$ = function $$oj$$4$$$$ComponentBinding$$($name$$82$$, $options$$168$$) {
-    this.$Init$($name$$82$$, $options$$168$$)
+  $oj$$6$$.$ComponentBinding$ = function $$oj$$6$$$$ComponentBinding$$($name$$83$$, $options$$170$$) {
+    this.Init($name$$83$$, $options$$170$$)
   };
-  $goog$exportPath_$$("ComponentBinding", $oj$$4$$.$ComponentBinding$, $oj$$4$$);
-  $oj$$4$$.$Object$.$createSubclass$($oj$$4$$.$ComponentBinding$, $oj$$4$$.$Object$, "oj.ComponentBinding");
-  $oj$$4$$.$ComponentBinding$.create = function $$oj$$4$$$$ComponentBinding$$create$($name$$83$$, $options$$169$$) {
-    if(null == $name$$83$$) {
+  $goog$exportPath_$$("ComponentBinding", $oj$$6$$.$ComponentBinding$, $oj$$6$$);
+  $oj$$6$$.$Object$.$createSubclass$($oj$$6$$.$ComponentBinding$, $oj$$6$$.$Object$, "oj.ComponentBinding");
+  $oj$$6$$.$ComponentBinding$.create = function $$oj$$6$$$$ComponentBinding$$create$($name$$84$$, $options$$171$$) {
+    if(null == $name$$84$$) {
       throw"Binding name is required!";
     }
-    var $instance$$8$$ = new $oj$$4$$.$ComponentBinding$($name$$83$$, $options$$169$$), $handlers$$6$$ = $ko$$1$$.bindingHandlers, $i$$92$$, $names$$ = Array.isArray($name$$83$$) ? $name$$83$$ : [$name$$83$$];
-    for($i$$92$$ = 0;$i$$92$$ < $names$$.length;$i$$92$$++) {
-      $handlers$$6$$[$names$$[$i$$92$$]] = $instance$$8$$
+    var $instance$$9$$ = new $oj$$6$$.$ComponentBinding$($name$$84$$, $options$$171$$), $handlers$$5$$ = $ko$$1$$.bindingHandlers, $i$$95$$, $names$$ = Array.isArray($name$$84$$) ? $name$$84$$ : [$name$$84$$];
+    for($i$$95$$ = 0;$i$$95$$ < $names$$.length;$i$$95$$++) {
+      $handlers$$5$$[$names$$[$i$$95$$]] = $instance$$9$$
     }
-    return $instance$$8$$
+    return $instance$$9$$
   };
-  $goog$exportPath_$$("ComponentBinding.create", $oj$$4$$.$ComponentBinding$.create, $oj$$4$$);
-  $oj$$4$$.$ComponentBinding$.$getDefaultInstance$ = function $$oj$$4$$$$ComponentBinding$$$getDefaultInstance$$() {
-    return $oj$$4$$.$ComponentBinding$.$_INSTANCE$
+  $goog$exportPath_$$("ComponentBinding.create", $oj$$6$$.$ComponentBinding$.create, $oj$$6$$);
+  $oj$$6$$.$ComponentBinding$.$getDefaultInstance$ = function $$oj$$6$$$$ComponentBinding$$$getDefaultInstance$$() {
+    return $oj$$6$$.$ComponentBinding$.$_INSTANCE$
   };
-  $goog$exportPath_$$("ComponentBinding.getDefaultInstance", $oj$$4$$.$ComponentBinding$.$getDefaultInstance$, $oj$$4$$);
-  $oj$$4$$.$ComponentBinding$.prototype.$setupManagedAttributes$ = function $$oj$$4$$$$ComponentBinding$$$$setupManagedAttributes$$($opts$$8$$) {
+  $goog$exportPath_$$("ComponentBinding.getDefaultInstance", $oj$$6$$.$ComponentBinding$.$getDefaultInstance$, $oj$$6$$);
+  $oj$$6$$.$ComponentBinding$.prototype.$setupManagedAttributes$ = function $$oj$$6$$$$ComponentBinding$$$$setupManagedAttributes$$($opts$$8$$) {
     var $forName$$ = $opts$$8$$["for"], $forName$$ = null == $forName$$ ? "@global" : $forName$$;
-    $oj$$4$$.$Logger$.option("level") >= $oj$$4$$.$Logger$.$LEVEL_ERROR$ && this.$_managedAttrOptions$[$forName$$] && $oj$$4$$.$Logger$.error("Managed Attributes for '%s' are redefined", $forName$$);
+    $oj$$6$$.$Logger$.option("level") >= $oj$$6$$.$Logger$.$LEVEL_ERROR$ && this.$_managedAttrOptions$[$forName$$] && $oj$$6$$.$Logger$.error("Managed Attributes for '%s' are redefined", $forName$$);
     this.$_managedAttrOptions$[$forName$$] = $opts$$8$$
   };
-  $oj$$4$$.$Object$.$exportPrototypeSymbol$("ComponentBinding.prototype.setupManagedAttributes", {$setupManagedAttributes$:$oj$$4$$.$ComponentBinding$.prototype.$setupManagedAttributes$});
-  $oj$$4$$.$ComponentBinding$.$deliverChanges$ = function $$oj$$4$$$$ComponentBinding$$$deliverChanges$$() {
-    $oj$$4$$.$ComponentBinding$.$_changeQueue$.$deliverChanges$()
+  $oj$$6$$.$Object$.$exportPrototypeSymbol$("ComponentBinding.prototype.setupManagedAttributes", {$setupManagedAttributes$:$oj$$6$$.$ComponentBinding$.prototype.$setupManagedAttributes$});
+  $oj$$6$$.$ComponentBinding$.$deliverChanges$ = function $$oj$$6$$$$ComponentBinding$$$deliverChanges$$() {
+    $oj$$6$$.$ComponentBinding$.$_changeQueue$.$deliverChanges$()
   };
-  $goog$exportPath_$$("ComponentBinding.deliverChanges", $oj$$4$$.$ComponentBinding$.$deliverChanges$, $oj$$4$$);
-  $oj$$4$$.$ComponentBinding$.prototype.$Init$ = function $$oj$$4$$$$ComponentBinding$$$$Init$$($names$$1$$, $options$$170$$) {
-    $oj$$4$$.$ComponentBinding$.$superclass$.$Init$.call(this);
-    "string" === typeof $options$$170$$ && ($options$$170$$ = {componentName:$options$$170$$});
-    this.$_bindingOptions$ = $options$$170$$ || {};
+  $goog$exportPath_$$("ComponentBinding.deliverChanges", $oj$$6$$.$ComponentBinding$.$deliverChanges$, $oj$$6$$);
+  $oj$$6$$.$ComponentBinding$.prototype.Init = function $$oj$$6$$$$ComponentBinding$$$Init$($names$$1$$, $options$$172$$) {
+    $oj$$6$$.$ComponentBinding$.$superclass$.Init.call(this);
+    "string" === typeof $options$$172$$ && ($options$$172$$ = {componentName:$options$$172$$});
+    this.$_bindingOptions$ = $options$$172$$ || {};
     this.$_bindingNames$ = Array.isArray($names$$1$$) ? $names$$1$$ : [$names$$1$$];
-    this.init = $oj$$4$$.$Object$.$createCallback$(this, this._init);
-    this.update = $oj$$4$$.$Object$.$createCallback$(this, this.$_update$);
+    this.init = $oj$$6$$.$Object$.$createCallback$(this, this._init);
+    this.update = $oj$$6$$.$Object$.$createCallback$(this, this.$_update$);
     this.$_managedAttrOptions$ = {}
   };
-  $oj$$4$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$ = "_ojNeedsJUIBInit";
-  $oj$$4$$.$ComponentBinding$.prototype._init = function $$oj$$4$$$$ComponentBinding$$$_init$($element$$20$$, $valueAccessor$$, $allBindingsAccessor$$, $viewModel$$1$$, $bindingContext$$5$$) {
-    $ko$$1$$.applyBindingsToDescendants($bindingContext$$5$$, $element$$20$$);
-    $$$$4$$($element$$20$$).data($oj$$4$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$, !0);
+  $oj$$6$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$ = "_ojNeedsJUIBInit";
+  $oj$$6$$.$ComponentBinding$.prototype._init = function $$oj$$6$$$$ComponentBinding$$$_init$($element$$22$$, $valueAccessor$$, $allBindingsAccessor$$, $viewModel$$1$$, $bindingContext$$4$$) {
+    $ko$$1$$.applyBindingsToDescendants($bindingContext$$4$$, $element$$22$$);
+    $$$$6$$($element$$22$$).data($oj$$6$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$, !0);
     return{controlsDescendantBindings:!0}
   };
-  $oj$$4$$.$ComponentBinding$.prototype.$_update$ = function $$oj$$4$$$$ComponentBinding$$$$_update$$($element$$21$$, $valueAccessor$$1$$, $allBindingsAccessor$$1$$, $jelem$$3_viewModel$$2$$, $bindingContext$$6$$) {
-    $jelem$$3_viewModel$$2$$ = $$$$4$$($element$$21$$);
-    $jelem$$3_viewModel$$2$$.data($oj$$4$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$) && ($jelem$$3_viewModel$$2$$.data($oj$$4$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$, null), this.$_initComponent$($element$$21$$, $jelem$$3_viewModel$$2$$, $valueAccessor$$1$$, $allBindingsAccessor$$1$$, $bindingContext$$6$$))
+  $oj$$6$$.$ComponentBinding$.prototype.$_update$ = function $$oj$$6$$$$ComponentBinding$$$$_update$$($element$$23$$, $valueAccessor$$1$$, $allBindingsAccessor$$1$$, $jelem$$3_viewModel$$2$$, $bindingContext$$5$$) {
+    $jelem$$3_viewModel$$2$$ = $$$$6$$($element$$23$$);
+    $jelem$$3_viewModel$$2$$.data($oj$$6$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$) && ($jelem$$3_viewModel$$2$$.data($oj$$6$$.$ComponentBinding$.$_NEEDS_JUIB_INIT$, null), this.$_initComponent$($element$$23$$, $jelem$$3_viewModel$$2$$, $valueAccessor$$1$$, $allBindingsAccessor$$1$$, $bindingContext$$5$$))
   };
-  $oj$$4$$.$ComponentBinding$.prototype.$_initComponent$ = function $$oj$$4$$$$ComponentBinding$$$$_initComponent$$($element$$22$$, $jelem$$4$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$7$$) {
-    var $options$$171$$ = $valueAccessor$$2$$(), $roleAttrName$$ = null, $disposed$$ = !1, $registeredListers$$ = [], $tracker$$2$$ = null, $comp$$ = null, $bindingMap$$ = $oj$$4$$.$ComponentBinding$.$_getBindingValueMap$(this.$_bindingNames$, $element$$22$$, $bindingContext$$7$$), $stage$$ = 0, $attributeEvaluatorCache$$ = {}, $componentName$$1$$ = this.$_bindingOptions$.componentName;
+  $oj$$6$$.$ComponentBinding$.prototype.$_initComponent$ = function $$oj$$6$$$$ComponentBinding$$$$_initComponent$$($element$$24$$, $jelem$$4$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$6$$) {
+    var $options$$173$$ = $valueAccessor$$2$$(), $roleAttrName$$ = null, $disposed$$ = !1, $registeredListers$$ = [], $tracker$$2$$ = null, $comp$$ = null, $bindingMap$$ = $oj$$6$$.$ComponentBinding$.$_getBindingValueMap$(this.$_bindingNames$, $element$$24$$, $bindingContext$$6$$), $stage$$ = 0, $attributeEvaluatorCache$$ = {}, $componentName$$1$$ = this.$_bindingOptions$.componentName;
     if(null == $componentName$$1$$) {
       $roleAttrName$$ = "component";
       if(!$bindingMap$$[$roleAttrName$$] && ($roleAttrName$$ = "role", !$bindingMap$$[$roleAttrName$$])) {
-        $oj$$4$$.$Logger$.error("component attribute is required for the ojComponent binding");
+        $oj$$6$$.$Logger$.error("component attribute is required for the ojComponent binding");
         return
       }
-      var $role$$ = $options$$171$$[$roleAttrName$$];
+      var $role$$ = $options$$173$$[$roleAttrName$$];
       if(null == $role$$) {
-        $oj$$4$$.$Logger$.error("non-null component attribute is required for the ojComponent binding");
+        $oj$$6$$.$Logger$.error("non-null component attribute is required for the ojComponent binding");
         return
       }
       $ko$$1$$.computed(function() {
-        $oj$$4$$.$ComponentBinding$.$_evaluatePropertyExpression$($bindingMap$$[$roleAttrName$$], $roleAttrName$$, $attributeEvaluatorCache$$, $bindingContext$$7$$);
+        $oj$$6$$.$ComponentBinding$.$_evaluatePropertyExpression$($bindingMap$$[$roleAttrName$$], $roleAttrName$$, $attributeEvaluatorCache$$, $bindingContext$$6$$);
         if(0 == $stage$$) {
           $componentName$$1$$ = $ko$$1$$.utils.unwrapObservable($role$$)
         }else {
           $disposed$$ = !0;
           $bindingMap$$ = null;
-          $oj$$4$$.$ComponentBinding$.$_unregisterWritebacks$($jelem$$4$$);
+          $oj$$6$$.$ComponentBinding$.$_unregisterWritebacks$($jelem$$4$$);
           if($comp$$) {
             $tracker$$2$$.$dispose$();
             $tracker$$2$$ = null;
             var $destroyCallback_l$$2$$ = this.$_bindingOptions$.beforeDestroy;
-            $destroyCallback_l$$2$$ && $destroyCallback_l$$2$$($element$$22$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$7$$);
+            $destroyCallback_l$$2$$ && $destroyCallback_l$$2$$($element$$24$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$6$$);
             $comp$$("destroy");
             $comp$$ = null;
             for($destroyCallback_l$$2$$ = 0;$destroyCallback_l$$2$$ < $registeredListers$$.length;$destroyCallback_l$$2$$++) {
@@ -152,29 +146,29 @@ define(["ojs/ojcore", "jquery", "knockout"], function($oj$$4$$, $$$$4$$, $ko$$1$
             }
             $registeredListers$$ = null
           }
-          this.$_initComponent$($element$$22$$, $jelem$$4$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$7$$)
+          this.$_initComponent$($element$$24$$, $jelem$$4$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$6$$)
         }
         return null
-      }, this, {disposeWhenNodeIsRemoved:$element$$22$$})
+      }, this, {disposeWhenNodeIsRemoved:$element$$24$$})
     }
     if(null != $componentName$$1$$) {
       if($comp$$ = $jelem$$4$$[$componentName$$1$$], "function" === typeof $comp$$) {
-        var $comp$$ = $comp$$.bind($jelem$$4$$), $managedAttrMap$$ = $oj$$4$$.$ComponentBinding$.$_resolveManagedAttributes$(this.$_managedAttrOptions$, $bindingMap$$, $componentName$$1$$), $defaultInstance_defaultManagedMap_writablePropMap$$ = $oj$$4$$.$ComponentBinding$.$getDefaultInstance$();
-        this !== $defaultInstance_defaultManagedMap_writablePropMap$$ && ($defaultInstance_defaultManagedMap_writablePropMap$$ = $defaultInstance_defaultManagedMap_writablePropMap$$.$_getManagedAttributes$($bindingMap$$, $componentName$$1$$), $oj$$4$$.$CollectionUtils$.$copyInto$($defaultInstance_defaultManagedMap_writablePropMap$$, $managedAttrMap$$), $managedAttrMap$$ = $defaultInstance_defaultManagedMap_writablePropMap$$);
-        var $propertyMap$$ = {}, $tracker$$2$$ = new $ComponentChangeTracker$$($comp$$, $oj$$4$$.$ComponentBinding$.$_changeQueue$), $defaultInstance_defaultManagedMap_writablePropMap$$ = {"^slider$":[{event:"slidechange", getter:$_extractValueFromChangeEvent$$}], "^oj*":[{event:"ojoptionchange", getter:$_extractOptionChange$$}]}, $handler$$47$$ = function $$handler$$47$$$() {
+        var $comp$$ = $comp$$.bind($jelem$$4$$), $managedAttrMap$$ = $oj$$6$$.$ComponentBinding$.$_resolveManagedAttributes$(this.$_managedAttrOptions$, $bindingMap$$, $componentName$$1$$), $defaultInstance_defaultManagedMap_writablePropMap$$ = $oj$$6$$.$ComponentBinding$.$getDefaultInstance$();
+        this !== $defaultInstance_defaultManagedMap_writablePropMap$$ && ($defaultInstance_defaultManagedMap_writablePropMap$$ = $defaultInstance_defaultManagedMap_writablePropMap$$.$_getManagedAttributes$($bindingMap$$, $componentName$$1$$), $oj$$6$$.$CollectionUtils$.$copyInto$($defaultInstance_defaultManagedMap_writablePropMap$$, $managedAttrMap$$), $managedAttrMap$$ = $defaultInstance_defaultManagedMap_writablePropMap$$);
+        var $propertyMap$$ = {}, $tracker$$2$$ = new $ComponentChangeTracker$$($comp$$, $element$$24$$, $oj$$6$$.$ComponentBinding$.$_changeQueue$), $defaultInstance_defaultManagedMap_writablePropMap$$ = {"^slider$":[{event:"slidechange", getter:$_extractValueFromChangeEvent$$}], "^oj*":[{event:"ojoptionchange", getter:$_extractOptionChange$$}]}, $handler$$45$$ = function $$handler$$45$$$() {
           var $initProps_prop$$54_updateProps$$ = this.$_property$, $exp$$1_initFunc_v$$ = $bindingMap$$[$initProps_prop$$54_updateProps$$];
-          $exp$$1_initFunc_v$$ && $oj$$4$$.$ComponentBinding$.$_evaluatePropertyExpression$($exp$$1_initFunc_v$$, $initProps_prop$$54_updateProps$$, $attributeEvaluatorCache$$, $bindingContext$$7$$);
+          $exp$$1_initFunc_v$$ && $oj$$6$$.$ComponentBinding$.$_evaluatePropertyExpression$($exp$$1_initFunc_v$$, $initProps_prop$$54_updateProps$$, $attributeEvaluatorCache$$, $bindingContext$$6$$);
           if(0 === $stage$$) {
-            var $p$$4_value$$129$$ = $oj$$4$$.$ComponentBinding$.$_toJS$($options$$171$$[$initProps_prop$$54_updateProps$$]);
-            null != $managedAttrMap$$[$initProps_prop$$54_updateProps$$] ? ($exp$$1_initFunc_v$$ = $managedAttrMap$$[$initProps_prop$$54_updateProps$$].$init$, null != $exp$$1_initFunc_v$$ && ($initProps_prop$$54_updateProps$$ = $exp$$1_initFunc_v$$($initProps_prop$$54_updateProps$$, $p$$4_value$$129$$, $element$$22$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$7$$) || {}, $oj$$4$$.$CollectionUtils$.$copyInto$($propertyMap$$, $initProps_prop$$54_updateProps$$))) : $propertyMap$$[$initProps_prop$$54_updateProps$$] = 
-            $p$$4_value$$129$$
+            var $p$$4_value$$131$$ = $oj$$6$$.$ComponentBinding$.$_toJS$($options$$173$$[$initProps_prop$$54_updateProps$$]);
+            null != $managedAttrMap$$[$initProps_prop$$54_updateProps$$] ? ($exp$$1_initFunc_v$$ = $managedAttrMap$$[$initProps_prop$$54_updateProps$$].$init$, null != $exp$$1_initFunc_v$$ && ($initProps_prop$$54_updateProps$$ = $exp$$1_initFunc_v$$($initProps_prop$$54_updateProps$$, $p$$4_value$$131$$, $element$$24$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$6$$) || {}, $oj$$6$$.$CollectionUtils$.$copyInto$($propertyMap$$, $initProps_prop$$54_updateProps$$))) : $propertyMap$$[$initProps_prop$$54_updateProps$$] = 
+            $p$$4_value$$131$$
           }else {
             if(!$disposed$$) {
-              if($exp$$1_initFunc_v$$ = $oj$$4$$.$ComponentBinding$.$_toJS$($valueAccessor$$2$$()[$initProps_prop$$54_updateProps$$]), null != $managedAttrMap$$[$initProps_prop$$54_updateProps$$]) {
+              if($exp$$1_initFunc_v$$ = $oj$$6$$.$ComponentBinding$.$_toJS$($valueAccessor$$2$$()[$initProps_prop$$54_updateProps$$]), null != $managedAttrMap$$[$initProps_prop$$54_updateProps$$]) {
                 var $updateFunc$$ = $managedAttrMap$$[$initProps_prop$$54_updateProps$$].update;
                 if(null != $updateFunc$$) {
-                  for($p$$4_value$$129$$ in $initProps_prop$$54_updateProps$$ = $updateFunc$$($initProps_prop$$54_updateProps$$, $exp$$1_initFunc_v$$, $element$$22$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$7$$) || {}, $initProps_prop$$54_updateProps$$) {
-                    $initProps_prop$$54_updateProps$$.hasOwnProperty($p$$4_value$$129$$) && $tracker$$2$$.$addChange$($p$$4_value$$129$$, $initProps_prop$$54_updateProps$$[$p$$4_value$$129$$])
+                  for($p$$4_value$$131$$ in $initProps_prop$$54_updateProps$$ = $updateFunc$$($initProps_prop$$54_updateProps$$, $exp$$1_initFunc_v$$, $element$$24$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$6$$) || {}, $initProps_prop$$54_updateProps$$) {
+                    $initProps_prop$$54_updateProps$$.hasOwnProperty($p$$4_value$$131$$) && $tracker$$2$$.$addChange$($p$$4_value$$131$$, $initProps_prop$$54_updateProps$$[$p$$4_value$$131$$])
                   }
                 }
               }else {
@@ -184,79 +178,79 @@ define(["ojs/ojcore", "jquery", "knockout"], function($oj$$4$$, $$$$4$$, $ko$$1$
           }
           return null
         }, $createCallback_p$$3$$;
-        for($createCallback_p$$3$$ in $options$$171$$) {
-          $options$$171$$.hasOwnProperty($createCallback_p$$3$$) && $createCallback_p$$3$$ !== $roleAttrName$$ && $registeredListers$$.push($ko$$1$$.computed($handler$$47$$, {$_property$:$createCallback_p$$3$$}, {disposeWhenNodeIsRemoved:$element$$22$$}))
+        for($createCallback_p$$3$$ in $options$$173$$) {
+          $options$$173$$.hasOwnProperty($createCallback_p$$3$$) && $createCallback_p$$3$$ !== $roleAttrName$$ && $registeredListers$$.push($ko$$1$$.computed($handler$$45$$, {$_property$:$createCallback_p$$3$$}, {disposeWhenNodeIsRemoved:$element$$24$$}))
         }
-        $oj$$4$$.$ComponentBinding$.$_registerWritebacks$($jelem$$4$$, $componentName$$1$$, $defaultInstance_defaultManagedMap_writablePropMap$$, $valueAccessor$$2$$, $bindingMap$$, $tracker$$2$$, $bindingContext$$7$$);
+        $oj$$6$$.$ComponentBinding$.$_registerWritebacks$($jelem$$4$$, $componentName$$1$$, $defaultInstance_defaultManagedMap_writablePropMap$$, $valueAccessor$$2$$, $bindingMap$$, $tracker$$2$$, $bindingContext$$6$$);
         $comp$$($propertyMap$$);
-        ($createCallback_p$$3$$ = this.$_bindingOptions$.afterCreate) && $createCallback_p$$3$$($element$$22$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$7$$);
+        ($createCallback_p$$3$$ = this.$_bindingOptions$.afterCreate) && $createCallback_p$$3$$($element$$24$$, $comp$$, $valueAccessor$$2$$, $allBindingsAccessor$$2$$, $bindingContext$$6$$);
         $propertyMap$$ = null
       }else {
-        $oj$$4$$.$Logger$.error("Component %s is not found", $componentName$$1$$)
+        $oj$$6$$.$Logger$.error("Component %s is not found", $componentName$$1$$)
       }
     }
     $stage$$ = 1
   };
-  $oj$$4$$.$ComponentBinding$.$_getBindingValueMap$ = function $$oj$$4$$$$ComponentBinding$$$_getBindingValueMap$$($n$$17_names$$2$$, $elem$$17_keyValueArray$$, $bindingContext$$8_stringTrimRegex$$) {
-    var $map$$ = {}, $bindingValue_i$$93_provider$$ = null, $bindingValue_i$$93_provider$$ = $ko$$1$$.bindingProvider.instance, $e$$40_selfVal$$;
-    $e$$40_selfVal$$ = null;
-    var $keyValueEntry$$, $bindingValue_i$$93_provider$$ = $bindingValue_i$$93_provider$$.$getBindingsString$ ? $bindingValue_i$$93_provider$$.$getBindingsString$($elem$$17_keyValueArray$$, $bindingContext$$8_stringTrimRegex$$) : $elem$$17_keyValueArray$$.getAttribute("data-bind");
-    if(!$bindingValue_i$$93_provider$$) {
+  $oj$$6$$.$ComponentBinding$.$_getBindingValueMap$ = function $$oj$$6$$$$ComponentBinding$$$_getBindingValueMap$$($n$$16_names$$2$$, $elem$$17_keyValueArray$$, $bindingContext$$7_stringTrimRegex$$) {
+    var $map$$ = {}, $bindingValue_i$$96_provider$$ = null, $bindingValue_i$$96_provider$$ = $ko$$1$$.bindingProvider.instance, $e$$39_selfVal$$;
+    $e$$39_selfVal$$ = null;
+    var $keyValueEntry$$, $bindingValue_i$$96_provider$$ = $bindingValue_i$$96_provider$$.$getBindingsString$ ? $bindingValue_i$$96_provider$$.$getBindingsString$($elem$$17_keyValueArray$$, $bindingContext$$7_stringTrimRegex$$) : $elem$$17_keyValueArray$$.getAttribute("data-bind");
+    if(!$bindingValue_i$$96_provider$$) {
       return $map$$
     }
-    $elem$$17_keyValueArray$$ = $ko$$1$$.jsonExpressionRewriting.parseObjectLiteral($bindingValue_i$$93_provider$$);
-    $bindingContext$$8_stringTrimRegex$$ = /^(\s|\u00A0)+|(\s|\u00A0)+$/g;
-    for($bindingValue_i$$93_provider$$ = 0;$bindingValue_i$$93_provider$$ < $elem$$17_keyValueArray$$.length;$bindingValue_i$$93_provider$$ += 1) {
-      $keyValueEntry$$ = $elem$$17_keyValueArray$$[$bindingValue_i$$93_provider$$];
-      var $bindingKey$$ = $keyValueEntry$$.key.replace($bindingContext$$8_stringTrimRegex$$, "");
-      if(0 <= $n$$17_names$$2$$.indexOf($bindingKey$$)) {
-        $e$$40_selfVal$$ = $keyValueEntry$$.value;
+    $elem$$17_keyValueArray$$ = $ko$$1$$.jsonExpressionRewriting.parseObjectLiteral($bindingValue_i$$96_provider$$);
+    $bindingContext$$7_stringTrimRegex$$ = /^(\s|\u00A0)+|(\s|\u00A0)+$/g;
+    for($bindingValue_i$$96_provider$$ = 0;$bindingValue_i$$96_provider$$ < $elem$$17_keyValueArray$$.length;$bindingValue_i$$96_provider$$ += 1) {
+      $keyValueEntry$$ = $elem$$17_keyValueArray$$[$bindingValue_i$$96_provider$$];
+      var $bindingKey$$ = $keyValueEntry$$.key.replace($bindingContext$$7_stringTrimRegex$$, "");
+      if(0 <= $n$$16_names$$2$$.indexOf($bindingKey$$)) {
+        $e$$39_selfVal$$ = $keyValueEntry$$.value;
         break
       }
     }
-    if(!$e$$40_selfVal$$) {
+    if(!$e$$39_selfVal$$) {
       return $map$$
     }
-    $elem$$17_keyValueArray$$ = $ko$$1$$.jsonExpressionRewriting.parseObjectLiteral($e$$40_selfVal$$);
-    for($n$$17_names$$2$$ = 0;$n$$17_names$$2$$ < $elem$$17_keyValueArray$$.length;$n$$17_names$$2$$ += 1) {
-      $e$$40_selfVal$$ = $elem$$17_keyValueArray$$[$n$$17_names$$2$$], $map$$[$e$$40_selfVal$$.key.replace($bindingContext$$8_stringTrimRegex$$, "")] = $e$$40_selfVal$$.value.replace($bindingContext$$8_stringTrimRegex$$, "")
+    $elem$$17_keyValueArray$$ = $ko$$1$$.jsonExpressionRewriting.parseObjectLiteral($e$$39_selfVal$$);
+    for($n$$16_names$$2$$ = 0;$n$$16_names$$2$$ < $elem$$17_keyValueArray$$.length;$n$$16_names$$2$$ += 1) {
+      $e$$39_selfVal$$ = $elem$$17_keyValueArray$$[$n$$16_names$$2$$], $map$$[$e$$39_selfVal$$.key.replace($bindingContext$$7_stringTrimRegex$$, "")] = $e$$39_selfVal$$.value.replace($bindingContext$$7_stringTrimRegex$$, "")
     }
     return $map$$
   };
-  $oj$$4$$.$ComponentBinding$.$_evaluatePropertyExpression$ = function $$oj$$4$$$$ComponentBinding$$$_evaluatePropertyExpression$$($expOrCallback$$, $key$$36$$, $cache$$, $bindingContext$$9$$) {
-    var $evaluator$$ = $cache$$[$key$$36$$];
-    void 0 === $evaluator$$ && ("string" !== typeof $expOrCallback$$ && ($expOrCallback$$ = $expOrCallback$$()), $evaluator$$ = null, null !== $expOrCallback$$ && ($evaluator$$ = new Function("$context", "with($context){with($data||{}){return " + $expOrCallback$$ + ";}}")), $cache$$[$key$$36$$] = $evaluator$$);
-    return $evaluator$$ ? $evaluator$$($bindingContext$$9$$) : null
+  $oj$$6$$.$ComponentBinding$.$_evaluatePropertyExpression$ = function $$oj$$6$$$$ComponentBinding$$$_evaluatePropertyExpression$$($expOrCallback$$, $key$$37$$, $cache$$, $bindingContext$$8$$) {
+    var $evaluator$$ = $cache$$[$key$$37$$];
+    void 0 === $evaluator$$ && ("string" !== typeof $expOrCallback$$ && ($expOrCallback$$ = $expOrCallback$$()), $evaluator$$ = null, null !== $expOrCallback$$ && ($evaluator$$ = new Function("$context", "with($context){with($data||{}){return " + $expOrCallback$$ + ";}}")), $cache$$[$key$$37$$] = $evaluator$$);
+    return $evaluator$$ ? $evaluator$$($bindingContext$$8$$) : null
   };
-  $oj$$4$$.$ComponentBinding$.prototype.$_getManagedAttributes$ = function $$oj$$4$$$$ComponentBinding$$$$_getManagedAttributes$$($bindingMap$$1$$, $componentName$$2$$) {
-    return $oj$$4$$.$ComponentBinding$.$_resolveManagedAttributes$(this.$_managedAttrOptions$, $bindingMap$$1$$, $componentName$$2$$)
+  $oj$$6$$.$ComponentBinding$.prototype.$_getManagedAttributes$ = function $$oj$$6$$$$ComponentBinding$$$$_getManagedAttributes$$($bindingMap$$1$$, $componentName$$2$$) {
+    return $oj$$6$$.$ComponentBinding$.$_resolveManagedAttributes$(this.$_managedAttrOptions$, $bindingMap$$1$$, $componentName$$2$$)
   };
-  $oj$$4$$.$ComponentBinding$.$_resolveManagedAttributes$ = function $$oj$$4$$$$ComponentBinding$$$_resolveManagedAttributes$$($optionMap$$, $bindingMap$$2$$, $componentName$$3_global$$1_n$$18$$) {
-    function $traverseOptions$$($name$$84_opt$$14_parents$$) {
-      $name$$84_opt$$14_parents$$ = $optionMap$$[$name$$84_opt$$14_parents$$];
-      if(null != $name$$84_opt$$14_parents$$) {
-        $applicableOptions$$.push($name$$84_opt$$14_parents$$);
-        $name$$84_opt$$14_parents$$ = $name$$84_opt$$14_parents$$.use;
-        var $i$$94$$;
-        if(null != $name$$84_opt$$14_parents$$) {
-          for($name$$84_opt$$14_parents$$ = Array.isArray($name$$84_opt$$14_parents$$) ? $name$$84_opt$$14_parents$$ : [$name$$84_opt$$14_parents$$], $i$$94$$ = 0;$i$$94$$ < $name$$84_opt$$14_parents$$.length;$i$$94$$++) {
-            $traverseOptions$$($name$$84_opt$$14_parents$$[$i$$94$$])
+  $oj$$6$$.$ComponentBinding$.$_resolveManagedAttributes$ = function $$oj$$6$$$$ComponentBinding$$$_resolveManagedAttributes$$($optionMap$$, $bindingMap$$2$$, $componentName$$3_global$$1_n$$17$$) {
+    function $traverseOptions$$($name$$85_opt$$14_parents$$) {
+      $name$$85_opt$$14_parents$$ = $optionMap$$[$name$$85_opt$$14_parents$$];
+      if(null != $name$$85_opt$$14_parents$$) {
+        $applicableOptions$$.push($name$$85_opt$$14_parents$$);
+        $name$$85_opt$$14_parents$$ = $name$$85_opt$$14_parents$$.use;
+        var $i$$97$$;
+        if(null != $name$$85_opt$$14_parents$$) {
+          for($name$$85_opt$$14_parents$$ = Array.isArray($name$$85_opt$$14_parents$$) ? $name$$85_opt$$14_parents$$ : [$name$$85_opt$$14_parents$$], $i$$97$$ = 0;$i$$97$$ < $name$$85_opt$$14_parents$$.length;$i$$97$$++) {
+            $traverseOptions$$($name$$85_opt$$14_parents$$[$i$$97$$])
           }
         }
       }
     }
     var $managedAttrMap$$1$$ = {}, $applicableOptions$$ = [];
-    $traverseOptions$$($componentName$$3_global$$1_n$$18$$);
-    $componentName$$3_global$$1_n$$18$$ = $optionMap$$["@global"];
-    var $attr$$14$$;
-    $componentName$$3_global$$1_n$$18$$ && $applicableOptions$$.push($componentName$$3_global$$1_n$$18$$);
+    $traverseOptions$$($componentName$$3_global$$1_n$$17$$);
+    $componentName$$3_global$$1_n$$17$$ = $optionMap$$["@global"];
+    var $attr$$13$$;
+    $componentName$$3_global$$1_n$$17$$ && $applicableOptions$$.push($componentName$$3_global$$1_n$$17$$);
     if(0 < $applicableOptions$$.length) {
-      for($attr$$14$$ in $bindingMap$$2$$) {
-        if($bindingMap$$2$$.hasOwnProperty($attr$$14$$)) {
-          for($componentName$$3_global$$1_n$$18$$ = 0;$componentName$$3_global$$1_n$$18$$ < $applicableOptions$$.length;$componentName$$3_global$$1_n$$18$$++) {
-            var $opts$$9$$ = $applicableOptions$$[$componentName$$3_global$$1_n$$18$$], $attributes$$12$$ = $opts$$9$$.attributes;
-            if(null != $attributes$$12$$ && 0 <= $attributes$$12$$.indexOf($attr$$14$$)) {
-              $managedAttrMap$$1$$[$attr$$14$$] = {$init$:$opts$$9$$.init, update:$opts$$9$$.update};
+      for($attr$$13$$ in $bindingMap$$2$$) {
+        if($bindingMap$$2$$.hasOwnProperty($attr$$13$$)) {
+          for($componentName$$3_global$$1_n$$17$$ = 0;$componentName$$3_global$$1_n$$17$$ < $applicableOptions$$.length;$componentName$$3_global$$1_n$$17$$++) {
+            var $opts$$9$$ = $applicableOptions$$[$componentName$$3_global$$1_n$$17$$], $attributes$$12$$ = $opts$$9$$.attributes;
+            if(null != $attributes$$12$$ && 0 <= $attributes$$12$$.indexOf($attr$$13$$)) {
+              $managedAttrMap$$1$$[$attr$$13$$] = {$init$:$opts$$9$$.init, update:$opts$$9$$.update};
               break
             }
           }
@@ -265,23 +259,23 @@ define(["ojs/ojcore", "jquery", "knockout"], function($oj$$4$$, $$$$4$$, $ko$$1$
     }
     return $managedAttrMap$$1$$
   };
-  $oj$$4$$.$ComponentBinding$.$_HANDLER_NAMESPACE$ = ".ojWriteback";
-  $oj$$4$$.$ComponentBinding$.$_unregisterWritebacks$ = function $$oj$$4$$$$ComponentBinding$$$_unregisterWritebacks$$($jelem$$5$$) {
-    $jelem$$5$$ && $jelem$$5$$.off($oj$$4$$.$ComponentBinding$.$_HANDLER_NAMESPACE$)
+  $oj$$6$$.$ComponentBinding$.$_HANDLER_NAMESPACE$ = ".ojWriteback";
+  $oj$$6$$.$ComponentBinding$.$_unregisterWritebacks$ = function $$oj$$6$$$$ComponentBinding$$$_unregisterWritebacks$$($jelem$$5$$) {
+    $jelem$$5$$ && $jelem$$5$$.off($oj$$6$$.$ComponentBinding$.$_HANDLER_NAMESPACE$)
   };
-  $oj$$4$$.$ComponentBinding$.$_registerWritebacks$ = function $$oj$$4$$$$ComponentBinding$$$_registerWritebacks$$($jelem$$6$$, $componentName$$4_eventInfos$$, $i$$95_writablePropMap$$1$$, $valueAccessor$$3$$, $bindingMap$$3$$, $tracker$$3$$, $bindingContext$$10$$) {
+  $oj$$6$$.$ComponentBinding$.$_registerWritebacks$ = function $$oj$$6$$$$ComponentBinding$$$_registerWritebacks$$($jelem$$6$$, $componentName$$4_eventInfos$$, $i$$98_writablePropMap$$1$$, $valueAccessor$$3$$, $bindingMap$$3$$, $tracker$$3$$, $bindingContext$$9$$) {
     var $cachedPropertyExpressionWriters$$ = {}, $info_pattern$$12$$;
-    for($info_pattern$$12$$ in $i$$95_writablePropMap$$1$$) {
+    for($info_pattern$$12$$ in $i$$98_writablePropMap$$1$$) {
       if($componentName$$4_eventInfos$$.match($info_pattern$$12$$)) {
-        $componentName$$4_eventInfos$$ = $i$$95_writablePropMap$$1$$[$info_pattern$$12$$];
-        for($i$$95_writablePropMap$$1$$ = 0;$i$$95_writablePropMap$$1$$ < $componentName$$4_eventInfos$$.length;$i$$95_writablePropMap$$1$$++) {
-          $info_pattern$$12$$ = $componentName$$4_eventInfos$$[$i$$95_writablePropMap$$1$$], $jelem$$6$$.on($info_pattern$$12$$.event + $oj$$4$$.$ComponentBinding$.$_HANDLER_NAMESPACE$, {$getter$:$info_pattern$$12$$.getter}, function($evt$$18$$, $data$$45$$) {
-            $evt$$18$$.stopPropagation();
-            var $nameValues$$ = $evt$$18$$.data.$getter$($evt$$18$$, $data$$45$$);
+        $componentName$$4_eventInfos$$ = $i$$98_writablePropMap$$1$$[$info_pattern$$12$$];
+        for($i$$98_writablePropMap$$1$$ = 0;$i$$98_writablePropMap$$1$$ < $componentName$$4_eventInfos$$.length;$i$$98_writablePropMap$$1$$++) {
+          $info_pattern$$12$$ = $componentName$$4_eventInfos$$[$i$$98_writablePropMap$$1$$], $jelem$$6$$.on($info_pattern$$12$$.event + $oj$$6$$.$ComponentBinding$.$_HANDLER_NAMESPACE$, {$getter$:$info_pattern$$12$$.getter}, function($evt$$17$$, $data$$44$$) {
+            $evt$$17$$.stopPropagation();
+            var $nameValues$$ = $evt$$17$$.data.$getter$($evt$$17$$, $data$$44$$);
             $tracker$$3$$.$suspend$();
             try {
-              for(var $name$$85$$ in $nameValues$$) {
-                $oj$$4$$.$ComponentBinding$.$_writeValueToProperty$($name$$85$$, $valueAccessor$$3$$()[$name$$85$$], $nameValues$$[$name$$85$$], $bindingMap$$3$$[$name$$85$$], $bindingContext$$10$$, $cachedPropertyExpressionWriters$$)
+              for(var $name$$86$$ in $nameValues$$) {
+                $oj$$6$$.$ComponentBinding$.$_writeValueToProperty$($name$$86$$, $valueAccessor$$3$$()[$name$$86$$], $nameValues$$[$name$$86$$], $bindingMap$$3$$[$name$$86$$], $bindingContext$$9$$, $cachedPropertyExpressionWriters$$)
               }
             }finally {
               $tracker$$3$$.$resume$()
@@ -292,69 +286,70 @@ define(["ojs/ojcore", "jquery", "knockout"], function($oj$$4$$, $$$$4$$, $ko$$1$
       }
     }
   };
-  $oj$$4$$.$ComponentBinding$.$_getPropertyWriterExpression$ = function $$oj$$4$$$$ComponentBinding$$$_getPropertyWriterExpression$$($expression$$3$$) {
-    var $match$$11_reserveddWords$$ = ["true", "false", "null", "undefined"];
-    if(null == $expression$$3$$ || 0 <= $match$$11_reserveddWords$$.indexOf($expression$$3$$)) {
+  $oj$$6$$.$ComponentBinding$.$_getPropertyWriterExpression$ = function $$oj$$6$$$$ComponentBinding$$$_getPropertyWriterExpression$$($expression$$3$$) {
+    var $match$$12_reserveddWords$$ = ["true", "false", "null", "undefined"];
+    if(null == $expression$$3$$ || 0 <= $match$$12_reserveddWords$$.indexOf($expression$$3$$)) {
       return null
     }
-    $match$$11_reserveddWords$$ = $expression$$3$$.match(/^(?:[$_a-z][$\w]*|(.+)(\.\s*[$_a-z][$\w]*|\[.+\]))$/i);
-    return null === $match$$11_reserveddWords$$ ? null : "function(v){" + ($match$$11_reserveddWords$$[1] ? "Object(" + $match$$11_reserveddWords$$[1] + ")" + $match$$11_reserveddWords$$[2] : $expression$$3$$) + "\x3dv;}"
+    $match$$12_reserveddWords$$ = $expression$$3$$.match(/^(?:[$_a-z][$\w]*|(.+)(\.\s*[$_a-z][$\w]*|\[.+\]))$/i);
+    return null === $match$$12_reserveddWords$$ ? null : "function(v){" + ($match$$12_reserveddWords$$[1] ? "Object(" + $match$$12_reserveddWords$$[1] + ")" + $match$$12_reserveddWords$$[2] : $expression$$3$$) + "\x3dv;}"
   };
-  $oj$$4$$.$ComponentBinding$.$_writeValueToProperty$ = function $$oj$$4$$$$ComponentBinding$$$_writeValueToProperty$$($func$$8_name$$86$$, $property$$13$$, $value$$130$$, $propertyExpression$$, $bindingContext$$11$$, $cachedPropertyExpressionWriters$$1$$) {
-    null != $property$$13$$ && $ko$$1$$.isObservable($property$$13$$) ? $ko$$1$$.isWriteableObservable($property$$13$$) && $property$$13$$($value$$130$$) : ($func$$8_name$$86$$ = $oj$$4$$.$ComponentBinding$.$_evaluatePropertyExpression$(function() {
-      return $oj$$4$$.$ComponentBinding$.$_getPropertyWriterExpression$($propertyExpression$$)
-    }, $func$$8_name$$86$$, $cachedPropertyExpressionWriters$$1$$, $bindingContext$$11$$)) && $func$$8_name$$86$$($value$$130$$)
+  $oj$$6$$.$ComponentBinding$.$_writeValueToProperty$ = function $$oj$$6$$$$ComponentBinding$$$_writeValueToProperty$$($func$$8_name$$87$$, $property$$13$$, $value$$132$$, $propertyExpression$$, $bindingContext$$10$$, $cachedPropertyExpressionWriters$$1$$) {
+    null != $property$$13$$ && $ko$$1$$.isObservable($property$$13$$) ? $ko$$1$$.isWriteableObservable($property$$13$$) && $property$$13$$($value$$132$$) : ($func$$8_name$$87$$ = $oj$$6$$.$ComponentBinding$.$_evaluatePropertyExpression$(function() {
+      return $oj$$6$$.$ComponentBinding$.$_getPropertyWriterExpression$($propertyExpression$$)
+    }, $func$$8_name$$87$$, $cachedPropertyExpressionWriters$$1$$, $bindingContext$$10$$)) && $func$$8_name$$87$$($value$$132$$)
   };
-  $oj$$4$$.$ComponentBinding$.$_toJS$ = function $$oj$$4$$$$ComponentBinding$$$_toJS$$($prop$$55$$) {
+  $oj$$6$$.$ComponentBinding$.$_toJS$ = function $$oj$$6$$$$ComponentBinding$$$_toJS$$($prop$$55$$) {
     $prop$$55$$ = $ko$$1$$.utils.unwrapObservable($prop$$55$$);
-    (Array.isArray($prop$$55$$) || $oj$$4$$.$CollectionUtils$.isPlainObject($prop$$55$$)) && $prop$$55$$.ojConvertToJS && ($prop$$55$$ = $ko$$1$$.toJS($prop$$55$$));
+    (Array.isArray($prop$$55$$) || $oj$$6$$.$CollectionUtils$.isPlainObject($prop$$55$$)) && $prop$$55$$.ojConvertToJS && ($prop$$55$$ = $ko$$1$$.toJS($prop$$55$$));
     return $prop$$55$$
   };
-  $oj$$4$$.$Object$.$createSubclass$($GlobalChangeQueue$$, $oj$$4$$.$Object$, "ComponentBinding.GlobalChangeQueue");
-  $GlobalChangeQueue$$.prototype.$Init$ = function $$GlobalChangeQueue$$$$$Init$$() {
-    $GlobalChangeQueue$$.$superclass$.$Init$.call(this);
+  $oj$$6$$.$Object$.$createSubclass$($GlobalChangeQueue$$, $oj$$6$$.$Object$, "ComponentBinding.GlobalChangeQueue");
+  $GlobalChangeQueue$$.prototype.Init = function $$GlobalChangeQueue$$$$Init$() {
+    $GlobalChangeQueue$$.$superclass$.Init.call(this);
     this.$_callbacks$ = []
   };
   $GlobalChangeQueue$$.prototype.$registerComponentChanges$ = function $$GlobalChangeQueue$$$$$registerComponentChanges$$($changesCallback$$) {
-    -1 === this.$_callbacks$.indexOf($changesCallback$$) && (this.$_callbacks$.push($changesCallback$$), this.$_delayTimer$ || (this.$_delayTimer$ = setTimeout($oj$$4$$.$Object$.$createCallback$(this, this.$_deliverChangesImpl$), 1)))
+    -1 === this.$_callbacks$.indexOf($changesCallback$$) && (this.$_callbacks$.push($changesCallback$$), this.$_delayTimer$ || (this.$_delayTimer$ = setTimeout($oj$$6$$.$Object$.$createCallback$(this, this.$_deliverChangesImpl$), 1)))
   };
-  $GlobalChangeQueue$$.prototype.$removeComponentChanges$ = function $$GlobalChangeQueue$$$$$removeComponentChanges$$($changesCallback$$1_index$$78$$) {
-    $changesCallback$$1_index$$78$$ = this.$_callbacks$.indexOf($changesCallback$$1_index$$78$$);
-    0 <= $changesCallback$$1_index$$78$$ && this.$_callbacks$.splice($changesCallback$$1_index$$78$$, 1)
+  $GlobalChangeQueue$$.prototype.$removeComponentChanges$ = function $$GlobalChangeQueue$$$$$removeComponentChanges$$($changesCallback$$1_index$$79$$) {
+    $changesCallback$$1_index$$79$$ = this.$_callbacks$.indexOf($changesCallback$$1_index$$79$$);
+    0 <= $changesCallback$$1_index$$79$$ && this.$_callbacks$.splice($changesCallback$$1_index$$79$$, 1)
   };
   $GlobalChangeQueue$$.prototype.$deliverChanges$ = function $$GlobalChangeQueue$$$$$deliverChanges$$() {
     this.$_delayTimer$ && clearTimeout(this.$_delayTimer$);
     this.$_deliverChangesImpl$()
   };
   $GlobalChangeQueue$$.prototype.$_deliverChangesImpl$ = function $$GlobalChangeQueue$$$$$_deliverChangesImpl$$() {
-    var $i$$96$$;
+    var $i$$99$$;
     this.$_delayTimer$ = null;
     try {
-      for($i$$96$$ = 0;$i$$96$$ < this.$_callbacks$.length;$i$$96$$ += 1) {
-        this.$_callbacks$[$i$$96$$]()
+      for($i$$99$$ = 0;$i$$99$$ < this.$_callbacks$.length;$i$$99$$ += 1) {
+        this.$_callbacks$[$i$$99$$]()
       }
     }finally {
       this.$_callbacks$ = []
     }
   };
-  $oj$$4$$.$Object$.$createSubclass$($ComponentChangeTracker$$, $oj$$4$$.$Object$, "ComponentBinding.ComponentChangeTracker");
-  $ComponentChangeTracker$$.prototype.$Init$ = function $$ComponentChangeTracker$$$$$Init$$($component$$7$$, $queue$$1$$) {
-    $ComponentChangeTracker$$.$superclass$.$Init$.call(this);
+  $oj$$6$$.$Object$.$createSubclass$($ComponentChangeTracker$$, $oj$$6$$.$Object$, "ComponentBinding.ComponentChangeTracker");
+  $ComponentChangeTracker$$.prototype.Init = function $$ComponentChangeTracker$$$$Init$($component$$7$$, $element$$25$$, $queue$$1$$) {
+    $ComponentChangeTracker$$.$superclass$.Init.call(this);
     this.$_component$ = $component$$7$$;
+    this.$_element$ = $element$$25$$;
     this.$_queue$ = $queue$$1$$;
-    this.$_updateCallback$ = $oj$$4$$.$Object$.$createCallback$(this, this.$_applyUpdates$);
+    this.$_updateCallback$ = $oj$$6$$.$Object$.$createCallback$(this, this.$_applyUpdates$);
     this.$_changes$ = {};
     this.$_suspendCount$ = 0
   };
-  $ComponentChangeTracker$$.prototype.$addChange$ = function $$ComponentChangeTracker$$$$$addChange$$($property$$14$$, $value$$131$$) {
-    this.$_isSuspended$() || this.$_disposed$ || (this.$_changes$[$property$$14$$] = $value$$131$$, this.$_queue$.$registerComponentChanges$(this.$_updateCallback$))
+  $ComponentChangeTracker$$.prototype.$addChange$ = function $$ComponentChangeTracker$$$$$addChange$$($property$$14$$, $value$$133$$) {
+    this.$_isSuspended$() || this.$_disposed$ || (this.$_changes$[$property$$14$$] = $value$$133$$, this.$_queue$.$registerComponentChanges$(this.$_updateCallback$))
   };
   $ComponentChangeTracker$$.prototype.$dispose$ = function $$ComponentChangeTracker$$$$$dispose$$() {
     this.$_queue$.$removeComponentChanges$(this.$_updateCallback$);
     this.$_disposed$ = !0
   };
   $ComponentChangeTracker$$.prototype.$resume$ = function $$ComponentChangeTracker$$$$$resume$$() {
-    $oj$$4$$.$Assert$.assert(0 < this.$_suspendCount$, "ComponentChangeTracker._suspendCount underflow");
+    $oj$$6$$.$Assert$.assert(0 < this.$_suspendCount$, "ComponentChangeTracker._suspendCount underflow");
     this.$_suspendCount$ -= 1
   };
   $ComponentChangeTracker$$.prototype.$suspend$ = function $$ComponentChangeTracker$$$$$suspend$$() {
@@ -365,98 +360,102 @@ define(["ojs/ojcore", "jquery", "knockout"], function($oj$$4$$, $$$$4$$, $ko$$1$
   };
   $ComponentChangeTracker$$.prototype.$_applyUpdates$ = function $$ComponentChangeTracker$$$$$_applyUpdates$$() {
     try {
-      this.$_component$("option", this.$_changes$)
+      null != $oj$$6$$.Components.$getWidgetConstructor$(this.$_element$) && this.$_component$("option", this.$_changes$)
     }finally {
       this.$_changes$ = {}
     }
   };
-  $oj$$4$$.$ComponentBinding$.$_changeQueue$ = new $GlobalChangeQueue$$;
-  $oj$$4$$.$ComponentBinding$.$_INSTANCE$ = $oj$$4$$.$ComponentBinding$.create(["ojComponent", "jqueryUI"]);
-  $oj$$4$$.$ComponentBinding$.$getDefaultInstance$().$setupManagedAttributes$({attributes:["columnTemplates", "footerTemplate", "rowTemplate"], init:function($columnId$$1_name$$87$$, $value$$132$$, $element$$23_template$$6$$, $widgetConstructor$$, $columnRenderers_valueAccessor$$4$$, $allBindingsAccessor$$3_i$$97$$, $bindingContext$$12$$) {
-    var $columnTemplate_type$$69$$;
-    if("columnTemplates" == $columnId$$1_name$$87$$) {
-      $columnRenderers_valueAccessor$$4$$ = [];
-      for($allBindingsAccessor$$3_i$$97$$ = 0;$allBindingsAccessor$$3_i$$97$$ < $value$$132$$.length;$allBindingsAccessor$$3_i$$97$$++) {
-        $columnTemplate_type$$69$$ = $value$$132$$[$allBindingsAccessor$$3_i$$97$$], $columnId$$1_name$$87$$ = $columnTemplate_type$$69$$.columnId, $element$$23_template$$6$$ = $columnTemplate_type$$69$$.template, $columnTemplate_type$$69$$ = $columnTemplate_type$$69$$.type, null != $element$$23_template$$6$$ && (null != $columnId$$1_name$$87$$ && null != $columnTemplate_type$$69$$) && ($columnRenderers_valueAccessor$$4$$[$allBindingsAccessor$$3_i$$97$$] = $_getTableColumnTemplateRenderer$$($bindingContext$$12$$, 
-        $columnId$$1_name$$87$$, $columnTemplate_type$$69$$, $element$$23_template$$6$$))
-      }
-      0 < $columnRenderers_valueAccessor$$4$$.length && $widgetConstructor$$({columnRenderers:$columnRenderers_valueAccessor$$4$$})
-    }else {
-      "rowTemplate" == $columnId$$1_name$$87$$ ? ($element$$23_template$$6$$ = $value$$132$$.template, $widgetConstructor$$({rowRenderer:$_getTableRowTemplateRenderer$$($bindingContext$$12$$, $element$$23_template$$6$$)})) : "footerTemplate" == $columnId$$1_name$$87$$ && ($element$$23_template$$6$$ = $value$$132$$.template, $widgetConstructor$$({footerRenderer:$_getTableFooterTemplateRenderer$$($bindingContext$$12$$, $element$$23_template$$6$$)}))
-    }
-  }, update:function($columnId$$2_name$$88$$, $value$$133$$, $element$$24_template$$7$$, $columnRenderers$$1_widgetConstructor$$1$$, $i$$98_valueAccessor$$5$$, $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$, $bindingContext$$13$$) {
-    if("columnTemplates" == $columnId$$2_name$$88$$) {
-      $columnRenderers$$1_widgetConstructor$$1$$ = [];
-      for($i$$98_valueAccessor$$5$$ = 0;$i$$98_valueAccessor$$5$$ < $value$$133$$.length;$i$$98_valueAccessor$$5$$++) {
-        $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$ = $value$$133$$[$i$$98_valueAccessor$$5$$], $columnId$$2_name$$88$$ = $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$.columnId, $element$$24_template$$7$$ = $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$.template, $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$ = $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$.type, null != $element$$24_template$$7$$ && (null != $columnId$$2_name$$88$$ && null != $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$) && 
-        ($columnRenderers$$1_widgetConstructor$$1$$[$i$$98_valueAccessor$$5$$] = $_getTableColumnTemplateRenderer$$($bindingContext$$13$$, $columnId$$2_name$$88$$, $allBindingsAccessor$$4_columnTemplate$$1_type$$70$$, $element$$24_template$$7$$))
-      }
-      if(0 < $columnRenderers$$1_widgetConstructor$$1$$.length) {
-        return{columnRenderers:$columnRenderers$$1_widgetConstructor$$1$$}
-      }
-    }else {
-      if("rowTemplate" == $columnId$$2_name$$88$$) {
-        return $element$$24_template$$7$$ = $value$$133$$.template, {rowRenderer:$_getTableRowTemplateRenderer$$($bindingContext$$13$$, $element$$24_template$$7$$)}
-      }
-      if("footerTemplate" == $columnId$$2_name$$88$$) {
-        return $element$$24_template$$7$$ = $value$$133$$.template, {footerRenderer:$_getTableFooterTemplateRenderer$$($bindingContext$$13$$, $element$$24_template$$7$$)}
-      }
-    }
-    return null
-  }, "for":"ojTable"});
-  $oj$$4$$.$koStringTemplateEngine$ = {};
-  $goog$exportPath_$$("koStringTemplateEngine", $oj$$4$$.$koStringTemplateEngine$, $oj$$4$$);
-  $oj$$4$$.$koStringTemplateEngine$.$install$ = function $$oj$$4$$$$koStringTemplateEngine$$$install$$() {
-    function $StringTemplate$$($template$$8$$) {
-      this.$_templateName$ = $template$$8$$;
+  $oj$$6$$.$ComponentBinding$.$_changeQueue$ = new $GlobalChangeQueue$$;
+  $oj$$6$$.$ComponentBinding$.$_INSTANCE$ = $oj$$6$$.$ComponentBinding$.create(["ojComponent", "jqueryUI"]);
+  $oj$$6$$.$koStringTemplateEngine$ = {};
+  $goog$exportPath_$$("koStringTemplateEngine", $oj$$6$$.$koStringTemplateEngine$, $oj$$6$$);
+  $oj$$6$$.$koStringTemplateEngine$.$install$ = function $$oj$$6$$$$koStringTemplateEngine$$$install$$() {
+    function $StringTemplate$$($template$$5$$) {
+      this.$_templateName$ = $template$$5$$;
       this.text = function $this$text$($value$$134$$) {
         if(!$value$$134$$) {
           return $_templateText$$[this.$_templateName$]
         }
         $_templateText$$[this.$_templateName$] = $value$$134$$
       };
-      this.data = function $this$data$($key$$37$$, $value$$135$$) {
+      this.data = function $this$data$($key$$38$$, $value$$135$$) {
         $_templateData$$[this.$_templateName$] || ($_templateData$$[this.$_templateName$] = {});
         if(1 === arguments.length) {
-          return $_templateData$$[this.$_templateName$][$key$$37$$]
+          return $_templateData$$[this.$_templateName$][$key$$38$$]
         }
-        $_templateData$$[this.$_templateName$][$key$$37$$] = $value$$135$$
+        $_templateData$$[this.$_templateName$][$key$$38$$] = $value$$135$$
       }
     }
     var $_templateText$$ = {}, $_templateData$$ = {}, $_engine$$ = new $ko$$1$$.nativeTemplateEngine;
-    $_engine$$.makeTemplateSource = function $$_engine$$$makeTemplateSource$($template$$9$$, $templateDocument$$) {
-      if("string" == typeof $template$$9$$) {
+    $_engine$$.makeTemplateSource = function $$_engine$$$makeTemplateSource$($template$$6$$, $templateDocument$$) {
+      if("string" == typeof $template$$6$$) {
         $templateDocument$$ = $templateDocument$$ || document;
-        var $elem$$18$$ = $templateDocument$$.getElementById($template$$9$$);
-        return $elem$$18$$ ? new $ko$$1$$.templateSources.domElement($elem$$18$$) : new $StringTemplate$$($template$$9$$)
+        var $elem$$18$$ = $templateDocument$$.getElementById($template$$6$$);
+        return $elem$$18$$ ? new $ko$$1$$.templateSources.domElement($elem$$18$$) : new $StringTemplate$$($template$$6$$)
       }
-      if($template$$9$$ && 1 == $template$$9$$.nodeType || 8 == $template$$9$$.nodeType) {
-        return new $ko$$1$$.templateSources.anonymousTemplate($template$$9$$)
+      if($template$$6$$ && 1 == $template$$6$$.nodeType || 8 == $template$$6$$.nodeType) {
+        return new $ko$$1$$.templateSources.anonymousTemplate($template$$6$$)
       }
     };
     $ko$$1$$.templates = $_templateText$$;
     $ko$$1$$.setTemplateEngine($_engine$$)
   };
-  $goog$exportPath_$$("koStringTemplateEngine.install", $oj$$4$$.$koStringTemplateEngine$.$install$, $oj$$4$$);
-  $oj$$4$$.$ComponentBinding$.$getDefaultInstance$().$setupManagedAttributes$({attributes:["header", "cell"], init:function($cellTemplate_column_name$$89_row$$, $value$$136$$, $columnTemplate$$2_element$$25_rowTemplate$$, $widgetConstructor$$2$$, $valueAccessor$$6$$, $allBindingsAccessor$$5$$, $bindingContext$$14$$) {
-    "header" === $cellTemplate_column_name$$89_row$$ ? ($cellTemplate_column_name$$89_row$$ = $value$$136$$.row, null != $cellTemplate_column_name$$89_row$$ && ($columnTemplate$$2_element$$25_rowTemplate$$ = $cellTemplate_column_name$$89_row$$.template, null != $columnTemplate$$2_element$$25_rowTemplate$$ && ($cellTemplate_column_name$$89_row$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$14$$, $columnTemplate$$2_element$$25_rowTemplate$$))), $cellTemplate_column_name$$89_row$$ = $value$$136$$.column, 
-    null != $cellTemplate_column_name$$89_row$$ && ($columnTemplate$$2_element$$25_rowTemplate$$ = $cellTemplate_column_name$$89_row$$.template, null != $columnTemplate$$2_element$$25_rowTemplate$$ && ($cellTemplate_column_name$$89_row$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$14$$, $columnTemplate$$2_element$$25_rowTemplate$$))), $widgetConstructor$$2$$({header:$value$$136$$})) : "cell" === $cellTemplate_column_name$$89_row$$ && ($cellTemplate_column_name$$89_row$$ = $value$$136$$.template, 
-    null != $cellTemplate_column_name$$89_row$$ && ($value$$136$$.renderer = $_getDataGridCellRenderer$$($bindingContext$$14$$, $cellTemplate_column_name$$89_row$$)), $widgetConstructor$$2$$({cell:$value$$136$$}))
-  }, update:function($cellTemplate$$1_column$$1_name$$90_row$$1$$, $value$$137$$, $columnTemplate$$3_element$$26_rowTemplate$$1$$, $widgetConstructor$$3$$, $valueAccessor$$7$$, $allBindingsAccessor$$6$$, $bindingContext$$15$$) {
-    return"header" === $cellTemplate$$1_column$$1_name$$90_row$$1$$ ? ($cellTemplate$$1_column$$1_name$$90_row$$1$$ = $value$$137$$.row, null != $cellTemplate$$1_column$$1_name$$90_row$$1$$ && ($columnTemplate$$3_element$$26_rowTemplate$$1$$ = $cellTemplate$$1_column$$1_name$$90_row$$1$$.template, null != $columnTemplate$$3_element$$26_rowTemplate$$1$$ && ($cellTemplate$$1_column$$1_name$$90_row$$1$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$15$$, $columnTemplate$$3_element$$26_rowTemplate$$1$$))), 
-    $cellTemplate$$1_column$$1_name$$90_row$$1$$ = $value$$137$$.column, null != $cellTemplate$$1_column$$1_name$$90_row$$1$$ && ($columnTemplate$$3_element$$26_rowTemplate$$1$$ = $cellTemplate$$1_column$$1_name$$90_row$$1$$.template, null != $columnTemplate$$3_element$$26_rowTemplate$$1$$ && ($cellTemplate$$1_column$$1_name$$90_row$$1$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$15$$, $columnTemplate$$3_element$$26_rowTemplate$$1$$))), {header:$value$$137$$}) : "cell" === $cellTemplate$$1_column$$1_name$$90_row$$1$$ ? 
-    ($cellTemplate$$1_column$$1_name$$90_row$$1$$ = $value$$137$$.template, null != $cellTemplate$$1_column$$1_name$$90_row$$1$$ && ($value$$137$$.renderer = $_getDataGridCellRenderer$$($bindingContext$$15$$, $cellTemplate$$1_column$$1_name$$90_row$$1$$)), {cell:$value$$137$$}) : null
+  $goog$exportPath_$$("koStringTemplateEngine.install", $oj$$6$$.$koStringTemplateEngine$.$install$, $oj$$6$$);
+  $oj$$6$$.$ComponentBinding$.$getDefaultInstance$().$setupManagedAttributes$({attributes:["header", "cell"], init:function($cellTemplate_column_name$$88_row$$, $value$$136$$, $columnTemplate_element$$26_rowTemplate$$, $widgetConstructor$$, $valueAccessor$$4$$, $allBindingsAccessor$$3$$, $bindingContext$$11$$) {
+    "header" === $cellTemplate_column_name$$88_row$$ ? ($cellTemplate_column_name$$88_row$$ = $value$$136$$.row, null != $cellTemplate_column_name$$88_row$$ && ($columnTemplate_element$$26_rowTemplate$$ = $cellTemplate_column_name$$88_row$$.template, null != $columnTemplate_element$$26_rowTemplate$$ && ($cellTemplate_column_name$$88_row$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$11$$, $columnTemplate_element$$26_rowTemplate$$))), $cellTemplate_column_name$$88_row$$ = $value$$136$$.column, 
+    null != $cellTemplate_column_name$$88_row$$ && ($columnTemplate_element$$26_rowTemplate$$ = $cellTemplate_column_name$$88_row$$.template, null != $columnTemplate_element$$26_rowTemplate$$ && ($cellTemplate_column_name$$88_row$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$11$$, $columnTemplate_element$$26_rowTemplate$$))), $widgetConstructor$$({header:$value$$136$$})) : "cell" === $cellTemplate_column_name$$88_row$$ && ($cellTemplate_column_name$$88_row$$ = $value$$136$$.template, 
+    null != $cellTemplate_column_name$$88_row$$ && ($value$$136$$.renderer = $_getDataGridCellRenderer$$($bindingContext$$11$$, $cellTemplate_column_name$$88_row$$)), $widgetConstructor$$({cell:$value$$136$$}))
+  }, update:function($cellTemplate$$1_column$$1_name$$89_row$$1$$, $value$$137$$, $columnTemplate$$1_element$$27_rowTemplate$$1$$, $widgetConstructor$$1$$, $valueAccessor$$5$$, $allBindingsAccessor$$4$$, $bindingContext$$12$$) {
+    return"header" === $cellTemplate$$1_column$$1_name$$89_row$$1$$ ? ($cellTemplate$$1_column$$1_name$$89_row$$1$$ = $value$$137$$.row, null != $cellTemplate$$1_column$$1_name$$89_row$$1$$ && ($columnTemplate$$1_element$$27_rowTemplate$$1$$ = $cellTemplate$$1_column$$1_name$$89_row$$1$$.template, null != $columnTemplate$$1_element$$27_rowTemplate$$1$$ && ($cellTemplate$$1_column$$1_name$$89_row$$1$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$12$$, $columnTemplate$$1_element$$27_rowTemplate$$1$$))), 
+    $cellTemplate$$1_column$$1_name$$89_row$$1$$ = $value$$137$$.column, null != $cellTemplate$$1_column$$1_name$$89_row$$1$$ && ($columnTemplate$$1_element$$27_rowTemplate$$1$$ = $cellTemplate$$1_column$$1_name$$89_row$$1$$.template, null != $columnTemplate$$1_element$$27_rowTemplate$$1$$ && ($cellTemplate$$1_column$$1_name$$89_row$$1$$.renderer = $_getDataGridHeaderRenderer$$($bindingContext$$12$$, $columnTemplate$$1_element$$27_rowTemplate$$1$$))), {header:$value$$137$$}) : "cell" === $cellTemplate$$1_column$$1_name$$89_row$$1$$ ? 
+    ($cellTemplate$$1_column$$1_name$$89_row$$1$$ = $value$$137$$.template, null != $cellTemplate$$1_column$$1_name$$89_row$$1$$ && ($value$$137$$.renderer = $_getDataGridCellRenderer$$($bindingContext$$12$$, $cellTemplate$$1_column$$1_name$$89_row$$1$$)), {cell:$value$$137$$}) : null
   }, "for":"ojDataGrid"});
-  $ko$$1$$.bindingHandlers.ojContextMenu = {update:function $$ko$$1$$$bindingHandlers$ojContextMenu$update$($element$$27$$, $valueAccessor$$8$$) {
-    $$$$4$$($element$$27$$).off(".ojContextMenu");
-    var $menu$$2$$ = $ko$$1$$.utils.unwrapObservable($valueAccessor$$8$$());
-    $menu$$2$$ && ($menu$$2$$ = $ko$$1$$.utils.unwrapObservable($menu$$2$$.menu));
-    $menu$$2$$ || ($menu$$2$$ = $element$$27$$.getAttribute("contextmenu"));
-    if($menu$$2$$ && ($menu$$2$$ = $$$$4$$("#" + $menu$$2$$).data("oj-ojMenu"))) {
-      var $$element$$ = $$$$4$$($element$$27$$);
-      $$element$$.on("keydown.ojContextMenu contextmenu.ojContextMenu", function($event$$40$$) {
-        return"contextmenu" === $event$$40$$.type || 121 == $event$$40$$.which && $event$$40$$.shiftKey ? ($menu$$2$$.show($event$$40$$, {launcher:$$element$$, focus:"menu"}), !1) : !0
+  $ko$$1$$.bindingHandlers.ojContextMenu = {update:function $$ko$$1$$$bindingHandlers$ojContextMenu$update$($element$$28$$, $valueAccessor$$6$$) {
+    $$$$6$$($element$$28$$).off(".ojContextMenu");
+    var $menu$$2$$ = $ko$$1$$.utils.unwrapObservable($valueAccessor$$6$$());
+    "string" !== $$$$6$$.type($menu$$2$$) && ($menu$$2$$ = $element$$28$$.getAttribute("contextmenu")) && ($menu$$2$$ = "#" + $menu$$2$$);
+    $menu$$2$$ && ($menu$$2$$ = $$$$6$$($menu$$2$$).data("oj-ojMenu"));
+    if($menu$$2$$) {
+      var $$element$$ = $$$$6$$($element$$28$$);
+      $$element$$.on("keydown.ojContextMenu contextmenu.ojContextMenu", function($event$$37$$) {
+        return"contextmenu" === $event$$37$$.type || 121 == $event$$37$$.which && $event$$37$$.shiftKey ? ($menu$$2$$.show($event$$37$$, {launcher:$$element$$, focus:"menu"}), !1) : !0
       })
     }
-  }}
+  }};
+  $oj$$6$$.$ComponentBinding$.$getDefaultInstance$().$setupManagedAttributes$({attributes:["columns", "columnsDefault", "rowTemplate"], init:function($name$$90$$, $value$$138$$, $element$$29_i$$100$$, $widgetConstructor$$2$$, $template$$7_valueAccessor$$7$$, $allBindingsAccessor$$5_footerTemplate$$, $bindingContext$$14$$) {
+    if("columns" == $name$$90$$ || "columnsDefault" == $name$$90$$) {
+      var $headerTemplate$$;
+      for($element$$29_i$$100$$ = 0;$element$$29_i$$100$$ < $value$$138$$.length;$element$$29_i$$100$$++) {
+        var $column$$2$$ = $value$$138$$[$element$$29_i$$100$$];
+        $template$$7_valueAccessor$$7$$ = $column$$2$$.template;
+        $allBindingsAccessor$$5_footerTemplate$$ = $column$$2$$.footerTemplate;
+        $headerTemplate$$ = $column$$2$$.headerTemplate;
+        null != $template$$7_valueAccessor$$7$$ && ($column$$2$$.renderer = $_getTableColumnTemplateRenderer$$($bindingContext$$14$$, "cell", $template$$7_valueAccessor$$7$$));
+        null != $allBindingsAccessor$$5_footerTemplate$$ && ($column$$2$$.footerRenderer = $_getTableColumnTemplateRenderer$$($bindingContext$$14$$, "footer", $allBindingsAccessor$$5_footerTemplate$$));
+        null != $headerTemplate$$ && ($column$$2$$.headerRenderer = $_getTableColumnTemplateRenderer$$($bindingContext$$14$$, "header", $headerTemplate$$))
+      }
+      "columns" == $name$$90$$ ? $widgetConstructor$$2$$({columns:$value$$138$$}) : $widgetConstructor$$2$$({columnsDefault:$value$$138$$})
+    }else {
+      "rowTemplate" == $name$$90$$ && $widgetConstructor$$2$$({rowRenderer:$_getTableRowTemplateRenderer$$($bindingContext$$14$$, $value$$138$$)})
+    }
+  }, update:function($name$$91$$, $value$$139$$, $element$$30_i$$101$$, $widgetConstructor$$3$$, $template$$8_valueAccessor$$8$$, $allBindingsAccessor$$6_footerTemplate$$1$$, $bindingContext$$15$$) {
+    if("columns" == $name$$91$$ || "columnsDefault" == $name$$91$$) {
+      var $headerTemplate$$1$$;
+      for($element$$30_i$$101$$ = 0;$element$$30_i$$101$$ < $value$$139$$.length;$element$$30_i$$101$$++) {
+        var $column$$3$$ = $value$$139$$[$element$$30_i$$101$$];
+        $template$$8_valueAccessor$$8$$ = $column$$3$$.template;
+        $allBindingsAccessor$$6_footerTemplate$$1$$ = $column$$3$$.footerTemplate;
+        $headerTemplate$$1$$ = $column$$3$$.headerTemplate;
+        null != $template$$8_valueAccessor$$8$$ && ($column$$3$$.renderer = $_getTableColumnTemplateRenderer$$($bindingContext$$15$$, "cell", $template$$8_valueAccessor$$8$$));
+        null != $allBindingsAccessor$$6_footerTemplate$$1$$ && ($column$$3$$.footerRenderer = $_getTableColumnTemplateRenderer$$($bindingContext$$15$$, "footer", $allBindingsAccessor$$6_footerTemplate$$1$$));
+        null != $headerTemplate$$1$$ && ($column$$3$$.headerRenderer = $_getTableColumnTemplateRenderer$$($bindingContext$$15$$, "header", $headerTemplate$$1$$))
+      }
+      "columns" == $name$$91$$ ? $widgetConstructor$$3$$({columns:$value$$139$$}) : $widgetConstructor$$3$$({columnsDefault:$value$$139$$})
+    }else {
+      if("rowTemplate" == $name$$91$$) {
+        return{rowRenderer:$_getTableRowTemplateRenderer$$($bindingContext$$15$$, $value$$139$$)}
+      }
+    }
+    return null
+  }, "for":"ojTable"})
 });

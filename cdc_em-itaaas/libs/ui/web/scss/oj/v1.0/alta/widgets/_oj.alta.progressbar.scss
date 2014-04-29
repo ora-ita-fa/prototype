@@ -16,8 +16,8 @@ $includeProgressbarClasses: $includeAllClasses !default;
         width: 200px;  	
         text-align: left; 
         overflow: hidden; 
-        background: #fcfdfe; 
-    	  background-image: linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%);
+        background: $progressbarBgColor; 
+    	  @include oj-background-image(linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%));
         border: 1px solid #dfe4e7;
         @include oj-border-radius($mediumBorderRadius);
     }
@@ -26,7 +26,7 @@ $includeProgressbarClasses: $includeAllClasses !default;
         // explicitly set box-sizing when height and border both specified
         box-sizing: content-box;
         height: 100%; 
-        background: $interaction1Color; 
+        background: $progressbarValueBgColor; 
         border: 0;
     }
     .oj-progressbar .oj-progressbar-overlay {

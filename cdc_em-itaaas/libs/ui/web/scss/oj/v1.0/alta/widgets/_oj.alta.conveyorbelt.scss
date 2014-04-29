@@ -11,107 +11,20 @@ $includeConveyerBeltClasses:  $includeAllClasses !default;
 @import "oj.alta.icons";
 
 
+@import "../../common/widgets/oj.common.conveyorbelt"; 
+
+
 @if $includeConveyerBeltClasses != false  {
   @include exports("conveyerbelt") {
 
-    /* conveyorbelt */
-    /* --------------------------------------------------------------- */
-    
-    .oj-conveyorbelt {
-        position: relative;
-    }
     /* overflow indicators */
     .oj-conveyorbelt-overflow-indicator {
-        @include oj-box-sizing-property(border-box);
         //1rem=12px
-        //.42rem=5px ; using 5px padding instead of Alta 6px because JET icons
-        //are 16x16 instead of Alta 14x14
-        padding: .42rem;//6px;
         //2.33rem=28px;
         //$buttonHeight=2.3rem
-        width: $buttonHeight;//28px;
-        height: $buttonHeight;//28px;
-        text-align: center; 
-        cursor: default;
-        @include oj-border-radius($buttonBorderRadius);
-
-        //from .oj-button.oj-enabled
-        border: 1px solid $buttonBorderColor; //fallback before rgba color
-        border: 1px solid rgba(0, 0, 0, 0);
-        font-weight: $buttonFontWeight;
-        text-shadow: $buttonTextShadow;
-    }
-    .oj-conveyorbelt-overflow-indicator.oj-hover {
-        //from .oj-button.oj-hover
-        background-color: $buttonBgColorHover;
-        border: 1px solid $buttonBorderColor;
-        text-shadow: none;
-    }
-    .oj-conveyorbelt-overflow-indicator.oj-active {
-        //from .oj-button.oj-active
-        background-color: $buttonBgColorActive;
-        border-color: $buttonBorderColorActive; 
-        text-shadow: none;
-    }
-    .oj-conveyorbelt-start-overflow-indicator,
-    .oj-conveyorbelt-end-overflow-indicator,
-    .oj-conveyorbelt-top-overflow-indicator,
-    .oj-conveyorbelt-bottom-overflow-indicator {
-    }
-    /* overflow icons */
-    //need to include .oj-conveyorbelt-overflow-indicator here to make this selector
-    //more specific than ".oj-enabled .oj-clickable-icon"
-    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-start-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-end-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-top-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-bottom-overflow-icon {
-        //from .oj-button.oj-enabled .oj-button-icon-start
-        color: $buttonIconColor;
-        //.oj-clickable-icon will make the cursor a pointer, which we want to
-        //undo here so that the cursor is uniform across the whole overflow 
-        //indicator (the normal arrow by default)
-        cursor: inherit;
-    }
-    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-start-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-end-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-top-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-bottom-overflow-icon {
-        //from .oj-button.oj-hover .oj-button-icon-start
-        color: $buttonIconColorHover;
-    }
-    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-start-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-end-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-top-overflow-icon,
-    .oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-bottom-overflow-icon {
-        //from .oj-button.oj-active .oj-button-icon-start
-        color: $buttonIconColorActive;
-    }
-
-
-    // icons
-    //------------------------------------------
-
-    .oj-conveyorbelt-start-overflow-icon:before {
-        @include oj-ltr() {
-            @extend .oj-fwk-icon-caret-w:before;
-        }
-        @include oj-rtl() {
-            @extend .oj-fwk-icon-caret-e:before;
-        }
-    }
-    .oj-conveyorbelt-end-overflow-icon:before {
-        @include oj-ltr() {
-            @extend .oj-fwk-icon-caret-e:before;
-        }
-        @include oj-rtl() {
-            @extend .oj-fwk-icon-caret-w:before;
-        }
-    }
-    .oj-conveyorbelt-top-overflow-icon:before {
-        @extend .oj-fwk-icon-caret-n:before;
-    }
-    .oj-conveyorbelt-bottom-overflow-icon:before {
-        @extend .oj-fwk-icon-caret-s:before;
+        //.42rem=5px ; using 5px padding instead of Alta 6px because JET icons
+        //are 16x16 instead of Alta 14x14, and 1px border for button size 28px
+        padding: .42rem;
     }
   }
 }

@@ -15,7 +15,6 @@ $includeListboxClasses:   $includeFormControlClasses !default;
 
 @import "../../common/helpers/oj.common.helpers"; 
 @import "oj.alta.icons";
-@import "oj.alta.tooltip";
 @import "oj.alta.messaging";
 @import "oj.alta.formcontrol.label";
 @import "oj.alta.formcontrol.common";
@@ -120,21 +119,22 @@ $includeListboxClasses:   $includeFormControlClasses !default;
       // http://aseng-wiki.us.oracle.com/asengwiki/display/ASDevJDeveloper/JET+Popup+Framework
       z-index: 9999;
       top: 100%;
-      background: $background1Color;
-      border: $borderWidth solid $windowBorderColor;
+      background: $popupBgColor;
+      border: 1px solid $popupBorderColor;
       border-top: 0;
-      box-shadow: 1px 3px 3px 0 rgba(0, 0, 0, .35);
+      // todo: box shadows should come from a $boxShadow variable, why is this different?
+      @include oj-box-shadow(1px 3px 3px 0 rgba(0, 0, 0, .35));
     }
 
     .oj-listbox-drop-auto-width {
-      border-top: $borderWidth solid $windowBorderColor;
+      border-top: 1px solid $windowBorderColor;
       width: auto; 
     }
 
     .oj-listbox-drop.oj-listbox-drop-above {
-      border-top: $borderWidth solid $windowBorderColor;
+      border-top: 1px solid $windowBorderColor;
       border-bottom: 0;
-      box-shadow: $smallBoxShadow;
+      @include oj-box-shadow($smallBoxShadow);
     }
 
     /* results */
@@ -213,11 +213,11 @@ $includeListboxClasses:   $includeFormControlClasses !default;
     }
 
     .oj-listbox-results .oj-listbox-highlighted {
-      background: $interaction2Color;
+      background: $listboxBgColorHover;
     }
 
     .oj-listbox-results .oj-listbox-highlighted:active {
-      background: $interaction3Color;
+      background: $listboxBgColorActive;
     }
 
     .oj-listbox-results li em {
@@ -299,9 +299,10 @@ $includeListboxClasses:   $includeFormControlClasses !default;
       height: auto;
       width: auto;
       opacity: 0;
+      // todo: must use a zindex var
       z-index: 9998;
       /* styles required for IE to work */
-      background-color: $background1Color;
+      background-color: $popupBgColor;
       filter: alpha(opacity=0); 
     }
 
@@ -322,7 +323,7 @@ $includeListboxClasses:   $includeFormControlClasses !default;
     .oj-listbox-chosen {
       width: 100%;
       border: 0;
-      box-shadow: none;
+      @include oj-box-shadow(none);
       outline: 0;
     }
 
@@ -379,7 +380,7 @@ $includeListboxClasses:   $includeFormControlClasses !default;
       vertical-align:text-bottom;
       cursor: pointer;
       font-size: 1rem;
-      color: $iconColorEnabled;
+      color: $iconColorDefault;
     }
 
 
@@ -387,8 +388,8 @@ $includeListboxClasses:   $includeFormControlClasses !default;
       @include oj-box-sizing-property(border-box);
       width: 100%;
       display: inline-table;
-      background-color: $background3Color;
-      border: $borderWidth solid $border4Color;
+      background-color: $formControlBgColor;
+      border: 1px solid $formControlBorderColor;
       @include oj-border-radius($mediumBorderRadius);
     }
 
@@ -399,7 +400,7 @@ $includeListboxClasses:   $includeFormControlClasses !default;
       padding: 6px 5px 5px 5px;
       display: table-cell;
       border: 0;
-      box-shadow: none;
+      @include oj-box-shadow(none);
       outline: 0;
      }
 
@@ -412,13 +413,13 @@ $includeListboxClasses:   $includeFormControlClasses !default;
       text-align: center;
       vertical-align: middle;
       border:0;
-      box-shadow: none;
+      @include oj-box-shadow(none);
    }
 
     .oj-listbox-search-wrapper {
       border: 0;
       padding: 5px;
-      background-color: $background3Color;
+      background-color: $formControlBgColor;
     }
 
    .oj-listbox-no-results {

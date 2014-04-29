@@ -332,30 +332,39 @@ table {
   position: absolute;
   width: 1px; }
 
+/* todo: DO NOT USE: this class will be removed */
 .oj-helper-reset {
   margin: 0;
   padding: 0;
   border: 0;
   line-height: 1.3;
   text-decoration: none;
-  font-size: 100%;
+  /*header level size
+      font-size: 100%;
+   */
   list-style: none; }
 
 .oj-helper-reset:focus {
   outline: 0; }
 
-.oj-helper-clearfix:before,
-.oj-helper-clearfix:after {
-  content: "";
-  display: table;
-  border-collapse: collapse; }
+.oj-helper-reset-inheritable {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  font-style: normal;
+  line-height: normal;
+  color: #333333;
+  background-color: white;
+  cursor: auto;
+  text-align: left; }
+  html[dir="rtl"] .oj-helper-reset-inheritable {
+    text-align: right; }
 
+.oj-helper-clearfix:before, .oj-helper-clearfix:after {
+  content: " ";
+  display: table; }
 .oj-helper-clearfix:after {
   clear: both; }
-
-.oj-helper-clearfix {
-  min-height: 0;
-  /* support: IE7 */ }
 
 /* Used by the framework's support for detecting resize */
 .oj-helper-detect-resize {
@@ -365,7 +374,8 @@ table {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0; }
+  bottom: 0;
+  direction: ltr; }
 
 /* html */
 /* --------------------------------------------------------------- */
@@ -397,6 +407,10 @@ a:hover {
 
 a:active {
   font-weight: bold; }
+
+a.oj-disabled {
+  color: #9e9e9e;
+  cursor: default; }
 
 /* header */
 /* --------------------------------------------------------------- */
@@ -460,7 +474,7 @@ ul li, ol li {
 /  generate a class ".binky-icon". You
 /  could then put class="oj-icon binky-icon" on your dom element. 
 --------------------------------------------------------------------*/
-.oj-icon {
+.oj-icon, .oj-popup-tail.oj-popup-tail-simple {
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -469,45 +483,58 @@ ul li, ol li {
   text-align: center;
   -moz-box-sizing: content-box;
   box-sizing: content-box; }
-.oj-icon:before {
+.oj-icon:before, .oj-popup-tail.oj-popup-tail-simple:before {
   display: inline-block;
   -moz-box-sizing: content-box;
   box-sizing: content-box; }
 
 a .oj-clickable-icon,
 a.oj-clickable-icon,
+a.oj-clickable-icon-nocontext {
+  font-weight: normal; }
+
+a .oj-clickable-icon,
+a.oj-clickable-icon,
+a.oj-clickable-icon-nocontext,
 a:visited .oj-clickable-icon,
 a:visited.oj-clickable-icon,
-.oj-enabled .oj-clickable-icon,
-.oj-enabled.oj-clickable-icon {
-  color: #878c90;
-  font-weight: normal;
-  cursor: pointer; }
+a:visited.oj-clickable-icon-nocontext,
+.oj-default .oj-clickable-icon,
+.oj-default.oj-clickable-icon,
+.oj-default.oj-clickable-icon-nocontext {
+  color: #878c90; }
 
 a:hover .oj-clickable-icon,
 a:hover.oj-clickable-icon,
+a:hover.oj-clickable-icon-nocontext,
 .oj-hover .oj-clickable-icon,
-.oj-hover.oj-clickable-icon {
+.oj-hover.oj-clickable-icon,
+.oj-hover.oj-clickable-icon-nocontext {
   color: #85bbe7; }
 
 a:active .oj-clickable-icon,
 a:active.oj-clickable-icon,
+a:active.oj-clickable-icon-nocontext,
 .oj-active .oj-clickable-icon,
-.oj-active.oj-clickable-icon {
+.oj-active.oj-clickable-icon,
+.oj-active.oj-clickable-icon-nocontext {
   color: #0572ce; }
 
-a.oj-checked .oj-clickable-icon,
-a.oj-checked.oj-clickable-icon,
-.oj-checked .oj-clickable-icon,
-.oj-checked.oj-clickable-icon {
+a.oj-selected .oj-clickable-icon,
+a.oj-selected.oj-clickable-icon,
+a.oj-selected.oj-clickable-icon-nocontext,
+.oj-selected .oj-clickable-icon,
+.oj-selected.oj-clickable-icon,
+.oj-selected.oj-clickable-icon-nocontext {
   color: #0572ce; }
 
 a.oj-disabled .oj-clickable-icon,
 a.oj-disabled.oj-clickable-icon,
+a.oj-disabled.oj-clickable-icon-nocontext,
 .oj-disabled .oj-clickable-icon,
-.oj-disabled.oj-clickable-icon {
-  color: #d4d6d7;
-  cursor: default; }
+.oj-disabled.oj-clickable-icon,
+.oj-disabled.oj-clickable-icon-nocontext {
+  color: #d4d6d7; }
 
 @font-face {
   font-family: 'Alta Icon Font';
@@ -521,7 +548,7 @@ a.oj-disabled.oj-clickable-icon,
 /  generate a class ".binky-icon". You
 /  could then put class="oj-icon binky-icon" on your dom element. 
 --------------------------------------------------------------------*/
-.oj-fwk-icon, .oj-widget-icon {
+.oj-fwk-icon, .oj-component-icon {
   font-family: "Alta Icon Font";
   font-size: 1.34rem;
   line-height: 1;
@@ -537,7 +564,7 @@ a.oj-disabled.oj-clickable-icon,
   box-sizing: content-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
-.oj-fwk-icon:before, .oj-widget-icon:before {
+.oj-fwk-icon:before, .oj-component-icon:before {
   display: inline-block; }
 
 /* Icon Font Icons =========== */
@@ -547,16 +574,16 @@ a.oj-disabled.oj-clickable-icon,
 .oj-fwk-icon-arrow-se:before, html[dir="rtl"] .oj-fwk-icon-arrow-s-start:before, html:not([dir="rtl"]) .oj-fwk-icon-arrow-s-end:before, html:not([dir="rtl"]) .oj-collapsible-open-icon:before, html:not([dir="rtl"]) .oj-rowexpander-collapse-icon:before {
   content: "\e601"; }
 
-.oj-fwk-icon-caret-e:before, html[dir="rtl"] .oj-fwk-icon-caret-start:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-end:before, html[dir="rtl"] .oj-conveyorbelt-start-overflow-icon:before, html:not([dir="rtl"]) .oj-conveyorbelt-end-overflow-icon:before, html[dir="rtl"] .oj-datepicker-prev-icon:before, html:not([dir="rtl"]) .oj-datepicker-next-icon:before {
+.oj-fwk-icon-caret-e:before, html[dir="rtl"] .oj-fwk-icon-caret-start:before, html[dir="rtl"] .oj-conveyorbelt-overflow-icon.oj-start:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-end:before, html:not([dir="rtl"]) .oj-conveyorbelt-overflow-icon.oj-end:before, html[dir="rtl"] .oj-datepicker-prev-icon:before, html:not([dir="rtl"]) .oj-datepicker-next-icon:before {
   content: "\e602"; }
 
 .oj-fwk-icon-cross:before, .oj-tabs-close-icon:before, .oj-dialog-close-icon:before, .oj-listbox-search-clear-entry-icon:before {
   content: "\e603"; }
 
-.oj-fwk-icon-calendar:before, .oj-datepicker-calendar-icon:before {
+.oj-fwk-icon-calendar:before, .oj-inputdatetime-calendar-icon:before {
   content: "\e604"; }
 
-.oj-fwk-icon-clock:before, .oj-datepicker-time-icon:before {
+.oj-fwk-icon-clock:before, .oj-inputdatetime-time-icon:before {
   content: "\e605"; }
 
 .oj-fwk-icon-help:before, .oj-label-help-icon:before {
@@ -614,19 +641,19 @@ a.oj-disabled.oj-clickable-icon,
   -ms-transform: rotate(-90deg);
   transform: rotate(-90deg); }
 
-.oj-fwk-icon-caret-s:before, .oj-conveyorbelt-bottom-overflow-icon:before, .oj-inputnumber-down-icon:before {
+.oj-fwk-icon-caret-s:before, .oj-conveyorbelt-overflow-icon.oj-bottom:before, .oj-inputnumber-down-icon:before {
   content: "\e602";
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(90deg); }
 
-.oj-fwk-icon-caret-w:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-start:before, html[dir="rtl"] .oj-fwk-icon-caret-end:before, html:not([dir="rtl"]) .oj-conveyorbelt-start-overflow-icon:before, html[dir="rtl"] .oj-conveyorbelt-end-overflow-icon:before, html:not([dir="rtl"]) .oj-datepicker-prev-icon:before, html[dir="rtl"] .oj-datepicker-next-icon:before {
+.oj-fwk-icon-caret-w:before, html:not([dir="rtl"]) .oj-fwk-icon-caret-start:before, html:not([dir="rtl"]) .oj-conveyorbelt-overflow-icon.oj-start:before, html[dir="rtl"] .oj-fwk-icon-caret-end:before, html[dir="rtl"] .oj-conveyorbelt-overflow-icon.oj-end:before, html:not([dir="rtl"]) .oj-datepicker-prev-icon:before, html[dir="rtl"] .oj-datepicker-next-icon:before {
   content: "\e602";
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg); }
 
-.oj-fwk-icon-caret-n:before, .oj-conveyorbelt-top-overflow-icon:before, .oj-inputnumber-up-icon:before {
+.oj-fwk-icon-caret-n:before, .oj-conveyorbelt-overflow-icon.oj-top:before, .oj-inputnumber-up-icon:before {
   content: "\e602";
   -webkit-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
@@ -695,7 +722,8 @@ a.oj-disabled.oj-clickable-icon,
 .oj-resizable-handle {
   position: absolute;
   font-size: 0.1px;
-  display: block; }
+  display: block;
+  z-index: 900; }
 
 .oj-resizable-disabled .oj-resizable-handle,
 .oj-resizable-autohide .oj-resizable-handle {
@@ -757,88 +785,8 @@ a.oj-disabled.oj-clickable-icon,
   right: -5px;
   top: -5px; }
 
-.ui-resizable {
-  position: relative; }
-
-.ui-resizable-handle {
-  position: absolute;
-  font-size: 0.1px;
-  display: block; }
-
-.ui-resizable-disabled .ui-resizable-handle,
-.ui-resizable-autohide .ui-resizable-handle {
-  display: none; }
-
-.ui-resizable-n {
-  cursor: n-resize;
-  height: 7px;
-  width: 100%;
-  top: -5px;
-  left: 0; }
-
-.ui-resizable-s {
-  cursor: s-resize;
-  height: 7px;
-  width: 100%;
-  bottom: -5px;
-  left: 0; }
-
-.ui-resizable-e {
-  cursor: e-resize;
-  width: 7px;
-  right: -5px;
-  top: 0;
-  height: 100%; }
-
-.ui-resizable-w {
-  cursor: w-resize;
-  width: 7px;
-  left: -5px;
-  top: 0;
-  height: 100%; }
-
-.ui-resizable-se {
-  cursor: se-resize;
-  width: 12px;
-  height: 12px;
-  right: 1px;
-  bottom: 1px; }
-
-.ui-resizable-sw {
-  cursor: sw-resize;
-  width: 9px;
-  height: 9px;
-  left: -5px;
-  bottom: -5px; }
-
-.ui-resizable-nw {
-  cursor: nw-resize;
-  width: 9px;
-  height: 9px;
-  left: -5px;
-  top: -5px; }
-
-.ui-resizable-ne {
-  cursor: ne-resize;
-  width: 9px;
-  height: 9px;
-  right: -5px;
-  top: -5px; }
-
-/* selectable */
-/* --------------------------------------------------------------- */
-.oj-selectable-helper {
-  position: absolute;
-  z-index: 100;
-  border: 1px dotted black; }
-
-.ui-selectable-helper {
-  position: absolute;
-  z-index: 100;
-  border: 1px dotted black; }
-
 /* Overlays */
-.oj-widget-overlay {
+.oj-component-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -848,14 +796,14 @@ a.oj-disabled.oj-clickable-icon,
   opacity: .3;
   filter: Alpha(Opacity=30); }
 
-.oj-widget-shadow {
+.oj-component-shadow {
   margin: -8px 0 0 -8px;
   padding: 8px;
   background: #aaaaaa url("images/ui-bg_flat_0_aaaaaa_40x100.png") 50% 50% repeat-x;
   opacity: .3;
   filter: Alpha(Opacity=30);
   border-radius: 8px; }
-  html.oj-slow-borderradius .oj-widget-shadow {
+  html.oj-slow-borderradius .oj-component-shadow {
     border-radius: 0; }
 
 /* Overlays */
@@ -879,6 +827,25 @@ a.oj-disabled.oj-clickable-icon,
   html.oj-slow-borderradius .ui-widget-shadow {
     border-radius: 0; }
 
+.oj-panel {
+  border: 1px solid #d6dfe6;
+  background-color: white;
+  border-radius: 1px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 10px; }
+  html.oj-slow-borderradius .oj-panel {
+    border-radius: 0; }
+
+/* panel alternative color scheme 1 */
+.oj-panel.oj-panel-alt1 {
+  background-color: #eff2f5; }
+
+/* panel alternative color scheme 2 */
+.oj-panel.oj-panel-alt2 {
+  background-color: #e8f2fb; }
+
 /* collapsible */
 /* --------------------------------------------------------------- */
 /* collapsible with "showDetail" style */
@@ -892,10 +859,13 @@ a.oj-disabled.oj-clickable-icon,
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   color: #252525;
-  font-size: 1rem;
-  padding: 4px 0 4px 0;
+  padding: 4px 0;
   background-image: none;
-  border: 0; }
+  margin: 0;
+  /*header level size
+        font-size: $fontSize;
+        border: 0;
+   */ }
 
 /*
  * applied to the disabled collapsible header 
@@ -911,15 +881,19 @@ a.oj-disabled.oj-clickable-icon,
   color: #333333;
   background-color: white;
   background-color: transparent;
-  padding-top: 1px;
-  padding-bottom: 5px;
-  border: 0; }
-  html:not([dir="rtl"]) .oj-collapsible-content {
-    padding-left: 24px;
-    padding-right: 10px; }
-  html[dir="rtl"] .oj-collapsible-content {
-    padding-right: 24px;
-    padding-left: 10px; }
+  padding: 4px 0;
+  border: 0;
+  margin: 0;
+  /*no indentation
+        @include oj-ltr() {
+          padding-left: 24px;
+          padding-right: 10px;
+        }
+        @include oj-rtl() {
+          padding-right: 24px;
+          padding-left: 10px;
+        }
+  */ }
 
 /* collapsible with "accordion" style */
 /* -----------------------------------*/
@@ -946,7 +920,7 @@ a.oj-disabled.oj-clickable-icon,
 .oj-collapsible.oj-disabled.oj-accordion-collapsible > .oj-collapsible-header {
   background-image: none;
   color: #9e9e9e;
-  background-color: #FAFAFA; }
+  background-color: #fafafa; }
 
 /*
  * applied to the accordion style content but not to any nested collapsible contents
@@ -958,68 +932,24 @@ a.oj-disabled.oj-clickable-icon,
   border: 1px solid #d6dfe6;
   border-top: 0; }
 
-/* collapsible with "box" style */
-/* -----------------------------*/
-/* 
- * applied to the box style header but not to any nested collapsible headers
- */
-.oj-collapsible.oj-box > .oj-collapsible-header {
-  display: block;
-  position: relative;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: bold;
-  color: #252525;
-  font-size: 1.167rem;
-  padding: 5px;
-  border: 1px solid #d6dfe6;
-  border-bottom: 0;
-  background-image: none; }
+    /*
+     * applied to the nested collapsible content
+     * reduce padding in the case of nested collapsible
 
-/*
- * applied to the disabled box style header 
- */
-.oj-collapsible.oj-disabled.oj-box > .oj-collapsible-header {
-  background-image: none;
-  color: #9e9e9e; }
-
-/* 
- * applied to the box style wrapper but not to any nested collapsible wrapper
- * make sure border appear even when it's collapsed
- */
-.oj-collapsible.oj-box > .oj-collapsible-wrapper {
-  border: 1px solid #d6dfe6;
-  border-top: 0; }
-
-/*
- * applied to the box style content but not to any nested collapsible content
- */
-.oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible-content {
-  color: #333333;
-  background-color: white; }
-  html:not([dir="rtl"]) .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible-content {
-    padding-left: 5px; }
-  html[dir="rtl"] .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible-content {
-    padding-right: 5px; }
-
-/*
- * applied to the nested collapsible content
- * reduce padding in the case of nested collapsible
- */
-.oj-collapsible > .oj-collapsible-wrapper > .oj-collapsible,
-.oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible.oj-box,
-.oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible.oj-accordion-collapsible,
-.oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-accordion {
+    .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible.oj-accordion-collapsible,
+    .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-accordion
+    {
+      padding: 0;
+      @include oj-ltr() {
+        padding-left: 24px;
+      }
+      @include oj-rtl() {
+        padding-right: 24px;
+      }
+    }
+     */
+.oj-collapsible > .oj-collapsible-wrapper > .oj-collapsible {
   padding: 0; }
-  html:not([dir="rtl"]) .oj-collapsible > .oj-collapsible-wrapper > .oj-collapsible, html:not([dir="rtl"])
-  .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible.oj-box, html:not([dir="rtl"])
-  .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible.oj-accordion-collapsible, html:not([dir="rtl"])
-  .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-accordion {
-    padding-left: 24px; }
-  html[dir="rtl"] .oj-collapsible > .oj-collapsible-wrapper > .oj-collapsible, html[dir="rtl"]
-  .oj-collapsible.oj-box > .oj-collapsible-wrapper > .oj-collapsible.oj-box, html[dir="rtl"]
-  .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-collapsible.oj-accordion-collapsible, html[dir="rtl"]
-  .oj-collapsible.oj-accordion-collapsible > .oj-collapsible-wrapper > .oj-accordion {
-    padding-right: 24px; }
 
 /* collapsible content transition effects */
 /* -------------------------------------- */
@@ -1036,7 +966,10 @@ a.oj-disabled.oj-clickable-icon,
  * hide any collapsed content
  */
 .oj-collapsible-wrapper {
-  overflow: hidden; }
+  /*      overflow: hidden; */
+  border: 0;
+  padding: 0;
+  margin: 0; }
 
 /* suppress all browser decorations of anchors in the header */
 /* --------------------------------------------------------- */
@@ -1053,11 +986,20 @@ a.oj-disabled.oj-clickable-icon,
  * For disabled headers
  */
 .oj-collapsible.oj-disabled .oj-collapsible-header-icon {
-  /*      display: none; */
   color: #d4d6d7; }
 
-html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
-  margin-left: 4px; }
+html:not([dir="rtl"]) .oj-collapsible-header a, html:not([dir="rtl"])
+.oj-collapsible-header .oj-collapsible-header-icon {
+  margin-left: -5px; }
+html[dir="rtl"] .oj-collapsible-header a, html[dir="rtl"]
+.oj-collapsible-header .oj-collapsible-header-icon {
+  margin-left: 4px;
+  margin-right: -5px; }
+
+html:not([dir="rtl"]) .oj-accordion-collapsible > .oj-collapsible-header > .oj-collapsible-header-icon {
+  margin-left: 0; }
+html[dir="rtl"] .oj-accordion-collapsible > .oj-collapsible-header > .oj-collapsible-header-icon {
+  margin-right: 0; }
 
 .oj-collapsible-header-icon {
   font-size: 1.167rem;
@@ -1113,51 +1055,50 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
 .oj-conveyorbelt-overflow-indicator {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding: .42rem;
   width: 2.34rem;
   height: 2.34rem;
   text-align: center;
-  cursor: default;
+  cursor: pointer;
   border-radius: 2px;
-  border: 1px solid #c4ced7;
-  border: 1px solid transparent;
-  font-weight: bold;
-  text-shadow: 0 1px 0 white; }
+  border: 1px solid; }
   html.oj-slow-borderradius .oj-conveyorbelt-overflow-indicator {
     border-radius: 0; }
 
+.oj-conveyorbelt-overflow-indicator.oj-default {
+  border-color: transparent; }
+
 .oj-conveyorbelt-overflow-indicator.oj-hover {
   background-color: #f7f8f9;
-  border: 1px solid #c4ced7;
-  text-shadow: none; }
+  border-color: #c4ced7; }
 
-.oj-conveyorbelt-overflow-indicator.oj-active {
+.oj-conveyorbelt-overflow-indicator.oj-active,
+.oj-conveyorbelt-overflow-indicator.oj-active.oj-hover {
   background-color: #0572ce;
-  border-color: #0572ce;
-  text-shadow: none; }
+  border-color: #0572ce; }
 
 /* overflow icons */
-.oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-start-overflow-icon,
-.oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-end-overflow-icon,
-.oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-top-overflow-icon,
-.oj-conveyorbelt-overflow-indicator .oj-conveyorbelt-bottom-overflow-icon {
-  color: #878c90;
-  cursor: inherit; }
-
-.oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-start-overflow-icon,
-.oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-end-overflow-icon,
-.oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-top-overflow-icon,
-.oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-bottom-overflow-icon {
+.oj-conveyorbelt-overflow-indicator.oj-hover .oj-conveyorbelt-overflow-icon {
   color: #85bbe7; }
 
-.oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-start-overflow-icon,
-.oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-end-overflow-icon,
-.oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-top-overflow-icon,
-.oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-bottom-overflow-icon {
+.oj-conveyorbelt-overflow-indicator.oj-active .oj-conveyorbelt-overflow-icon,
+.oj-conveyorbelt-overflow-indicator.oj-active.oj-hover .oj-conveyorbelt-overflow-icon {
   color: white; }
+
+/* overflow indicators */
+.oj-conveyorbelt-overflow-indicator {
+  padding: .42rem; }
 
 /* tabs */
 /* --------------------------------------------------------------- */
+/*
+ * applied to the Tab bar
+ */
+.oj-tabs-nav {
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  border: 0; }
+
 /*
  * applied to the horizontal Tab
  * line-height is for the height of the Tab Bar
@@ -1173,74 +1114,91 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border: 0;
   border-top: 3px solid transparent;
-  background-color: transparent;
+  border-radius: 0 0 0 0;
   white-space: nowrap;
   display: inline-block; }
 
 /*
- * applied to the horizontal Tab
+ * Container of the horizontal Tab bar
  */
-.oj-tabs-conveyor > .oj-tabs-nav,
-.oj-tabs > .oj-tabs-nav {
-  white-space: nowrap; }
-
 .oj-tabs-conveyor {
   display: inline-block; }
 
 /*
- * applied to the enabled Tab Title
- * display inline so the close icon is aligned with the title text
+ * applied to the conveyorbelt buttons
  */
-.oj-tabs-nav > .oj-tabs-default h3 {
-  display: inline;
-  font-weight: normal; }
+html:not([dir="rtl"]) .oj-tabs-conveyorbelt .oj-conveyorbelt-start-overflow-indicator {
+  margin-right: 5px; }
+html[dir="rtl"] .oj-tabs-conveyorbelt .oj-conveyorbelt-start-overflow-indicator {
+  margin-left: 5px; }
+
+html:not([dir="rtl"]) .oj-tabs-conveyorbelt .oj-conveyorbelt-end-overflow-indicator {
+  margin-left: 5px; }
+html[dir="rtl"] .oj-tabs-conveyorbelt .oj-conveyorbelt-end-overflow-indicator {
+  margin-right: 5px; }
 
 /*
- * Tab Title text
+ * applied to tab title text
+ * display inline so the close icon is aligned with the title text
  */
 .oj-tabs-title {
-  vertical-align: middle; }
+  display: inline;
+  min-width: 12px;
+  vertical-align: middle;
+  font-weight: normal;
+  font-size: 1rem;
+  color: #145c9e;
+  text-decoration: none; }
 
+.oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
+  cursor: pointer;
+  outline: none;
+  padding-right: 8px;
+  padding-left: 8px; }
+
+/*
+ * applied to tab title text when it's overflow
+ */
 .oj-tabs-title-overflow {
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; }
 
-.oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
-  font-weight: normal;
-  text-decoration: none;
-  cursor: pointer;
-  color: #145c9e;
-  outline: none;
-  padding-right: 8px;
-  padding-left: 8px; }
-
 /*
- * applied to the selected Tab Title
+ * applied to tab title text when it's selected
  */
-.oj-tabs-nav > .oj-tabs-default.oj-tabs-active .oj-tabs-anchor {
+.oj-tabs-default.oj-tabs-active .oj-tabs-title {
   font-weight: bold; }
 
 /*
- * applied to the Tab Title when it's hovered
+ * applied to the tab title when it's hovered
  */
-.oj-tabs-nav > .oj-tabs-default.oj-hover .oj-tabs-anchor {
+.oj-tabs-default.oj-hover .oj-tabs-title {
   text-decoration: underline; }
 
 /*
- * applied to the disabled Tab Title
+ * applied to the tab title text when it's disabled
  */
-.oj-tabs-nav > .oj-tabs-default.oj-disabled .oj-tabs-anchor {
+.oj-tabs-default.oj-disabled .oj-tabs-title {
   color: #9e9e9e;
-  cursor: text; }
+  cursor: text;
+  text-decoration: none; }
+
+/* suppress all browser decorations of anchors in the tab */
+.oj-tabs-default a,
+.oj-tabs-default a:active,
+.oj-tabs-default a:visited,
+.oj-tabs-default a:hover,
+.oj-tabs-default a:focus {
+  text-decoration: none; }
 
 /*
  * applied to the panel body
  */
 .oj-tabs-panel {
   display: block;
-  padding: 1em;
+  padding: 10px;
   color: #333333;
   background-color: white;
   border: 1px solid #d6dfe6;
@@ -1264,27 +1222,25 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
 
 /*
  * applied to the horizontal tab when it is NOT selected
+ * used to reduce the size jumps between selected and un-selected.
  */
 .oj-tabs-nav > .oj-tabs-default > .oj-tabs-tab-content {
   white-space: nowrap;
   padding-top: 4px;
   padding-bottom: 3px;
-  /*
-        padding-right: $paddingEnd;
-        padding-left: $paddingEnd;
-  */
-  border-top: 0;
-  border-bottom: 0;
-  border-right: 1px solid transparent;
-  border-left: 1px solid transparent; }
+  border-style: solid;
+  border-width: 1px 1px 0 1px;
+  border-color: transparent;
+  border-radius: 0 0 0 0; }
 
 /*
  * applied to the horizontal tab when it is selected
  */
 .oj-tabs-conveyor > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active > .oj-tabs-tab-content,
 .oj-tabs > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active > .oj-tabs-tab-content {
-  border-right-color: #c4ced7;
-  border-left-color: #c4ced7; }
+  border-color: #c4ced7;
+  background-color: white;
+  border-top: 0; }
 
 .oj-tabs-conveyor > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active,
 .oj-tabs > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active {
@@ -1302,15 +1258,19 @@ html[dir="rtl"] .oj-collapsible-header .oj-collapsible-header-icon {
   cursor: pointer;
   text-align: center;
   vertical-align: middle;
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   line-height: 20px;
   width: 22px;
-  height: 22px; }
+  height: 22px;
+  margin-top: 2px; }
   html:not([dir="rtl"]) .oj-tabs-close-icon {
     margin-left: -8px; }
   html[dir="rtl"] .oj-tabs-close-icon {
     margin-right: -8px; }
 
+/*
+ * close icon styles for vertical tabs
+ */
 html:not([dir="rtl"]) .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-close-icon {
   float: right; }
 html[dir="rtl"] .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-close-icon {
@@ -1325,6 +1285,8 @@ html[dir="rtl"] .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-clo
  * applied to the vertical Tab bar
  */
 .oj-tabs-vertical > .oj-tabs-nav {
+  margin: 0;
+  padding: 0;
   padding-top: 15px; }
   html:not([dir="rtl"]) .oj-tabs-vertical > .oj-tabs-nav {
     float: left; }
@@ -1401,7 +1363,7 @@ html[dir="rtl"] .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-clo
 /* vertical tabs when all tabs have a title icon */
 /* --------------------------------------------------------------- */
 /*
- * applied to the vertical Tab
+ * applied to the icons only vertical Tab
  */
 .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default {
   background-color: #f0f0f0; }
@@ -1416,7 +1378,7 @@ html[dir="rtl"] .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-clo
   background-color: white; }
 
 .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active.oj-hover {
-  background-color: #f0f0f0; }
+  background-color: white; }
 
 .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default > .oj-tabs-tab-content {
   padding: 8px;
@@ -1472,6 +1434,17 @@ html:not([dir="rtl"]) .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-
 html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:last-child {
   border-left: 0; }
 
+/*
+ * applied to the icon
+ */
+.oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
+  padding-right: 0;
+  padding-left: 0; }
+
+.oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default.oj-tabs-hover .oj-tabs-title,
+.oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active .oj-tabs-title {
+  font-weight: normal; }
+
 /* progressbar */
 /* --------------------------------------------------------------- */
 .oj-progressbar {
@@ -1484,6 +1457,8 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   background-image: linear-gradient(bottom, #0367c9 0%, #0571cd 46.75%, #057dd3 100%);
   border: 1px solid #dfe4e7;
   border-radius: 2px; }
+  html.oj-slow-cssgradients .oj-progressbar {
+    background-image: none; }
   html.oj-slow-borderradius .oj-progressbar {
     border-radius: 0; }
 
@@ -1518,6 +1493,8 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   background: #f9f9f9;
   border: 1px solid #c4ced7;
   border-radius: 1px; }
+  html.oj-slow-boxshadow .oj-dialog {
+    box-shadow: none; }
   html.oj-slow-borderradius .oj-dialog {
     border-radius: 0; }
 
@@ -1564,7 +1541,7 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
 .oj-dialog .oj-dialog-body {
   position: relative;
   border: 0;
-  padding: 10px 10px 10px 10px;
+  padding: 10px;
   background: #f9f9f9;
   color: #333333;
   overflow: auto; }
@@ -1592,14 +1569,13 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   padding: 0;
   border: none; }
 
-.oj-resizable-handle.oj-icon:before {
+.oj-resizable-handle.oj-icon:before, .oj-resizable-handle.oj-popup-tail.oj-popup-tail-simple:before {
   content: none; }
 
 .oj-dialog .oj-dialog-footer {
   padding: 10px 10px;
-  position: absolute;
-  bottom: 0;
-  right: 0; }
+  position: relative;
+  float: right; }
 
 /* popup */
 /* --------------------------------------------------------------- */
@@ -1608,84 +1584,93 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   z-index: 1000;
   position: absolute;
   border-radius: 1px;
-  background-color: #f9f9f9;
+  background-color: white;
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
   html.oj-slow-borderradius .oj-popup {
     border-radius: 0; }
+  html.oj-slow-boxshadow .oj-popup {
+    box-shadow: none; }
 
 .oj-popup.oj-popup-tail-simple {
   z-index: 1030;
-  box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.45); }
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.4);
+  border-color: #c4ced7;
+  background-color: #f9f9f9; }
+  html.oj-slow-boxshadow .oj-popup.oj-popup-tail-simple {
+    box-shadow: none; }
 
-.oj-popup-no-chrome {
+.oj-popup.oj-popup-no-chrome {
   border-width: 0;
   box-shadow: none;
-  border-radius: 0; }
+  border-radius: 0;
+  background-color: transparent; }
 
 .oj-popup-content {
   padding: 10px; }
 
+.oj-popup-no-chrome > .oj-popup-content {
+  padding: 0; }
+
 .oj-popup-tail {
   position: absolute;
-  pointer-events: none;
-  z-index: 1001; }
+  pointer-events: none; }
 
-.oj-popup-tail-simple > .oj-popup-tail {
+.oj-popup-tail.oj-popup-tail-simple {
   height: 13px;
   width: 14px;
   background-position: center center;
   background-color: transparent;
-  background-repeat: no-repeat;
-  z-index: 1031; }
+  background-repeat: no-repeat; }
 
-.oj-popup-tail-simple-start-top, .oj-popup-tail-simple-start-middle {
-  top: 0;
-  left: -14px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAZklEQVQoU43RsQ6AMAgE0Pv/39LZuDmZLv4EE5ahpFHgOtzGu6aA/bh0Craz0agqYMOG7vboakmfdehYRGhJn4E//cUjUYlDhqOS36cZHgk3toLTdTNc3qrCKWS4hBWmMMMURdjyAhXCJGsoKfTHAAAAAElFTkSuQmCC); }
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-top,
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-middle,
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-bottom {
+  left: -14px; }
 
-.oj-popup-tail-simple-center-top {
-  left: 50%;
-  top: -13px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACJSURBVChTYzhy7vp/IGAgBTMxAMHR8zf+g2hiAViTpCAvSRqZrA01GJ+//0ySRrBNICAjJUq0RrimJ89eE68RFiKgUPz58ycY373/5D++UIXbhAwI2YiiCeREGMCnEa4JForIAJdGrM5DBtg0YmhCdiIMoGtE14ThRBhA1oiu6T9IAheAaORlAACRvI787TdGjAAAAABJRU5ErkJggg==); }
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-top,
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-middle,
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-bottom {
+  right: -14px; }
 
-.oj-popup-tail-simple-start-middle {
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-top,
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-top {
+  top: 0; }
+
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-bottom,
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-bottom {
+  bottom: 0; }
+
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-middle,
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-middle {
   top: 50%; }
 
-.oj-popup-tail-simple-start-bottom {
-  bottom: 0;
-  left: -14px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAV0lEQVQokZ3RMQ4AEAyF4d7/XGarSSwu0alCIlF5Wgxvkf8bGiQi9LIQk+RS/xAz/6FruKMriJALT8iEFjpCD0Foof4O/xGhGS8bHUR7jM5RyIsVfInXNbifVqg9Iea7AAAAAElFTkSuQmCC); }
+.oj-popup-tail.oj-popup-tail-simple.oj-center.oj-top,
+.oj-popup-tail.oj-popup-tail-simple.oj-center.oj-bottom {
+  left: 50%; }
 
-.oj-popup-tail-simple-end-top, .oj-popup-tail-simple-end-middle {
-  top: 0;
-  right: -14px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAY0lEQVQoU5XRIRLAIAxE0b3/tUAzOFQnppdYtVUIaBJase4/k6B0w9fVNjT3K77sVm1DkgCSr+0xyQUt0IvndiQJiOIMlW6AF59QCjMUwhNyoYdI5jBCKcxQCE/IhfOP2SG8PZAPN99zpHp2AAAAAElFTkSuQmCC); }
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-top:before,
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-middle:before {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAZklEQVQoU43RsQ6AMAgE0Pv/39LZuDmZLv4EE5ahpFHgOtzGu6aA/bh0Craz0agqYMOG7vboakmfdehYRGhJn4E//cUjUYlDhqOS36cZHgk3toLTdTNc3qrCKWS4hBWmMMMURdjyAhXCJGsoKfTHAAAAAElFTkSuQmCC); }
 
-.oj-popup-tail-simple-center-bottom {
-  left: 50%;
-  bottom: -13px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC6SURBVChTYzxy7vp/U20lBlzg9NV7DEB5RhD71PVnYDEmEPHk2Wswh1jAZG2owfj8/WecGiUFeUG2/YdywQBsEz6NMlKiUBYCgDWBACEbkQHTkYsPoEzcGtGdCLbp169fYA4IYNOI7kS48whpRAZwTSCATyPIiYz/foCdiKIJBHBpRHYi4+EL96FMVGCjrwBlMTAcPX/jP8gmkAH/mTgYMWyCAWyhCnMiTk0ggE0jCODVBALoGhkYGBgA+JJyzMnGoIEAAAAASUVORK5CYII=); }
+.oj-popup-tail.oj-popup-tail-simple.oj-left.oj-bottom:before {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAV0lEQVQokZ3RMQ4AEAyF4d7/XGarSSwu0alCIlF5Wgxvkf8bGiQi9LIQk+RS/xAz/6FruKMriJALT8iEFjpCD0Foof4O/xGhGS8bHUR7jM5RyIsVfInXNbifVqg9Iea7AAAAAElFTkSuQmCC); }
 
-.oj-popup-tail-simple-end-middle {
-  top: 50%; }
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-top:before,
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-middle:before {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAY0lEQVQoU5XRIRLAIAxE0b3/tUAzOFQnppdYtVUIaBJase4/k6B0w9fVNjT3K77sVm1DkgCSr+0xyQUt0IvndiQJiOIMlW6AF59QCjMUwhNyoYdI5jBCKcxQCE/IhfOP2SG8PZAPN99zpHp2AAAAAElFTkSuQmCC); }
 
-.oj-popup-tail-simple-end-bottom {
-  bottom: 0;
-  right: -14px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAaUlEQVQoU53PMQ7AIAgFUO5/rXY23To1Ll6CiYYfaVJLIzgQjfg+SldtspdTi7ajhouYWVYw4Ap+YBa/YAZ/YBS7MIJ/4QyTNXXNYJ1IetibboiHAUUE1QPckBHrU7ExPAsxjEvjxyMhNzVRJMfPJwiCAAAAAElFTkSuQmCC); }
+.oj-popup-tail.oj-popup-tail-simple.oj-right.oj-bottom:before {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAaUlEQVQoU53PMQ7AIAgFUO5/rXY23To1Ll6CiYYfaVJLIzgQjfg+SldtspdTi7ajhouYWVYw4Ap+YBa/YAZ/YBS7MIJ/4QyTNXXNYJ1IetibboiHAUUE1QPckBHrU7ExPAsxjEvjxyMhNzVRJMfPJwiCAAAAAElFTkSuQmCC); }
 
-/* tootip */
-/* --------------------------------------------------------------- */
-.ui-tooltip {
-  padding: 5px;
-  position: absolute;
-  z-index: 9999;
-  max-width: 300px;
-  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
+.oj-popup-tail.oj-popup-tail-simple.oj-center.oj-top {
+  top: -13px; }
+  .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-top:before {
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACJSURBVChTYzhy7vp/IGAgBTMxAMHR8zf+g2hiAViTpCAvSRqZrA01GJ+//0ySRrBNICAjJUq0RrimJ89eE68RFiKgUPz58ycY373/5D++UIXbhAwI2YiiCeREGMCnEa4JForIAJdGrM5DBtg0YmhCdiIMoGtE14ThRBhA1oiu6T9IAheAaORlAACRvI787TdGjAAAAABJRU5ErkJggg==); }
 
-body .ui-tooltip {
-  background: white;
-  border: 1px solid #c4ced7; }
+.oj-popup-tail.oj-popup-tail-simple.oj-center.oj-bottom {
+  bottom: -13px; }
+  .oj-popup-tail.oj-popup-tail-simple.oj-center.oj-bottom:before {
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC6SURBVChTYzxy7vp/U20lBlzg9NV7DEB5RhD71PVnYDEmEPHk2Wswh1jAZG2owfj8/WecGiUFeUG2/YdywQBsEz6NMlKiUBYCgDWBACEbkQHTkYsPoEzcGtGdCLbp169fYA4IYNOI7kS48whpRAZwTSCATyPIiYz/foCdiKIJBHBpRHYi4+EL96FMVGCjrwBlMTAcPX/jP8gmkAH/mTgYMWyCAWyhCnMiTk0ggE0jCODVBALoGhkYGBgA+JJyzMnGoIEAAAAASUVORK5CYII=); }
 
 /* menu */
 /* --------------------------------------------------------------- */
@@ -1700,6 +1685,8 @@ body .ui-tooltip {
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35);
   font-size: 1rem;
   white-space: nowrap; }
+  html.oj-slow-boxshadow .oj-menu {
+    box-shadow: none; }
 
 .oj-menu:focus {
   outline: none; }
@@ -1783,6 +1770,7 @@ html[dir="rtl"] .oj-menu-submenu-icon {
   display: inline-block;
   vertical-align: middle;
   padding: 0;
+  border: 1px solid;
   margin-bottom: 4px;
   cursor: pointer;
   text-align: center;
@@ -1793,7 +1781,8 @@ html[dir="rtl"] .oj-menu-submenu-icon {
   height: 2.34rem;
   line-height: 2.34rem;
   font-size: inherit;
-  font-family: inherit; }
+  font-family: inherit;
+  font-weight: bold; }
   html.oj-slow-borderradius .oj-button {
     border-radius: 0; }
 
@@ -1813,32 +1802,35 @@ html[dir="rtl"] .oj-menu-submenu-icon {
 .oj-button:focus {
   outline: none; }
 
-.oj-button.oj-enabled {
+.oj-button.oj-default {
   background-color: #e4e8ea;
   background-image: -webkit-linear-gradient(top, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
   background-image: linear-gradient(to bottom, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
-  border: 1px solid #c4ced7;
-  box-shadow: inset 0 1px 0 white;
+  border-color: #c4ced7;
   color: black;
-  font-weight: bold;
-  text-shadow: 0 1px 0 white; }
-  html.oj-slow-cssgradients .oj-button.oj-enabled {
+  box-shadow: inset 0 1px 0 white; }
+  html.oj-slow-cssgradients .oj-button.oj-default {
     background-image: none; }
+  html.oj-slow-boxshadow .oj-button.oj-default {
+    box-shadow: none; }
 
-.oj-button.oj-enabled .oj-button-icon-start,
-.oj-button.oj-enabled .oj-button-icon-end {
+.oj-button.oj-default {
+  text-shadow: 0 1px 0 white; }
+
+.oj-button .oj-button-icon-start,
+.oj-button .oj-button-icon-end {
+  font-weight: normal;
+  text-shadow: none; }
+
+.oj-button.oj-default .oj-button-icon-start,
+.oj-button.oj-default .oj-button-icon-end {
   color: #878c90; }
 
 .oj-button.oj-hover,
-.oj-button.oj-focus,
-.oj-button.oj-hover.oj-button-half-chrome,
-.oj-button.oj-focus.oj-button-half-chrome {
+.oj-button.oj-focus {
   background-color: #f7f8f9;
-  background-image: none;
   border-color: #c4ced7;
-  box-shadow: none;
-  color: #0572ce;
-  text-shadow: none; }
+  color: #0572ce; }
 
 .oj-button.oj-hover .oj-button-icon-start,
 .oj-button.oj-focus .oj-button-icon-start,
@@ -1846,96 +1838,142 @@ html[dir="rtl"] .oj-menu-submenu-icon {
 .oj-button.oj-focus .oj-button-icon-end {
   color: #85bbe7; }
 
-/* Must be *after* the hover/focus rule of equal specificity. */
 .oj-button.oj-active,
-.oj-button.oj-active.oj-button-half-chrome,
-.oj-button.oj-checked,
-.oj-button.oj-checked.oj-button-half-chrome {
-  box-shadow: none;
-  text-shadow: none; }
-
-.oj-button.oj-active,
-.oj-button.oj-active.oj-button-half-chrome {
+.oj-button.oj-active.oj-hover,
+.oj-button.oj-active.oj-focus {
   background-color: #0572ce;
-  background-image: none;
   border-color: #0572ce;
   color: white; }
 
-.oj-button.oj-checked,
-.oj-button.oj-checked.oj-button-half-chrome {
-  background-color: #0572ce;
-  background-image: none;
-  border-color: #0572ce;
-  color: white; }
-
-/* Must be *after* the hover/focus icon rule of equal specificity. */
 .oj-button.oj-active .oj-button-icon-start,
 .oj-button.oj-active .oj-button-icon-end,
-.oj-button.oj-checked .oj-button-icon-start,
-.oj-button.oj-checked .oj-button-icon-end {
+.oj-button.oj-active.oj-hover .oj-button-icon-start,
+.oj-button.oj-active.oj-hover .oj-button-icon-end,
+.oj-button.oj-active.oj-focus .oj-button-icon-start,
+.oj-button.oj-active.oj-focus .oj-button-icon-end {
   color: white; }
 
-/* Must be *after* the checked rules "ob.oc,ob.oc.obhc) above. */
+.oj-button.oj-selected,
+.oj-button.oj-selected.oj-hover,
+.oj-button.oj-selected.oj-focus {
+  background-color: #0572ce;
+  border-color: #0572ce;
+  color: white; }
+
+.oj-button.oj-selected .oj-button-icon-start,
+.oj-button.oj-selected .oj-button-icon-end,
+.oj-button.oj-selected.oj-hover .oj-button-icon-start,
+.oj-button.oj-selected.oj-hover .oj-button-icon-end,
+.oj-button.oj-selected.oj-focus .oj-button-icon-start,
+.oj-button.oj-selected.oj-focus .oj-button-icon-end {
+  color: white; }
+
 .oj-button.oj-disabled,
-.oj-button.oj-disabled.oj-button-half-chrome {
+.oj-button.oj-disabled.oj-selected {
   background-color: #f4f6f7;
   background-image: none;
-  border: 1px solid #e0e6eb;
-  box-shadow: none;
+  border-color: #e0e6eb;
   color: #9e9e9e;
-  font-weight: bold;
-  text-shadow: none;
   cursor: default; }
 
 .oj-button.oj-disabled .oj-button-icon-start,
 .oj-button.oj-disabled .oj-button-icon-end {
   color: #d4d6d7; }
 
+.oj-button.oj-disabled.oj-selected,
+.oj-button.oj-disabled.oj-selected.oj-button-half-chrome,
+.oj-button.oj-disabled.oj-selected.oj-button-no-chrome {
+  color: gray; }
+
+.oj-button.oj-disabled.oj-selected .oj-button-icon-start,
+.oj-button.oj-disabled.oj-selected .oj-button-icon-end {
+  color: #b2b2b2; }
+
 /* No-Chrome and Half-chrome buttons 
  * Apps can apply the oj-button-no-chrome or oj-button-half-chrome class to a 
  * Button to make it appear with no background or border.  Half-chrome buttons
  * acquire chrome on hover/focus and active/checked states; no-chrome buttons do not.
  */
-/* Must be *after* the "state" rules of equal specificity like .oj-button.oj-enabled, 
-   and after the other ob.od.obhc rule. */
-.oj-button.oj-button-no-chrome,
-.oj-button.oj-button-half-chrome,
-.oj-button.oj-disabled.oj-button-half-chrome {
+.oj-button.oj-default.oj-button-half-chrome,
+.oj-button.oj-disabled.oj-button-half-chrome,
+.oj-button.oj-disabled.oj-button-no-chrome,
+.oj-button.oj-default.oj-button-no-chrome,
+.oj-button.oj-hover.oj-button-no-chrome,
+.oj-button.oj-focus.oj-button-no-chrome,
+.oj-button.oj-active.oj-button-no-chrome,
+.oj-button.oj-active.oj-hover.oj-button-no-chrome,
+.oj-button.oj-active.oj-focus.oj-button-no-chrome,
+.oj-button.oj-selected.oj-button-no-chrome,
+.oj-button.oj-selected.oj-hover.oj-button-no-chrome,
+.oj-button.oj-selected.oj-focus.oj-button-no-chrome {
   border-color: transparent;
   background-color: transparent;
   background-image: none;
-  box-shadow: none;
-  font-weight: normal;
+  box-shadow: none; }
+
+.oj-button.oj-default.oj-button-half-chrome,
+.oj-button.oj-default.oj-button-no-chrome {
   text-shadow: none; }
 
+.oj-button.oj-button-half-chrome,
+.oj-button.oj-button-no-chrome {
+  font-weight: normal; }
+
 .oj-button.oj-active.oj-button-no-chrome,
-.oj-button.oj-checked.oj-button-no-chrome {
+.oj-button.oj-active.oj-hover.oj-button-no-chrome,
+.oj-button.oj-active.oj-focus.oj-button-no-chrome {
   color: #0572ce; }
+
+.oj-button.oj-selected.oj-button-no-chrome,
+.oj-button.oj-selected.oj-hover.oj-button-no-chrome,
+.oj-button.oj-selected.oj-focus.oj-button-no-chrome {
+  color: #0572ce; }
+
+.oj-button.oj-default.oj-button-half-chrome .oj-button-icon-start,
+.oj-button.oj-default.oj-button-half-chrome .oj-button-icon-end,
+.oj-button.oj-default.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-default.oj-button-no-chrome .oj-button-icon-end {
+  color: #878c90; }
+
+.oj-button.oj-hover.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-focus.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-hover.oj-button-no-chrome .oj-button-icon-end,
+.oj-button.oj-focus.oj-button-no-chrome .oj-button-icon-end {
+  color: #85bbe7; }
 
 .oj-button.oj-active.oj-button-no-chrome .oj-button-icon-start,
 .oj-button.oj-active.oj-button-no-chrome .oj-button-icon-end,
-.oj-button.oj-checked.oj-button-no-chrome .oj-button-icon-start,
-.oj-button.oj-checked.oj-button-no-chrome .oj-button-icon-end {
+.oj-button.oj-active.oj-hover.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-active.oj-hover.oj-button-no-chrome .oj-button-icon-end,
+.oj-button.oj-active.oj-focus.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-active.oj-focus.oj-button-no-chrome .oj-button-icon-end {
   color: #0572ce; }
 
-/* Combo states 
- * This section must be *after* the non-combo "state" rules and the "no/half-chrome" rules.
- */
-/* Must be *after* .ob.oc.obhc and .ob.od.obhc rules. */
-.oj-button.oj-checked.oj-disabled {
-  color: gray; }
+.oj-button.oj-selected.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-selected.oj-button-no-chrome .oj-button-icon-end,
+.oj-button.oj-selected.oj-hover.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-selected.oj-hover.oj-button-no-chrome .oj-button-icon-end,
+.oj-button.oj-selected.oj-focus.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-selected.oj-focus.oj-button-no-chrome .oj-button-icon-end {
+  color: #0572ce; }
 
-/* Must be *after* .ob.oc.obhc icon rule. */
-.oj-button.oj-checked.oj-disabled .oj-button-icon-start,
-.oj-button.oj-checked.oj-disabled .oj-button-icon-end {
+.oj-button.oj-disabled.oj-button-half-chrome .oj-button-icon-start,
+.oj-button.oj-disabled.oj-button-half-chrome .oj-button-icon-end,
+.oj-button.oj-disabled.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-disabled.oj-button-no-chrome .oj-button-icon-end {
+  color: #d4d6d7; }
+
+.oj-button.oj-disabled.oj-selected.oj-button-half-chrome .oj-button-icon-start,
+.oj-button.oj-disabled.oj-selected.oj-button-half-chrome .oj-button-icon-end,
+.oj-button.oj-disabled.oj-selected.oj-button-no-chrome .oj-button-icon-start,
+.oj-button.oj-disabled.oj-selected.oj-button-no-chrome .oj-button-icon-end {
   color: #b2b2b2; }
 
 /*button sizing and alignment*/
 .oj-button-icon-start,
 .oj-button-icon-end {
   vertical-align: middle;
-  margin-bottom: 3px;
-  text-shadow: none; }
+  margin-bottom: 3px; }
 
 /* The element containing the text of buttons without icons.  This is the Button (input element) 
  * itself for <input type=button|submit|reset>, which doesn't support icons at all, and a nested span 
@@ -2094,6 +2132,10 @@ html[dir="rtl"] .oj-toolbar-row .oj-toolbar + .oj-toolbar {
   box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.12);
   background: #f5f5f5;
   background-image: linear-gradient(bottom, whitesmoke 0%, #f1f1f1 50%, #e3e7e9 100%); }
+  html.oj-slow-boxshadow .oj-train-bar {
+    box-shadow: none; }
+  html.oj-slow-cssgradients .oj-train-bar {
+    background-image: none; }
 
 .oj-train-stepBackground {
   position: absolute;
@@ -2104,12 +2146,20 @@ html[dir="rtl"] .oj-toolbar-row .oj-toolbar + .oj-toolbar {
   background: #f5f5f5;
   box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.12);
   background-image: linear-gradient(bottom, whitesmoke 0%, #f1f1f1 50%, #e3e7e9 100%); }
+  html.oj-slow-borderradius .oj-train-stepBackground {
+    border-radius: 0; }
+  html.oj-slow-boxshadow .oj-train-stepBackground {
+    box-shadow: none; }
+  html.oj-slow-cssgradients .oj-train-stepBackground {
+    background-image: none; }
 
 .oj-train-bar-overlay {
   position: absolute;
   height: 8px;
   box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.12);
   background-color: #d3d4d6; }
+  html.oj-slow-boxshadow .oj-train-bar-overlay {
+    box-shadow: none; }
 
 .oj-train-stepBackground-overlay {
   position: absolute;
@@ -2119,6 +2169,10 @@ html[dir="rtl"] .oj-toolbar-row .oj-toolbar + .oj-toolbar {
   box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.12);
   background-clip: padding-box;
   background-color: #d3d4d6; }
+  html.oj-slow-borderradius .oj-train-stepBackground-overlay {
+    border-radius: 0; }
+  html.oj-slow-boxshadow .oj-train-stepBackground-overlay {
+    box-shadow: none; }
 
 .oj-train-button-visited.oj-hover,
 .oj-train-button-unvisited.oj-hover {
@@ -2132,25 +2186,33 @@ html[dir="rtl"] .oj-toolbar-row .oj-toolbar + .oj-toolbar {
   position: absolute;
   border-radius: 7px;
   border: 1px solid #0572ce;
-  background-color: #ffffff; }
+  background-color: white; }
+  html.oj-slow-borderradius .oj-train-button-visited {
+    border-radius: 0; }
 
 .oj-train-button-unvisited {
   position: absolute;
   border-radius: 7px;
   border: 1px solid #c4ced7;
   background-color: #e4e8ea; }
+  html.oj-slow-borderradius .oj-train-button-unvisited {
+    border-radius: 0; }
 
 .oj-train-button-current {
   border-radius: 7px;
   position: absolute;
   border: 1px solid #0572ce;
   background-color: #0572ce; }
+  html.oj-slow-borderradius .oj-train-button-current {
+    border-radius: 0; }
 
 .oj-train-button-disabled {
   border-radius: 7px;
   position: absolute;
   border: 1px solid #e0e6eb;
   background-color: #f4f6f7; }
+  html.oj-slow-borderradius .oj-train-button-disabled {
+    border-radius: 0; }
 
 .oj-train-label {
   text-decoration: none;
@@ -2200,9 +2262,6 @@ html[dir="rtl"] .oj-toolbar-row .oj-toolbar + .oj-toolbar {
 /* paging control */
 /* --------------------------------------------------------------- */
 /* Styling for the component. */
-.oj-pagingcontrol {
-  background-color: white; }
-
 /* Styling for the component content. */
 .oj-pagingcontrol-content {
   line-height: 2.5rem;
@@ -2265,7 +2324,7 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
   vertical-align: middle; }
 
 /* Styling for the page mode page link when selected. */
-.oj-pagingcontrol-nav-page.oj-checked {
+.oj-pagingcontrol-nav-page.oj-selected {
   border: 1px solid black;
   display: inline; }
 
@@ -2343,6 +2402,14 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
 .oj-pagingcontrol-datagrid-border {
   border: 1px solid #d6dfe6; }
 
+/* Styling which can be used when paging control is paired with ojTable. */
+.oj-pagingcontrol-table-background-color {
+  background-color: white; }
+
+/* Styling which can be used when paging control is paired with ojDataGrid. */
+.oj-pagingcontrol-datagrid-background-color {
+  background-color: white; }
+
 /* table */
 /* --------------------------------------------------------------- */
 /* Dimension variables */
@@ -2363,7 +2430,7 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
   border-right: 1px solid #d6dfe6;
   border-bottom: 1px solid #d6dfe6;
   background-color: #f2f4f7;
-  float: none!important;
+  float: none;
   min-height: 1.167rem;
   padding-top: 5px;
   padding-bottom: 5px; }
@@ -2373,28 +2440,16 @@ html[dir="rtl"] .oj-pagingcontrol-loadmore {
   cursor: url("images/column-select.cur"), default; }
 
 /* Styling for the column header elements in selected state when table focused. */
-.oj-table.oj-focus .oj-table-column-header.oj-checked {
+.oj-table.oj-focus .oj-table-column-header.oj-selected {
   background-color: #b4c8d8; }
 
 /* Styling for the column header elements in selected state when table not focused. */
-.oj-table-column-header.oj-checked {
+.oj-table-column-header.oj-selected {
   background-color: #f6f6e0; }
 
 /* Styling for the column header element in focused state. */
 .oj-table-column-header.oj-focus {
   background-color: #dae9f5; }
-
-/* Styling for the show required asterix in the column headers. */
-.oj-table-column-header-show-required {
-  color: #0572ce;
-  font-size: 1.167rem;
-  font-weight: bold;
-  line-height: 1.167rem;
-  cursor: text; }
-  html:not([dir="rtl"]) .oj-table-column-header-show-required {
-    margin-right: 4px; }
-  html[dir="rtl"] .oj-table-column-header-show-required {
-    margin-left: 4px; }
 
 /* Styling for the column header row element. */
 .oj-table-column-header-row {
@@ -2458,11 +2513,11 @@ html[dir="rtl"] .oj-table-body-row-selector {
   min-width: 1rem; }
 
 /* Styling for the data cell elements in selected state when table focused. */
-.oj-table.oj-focus .oj-table-data-cell.oj-checked {
+.oj-table.oj-focus .oj-table-data-cell.oj-selected {
   background-color: #bfd4e5; }
 
 /* Styling for the data cell elements in selected state when table not focused. */
-.oj-table-data-cell.oj-checked {
+.oj-table-data-cell.oj-selected {
   background-color: #fafaeb; }
 
 /* Styling for the data cell elements in focused state. */
@@ -2481,6 +2536,18 @@ html[dir="rtl"] .oj-table-body-row-selector {
 .oj-table-data-cell-hgrid-lines {
   border-bottom: 1px solid #eeeeee; }
 
+.oj-table-footer-cell {
+  background-color: #f2f4f7;
+  float: none;
+  min-height: 1.167rem;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: 1px solid #d6dfe6; }
+
+/* Styling for the vertical grid lines. */
+.oj-table-footer-cell-vgrid-lines {
+  border-right: 1px solid #d6dfe6; }
+
 /* Styling for the status message. */
 .oj-table-status-message {
   background-color: InfoBackground;
@@ -2495,6 +2562,86 @@ html[dir="rtl"] .oj-table-body-row-selector {
 
 /* tree */
 /* --------------------------------------------------------------- */
+.oj-tree-list, .oj-tree-list ul, .oj-tree-list li {
+  display: block;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  list-style-type: none; }
+
+.oj-tree-list li {
+  display: block;
+  min-height: 22px;
+  line-height: 22px;
+  white-space: nowrap;
+  margin-left: 18px;
+  min-width: 18px; }
+
+.oj-tree-rtl li {
+  margin-left: 0;
+  margin-right: 18px; }
+
+.oj-tree-list > ul > li {
+  margin-left: 0; }
+
+.oj-tree-rtl > ul > li {
+  margin-right: 0; }
+
+.oj-tree-list ins {
+  display: inline-block;
+  text-decoration: none;
+  width: 18px;
+  height: 18px;
+  margin: 0 0 0 0;
+  padding: 0; }
+
+.oj-tree-list a {
+  box-sizing: content-box;
+  display: inline-block;
+  line-height: 22px;
+  color: black;
+  white-space: nowrap;
+  text-decoration: none;
+  padding: 1px 2px;
+  margin: 0; }
+
+.oj-tree-list a:focus {
+  outline: none; }
+
+.oj-tree-list a > ins {
+  height: 18px;
+  width: 16px; }
+
+.oj-tree-list a > .oj-tree-icon {
+  margin-right: 3px; }
+
+.oj-tree-rtl a > .oj-tree-icon {
+  margin-left: 3px;
+  margin-right: 0; }
+
+li.oj-tree-open > ul {
+  display: block; }
+
+li.oj-tree-closed > ul {
+  display: none; }
+
+li.oj-tree-open > ins {
+  cursor: pointer; }
+
+li.oj-tree-closed > ins {
+  cursor: pointer; }
+
+li.oj-tree-open > ins {
+  cursor: pointer; }
+
+li.oj-tree-closed > ins {
+  cursor: pointer; }
+
+li.oj-tree-leaf > ins {
+  cursor: pointer; }
+
+.oj-tree-hovered span.oj-tree-title {
+  cursor: pointer; }
+
 .oj-tree-default .oj-tree-list li,
 .oj-tree-default .oj-tree-list ins {
   background-image: url("images/d.png");
@@ -2519,20 +2666,30 @@ html[dir="rtl"] .oj-table-body-row-selector {
 
 .oj-tree-default .oj-tree-list a {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  color: #145c9e; }
+  color: #145c9e;
+  line-height: 22px; }
 
-.oj-tree-default .oj-tree-hovered {
-  background: #e7f4f9;
-  border: 1px solid #d8f0fa;
+.oj-tree-default .oj-tree-hovered span.oj-tree-title {
+  font-weight: bold;
+  background-color: #E4F0FA;
+  padding: 0 2px 0 1px;
+  border: 1px solid transparent; }
+
+.oj-tree-default a.oj-tree-clicked span.oj-tree-title {
+  background-color: #FAFAEB;
+  font-weight: bold;
+  border: 1px solid #F6F6E0;
   padding: 0 2px 0 1px; }
 
-.oj-tree-default .oj-tree-clicked {
-  background: #beebff;
-  border: 1px solid #99defd;
-  padding: 0 2px 0 1px; }
+.oj-tree-default a.oj-tree-hovered.oj-tree-clicked span.oj-tree-title {
+  font-weight: bold;
+  background-color: #BFD4E5;
+  padding: 0 2px 0 1px;
+  border: 1px solid #145C9E;
+  cursor: default; }
 
 .oj-tree-default .oj-tree-list a .oj-tree-icon {
-  background-position: -56px -19px; }
+  background-position: -55px -19px; }
 
 .oj-tree-default a.oj-tree-loading .oj-tree-icon {
   background: url("images/ojtreeload.gif") center center no-repeat; }
@@ -2543,6 +2700,9 @@ html[dir="rtl"] .oj-table-body-row-selector {
 .oj-tree-default .oj-tree-no-dots li,
 .oj-tree-default .oj-tree-no-dots .oj-tree-leaf > ins {
   background: transparent; }
+
+.oj-tree-default .oj-tree-no-dots .oj-tree-leaf a ins.oj-tree-icon {
+  background-position: -72px -91px; }
 
 .oj-tree-default .oj-tree-no-dots .oj-tree-open > ins {
   background-position: -18px 0; }
@@ -2632,7 +2792,7 @@ html[dir="rtl"] .oj-table-body-row-selector {
   text-shadow: 1px 1px 1px white;
   color: black;
   line-height: 10px;
-  background: url("images/d.png") -41px -57px no-repeat;
+  background: url("images/d.png") -41px -56px no-repeat;
   text-indent: -100px; }
 
 .oj-tree-marker-line {
@@ -2648,27 +2808,33 @@ html[dir="rtl"] .oj-table-body-row-selector {
   z-index: 10000;
   background-repeat: no-repeat;
   display: none;
-  background-color: #456c43;
+  background-color: #0572CE;
   cursor: pointer;
   border-left: 0;
-  -moz-box-shadow: 0 0 2px #666;
-  -webkit-box-shadow: 0 0 2px #666;
-  box-shadow: 0 0 2px #666;
   border-radius: 1px; }
   html.oj-slow-borderradius .oj-tree-marker-line {
     border-radius: 0; }
 
+/* Styling for the datagrid widget container */
 .oj-datagrid {
   position: relative;
   border: 1px solid #d6dfe6;
   -moz-box-sizing: border-box;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none; }
 
-.oj-datagrid:focus, .oj-datagrid-cell:focus, .oj-datagrid-headercell:focus {
+/* Styling to remove focus border on focusable elements */
+.oj-datagrid:focus, .oj-datagrid-cell:focus, .oj-datagrid-header-cell:focus, .oj-datagrid-row:focus {
   outline: none; }
 
+/* Styling on databody cells */
 .oj-datagrid-cell {
   position: absolute;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2678,140 +2844,146 @@ html[dir="rtl"] .oj-table-body-row-selector {
   font-size: 0.917rem;
   font-weight: normal;
   color: #333333;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   background-color: white;
-  border-bottom: 1px solid #eeeeee;
-  padding: 5px; }
+  padding: 5px;
+  border-bottom: 1px solid #eeeeee; }
   html:not([dir="rtl"]) .oj-datagrid-cell {
     border-right: 1px solid #eeeeee; }
   html[dir="rtl"] .oj-datagrid-cell {
     border-left: 1px solid #eeeeee; }
 
-.oj-datagrid-row.oj-datagrid-banded .oj-datagrid-cell {
+/* Styling on row and column banding */
+.oj-datagrid-row.oj-datagrid-banded .oj-datagrid-cell, .oj-datagrid-cell.oj-datagrid-banded {
   background-color: #f9f9f9; }
 
-.oj-datagrid-row.oj-hover .oj-datagrid-cell {
+/* Styling on row and cell hover */
+.oj-datagrid-row.oj-hover .oj-datagrid-cell, .oj-datagrid-row .oj-datagrid-cell.oj-hover {
   background-color: #ebeced; }
 
-.oj-datagrid-row.oj-checked .oj-datagrid-cell {
+/* Styling on row and cell selection */
+.oj-datagrid-row.oj-selected .oj-datagrid-cell, .oj-datagrid-row .oj-datagrid-cell.oj-selected {
   background-color: #bfd4e5; }
 
-.oj-datagrid-row.oj-active .oj-datagrid-cell {
+/* Styling on active row and cell */
+.oj-datagrid-row.oj-active .oj-datagrid-cell, .oj-datagrid-row .oj-datagrid-cell.oj-active {
   background-color: #e4f0fa; }
 
-.oj-datagrid-row .oj-datagrid-cell.oj-hover {
-  background-color: #ebeced; }
-
-.oj-datagrid-row .oj-datagrid-cell.oj-checked {
-  background-color: #bfd4e5; }
-
-.oj-datagrid-row .oj-datagrid-cell.oj-active {
-  background-color: #e4f0fa; }
-
-.oj-datagrid-cell.oj-datagrid-banded {
-  background-color: #f9f9f9; }
-
-.oj-datagrid-cell.oj-hover {
-  background-color: #ebeced; }
-
-.oj-datagrid-cell.oj-checked {
-  background-color: #bfd4e5; }
-
-.oj-datagrid-cell.oj-active {
-  background-color: #e4f0fa; }
-
+/* Styling on rows, primarily for sizing, set styles on cells */
 .oj-datagrid-row {
   position: absolute;
   width: 100%;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+/* Styling on header containers, primarily for sizing, set styles on header cells */
 .oj-datagrid-header {
   position: absolute;
   overflow: hidden; }
 
+/* Styling on databody, primarily for sizing, set styles on header cells disables user-select */
 .oj-datagrid-databody {
   position: absolute;
-  overflow: hidden;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none; }
+  overflow: hidden; }
 
+/* Styling on scrollers regions, primarily for sizing, set styles on header cells */
 .oj-datagrid-scrollers {
   position: absolute;
   overflow: auto; }
 
-.oj-datagrid-scroller-mobile {
+/* Styling on scroller for touch devices, primarily for sizing, set styles on header cells */
+.oj-datagrid-scroller-touch {
   position: absolute;
   -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
   -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   -webkit-perspective: 1000;
+  perspective: 1000;
   width: 100%;
   height: 100%; }
 
+/* Styling on scroller region, primarily for sizing, set styles on header cells */
 .oj-datagrid-scroller {
   position: absolute;
   width: 100%;
   height: 100%; }
 
-.oj-datagrid-headercell {
+/* Styling on header cells both for rows and columns */
+.oj-datagrid-header-cell {
   position: absolute;
   width: 100%;
   height: 100%;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 5px;
-  overflow: hidden;
-  background-color: #f2f4f7; }
-
-html:not([dir="rtl"]) .oj-datagrid-colheadercell {
-  border-right: 1px solid #eeeeee; }
-html[dir="rtl"] .oj-datagrid-colheadercell {
-  border-left: 1px solid #eeeeee; }
-
-.oj-datagrid-rowheadercell {
-  border-bottom: 1px solid #eeeeee; }
-
-.oj-datagrid-rowheader {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1.167rem;
   font-weight: bold;
   color: black;
-  text-align: center;
+  background-color: #f2f4f7;
+  padding: 5px;
+  overflow: hidden; }
+
+/* Styling on header cells when hovered both for rows and columns */
+.oj-datagrid-header-cell.oj-hover {
+  background-color: #d6d7d8; }
+
+/* Styling on header cells when active both for rows and columns */
+.oj-datagrid-header-cell.oj-active {
+  background-color: #dae9f5; }
+
+/* Styling on column header cells */
+.oj-datagrid-column-header-cell {
+  text-align: center; }
+  html:not([dir="rtl"]) .oj-datagrid-column-header-cell {
+    border-right: 1px solid #eeeeee; }
+  html[dir="rtl"] .oj-datagrid-column-header-cell {
+    border-left: 1px solid #eeeeee; }
+
+/* Styling on row header cells */
+.oj-datagrid-row-header-cell {
+  border-bottom: 1px solid #eeeeee; }
+  html:not([dir="rtl"]) .oj-datagrid-row-header-cell {
+    text-align: left; }
+  html[dir="rtl"] .oj-datagrid-row-header-cell {
+    text-align: right; }
+
+/* Styling on the row header container */
+.oj-datagrid-row-header {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
-  html:not([dir="rtl"]) .oj-datagrid-rowheader {
+  html:not([dir="rtl"]) .oj-datagrid-row-header {
     border-right: 1px solid #c4ced7; }
-  html[dir="rtl"] .oj-datagrid-rowheader {
+  html[dir="rtl"] .oj-datagrid-row-header {
     border-left: 1px solid #c4ced7; }
 
-.oj-datagrid-colheader {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.167rem;
-  font-weight: bold;
-  color: black;
+/* Styling on the column header container */
+.oj-datagrid-column-header {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   border-bottom: 1px solid #c4ced7; }
 
+/* Styling on the status text, such as fetching data */
 .oj-datagrid-status {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   position: absolute;
   display: none;
   z-index: 5;
-  background-color: #FFFFFF;
+  background-color: white;
   padding: 5px;
   top: 50%; }
 
+/* Styling for the empty data grid text */
 .oj-datagrid-empty-text {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   position: absolute; }
 
+/* Styling for the top corner between headers */
 .oj-datagrid-top-corner {
   position: absolute;
   background-color: #F7F9FC;
@@ -2823,12 +2995,14 @@ html[dir="rtl"] .oj-datagrid-colheadercell {
   html[dir="rtl"] .oj-datagrid-top-corner {
     border-left: 1px solid #c4ced7; }
 
+/* Styling for the corner between scrollbars if present */
 .oj-datagrid-bottom-corner {
   position: absolute;
   background-color: #F7F9FC;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+/* Styling for the corner between row headers and horizontal scrollbar */
 .oj-datagrid-row-header-spacer {
   position: absolute;
   background-color: #F7F9FC;
@@ -2840,6 +3014,7 @@ html[dir="rtl"] .oj-datagrid-colheadercell {
   html[dir="rtl"] .oj-datagrid-row-header-spacer {
     border-left: 1px solid #c4ced7; }
 
+/* Styling for the corner between column headers and vertical scrollbar */
 .oj-datagrid-column-header-spacer {
   position: absolute;
   background-color: #F7F9FC;
@@ -2851,78 +3026,97 @@ html[dir="rtl"] .oj-datagrid-colheadercell {
   html[dir="rtl"] .oj-datagrid-column-header-spacer {
     border-right: 1px solid #d6dfe6; }
 
-.oj-datagrid-sort-indicators {
+/* Styling for the sort area around the icon icon */
+.oj-datagrid-sort-icon-container {
   position: absolute;
-  height: 14px;
-  width: 28px;
   display: inline-block;
-  top: 5px; }
-  html:not([dir="rtl"]) .oj-datagrid-sort-indicators {
+  width: 30px;
+  height: 100%;
+  top: 0; }
+  html:not([dir="rtl"]) .oj-datagrid-sort-icon-container {
+    right: 0; }
+  html[dir="rtl"] .oj-datagrid-sort-icon-container {
+    left: 0; }
+
+/* Styling for the gradient for sort icons in the header */
+.oj-datagrid-sort-icon-container.oj-enabled {
+  background: linear-gradient(to right, rgba(242, 244, 247, 0), #f2f4f7 40%); }
+
+/* Styling for the gradient for sort icons on hover in the header */
+.oj-hover .oj-datagrid-sort-icon-container {
+  background: linear-gradient(to right, rgba(214, 215, 216, 0), #d6d7d8 40%); }
+
+/* Styling for the gradient for sort icons on hover in an active header */
+.oj-hover.oj-active .oj-datagrid-sort-icon-container, .oj-active .oj-datagrid-sort-icon-container.oj-enabled {
+  background: linear-gradient(to right, rgba(218, 233, 245, 0), #dae9f5 40%); }
+
+/* Styling for both the sort icons and click area */
+.oj-datagrid-sort-ascending-icon, .oj-datagrid-sort-descending-icon {
+  font-size: 1.083rem;
+  width: 24px;
+  height: 24px; }
+  html:not([dir="rtl"]) .oj-datagrid-sort-ascending-icon, html:not([dir="rtl"]) .oj-datagrid-sort-descending-icon {
     right: 5px; }
-  html[dir="rtl"] .oj-datagrid-sort-indicators {
+  html[dir="rtl"] .oj-datagrid-sort-ascending-icon, html[dir="rtl"] .oj-datagrid-sort-descending-icon {
     left: 5px; }
 
-.oj-datagrid-sort-ascending-icon {
-  position: absolute;
-  width: 14px;
-  height: 14px; }
-  html:not([dir="rtl"]) .oj-datagrid-sort-ascending-icon {
-    left: 0; }
-  html[dir="rtl"] .oj-datagrid-sort-ascending-icon {
-    right: 0; }
+/* Styling for the icon content within its container */
+.oj-datagrid-sort-ascending-icon:before, .oj-datagrid-sort-descending-icon:before {
+  vertical-align: middle; }
+  html:not([dir="rtl"]) .oj-datagrid-sort-ascending-icon:before, html:not([dir="rtl"]) .oj-datagrid-sort-descending-icon:before {
+    right: 5px; }
+  html[dir="rtl"] .oj-datagrid-sort-ascending-icon:before, html[dir="rtl"] .oj-datagrid-sort-descending-icon:before {
+    left: 5px; }
 
-.oj-datagrid-sort-descending-icon {
-  position: absolute;
-  width: 14px;
-  height: 14px; }
-  html:not([dir="rtl"]) .oj-datagrid-sort-descending-icon {
-    right: 0; }
-  html[dir="rtl"] .oj-datagrid-sort-descending-icon {
-    left: 0; }
-
+/* Styling for the sort ascending icon */
+/* Styling for the sort descending icon */
+/* Styling for disabled sort ascending icons */
 .oj-datagrid-sort-ascending-icon.oj-disabled {
   display: none; }
 
+/* Styling for disabled sort descending icons */
 .oj-datagrid-sort-descending-icon.oj-disabled {
   display: none; }
 
-.oj-datagrid-row.oj-datagrid-cut .oj-datagrid-cell {
+/* Styling for the row that is cut */
+.oj-datagrid-row.oj-datagrid-cut .oj-datagrid-cell, .oj-datagrid-row.oj-datagrid-cut {
   opacity: 0.8; }
 
-.oj-datagrid-row.oj-datagrid-cut {
-  opacity: 0.8; }
-
+/* Styling for the row that is being moved using drag */
 .oj-datagrid-row.oj-datagrid-move {
   opacity: 0.8;
   z-index: 1; }
 
-.oj-datagrid-headercell.oj-active {
-  background-color: #dae9f5; }
-
-.oj-datagrid-droptarget {
+/* Styling for the drop target when dragging rows*/
+.oj-datagrid-drop-target {
   width: 100%;
   position: absolute;
   border-color: #C3EAF3;
   background-color: #D9F4FA;
   opacity: .8;
+  -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+/* Styling for the widget */
 .oj-rowexpander {
   width: 14px;
   height: 14px;
   display: inline-block;
   vertical-align: top; }
 
+/* Styling for the expand icon */
 html:not([dir="rtl"]) .oj-rowexpander-expand-icon {
   float: right; }
 html[dir="rtl"] .oj-rowexpander-expand-icon {
   float: left; }
 
+/* Styling for the collapse icon */
 html:not([dir="rtl"]) .oj-rowexpander-collapse-icon {
   float: right; }
 html[dir="rtl"] .oj-rowexpander-collapse-icon {
   float: left; }
 
+/* Styling for the leaf icon */
 html:not([dir="rtl"]) .oj-rowexpander-leaf-icon {
   float: right; }
 html[dir="rtl"] .oj-rowexpander-leaf-icon {
@@ -2939,8 +3133,8 @@ html[dir="rtl"] .oj-rowexpander-leaf-icon {
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  animation-duration: 500ms;
-  -webkit-animation-duration: 500ms; }
+  animation-duration: 0.5s;
+  -webkit-animation-duration: 0.5s; }
 
 .oj-dvt-category-index1 {
   color: #267db3; }
@@ -3312,6 +3506,10 @@ html[dir="rtl"] .oj-treemap-restore-icon.oj-active {
 
 /* messaging */
 /* --------------------------------------------------------------- */
+/* wraps all messaging content that displays inside popup */
+.oj-messaging-popup-container {
+  max-width: 340px; }
+
 /* wraps a message block */
 .oj-message {
   padding-top: 4px;
@@ -3543,7 +3741,7 @@ html .oj-form-control {
 
 .oj-textarea-input {
   height: auto;
-  padding: 5px;
+  padding: 0.5em 5px;
   resize: none; }
 
 .oj-inputtext.oj-invalid .oj-inputtext-input,
@@ -3577,7 +3775,7 @@ html .oj-form-control {
 /* inputnumber */
 /* --------------------------------------------------------------- */
 /* Root dom element for inputnumber. 
- It wraps the input and the up/down buttons */
+ It wraps the input and the down/up buttons */
 .oj-inputnumber {
   white-space: nowrap;
   display: inline-table;
@@ -3686,34 +3884,34 @@ html .oj-form-control {
 /* Warning/error styling for the widget.  Spec calls for border around entire
  component, not just input. We make sure the border is only on the outside
  of the buttons by setting border-left/right to none as appropriate.
- The 'down' button is the outside button.
+ The 'up' button is the outside button.
 */
-html:not([dir="rtl"]) .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down, html:not([dir="rtl"])
-.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+html:not([dir="rtl"]) .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up, html:not([dir="rtl"])
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up {
   border-left: none; }
-html[dir="rtl"] .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down, html[dir="rtl"]
-.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
+html[dir="rtl"] .oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up, html[dir="rtl"]
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up {
   border-right: none; }
 
-.oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-up,
-.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-up {
+.oj-inputnumber.oj-invalid .oj-inputnumber-button.oj-button.oj-inputnumber-down,
+.oj-inputnumber.oj-warning .oj-inputnumber-button.oj-button.oj-inputnumber-down {
   border-left: none;
   border-right: none; }
 
-.oj-inputnumber-up.oj-button {
+.oj-inputnumber-down.oj-button {
   border-radius: 0; }
 
-html:not([dir="rtl"]) .oj-inputnumber-down.oj-button {
+html:not([dir="rtl"]) .oj-inputnumber-up.oj-button {
   border-radius: 0 2px 2px 0; }
-html.oj-slow-borderradius .oj-inputnumber-down.oj-button {
+html.oj-slow-borderradius .oj-inputnumber-up.oj-button {
   border-radius: 0; }
-html[dir="rtl"] .oj-inputnumber-down.oj-button {
+html[dir="rtl"] .oj-inputnumber-up.oj-button {
   border-radius: 2px 0 0 2px; }
-html.oj-slow-borderradius .oj-inputnumber-down.oj-button {
+html.oj-slow-borderradius .oj-inputnumber-up.oj-button {
   border-radius: 0; }
 
-.oj-inputnumber .oj-inputnumber-up-icon,
-.oj-inputnumber .oj-inputnumber-down-icon {
+.oj-inputnumber .oj-inputnumber-down-icon,
+.oj-inputnumber .oj-inputnumber-up-icon {
   font-size: 1rem; }
 
 .oj-inputnumber .oj-inputnumber-up-icon {
@@ -3814,103 +4012,6 @@ html[dir="rtl"] .oj-combobox.oj-combobox-allowclear .oj-combobox-choice .oj-comb
   box-shadow: none;
   outline: 0;
   background-color: #fcfdfe; }
-
-.oj-combobox-drop {
-  position: absolute;
-  z-index: 9999;
-  top: 100%;
-  background: white;
-  border: 1px solid #c4ced7;
-  border-top: 0;
-  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
-
-.oj-combobox-drop-auto-width {
-  border-top: 1px solid #c4ced7;
-  width: auto; }
-
-.oj-combobox-drop.oj-combobox-drop-above {
-  border-top: 1px solid #c4ced7;
-  border-bottom: 0;
-  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
-
-/* results */
-.oj-combobox-results {
-  max-height: 200px;
-  padding: 0;
-  margin: 4px 0 4px 0;
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-tap-highlight-color: transparent; }
-
-.oj-combobox-results ul.oj-combobox-result-sub {
-  margin: 0;
-  padding-left: 0; }
-
-.oj-combobox-results ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-  padding-left: 20px; }
-
-.oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-  padding-left: 40px; }
-
-.oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-  padding-left: 60px; }
-
-.oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-  padding-left: 80px; }
-
-.oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-  padding-left: 100px; }
-
-.oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-  padding-left: 110px; }
-
-.oj-combobox-results ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub ul.oj-combobox-result-sub > li .oj-combobox-result-label {
-  padding-left: 120px; }
-
-.oj-combobox-results li {
-  list-style: none;
-  display: list-item;
-  background-image: none; }
-
-.oj-combobox-results li.oj-combobox-result-with-children > .oj-combobox-result-label {
-  font-weight: bold; }
-
-.oj-combobox-results .oj-combobox-result-label {
-  padding-left: 5px;
-  line-height: 24px;
-  margin: 0;
-  cursor: pointer;
-  min-height: 1em;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
-.oj-combobox-results .oj-combobox-highlighted {
-  background: #ebeced; }
-
-.oj-combobox-results .oj-combobox-highlighted:active {
-  background: #bfd4e5; }
-
-.oj-combobox-results li em {
-  background: #feffde;
-  font-style: normal; }
-
-.oj-combobox-results .oj-combobox-highlighted em {
-  background: transparent; }
-
-/*
-disabled look for disabled choices in the results dropdown
-*/
-.oj-combobox-results .oj-disabled {
-  color: #9e9e9e;
-  display: list-item;
-  cursor: default; }
-
-.oj-combobox-results .oj-combobox-selected {
-  display: none; }
 
 /* disabled styles */
 .oj-combobox.oj-disabled .oj-combobox-choice,
@@ -4074,23 +4175,6 @@ disabled look for disabled choices in the results dropdown
   left: 0;
   top: 0; }
 
-.oj-combobox-drop-mask {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-  min-height: 100%;
-  min-width: 100%;
-  height: auto;
-  width: auto;
-  opacity: 0;
-  z-index: 9998;
-  /* styles required for IE to work */
-  background-color: white;
-  filter: alpha(opacity=0); }
-
 .oj-combobox-display-none {
   display: none; }
 
@@ -4102,7 +4186,6 @@ disabled look for disabled choices in the results dropdown
   height: 100px;
   overflow: scroll; }
 
-/* Class placed on the widget, distinguishes one type to an another */
 .oj-inputdatetime-input-container {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -4110,7 +4193,7 @@ disabled look for disabled choices in the results dropdown
   /* use a width of 100% and then max and min width so that when 
      there's less room for the form control it can automatically 
      get smaller instead of overflowing its boundaries */
-  max-width: 15em;
+  max-width: 18em;
   min-width: 8em;
   width: 100%;
   font-size: 1rem; }
@@ -4136,19 +4219,18 @@ disabled look for disabled choices in the results dropdown
     color: #737373; }
   .oj-inputdatetime-input:-ms-input-placeholder {
     color: #737373; }
-
-html:not([dir="rtl"]) .oj-inputdatetime-input.oj-has-trigger {
-  border-radius: 2px 0 0 2px; }
-html.oj-slow-borderradius .oj-inputdatetime-input.oj-has-trigger {
-  border-radius: 0; }
-html[dir="rtl"] .oj-inputdatetime-input.oj-has-trigger {
-  border-radius: 0 2px 2px 0; }
-html.oj-slow-borderradius .oj-inputdatetime-input.oj-has-trigger {
-  border-radius: 0; }
-html:not([dir="rtl"]) .oj-inputdatetime-input.oj-has-trigger {
-  border-width: 1px 0 1px 1px; }
-html[dir="rtl"] .oj-inputdatetime-input.oj-has-trigger {
-  border-width: 1px 1px 1px 0; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input {
+    border-radius: 2px 0 0 2px; }
+  html.oj-slow-borderradius .oj-inputdatetime-input {
+    border-radius: 0; }
+  html[dir="rtl"] .oj-inputdatetime-input {
+    border-radius: 0 2px 2px 0; }
+  html.oj-slow-borderradius .oj-inputdatetime-input {
+    border-radius: 0; }
+  html:not([dir="rtl"]) .oj-inputdatetime-input {
+    border-width: 1px 0 1px 1px; }
+  html[dir="rtl"] .oj-inputdatetime-input {
+    border-width: 1px 1px 1px 0; }
 
 .oj-inputdatetime-input-trigger {
   -moz-box-sizing: border-box;
@@ -4174,70 +4256,58 @@ html[dir="rtl"] .oj-inputdatetime-input.oj-has-trigger {
   html[dir="rtl"] .oj-inputdatetime-input-trigger {
     border-width: 1px 0 1px 1px; }
 
-.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input {
-  border-color: #c70000;
-  border-width: 2px; }
+.oj-inputdatetime.oj-warning .oj-inputdatetime-input,
+.oj-inputdatetime.oj-warning .oj-inputdatetime-input-trigger {
+  border-color: #ffaa2b; }
 
-html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger, html:not([dir="rtl"])
-.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input.oj-has-trigger {
+.oj-inputdatetime.oj-invalid .oj-inputdatetime-input,
+.oj-inputdatetime.oj-invalid .oj-inputdatetime-input-trigger {
+  border-color: #c70000; }
+
+html:not([dir="rtl"]) .oj-inputdatetime.oj-invalid .oj-inputdatetime-input, html:not([dir="rtl"])
+.oj-inputdatetime.oj-warning .oj-inputdatetime-input {
   border-width: 2px 0 2px 2px; }
-html[dir="rtl"] .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input.oj-has-trigger, html[dir="rtl"]
-.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input.oj-has-trigger {
+html[dir="rtl"] .oj-inputdatetime.oj-invalid .oj-inputdatetime-input, html[dir="rtl"]
+.oj-inputdatetime.oj-warning .oj-inputdatetime-input {
   border-width: 2px 2px 2px 0; }
 
-.oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
-  border-color: #c70000; }
-  html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
-    border-width: 2px 2px 2px 0; }
-  html[dir="rtl"] .oj-inputdatetime-input-container.oj-invalid .oj-inputdatetime-input-trigger {
-    border-width: 2px 0 2px 2px; }
+html:not([dir="rtl"]) .oj-inputdatetime.oj-invalid .oj-inputdatetime-input-trigger, html:not([dir="rtl"])
+.oj-inputdatetime.oj-warning .oj-inputdatetime-input-trigger {
+  border-width: 2px 2px 2px 0; }
+html[dir="rtl"] .oj-inputdatetime.oj-invalid .oj-inputdatetime-input-trigger, html[dir="rtl"]
+.oj-inputdatetime.oj-warning .oj-inputdatetime-input-trigger {
+  border-width: 2px 0 2px 2px; }
 
-.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input {
-  border-color: #ffaa2b;
-  border-width: 2px; }
-
-.oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
-  border-color: #ffaa2b; }
-  html:not([dir="rtl"]) .oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
-    border-width: 2px 2px 2px 0; }
-  html[dir="rtl"] .oj-inputdatetime-input-container.oj-warning .oj-inputdatetime-input-trigger {
-    border-width: 2px 0 2px 2px; }
-
-.oj-inputdatetime-date-time.oj-disabled .oj-inputdatetime-input,
-.oj-inputdatetime-date-only.oj-disabled .oj-inputdatetime-input,
-.oj-inputdatetime-time-only.oj-disabled .oj-inputdatetime-input {
+.oj-inputdatetime.oj-disabled .oj-inputdatetime-input {
   color: #9e9e9e;
   background-color: #efeff1;
   border: 1px solid #efeff1; }
 
-.oj-inputdatetime-date-time.oj-disabled .oj-inputdatetime-input-trigger,
-.oj-inputdatetime-date-only.oj-disabled .oj-inputdatetime-input-trigger,
-.oj-inputdatetime-time-only.oj-disabled .oj-inputdatetime-input-trigger {
+.oj-inputdatetime.oj-disabled .oj-inputdatetime-input-trigger {
   background-color: #efeff1;
   border-color: #efeff1; }
 
-.oj-inputdatetime-input-container.oj-read-only,
-.oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input {
+.oj-inputdatetime.oj-read-only .oj-inputdatetime-input {
   color: #333333;
   background-color: transparent;
   border: 0;
   padding: 0; }
 
-.oj-inputdatetime-input-container.oj-read-only .oj-inputdatetime-input-trigger {
+.oj-inputdatetime.oj-read-only .oj-inputdatetime-input-trigger {
   display: none; }
 
-html:not([dir="rtl"]) .oj-inputdatetime-date-time .oj-datepicker-calendar-icon {
+html:not([dir="rtl"]) .oj-inputdatetime-date-time .oj-inputdatetime-calendar-icon {
   margin-right: 5px; }
-html[dir="rtl"] .oj-inputdatetime-date-time .oj-datepicker-calendar-icon {
+html[dir="rtl"] .oj-inputdatetime-date-time .oj-inputdatetime-calendar-icon {
   margin-left: 5px; }
 
-.oj-datepicker-calendar-icon,
-.oj-datepicker-time-icon {
+.oj-inputdatetime-calendar-icon,
+.oj-inputdatetime-time-icon {
   display: inline-block;
   vertical-align: middle; }
 
-.oj-datepicker-calendar-icon.oj-disabled,
-.oj-datepicker-time-icon.oj-disabled {
+.oj-inputdatetime-calendar-icon.oj-disabled,
+.oj-inputdatetime-time-icon.oj-disabled {
   background-color: #efeff1;
   cursor: default; }
 
@@ -4246,11 +4316,11 @@ html[dir="rtl"] .oj-inputdatetime-date-time .oj-datepicker-calendar-icon {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   background-color: white;
-  border: 1px solid #d6dfe6;
+  border: 1px solid #c4ced7;
   display: none;
   padding: 5px 3px 0 4px;
   z-index: 1000;
-  width: 15em; }
+  width: 18em; }
   html[dir="rtl"] .oj-datepicker-content {
     direction: rtl; }
 
@@ -4278,7 +4348,7 @@ html[dir="rtl"] .oj-datepicker-next-icon {
   left: 2px; }
 
 .oj-datepicker-title {
-  margin: 0 2.3em;
+  margin: 0 2.2em;
   line-height: 1.8em;
   text-align: center; }
 
@@ -4350,7 +4420,7 @@ html[dir="rtl"] .oj-datepicker-next-icon {
   box-sizing: border-box;
   margin: 2px 0 0;
   padding: 0 3px;
-  border: 1px solid #d6dfe6;
+  border: 1px solid #c4ced7;
   border-width: 1px 0 0;
   display: inline-block;
   width: 100%; }
@@ -4574,6 +4644,8 @@ html[dir="rtl"] .oj-listbox.oj-listbox-allowclear .oj-listbox-choice .oj-listbox
   border: 1px solid #c4ced7;
   border-top: 0;
   box-shadow: 1px 3px 3px 0 rgba(0, 0, 0, 0.35); }
+  html.oj-slow-boxshadow .oj-listbox-drop {
+    box-shadow: none; }
 
 .oj-listbox-drop-auto-width {
   border-top: 1px solid #c4ced7;
@@ -4583,6 +4655,8 @@ html[dir="rtl"] .oj-listbox.oj-listbox-allowclear .oj-listbox-choice .oj-listbox
   border-top: 1px solid #c4ced7;
   border-bottom: 0;
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
+  html.oj-slow-boxshadow .oj-listbox-drop.oj-listbox-drop-above {
+    box-shadow: none; }
 
 /* results */
 .oj-listbox-results {
@@ -4826,15 +4900,16 @@ html[dir="rtl"] .oj-listbox-no-results {
   vertical-align: middle;
   max-width: 18em;
   min-width: 8em;
-  width: 100%; }
-
-.oj-select,
-.oj-select-drop {
+  width: 100%;
+  font-size: 1rem;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-/* songo */
-.oj-select .oj-select-choice {
+/* 
+ * TODO:
+ * Applied to the select box which includes the selected text and the dropdown icon
+ */
+.oj-select-choice {
   color: #333333;
   background-color: #fcfdfe;
   border: 1px solid #dfe4e7;
@@ -4846,347 +4921,59 @@ html[dir="rtl"] .oj-listbox-no-results {
   background-clip: padding-box;
   text-overflow: ellipsis;
   line-height: 26px; }
-  html.oj-slow-borderradius .oj-select .oj-select-choice {
+  html.oj-slow-borderradius .oj-select-choice {
     border-radius: 0; }
-  .oj-select .oj-select-choice::-webkit-input-placeholder {
+  .oj-select-choice::-webkit-input-placeholder {
     color: #737373; }
-  .oj-select .oj-select-choice::-moz-placeholder {
+  .oj-select-choice::-moz-placeholder {
     color: #737373; }
-  .oj-select .oj-select-choice:-ms-input-placeholder {
+  .oj-select-choice:-ms-input-placeholder {
     color: #737373; }
-  html:not([dir="rtl"]) .oj-select .oj-select-choice {
+  html:not([dir="rtl"]) .oj-select-choice {
     padding-left: 5px; }
-  html[dir="rtl"] .oj-select .oj-select-choice {
+  html[dir="rtl"] .oj-select-choice {
     padding-right: 5px; }
 
-.oj-select .oj-select-choice .oj-select-search {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  /* songo */ }
-  html:not([dir="rtl"]) .oj-select .oj-select-choice .oj-select-search {
-    margin-right: 5px; }
-  html[dir="rtl"] .oj-select .oj-select-choice .oj-select-search {
-    margin-left: 5px; }
-
-.oj-select .oj-select-choice abbr {
-  display: none;
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  top: 6px;
-  font-size: 1px;
-  border: 0;
-  cursor: pointer;
-  outline: 0; }
-  html:not([dir="rtl"]) .oj-select .oj-select-choice abbr {
-    right: 34px; }
-  html[dir="rtl"] .oj-select .oj-select-choice abbr {
-    left: 34px; }
-
-.oj-select .oj-select-choice abbr:hover {
-  cursor: pointer; }
-
-/* suppress all browser decorations of anchors in the select */
-/* --------------------------------------------------------- */
-.oj-select a,
-.oj-select a:active,
-.oj-select a:visited,
-.oj-select a:hover,
-.oj-select a:focus {
-  text-decoration: none; }
-
-.oj-select.oj-select-allowclear .oj-select-choice abbr {
-  display: inline-block; }
-
-html:not([dir="rtl"]) .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
-  margin-right: 42px; }
-html[dir="rtl"] .oj-select.oj-select-allowclear .oj-select-choice .oj-select-search {
-  margin-left: 42px; }
-
-.oj-select-drop {
-  position: absolute;
-  z-index: 9999;
-  top: 100%;
-  background: white;
-  border: 1px solid #c4ced7;
-  border-top: 0;
-  /* songo can't use $smallBoxShadow because we need to cover up border-bottom of the select box */
-  box-shadow: 1px 3px 3px 0 rgba(0, 0, 0, 0.35); }
-
-.oj-select-drop-auto-width {
-  border-top: 1px solid #c4ced7;
-  width: auto; }
-
-.oj-select-drop.oj-select-drop-above {
-  border-top: 1px solid #c4ced7;
-  border-bottom: 0;
-  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.35); }
-
-/* results */
-.oj-select-results {
-  max-height: 200px;
-  padding: 0;
-  margin: 1px 0 2px 0;
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-tap-highlight-color: transparent; }
-
-.oj-select-results ul.oj-select-result-sub {
-  margin: 0;
-  padding-left: 0; }
-
-.oj-select-results ul.oj-select-result-sub > li .oj-select-result-label {
-  padding-left: 20px; }
-
-.oj-select-results ul.oj-select-result-sub ul.oj-select-result-sub > li .oj-select-result-label {
-  padding-left: 40px; }
-
-.oj-select-results ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub > li .oj-select-result-label {
-  padding-left: 60px; }
-
-.oj-select-results ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub > li .oj-select-result-label {
-  padding-left: 80px; }
-
-.oj-select-results ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub > li .oj-select-result-label {
-  padding-left: 100px; }
-
-.oj-select-results ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub > li .oj-select-result-label {
-  padding-left: 110px; }
-
-.oj-select-results ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub ul.oj-select-result-sub > li .oj-select-result-label {
-  padding-left: 120px; }
-
-.oj-select-results li {
-  list-style: none;
-  display: list-item;
-  background-image: none; }
-
-.oj-select-results li.oj-select-result-with-children > .oj-select-result-label {
-  font-weight: bold; }
-
-.oj-select-results .oj-select-result-label {
-  padding-left: 5px;
-  line-height: 24px;
-  margin: 0;
-  cursor: pointer;
-  min-height: 1em;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
-.oj-select-results .oj-select-highlighted {
-  background: #ebeced; }
-
-.oj-select-results .oj-select-highlighted:active {
-  background: #bfd4e5; }
-
-.oj-select-results li em {
-  background: #feffde;
-  font-style: normal; }
-
-.oj-select-results .oj-select-highlighted em {
-  background: transparent; }
-
-/*
-disabled look for disabled choices in the results dropdown
-*/
-.oj-select-results .oj-disabled {
-  color: #9e9e9e;
-  display: list-item;
-  cursor: default; }
-
-.oj-select-results .oj-select-selected {
-  display: none; }
-
 /* disabled styles */
-.oj-select.oj-disabled .oj-select-choice,
-.oj-select.oj-disabled .oj-select-choice input {
+.oj-select.oj-disabled .oj-select-choice {
   color: #9e9e9e;
   background-color: #efeff1;
   border: 1px solid #efeff1; }
 
-/* multiselect */
-.oj-select-multi .oj-select-choices {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  color: #333333;
-  background-color: #fcfdfe;
-  border: 1px solid #dfe4e7;
-  border-radius: 2px;
-  height: auto;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  cursor: text;
-  overflow: hidden; }
-  html.oj-slow-borderradius .oj-select-multi .oj-select-choices {
-    border-radius: 0; }
-  .oj-select-multi .oj-select-choices::-webkit-input-placeholder {
-    color: #737373; }
-  .oj-select-multi .oj-select-choices::-moz-placeholder {
-    color: #737373; }
-  .oj-select-multi .oj-select-choices:-ms-input-placeholder {
-    color: #737373; }
-
-.oj-select-locked {
-  padding: 3px 5px 3px 5px; }
-
-.oj-select-multi .oj-select-choices {
-  min-height: 26px; }
-
-.oj-select-multi .oj-select-choices li {
-  list-style: none; }
-  html:not([dir="rtl"]) .oj-select-multi .oj-select-choices li {
-    float: left; }
-  html[dir="rtl"] .oj-select-multi .oj-select-choices li {
-    float: right; }
-
-.oj-select-multi .oj-select-choices .oj-select-search-field {
-  margin: 0;
-  padding: 0;
-  white-space: nowrap; }
-
-.oj-select-search-field .oj-select-input {
-  padding: 5px;
-  margin: 1px 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1rem;
-  color: #333333;
-  background-color: #fcfdfe;
-  outline: 0;
-  border: 0; }
-
-.oj-select-chosen.oj-select-default {
-  color: #737373; }
-
-.oj-select-multi .oj-select-choices .oj-select-search-choice {
-  padding: 3px 18px 3px 5px;
-  margin: 3px 0 3px 5px;
-  position: relative;
-  line-height: 13px;
-  color: #333333;
-  cursor: default;
-  border-radius: 2px;
-  background-color: #e4e8ea;
-  background-image: -webkit-linear-gradient(top, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
-  background-image: linear-gradient(to bottom, white 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
-  background-clip: padding-box;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-  html.oj-slow-borderradius .oj-select-multi .oj-select-choices .oj-select-search-choice {
-    border-radius: 0; }
-  html.oj-slow-cssgradients .oj-select-multi .oj-select-choices .oj-select-search-choice {
-    background-image: none; }
-
-.oj-select-multi .oj-select-choices .oj-select-search-choice .oj-select-chosen {
-  cursor: default; }
-
-.oj-select-multi .oj-select-choices .oj-select-search-choice-focus {
-  background: #f7f8f9;
-  color: #0572ce; }
-
-.oj-select-search-choice-close {
-  display: block;
-  width: 12px;
-  height: 13px;
-  position: absolute;
-  top: 3px;
-  font-size: 1px;
-  outline: none;
-  background: url("images/clearEntry_ena.png"); }
-  html:not([dir="rtl"]) .oj-select-search-choice-close {
-    right: 5px; }
-  html[dir="rtl"] .oj-select-search-choice-close {
-    left: 5px; }
-
-.oj-select-search-choice-close:hover {
-  background: url("images/clearEntry_ovr.png"); }
-
-.oj-select-search-choice-close:hover {
-  background: url("images/clearEntry_dwn.png"); }
-
-/* disabled styles */
-.oj-select-multi.oj-disabled .oj-select-choices,
-.oj-select-multi.oj-disabled .oj-select-choices .oj-select-search-choice,
-.oj-select-multi.oj-disabled .oj-select-choices input {
-  color: #9e9e9e;
-  background-color: #efeff1;
-  border: 1px solid #efeff1; }
-
-.oj-select-multi.oj-disabled .oj-select-choices .oj-select-search-choice .oj-select-search-choice-close {
-  display: none;
-  background: none; }
-
-/* end multiselect */
 /* Invalid styling for the widget */
-.oj-select.oj-invalid .oj-select-choice,
-.oj-select-multi.oj-invalid .oj-select-choices {
+.oj-select.oj-invalid .oj-select-choice {
   border: 2px solid #c70000; }
 
 /* Warning styling for the widget */
-.oj-select.oj-warning .oj-select-choice,
-.oj-select-multi.oj-warning .oj-select-choices {
+.oj-select.oj-warning .oj-select-choice {
   border: 2px solid #ffaa2b; }
 
-.oj-select-offscreen, .oj-select-offscreen:focus {
-  clip: rect(0 0 0 0);
-  width: 1px;
-  height: 1px;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  position: absolute;
-  outline: 0;
-  left: 0;
-  top: 0; }
-
-.oj-select-drop-mask {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-  min-height: 100%;
-  min-width: 100%;
-  height: auto;
-  width: auto;
-  opacity: 0;
-  z-index: 9998;
-  /* styles required for IE to work */
-  background-color: white;
-  filter: alpha(opacity=0); }
-
-.oj-select-display-none {
-  display: none; }
-
-.oj-select-measure-scrollbar {
-  position: absolute;
-  top: -10000px;
-  left: -10000px;
-  width: 100px;
-  height: 100px;
-  overflow: scroll; }
-
-/* songo */
+/* 
+ * Applied to the selected text
+ */
 .oj-select-chosen {
   width: 100%;
   border: 0;
   box-shadow: none;
-  outline: 0; }
+  outline: 0;
+  white-space: nowrap;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+  html:not([dir="rtl"]) .oj-select-chosen {
+    padding-right: 24px; }
+  html[dir="rtl"] .oj-select-chosen {
+    padding-left: 24px; }
 
-/* icon */
-/* -----------------------------*/
-/* open icon for select */
+.oj-select-chosen.oj-select-default {
+  color: #737373; }
+
+/* 
+ * Applied to the dropdown open icon
+ */
 .oj-select-open-icon {
   text-align: center;
   vertical-align: middle;
@@ -5200,58 +4987,118 @@ disabled look for disabled choices in the results dropdown
   html[dir="rtl"] .oj-select-open-icon {
     left: 0; }
 
-/* search icon for select */
+/* 
+ * Applied to the search icon
+ */
 .oj-select-search-icon {
   text-align: center;
-  overflow: hidden;
   vertical-align: text-bottom;
-  cursor: pointer;
   font-size: 1rem;
   color: #878c90; }
 
-.oj-select-search {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  width: 100%;
-  display: inline-table;
-  background-color: #fcfdfe;
-  border: 1px solid #dfe4e7;
-  border-radius: 2px; }
-  html.oj-slow-borderradius .oj-select-search {
-    border-radius: 0; }
-
-.oj-select-search .oj-select-input {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  width: 100%;
-  color: #333333;
-  padding: 6px 5px 5px 5px;
-  display: table-cell;
-  border: 0;
-  box-shadow: none;
-  outline: 0; }
-
+/* 
+ * Applied to the spyglass (search icon) container
+ */
 .oj-select-spyglass-box {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: white;
-  display: table-cell;
+  box-shadow: none;
   line-height: 26px;
   width: 28px;
   text-align: center;
   vertical-align: middle;
   border: 0;
-  box-shadow: none; }
+  /*
+        display: table-cell;
+  */
+  overflow: hidden;
+  cursor: pointer;
+  display: inline-block;
+  position: absolute; }
+  html:not([dir="rtl"]) .oj-select-spyglass-box {
+    right: 0;
+    padding-right: 5px; }
+  html[dir="rtl"] .oj-select-spyglass-box {
+    left: 0;
+    padding-left: 5px; }
 
+/* 
+ * Applied to the search box which includes the search text and the spyglass icon
+ */
+.oj-select-search {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  display: inline-table;
+  background-color: white;
+  border: 1px solid #dfe4e7;
+  border-radius: 2px; }
+  html.oj-slow-borderradius .oj-select-search {
+    border-radius: 0; }
+
+/* 
+ * Applied to the search text
+ */
+.oj-select-search .oj-select-input {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  color: #333333;
+  border: 0;
+  background-color: inherit;
+  box-shadow: none;
+  /*      display: table-cell; */
+  padding-top: 6px;
+  padding-bottom: 5px; }
+  html:not([dir="rtl"]) .oj-select-search .oj-select-input {
+    padding-right: 28px;
+    padding-left: 5px; }
+  html[dir="rtl"] .oj-select-search .oj-select-input {
+    padding-left: 28px;
+    padding-right: 5px; }
+
+/* 
+ * Used to cover the border bottom of the select box when the dropdown is open
+ */
 .oj-select-search-wrapper {
   border: 0;
   padding: 5px;
   background-color: #fcfdfe; }
 
+/* 
+ * Applied to the "No matches found" result entry
+ */
 html:not([dir="rtl"]) .oj-select-no-results {
   padding-left: 5px; }
 html[dir="rtl"] .oj-select-no-results {
   padding-right: 5px; }
+
+/* suppress all browser decorations of anchors in the select */
+.oj-select a,
+.oj-select a:active,
+.oj-select a:visited,
+.oj-select a:hover,
+.oj-select a:focus {
+  text-decoration: none; }
+
+/*
+ * Used to hide the original markup
+ */
+.oj-select-offscreen, .oj-select-offscreen:focus {
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: absolute;
+  outline: 0;
+  left: 0;
+  top: 0; }
+
+.oj-select-display-none {
+  display: none; }
 
 /* Grid HTML Classes */
 .oj-row {

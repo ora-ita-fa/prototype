@@ -96,7 +96,7 @@ $includeMenuClasses: $includeAllClasses !default;
 		// icons
 		//------------------------------------------
 
-		// we render oj-widget-icon as well, which defines 
+		// we render oj-component-icon as well, which defines 
 		// an icon sprite
 		html:not([dir="rtl"]) .oj-menu-submenu-icon:before {
 		  @extend .oj-fwk-icon-caret-e:before;

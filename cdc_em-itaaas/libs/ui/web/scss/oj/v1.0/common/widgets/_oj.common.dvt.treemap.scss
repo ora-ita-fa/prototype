@@ -11,7 +11,7 @@
       @include oj-border-radius($largeBorderRadius);
       font-size: 11px;
       border-color: $dvtTreemapNodeHeaderBorderColor;
-      background-color:$background1Color;
+      background-color: $dvtComponentBgColor;
       color: $textColor;
     }
 

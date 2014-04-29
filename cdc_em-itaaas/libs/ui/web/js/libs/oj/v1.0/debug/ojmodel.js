@@ -217,7 +217,9 @@ oj.Events['unbind'] = oj.Events['off'];
         'REMOVE' : "remove",
         /** Triggered when a collection is reset (see oj.Collection.reset) */
         'RESET' : "reset",
-        /** Triggered when a collection is sorted */
+        /** Triggered when a collection is refreshed (see oj.Collection.refresh) */
+        'REFRESH' : "refresh",
+        /** Triggered when a collection is sorted.  If the second argument to the callback is set (options) and 'add' is true, it means this sort event was triggered as a result of an add */
         'SORT' : "sort",
         /** Triggered when a model's attributes are changed */
         'CHANGE' : "change",
@@ -2303,8 +2305,10 @@ oj.Collection.prototype._overUpperLimit = function(index) {
     if (index < this._getModelsLength()) {
         return false;
     }
-    if (this._isVirtual() && !this._hasTotalResults()) {
-        return false;
+    if (this._isVirtual()) {
+        if (!this._hasTotalResults() || this._getModelsLength() === 0) {
+            return false;
+        }
     }
     return true;
 };
@@ -2573,6 +2577,8 @@ oj.Collection.prototype._newModel = function(m, options) {
 
 /**
  * Add an instance of this collection's model(s) to the end of the collection.
+ * Note that for virtual collections, if a new model is added after being saved up to the server, no add event will be fired as the 
+ * collection will already "see" the model as existing. 
  * @param {Object|Array} m Model object (or array of models) to add. These can be already-created instance of the oj.Model object, or sets of attribute/values, which will be wrapped by add() using the collection's model.
  * @param {Object=} options silent: if set, do not fire an add event<p>
  *                          at: splice the new model into the collection at the value given (at:index) <p>
@@ -2648,7 +2654,10 @@ oj.Collection.prototype._addInternal = function(m, options, fillIn, deferred) {
             if (index > -1) {
                 cid = collection._getModel(index)['cid'];
             }
-            collection.sort(options);
+            var sortOpt = {};
+            oj.CollectionUtils.copyInto(sortOpt, options);            
+            sortOpt['add'] = true;
+            collection.sort(sortOpt);
             // Reset index
             if (index > -1) {
                 index = collection.indexOf(collection.getByCid(cid), deferred);
@@ -2771,9 +2780,9 @@ oj.Collection.prototype.sort = function(options) {
                             return oj.Collection.SortFunc(a, b, comparator, self, self);
                         });
     this._realignModelIndices(0);
-    //if (!silent) {
-        this.TriggerInternal(silent, oj.Events.EventType['SORT'], this, null, null);
-    //}    
+    // Indicate this sort is due to an add
+    var eventOpts = options['add'] ? {'add':true} : null;
+    this.TriggerInternal(silent, oj.Events.EventType['SORT'], this, eventOpts, null);
 };
 
 oj.Collection._getKey = function(val, attr) {
@@ -3180,6 +3189,7 @@ oj.Collection.prototype._getModelLimit = function() {
  * Set or change the number of models to fetch with each server request
  * 
  * @param {number} n number of models to fetch with each request
+ * @export
  */
 oj.Collection.prototype.setFetchSize = function(n) {
     this[oj.Collection._FETCH_SIZE_PROP] = n;
@@ -3291,6 +3301,41 @@ oj.Collection.prototype._modelEvent = function(event, model, collection, options
     args = Array.prototype.slice.call(arguments);
     var silent = options && options['silent'];
     this.TriggerInternal(silent, event, model, collection, options);
+};
+
+/**
+ * Clear all data from the collection and refetch (if non-virtual).  If virtual, clear all data.  In both cases, fire a refresh event
+ * if silent is not set
+ * @param {Object=} options user options<p>
+ *                          silent: if set, do not fire a refresh event<p>
+ * @return {Object} promise object triggering done when complete (in case there is a fetch for non-virtual mode)
+ * @export
+ */
+oj.Collection.prototype.refresh = function(options)
+{
+    options = options || {};
+    
+    var dfd = $.Deferred();
+    if (!this._isVirtual()) {
+        // Do a reset, with silent
+        this.reset(null, {'silent':true});
+        // Local: do a fetch to fill back up
+        this.fetch({'success': function () {
+                        var silent = options['silent'] !== undefined && options['silent'];
+                        this.TriggerInternal(silent, oj.Events.EventType['REFRESH'], this, options, null);
+                        dfd.resolve();                                    
+                    }});
+        return dfd;        
+    }
+    // Virtual
+    var totalResults =  this['totalResults'];
+    if (totalResults !== undefined) {
+        this._setModels(new Array(totalResults));
+        this._resetLRU();
+    }
+    var silent = options['silent'] !== undefined && options['silent'];
+    this.TriggerInternal(silent, oj.Events.EventType['REFRESH'], this, options, null);
+    return dfd.resolve();
 };
 
 /**
@@ -3596,7 +3641,11 @@ oj.Collection.prototype.setRangeLocal = function(start, count) {
                };
                
     // Go fetch
-    var limit = this._getMaxLength(start, count);    
+    var limit = this._getMaxLength(start, count);   
+    // Get the greater of the limit-start or fetchSize
+    if (this[oj.Collection._FETCH_SIZE_PROP] && this[oj.Collection._FETCH_SIZE_PROP] > limit-start) {
+        limit = this[oj.Collection._FETCH_SIZE_PROP] + start;
+    }
     // Adjust for no totalResults
     if (!this._hasTotalResults() && limit < start + count) {
         // We shouldn't be limited by the size of the current storage
@@ -3629,6 +3678,10 @@ oj.Collection.prototype.isRangeLocal = function(start, count) {
     // Adjust for no totalResults
     if (!this._hasTotalResults() && limit < start + count) {
         // We don't know if it's local or not
+        return false;
+    }
+    if (limit === 0) {
+        // There nothing here
         return false;
     }
     for (var i = start; i < limit; i++) {
@@ -3695,11 +3748,29 @@ oj.Collection.prototype._fetchInternal = function(options, fillIn) {
             
              // Reset with no internal model
              if (!fillIn) {
-                self.reset(data);             
+                if (self._isVirtual()) {
+                    // Insert into collection with no model
+                    doReset(self, opt, fillIn);
+                    
+                    if (data) {
+                       var addOpt = {}, offset = self._getOffset();
+                       self._manageLRU(dataList.length);
+                       for (i = 0; i < dataList.length; i=i+1) {
+                           if (self._isVirtual()) {
+                               addOpt = {'at': offset+i};
+                           }
+                           // Don't fire add events
+                           addOpt['silent'] = true;
+                           self._addInternal(dataList[i], addOpt, true, false);
+                       }
+                    }                    
+                }
+                else {
+                    self.reset(data);             
+                }
              }
          }
-         else {
-             
+         else {             
              doReset(self, opt, fillIn);
              
              modelInstance = oj.Collection._createParsingModel(self);

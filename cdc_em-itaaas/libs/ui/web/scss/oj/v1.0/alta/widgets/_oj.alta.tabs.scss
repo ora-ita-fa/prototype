@@ -19,6 +19,17 @@ $paddingEnd: 8px !default;
 
     /* tabs */
     /* --------------------------------------------------------------- */
+
+    /*
+     * applied to the Tab bar
+     */
+    .oj-tabs-nav {
+      white-space: nowrap;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
     /*
      * applied to the horizontal Tab
      * line-height is for the height of the Tab Bar
@@ -33,42 +44,63 @@ $paddingEnd: 8px !default;
       font-size: $fontSize;
       font-family: $fontFamily;
       border: 0;
-      border-top: 3px solid transparent;
-      background-color: transparent;
-
+      border-top: $tabsNavBorderWidthSelected solid transparent;
+      @include oj-border-radius($tabsNavBorderRadius $tabsNavBorderRadius 0 0);
       white-space: nowrap;
       display: inline-block;
     }
 
     /*
-     * applied to the horizontal Tab
+     * Container of the horizontal Tab bar
      */
-    .oj-tabs-conveyor > .oj-tabs-nav,
-    .oj-tabs > .oj-tabs-nav {
-      white-space: nowrap;
-    }
-
     .oj-tabs-conveyor {
       display: inline-block;
     }
 
     /*
-     * applied to the enabled Tab Title
-     * display inline so the close icon is aligned with the title text
+     * applied to the conveyorbelt buttons
      */
-    .oj-tabs-nav > .oj-tabs-default h3
-    {
-      display:inline;
-      font-weight: normal;
+    .oj-tabs-conveyorbelt .oj-conveyorbelt-start-overflow-indicator {
+      @include oj-ltr() {
+        margin-right: 5px;
+      }
+      @include oj-rtl() {
+        margin-left: 5px;
+      }
+    }
+    .oj-tabs-conveyorbelt .oj-conveyorbelt-end-overflow-indicator {
+      @include oj-ltr() {
+        margin-left: 5px;
+      }
+      @include oj-rtl() {
+        margin-right: 5px;
+      }
     }
 
     /*
-     * Tab Title text
+     * applied to tab title text
+     * display inline so the close icon is aligned with the title text
      */
     .oj-tabs-title {
+      display:inline;
+      min-width: 12px;
       vertical-align: middle;
+      font-weight: normal;
+      font-size: $fontSize;
+      color: $tabsNavTextColor;
+      text-decoration: none;
     }
 
+    .oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
+      cursor: pointer;
+      outline:none;
+      padding-right: $paddingEnd;
+      padding-left: $paddingEnd;
+    }
+
+    /*
+     * applied to tab title text when it's overflow
+     */
     .oj-tabs-title-overflow {
       display: inline-block;
       overflow: hidden; 
@@ -76,50 +108,48 @@ $paddingEnd: 8px !default;
       text-overflow: ellipsis;
     }
 
-    .oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
-      font-weight: normal;
-      text-decoration: none;
-      cursor: pointer;
-      color: $linkTextColor;
-      outline:none;
-
-      padding-right: $paddingEnd;
-      padding-left: $paddingEnd;
-    }
-
     /*
-     * applied to the selected Tab Title
+     * applied to tab title text when it's selected
      */
-    .oj-tabs-nav > .oj-tabs-default.oj-tabs-active .oj-tabs-anchor {
+    .oj-tabs-default.oj-tabs-active .oj-tabs-title {
       font-weight: bold;
     }
 
     /*
-     * applied to the Tab Title when it's hovered
+     * applied to the tab title when it's hovered
      */
-    .oj-tabs-nav > .oj-tabs-default.oj-hover .oj-tabs-anchor {
+    .oj-tabs-default.oj-hover .oj-tabs-title {
       text-decoration: underline;
     }
 
-
     /*
-     * applied to the disabled Tab Title
+     * applied to the tab title text when it's disabled
      */
-    .oj-tabs-nav > .oj-tabs-default.oj-disabled .oj-tabs-anchor {
-      color: $textColorDisabled;
+    .oj-tabs-default.oj-disabled .oj-tabs-title {
+      // todo: add support for opacity
+      color: $linkTextColorDisabled;
       cursor: text;
+      text-decoration: none;
     }
 
+    /* suppress all browser decorations of anchors in the tab */
+    .oj-tabs-default a,
+    .oj-tabs-default a:active,
+    .oj-tabs-default a:visited,
+    .oj-tabs-default a:hover,
+    .oj-tabs-default a:focus {
+      text-decoration: none;
+    }
 
     /*
      * applied to the panel body
      */
     .oj-tabs-panel {
       display: block;
-      padding: 1em;
+      padding: $panelPadding;
       color: $textColor;
-      background-color: $background1Color;
-      border: $borderWidth solid $border1Color;
+      background-color: $tabsContentBgColor;
+      border: 1px solid $tabsContentBorderColor;
       @include oj-border-radius($largeBorderRadius);
       margin-top: -1px;
     }
@@ -141,19 +171,17 @@ $paddingEnd: 8px !default;
 
     /*
      * applied to the horizontal tab when it is NOT selected
+     * used to reduce the size jumps between selected and un-selected.
      */
     .oj-tabs-nav > .oj-tabs-default > .oj-tabs-tab-content {
       white-space: nowrap;
       padding-top: 4px;
       padding-bottom: 3px;
-/*
-      padding-right: $paddingEnd;
-      padding-left: $paddingEnd;
-*/
-      border-top: 0;
-      border-bottom: 0;
-      border-right: 1px solid transparent;
-      border-left: 1px solid transparent;
+      border-style: solid;
+      border-width: 1px 1px 0 1px;
+      border-color: $tabsNavBorderColor;
+      @include oj-border-radius($tabsNavBorderRadius $tabsNavBorderRadius 0 0);
+      background-color: $tabsNavBgColor;
     }
 
 
@@ -162,14 +190,15 @@ $paddingEnd: 8px !default;
      */
     .oj-tabs-conveyor > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active > .oj-tabs-tab-content,
     .oj-tabs > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active > .oj-tabs-tab-content {
-      border-right-color: $border3Color;
-      border-left-color: $border3Color;
+      border-color: $tabsNavAccentBorderColorSelected;
+      background-color: $tabsNavBgColorSelected;
+      border-top: 0;
     }
 
     .oj-tabs-conveyor > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active,
     .oj-tabs > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active {
-      border-top-color: $interaction1Color;
-      background-color: $background1Color;
+      border-top-color: $tabsNavBorderColorSelected;
+      background-color: $tabsNavBgColorSelected;
       z-index:1;
     }
 
@@ -189,10 +218,11 @@ $paddingEnd: 8px !default;
       cursor: pointer;
       text-align: center;
       vertical-align: middle;
-      font-size: 0.85rem;
+      font-size: 0.65rem;
       line-height: 20px;
       width: 22px;
       height: 22px;
+      margin-top: 2px;
 
       @include oj-ltr() {
         margin-left: -$paddingEnd;
@@ -202,6 +232,9 @@ $paddingEnd: 8px !default;
       }
     }
 
+    /*
+     * close icon styles for vertical tabs
+     */
     .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default .oj-tabs-close-icon {
       @include oj-ltr() {
         float: right;
@@ -210,6 +243,7 @@ $paddingEnd: 8px !default;
         float: left;
       }
     }
+
 
     /* vertical tabs */
     /* --------------------------------------------------------------- */
@@ -222,6 +256,8 @@ $paddingEnd: 8px !default;
      * applied to the vertical Tab bar
      */
     .oj-tabs-vertical > .oj-tabs-nav {
+      margin: 0;
+      padding: 0;
       padding-top: 15px;
     //  width: set in javascript
 
@@ -274,11 +310,11 @@ $paddingEnd: 8px !default;
       background-color: transparent;
       @include oj-ltr() {
         left: 0;
-        border-left: 3px solid transparent;
+        border-left: $tabsNavBorderWidthSelected solid transparent;
       }
       @include oj-rtl() {
         right: 0;
-        border-right: 3px solid transparent
+        border-right: $tabsNavBorderWidthSelected solid transparent
       }
     }
 
@@ -293,22 +329,21 @@ $paddingEnd: 8px !default;
     }
 
     .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active > .oj-tabs-tab-content {
-      border-top-color: $border3Color;
-      border-bottom-color: $border3Color;
+      border-top-color: $tabsNavAccentBorderColorSelected;
+      border-bottom-color: $tabsNavAccentBorderColorSelected;
     }
 
     .oj-tabs-vertical > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active {
-      background-color: $background1Color;
+      background-color: $tabsNavBgColorSelected;
       z-index:1;
 
       @include oj-ltr() {
-        border-left-color: $interaction1Color;
+        border-left-color: $tabsNavBorderColorSelected;
       }
       @include oj-rtl() {
-        border-right-color: $interaction1Color;
+        border-right-color: $tabsNavBorderColorSelected;
       }
     }
-
 
     /*
      * applied to the body of vertical tabs
@@ -324,26 +359,26 @@ $paddingEnd: 8px !default;
     /* --------------------------------------------------------------- */
 
     /*
-     * applied to the vertical Tab
+     * applied to the icons only vertical Tab
      */
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default {
-      background-color: $background4Color;
+      background-color: $tabsNavIconOnlyBgColor;
       @include oj-ltr() {
         left: 0;
-        border-left: $borderWidth solid $border1Color;
+        border-left: 1px solid $tabsNavIconOnlyBorderColor;
       }
       @include oj-rtl() {
         right: 0;
-        border-right: $borderWidth solid $border1Color;
+        border-right: 1px solid $tabsNavIconOnlyBorderColor;
       }
     }
 
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active {
-      background-color: $background1Color;
+      background-color: $tabsNavBgColorSelected;
     }
 
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active.oj-hover {
-      background-color: $background4Color;
+      background-color: $tabsNavBgColorSelected;
     }
 
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default > .oj-tabs-tab-content {
@@ -357,11 +392,11 @@ $paddingEnd: 8px !default;
      * display all borders and put radius on top border
      */
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default:first-child {
-      border: $borderWidth solid $border1Color;
+      border: 1px solid $tabsNavIconOnlyBorderColor;
       @include oj-border-top-left-radius($mediumBorderRadius, $textDirection:ltr);
       @include oj-border-top-right-radius($mediumBorderRadius, $textDirection:rtl);
       @include oj-ltr() {
-          border-right:0;
+        border-right:0;
       }
       @include oj-rtl() {
         border-left:0;
@@ -374,7 +409,7 @@ $paddingEnd: 8px !default;
      */
     .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default {
       margin-top: 0; 
-      border: $borderWidth solid $border1Color;
+      border: 1px solid $tabsNavIconOnlyBorderColor;
       border-top: 0;
       @include oj-ltr() {
         border-right:0;
@@ -398,5 +433,19 @@ $paddingEnd: 8px !default;
         border-left:0;
       }
     }
+
+    /*
+     * applied to the icon
+     */
+    .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default .oj-tabs-anchor {
+      padding-right: 0;
+      padding-left: 0;
+    }
+    .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default.oj-tabs-hover .oj-tabs-title,
+    .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-default.oj-tabs-active .oj-tabs-title {
+      font-weight: normal;
+    }
+
+
   }
 }

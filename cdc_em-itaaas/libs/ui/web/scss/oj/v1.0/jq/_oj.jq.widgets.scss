@@ -12,19 +12,18 @@
 // shared
 @import "widgets/oj.jq.icons";
 @import "widgets/oj.jq.resizable";
-@import "widgets/oj.jq.selectable";
 @import "widgets/oj.jq.windows";
 @import "widgets/oj.jq.messaging";
 
 
 // layout
+@import "widgets/oj.jq.panel";
 @import "widgets/oj.jq.accordion";
 @import "widgets/oj.jq.conveyorbelt";
 @import "widgets/oj.jq.tabs";
 
 // secondary windows
 @import "widgets/oj.jq.dialog";
-@import "widgets/oj.jq.tooltip";
 @import "widgets/oj.jq.popup";
 
 // behavior

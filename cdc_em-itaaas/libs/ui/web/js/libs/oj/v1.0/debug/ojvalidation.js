@@ -5367,7 +5367,7 @@ oj.Message.prototype.equals = function (msg)
 /**
  * A convenience method that returns the severity level when given either a severity level of type 
  * number or a severity type of string. 
- * If severity level is not provided or is not valid this return a severity error.
+ * If severity level is not provided or is not valid this returns a severity error.
  * @param {string|number|undefined} severity 
  * @return {number}
  * @export
@@ -5956,7 +5956,7 @@ oj.DateRestrictionValidator.prototype._inDisabledMetaData = function(value)
   
   if(dayMetaData) {
     var fullYear = value.getFullYear(),
-        month = value.getMonth(),
+        month = value.getMonth() + 1, //request to start from 1 rather than 0
         date = value.getDate(),
         metaData = disabledInMetaData(dayMetaData, 0, [fullYear, month, date]);
     

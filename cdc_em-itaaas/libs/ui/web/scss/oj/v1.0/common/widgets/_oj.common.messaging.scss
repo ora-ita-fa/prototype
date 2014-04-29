@@ -12,6 +12,11 @@
     /* messaging */
     /* --------------------------------------------------------------- */
 
+    /* wraps all messaging content that displays inside popup */
+    .oj-messaging-popup-container {
+      max-width: 340px; 
+    }
+      
     /* wraps a message block */
     .oj-message {
       padding-top: 4px; 

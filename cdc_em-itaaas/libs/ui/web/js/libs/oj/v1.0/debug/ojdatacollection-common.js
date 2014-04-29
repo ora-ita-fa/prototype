@@ -363,7 +363,7 @@ oj.FlattenedTreeDataSource.prototype.getOption = function(option)
 /**
  * Retrieves the underlying TreeDataSource.
  * @return {Object} the underlying oj.TreeDataSource.
- * @protected
+ * @export
  */
 oj.FlattenedTreeDataSource.prototype.getWrappedDataSource = function()
 {
@@ -503,7 +503,7 @@ oj.FlattenedTreeDataSource.prototype._handleFetchSuccess = function(nodeSet, par
     // handle result nodeSet
     toExpand = [];
     // wrap it to inject additional metadata
-    nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this));
+    nodeSet = new oj.NodeSetWrapper(nodeSet, this.insertMetadata.bind(this), range);
     this._processNodeSet(nodeSet, parent, depth, toExpand);
 
     // if child count is unknown and the result fetched from parent is less than what we asked for 
@@ -963,7 +963,7 @@ oj.FlattenedTreeDataSource.prototype.collapse = function(rowKey)
     keys = [];
     for (i=0; i<count; i++)
     {
-        keys.push({"row": this._getEntry(rowIndex+i)['key']});
+        keys.push({"key": this._getEntry(rowIndex+i)['key'], "index":rowIndex+i});
     }
 
     // remove from cache.  Note this has to be done before firing row remove event
@@ -1669,7 +1669,7 @@ oj.JsonTreeDataSource = function(data)
         tree.id = "root";
     }
 
-    this.data = this._createTreeDataSource(tree, data);
+    this.data = this._createTreeDataSource(0, tree, data);
 
     oj.JsonTreeDataSource.superclass.constructor.call(this, tree);
 };
@@ -1693,7 +1693,7 @@ oj.JsonTreeDataSource.prototype.Init = function()
  * @param {Object} source the json object.
  * @param {number=} depth used recursively for depth calculation.
  */
-oj.JsonTreeDataSource.prototype._createTreeDataSource = function(target, source, depth)
+oj.JsonTreeDataSource.prototype._createTreeDataSource = function(c, target, source, depth)
 {
     var children, node, child, prop, propr, prp, prpr, j;
 
@@ -1722,13 +1722,14 @@ oj.JsonTreeDataSource.prototype._createTreeDataSource = function(target, source,
                 node = new oj._JsonTreeNodeDataSource();
                 if (!child.id) 
                 {
+					c++;
                     if (!child.attr) 
                     {
-                        node.id = 'rid_' + Math.floor((Math.random() * 1000) + 1);
+                        node.id = 'rid_' + c;//Math.floor((Math.random() * 1000) + 1);
                     } 
                     else if (!child.attr.id) 
                     {
-                        child.attr.id = 'rid_' + Math.floor((Math.random() * 1000) + 1);
+                        child.attr.id = 'rid_' + c;//Math.floor((Math.random() * 1000) + 1);
                     }
                 }
                 for (propr in child)
@@ -1750,7 +1751,7 @@ oj.JsonTreeDataSource.prototype._createTreeDataSource = function(target, source,
                 {
                     if (prp == "children")
                     {
-                        this._createTreeDataSource(target.children[j], child, depth);
+                        this._createTreeDataSource(c, target.children[j], child, depth);
                     }
                 }
             }
@@ -2471,14 +2472,6 @@ oj.RowSet = function(rows, options)
 
 /**
  * @export
- * @desc Sort direction for string-based field comparators.  A value of 1 (the default), indicates ascending sorts, -1 indicates descending
- * 
- * @type number
- */
-oj.RowSet.prototype.sortDirection = 1;
-
-/**
- * @export
  * @desc If set, sort the rowSet using the given attribute of a row (if string); function(Row) returning a string attribute
  * by which the sort should take place; function(Row1, Row2) if a user-defined function comparing Row1 and Row2 (see the
  * JavaScript array.sort() for details)
@@ -2626,10 +2619,8 @@ oj.RowSet.prototype.size = function()
 /**
  * @export
  * Sort the Rows in the RowSet
- * 
- * @param {Object=} options
  */
-oj.RowSet.prototype.sort = function(options)
+oj.RowSet.prototype.sort = function()
 {
   oj.Assert.failedInAbstractFunction();
 };
@@ -3107,14 +3098,6 @@ oj.ArrayRowSet = function(rows, options)
 
 /**
  * @export
- * @desc Sort direction for string-based field comparators.  A value of 1 (the default), indicates ascending sorts, -1 indicates descending
- * 
- * @type number
- */
-oj.ArrayRowSet.prototype.sortDirection = 1;
-
-/**
- * @export
  * @desc If set, sort the rowSet using the given attribute of a row (if string); function(Row) returning a string attribute
  * by which the sort should take place; function(Row1, Row2) if a user-defined function comparing Row1 and Row2 (see the
  * JavaScript array.sort() for details)
@@ -3172,10 +3155,9 @@ oj.ArrayRowSet._init = function(rowSet, rows, options, properties)
     if (!(rows instanceof Array))
     {
       // subscribe to observableArray
-      (/** @type {{subscribe: Function}} */(rows)).subscribe(function(values) {
+      (/** @type {{subscribe: Function}} */(rows))['subscribe'](function(values) {
         var rowArray = rowSet._getRowArray(values, null, null);
         rowSet.reset(rowArray);
-        rowSet.superclass._handleEvent.call(rowSet, 'change', null);
       }, null, 'change');
     }
 
@@ -3191,20 +3173,21 @@ oj.ArrayRowSet._init = function(rowSet, rows, options, properties)
 
 /**
  * Add an instance of this RowSet's Row(s) to the end of the RowSet.
- * @param {Object} row Row object
+ * @param {Object} m Row object (or array of rows) to add. These can be already-created instance of the oj.Row object, or sets of attribute/values, which will be wrapped by add().
  * @param {Object=} options at: splice the new Row into the RowSet at the value given (at:index) <p>
  *                          deferred: if true, return a promise as though this RowSet were virtual whether it is or not
+ *                          silent: if set, do not fire an add event 
  * 
  * @returns {Object} if deferred or virtual, return a promise when the set has completed
  * @export
  */
-oj.ArrayRowSet.prototype.add = function(row, options)
+oj.ArrayRowSet.prototype.add = function(m, options)
 {
   options = options || {};
   var index = options['at'];
   var deferred = options['deferred'];
 
-  this._addToRowSet(row, index);
+  this._addToRowSet(m, index, options);
 
   if (deferred)
   {
@@ -3279,26 +3262,11 @@ oj.ArrayRowSet.prototype.clone = function()
 oj.ArrayRowSet.prototype.fetch = function(options)
 {
   options = options || {};
-  if (this._canFetch()) {
-    this._startFetch();
-    var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
-    var origStartIndex = this._startIndex;
-    this._startIndex = options != null ? (options['startIndex'] != null ? options['startIndex'] : 0) : 0;
-    var origRowArray = null;
-
-    if (this._rows != null)
-    {
-      origRowArray = this._rows;
-    }
-    this._rows = this._getRowArray(this._data, this._idAttribute, this._startIndex, pageSize);
-
-    if (origRowArray != null)
-    {
-      var updates = this._compareRowArray(origRowArray, this._rows, origStartIndex, this._startIndex, pageSize);
-      this._processUpdates(updates, origRowArray);
-    }
-    this._endFetch(true);
-  }
+  this._startFetch();
+  var pageSize = options['pageSize'] > 0 ? options['pageSize'] : -1;
+  this._startIndex = options != null ? (options['startIndex'] != null ? options['startIndex'] : 0) : 0;
+  this._rows = this._getRowArray(this._data, this._idAttribute, this._startIndex, pageSize);
+  this._endFetch(true);
 }
 
 /**
@@ -3404,6 +3372,7 @@ oj.ArrayRowSet.prototype.reset = function(data, options)
 
   options = options || {};
   options['previousRows'] = this._rows;
+  options['silent'] = true;
 
   if (data === undefined || data == null || (data instanceof Array && data.length == 0))
   {
@@ -3448,12 +3417,9 @@ oj.ArrayRowSet.prototype.size = function()
 /**
  * @export
  * Sort the Rows in the RowSet
- * 
- * @param {Object=} options
  */
-oj.ArrayRowSet.prototype.sort = function(options)
+oj.ArrayRowSet.prototype.sort = function()
 {
-  options = options || {};
   var comparator = this['comparator'], self;
 
   // Check for comparator
@@ -3482,22 +3448,44 @@ oj.ArrayRowSet.prototype.totalSize = function()
 };
 
 /**
- * @param {Object} row Row instance
+ * @param {Object} m Row instance or array of Rows or sets of attribute/values
  * @param {number} index Index value
+ * @param {Object=} options silent: if set, do not fire an add event 
  */
-oj.ArrayRowSet.prototype._addToRowSet = function(row, index)
+oj.ArrayRowSet.prototype._addToRowSet = function(m, index, options)
 {
-  if (index === undefined)
+  var i, row;
+  options = options || {};
+  var silent = options['silent'];
+  
+  if (!(m instanceof Array))
   {
-    this._rows.push(row);
+    m = [m];
   }
-  else
+  for (i = 0; i < m.length; i++)
   {
-    this._rows[index] = row;
+    row = m[i];
+    
+    if (!(row instanceof oj.ArrayRow))
+    {
+      row = new oj.ArrayRow(row, {'idAttribute': this._idAttribute});
+    }
+    if (index === undefined)
+    { 
+      this._rows.push(row);
+      row['index'] = this._rows.length - 1;
+    }
+    else
+    {
+      this._rows[index + i] = row;
+      row['index'] = index + i;
+    }
+    row['rowSet'] = this;
+    if (!silent)
+    {
+      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': row['index'], 'row': row});
+    }
   }
-  row['rowSet'] = this;
-  row['index'] = this._rows.length;
-  oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': index, 'row': row});
 }
 
 oj.ArrayRowSet._compareKeys = function(keyA, keyB, sortDirection)
@@ -3525,84 +3513,6 @@ oj.ArrayRowSet._compareKeys = function(keyA, keyB, sortDirection)
     }
   }
   return 0;
-};
-
-oj.ArrayRowSet.prototype._compareRowArray = function(origRowArray, updRowArray, origStartIndex, startIndex, pageSize)
-{
-  var updates = [];
-
-  // first check if the updated Row array is empty
-  if (updRowArray.length > 0)
-  {
-    var rowIdx, i = 0;
-
-    // next delete rows in the original row array which are less than startIndex or greater than
-    // startIndex + pageSize
-    for (rowIdx = 0; rowIdx < origRowArray.length; rowIdx++)
-    {
-      if (rowIdx < startIndex)
-      {
-        updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._DELETED};
-        i++;
-      }
-      else if (pageSize > 0)
-      {
-        if (rowIdx >= startIndex + pageSize)
-        {
-          updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._DELETED};
-          i++;
-        }
-      }
-    }
-
-    for (rowIdx = 0; rowIdx < updRowArray.length; rowIdx++)
-    {
-      if ((pageSize > 0 && rowIdx >= startIndex &&
-        rowIdx < startIndex + pageSize) ||
-        pageSize < 0)
-      {
-        var origSize = origRowArray.length;
-
-        if (rowIdx < origStartIndex ||
-          rowIdx > origSize - 1)
-        {
-          updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._ADDED};
-          i++;
-        }
-        else
-        {
-          var row = updRowArray[rowIdx];
-          var keys = row.keys();
-          var origRow = origRowArray[rowIdx];
-          var updated = false;
-          var j;
-          for (j = 0; j < keys.length; j++)
-          {
-            if (row.get(keys[j]).toString() != origRow.get(keys[j]).toString())
-            {
-              updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._UPDATED};
-              updated = true;
-              i++;
-              break;
-            }
-          }
-          if (!updated)
-          {
-            updates[i] = {'rowIdx': rowIdx, 'status': oj.RowSet._ROW_STATUSES._NONE};
-            i++;
-          }
-        }
-      }
-    }
-  }
-  else
-  {
-    for (rowIdx = 0; rowIdx < origRowArray.length; rowIdx++)
-    {
-      updates[rowIdx] = {'rowIdx': origRowArray[rowIdx], 'status': oj.RowSet._ROW_STATUSES._DELETED};
-    }
-  }
-  return updates;
 };
 
 oj.ArrayRowSet._getKey = function(val, attr) {
@@ -3682,67 +3592,6 @@ oj.ArrayRowSet.prototype._hasComparator = function()
 {
   var comparator = this['comparator'];
   return comparator !== undefined && comparator !== null;
-};
-
-/**
- * Process the updates array
- * @param {Array} updates Array of row updates
- * @param {Object} origRowArray  Original row array
- * @private
- */
-oj.ArrayRowSet.prototype._processUpdates = function(updates, origRowArray)
-{
-  // if all the rows are not updated then call end fetch without refresh
-  var noneUpdated = true;
-  var i;
-  for (i = 0; i < updates.length; i++)
-  {
-    if (updates[i]['status'] != oj.RowSet._ROW_STATUSES._NONE)
-    {
-      noneUpdated = false;
-      break;
-    }
-  }
-  if (noneUpdated)
-  {
-    this._endFetch(false);
-    return;
-  }
-
-  // if all the rows are added then refresh the entire table
-  var allAdded = true;
-  for (i = 0; i < updates.length; i++)
-  {
-    if (updates[i]['status'] != oj.RowSet._ROW_STATUSES._ADDED)
-    {
-      allAdded = false;
-      break;
-    }
-  }
-  if (allAdded)
-  {
-    this._endFetch(true);
-    return;
-  }
-
-  // process individual row statuses
-  for (i = 0; i < updates.length; i++)
-  {
-    var rowIdx = updates[i]['rowIdx'];
-    if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._ADDED)
-    {
-      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['ADD'], {'rowIdx': rowIdx, 'row': this._rows[rowIdx]});
-    }
-    else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._DELETED)
-    {
-      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REMOVE'], {'rowIdx': rowIdx, 'row': origRowArray[rowIdx]});
-    }
-    else if (updates[i]['status'] == oj.RowSet._ROW_STATUSES._UPDATED)
-    {
-      oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['CHANGE'], {'rowIdx': rowIdx, 'row': this._rows[rowIdx]});
-    }
-  }
-  this._endFetch(false);
 };
 
 // Realign all the indices of the rows (after sort for example)
@@ -3838,21 +3687,11 @@ oj.ArrayRowSet._sortFunc = function(a, b, comparator, rowSet, self)
 };
 
 /**
- * Indicate whether we can start a fetch
- * @private
- */
-oj.ArrayRowSet.prototype._canFetch = function()
-{
-  return !this._isFetching;
-};
-
-/**
  * Indicate starting fetch
  * @private
  */
 oj.ArrayRowSet.prototype._startFetch = function()
 {
-  this._isFetching = true;
   oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['REQUEST'], null);
 };
 
@@ -3863,7 +3702,6 @@ oj.ArrayRowSet.prototype._startFetch = function()
  */
 oj.ArrayRowSet.prototype._endFetch = function(refresh)
 {
-  this._isFetching = false;
   oj.ArrayRowSet.superclass._handleEvent.call(this, oj.RowSet.EventType['SYNC'], refresh);
 };
 /**
@@ -3940,13 +3778,15 @@ oj.EmptyNodeSet.prototype.getMetadata = function(index)
  * Wraps around the NodeSet to provide additional metadata
  * @param {Object} nodeSet the node set to wrap
  * @param {function(Object, Object)} metadataCallback callback to inject additional metadata information
+ * @param {Object=} range the requested range
  * @constructor
  * @export
  */
-oj.NodeSetWrapper = function(nodeSet, metadataCallback)
+oj.NodeSetWrapper = function(nodeSet, metadataCallback, range)
 {
     this.m_nodeSet = nodeSet;
     this.m_callback = metadataCallback;
+    this.m_range = range;
 };
 
 /**
@@ -3966,7 +3806,16 @@ oj.NodeSetWrapper.prototype.getParent = function()
  */
 oj.NodeSetWrapper.prototype.getStart = function()
 {
-    return this.m_nodeSet.getStart();
+    // if the requested start is a subset of the result set, adjust
+    // accordingly
+    if (this.m_range != null)
+    {
+        return this.m_range['start'];
+    }
+    else
+    {
+        return this.m_nodeSet.getStart();
+    }
 };
 
 /**
@@ -3976,7 +3825,27 @@ oj.NodeSetWrapper.prototype.getStart = function()
  */
 oj.NodeSetWrapper.prototype.getCount = function()
 {
-    return this.m_nodeSet.getCount();
+    var nodeStart, nodeCount;
+
+    nodeStart = this.m_nodeSet.getStart();
+    nodeCount = this.m_nodeSet.getCount();
+
+    // if the requested start is a subset of the NodeSet, adjust
+    // accordingly
+    if (this.m_range != null)
+    {
+        if (this.m_range['start'] > nodeStart)
+        {
+            nodeCount = Math.min(0, nodeCount - (this.m_range['start'] - nodeStart));
+        }
+        else if (this.m_range['start'] < nodeStart)
+        {
+            // this is an invalid NodeSet, so just return 0
+            nodeCount = 0;
+        }
+    }
+
+    return nodeCount;
 };
 
 /**
@@ -4007,6 +3876,8 @@ oj.NodeSetWrapper.prototype.getMetadata = function(index)
     var metadata, rowKey;
 
     metadata = this.m_nodeSet.getMetadata(index);
+    metadata['index'] = index;
+    metadata['parentKey'] = this.getParent();
     rowKey = metadata['key'];
 
     // inject additional metadata
@@ -4108,7 +3979,7 @@ oj.JsonNodeSet.prototype.getData = function(index)
  * The metadata that the data source must return are:
  *  1) key - Object, the key of the node/row.
  *  2) leaf - boolean, true if it's a leaf, false otherwise. 
- *  3) depth? - number, the depth of the node/row. (or should the caller just calculate it?)
+ *  3) depth - number, the depth of the node/row. 
  * @param {number} index the index of the node/row in which we want to retrieve the metadata from.  
  * @return {Object} the metadata object for the specific index.
  * @export

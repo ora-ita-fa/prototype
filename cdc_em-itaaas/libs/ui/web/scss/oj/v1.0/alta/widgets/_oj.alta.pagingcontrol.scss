@@ -24,7 +24,6 @@ $navArrowPadding: 5px !default;
 
     /* Styling for the component. */
     .oj-pagingcontrol {
-      background-color: $background1Color;
     }
 
     /* Styling for the component content. */
@@ -81,11 +80,11 @@ $navArrowPadding: 5px !default;
       display: inline-block; 
       vertical-align: middle;
       @include oj-ltr() {    
-        border-left: $borderWidth solid $border1Color;
+        border-left: 1px solid $panelBorderColor;
         padding-left: $navPaddingLeftRight;
       }
       @include oj-rtl() {    
-        border-right: $borderWidth solid $border1Color;
+        border-right: 1px solid $panelBorderColor;
         padding-right: $navPaddingLeftRight;
       }
     }
@@ -106,8 +105,8 @@ $navArrowPadding: 5px !default;
     }
 
     /* Styling for the page mode page link when selected. */
-    .oj-pagingcontrol-nav-page.oj-checked {
-       border: $borderWidth solid $pagingControlPageLinkBorder;
+    .oj-pagingcontrol-nav-page.oj-selected {
+       border: 1px solid $pagingControlPageLinkBorder;
        display: inline;
     }
 
@@ -131,8 +130,7 @@ $navArrowPadding: 5px !default;
 
     /* Styling for the page mode page input element. */
     .oj-pagingcontrol-nav-input {
-    // todo: should this match input and be $formControlBgColor
-      background-color: $background3Color;
+      background-color: $formControlBgColor;
       margin: 3px 0 3px 8px;
       text-align: center;
       width: 2 * $fontSize;
@@ -232,12 +230,22 @@ $navArrowPadding: 5px !default;
     
     /* Styling which can be used when paging control is paired with ojTable. */
     .oj-pagingcontrol-table-border {
-       border: $borderWidth solid $dataGridBorderColor;
+       border: 1px solid $dataGridBorderColor;
     }
     
     /* Styling which can be used when paging control is paired with ojDataGrid. */
     .oj-pagingcontrol-datagrid-border {
        border: $dataGridBorderWidth solid $dataGridBorderColor;
+    }
+    
+    /* Styling which can be used when paging control is paired with ojTable. */
+    .oj-pagingcontrol-table-background-color {
+       background-color: $dataGridCellBgColor;
+    }
+    
+    /* Styling which can be used when paging control is paired with ojDataGrid. */
+    .oj-pagingcontrol-datagrid-background-color {
+       background-color: $dataGridCellBgColor;
     }
   }
 }
