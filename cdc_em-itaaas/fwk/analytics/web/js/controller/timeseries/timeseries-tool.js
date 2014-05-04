@@ -17,6 +17,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
            
             var qdg = dataSource.getQueryDescriptorGroup();
             var dsg = dataSource.getDataSetGroup();
+            console.log(dsg);
             var config = dataSource.getConfig();
             console.log(config);
             var timeWindow = valueAccessor().timeWindow;
@@ -24,10 +25,55 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
 
                 var demoChart = new ChartRegionModel();
+                var aggregates = [];
+                
+                if (dsg && dsg.aggregates) {
+                    $.each(dsg.aggregates, function() {
+                        if (!this.treatAsMeasure) {
+                            aggregates.push(this);
+                        }
+                    });
+                }
 
-                if (dsg && dsg.groups && dsg.series) {
-                    demoChart.lineSeriesValue = dsg.series;
-                    demoChart.lineGroupsValue = dsg.groups;
+                if (dsg && dsg.dataSetEntryList) {
+                    var dsEntries = dsg.dataSetEntryList;
+                    if (dsEntries) {
+                        var seriesList = [];
+                        var timeGroup = [] ;
+                        
+                        $.each(dsEntries, function(i) {
+                            if (this.dataSeriesKey.aggregation.treatAsMeasure) {
+                                return true;
+                            }
+                            
+                            var series = {};
+                            series.name = this.dataSeriesKey.componentValues[0];
+                            series.items = [];
+                            $.each(this.dataSeries.series, function() {
+                               
+                                var measure = this.measure;
+                                if (measure === "NaN") {
+                                    measure = 0;
+                                }
+                                var timestamp = this.timestamp;
+                                if (timestamp > 0) {
+//                                    series.items.push({
+//                                        x: new Date(timestamp),
+//                                        y: measure
+//                                    });
+                                    series.items.push(measure);
+                                    // items for time series in format of 'x','y' and without 'group'
+                                    //   has bugs in ojchart.
+                                    if (i === 1) {
+                                        timeGroup.push(new Date(timestamp));
+                                    }
+                                }
+                            });
+                            seriesList.push(series);
+                        });
+                        demoChart.lineSeriesValue = ko.observable(seriesList);
+                        demoChart.lineGroupsValue = timeGroup;
+                    }
                 }
                 if (timeWindow && timeWindow.subscribe && typeof timeWindow.subscribe === 'function') {
                     timeWindow.subscribe(function(newVal) {
@@ -66,15 +112,15 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 var chartEl = $newChart.find('.chart').get(0);
 
 
-                $newChart.resizable({
-                    stop: function(event, ui) {
-                        ko.cleanNode(chartEl);
-                        ko.applyBindings(demoChart, chartEl);
-                        if ($newChart.width() > $(window).width() - 50) {
-                            $newChart.removeAttr('style');
-                        }
-                    }
-                });
+//                $newChart.resizable({
+//                    stop: function(event, ui) {
+//                        ko.cleanNode(chartEl);
+//                        ko.applyBindings(demoChart, chartEl);
+//                        if ($newChart.width() > $(window).width() - 50) {
+//                            $newChart.removeAttr('style');
+//                        }
+//                    }
+//                });
 
                 var rollupEl = $newChart.find('.rollup-table').get(0);
 
@@ -97,7 +143,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
 
                 var rollupConfig;
                 try {
-                    rollupConfig = qdg.QueryDescriptor[0].startingRollupLevels;
+                    //rollupConfig = qdg.QueryDescriptor[0].startingRollupLevels;
                 } catch (ignore) {
 
                 }
@@ -109,8 +155,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                     }, rollupEl);
                 } else {
                     ko.cleanNode(chartEl);
+                    console.log(ko.toJS(demoChart));
                     ko.applyBindings(demoChart, chartEl);
                 }
+                
+                
+                var aggregatesEl = $newChart.find(".aggregation-selector").get(0);
+                ko.applyBindings(
+                        {
+                            aggregates: aggregates
+                        }, aggregatesEl);
 
             });
         }

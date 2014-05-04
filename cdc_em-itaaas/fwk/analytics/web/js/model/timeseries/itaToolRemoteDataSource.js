@@ -13,16 +13,16 @@ define(['knockout','jquery'], function(ko,$) {
             
             this.getDataSetGroup = function(){
                 if(this._dsgURL){
-                    return $.ajax({
+                    return $.parseJSON($.ajax({
                         type: "GET", 
                         url: this._dsgURL,
-                        async: false}).responseText;
+                        async: false}).responseText);
                 }
             };
             
             this.getQueryDescriptorGroup = function() {
                 if(this._qdgURL){
-                    return  JSON.parse( $.ajax({
+                    return  $.parseJSON($.ajax({
                         type: "GET", 
                         url: this._qdgURL,
                         async: false}).responseText);
