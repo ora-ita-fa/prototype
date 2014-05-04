@@ -24,7 +24,10 @@ define(['ojs/ojcore', 'knockout', 'jquery',
                     
                     var _itaTimeSeriesConfig=new itaTimeSeriesConfig(faConfig.chartType);
                     console.log(_itaTimeSeriesConfig);
-                    var _dataSource = new itaToolRemoteDataSource("/flex_analyzer/data/sample-qdg-fa.json",null,_itaTimeSeriesConfig);
+                    var _dataSource = new itaToolRemoteDataSource(
+                            "/flex_analyzer/data/sample-qdg-fa.json",
+                            "/db_resource_planner/data/dataSet1.json",
+                            _itaTimeSeriesConfig);
 
                     ko.applyBindings({dataSource: _dataSource}, $newChart.get(0));
                         
