@@ -4,18 +4,27 @@
  * and open the template in the editor.
  */
 
-define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/model/timeseries/itaToolRemoteDataSource.js', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
-    '/flex_analyzer/js/controller/setting/fa-config.js', '/analytics/js/controller/timeseries/timeseries-tool.js'],
-        function(oj, ko, $, itaToolRemoteDataSource) {
-
+define(['ojs/ojcore', 'knockout', 'jquery',
+    '/analytics/js/model/timeseries/itaToolRemoteDataSource.js', 
+    '/analytics/js/model/timeseries/itaTimeSeriesConfig.js',
+    '/flex_analyzer/js/controller/setting/fa-config.js',
+    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
+     '/analytics/js/controller/timeseries/timeseries-tool.js'],
+        function(oj, ko, $, itaToolRemoteDataSource,itaTimeSeriesConfig, faConfig) {
             $(function() {
                 $(".chart-list").sortable();
 
                 function addChart() {
+                    //print faConfig Content
+                    for(var prop in faConfig){
+                      console.log(prop+ " : " +faConfig[prop]);
+                    }
                     var $newChart = $($("#chart-template").html());
                     $(".chart-list").append($newChart);
-
-                    var _dataSource = new itaToolRemoteDataSource("/flex_analyzer/data/sample-qdg-fa.json");
+                    
+                    var _itaTimeSeriesConfig=new itaTimeSeriesConfig(faConfig.chartType);
+                    console.log(_itaTimeSeriesConfig);
+                    var _dataSource = new itaToolRemoteDataSource("/flex_analyzer/data/sample-qdg-fa.json",null,_itaTimeSeriesConfig);
 
                     ko.applyBindings({dataSource: _dataSource}, $newChart.get(0));
                         

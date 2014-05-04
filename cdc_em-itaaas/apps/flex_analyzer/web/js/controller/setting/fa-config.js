@@ -8,6 +8,7 @@
 define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
     '/analytics/js/view_model/timeseries/ChartRegionModel.js',
     'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita, ChartRegionModel) {
+    var faConfig={};
     ita.registerTool(
             {
                 name: 'fa-config',
@@ -17,12 +18,12 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
 
                     function ChartTypeModel() {
                         this.chartTypeButtonClick = function(data, event) {
-                            var currentType = event.currentTarget.id;
-                            if (currentType === 'line')
+                            faConfig.chartType = event.currentTarget.id;
+                            if (faConfig.chartType === 'line')
                                 model.chartType('line');
-                            else if (currentType === 'bar')
+                            else if (faConfig.chartType === 'bar')
                                 model.chartType('bar');
-                            else if (currentType === 'area')
+                            else if (faConfig.chartType === 'area')
                                 model.chartType('area');
                             return true;
                         };
@@ -126,5 +127,5 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 }
             }
     );
-
+    return faConfig;
 });

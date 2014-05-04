@@ -8,9 +8,10 @@
 define(['ojs/ojcore', 'knockout', 'jquery', 
     '/analytics/js/model/timeseries/itaToolRemoteDataSource.js',
     '/analytics/js/model/timeseries/itaToolLocalDataSource.js',
+    '/analytics/js/model/forecast/itaForecastConfig.js',
     'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
     '/analytics/js/controller/timeseries/timeseries-tool.js','/analytics/js/controller/forecast/forecast-tool.js',
-    '/analytics/js/controller/timeseries/time-slider.js'], function(oj, ko, $, itaToolRemoteDataSource, itaToolLocalDataSource) {
+    '/analytics/js/controller/timeseries/time-slider.js'], function(oj, ko, $, itaToolRemoteDataSource, itaToolLocalDataSource,itaForecastConfig) {
     $(function() {
         var DAY = 24 * 60 * 60 * 1000;
         var nowStamp = new Date();
@@ -111,15 +112,8 @@ define(['ojs/ojcore', 'knockout', 'jquery',
             series: ko.observableArray()
         };
         var sampleDataSource4 = new itaToolLocalDataSource(null,_dsg4);
-        var forecastConfig = {
-                "forecastPeriod" : 120,
-                "confidence" : 95,
-                "selectedRegressionModel" : "BESTFIT",
-                "showChannels" : false,
-                "showThresholds" : false,
-                "singleChartMode" : false,
-                "showTotalTrend" : true
-            };
+        var forecastConfig = new itaForecastConfig();
+        
        // var forecastDataSource = new itaToolRemoteDataSource("http://dhcp-1op1-1op2-west-144-25-170-26.usdhcp.oraclecorp.com:7101/MyEMWToolsWS-EmwTools-context-root/jersey/QueryService/getQDJson",null,forecastConfig);
         var forecastDataSource = new itaToolRemoteDataSource("/analytics/data/forecast/qd.json",null,forecastConfig);
         

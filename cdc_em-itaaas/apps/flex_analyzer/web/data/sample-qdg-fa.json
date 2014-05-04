@@ -1,85 +1,116 @@
 {
     "identity": "REGION_1",
     "QueryDescriptor": [{
-            "-xmlns": "http://www.oracle.com/sysman/core/emwanalytics/Worksheet",
-            "-identity": "query-126",
-            "Subject": {
-                "-name": "TVMDWFSUBJECT"
-            },
-            "Cube": {
-                "-name": "TVMDWFDISKACTIVITY"
-            },
-            "Source": {
-                "-type": "cube"
-            },
-            "Aggregations": {
-                "MeasureAggregation": {
-                    "-alias": "AVG_ACTIVEREADS_",
-                    "Function": "Average",
-                    "Measure": "ACTIVE READS (PER SEC)"
-                },
-                "AggregationAggregation": {
-                    "-treatAsMeasure": "false",
-                    "-alias": "EMWC_TVMDWFDISKACT_END_TIME_ID",
-                    "Function": "Trunc with format",
-                    "FunctionParameters": {
-                        "FunctionParameter": "'dd'"
-                    },
-                    "DateAggregation": {
-                        "-cube": "TVMDWFDISKACTIVITY",
-                        "-dimension": "END_TIME",
-                        "Function": "Minimum"
-                    }
-                }
-            },
-            "GroupByEntities": {
-                "GroupByLevel": {
-                    "Level": {
-                        "-name": "TARGETLEVELINSTANCE",
-                        "Dimension": "TARGET",
-                        "Hierarchy": "TARGETHIERBYCOSTCENTER"
-                    },
-                    "AttributeSelections": {
-                        "AttributeSelection": {
-                            "-alias": "TARGET_DISPLAYNAME",
-                            "Attribute": {
-                                "-name": "DISPLAYNAME",
-                                "-type": "1",
-                                "Level": {
-                                    "-name": "TARGETLEVELINSTANCE",
-                                    "Dimension": "TARGET",
-                                    "Hierarchy": "TARGETHIERBYCOSTCENTER"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "WhereExpression": {
-                "-conjunction": "AND",
-                "Filter": {
-                    "-type": "relative_time_range",
-                    "RelativeTimeRangeFilter": {
-                        "offsetField": "1",
-                        "offset": "1",
-                        "dimensionName": "END_TIME"
-                    }
-                }
-            },
-            "RollupLevels": [{
-                    "-name": "TIMELEVELDAYOFMONTH",
-                    "Dimension": "END_TIME",
-                    "Hierarchy": "TIMEHIERBYMONTHOFYEAR"
-                }]
-            ,
-            "StartingRollupLevels": {
-                "Level": {
-                    "-name": "TIMELEVELMONTHOFYEAR",
-                    "Dimension": "END_TIME",
-                    "Hierarchy": "TIMEHIERBYMONTHOFYEAR"
-                }
+    "subject": "TVMDWFSUBJECT",
+    "cube": "TVMDWFLOAD",
+    "source": {
+        "sourceType": "cube",
+        "cube": "TVMDWFLOAD",
+        "cubeTable": "EMWC_TVMDWFLOAD"
+    },
+    "aggregationList": [
+        {
+            "type": "measureAggregation",
+            "function": "Average",
+            "alias": "avgActiveMem",
+            "functionParameters": null,
+            "measure": "ACTIVE MEMORY"
+        },
+        {
+            "type": "aggregationAggregation",
+            "function": "Trunc with format",
+            "alias": "EMWC_TVMDWFLOAD_START_TIME_ID",
+            "functionParameters": ["'mm'"],
+            "aggregation": {
+                "type": "dateAggregation",
+                "function": "Minimum",
+                "alias": null,
+                "functionParameters": null,
+                "dimensionName": "TIME",
+                "cubeName": "TVMDWFLOAD"
             }
-        }],
+        }
+    ],
+    "selectiontionList": null,
+    "grpbyEntityList": [
+        {
+            "type": "grpbyLevel",
+            "withRollup": false,
+            "level": {
+                "parentHierarchyName": "TARGETHIERBYCOSTCENTER",
+                "parentDimName": "TARGET",
+                "name": "TARGETLEVELCOSTCENTER",
+                "displayName": "TARGETLEVELCOSTCENTER"
+            },
+            "attrSelList": [
+                {
+                    "type": "attributeSelection",
+                    "alias": "TARGET_COSTCENTER",
+                    "function": null,
+                    "functionParameters": null,
+                    "attribute": {
+                        "name": "COSTCENTER",
+                        "displayName": "COSTCENTER",
+                        "parentDimName": "TARGET"
+                    }
+                }
+            ]
+
+        },
+        {
+            "type": "grpbyLevel",
+            "withRollup": true,
+            "level": {
+                "parentHierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                "parentDimName": "START_TIME",
+                "name": "TIMELEVELMONTHOFYEAR",
+                "displayName": "TIMELEVELMONTHOFYEAR"
+            },
+            "attrSelList": [
+                {
+                    "type": "attributeSelection",
+                    "alias": "START_TIME_MONTHOFYEAR",
+                    "function": null,
+                    "functionParameters": null,
+                    "attribute": {
+                        "name": "MONTHOFYEAR",
+                        "displayName": "MONTHOFYEAR",
+                        "parentDimName": "TARGET"
+                    }
+                }
+            ]
+        }
+
+    ],
+    "startingRollupLevels": [
+        {
+                "parentHierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                "parentDimName": "START_TIME",
+                "name": "TIMELEVELMONTHOFYEAR",
+                "displayName": "TIMELEVELMONTHOFYEAR"
+            }],
+    "rollupLowestLevels": [],
+    "hasDynamicHierarchy": false,
+    "dynHierList": null,
+    "whereExpression": {
+        "conjunction": "AND",
+        "filterList": [
+            {
+                "filterType": "time_range",
+                "startDate": 1334162849492,
+                "endDate": 1397234849492,
+                "dimensionName": "TIME",
+                "dimRoleName": "TIME",
+                "dimNatKey": "TIME_ID"
+            }
+        ]
+        ,
+        "havingExpression": null,
+        "identity": "query-761",
+        "topnConfig": null,
+        "parameters": null
+    }
+}],
     "Parameters": {
         "FAUICONFIG": {
             "chartType": "bar"

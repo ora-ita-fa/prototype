@@ -22,10 +22,10 @@ define(['knockout','jquery'], function(ko,$) {
             
             this.getQueryDescriptorGroup = function() {
                 if(this._qdgURL){
-                    return $.ajax({
+                    return  JSON.parse( $.ajax({
                         type: "GET", 
                         url: this._qdgURL,
-                        async: false}).responseText;
+                        async: false}).responseText);
                 }
             };
             
