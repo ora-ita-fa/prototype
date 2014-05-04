@@ -70,8 +70,17 @@ DvtLegend.prototype.Init = function(context, callback, callbackObj) {
    * @private
    */
   this._bounds = null;
+
+  this._bundle = new DvtUtilBundle();
 };
 
+/**
+ * Retuns the translation bundle
+ * @return {Object}
+ */
+DvtLegend.prototype.__getBundle = function() {
+  return this._bundle;
+};
 
 /**
  * @override
@@ -371,7 +380,7 @@ DvtLegendAutomation.prototype._getIndicesFromSeries = function(series, legendOpt
 
 /**
  * Returns the legend item for the given subId
- * @param {Object}options the legend options object
+ * @param {Object} options the legend options object
  * @param {String} subId the subId of the desired legend item
  * @return {Object} the legend item corresponding to the given subId
  * @private
@@ -554,6 +563,9 @@ DvtLegendEventManager.prototype.OnMouseOver = function(event) {
   // Category Rollover Support.  If rollover occurs, the event should not bubble.
   if (this._processRolloverEvent(obj, true))
     event.stopPropagation();
+
+  // Accessibility Support
+  this.UpdateActiveElement(obj);
 };
 
 
@@ -643,18 +655,22 @@ DvtLegendEventManager.prototype._processHideShowEvent = function(obj) {
   if (!categories || categories.length <= 0)
     return false;
 
+
+  var dataItem = obj.getData();
+  var visibility = dataItem['categoryVisibility'];
+
   // Update the legend markers
   var displayables = obj.getDisplayables();
   for (var i = 0; i < displayables.length; i++) {
     var displayable = displayables[i];
-    if (displayable instanceof DvtMarker)// setHollow is a toggle
+    if (displayable instanceof DvtMarker) // setHollow is a toggle
       displayable.setHollow(obj.getColor());
+    if (displayable instanceof DvtRect)
+      displayable.setAriaProperty('label', dataItem['text'] + '. ' + this._legend.__getBundle().getTranslatedString((visibility == 'visible' ? 'STATE_HIDDEN' : 'STATE_VISIBLE')));
   }
 
   // Update the state and create the event
   var id = categories[0];
-  var dataItem = obj.getData();
-  var visibility = dataItem['categoryVisibility'];
   if (visibility == 'hidden') {
     // Currently hidden, show
     dataItem['categoryVisibility'] = 'visible';
@@ -882,7 +898,7 @@ DvtLegendRenderer.render = function(legend, availSpace) {
   var gapHeight = DvtLegendDefaults.getGapSize(options, options['layout']['outerGapHeight']);
   var legendSpace = new DvtRectangle(availSpace.x + gapWidth, availSpace.y + gapHeight,
       availSpace.w - 2 * gapWidth, availSpace.h - 2 * gapHeight);
-  
+
   legend.__setBounds(legendSpace.clone());
 
   // return if there's no space
@@ -1317,6 +1333,12 @@ DvtLegendRenderer._renderSection = function(legend, section, sectionIndex, avail
       if (item['categoryVisibility'] == 'hidden' && peer)
         marker.setHollow(peer.getColor());
 
+      if (legend.__getOptions()['hideAndShowBehavior'] != 'none') {
+        itemRect.setAriaRole('img');
+        itemRect.setAriaProperty('label', label + '. ' +
+            legend.__getBundle().getTranslatedString((item['categoryVisibility'] == 'hidden' ? 'STATE_HIDDEN' : 'STATE_VISIBLE')));
+      }
+
       // Update coordiantes for next row
       availSpace.y += (rowHeight + rowGap);
       currRow++;
@@ -1377,6 +1399,12 @@ DvtLegendRenderer._renderSection = function(legend, section, sectionIndex, avail
       // Legend item visibility support
       if (item['categoryVisibility'] == 'hidden' && peer)
         marker.setHollow(peer.getColor());
+
+      if (legend.__getOptions()['hideAndShowBehavior'] != 'none') {
+        itemRect.setAriaRole('img');
+        itemRect.setAriaProperty('label', label + '. ' +
+            legend.__getBundle().getTranslatedString((item['categoryVisibility'] == 'hidden' ? 'STATE_HIDDEN' : 'STATE_VISIBLE')));
+      }
 
       // Update coordinates for next row
       availSpace.y += (rowHeight + rowGap);

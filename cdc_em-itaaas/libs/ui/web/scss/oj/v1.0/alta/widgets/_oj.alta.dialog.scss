@@ -29,6 +29,7 @@ $includeDialogClasses:  $includeAllClasses !default;
         @include oj-box-shadow($largeBoxShadow);
         background: $dialogWindowBgColor;
         border: 1px solid $dialogWindowBorderColor;
+        overflow: hidden;
         @include oj-border-radius($smallBorderRadius);
     }
 
@@ -137,6 +138,7 @@ $includeDialogClasses:  $includeAllClasses !default;
        padding: 10px 10px;
        position: relative; // needed to align buttons to bottom of dialog on resize
        float: right;
+       overflow: auto;
     }
 
     //.oj-dialog .oj-dialog-header {

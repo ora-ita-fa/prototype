@@ -1,388 +1,396 @@
-define(
-{
-    'oj-message' : 
-    {
-      'fatal' : '$[PX$]$[Fatal ä$]',
-      'error': '$[PX$]$[Error ä$]',
-      'warning': '$[PX$]$[Warning ä$]',
-      'info' : '$[PX$]$[Info ä$]',
-      'confirmation' : '$[PX$]$[Confirmation ä$]',
-      'compact-type-summary': '{0}: {1}'
-    },
-    'oj-converter': 
-    {
-      'summary': '$[PX$]$[The value is not in the expected format. äëü\'\\$]',
-      'detail': '$[PX$]$[Enter a value in the expected format. äëü\'$]',
-      'plural-separator' : ", ",
+define({
+      'oj-message' : 
+      {
+        'fatal' : 'Abbruchfehler',
+        'error': 'Fehler',
+        'warning': 'Warnung',
+        'info' : 'Info',
+        'confirmation' : 'Bestätigung',
+        'compact-type-summary': '{0}: {1}'
+      },
+      'oj-converter': 
+      {
+        'summary': 'Der Wert besitzt nicht das erwartete Format.',
+        'detail': 'Geben Sie einen Wert im erwarteten Format ein.',
+        'plural-separator' : ", ",
 
-      
-      // when we want to show a hint. 
-      'hint': 
-      {
-        'summary': "$[PX$]$[Example: {exampleValue} ä$]",
-        'detail': "$[PX$]$[Enter a value in the same format as this example: '{exampleValue}' äëü'\\&äëü'\\&ä$]",
-        'detail-plural': "$[PX$]$[Enter a value in the same format as these examples: '{exampleValue}' äëü'\\&äëü'\\&ä$]"
-      },
-      
-      // when the option values are not what we expected and we tell users what values we accept
-      'optionHint' : 
-      {
-        'detail': "$[PX$]$[An accepted value for '{propertyName}' is '{propertyValueValid}'. äëü'\\&äëü'\\&ä$]",
-        'detail-plural': "$[PX$]$[Accepted values for '{propertyName}' are '{propertyValueValid}'. äëü'\\&äëü'\\&$]",
-      },
-
-      // when converter options are incorrect
-      'optionTypesMismatch': 
-      {
-        'summary': "$[PX$]$[A value for the property '{requiredPropertyName}' is required when the property '{propertyName}' is set to '{propertyValue}'. äëü'\\&äëü'\\&äëü'\\&äëü'\\&äëü'\\&ä$]"
-      },
-      'optionTypeInvalid': 
-      {
-        'summary': "$[PX$]$[A value of the expected type was not provided for '{propertyName}'. äëü'\\&äëü'\\&ä$]"
-      },
-      'optionOutOfRange': 
-      {
-        'summary': "$[PX$]$[The value {propertyValue} is out of range for the option '{propertyName}'. äëü'\\&äëü'\\&äëü$]"
-      },
-      'optionValueInvalid': 
-      {
-        'summary': "$[PX$]$[An invalid value '{propertyValue}' was specified for the option '{propertyName}'. äëü'\\&äëü'\\&äëü'\\$]"
-      },
-
-      'number': 
-      {
-        // when the the value fails number conversion
-        'decimalFormatMismatch': 
-        {
-          'summary': "$[PX$]$[The decimal '{value}' is not in the expected format. äëü'\\&äë$]"
+        
+        // when we want to show a hint. 
+        'hint': {
+          'summary': "Beispiel: {exampleValue}",
+          'detail': "Geben Sie einen Wert im gleichen Format ein wie in diesem Beispiel: \"{exampleValue}\"",
+          'detail-plural': "Geben Sie einen Wert im gleichen Format ein wie in diesen Beispielen: \"{exampleValue}\""
         },
-        'currencyFormatMismatch': 
-        {
-          'summary': "$[PX$]$[The currency '{value}' is not in the expected format. äëü'\\&äëü$]"
+        
+        // when the option values are not what we expected and we tell users what values we accept
+        'optionHint' : {
+          'detail': "Ein akzeptierter Wert für Option \"{propertyName}\" lautet \"{propertyValueValid}\".",
+          'detail-plural': "Akzeptierte Werte für Option \"{propertyName}\" lauten \"{propertyValueValid}\"."
         },
-        'percentFormatMismatch' : 
-        {
-          'summary': "$[PX$]$[The percent '{value}' is not in the expected format. äëü'\\&äë$]"
+
+        // when converter options are incorrect
+        'optionTypesMismatch': {
+          'summary': "Für die Option \"{requiredPropertyName}\" muss ein Wert angegeben werden, wenn für die Option \"{propertyName}\" der Wert \"{propertyValue}\" festgelegt wurde."
+        },
+        'optionTypeInvalid': {
+          'summary': "Für Option \"{propertyName}\" wurde kein Wert des erwarteten Typs angegeben."
+        },
+        'optionOutOfRange': {
+          'summary': "Wert {propertyValue} für die Option \"{propertyName}\" befindet sich außerhalb des zulässigen Bereichs."
+        },
+        'optionValueInvalid': {
+          'summary': "Für die Option \"{propertyName}\" wurde der ungültige Wert \"{propertyValue}\" angegeben."
+        },
+
+        'number': {
+          // when the the value fails number conversion
+          'decimalFormatMismatch': {
+            'summary': "Der Dezimalwert \"{value}\" besitzt nicht das erwartete Format."
+          },
+          'currencyFormatMismatch': {
+            'summary': "Der Währungswert \"{value}\" besitzt nicht das erwartete Format."
+          },
+          'percentFormatMismatch' : {
+            'summary': "Der Prozentwert \"{value}\" besitzt nicht das erwartete Format."
+          }
+        },
+        'datetime': {
+          // when the the value fails date time conversion
+          'datetimeOutOfRange': {
+            'summary': "Wert \"{value}\" für \"{propertyName}\" befindet sich außerhalb des zulässigen Bereichs.",
+            'detail': "Geben Sie einen Wert zwischen \"{minValue}\" und \"{maxValue}\" ein."
+          },
+          'dateFormatMismatch': {
+            'summary': "Der Datumswert \"{value}\" besitzt nicht das erwartete Format."
+          },
+          'timeFormatMismatch': {
+            'summary': "Der Uhrzeitwert \"{value}\" besitzt nicht das erwartete Format."
+          },
+          'datetimeFormatMismatch': {
+            'summary': "Der Datums- und Uhrzeitwert \"{value}\" besitzt nicht das erwartete Format."
+          },
+          'dateToWeekdayMismatch' : {
+            'summary': "Der Tag \"{date}\" ist kein \"{weekday}\".",
+            'detail' : "Geben Sie den Wochentag ein, der dem Datum entspricht."
+          }
         }
       },
-      'datetime': 
+      // translations used by the validators 
+      'oj-validator': 
       {
-        // when the the value fails date time conversion
-        'datetimeOutOfRange': 
+        'length' :
         {
-          'summary': "$[PX$]$[The value '{value}' is out of range for the '{propertyName}'. äëü'\\&äëü'\\$]",
-          'detail': "$[PX$]$[Enter a value between '{minValue}' and '{maxValue}'. äëü'\\&äëü$]"
+          'range':
+          {
+            'summary' : 'Die Anzahl der Zeichen liegt außerhalb des gültigen Bereichs.',
+            'detail' : 'Die Zeichenanzahl muss zwischen {min} und {max} liegen.',
+            'hint' : 'Geben Sie {min} oder mehr, bis maximal {max} Zeichen ein.'
+          },
+          'min':
+          {
+            'summary' : 'Zu wenige Zeichen.',
+            'detail' : 'Geben Sie {min} oder mehr Zeichen ein, nicht weniger.',
+            'hint' : 'Geben Sie {min} oder mehr Zeichen ein.'
+          },
+          'max':
+          {
+            'summary' : 'Zu viele Zeichen.',
+            'detail' : 'Geben Sie {max} oder weniger Zeichen ein, nicht mehr.',
+            'hint' : 'Geben Sie {max} oder weniger Zeichen ein'
+          },
+          'exact': 
+          {
+            'summary': 'Die Anzahl der Zeichen ist falsch.',
+            'detail': 'Geben Sie genau {length} Zeichen ein.',
+            'hint': 'Geben Sie {length} Zeichen ein.'
+          }
+
         },
-        'dateFormatMismatch': 
-        {
-          'summary': "$[PX$]$[The date '{value}' is not in the expected format. äëü'\\&äë$]"
-        },
-        'timeFormatMismatch':
-        {
-          'summary': "$[PX$]$[The time '{value}' is not in the expected format. äëü'\\&äë$]"
-        },
-        'datetimeFormatMismatch': 
-        {
-          'summary': "$[PX$]$[The datetime '{value}' is not in the expected format. äëü'\\&äëü$]"
-        },
-        'dateToWeekdayMismatch' : 
-        {
-          'summary': "$[PX$]$[Day '{date}' does not fall on a '{weekday}'. äëü'\\&$]",
-          'detail' : "$[PX$]$[Enter a weekday that corresponds with the date. äëü'\\&ä$]"
-        }
-      }
-    },
-    // translations used by the validators 
-    'oj-validator': 
-    {
-      'length' :
-      {
         'range':
         {
-          'summary' : '$[PX$]$[The number of characters is out of range. äëü\'\\$]',
-          'detail' : '$[PX$]$[The number must be between {min} and {max}. äëü\'\\&$]',
-          'hint' : '$[PX$]$[Enter {min} or more characters, up to a maximum of {max}. äëü\'\\&äëü\'$]'
+          'number': 
+          {
+            'range':
+            {
+              'summary' : 'Die Zahl liegt außerhalb des zulässigen Bereichs.',
+              'detail' : 'Die Zahl {value} muss zwischen {min} und {max} liegen.',
+              'hint' : 'Geben Sie eine Zahl zwischen {min} und {max} ein.'
+            },
+            'min':
+            {
+              'summary' : 'Die Zahl ist zu niedrig.',
+              'detail' : 'Die Zahl {value} muss größer/gleich {min} sein.',
+              'hint' : 'Geben Sie eine Zahl ein, die größer oder gleich {min} ist.'
+            },
+            'max':
+            {
+              'summary' : 'Die Zahl ist zu hoch.',
+              'detail' : 'Die Zahl {value} muss kleiner/gleich {max} sein.',
+              'hint' : 'Geben Sie eine Zahl ein, die kleiner oder gleich {max} ist.'
+            }
+          },
+          'datetime': 
+          {
+            'range':
+            {
+              'summary' : 'Datum und Uhrzeit liegen außerhalb des zulässigen Bereichs.',
+              'detail' : 'Datum und Uhrzeit müssen zwischen {min} und {max} liegen.',
+              'hint' : 'Geben Sie Datum und Uhrzeit zwischen {min} und {max} ein.'
+            },
+            'min':
+            {
+              'summary': 'Datum und Uhrzeit liegen vor dem frühesten Datum.',
+              'detail' : 'Datum und Uhrzeit {value} müssen {min} oder später sein.',
+              'hint' : 'Geben Sie Datum und Uhrzeit ein, die {min} oder später entsprechen.'
+            },
+            'max':
+            {
+              'summary' : 'Datum und Uhrzeit liegen nach dem spätesten Datum.',
+              'detail' : 'Datum und Uhrzeit {value} müssen {max} oder früher sein.',
+              'hint' : 'Geben Sie Datum und Uhrzeit ein, die {max} oder früher entsprechen.'
+            }
+          }
         },
-        'min':
+        'restriction':
         {
-          'summary' : '$[PX$]$[There are too few characters. ä$]',
-          'detail' : '$[PX$]$[Enter {min} or more characters, not fewer. äëü\'\\$]',
-          'hint' : '$[PX$]$[Enter {min} or more characters. äë$]'
+          'date': 
+          {
+            'dayMetaData':
+            {
+              'summary': 'Das Datum bezieht sich auf einen deaktivierten Eintrag.',
+              'detail': 'Das Datum {value} darf sich nicht auf einen deaktivierten Eintrag beziehen.'
+            }
+          }
         },
-        'max':
+        'regExp': 
         {
-          'summary' : '$[PX$]$[There are too many characters. äë$]',
-          'detail' : '$[PX$]$[Enter {max} or fewer characters, not more. äëü\'\\$]',
-          'hint' : '$[PX$]$[Enter {max} or fewer characters äë$]'
+          'summary': "Format ist falsch.",
+          'detail': "Wert \"{value}\" muss mit diesem Muster übereinstimmen: \"{pattern}\""
         },
-        'exact': 
+        'required':
         {
-          'summary': '$[PX$]$[The number of characters is incorrect. äëü\'$]',
-          'detail': '$[PX$]$[Enter exactly {length} characters. äëü$]',
-          'hint': '$[PX$]$[Enter {length} characters. ä$]'
+          'summary': 'Wert ist erforderlich.',
+          'detail': 'Sie müssen einen Wert eingeben.'
         }
+      },
+	  
+      'oj-ojInputDate':
+      {
+        'closeText': 'Fertig',
+        'prevText': 'Voriger',
+        'nextText': 'Nächster',
+        'currentText': 'Heute',
+        'weekHeader': 'KW',
+        'datePicker': 'Datumsauswahl',
+	'inputDetail': 'Drücken Sie die NACH-UNTEN- bzw. NACH-OBEN-TASTE, um auf den Kalender zuzugreifen',
+        'inputDetailBoth': 'Drücken Sie die NACH-UNTEN- bzw. NACH-OBEN-TASTE, um auf den Kalender zuzugreifen, und ALT+NACH-UNTEN bzw. ALT+NACH-OBEN, um auf das Dropdown-Menü für die Uhrzeit zuzugreifen'
+      },
 
-      },
-      'range':
+      'oj-ojInputTime':
       {
-        'number': 
+        'inputDetail': 'Drücken Sie die NACH-UNTEN- bzw. NACH-OBEN-TASTE, um auf das Dropdown-Menü für die Uhrzeit zuzugreifen'
+      },
+
+      'oj-ojDataGrid':
+      {
+        'accessibleSortAscending': '{id} aufsteigend sortiert',
+        'accessibleSortDescending': '{id} absteigend sortiert',
+        'accessibleActionableMode': 'Aktionsmodus aufrufen',
+        'accessibleNavigationMode': 'Navigationsmodus aufrufen',
+        'accessibleSummaryExact': 'Dies ist ein Datenraster mit {rownum} Zeilen und {colnum} Spalten',
+        'accessibleSummaryEstimate': 'Dies ist ein Datenraster mit einer unbekannten Anzahl Zeilen und Spalten',
+        'accessibleSummaryExpanded' : 'Es sind derzeit {num} Zeilen eingeblendet',
+        'accessibleRowExpanded': 'Zeile eingeblendet',
+        'accessibleRowCollapsed': 'Zeile ausgeblendet',
+        'accessibleStateSelected': 'gewählt',
+        'accessibleMultiCellSelected': '{num} Zellen gewählt',
+        'msgFetchingData': 'Daten werden abgerufen...',
+        'msgNoData': 'Keine anzuzeigenden Daten.',
+        'labelResize': 'Skalieren',
+        'labelResizeWidth': 'Breite ändern',
+        'labelResizeHeight': 'Höhe ändern',
+        'labelSortRow': 'Zeile sortieren',
+        'labelSortRowAsc': 'Zeile aufsteigend sortieren',
+        'labelSortRowDsc': 'Zeile absteigend sortieren',
+        'labelSortCol': 'Spalte sortieren',
+        'labelSortColAsc': 'Spalte aufsteigend sortieren',
+        'labelSortColDsc': 'Spalte absteigend sortieren',
+        'labelCut': 'Ausschneiden',
+        'labelPaste': 'Einfügen'
+      },
+      'oj-_ojLabel' :
+      {
+        'tooltipHelp':'Hilfe',
+        'tooltipRequired':'Erforderlich'
+      },
+      'oj-ojInputNumber' :
+      {
+        'tooltipDecrement':'Verringern',
+        'tooltipIncrement':'Erhöhen'
+      },
+      // translations used by the table component 
+      'oj-ojTable': 
+      {
+        'labelSelectRow':'Zeile auswählen',
+        'labelSelectColumn':'Spalte auswählen',
+        'labelSort': 'Sortieren',
+		    'labelSortAsc': 'Aufsteigend sortieren',
+		    'labelSortDsc': 'Absteigend sortieren',
+        'msgFetchingData':'Daten werden abgerufen...',
+        'msgNoData':'Keine anzuzeigenden Daten.',
+
+        'activeRowUnavailableIndex':
         {
-          'range':
-          {
-            'summary' : '$[PX$]$[The number is out of range. ä$]',
-            'detail' : '$[PX$]$[The number {value} must be between {min} and {max}. äëü\'\\&äëü$]',
-            'hint' : '$[PX$]$[Enter a number between {min} and {max}. äëü\'\\$]'
-          },
-          'min':
-          {
-            'summary' : '$[PX$]$[The number is too low. ä$]',
-            'detail' : '$[PX$]$[The number {value} must be greater than or equal to {min}. äëü\'\\&äëü\'\\$]',
-            'hint' : '$[PX$]$[Enter a number greater than or equal to {min}. äëü\'\\&ä$]'
-          },
-          'max':
-          {
-            'summary' : '$[PX$]$[The number is too high. ä$]',
-            'detail' : '$[PX$]$[The number {value} must be less than or equal to {max}. äëü\'\\&äëü\'$]',
-            'hint' : '$[PX$]$[Enter a number less than or equal to {max}. äëü\'\\&$]'
-          }
+          'summary': 'Aktive Zeile wurde aufgrund von nicht verfügbarem Zeilenindex nicht geändert.',
+          'detail': 'Nicht verfügbarer Zeilenindex: {rowIdx}.'
         },
-        'datetime': 
+        'columnRendererColumnNotFound':
         {
-          'range':
-          {
-            'summary' : '$[PX$]$[The datetime is out of range. ä$]',
-            'detail' : '$[PX$]$[The datetime must be between {min} and {max}. äëü\'\\&ä$]',
-            'hint' : '$[PX$]$[Enter a datetime between {min} and {max}. äëü\'\\$]'
-          },
-          'min':
-          {
-            'summary': '$[PX$]$[The datetime is earlier than the minimum date. äëü\'\\&$]',
-            'detail' : '$[PX$]$[The datetime must be greater than or equal to {min}. äëü\'\\&äë$]',
-            'hint' : '$[PX$]$[Enter a datetime on or after {min}. äëü$]'
-          },
-          'max':
-          {
-            'summary' : '$[PX$]$[The datetime is later than the maximum date. äëü\'\\&$]',
-            'detail' : '$[PX$]$[The datetime must be less than or equal to {max}. äëü\'\\&äë$]',
-            'hint' : '$[PX$]$[Enter a datetime on or before {max}. äëü\'$]'
-          }
+          'summary': 'Spalte mit ID {columnId} für Spalten-Renderer nicht gefunden.',
+          'detail': 'Stellen Sie sicher, dass für den Spalten-Renderer eine Spalte mit der entsprechenden Spalten-ID vorhanden ist.'
+        },
+        'columnRendererOptionRequired':
+        {
+          'summary': 'Option {option} muss für den Spalten-Renderer angegeben werden.',
+          'detail': 'Geben Sie Option {option} für den Spalten-Renderer an.'
+        },
+        'dataInvalidType':
+        {
+          'summary': 'Ungültiger Datentyp.',
+          'detail': 'Geben Sie den entsprechenden Datentyp an.'
+        },
+        'dataUnitialized':
+        {
+          'summary': 'Daten sind leer oder nicht initialisiert.',
+          'detail': 'Geben Sie Daten an.'
+        },
+        'preActiveRowError':
+        {
+          'summary': 'Aktive Zeile aufgrund von Fehler nicht geändert.',
+          'detail': 'Fehlerdetail: {error}.'
+        },
+        'refreshRowInvalidRowIndex':
+        {
+          'summary': 'Ungültiger Wert für Zeilenindex.',
+          'detail': 'Zeilenindex: {rowIdx}.'
+        },
+        'tableDataSourceInstantiated':
+        {
+          'summary': 'oj.TableDataSource-Konstruktor aufgerufen.',
+          'detail': 'Instanziieren Sie oj.TableDataSource nicht. Verwenden Sie stattdessen eine der Unterklassen wie beispielsweise oj.ArrayTableDataSource oder oj.CollectionTableDataSource.'
         }
       },
-      'restriction':
+
+      'oj-ojTree':
       {
-        'date': 
-        {
-          'dayMetaData':
-          {
-            'summary': '$[PX$]$[The date is a disabled entry. ä$]',
-            'detail': '$[PX$]$[The date {value} should not be a disabled entry. äëü\'\\&ä$]'
-          }
-        }
+		'm_loading': 'Wird geladen...',
+		'm_newnode': 'Neuer Knoten',
+		'm_multisel': 'Mehrfachauswahl',
+		'm_edit': 'Bearbeiten',
+		'm_create': 'Erstellen',
+		'm_cut': 'Ausschneiden',
+		'm_copy': 'Kopieren',
+		'm_paste': 'Einfügen',
+		'm_remove': 'Entfernen',
+		'm_rename': 'Umbenennen',
+		'm_emptyText': 'Keine Daten'
       },
-      'regExp': 
+
+      'oj-ojPagingControl': 
       {
-        'summary': "$[PX$]$[The format is incorrect. ä$]",
-        'detail': "$[PX$]$[The value '{value}' must match this pattern: '{pattern}' äëü'\\&äëü'$]"
-      },
-      'required':
-      {
-        'summary': '$[PX$]$[A value is required. ä$]',
-        'detail': '$[PX$]$[You must enter a value. ä$]'
-      }
-    },
+        'labelAccPaging': 'Seitenumbruch',
+        'labelAccNavFirstPage': 'Erste Seite',
+        'labelAccNavLastPage': 'Letzte Seite',
+        'labelAccNavNextPage': 'Nächste Seite',
+        'labelAccNavPreviousPage': 'Vorherige Seite',
+        'labelAccNavPage': 'Seite',
+        'labelLoadMore':'Weitere anzeigen...',
+        'labelNavInputPage':'Seite',
+        'labelNavInputPageMax':'von {pageMax}',
+        'labelNavInputPageSummary':'({pageSummary})',
+        'msgItemRange':'{pageFrom}-{pageTo} von {pageTotal} Elementen',
+        'msgItemRangeUnknown':'{pageFrom}-{pageTo} Elemente',
+        'tipNavInputPage':'Gehe zu Seite',
+        'tipNavPageLink':'Gehe zu Seite {pageNum}',
+        'tipNavNextPage':'Weiter',
+        'tipNavPreviousPage':'Zurück',
+        'tipNavFirstPage':'Erste',
+        'tipNavLastPage':'Letzte',
         
-    'oj-ojInputDate':
-    {
-      'closeText': '$[PX$]$[Done ä$]',
-      'prevText': '$[PX$]$[Prev ä$]',
-      'nextText': '$[PX$]$[Next ä$]',
-      'currentText': '$[PX$]$[Today ä$]',
-      'weekHeader': '$[PX$]$[Wk ä$]',
-      'datePicker': '$[PX$]$[Date Picker ä$]',
-              'inputDetail': '$[PX$]$[Keydown for access to Calendar äë$]'
-    },
-        
-        'oj-ojInputTime':
+        'pageInvalid':
         {
-          'inputDetail': '$[PX$]$[Keydown for access to time drop down äëü$]'
+          'summary': 'Der eingegebene Seitenwert ist ungültig.',
+          'detail': 'Geben Sie einen Wert größer als 0 ein.'
         },
-
-    'oj-ojDataGrid':
-    {
-              'fetching': '$[PX$]$[Fetching Data... ä$]',
-              'empty': '$[PX$]$[There are no data. ä$]',
-              'resize': '$[PX$]$[Resize ä$]',
-              'resizeWidth': '$[PX$]$[Resize Width ä$]',
-              'resizeHeight': '$[PX$]$[Resize Height ä$]',
-              'sortRow': '$[PX$]$[Sort Row ä$]',
-              'sortRowAsc': '$[PX$]$[Sort Row Ascending ä$]',
-              'sortRowDsc': '$[PX$]$[Sort Row Descending ä$]',
-              'sortCol': '$[PX$]$[Sort Column ä$]',
-              'sortColAsc': '$[PX$]$[Sort Column Ascending ä$]',
-              'sortColDsc': '$[PX$]$[Sort Column Descending ä$]',
-              'summary-exact': '$[PX$]$[There are {0} rows and {1} coulmns äëü$]',
-              'summary-estimate': '$[PX$]$[There are approximately {0} rows and approximately {1} coulmns äëü\'\\&äëü\'\\&$]',
-              'expand': '$[PX$]$[Row expanded ä$]',
-              'collapse': '$[PX$]$[Row collapsed ä$]',
-              'cut': '$[PX$]$[Cut ä$]',
-              'paste': '$[PX$]$[Paste ä$]'
-    },
-    'oj-_ojLabel' :
-    {
-      'tooltipHelp':'$[PX$]$[Help ä$]',
-      'tooltipRequired':'$[PX$]$[Required ä$]'
-    },
-    'oj-ojInputNumber' :
-    {
-      'tooltipDecrement':'$[PX$]$[Decrement ä$]',
-      'tooltipIncrement':'$[PX$]$[Increment ä$]'
-    },
-    // translations used by the table component 
-    'oj-ojTable': 
-    {
-      'labelRequired':'$[PX$]$[Required ä$]',
-      'labelSelectRow':'$[PX$]$[Select Row ä$]',
-      'labelSelectColumn':'$[PX$]$[Select Column ä$]',
-      'labelSort': '$[PX$]$[Sort ä$]',
-                  'labelSortAsc': '$[PX$]$[Sort Ascending ä$]',
-                  'labelSortDsc': '$[PX$]$[Sort Descending ä$]',
-      'msgFetchingData':'$[PX$]$[Fetching Data... ä$]',
-      'msgNoData':'$[PX$]$[No data to display. ä$]',
-
-      'activeRowUnavailableIndex':
-      {
-        'summary': '$[PX$]$[Did not change active row due to unavailable row index. äëü\'\\&äëü$]',
-        'detail': '$[PX$]$[Unavailable row index: {0}. ä$]'
+        
+        'maxPageLinksInvalid':
+        {
+          'summary': 'Wert für maxPageLinks ist ungültig.',
+          'detail': 'Geben Sie einen Wert größer als 4 ein.'
+        }
       },
-      'columnRendererColumnNotFound':
-      {
-        'summary': '$[PX$]$[Cannot find column with id {0} for column renderer. äëü\'\\&äë$]',
-        'detail': '$[PX$]$[Please make sure a column with the matching column Id exists for the column renderer. äëü\'\\&äëü\'\\&äëü\'\\&$]'
+      
+      // DVT Components
+      'oj-ojChart': {
+        'labelDefaultGroupName': 'Gruppe {groupName}',
+        'labelSeries': 'Reihe: {seriesName}',
+        'labelGroup': 'Gruppe: {groupName}',
+        'labelValue': 'Wert: {value}',
+        'labelTargetValue': 'Ziel: {targetValue}',
+        'labelX': 'X: {x}',
+        'labelY': 'Y: {y}',
+        'labelZ': 'Z: {z}',
+        'labelLow': 'Niedrigst: {low}',
+        'labelHigh': 'Höchst: {high}',
+        'labelOther': 'Weitere',
+        
+        'tooltipPan': 'Schwenken',
+        'tooltipSelect': 'Auswahl in Laufschrift',
+        'tooltipZoom': 'Laufschriftzoom'
       },
-      'columnRendererOptionRequired':
-      {
-        'summary': '$[PX$]$[Option {0} is required for column renderer. äëü\'\\&$]',
-        'detail': '$[PX$]$[Please specify option {0} for column renderer. äëü\'\\&ä$]'
+      'oj-ojSunburst': {
+        'labelColor': 'Farbe',
+        'labelSize': 'Größe'
       },
-      'dataInvalidType':
-      {
-        'summary': '$[PX$]$[Invalid data type. ä$]',
-        'detail': '$[PX$]$[Please specify oj.Collection or oj.TableDataSource or ko.observableArray. äëü\'\\&äëü\'\\&äë$]'
+      'oj-ojTreemap': {
+        'labelColor': 'Farbe',
+        'labelSize': 'Größe'
       },
-      'dataUnitialized':
-      {
-        'summary': '$[PX$]$[Data is empty or uninitialized. äë$]',
-        'detail': '$[PX$]$[Please specify data. ä$]'
-      },
-      'preActiveRowError':
-      {
-        'summary': '$[PX$]$[Did not change active row due to error. äëü\'$]',
-        'detail': '$[PX$]$[Error detail: {0}. ä$]'
-      },
-      'refreshRowInvalidRowIndex':
-      {
-        'summary': '$[PX$]$[Invalid row index value. ä$]',
-        'detail': '$[PX$]$[Row index: {0}. ä$]'
+      'oj-dvtBaseComponent': {
+        'labelClearSelection': 'Auswahl löschen',
+        
+        'labelMonthShortJanuary': 'Jan',
+        'labelMonthShortFebruary': 'Feb',
+        'labelMonthShortMarch': 'Mrz',
+        'labelMonthShortApril': 'Apr',
+        'labelMonthShortMay': 'Mai',
+        'labelMonthShortJune': 'Jun',
+        'labelMonthShortJuly': 'Jul',
+        'labelMonthShortAugust': 'Aug',
+        'labelMonthShortSeptember': 'Sep',
+        'labelMonthShortOctober': 'Okt',
+        'labelMonthShortNovember': 'Nov',
+        'labelMonthShortDecember': 'Dez',
+      
+        'labelScalingSuffixThousand': 'K',
+        'labelScalingSuffixMillion': 'M',
+        'labelScalingSuffixBillion': 'B',
+        'labelScalingSuffixTrillion': 'T',
+        'labelScalingSuffixQuadrillion': 'Q',
+        
+        'msgNoData': 'Keine anzuzeigenden Daten',
+        
+        'notReadyToRender': {
+          'summary': "Diese Komponente muss vor dem Rendering mit einem sichtbaren Unterbaum von DOM verknüpft werden."
+        },
+        
+        'stateSelected': 'Gewählt',
+        'stateUnselected': 'Auswahl aufgehoben',
+        'stateMaximized': 'Maximiert',
+        'stateMinimized': 'Minimiert',
+        'stateExpanded': 'Eingeblendet',
+        'stateCollapsed': 'Ausgeblendet',
+        'stateIsolated': 'Isoliert',
+        'stateHidden': 'Ausgeblendet'
       }
-    },
-
-    'oj-ojTree':
-    {
-              'm_loading': '$[PX$]$[Loading... ä$]',
-              'm_newnode': '$[PX$]$[New Node ä$]',
-              'm_multisel': '$[PX$]$[Multiple Selection ä$]',
-              'm_edit': '$[PX$]$[Edit ä$]',
-              'm_create': '$[PX$]$[Create ä$]',
-              'm_cut': '$[PX$]$[Cut ä$]',
-              'm_copy': '$[PX$]$[Copy ä$]',
-              'm_paste': '$[PX$]$[Paste ä$]',
-              'm_remove': '$[PX$]$[Remove ä$]',
-              'm_rename': '$[PX$]$[Rename ä$]'
-    },
-
-    'oj-ojPagingControl': 
-    {
-      'labelAccPaging': '$[PX$]$[Pagination ä$]',
-      'labelAccNavFirstPage': '$[PX$]$[First Page ä$]',
-      'labelAccNavLastPage': '$[PX$]$[Last Page ä$]',
-      'labelAccNavNextPage': '$[PX$]$[Next Page ä$]',
-      'labelAccNavPreviousPage': '$[PX$]$[Previous Page ä$]',
-      'labelAccNavPage': '$[PX$]$[Page ä$]',
-      'labelLoadMore':'$[PX$]$[Show More... ä$]',
-      'labelNavInputPage':'$[PX$]$[Page ä$]',
-      'labelNavInputPageMax':'$[PX$]$[of {0} ä$]',
-      'labelNavInputPageSummary':'({0})',
-      'msgItemRange':'$[PX$]$[{0}-{1} of {2} items ä$]',
-      'msgItemRangeUnknown':'$[PX$]$[{0}-{1} items ä$]',
-      'tipNavInputPage':'$[PX$]$[Go To Page ä$]',
-      'tipNavPageLink':'$[PX$]$[Go To Page {0} ä$]',
-      'tipNavNextPage':'$[PX$]$[Next ä$]',
-      'tipNavPreviousPage':'$[PX$]$[Previous ä$]',
-      'tipNavFirstPage':'$[PX$]$[First ä$]',
-      'tipNavLastPage':'$[PX$]$[Last ä$]',
-      
-      'pageInvalid':
-      {
-        'summary': '$[PX$]$[The page value entered is invalid. äëü$]',
-        'detail': '$[PX$]$[Please enter a value greater than 0. äëü$]'
-      },
-      
-      'maxPageLinksInvalid':
-      {
-        'summary': '$[PX$]$[Value for maxPageLinks is invalid. äëü$]',
-        'detail': '$[PX$]$[Please enter a value greater than 4. äëü$]'
-      }
-    },
-    
-    // DVT Components
-    'oj-ojChart': {
-      'labelDefaultGroupName': '$[PX$]$[Group {0} ä$]',
-      'labelSeries': '$[PX$]$[Series: {0} ä$]',
-      'labelGroup': '$[PX$]$[Group: {0} ä$]',
-      'labelValue': '$[PX$]$[Value: {0} ä$]',
-      'labelTargetValue': '$[PX$]$[Target: {0} ä$]',
-      'labelX': 'X: {0}',
-      'labelY': 'Y: {0}',
-      'labelZ': 'Z: {0}',
-      'labelLow': '$[PX$]$[Low: {0} ä$]',
-      'labelHigh': '$[PX$]$[High: {0} ä$]',
-      'labelOther': '$[PX$]$[Other ä$]',
-      
-      'tooltipPan': '$[PX$]$[Pan ä$]',
-      'tooltipSelect': '$[PX$]$[Marquee select ä$]',
-      'tooltipZoom': '$[PX$]$[Marquee zoom ä$]'
-    },
-    'oj-ojSunburst': {
-      'labelColor': '$[PX$]$[Color ä$]',
-      'labelSize': '$[PX$]$[Size ä$]'
-    },
-    'oj-ojTreemap': {
-      'labelColor': '$[PX$]$[Color ä$]',
-      'labelSize': '$[PX$]$[Size ä$]'
-    },
-    'oj-ojDvtCommon': {
-      'labelClearSelection': '$[PX$]$[Clear Selection ä$]',
-      
-      'labelMonthShortJanuary': '$[PX$]$[Jan ä$]',
-      'labelMonthShortFebruary': '$[PX$]$[Feb ä$]',
-      'labelMonthShortMarch': '$[PX$]$[Mar ä$]',
-      'labelMonthShortApril': '$[PX$]$[Apr ä$]',
-      'labelMonthShortMay': '$[PX$]$[May ä$]',
-      'labelMonthShortJune': '$[PX$]$[Jun ä$]',
-      'labelMonthShortJuly': '$[PX$]$[Jul ä$]',
-      'labelMonthShortAugust': '$[PX$]$[Aug ä$]',
-      'labelMonthShortSeptember': '$[PX$]$[Sep ä$]',
-      'labelMonthShortOctober': '$[PX$]$[Oct ä$]',
-      'labelMonthShortNovember': '$[PX$]$[Nov ä$]',
-      'labelMonthShortDecember': '$[PX$]$[Dec ä$]',
-    
-      'labelScalingSuffixThousand': '$[PX$]$[K ä$]',
-      'labelScalingSuffixMillion': '$[PX$]$[M ä$]',
-      'labelScalingSuffixBillion': '$[PX$]$[B ä$]',
-      'labelScalingSuffixTrillion': '$[PX$]$[T ä$]',
-      'labelScalingSuffixQuadrillion': '$[PX$]$[Q ä$]',
-      
-      'msgNoData': '$[PX$]$[No data to display ä$]'
-    }
-}
-);
+});

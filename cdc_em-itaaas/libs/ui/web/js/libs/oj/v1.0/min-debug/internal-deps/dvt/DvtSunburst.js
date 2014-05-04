@@ -12,13 +12,13 @@ D.$DvtSunburstRotationEvent$$.TYPE = "sunburstRotation";
 D.$DvtSunburstRotationEvent$$.TYPE_INPUT = "sunburstRotationInput";
 D.$DvtSunburstRotationEvent$$.prototype.$getStartAngle$ = (0,D.$JSCompiler_get$$)("$_startAngle$");
 D.$DvtSunburstRotationEvent$$.prototype.getStartAngle = D.$DvtSunburstRotationEvent$$.prototype.$getStartAngle$;
-D.$DvtBaseSunburst$$ = function $$DvtBaseSunburst$$$($context$$377$$, $callback$$73$$, $callbackObj$$46$$) {
-  this.Init($context$$377$$, $callback$$73$$, $callbackObj$$46$$)
+D.$DvtBaseSunburst$$ = function $$DvtBaseSunburst$$$($context$$371$$, $callback$$73$$, $callbackObj$$46$$) {
+  this.Init($context$$371$$, $callback$$73$$, $callbackObj$$46$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtBaseSunburst$$, D.$DvtBaseTreeView$$, "DvtBaseSunburst");
 D.$JSCompiler_prototypeAlias$$ = D.$DvtBaseSunburst$$.prototype;
-D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$378$$, $callback$$74$$, $callbackObj$$47$$) {
-  D.$DvtBaseSunburst$$.$superclass$.Init.call(this, $context$$378$$, $callback$$74$$, $callbackObj$$47$$);
+D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$372$$, $callback$$74$$, $callbackObj$$47$$) {
+  D.$DvtBaseSunburst$$.$superclass$.Init.call(this, $context$$372$$, $callback$$74$$, $callbackObj$$47$$);
   this.$Defaults$ = new D.$DvtSunburstDefaults$$;
   this.$_angleExtent$ = 2 * window.Math.PI
 };
@@ -70,8 +70,8 @@ D.$JSCompiler_prototypeAlias$$.$Render$ = function $$JSCompiler_prototypeAlias$$
     (0,D.$JSCompiler_StaticMethods_RenderEmptyText$$)(this, $container$$38$$)
   }
 };
-D.$JSCompiler_prototypeAlias$$.$CreateEventManager$ = function $$JSCompiler_prototypeAlias$$$$CreateEventManager$$($view$$10$$, $context$$379$$, $callback$$75$$, $callbackObj$$48$$) {
-  return new D.$DvtSunburstEventManager$$($view$$10$$, $context$$379$$, $callback$$75$$, $callbackObj$$48$$)
+D.$JSCompiler_prototypeAlias$$.$CreateEventManager$ = function $$JSCompiler_prototypeAlias$$$$CreateEventManager$$($view$$10$$, $context$$373$$, $callback$$75$$, $callbackObj$$48$$) {
+  return new D.$DvtSunburstEventManager$$($view$$10$$, $context$$373$$, $callback$$75$$, $callbackObj$$48$$)
 };
 D.$JSCompiler_prototypeAlias$$.$GetDisplayAnimation$ = function $$JSCompiler_prototypeAlias$$$$GetDisplayAnimation$$($container$$39$$, $bounds$$43$$) {
   if("fan" === this.$AnimationOnDisplay$ && (0,D.$JSCompiler_StaticMethods_HasValidData$$)(this)) {
@@ -93,8 +93,8 @@ D.$JSCompiler_prototypeAlias$$.$OnAnimationEnd$ = function $$JSCompiler_prototyp
     var $availSpace$$24_selectedNodes$$3$$ = new D.$DvtRectangle$$(0, 0, this.$Width$, this.$Height$);
     this.$Layout$($availSpace$$24_selectedNodes$$3$$);
     this.$Render$(this.$_container$, $availSpace$$24_selectedNodes$$3$$);
-    for(var $availSpace$$24_selectedNodes$$3$$ = this.$_selectionHandler$ ? this.$_selectionHandler$.getSelection() : [], $i$$278$$ = 0;$i$$278$$ < $availSpace$$24_selectedNodes$$3$$.length;$i$$278$$++) {
-      $availSpace$$24_selectedNodes$$3$$[$i$$278$$].$setSelected$(D.$JSCompiler_alias_TRUE$$)
+    for(var $availSpace$$24_selectedNodes$$3$$ = this.$_selectionHandler$ ? this.$_selectionHandler$.getSelection() : [], $i$$274$$ = 0;$i$$274$$ < $availSpace$$24_selectedNodes$$3$$.length;$i$$274$$++) {
+      $availSpace$$24_selectedNodes$$3$$[$i$$274$$].$setSelected$(D.$JSCompiler_alias_TRUE$$)
     }
   }
   this.$_angleExtent$ < 2 * window.Math.PI && this.$_animateAngleExtent$(2 * window.Math.PI);
@@ -135,24 +135,24 @@ D.$JSCompiler_StaticMethods___endRotation$$ = function $$JSCompiler_StaticMethod
   $JSCompiler_StaticMethods___endRotation$self$$.$__dispatchEvent$(new D.$DvtSunburstRotationEvent$$($degrees$$3$$, D.$JSCompiler_alias_FALSE$$));
   $JSCompiler_StaticMethods___endRotation$self$$.$__dispatchEvent$(new D.$DvtSunburstRotationEvent$$($degrees$$3$$, D.$JSCompiler_alias_TRUE$$))
 };
-D.$JSCompiler_StaticMethods__calcAngle$$ = function $$JSCompiler_StaticMethods__calcAngle$$$($JSCompiler_StaticMethods__calcAngle$self$$, $x$$174$$, $y$$146$$) {
-  return window.Math.atan2($y$$146$$ - $JSCompiler_StaticMethods__calcAngle$self$$.$_translatePt$.y, $x$$174$$ - $JSCompiler_StaticMethods__calcAngle$self$$.$_translatePt$.x)
+D.$JSCompiler_StaticMethods__calcAngle$$ = function $$JSCompiler_StaticMethods__calcAngle$$$($JSCompiler_StaticMethods__calcAngle$self$$, $x$$172$$, $y$$144$$) {
+  return window.Math.atan2($y$$144$$ - $JSCompiler_StaticMethods__calcAngle$self$$.$_translatePt$.y, $x$$172$$ - $JSCompiler_StaticMethods__calcAngle$self$$.$_translatePt$.x)
 };
 D.$DvtSunburst$$ = (0,D.$JSCompiler_emptyFn$$)();
 (0,D.$goog$exportSymbol$$)("DvtSunburst", D.$DvtSunburst$$);
 D.$DvtObj$$.$createSubclass$(D.$DvtSunburst$$, D.$DvtBaseSunburst$$, "DvtSunburst");
-D.$DvtSunburst$$.newInstance = function $$DvtSunburst$$$newInstance$($context$$380$$, $callback$$76$$, $callbackObj$$49$$) {
+D.$DvtSunburst$$.newInstance = function $$DvtSunburst$$$newInstance$($context$$374$$, $callback$$76$$, $callbackObj$$49$$) {
   var $component$$3$$ = new D.$DvtSunburst$$;
-  $component$$3$$.Init($context$$380$$, $callback$$76$$, $callbackObj$$49$$);
+  $component$$3$$.Init($context$$374$$, $callback$$76$$, $callbackObj$$49$$);
   return $component$$3$$
 };
 D.$DvtSunburst$$.getDefaults = function $$DvtSunburst$$$getDefaults$($skin$$10$$) {
   return(0,D.$JSCompiler_StaticMethods_getDefaults$$)(new D.$DvtSunburstDefaults$$, $skin$$10$$)
 };
-D.$DvtSunburst$$.prototype.$render$ = function $$DvtSunburst$$$$$render$$($options$$28_xmlString$$12$$, $width$$53$$, $height$$47$$) {
+D.$DvtSunburst$$.prototype.$render$ = function $$DvtSunburst$$$$$render$$($options$$28_xmlString$$12$$, $width$$52$$, $height$$45$$) {
   $options$$28_xmlString$$12$$ ? (this.$Options$ = this.$Defaults$.$calcOptions$($options$$28_xmlString$$12$$), D.$DvtAgent$$.$isEnvironmentBrowser$() || (this.$Options$.animationOnDisplay = "none", this.$Options$.animationOnDataChange = "none")) : this.$Options$ || (this.$Options$ = (0,D.$JSCompiler_StaticMethods_GetDefaults$$)(this));
   $options$$28_xmlString$$12$$ = (new D.$DvtSunburstJsonUtils$$).$toXml$(this.$Options$);
-  D.$DvtSunburst$$.$superclass$.$render$.call(this, $options$$28_xmlString$$12$$, $width$$53$$, $height$$47$$)
+  D.$DvtSunburst$$.$superclass$.$render$.call(this, $options$$28_xmlString$$12$$, $width$$52$$, $height$$45$$)
 };
 D.$DvtSunburst$$.prototype.render = D.$DvtSunburst$$.prototype.$render$;
 D.$DvtSunburstParser$$ = function $$DvtSunburstParser$$$($sunburst$$) {
@@ -162,19 +162,19 @@ D.$DvtObj$$.$createSubclass$(D.$DvtSunburstParser$$, D.$DvtBaseTreeParser$$, "Dv
 D.$DvtSunburstParser$$.prototype.$CreateNode$ = function $$DvtSunburstParser$$$$$CreateNode$$($treeView$$10$$, $props$$27$$, $templates$$5$$) {
   return new D.$DvtSunburstNode$$($treeView$$10$$, $props$$27$$, $templates$$5$$)
 };
-D.$DvtSunburstParser$$.prototype.$ParseRootAttributes$ = function $$DvtSunburstParser$$$$$ParseRootAttributes$$($xmlNode$$57$$) {
-  var $ret$$84$$ = D.$DvtSunburstParser$$.$superclass$.$ParseRootAttributes$.call(this, $xmlNode$$57$$);
-  $ret$$84$$.rotation = $xmlNode$$57$$.$getAttr$("r");
-  $ret$$84$$.$startAngle$ = $xmlNode$$57$$.$getAttr$("sa");
+D.$DvtSunburstParser$$.prototype.$ParseRootAttributes$ = function $$DvtSunburstParser$$$$$ParseRootAttributes$$($xmlNode$$56$$) {
+  var $ret$$84$$ = D.$DvtSunburstParser$$.$superclass$.$ParseRootAttributes$.call(this, $xmlNode$$56$$);
+  $ret$$84$$.rotation = $xmlNode$$56$$.$getAttr$("r");
+  $ret$$84$$.$startAngle$ = $xmlNode$$56$$.$getAttr$("sa");
   if($ret$$84$$.$startAngle$ === D.$JSCompiler_alias_NULL$$ || (0,window.isNaN)($ret$$84$$.$startAngle$)) {
     $ret$$84$$.$startAngle$ = 90
   }
   return $ret$$84$$
 };
-D.$DvtSunburstParser$$.prototype.$ParseNodeAttributes$ = function $$DvtSunburstParser$$$$$ParseNodeAttributes$$($xmlNode$$58$$) {
-  var $ret$$85$$ = D.$DvtSunburstParser$$.$superclass$.$ParseNodeAttributes$.call(this, $xmlNode$$58$$);
-  $ret$$85$$.$labelHalign$ = $xmlNode$$58$$.$getAttr$("ha");
-  $ret$$85$$.$radius$ = $xmlNode$$58$$.$getAttr$("r");
+D.$DvtSunburstParser$$.prototype.$ParseNodeAttributes$ = function $$DvtSunburstParser$$$$$ParseNodeAttributes$$($xmlNode$$57$$) {
+  var $ret$$85$$ = D.$DvtSunburstParser$$.$superclass$.$ParseNodeAttributes$.call(this, $xmlNode$$57$$);
+  $ret$$85$$.$labelHalign$ = $xmlNode$$57$$.$getAttr$("ha");
+  $ret$$85$$.$radius$ = $xmlNode$$57$$.$getAttr$("r");
   return $ret$$85$$
 };
 D.$DvtSunburstParser$$.prototype.$ParseAdditionalNodeStyles$ = function $$DvtSunburstParser$$$$$ParseAdditionalNodeStyles$$($nodeStyle$$3$$, $nodeHoverStyle$$3$$, $nodeSelectedStyle$$3$$, $styles$$10$$) {
@@ -210,7 +210,7 @@ D.$JSCompiler_prototypeAlias$$.$render$ = function $$JSCompiler_prototypeAlias$$
       this.$_text$ = this.$_createTextNode$(this.$_shape$), this.$_text$ != D.$JSCompiler_alias_NULL$$ && (this.$_shape$.$addChild$(this.$_text$), this.$_pattern$ && ($afContext$$7_dims$$34_sqrt2$$ = this.$_text$.$measureDimensions$(), this.$_textBackground$ = new D.$DvtRect$$(this.$_view$.$_context$, $afContext$$7_dims$$34_sqrt2$$.x, $afContext$$7_dims$$34_sqrt2$$.y, $afContext$$7_dims$$34_sqrt2$$.$w$, $afContext$$7_dims$$34_sqrt2$$.$h$), this.$_textBackground$.$setSolidFill$("#FFFFFF"), this.$_textBackground$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$), 
       this.$_shape$.$addChild$(this.$_textBackground$), $aw$$4_matrix$$13$$ = this.$_text$.$getMatrix$(), (0,D.$JSCompiler_StaticMethods_isIdentity$$)($aw$$4_matrix$$13$$) || this.$_textBackground$.$setMatrix$($aw$$4_matrix$$13$$), this.$_shape$.$addChild$(this.$_text$)))
     }
-    (0,D.$JSCompiler_StaticMethods_setAriaRole$$)(this.$_shape$);
+    (0,D.$JSCompiler_StaticMethods_setAriaRole$$)(this.$_shape$, "img");
     (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)(this.$_shape$, "label", this.$_datatip$);
     this.$renderChildren$($container$$125$$)
   }
@@ -224,13 +224,13 @@ D.$JSCompiler_prototypeAlias$$.$showHoverEffect$ = function $$JSCompiler_prototy
 D.$JSCompiler_prototypeAlias$$.$hideHoverEffect$ = function $$JSCompiler_prototypeAlias$$$$hideHoverEffect$$() {
   this.$_shape$ && (this.$_hasLayout$ && !this.$isShowingKeyboardFocusEffect$()) && (this.$_shape$.$hideHoverEffect$(), !this.$isSelected$() && this.$_nodeContainer$ && this.$_nodeContainer$.$addChild$(this.$_shape$))
 };
-D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_prototypeAlias$$$$getNextNavigable$$($event$$510_next$$9$$) {
-  var $keyCode$$27_lastVisitedChild$$, $lastVisitedMidAngle_navigables$$7$$, $i$$inline_5772_idx$$32$$, $root$$19$$;
-  if($event$$510_next$$9$$.type == D.$DvtMouseEvent$CLICK$$) {
-    return D.$DvtSunburstNode$$.$superclass$.$getNextNavigable$.call(this, $event$$510_next$$9$$)
+D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_prototypeAlias$$$$getNextNavigable$$($event$$501_next$$9$$) {
+  var $keyCode$$26_lastVisitedChild$$, $lastVisitedMidAngle_navigables$$7$$, $i$$inline_5714_idx$$32$$, $root$$19$$;
+  if($event$$501_next$$9$$.type == D.$DvtMouseEvent$CLICK$$) {
+    return D.$DvtSunburstNode$$.$superclass$.$getNextNavigable$.call(this, $event$$501_next$$9$$)
   }
-  $keyCode$$27_lastVisitedChild$$ = $event$$510_next$$9$$.keyCode;
-  if(32 == $keyCode$$27_lastVisitedChild$$ && $event$$510_next$$9$$.ctrlKey) {
+  $keyCode$$26_lastVisitedChild$$ = $event$$501_next$$9$$.keyCode;
+  if(32 == $keyCode$$26_lastVisitedChild$$ && $event$$501_next$$9$$.ctrlKey) {
     return this
   }
   for($root$$19$$ = this;$root$$19$$.$_parent$;) {
@@ -238,54 +238,54 @@ D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_protot
   }
   $lastVisitedMidAngle_navigables$$7$$ = (0,D.$JSCompiler_StaticMethods_GetNodesAtDepth$$)(this, $root$$19$$, (0,D.$JSCompiler_StaticMethods_GetDepth$$)(this));
   a: {
-    for($i$$inline_5772_idx$$32$$ = 0;$i$$inline_5772_idx$$32$$ < $lastVisitedMidAngle_navigables$$7$$.length;$i$$inline_5772_idx$$32$$++) {
-      if(this === $lastVisitedMidAngle_navigables$$7$$[$i$$inline_5772_idx$$32$$]) {
+    for($i$$inline_5714_idx$$32$$ = 0;$i$$inline_5714_idx$$32$$ < $lastVisitedMidAngle_navigables$$7$$.length;$i$$inline_5714_idx$$32$$++) {
+      if(this === $lastVisitedMidAngle_navigables$$7$$[$i$$inline_5714_idx$$32$$]) {
         break a
       }
     }
-    $i$$inline_5772_idx$$32$$ = -1
+    $i$$inline_5714_idx$$32$$ = -1
   }
   var $midAngle$$1$$ = this.$_startAngle$ + this.$_angleExtent$ / 2, $midAngle$$1$$ = (0,D.$DvtSunburstNode$_normalizedRadToDeg$$)($midAngle$$1$$);
-  switch($keyCode$$27_lastVisitedChild$$) {
+  switch($keyCode$$26_lastVisitedChild$$) {
     case 38:
       if(this === $root$$19$$ || 180 < $midAngle$$1$$) {
-        if($keyCode$$27_lastVisitedChild$$ = this.$_lastVisitedChild$) {
-          if($lastVisitedMidAngle_navigables$$7$$ = $keyCode$$27_lastVisitedChild$$.$_startAngle$ + $keyCode$$27_lastVisitedChild$$.$_angleExtent$ / 2, $lastVisitedMidAngle_navigables$$7$$ = (0,D.$DvtSunburstNode$_normalizedRadToDeg$$)($lastVisitedMidAngle_navigables$$7$$), 180 < $lastVisitedMidAngle_navigables$$7$$) {
-            return $keyCode$$27_lastVisitedChild$$
+        if($keyCode$$26_lastVisitedChild$$ = this.$_lastVisitedChild$) {
+          if($lastVisitedMidAngle_navigables$$7$$ = $keyCode$$26_lastVisitedChild$$.$_startAngle$ + $keyCode$$26_lastVisitedChild$$.$_angleExtent$ / 2, $lastVisitedMidAngle_navigables$$7$$ = (0,D.$DvtSunburstNode$_normalizedRadToDeg$$)($lastVisitedMidAngle_navigables$$7$$), 180 < $lastVisitedMidAngle_navigables$$7$$) {
+            return $keyCode$$26_lastVisitedChild$$
           }
         }
-        $event$$510_next$$9$$ = (0,D.$DvtKeyboardHandler$getNextAdjacentNavigable$$)(this, $event$$510_next$$9$$, (0,D.$JSCompiler_StaticMethods_getDescendantNodes$$)(this))
+        $event$$501_next$$9$$ = (0,D.$DvtKeyboardHandler$getNextAdjacentNavigable$$)(this, $event$$501_next$$9$$, (0,D.$JSCompiler_StaticMethods_getDescendantNodes$$)(this))
       }else {
-        $event$$510_next$$9$$ = (0,D.$JSCompiler_StaticMethods__navigateToParent$$)(this)
+        $event$$501_next$$9$$ = (0,D.$JSCompiler_StaticMethods__navigateToParent$$)(this)
       }
       break;
     case 40:
       if(this === $root$$19$$ || 0 <= $midAngle$$1$$ && 180 >= $midAngle$$1$$) {
-        if($keyCode$$27_lastVisitedChild$$ = this.$_lastVisitedChild$) {
-          if($lastVisitedMidAngle_navigables$$7$$ = $keyCode$$27_lastVisitedChild$$.$_startAngle$ + $keyCode$$27_lastVisitedChild$$.$_angleExtent$ / 2, $lastVisitedMidAngle_navigables$$7$$ = (0,D.$DvtSunburstNode$_normalizedRadToDeg$$)($lastVisitedMidAngle_navigables$$7$$), 0 <= $lastVisitedMidAngle_navigables$$7$$ && 180 >= $lastVisitedMidAngle_navigables$$7$$) {
-            return $keyCode$$27_lastVisitedChild$$
+        if($keyCode$$26_lastVisitedChild$$ = this.$_lastVisitedChild$) {
+          if($lastVisitedMidAngle_navigables$$7$$ = $keyCode$$26_lastVisitedChild$$.$_startAngle$ + $keyCode$$26_lastVisitedChild$$.$_angleExtent$ / 2, $lastVisitedMidAngle_navigables$$7$$ = (0,D.$DvtSunburstNode$_normalizedRadToDeg$$)($lastVisitedMidAngle_navigables$$7$$), 0 <= $lastVisitedMidAngle_navigables$$7$$ && 180 >= $lastVisitedMidAngle_navigables$$7$$) {
+            return $keyCode$$26_lastVisitedChild$$
           }
         }
-        $event$$510_next$$9$$ = (0,D.$DvtKeyboardHandler$getNextAdjacentNavigable$$)(this, $event$$510_next$$9$$, (0,D.$JSCompiler_StaticMethods_getDescendantNodes$$)(this))
+        $event$$501_next$$9$$ = (0,D.$DvtKeyboardHandler$getNextAdjacentNavigable$$)(this, $event$$501_next$$9$$, (0,D.$JSCompiler_StaticMethods_getDescendantNodes$$)(this))
       }else {
-        $event$$510_next$$9$$ = (0,D.$JSCompiler_StaticMethods__navigateToParent$$)(this)
+        $event$$501_next$$9$$ = (0,D.$JSCompiler_StaticMethods__navigateToParent$$)(this)
       }
       break;
     case 37:
-      $event$$510_next$$9$$ = 1 == $lastVisitedMidAngle_navigables$$7$$.length ? this : 0 == $i$$inline_5772_idx$$32$$ ? $lastVisitedMidAngle_navigables$$7$$[$lastVisitedMidAngle_navigables$$7$$.length - 1] : $lastVisitedMidAngle_navigables$$7$$[$i$$inline_5772_idx$$32$$ - 1];
+      $event$$501_next$$9$$ = 1 == $lastVisitedMidAngle_navigables$$7$$.length ? this : 0 == $i$$inline_5714_idx$$32$$ ? $lastVisitedMidAngle_navigables$$7$$[$lastVisitedMidAngle_navigables$$7$$.length - 1] : $lastVisitedMidAngle_navigables$$7$$[$i$$inline_5714_idx$$32$$ - 1];
       break;
     case 39:
-      $event$$510_next$$9$$ = 1 == $lastVisitedMidAngle_navigables$$7$$.length ? this : $i$$inline_5772_idx$$32$$ == $lastVisitedMidAngle_navigables$$7$$.length - 1 ? $lastVisitedMidAngle_navigables$$7$$[0] : $lastVisitedMidAngle_navigables$$7$$[$i$$inline_5772_idx$$32$$ + 1];
+      $event$$501_next$$9$$ = 1 == $lastVisitedMidAngle_navigables$$7$$.length ? this : $i$$inline_5714_idx$$32$$ == $lastVisitedMidAngle_navigables$$7$$.length - 1 ? $lastVisitedMidAngle_navigables$$7$$[0] : $lastVisitedMidAngle_navigables$$7$$[$i$$inline_5714_idx$$32$$ + 1];
       break;
     default:
-      $event$$510_next$$9$$ = this
+      $event$$501_next$$9$$ = this
   }
-  (0,D.$JSCompiler_StaticMethods_MarkAsLastVisitedChild$$)($event$$510_next$$9$$);
-  return $event$$510_next$$9$$
+  (0,D.$JSCompiler_StaticMethods_MarkAsLastVisitedChild$$)($event$$501_next$$9$$);
+  return $event$$501_next$$9$$
 };
 D.$JSCompiler_StaticMethods__navigateToParent$$ = function $$JSCompiler_StaticMethods__navigateToParent$$$($JSCompiler_StaticMethods__navigateToParent$self_next$$10$$) {
-  var $parent$$65$$ = $JSCompiler_StaticMethods__navigateToParent$self_next$$10$$.$_parent$;
-  $parent$$65$$ && ($JSCompiler_StaticMethods__navigateToParent$self_next$$10$$ = $parent$$65$$, (0,D.$JSCompiler_StaticMethods_MarkAsLastVisitedChild$$)($parent$$65$$));
+  var $parent$$61$$ = $JSCompiler_StaticMethods__navigateToParent$self_next$$10$$.$_parent$;
+  $parent$$61$$ && ($JSCompiler_StaticMethods__navigateToParent$self_next$$10$$ = $parent$$61$$, (0,D.$JSCompiler_StaticMethods_MarkAsLastVisitedChild$$)($parent$$61$$));
   (0,D.$JSCompiler_StaticMethods_MarkAsLastVisitedChild$$)($JSCompiler_StaticMethods__navigateToParent$self_next$$10$$);
   return $JSCompiler_StaticMethods__navigateToParent$self_next$$10$$
 };
@@ -318,8 +318,8 @@ D.$JSCompiler_prototypeAlias$$.$GetFill$ = function $$JSCompiler_prototypeAlias$
   return this.$_bArtificialRoot$ ? (0,D.$DvtSolidFill$invisibleFill$$)() : D.$DvtSunburstNode$$.$superclass$.$GetFill$.call(this)
 };
 D.$JSCompiler_prototypeAlias$$.$GetAnimationParams$ = function $$JSCompiler_prototypeAlias$$$$GetAnimationParams$$() {
-  var $r$$77$$ = D.$DvtColorUtils$$.$getRed$(this.$_color$), $g$$23$$ = D.$DvtColorUtils$$.$getGreen$(this.$_color$), $b$$50$$ = D.$DvtColorUtils$$.$getBlue$(this.$_color$);
-  return[this.$_innerRadius$, this.$_outerRadius$, this.$_startAngle$, this.$_angleExtent$, $r$$77$$, $g$$23$$, $b$$50$$]
+  var $r$$77$$ = D.$DvtColorUtils$$.$getRed$(this.$_color$), $g$$22$$ = D.$DvtColorUtils$$.$getGreen$(this.$_color$), $b$$50$$ = D.$DvtColorUtils$$.$getBlue$(this.$_color$);
+  return[this.$_innerRadius$, this.$_outerRadius$, this.$_startAngle$, this.$_angleExtent$, $r$$77$$, $g$$22$$, $b$$50$$]
 };
 D.$JSCompiler_prototypeAlias$$.$SetAnimationParams$ = function $$JSCompiler_prototypeAlias$$$$SetAnimationParams$$($params$$46$$) {
   this.$setLayoutParams$($params$$46$$[0], $params$$46$$[1], $params$$46$$[2], $params$$46$$[3]);
@@ -329,9 +329,9 @@ D.$JSCompiler_prototypeAlias$$.$SetAnimationParams$ = function $$JSCompiler_prot
 D.$JSCompiler_prototypeAlias$$.$animateUpdate$ = function $$JSCompiler_prototypeAlias$$$$animateUpdate$$($handler$$55$$, $oldNode$$5$$) {
   $oldNode$$5$$.$_hasLayout$ && 0 < $oldNode$$5$$.$_angleExtent$ ? D.$DvtSunburstNode$$.$superclass$.$animateUpdate$.call(this, $handler$$55$$, $oldNode$$5$$) : this.$animateInsert$($handler$$55$$)
 };
-D.$JSCompiler_prototypeAlias$$.contains = function $$JSCompiler_prototypeAlias$$$contains$($x$$287$$, $y$$256$$) {
-  var $angle$$42$$ = (0,D.$DvtSunburstNode$_calcAngle$$)($x$$287$$, $y$$256$$);
-  return window.Math.sqrt($x$$287$$ * $x$$287$$ + $y$$256$$ * $y$$256$$) >= this.$_innerRadius$ && window.Math.sqrt($x$$287$$ * $x$$287$$ + $y$$256$$ * $y$$256$$) <= this.$_outerRadius$ && (0,D.$JSCompiler_StaticMethods_ContainsAngle$$)(this, $angle$$42$$)
+D.$JSCompiler_prototypeAlias$$.contains = function $$JSCompiler_prototypeAlias$$$contains$($x$$285$$, $y$$254$$) {
+  var $angle$$42$$ = (0,D.$DvtSunburstNode$_calcAngle$$)($x$$285$$, $y$$254$$);
+  return window.Math.sqrt($x$$285$$ * $x$$285$$ + $y$$254$$ * $y$$254$$) >= this.$_innerRadius$ && window.Math.sqrt($x$$285$$ * $x$$285$$ + $y$$254$$ * $y$$254$$) <= this.$_outerRadius$ && (0,D.$JSCompiler_StaticMethods_ContainsAngle$$)(this, $angle$$42$$)
 };
 D.$JSCompiler_StaticMethods_ContainsAngle$$ = function $$JSCompiler_StaticMethods_ContainsAngle$$$($JSCompiler_StaticMethods_ContainsAngle$self$$, $angle$$43$$) {
   for(;$angle$$43$$ < $JSCompiler_StaticMethods_ContainsAngle$self$$.$_startAngle$;) {
@@ -345,8 +345,8 @@ D.$JSCompiler_StaticMethods_ContainsAngle$$ = function $$JSCompiler_StaticMethod
 D.$DvtSunburstNode$_calcPointOnArc$$ = function $$DvtSunburstNode$_calcPointOnArc$$$($radius$$20$$, $angle$$44$$) {
   return{x:window.Math.cos($angle$$44$$) * $radius$$20$$, y:window.Math.sin($angle$$44$$) * $radius$$20$$}
 };
-D.$DvtSunburstNode$_calcAngle$$ = function $$DvtSunburstNode$_calcAngle$$$($x$$289$$, $y$$258$$) {
-  var $angle$$45$$ = window.Math.atan2($y$$258$$, $x$$289$$);
+D.$DvtSunburstNode$_calcAngle$$ = function $$DvtSunburstNode$_calcAngle$$$($x$$287$$, $y$$256$$) {
+  var $angle$$45$$ = window.Math.atan2($y$$256$$, $x$$287$$);
   0 > $angle$$45$$ ? $angle$$45$$ += D.$DvtSunburstNode$TWO_PI$$ : $angle$$45$$ > D.$DvtSunburstNode$TWO_PI$$ && ($angle$$45$$ -= D.$DvtSunburstNode$TWO_PI$$);
   return $angle$$45$$
 };
@@ -379,107 +379,107 @@ D.$JSCompiler_StaticMethods__createPathCmd$$ = function $$JSCompiler_StaticMetho
   $JSCompiler_StaticMethods__createPathCmd$self$$.$_angleExtent$ / 2, 0, $p4$$3$$.x, $p4$$3$$.y)), $cmd$$11_p1$$6$$ += window.DvtPathUtils.closePath());
   return $cmd$$11_p1$$6$$
 };
-D.$DvtSunburstNode$$.prototype.$_createTextNode$ = function $$DvtSunburstNode$$$$$_createTextNode$$($JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$) {
-  if(!this.$_textStr$ || !$JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ || !this.$_labelDisplay$ || "off" == this.$_labelDisplay$) {
+D.$DvtSunburstNode$$.prototype.$_createTextNode$ = function $$DvtSunburstNode$$$$$_createTextNode$$($JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$) {
+  if(!this.$_textStr$ || !$JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ || !this.$_labelDisplay$ || "off" == this.$_labelDisplay$) {
     return D.$JSCompiler_alias_NULL$$
   }
-  var $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = D.$JSCompiler_alias_FALSE$$;
-  "auto" == this.$_labelDisplay$ ? $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = !D.$DvtAgent$$.$isPlatformIE$() && D.$DvtAgent$$.$getOS$() == D.$DvtAgent$$.$WINDOWS_OS$ ? D.$JSCompiler_alias_FALSE$$ : D.$JSCompiler_alias_TRUE$$ : "rotated" == this.$_labelDisplay$ && ($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = D.$JSCompiler_alias_TRUE$$);
-  if($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ && this.$_angleExtent$ < 2 * window.Math.PI) {
-    var $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ = window.Math.max(this.$_innerRadius$, 10), $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$ = this.$_outerRadius$ - $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ - 6, $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$ = 1.1 * this.$_angleExtent$ * ($angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ + 
+  var $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = D.$JSCompiler_alias_FALSE$$;
+  "auto" == this.$_labelDisplay$ ? $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = !D.$DvtAgent$$.$isPlatformIE$() && D.$DvtAgent$$.$getOS$() == D.$DvtAgent$$.$WINDOWS_OS$ ? D.$JSCompiler_alias_FALSE$$ : D.$JSCompiler_alias_TRUE$$ : "rotated" == this.$_labelDisplay$ && ($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = D.$JSCompiler_alias_TRUE$$);
+  if($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ && this.$_angleExtent$ < 2 * window.Math.PI) {
+    var $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ = window.Math.max(this.$_innerRadius$, 10), $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$ = this.$_outerRadius$ - $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ - 6, $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$ = 1.1 * this.$_angleExtent$ * ($angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ + 
     6);
-    if(6 >= $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$) {
-      $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ = D.$JSCompiler_alias_NULL$$
+    if(6 >= $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$) {
+      $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ = D.$JSCompiler_alias_NULL$$
     }else {
-      if($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = new D.$DvtOutputText$$(this.$_view$.$_context$, this.$_textStr$, 0, 0), $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.$setFontSize$((0,D.$JSCompiler_StaticMethods_GetTextSize$$)(this)), (0,D.$JSCompiler_StaticMethods_ApplyLabelTextStyle$$)(this, $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$), D.$DvtTextUtils$$.$fitText$($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$, 
-      $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$, $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$, $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$)) {
-        $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$ = ($angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ + this.$_outerRadius$) / 2;
+      if($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = new D.$DvtOutputText$$(this.$_view$.$_context$, this.$_textStr$, 0, 0), $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.$setFontSize$((0,D.$JSCompiler_StaticMethods_GetTextSize$$)(this)), (0,D.$JSCompiler_StaticMethods_ApplyLabelTextStyle$$)(this, $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$), D.$DvtTextUtils$$.$fitText$($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$, 
+      $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$, $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$, $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$)) {
+        $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$ = ($angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ + this.$_outerRadius$) / 2;
         if("s" == this.$_labelHalign$ || "e" == this.$_labelHalign$) {
-          $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$.$addChild$($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$), $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ = $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.$getDimensions$().$w$, "s" == this.$_labelHalign$ ? $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$ = $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ + 
-          4.5 + $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ / 2 : "e" == this.$_labelHalign$ && ($anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$ = $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ + $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$ - 4.5 - $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ / 2)
+          $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$.$addChild$($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$), $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ = $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.$getDimensions$().$w$, "s" == this.$_labelHalign$ ? $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$ = $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ + 
+          4.5 + $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ / 2 : "e" == this.$_labelHalign$ && ($anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$ = $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ + $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$ - 4.5 - $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ / 2)
         }
-        $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ = (0,D.$DvtSunburstNode$_calcPointOnArc$$)($anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$, this.$_startAngle$ + this.$_angleExtent$ / 2);
-        $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.$alignCenter$();
-        $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.$alignMiddle$();
-        $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ = this.$_startAngle$ + this.$_angleExtent$ / 2;
-        $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ = $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ >= D.$DvtSunburstNode$TWO_PI$$ ? $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ - D.$DvtSunburstNode$TWO_PI$$ : $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$;
-        $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ = 0 > $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ ? $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ + D.$DvtSunburstNode$TWO_PI$$ : $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$;
-        $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ > 0.5 * window.Math.PI && $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ < 1.5 * window.Math.PI && ($angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ += window.Math.PI);
-        $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.$setRotation$($angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$);
-        (0,D.$JSCompiler_StaticMethods_setTranslate$$)($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$, $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$.x, $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$.y);
-        $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$);
-        $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ = $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$
+        $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ = (0,D.$DvtSunburstNode$_calcPointOnArc$$)($anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$, this.$_startAngle$ + this.$_angleExtent$ / 2);
+        $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.$alignCenter$();
+        $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.$alignMiddle$();
+        $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ = this.$_startAngle$ + this.$_angleExtent$ / 2;
+        $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ = $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ >= D.$DvtSunburstNode$TWO_PI$$ ? $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ - D.$DvtSunburstNode$TWO_PI$$ : $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$;
+        $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ = 0 > $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ ? $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ + D.$DvtSunburstNode$TWO_PI$$ : $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$;
+        $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ > 0.5 * window.Math.PI && $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ < 1.5 * window.Math.PI && ($angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ += window.Math.PI);
+        $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.$setRotation$($angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$);
+        (0,D.$JSCompiler_StaticMethods_setTranslate$$)($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$, $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$.x, $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$.y);
+        $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$);
+        $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ = $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$
       }else {
-        $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ = D.$JSCompiler_alias_NULL$$
+        $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ = D.$JSCompiler_alias_NULL$$
       }
     }
   }else {
     if(0 == this.$_innerRadius$) {
-      $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = {x:0, y:0}
+      $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = {x:0, y:0}
     }else {
-      if($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = (0,D.$DvtSunburstNode$_calcPointOnArc$$)((this.$_innerRadius$ + this.$_outerRadius$) / 2, this.$_startAngle$ + this.$_angleExtent$ / 2), $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ = 3 * (0,D.$JSCompiler_StaticMethods_GetTextSize$$)(this) / 2, $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$ = (0,D.$DvtSunburstNode$_calcAngle$$)($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.x + 
-      $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ / 2, $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.y), !(0,D.$JSCompiler_StaticMethods_ContainsAngle$$)(this, (0,D.$DvtSunburstNode$_calcAngle$$)($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.x - $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ / 2, $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.y)) || 
-      !(0,D.$JSCompiler_StaticMethods_ContainsAngle$$)(this, $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$)) {
-        $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = D.$JSCompiler_alias_NULL$$
+      if($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = (0,D.$DvtSunburstNode$_calcPointOnArc$$)((this.$_innerRadius$ + this.$_outerRadius$) / 2, this.$_startAngle$ + this.$_angleExtent$ / 2), $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ = 3 * (0,D.$JSCompiler_StaticMethods_GetTextSize$$)(this) / 2, $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$ = (0,D.$DvtSunburstNode$_calcAngle$$)($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.x + 
+      $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ / 2, $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.y), !(0,D.$JSCompiler_StaticMethods_ContainsAngle$$)(this, (0,D.$DvtSunburstNode$_calcAngle$$)($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.x - $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ / 2, $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.y)) || 
+      !(0,D.$JSCompiler_StaticMethods_ContainsAngle$$)(this, $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$)) {
+        $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = D.$JSCompiler_alias_NULL$$
       }
     }
-    if($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$) {
-      $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ = new D.$DvtOutputText$$(this.$_view$.$_context$, this.$_textStr$, $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.x, $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.y, D.$JSCompiler_alias_NULL$$);
-      $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$.$setFontSize$((0,D.$JSCompiler_StaticMethods_GetTextSize$$)(this));
-      (0,D.$JSCompiler_StaticMethods_ApplyLabelTextStyle$$)(this, $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$);
-      $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$.$alignCenter$();
-      $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$.$alignMiddle$();
-      $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$);
-      for(var $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$ = D.$DvtTextUtils$$.$guessTextDimensions$($angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$), $x2$$inline_5793$$ = $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$ = $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.x, $y1$$inline_5794$$ = $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.y - 
-      $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$.$h$ / 2, $y2$$inline_5795$$ = $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.y + $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$.$h$ / 2;this.contains($anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$, $y1$$inline_5794$$) && this.contains($anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$, $y2$$inline_5795$$);) {
-        $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$--
+    if($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$) {
+      $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ = new D.$DvtOutputText$$(this.$_view$.$_context$, this.$_textStr$, $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.x, $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.y, D.$JSCompiler_alias_NULL$$);
+      $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$.$setFontSize$((0,D.$JSCompiler_StaticMethods_GetTextSize$$)(this));
+      (0,D.$JSCompiler_StaticMethods_ApplyLabelTextStyle$$)(this, $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$);
+      $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$.$alignCenter$();
+      $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$.$alignMiddle$();
+      $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$);
+      for(var $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$ = D.$DvtTextUtils$$.$guessTextDimensions$($angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$), $x2$$inline_5735$$ = $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$ = $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.x, $y1$$inline_5736$$ = $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.y - 
+      $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$.$h$ / 2, $y2$$inline_5737$$ = $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.y + $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$.$h$ / 2;this.contains($anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$, $y1$$inline_5736$$) && this.contains($anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$, $y2$$inline_5737$$);) {
+        $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$--
       }
-      for(;this.contains($x2$$inline_5793$$, $y1$$inline_5794$$) && this.contains($x2$$inline_5793$$, $y2$$inline_5795$$);) {
-        $x2$$inline_5793$$++
+      for(;this.contains($x2$$inline_5735$$, $y1$$inline_5736$$) && this.contains($x2$$inline_5735$$, $y2$$inline_5737$$);) {
+        $x2$$inline_5735$$++
       }
-      $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$ += 3;
-      $x2$$inline_5793$$ -= 3;
-      $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = 2 * window.Math.min($bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.x - $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$, $x2$$inline_5793$$ - $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$.x);
-      $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ < $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$.$w$ && ($angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$.$setX$(($anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$ + $x2$$inline_5793$$) / 2), $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$ = $x2$$inline_5793$$ - $anchorRadius$$inline_5780_availHeight$$inline_5778_x1$$inline_5792$$);
-      $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ = D.$DvtTextUtils$$.$fitText$($angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$, $bRotated_text$$inline_5779_textAnchor$$inline_5787_usableSpace$$inline_5796$$, $availWidth$$inline_5777_estimatedDims$$inline_5791_rightAngle$$inline_5789$$.$h$, $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$) ? $angle$$inline_5783_approxWidth$$inline_5788_innerStartCoord$$inline_5776_text$$inline_5790$$ : 
+      $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$ += 3;
+      $x2$$inline_5735$$ -= 3;
+      $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = 2 * window.Math.min($bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.x - $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$, $x2$$inline_5735$$ - $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$.x);
+      $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ < $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$.$w$ && ($angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$.$setX$(($anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$ + $x2$$inline_5735$$) / 2), $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$ = $x2$$inline_5735$$ - $anchorRadius$$inline_5722_availHeight$$inline_5720_x1$$inline_5734$$);
+      $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ = D.$DvtTextUtils$$.$fitText$($angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$, $bRotated_text$$inline_5721_textAnchor$$inline_5729_usableSpace$$inline_5738$$, $availWidth$$inline_5719_estimatedDims$$inline_5733_rightAngle$$inline_5731$$.$h$, $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$) ? $angle$$inline_5725_approxWidth$$inline_5730_innerStartCoord$$inline_5718_text$$inline_5732$$ : 
       D.$JSCompiler_alias_NULL$$
     }else {
-      $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$ = D.$JSCompiler_alias_VOID$$
+      $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$ = D.$JSCompiler_alias_VOID$$
     }
   }
-  return $JSCompiler_temp$$208_actualTextWidth$$inline_5781_container$$127_textAnchor$$inline_5782$$
+  return $JSCompiler_temp$$203_actualTextWidth$$inline_5723_container$$127_textAnchor$$inline_5724$$
 };
 D.$DvtSunburstNode$$.prototype.$handleMouseOver$ = function $$DvtSunburstNode$$$$$handleMouseOver$$() {
   if(!this.$_expandButton$) {
-    var $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$;
-    $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$ = this.$_shape$;
-    if(!$JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$ || !("i" == this.$_drilling$ || "ir" == this.$_drilling$)) {
-      $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$ = D.$JSCompiler_alias_NULL$$
+    var $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$;
+    $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$ = this.$_shape$;
+    if(!$JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$ || !("i" == this.$_drilling$ || "ir" == this.$_drilling$)) {
+      $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$ = D.$JSCompiler_alias_NULL$$
     }else {
-      var $JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$;
+      var $JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$;
       if(this.$_disclosed$) {
-        $JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$ = this.$_view$.$_context$;
-        var $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$ = this.$_view$.$_resources$, $center$$inline_5801_upState$$inline_9789_upState$$inline_9797$$ = new D.$DvtImage$$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$.collapseUp, 0, 0, 16, 16), $overState$$inline_9790_overState$$inline_9798$$ = 
-        new D.$DvtImage$$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$.collapseOver, 0, 0, 16, 16), $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$ = new D.$DvtImage$$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, 
-        $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$.collapseDown, 0, 0, 16, 16)
+        $JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$ = this.$_view$.$_context$;
+        var $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$ = this.$_view$.$_resources$, $center$$inline_5743_upState$$inline_9734_upState$$inline_9742$$ = new D.$DvtImage$$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$.collapseUp, 0, 0, 16, 16), $overState$$inline_9735_overState$$inline_9743$$ = 
+        new D.$DvtImage$$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$.collapseOver, 0, 0, 16, 16), $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$ = new D.$DvtImage$$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, 
+        $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$.collapseDown, 0, 0, 16, 16)
       }else {
-        $JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$ = this.$_view$.$_context$, $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$ = this.$_view$.$_resources$, $center$$inline_5801_upState$$inline_9789_upState$$inline_9797$$ = new D.$DvtImage$$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$.expandUp, 
-        0, 0, 16, 16), $overState$$inline_9790_overState$$inline_9798$$ = new D.$DvtImage$$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$.expandOver, 0, 0, 16, 16), $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$ = new D.$DvtImage$$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, 
-        $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$.expandDown, 0, 0, 16, 16)
+        $JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$ = this.$_view$.$_context$, $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$ = this.$_view$.$_resources$, $center$$inline_5743_upState$$inline_9734_upState$$inline_9742$$ = new D.$DvtImage$$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$.expandUp, 
+        0, 0, 16, 16), $overState$$inline_9735_overState$$inline_9743$$ = new D.$DvtImage$$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$.expandOver, 0, 0, 16, 16), $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$ = new D.$DvtImage$$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, 
+        $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$.expandDown, 0, 0, 16, 16)
       }
-      (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($center$$inline_5801_upState$$inline_9789_upState$$inline_9797$$);
-      (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($overState$$inline_9790_overState$$inline_9798$$);
-      (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$);
-      $JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$ = new D.$DvtButton$$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, $center$$inline_5801_upState$$inline_9789_upState$$inline_9797$$, $overState$$inline_9790_overState$$inline_9798$$, $downState$$inline_9791_downState$$inline_9799_resources$$inline_9788_resources$$inline_9796$$);
-      $JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$.$addEvtListener$(D.$DvtMouseEvent$CLICK$$, this.$expandCollapseNode$, D.$JSCompiler_alias_FALSE$$, this);
-      $center$$inline_5801_upState$$inline_9789_upState$$inline_9797$$ = (0,D.$DvtSunburstNode$_calcPointOnArc$$)(this.$_outerRadius$, this.$_startAngle$ + this.$_angleExtent$ / 2);
-      (0,D.$JSCompiler_StaticMethods_setTranslate$$)($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, $center$$inline_5801_upState$$inline_9789_upState$$inline_9797$$.x - 8, $center$$inline_5801_upState$$inline_9789_upState$$inline_9797$$.y - 8);
-      $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$.$addChild$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$);
-      $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$ = this.$_disclosed$ ? this.$_view$.$_resources$.collapse : this.$_view$.$_resources$.expand;
-      this.$_view$.$__getEventManager$().$associate$($JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$, new D.$DvtBaseTreePeer$$(this, this.getId(), $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$));
-      $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$ = $JSCompiler_temp$$8628_button$$inline_5800_button$$inline_9792_button$$inline_9800_context$$inline_9787_context$$inline_9795$$
+      (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($center$$inline_5743_upState$$inline_9734_upState$$inline_9742$$);
+      (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($overState$$inline_9735_overState$$inline_9743$$);
+      (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$);
+      $JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$ = new D.$DvtButton$$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, $center$$inline_5743_upState$$inline_9734_upState$$inline_9742$$, $overState$$inline_9735_overState$$inline_9743$$, $downState$$inline_9736_downState$$inline_9744_resources$$inline_9733_resources$$inline_9741$$);
+      $JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$.$addEvtListener$(D.$DvtMouseEvent$CLICK$$, this.$expandCollapseNode$, D.$JSCompiler_alias_FALSE$$, this);
+      $center$$inline_5743_upState$$inline_9734_upState$$inline_9742$$ = (0,D.$DvtSunburstNode$_calcPointOnArc$$)(this.$_outerRadius$, this.$_startAngle$ + this.$_angleExtent$ / 2);
+      (0,D.$JSCompiler_StaticMethods_setTranslate$$)($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, $center$$inline_5743_upState$$inline_9734_upState$$inline_9742$$.x - 8, $center$$inline_5743_upState$$inline_9734_upState$$inline_9742$$.y - 8);
+      $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$.$addChild$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$);
+      $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$ = this.$_disclosed$ ? this.$_view$.$_resources$.collapse : this.$_view$.$_resources$.expand;
+      this.$_view$.$__getEventManager$().$associate$($JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$, new D.$DvtBaseTreePeer$$(this, this.getId(), $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$));
+      $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$ = $JSCompiler_temp$$8584_button$$inline_5742_button$$inline_9737_button$$inline_9745_context$$inline_9732_context$$inline_9740$$
     }
-    this.$_expandButton$ = $JSCompiler_inline_result$$517_container$$inline_5799_tooltip$$inline_5802$$
+    this.$_expandButton$ = $JSCompiler_inline_result$$501_container$$inline_5741_tooltip$$inline_5744$$
   }
   D.$DvtSunburstNode$$.$superclass$.$handleMouseOver$.call(this)
 };
@@ -497,23 +497,23 @@ D.$JSCompiler_StaticMethods_updateShapes$$ = function $$JSCompiler_StaticMethods
     }
     $JSCompiler_StaticMethods_updateShapes$self$$.$_shape$.$setFill$($JSCompiler_StaticMethods_updateShapes$self$$.$GetFill$());
     if($bRecurse$$) {
-      for(var $children$$28_cmd$$12$$ = $JSCompiler_StaticMethods_updateShapes$self$$.$getChildNodes$(), $i$$589$$ = 0;$i$$589$$ < $children$$28_cmd$$12$$.length;$i$$589$$++) {
-        (0,D.$JSCompiler_StaticMethods_updateShapes$$)($children$$28_cmd$$12$$[$i$$589$$], D.$JSCompiler_alias_TRUE$$)
+      for(var $children$$28_cmd$$12$$ = $JSCompiler_StaticMethods_updateShapes$self$$.$getChildNodes$(), $i$$585$$ = 0;$i$$585$$ < $children$$28_cmd$$12$$.length;$i$$585$$++) {
+        (0,D.$JSCompiler_StaticMethods_updateShapes$$)($children$$28_cmd$$12$$[$i$$585$$], D.$JSCompiler_alias_TRUE$$)
       }
     }
   }
 };
 D.$DvtSunburstNode$$.prototype.$expandCollapseNode$ = function $$DvtSunburstNode$$$$$expandCollapseNode$$() {
   this.$_disclosed$ = !this.$_disclosed$;
-  var $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$ = this.$_view$, $bDisclosed$$inline_5806_xmlString$$inline_9805$$ = this.$_disclosed$, $id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$ = this.getId();
-  $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$.$_navigableIdToFocus$ = $id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$;
-  if($bDisclosed$$inline_5806_xmlString$$inline_9805$$) {
-    $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$.$__dispatchEvent$(new D.$DvtSunburstExpandCollapseEvent$$("sunburstExpand", this.getId()))
+  var $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$ = this.$_view$, $bDisclosed$$inline_5748_xmlString$$inline_9750$$ = this.$_disclosed$, $id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$ = this.getId();
+  $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$.$_navigableIdToFocus$ = $id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$;
+  if($bDisclosed$$inline_5748_xmlString$$inline_9750$$) {
+    $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$.$__dispatchEvent$(new D.$DvtSunburstExpandCollapseEvent$$("sunburstExpand", this.getId()))
   }else {
-    var $bDisclosed$$inline_5806_xmlString$$inline_9805$$ = $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$.$LastXml$, $id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$ = this.getId(), $id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$ = $bDisclosed$$inline_5806_xmlString$$inline_9805$$.indexOf('\x3cn id\x3d"' + $id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$), $endIndex$$inline_9808$$ = $bDisclosed$$inline_5806_xmlString$$inline_9805$$.indexOf("\x3e", 
-    $id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$), $nodeString$$inline_9809$$ = $bDisclosed$$inline_5806_xmlString$$inline_9805$$.substring($id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$, $endIndex$$inline_9808$$), $nodeString$$inline_9809$$ = -1 < $nodeString$$inline_9809$$.indexOf("di\x3d") ? $nodeString$$inline_9809$$.replace('di\x3d"t"', 'di\x3d"f"') : $nodeString$$inline_9809$$ + 'di\x3d"f"';
-    $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$.$render$($bDisclosed$$inline_5806_xmlString$$inline_9805$$.substring(0, $id$$inline_9803_nodeId$$inline_9806_startIndex$$inline_9807$$) + $nodeString$$inline_9809$$ + $bDisclosed$$inline_5806_xmlString$$inline_9805$$.substring($endIndex$$inline_9808$$), $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$.$Width$, $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$.$Height$);
-    $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5804$$.$__dispatchEvent$(new D.$DvtSunburstExpandCollapseEvent$$("sunburstCollapse", this.getId()))
+    var $bDisclosed$$inline_5748_xmlString$$inline_9750$$ = $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$.$LastXml$, $id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$ = this.getId(), $id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$ = $bDisclosed$$inline_5748_xmlString$$inline_9750$$.indexOf('\x3cn id\x3d"' + $id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$), $endIndex$$inline_9753$$ = $bDisclosed$$inline_5748_xmlString$$inline_9750$$.indexOf("\x3e", 
+    $id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$), $nodeString$$inline_9754$$ = $bDisclosed$$inline_5748_xmlString$$inline_9750$$.substring($id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$, $endIndex$$inline_9753$$), $nodeString$$inline_9754$$ = -1 < $nodeString$$inline_9754$$.indexOf("di\x3d") ? $nodeString$$inline_9754$$.replace('di\x3d"t"', 'di\x3d"f"') : $nodeString$$inline_9754$$ + 'di\x3d"f"';
+    $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$.$render$($bDisclosed$$inline_5748_xmlString$$inline_9750$$.substring(0, $id$$inline_9748_nodeId$$inline_9751_startIndex$$inline_9752$$) + $nodeString$$inline_9754$$ + $bDisclosed$$inline_5748_xmlString$$inline_9750$$.substring($endIndex$$inline_9753$$), $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$.$Width$, $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$.$Height$);
+    $JSCompiler_StaticMethods___expandCollapseNode$self$$inline_5746$$.$__dispatchEvent$(new D.$DvtSunburstExpandCollapseEvent$$("sunburstCollapse", this.getId()))
   }
 };
 D.$DvtSunburstNode$$.prototype.$isDisclosed$ = (0,D.$JSCompiler_get$$)("$_disclosed$");
@@ -526,21 +526,21 @@ D.$DvtSunburstLayout$$.$layout$ = function $$DvtSunburstLayout$$$$layout$$($tota
   var $longestRadius$$ = D.$DvtSunburstLayout$$.$_calcLargestRadius$($root$$18$$);
   D.$DvtSunburstLayout$$.$_layout$($totalRadius$$ / $longestRadius$$, $root$$18$$, $startAngle$$18$$, $angleExtent$$14$$, $sorting$$1$$, 0)
 };
-D.$DvtSunburstLayout$$.$_layout$ = function $$DvtSunburstLayout$$$$_layout$$($radiusPerDepth$$1$$, $i$$585_node$$122$$, $childStartAngle_startAngle$$19$$, $angleExtent$$15$$, $sorting$$2$$, $children$$26_innerRadius$$6$$) {
-  var $outerRadius$$6$$ = $children$$26_innerRadius$$6$$ + (0,D.$JSCompiler_StaticMethods___getRadius$$)($i$$585_node$$122$$) * $radiusPerDepth$$1$$;
-  $i$$585_node$$122$$.$setLayoutParams$($children$$26_innerRadius$$6$$, $outerRadius$$6$$, $childStartAngle_startAngle$$19$$, $angleExtent$$15$$);
-  $children$$26_innerRadius$$6$$ = $i$$585_node$$122$$.$getChildNodes$();
-  if($children$$26_innerRadius$$6$$ != D.$JSCompiler_alias_NULL$$ && $i$$585_node$$122$$.$isDisclosed$()) {
-    "on" == $sorting$$2$$ && ($children$$26_innerRadius$$6$$ = $children$$26_innerRadius$$6$$.slice(0), $children$$26_innerRadius$$6$$.sort(function($radiusPerDepth$$1$$, $i$$585_node$$122$$) {
-      return $i$$585_node$$122$$.$getSize$() - $radiusPerDepth$$1$$.$getSize$()
+D.$DvtSunburstLayout$$.$_layout$ = function $$DvtSunburstLayout$$$$_layout$$($radiusPerDepth$$1$$, $i$$581_node$$122$$, $childStartAngle_startAngle$$19$$, $angleExtent$$15$$, $sorting$$2$$, $children$$26_innerRadius$$6$$) {
+  var $outerRadius$$6$$ = $children$$26_innerRadius$$6$$ + (0,D.$JSCompiler_StaticMethods___getRadius$$)($i$$581_node$$122$$) * $radiusPerDepth$$1$$;
+  $i$$581_node$$122$$.$setLayoutParams$($children$$26_innerRadius$$6$$, $outerRadius$$6$$, $childStartAngle_startAngle$$19$$, $angleExtent$$15$$);
+  $children$$26_innerRadius$$6$$ = $i$$581_node$$122$$.$getChildNodes$();
+  if($children$$26_innerRadius$$6$$ != D.$JSCompiler_alias_NULL$$ && $i$$581_node$$122$$.$isDisclosed$()) {
+    "on" == $sorting$$2$$ && ($children$$26_innerRadius$$6$$ = $children$$26_innerRadius$$6$$.slice(0), $children$$26_innerRadius$$6$$.sort(function($radiusPerDepth$$1$$, $i$$581_node$$122$$) {
+      return $i$$581_node$$122$$.$getSize$() - $radiusPerDepth$$1$$.$getSize$()
     }));
-    D.$DvtAgent$$.$isRightToLeft$($i$$585_node$$122$$.$_view$.$_context$) && ($children$$26_innerRadius$$6$$ = $children$$26_innerRadius$$6$$.slice(0).reverse());
+    D.$DvtAgent$$.$isRightToLeft$($i$$581_node$$122$$.$_view$.$_context$) && ($children$$26_innerRadius$$6$$ = $children$$26_innerRadius$$6$$.slice(0).reverse());
     var $total$$6$$ = 0;
-    for($i$$585_node$$122$$ = 0;$i$$585_node$$122$$ < $children$$26_innerRadius$$6$$.length;$i$$585_node$$122$$++) {
-      $total$$6$$ += 0 < $children$$26_innerRadius$$6$$[$i$$585_node$$122$$].$getSize$() ? $children$$26_innerRadius$$6$$[$i$$585_node$$122$$].$getSize$() : 0
+    for($i$$581_node$$122$$ = 0;$i$$581_node$$122$$ < $children$$26_innerRadius$$6$$.length;$i$$581_node$$122$$++) {
+      $total$$6$$ += 0 < $children$$26_innerRadius$$6$$[$i$$581_node$$122$$].$getSize$() ? $children$$26_innerRadius$$6$$[$i$$581_node$$122$$].$getSize$() : 0
     }
-    for($i$$585_node$$122$$ = 0;$i$$585_node$$122$$ < $children$$26_innerRadius$$6$$.length;$i$$585_node$$122$$++) {
-      var $child$$69$$ = $children$$26_innerRadius$$6$$[$i$$585_node$$122$$];
+    for($i$$581_node$$122$$ = 0;$i$$581_node$$122$$ < $children$$26_innerRadius$$6$$.length;$i$$581_node$$122$$++) {
+      var $child$$69$$ = $children$$26_innerRadius$$6$$[$i$$581_node$$122$$];
       if(!(0 >= $child$$69$$.$getSize$())) {
         var $childAngleExtent$$ = $child$$69$$.$getSize$() / $total$$6$$ * $angleExtent$$15$$;
         D.$DvtSunburstLayout$$.$_layout$($radiusPerDepth$$1$$, $child$$69$$, $childStartAngle_startAngle$$19$$, $childAngleExtent$$, $sorting$$2$$, $outerRadius$$6$$);
@@ -552,8 +552,8 @@ D.$DvtSunburstLayout$$.$_layout$ = function $$DvtSunburstLayout$$$$_layout$$($ra
 D.$DvtSunburstLayout$$.$_calcLargestRadius$ = function $$DvtSunburstLayout$$$$_calcLargestRadius$$($node$$123$$) {
   var $maxRadius$$2$$ = 0, $children$$27$$ = $node$$123$$.$getChildNodes$();
   if($children$$27$$ && 0 < $children$$27$$.length) {
-    for(var $i$$586$$ = 0;$i$$586$$ < $children$$27$$.length;$i$$586$$++) {
-      var $childRadius$$ = D.$DvtSunburstLayout$$.$_calcLargestRadius$($children$$27$$[$i$$586$$]), $maxRadius$$2$$ = window.Math.max($maxRadius$$2$$, $childRadius$$)
+    for(var $i$$582$$ = 0;$i$$582$$ < $children$$27$$.length;$i$$582$$++) {
+      var $childRadius$$ = D.$DvtSunburstLayout$$.$_calcLargestRadius$($children$$27$$[$i$$582$$]), $maxRadius$$2$$ = window.Math.max($maxRadius$$2$$, $childRadius$$)
     }
     return $maxRadius$$2$$ + (0,D.$JSCompiler_StaticMethods___getRadius$$)($node$$123$$)
   }
@@ -565,58 +565,58 @@ D.$DvtSunburstExpandCollapseEvent$$ = function $$DvtSunburstExpandCollapseEvent$
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtSunburstExpandCollapseEvent$$, D.$DvtBaseComponentEvent$$, "DvtSunburstExpandCollapseEvent");
 D.$DvtSunburstExpandCollapseEvent$$.prototype.getId = (0,D.$JSCompiler_get$$)("$_id$");
-D.$DvtSunburstEventManager$$ = function $$DvtSunburstEventManager$$$($view$$64$$, $context$$585$$, $callback$$120$$, $callbackObj$$92$$) {
-  D.$DvtBaseTreeEventManager$$.call(this, $view$$64$$, $context$$585$$, $callback$$120$$, $callbackObj$$92$$)
+D.$DvtSunburstEventManager$$ = function $$DvtSunburstEventManager$$$($view$$64$$, $context$$579$$, $callback$$120$$, $callbackObj$$92$$) {
+  D.$DvtBaseTreeEventManager$$.call(this, $view$$64$$, $context$$579$$, $callback$$120$$, $callbackObj$$92$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtSunburstEventManager$$, D.$DvtBaseTreeEventManager$$, "DvtSunburstEventManager");
 D.$JSCompiler_prototypeAlias$$ = D.$DvtSunburstEventManager$$.prototype;
-D.$JSCompiler_prototypeAlias$$.$OnMouseDown$ = function $$JSCompiler_prototypeAlias$$$$OnMouseDown$$($event$$500_relPos$$30$$) {
-  var $JSCompiler_StaticMethods___startRotation$self$$inline_5748_obj$$283$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$500_relPos$$30$$.target);
-  $JSCompiler_StaticMethods___startRotation$self$$inline_5748_obj$$283$$ && $JSCompiler_StaticMethods___startRotation$self$$inline_5748_obj$$283$$.getId && "_rotationShape" == $JSCompiler_StaticMethods___startRotation$self$$inline_5748_obj$$283$$.getId() && !this.$_bRotating$ ? (this.$_bRotating$ = D.$JSCompiler_alias_TRUE$$, $event$$500_relPos$$30$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $event$$500_relPos$$30$$.pageX, $event$$500_relPos$$30$$.pageY), $JSCompiler_StaticMethods___startRotation$self$$inline_5748_obj$$283$$ = 
-  this.$_view$, (0,D.$JSCompiler_StaticMethods___setRotationAnchor$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5748_obj$$283$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5748_obj$$283$$, $event$$500_relPos$$30$$.x, $event$$500_relPos$$30$$.y))) : D.$DvtSunburstEventManager$$.$superclass$.$OnMouseDown$.call(this, $event$$500_relPos$$30$$)
+D.$JSCompiler_prototypeAlias$$.$OnMouseDown$ = function $$JSCompiler_prototypeAlias$$$$OnMouseDown$$($event$$491_relPos$$30$$) {
+  var $JSCompiler_StaticMethods___startRotation$self$$inline_5690_obj$$284$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$491_relPos$$30$$.target);
+  $JSCompiler_StaticMethods___startRotation$self$$inline_5690_obj$$284$$ && $JSCompiler_StaticMethods___startRotation$self$$inline_5690_obj$$284$$.getId && "_rotationShape" == $JSCompiler_StaticMethods___startRotation$self$$inline_5690_obj$$284$$.getId() && !this.$_bRotating$ ? (this.$_bRotating$ = D.$JSCompiler_alias_TRUE$$, $event$$491_relPos$$30$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $event$$491_relPos$$30$$.pageX, $event$$491_relPos$$30$$.pageY), $JSCompiler_StaticMethods___startRotation$self$$inline_5690_obj$$284$$ = 
+  this.$_view$, (0,D.$JSCompiler_StaticMethods___setRotationAnchor$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5690_obj$$284$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5690_obj$$284$$, $event$$491_relPos$$30$$.x, $event$$491_relPos$$30$$.y))) : D.$DvtSunburstEventManager$$.$superclass$.$OnMouseDown$.call(this, $event$$491_relPos$$30$$)
 };
-D.$JSCompiler_prototypeAlias$$.$OnMouseMove$ = function $$JSCompiler_prototypeAlias$$$$OnMouseMove$$($event$$501_relPos$$31$$) {
+D.$JSCompiler_prototypeAlias$$.$OnMouseMove$ = function $$JSCompiler_prototypeAlias$$$$OnMouseMove$$($event$$492_relPos$$31$$) {
   if(this.$_bRotating$) {
-    $event$$501_relPos$$31$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $event$$501_relPos$$31$$.pageX, $event$$501_relPos$$31$$.pageY);
-    var $JSCompiler_StaticMethods___continueRotation$self$$inline_5752$$ = this.$_view$;
-    (0,D.$JSCompiler_StaticMethods___rotate$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5752$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5752$$, $event$$501_relPos$$31$$.x, $event$$501_relPos$$31$$.y))
+    $event$$492_relPos$$31$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $event$$492_relPos$$31$$.pageX, $event$$492_relPos$$31$$.pageY);
+    var $JSCompiler_StaticMethods___continueRotation$self$$inline_5694$$ = this.$_view$;
+    (0,D.$JSCompiler_StaticMethods___rotate$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5694$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5694$$, $event$$492_relPos$$31$$.x, $event$$492_relPos$$31$$.y))
   }else {
-    D.$DvtSunburstEventManager$$.$superclass$.$OnMouseMove$.call(this, $event$$501_relPos$$31$$)
+    D.$DvtSunburstEventManager$$.$superclass$.$OnMouseMove$.call(this, $event$$492_relPos$$31$$)
   }
 };
-D.$JSCompiler_prototypeAlias$$.$OnMouseUp$ = function $$JSCompiler_prototypeAlias$$$$OnMouseUp$$($event$$502$$) {
-  this.$_bRotating$ ? (this.$_bRotating$ = D.$JSCompiler_alias_FALSE$$, (0,D.$JSCompiler_StaticMethods___endRotation$$)(this.$_view$)) : D.$DvtSunburstEventManager$$.$superclass$.$OnMouseUp$.call(this, $event$$502$$)
+D.$JSCompiler_prototypeAlias$$.$OnMouseUp$ = function $$JSCompiler_prototypeAlias$$$$OnMouseUp$$($event$$493$$) {
+  this.$_bRotating$ ? (this.$_bRotating$ = D.$JSCompiler_alias_FALSE$$, (0,D.$JSCompiler_StaticMethods___endRotation$$)(this.$_view$)) : D.$DvtSunburstEventManager$$.$superclass$.$OnMouseUp$.call(this, $event$$493$$)
 };
-D.$JSCompiler_prototypeAlias$$.$ProcessKeyboardEvent$ = function $$JSCompiler_prototypeAlias$$$$ProcessKeyboardEvent$$($event$$503$$) {
-  var $eventConsumed$$5$$ = D.$JSCompiler_alias_TRUE$$, $keyCode$$26_newAngle$$1$$ = $event$$503$$.keyCode, $node$$121$$ = (0,D.$JSCompiler_StaticMethods_getFocus$$)(this), $sunburst$$1$$ = this.$_view$;
-  ("i" == $node$$121$$.$_drilling$ || "ir" == $node$$121$$.$_drilling$) && ((0,D.$DvtKeyboardEvent$isPlus$$)($event$$503$$) && !$node$$121$$.$isDisclosed$() || (0,D.$DvtKeyboardEvent$isMinus$$)($event$$503$$) && $node$$121$$.$isDisclosed$() || $event$$503$$.ctrlKey && 13 == $keyCode$$26_newAngle$$1$$) ? ($node$$121$$.$expandCollapseNode$(), $event$$503$$.preventDefault()) : $sunburst$$1$$ && "on" == $sunburst$$1$$.$_rotation$ && (37 == $keyCode$$26_newAngle$$1$$ || 39 == $keyCode$$26_newAngle$$1$$) && 
-  !$event$$503$$.ctrlKey && $event$$503$$.altKey && $event$$503$$.shiftKey ? ($keyCode$$26_newAngle$$1$$ = 37 == $keyCode$$26_newAngle$$1$$ ? -5 * (window.Math.PI / 180) : 5 * (window.Math.PI / 180), (0,D.$JSCompiler_StaticMethods___setRotationAnchor$$)($sunburst$$1$$, 0), (0,D.$JSCompiler_StaticMethods___rotate$$)($sunburst$$1$$, $keyCode$$26_newAngle$$1$$), (0,D.$JSCompiler_StaticMethods___endRotation$$)($sunburst$$1$$), $event$$503$$.preventDefault()) : $eventConsumed$$5$$ = D.$DvtSunburstEventManager$$.$superclass$.$ProcessKeyboardEvent$.call(this, 
-  $event$$503$$);
-  return $eventConsumed$$5$$
+D.$JSCompiler_prototypeAlias$$.$ProcessKeyboardEvent$ = function $$JSCompiler_prototypeAlias$$$$ProcessKeyboardEvent$$($event$$494$$) {
+  var $eventConsumed$$4$$ = D.$JSCompiler_alias_TRUE$$, $keyCode$$25_newAngle$$1$$ = $event$$494$$.keyCode, $node$$121$$ = (0,D.$JSCompiler_StaticMethods_getFocus$$)(this), $sunburst$$1$$ = this.$_view$;
+  ("i" == $node$$121$$.$_drilling$ || "ir" == $node$$121$$.$_drilling$) && ((0,D.$DvtKeyboardEvent$isPlus$$)($event$$494$$) && !$node$$121$$.$isDisclosed$() || (0,D.$DvtKeyboardEvent$isMinus$$)($event$$494$$) && $node$$121$$.$isDisclosed$() || $event$$494$$.ctrlKey && 13 == $keyCode$$25_newAngle$$1$$) ? ($node$$121$$.$expandCollapseNode$(), $event$$494$$.preventDefault()) : $sunburst$$1$$ && "on" == $sunburst$$1$$.$_rotation$ && (37 == $keyCode$$25_newAngle$$1$$ || 39 == $keyCode$$25_newAngle$$1$$) && 
+  !$event$$494$$.ctrlKey && $event$$494$$.altKey && $event$$494$$.shiftKey ? ($keyCode$$25_newAngle$$1$$ = 37 == $keyCode$$25_newAngle$$1$$ ? -5 * (window.Math.PI / 180) : 5 * (window.Math.PI / 180), (0,D.$JSCompiler_StaticMethods___setRotationAnchor$$)($sunburst$$1$$, 0), (0,D.$JSCompiler_StaticMethods___rotate$$)($sunburst$$1$$, $keyCode$$25_newAngle$$1$$), (0,D.$JSCompiler_StaticMethods___endRotation$$)($sunburst$$1$$), $event$$494$$.preventDefault()) : $eventConsumed$$4$$ = D.$DvtSunburstEventManager$$.$superclass$.$ProcessKeyboardEvent$.call(this, 
+  $event$$494$$);
+  return $eventConsumed$$4$$
 };
-D.$JSCompiler_prototypeAlias$$.$HandleImmediateTouchStartInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleImmediateTouchStartInternal$$($event$$504$$) {
-  var $obj$$284$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$504$$.target);
-  $obj$$284$$ && ($obj$$284$$.getId && "_rotationShape" == $obj$$284$$.getId()) && (0,D.$JSCompiler_StaticMethods_processAssociatedTouchAttempt$$)($event$$504$$, this.$RotateStartTouch$, this)
+D.$JSCompiler_prototypeAlias$$.$HandleImmediateTouchStartInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleImmediateTouchStartInternal$$($event$$495$$) {
+  var $obj$$285$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$495$$.target);
+  $obj$$285$$ && ($obj$$285$$.getId && "_rotationShape" == $obj$$285$$.getId()) && (0,D.$JSCompiler_StaticMethods_processAssociatedTouchAttempt$$)($event$$495$$, this.$RotateStartTouch$, this)
 };
-D.$JSCompiler_prototypeAlias$$.$HandleImmediateTouchMoveInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleImmediateTouchMoveInternal$$($event$$505$$) {
-  (0,D.$JSCompiler_StaticMethods_processAssociatedTouchMove$$)(this.$TouchManager$, $event$$505$$, "rotateKey")
+D.$JSCompiler_prototypeAlias$$.$HandleImmediateTouchMoveInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleImmediateTouchMoveInternal$$($event$$496$$) {
+  (0,D.$JSCompiler_StaticMethods_processAssociatedTouchMove$$)(this.$TouchManager$, $event$$496$$, "rotateKey")
 };
-D.$JSCompiler_prototypeAlias$$.$HandleImmediateTouchEndInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleImmediateTouchEndInternal$$($event$$506$$) {
-  (0,D.$JSCompiler_StaticMethods_processAssociatedTouchEnd$$)(this.$TouchManager$, $event$$506$$, "rotateKey")
+D.$JSCompiler_prototypeAlias$$.$HandleImmediateTouchEndInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleImmediateTouchEndInternal$$($event$$497$$) {
+  (0,D.$JSCompiler_StaticMethods_processAssociatedTouchEnd$$)(this.$TouchManager$, $event$$497$$, "rotateKey")
 };
-D.$JSCompiler_prototypeAlias$$.$RotateStartTouch$ = function $$JSCompiler_prototypeAlias$$$$RotateStartTouch$$($event$$507$$, $touch$$50$$) {
+D.$JSCompiler_prototypeAlias$$.$RotateStartTouch$ = function $$JSCompiler_prototypeAlias$$$$RotateStartTouch$$($event$$498$$, $touch$$50$$) {
   if(1 >= (0,D.$JSCompiler_StaticMethods_getTouchIdsForObj$$)(this.$TouchManager$, "rotateKey").length) {
     (0,D.$JSCompiler_StaticMethods_saveProcessedTouch$$)(this.$TouchManager$, $touch$$50$$.identifier, "rotateKey", D.$JSCompiler_alias_NULL$$, "rotateKey", "rotateKey", this.$RotateMoveTouch$, this.$RotateEndTouch$, this);
     (0,D.$JSCompiler_StaticMethods_setTooltipEnabled$$)(this.$TouchManager$, $touch$$50$$.identifier, D.$JSCompiler_alias_FALSE$$);
-    var $pos$$53$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$50$$.pageX, $touch$$50$$.pageY), $JSCompiler_StaticMethods___startRotation$self$$inline_5756$$ = this.$_view$;
-    (0,D.$JSCompiler_StaticMethods___setRotationAnchor$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5756$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5756$$, $pos$$53$$.x, $pos$$53$$.y));
-    $event$$507$$.$blockTouchHold$()
+    var $pos$$53$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$50$$.pageX, $touch$$50$$.pageY), $JSCompiler_StaticMethods___startRotation$self$$inline_5698$$ = this.$_view$;
+    (0,D.$JSCompiler_StaticMethods___setRotationAnchor$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5698$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___startRotation$self$$inline_5698$$, $pos$$53$$.x, $pos$$53$$.y));
+    $event$$498$$.$blockTouchHold$()
   }
 };
-D.$JSCompiler_prototypeAlias$$.$RotateMoveTouch$ = function $$JSCompiler_prototypeAlias$$$$RotateMoveTouch$$($event$$508$$, $touch$$51$$) {
-  var $pos$$54$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$51$$.pageX, $touch$$51$$.pageY), $JSCompiler_StaticMethods___continueRotation$self$$inline_5760$$ = this.$_view$;
-  (0,D.$JSCompiler_StaticMethods___rotate$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5760$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5760$$, $pos$$54$$.x, $pos$$54$$.y));
-  $event$$508$$.preventDefault()
+D.$JSCompiler_prototypeAlias$$.$RotateMoveTouch$ = function $$JSCompiler_prototypeAlias$$$$RotateMoveTouch$$($event$$499$$, $touch$$51$$) {
+  var $pos$$54$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$51$$.pageX, $touch$$51$$.pageY), $JSCompiler_StaticMethods___continueRotation$self$$inline_5702$$ = this.$_view$;
+  (0,D.$JSCompiler_StaticMethods___rotate$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5702$$, (0,D.$JSCompiler_StaticMethods__calcAngle$$)($JSCompiler_StaticMethods___continueRotation$self$$inline_5702$$, $pos$$54$$.x, $pos$$54$$.y));
+  $event$$499$$.preventDefault()
 };
 D.$JSCompiler_prototypeAlias$$.$RotateEndTouch$ = function $$JSCompiler_prototypeAlias$$$$RotateEndTouch$$() {
   (0,D.$JSCompiler_StaticMethods___endRotation$$)(this.$_view$)
@@ -637,32 +637,32 @@ D.$DvtSunburstJsonUtils$$ = (0,D.$JSCompiler_emptyFn$$)();
 D.$DvtObj$$.$createSubclass$(D.$DvtSunburstJsonUtils$$, D.$DvtBaseTreeJsonUtils$$, "DvtSunburstJsonUtils");
 D.$JSCompiler_prototypeAlias$$ = D.$DvtSunburstJsonUtils$$.prototype;
 D.$JSCompiler_prototypeAlias$$.$GetComponentName$ = (0,D.$JSCompiler_returnArg$$)("sunburst");
-D.$JSCompiler_prototypeAlias$$.$WriteComponentAttributes$ = function $$JSCompiler_prototypeAlias$$$$WriteComponentAttributes$$($animationOnDisplay$$5_options$$183$$) {
-  var $ret$$86$$ = D.$DvtSunburstJsonUtils$$.$superclass$.$WriteComponentAttributes$.call(this, $animationOnDisplay$$5_options$$183$$), $ret$$86$$ = $ret$$86$$ + this.$WriteAttr$("r", $animationOnDisplay$$5_options$$183$$.rotation), $ret$$86$$ = $ret$$86$$ + this.$WriteAttr$("sa", ($animationOnDisplay$$5_options$$183$$.startAngle + 360) % 360);
-  $animationOnDisplay$$5_options$$183$$ = $animationOnDisplay$$5_options$$183$$.animationOnDisplay;
-  return $ret$$86$$ = "auto" == $animationOnDisplay$$5_options$$183$$ ? $ret$$86$$ + this.$WriteAttr$("adi", "fan") : $ret$$86$$ + this.$WriteAttr$("adi", $animationOnDisplay$$5_options$$183$$)
+D.$JSCompiler_prototypeAlias$$.$WriteComponentAttributes$ = function $$JSCompiler_prototypeAlias$$$$WriteComponentAttributes$$($animationOnDisplay$$5_options$$184$$) {
+  var $ret$$86$$ = D.$DvtSunburstJsonUtils$$.$superclass$.$WriteComponentAttributes$.call(this, $animationOnDisplay$$5_options$$184$$), $ret$$86$$ = $ret$$86$$ + this.$WriteAttr$("r", $animationOnDisplay$$5_options$$184$$.rotation), $ret$$86$$ = $ret$$86$$ + this.$WriteAttr$("sa", ($animationOnDisplay$$5_options$$184$$.startAngle + 360) % 360);
+  $animationOnDisplay$$5_options$$184$$ = $animationOnDisplay$$5_options$$184$$.animationOnDisplay;
+  return $ret$$86$$ = "auto" == $animationOnDisplay$$5_options$$184$$ ? $ret$$86$$ + this.$WriteAttr$("adi", "fan") : $ret$$86$$ + this.$WriteAttr$("adi", $animationOnDisplay$$5_options$$184$$)
 };
-D.$JSCompiler_prototypeAlias$$.$WriteNodeAttributes$ = function $$JSCompiler_prototypeAlias$$$$WriteNodeAttributes$$($options$$184$$, $nodeData$$11$$) {
-  var $ret$$87$$ = D.$DvtSunburstJsonUtils$$.$superclass$.$WriteNodeAttributes$.call(this, $options$$184$$, $nodeData$$11$$), $ret$$87$$ = $ret$$87$$ + this.$WriteAttr$("ld", $nodeData$$11$$.labelDisplay ? $nodeData$$11$$.labelDisplay : $options$$184$$.nodeDefaults.labelDisplay), $labelHalign$$1_radius$$17$$ = $nodeData$$11$$.labelHalign ? $nodeData$$11$$.labelHalign : $options$$184$$.nodeDefaults.labelHalign;
+D.$JSCompiler_prototypeAlias$$.$WriteNodeAttributes$ = function $$JSCompiler_prototypeAlias$$$$WriteNodeAttributes$$($options$$185$$, $nodeData$$11$$) {
+  var $ret$$87$$ = D.$DvtSunburstJsonUtils$$.$superclass$.$WriteNodeAttributes$.call(this, $options$$185$$, $nodeData$$11$$), $ret$$87$$ = $ret$$87$$ + this.$WriteAttr$("ld", $nodeData$$11$$.labelDisplay ? $nodeData$$11$$.labelDisplay : $options$$185$$.nodeDefaults.labelDisplay), $labelHalign$$1_radius$$17$$ = $nodeData$$11$$.labelHalign ? $nodeData$$11$$.labelHalign : $options$$185$$.nodeDefaults.labelHalign;
   "inner" == $labelHalign$$1_radius$$17$$ ? $ret$$87$$ += this.$WriteAttr$("ha", "s") : "outer" == $labelHalign$$1_radius$$17$$ && ($ret$$87$$ += this.$WriteAttr$("ha", "e"));
   $labelHalign$$1_radius$$17$$ = $nodeData$$11$$.radius;
   $labelHalign$$1_radius$$17$$ != D.$JSCompiler_alias_NULL$$ && !(0,window.isNaN)($labelHalign$$1_radius$$17$$) && ($ret$$87$$ += this.$WriteAttr$("r", $labelHalign$$1_radius$$17$$));
   return $ret$$87$$
 };
-D.$JSCompiler_prototypeAlias$$.$WriteResourcesElement$ = function $$JSCompiler_prototypeAlias$$$$WriteResourcesElement$$($options$$185$$) {
+D.$JSCompiler_prototypeAlias$$.$WriteResourcesElement$ = function $$JSCompiler_prototypeAlias$$$$WriteResourcesElement$$($options$$186$$) {
   var $ret$$88$$, $bundle$$6$$ = new D.$DvtSunburstBundle$$;
   $ret$$88$$ = "\x3cresources" + this.$WriteAttr$("legendSize", (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$6$$, "SIZE"));
   $ret$$88$$ += this.$WriteAttr$("legendColor", (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$6$$, "COLOR"));
-  $ret$$88$$ += this.$WriteAttr$("cursorRotate", $options$$185$$._resources.rotateCursor);
+  $ret$$88$$ += this.$WriteAttr$("cursorRotate", $options$$186$$._resources.rotateCursor);
   $ret$$88$$ += this.$WriteAttr$("alta", "true");
   return $ret$$88$$ + "/\x3e\n"
 };
-D.$JSCompiler_prototypeAlias$$.$WriteStyleElement$ = function $$JSCompiler_prototypeAlias$$$$WriteStyleElement$$($options$$186_selectedColor$$) {
-  var $ret$$89$$ = D.$DvtSunburstJsonUtils$$.$superclass$.$WriteStyleElement$.call(this, $options$$186_selectedColor$$), $animationColor$$1_borderColor$$49_hoverColor$$3$$ = $options$$186_selectedColor$$.animationUpdateColor;
+D.$JSCompiler_prototypeAlias$$.$WriteStyleElement$ = function $$JSCompiler_prototypeAlias$$$$WriteStyleElement$$($options$$187_selectedColor$$) {
+  var $ret$$89$$ = D.$DvtSunburstJsonUtils$$.$superclass$.$WriteStyleElement$.call(this, $options$$187_selectedColor$$), $animationColor$$1_borderColor$$49_hoverColor$$3$$ = $options$$187_selectedColor$$.animationUpdateColor;
   $animationColor$$1_borderColor$$49_hoverColor$$3$$ && ($ret$$89$$ += this.$WriteAttr$("top", "-tr-animation-update-color: " + $animationColor$$1_borderColor$$49_hoverColor$$3$$));
-  ($animationColor$$1_borderColor$$49_hoverColor$$3$$ = $options$$186_selectedColor$$.nodeDefaults.borderColor) && ($ret$$89$$ += this.$WriteAttr$("node", "border-color: " + $animationColor$$1_borderColor$$49_hoverColor$$3$$));
-  ($animationColor$$1_borderColor$$49_hoverColor$$3$$ = $options$$186_selectedColor$$.nodeDefaults.hoverColor) && ($ret$$89$$ += this.$WriteAttr$("node-hover", "border-color: " + $animationColor$$1_borderColor$$49_hoverColor$$3$$));
-  ($options$$186_selectedColor$$ = $options$$186_selectedColor$$.nodeDefaults.selectedColor) && ($ret$$89$$ += this.$WriteAttr$("node-selected", "border-color: " + $options$$186_selectedColor$$));
+  ($animationColor$$1_borderColor$$49_hoverColor$$3$$ = $options$$187_selectedColor$$.nodeDefaults.borderColor) && ($ret$$89$$ += this.$WriteAttr$("node", "border-color: " + $animationColor$$1_borderColor$$49_hoverColor$$3$$));
+  ($animationColor$$1_borderColor$$49_hoverColor$$3$$ = $options$$187_selectedColor$$.nodeDefaults.hoverColor) && ($ret$$89$$ += this.$WriteAttr$("node-hover", "border-color: " + $animationColor$$1_borderColor$$49_hoverColor$$3$$));
+  ($options$$187_selectedColor$$ = $options$$187_selectedColor$$.nodeDefaults.selectedColor) && ($ret$$89$$ += this.$WriteAttr$("node-selected", "border-color: " + $options$$187_selectedColor$$));
   return $ret$$89$$ + "/\x3e\n"
 };
 });

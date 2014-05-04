@@ -277,10 +277,9 @@ the specific language governing permissions and limitations under the Apache Lic
         '<' : '&lt;',
         '>' : '&gt;',
         '"' : '&quot;',
-        "'" : '&#39;',
-        "/" : '&#47;'
+        "'" : '&#39;'
       };
-      return String(markup).replace(/[&<>"'\/\\]/g, function (match)
+      return String(markup).replace(/[&<>"'\\]/g, function (match)
         {
           return replace_map[match];
         });
@@ -1675,12 +1674,16 @@ the specific language governing permissions and limitations under the Apache Lic
             this._clear();
             _ComboUtils.killEventImmediately(e);
             this.close();
-            this.selection.focus(); //Fixed???
+            this.selection.focus();
           }
           ));
 
         selection.on("mousedown", this._bind(function (e)
           {
+            ///prevent user from focusing on disabled select
+            if (this.opts.element.prop("disabled"))
+              _ComboUtils.killEvent(e);
+
             if (this._opened())
             {
               this.close();
@@ -2087,7 +2090,11 @@ the specific language governing permissions and limitations under the Apache Lic
 
         //Don't allow focus on a disabled "select"
         if (this.opts.element.prop("disabled"))
+        {
           container.find(".oj-select-choice").attr("tabindex", "-1");
+          //Bug 18697446 - disabled select icon hover still shows chnages
+          container.find(".oj-select-open-icon").addClass("oj-disabled");
+        }
 
         return container;
       },
@@ -2107,6 +2114,9 @@ the specific language governing permissions and limitations under the Apache Lic
 
         //set focus to select box
         _ComboUtils._focus(this.selection);
+
+        ///remove "mouse click" listeners on spyglass
+        this.container.find(".oj-select-spyglass-box").off("mouseup click");
       },
 
       _opening : function (event)
@@ -2274,8 +2284,9 @@ the specific language governing permissions and limitations under the Apache Lic
           return;
         }
 
-        if (e.which === _ComboUtils.KEY.TAB)
+        switch (e.which)
         {
+        case _ComboUtils.KEY.TAB:
           this._selectHighlighted(
             {
               noFocus : true
@@ -2285,6 +2296,16 @@ the specific language governing permissions and limitations under the Apache Lic
           //James: tab out of an expanded poplist, focus is going all the way to the top of the page.
           this.selection.focus();
           return;
+
+        // open dropdown on Enter 
+        case _ComboUtils.KEY.ENTER:
+          if (e.target === this.selection[0] && ! this._opened())
+          {
+            this.open();
+            _ComboUtils.killEvent(e);
+            return;
+          }
+          break;
         }
 
        _OjSingleSelect.superclass._containerKeydownHandler.apply(this, arguments);
@@ -2322,6 +2343,18 @@ the specific language governing permissions and limitations under the Apache Lic
 
         //if search box is being displayed, focus on the search box otherwise focus on the select box
         _ComboUtils._focus(focusOnSearchBox ? this.search : this.selection);
+
+        ///disable "click" on spyglass
+        if (focusOnSearchBox)
+        {
+          var self = this;
+          searchBox.find(".oj-select-spyglass-box").on("mouseup click", function (e)
+          {
+            self.search.focus();
+            e.stopPropagation();
+          });
+        }
+
       },
 
       _hasSearchBox : function ()
@@ -2926,8 +2959,8 @@ the specific language governing permissions and limitations under the Apache Lic
      */
     _ComponentCreate : function ()
     {
-      this._setup();
       this._super();
+      this._setup();
     },
 
     _setup : function ()

@@ -8,10 +8,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
     $_PAGING_CONTROL_NAV_INPUT_SUMMARY_CLASS$:"oj-pagingcontrol-nav-input-summary", $_PAGING_CONTROL_NAV_PAGES_SECTION_CLASS$:"oj-pagingcontrol-nav-pages-section", $_PAGING_CONTROL_NAV_PAGES_LINKS_CLASS$:"oj-pagingcontrol-nav-pages-links", $_PAGING_CONTROL_NAV_FIRST_CLASS$:"oj-pagingcontrol-nav-first", $_PAGING_CONTROL_NAV_FIRST_ACC_LABEL_CLASS$:"oj-pagingcontrol-nav-first-acc-label", $_PAGING_CONTROL_NAV_PREVIOUS_CLASS$:"oj-pagingcontrol-nav-previous", $_PAGING_CONTROL_NAV_PREVIOUS_ACC_LABEL_CLASS$:"oj-pagingcontrol-nav-previous-acc-label", 
     $_PAGING_CONTROL_NAV_NEXT_CLASS$:"oj-pagingcontrol-nav-next", $_PAGING_CONTROL_NAV_NEXT_ACC_LABEL_CLASS$:"oj-pagingcontrol-nav-next-acc-label", $_PAGING_CONTROL_NAV_LAST_CLASS$:"oj-pagingcontrol-nav-last", $_PAGING_CONTROL_NAV_LAST_ACC_LABEL_CLASS$:"oj-pagingcontrol-nav-last-acc-label", $_PAGING_CONTROL_NAV_FIRST_ICON_CLASS$:"oj-pagingcontrol-nav-first-icon", $_PAGING_CONTROL_NAV_PREVIOUS_ICON_CLASS$:"oj-pagingcontrol-nav-previous-icon", $_PAGING_CONTROL_NAV_NEXT_ICON_CLASS$:"oj-pagingcontrol-nav-next-icon", 
     $_PAGING_CONTROL_NAV_LAST_ICON_CLASS$:"oj-pagingcontrol-nav-last-icon", $_WIDGET_ICON_CLASS$:"oj-component-icon", $_HIDDEN_CONTENT_ACC_CLASS$:"oj-helper-hidden-accessible"}, $_DATA_ATTR_PAGE_NUM$:"data-oj-pagenum", $_OPTION_ENABLED$:"enabled", $_OPTION_DISABLED$:"disabled", $_MODE$:{$_LOAD_MORE$:"loadMore", $_PAGE$:"page"}, $_PAGE_OPTION_LAYOUT$:{$_AUTO$:"auto", $_INPUT$:"input", $_RANGE_TEXT$:"rangeText", $_PAGES$:"pages", $_NAV$:"nav"}, firstPage:function() {
-      var $data$$134$$ = this.$_getData$();
-      if(null != $data$$134$$) {
+      var $data$$137$$ = this.$_getData$();
+      if(null != $data$$137$$) {
         try {
-          this.$_startIndex$ = 0, $data$$134$$.fetch({startIndex:0})
+          this.$_startIndex$ = 0, $data$$137$$.fetch({startIndex:0})
         }catch($err$$7$$) {
           return!1
         }
@@ -19,11 +19,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       }
       return!1
     }, previousPage:function() {
-      var $data$$135$$ = this.$_getData$();
-      if(null != $data$$135$$) {
+      var $data$$138$$ = this.$_getData$();
+      if(null != $data$$138$$) {
         var $page$$ = this.$_getCurrentPage$();
         try {
-          this.$_startIndex$ = this.$_getStartIndexForPage$($page$$ - 1), $data$$135$$.fetch({startIndex:this.$_startIndex$})
+          this.$_startIndex$ = this.$_getStartIndexForPage$($page$$ - 1), $data$$138$$.fetch({startIndex:this.$_startIndex$})
         }catch($err$$8$$) {
           return!1
         }
@@ -31,11 +31,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       }
       return!1
     }, nextPage:function() {
-      var $data$$136$$ = this.$_getData$();
-      if(null != $data$$136$$) {
+      var $data$$139$$ = this.$_getData$();
+      if(null != $data$$139$$) {
         var $page$$1$$ = this.$_getCurrentPage$();
         try {
-          this.$_startIndex$ = this.$_getStartIndexForPage$($page$$1$$ + 1), $data$$136$$.fetch({startIndex:this.$_startIndex$})
+          this.$_startIndex$ = this.$_getStartIndexForPage$($page$$1$$ + 1), $data$$139$$.fetch({startIndex:this.$_startIndex$})
         }catch($err$$9$$) {
           return!1
         }
@@ -43,10 +43,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       }
       return!1
     }, lastPage:function() {
-      var $data$$137$$ = this.$_getData$();
-      if(null != $data$$137$$) {
+      var $data$$140$$ = this.$_getData$();
+      if(null != $data$$140$$) {
         try {
-          this.$_startIndex$ = this.$_getStartIndexForPage$(this.$_getTotalPages$()), $data$$137$$.fetch({startIndex:this.$_startIndex$})
+          this.$_startIndex$ = this.$_getStartIndexForPage$(this.$_getTotalPages$()), $data$$140$$.fetch({startIndex:this.$_startIndex$})
         }catch($err$$10$$) {
           return!1
         }
@@ -85,14 +85,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       this.$_registerResizeListener$(this.$_getPagingControlContainer$());
       this._on(this.$_events$)
     }, _destroy:$JSCompiler_emptyFn$$(), $_draw$:function() {
-      var $options$$298$$ = this.options;
+      var $options$$302$$ = this.options;
       this.element.addClass(this.$_CSS_CLASSES$.$_PAGING_CONTROL_CLASS$);
       this.element.addClass(this.$_MARKER_STYLE_CLASSES$.$_WIDGET$);
       this.$_startIndex$ = 0;
       this.$_createPagingControlAccLabel$();
       this.$_createPagingControlContent$();
-      $options$$298$$.mode == this.$_MODE$.$_LOAD_MORE$ ? (this.$_createPagingControlLoadMore$(), this.$_createPagingControlLoadMoreLink$(), this.$_createPagingControlLoadMoreRange$()) : this.$_createPagingControlNav$();
-      null != this.$_getData$() && 0 == this.$_getData$().size() && (this.$_getData$().setPageSize($options$$298$$.pageSize), this.$_getData$().fetch({startIndex:this.$_startIndex$}))
+      $options$$302$$.mode == this.$_MODE$.$_LOAD_MORE$ ? (this.$_createPagingControlLoadMore$(), this.$_createPagingControlLoadMoreLink$(), this.$_createPagingControlLoadMoreRange$()) : this.$_createPagingControlNav$();
+      null != this.$_getData$() && 0 == this.$_getData$().size() && (this.$_getData$().setPageSize($options$$302$$.pageSize), this.$_getData$().fetch({startIndex:this.$_startIndex$}))
     }, $_events$:{"click .oj-pagingcontrol-loadmore-link":function($event$$334$$) {
       this.loadNext();
       $event$$334$$.preventDefault()
@@ -121,13 +121,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       }
     }}, $_refresh$:function() {
       if(this.options.mode == this.$_MODE$.$_LOAD_MORE$) {
-        var $data$$139$$ = this.$_getData$(), $pagingControlLoadMore$$ = this.$_getPagingControlLoadMore$();
-        null != $data$$139$$ && $data$$139$$.size() == $data$$139$$.totalSize() ? $pagingControlLoadMore$$.css("display", "none") : ($pagingControlLoadMore$$.css("display", ""), this.$_refreshPagingControlLoadMoreRange$())
+        var $data$$142$$ = this.$_getData$(), $pagingControlLoadMore$$ = this.$_getPagingControlLoadMore$();
+        null != $data$$142$$ && $data$$142$$.size() == $data$$142$$.totalSize() ? $pagingControlLoadMore$$.css("display", "none") : ($pagingControlLoadMore$$.css("display", ""), this.$_refreshPagingControlLoadMoreRange$())
       }else {
         this.$_refreshPagingControlNav$()
       }
-    }, _setOption:function($key$$115$$, $value$$205$$) {
-      this._super($key$$115$$, $value$$205$$);
+    }, _setOption:function($key$$115$$, $value$$207$$) {
+      this._super($key$$115$$, $value$$207$$);
       this.$_refresh$()
     }, $_clearCachedDomLoadMoreRange$:function() {
       this.$_cachedDomPagingControlLoadMoreRange$ = null
@@ -137,20 +137,20 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       return 0 == this.$_startIndex$ ? 1 : Math.ceil((this.$_startIndex$ + 1) / this.options.pageSize)
     }, $_getData$:function() {
       if(!this.$_data$ && null != this.options.data) {
-        var $data$$140_errSummary$$9$$ = this.options.data;
-        if($data$$140_errSummary$$9$$ instanceof $oj$$37$$.$PagingDataSource$ || $data$$140_errSummary$$9$$ instanceof $oj$$37$$.$PagingTableDataSource$) {
-          this.$_data$ = $data$$140_errSummary$$9$$
+        var $data$$143_errSummary$$9$$ = this.options.data;
+        if($data$$143_errSummary$$9$$ instanceof $oj$$37$$.$PagingDataSource$ || $data$$143_errSummary$$9$$ instanceof $oj$$37$$.$PagingTableDataSource$) {
+          this.$_data$ = $data$$143_errSummary$$9$$
         }else {
-          var $data$$140_errSummary$$9$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_DATA_INVALID_TYPE_SUMMARY$), $errDetail$$9$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_DATA_INVALID_TYPE_DETAIL$);
-          throw new $oj$$37$$.$Message$($data$$140_errSummary$$9$$, $errDetail$$9$$, $oj$$37$$.$Message$.$SEVERITY_LEVEL$.ERROR);
+          var $data$$143_errSummary$$9$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_DATA_INVALID_TYPE_SUMMARY$), $errDetail$$9$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_DATA_INVALID_TYPE_DETAIL$);
+          throw new $oj$$37$$.$Message$($data$$143_errSummary$$9$$, $errDetail$$9$$, $oj$$37$$.$Message$.$SEVERITY_LEVEL$.ERROR);
         }
         this.$_data$.setPageSize(this.options.pageSize);
         this.$_dataMetadata$ = this.options.data
       }
       return this.$_data$
     }, $_getItemRangeText$:function() {
-      var $data$$141$$ = this.$_getData$(), $itemRangeText$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_MSG_ITEM_RANGE$, {pageFrom:this.$_startIndex$, pageTo:0, pageTotal:0});
-      null != $data$$141$$ && ($itemRangeText$$ = -1 != $data$$141$$.totalSize() ? this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_MSG_ITEM_RANGE$, {pageFrom:this.$_startIndex$ + 1, pageTo:this.$_startIndex$ + $data$$141$$.size(), pageTotal:$data$$141$$.totalSize()}) : this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_MSG_ITEM_RANGE_UNKNOWN$, {pageFrom:this.$_startIndex$ + 1, pageTo:this.$_startIndex$ + $data$$141$$.size()}));
+      var $data$$144$$ = this.$_getData$(), $itemRangeText$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_MSG_ITEM_RANGE$, {pageFrom:this.$_startIndex$, pageTo:0, pageTotal:0});
+      null != $data$$144$$ && ($itemRangeText$$ = -1 != $data$$144$$.totalSize() ? this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_MSG_ITEM_RANGE$, {pageFrom:this.$_startIndex$ + 1, pageTo:this.$_startIndex$ + $data$$144$$.size(), pageTotal:$data$$144$$.totalSize()}) : this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_MSG_ITEM_RANGE_UNKNOWN$, {pageFrom:this.$_startIndex$ + 1, pageTo:this.$_startIndex$ + $data$$144$$.size()}));
       return $itemRangeText$$
     }, $_getMaxPageLinks$:function() {
       return this.options.pageOptions.maxPageLinks
@@ -164,8 +164,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       }
       return $startIndex$$5$$
     }, $_getTotalPages$:function() {
-      var $data$$142$$ = this.$_getData$(), $totalSize$$3$$ = 0;
-      null != $data$$142$$ && ($totalSize$$3$$ = $data$$142$$.totalSize());
+      var $data$$145$$ = this.$_getData$(), $totalSize$$3$$ = 0;
+      null != $data$$145$$ && ($totalSize$$3$$ = $data$$145$$.totalSize());
       return-1 == $totalSize$$3$$ ? -1 : Math.ceil($totalSize$$3$$ / this.options.pageSize)
     }, $_handleDataFetchEnd$:function() {
       this.$_refresh$()
@@ -198,20 +198,20 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
       ($pagingControlNavArrowSection$$1_pagingControlNavNext$$ = $pagingControlNavArrowSection$$1_pagingControlNavNext$$.children("." + this.$_CSS_CLASSES$.$_PAGING_CONTROL_NAV_NEXT_CLASS$)) && 0 < $pagingControlNavArrowSection$$1_pagingControlNavNext$$.length && ($pagingControlNavArrowSection$$1_pagingControlNavNext$$ = $$$$35$$($pagingControlNavArrowSection$$1_pagingControlNavNext$$[0]), this.$_getCurrentPage$() == this.$_getTotalPages$() ? ($pagingControlNavArrowSection$$1_pagingControlNavNext$$.addClass(this.$_MARKER_STYLE_CLASSES$.$_DISABLED$), 
       $pagingControlNavArrowSection$$1_pagingControlNavNext$$.removeClass(this.$_MARKER_STYLE_CLASSES$.$_ENABLED$), $pagingControlNavArrowSection$$1_pagingControlNavNext$$.attr("tabindex", "-1")) : ($pagingControlNavArrowSection$$1_pagingControlNavNext$$.addClass(this.$_MARKER_STYLE_CLASSES$.$_ENABLED$), $pagingControlNavArrowSection$$1_pagingControlNavNext$$.removeClass(this.$_MARKER_STYLE_CLASSES$.$_DISABLED$), $pagingControlNavArrowSection$$1_pagingControlNavNext$$.attr("tabindex", "0")))
     }, $_registerDataSourceEventListeners$:function() {
-      var $data$$143$$ = this.$_getData$();
-      if(null != $data$$143$$) {
+      var $data$$146$$ = this.$_getData$();
+      if(null != $data$$146$$) {
         this.$_dataSourceEventHandlers$ = [];
         this.$_dataSourceEventHandlers$.push({eventType:$oj$$37$$.$PagingDataSource$.$EventType$.SYNC, eventHandler:this.$_handleDataFetchEnd$.bind(this)});
         var $i$$276$$;
         for($i$$276$$ = 0;$i$$276$$ < this.$_dataSourceEventHandlers$.length;$i$$276$$++) {
-          $data$$143$$.on(this.$_dataSourceEventHandlers$[$i$$276$$].eventType, this.$_dataSourceEventHandlers$[$i$$276$$].eventHandler)
+          $data$$146$$.on(this.$_dataSourceEventHandlers$[$i$$276$$].eventType, this.$_dataSourceEventHandlers$[$i$$276$$].eventHandler)
         }
       }
-    }, $_registerResizeListener$:function($element$$64$$) {
+    }, $_registerResizeListener$:function($element$$65$$) {
       if(!this.$_isResizeListenerAdded$) {
-        var $self$$104$$ = this;
-        $oj$$37$$.$DomUtils$.$addResizeListener$($element$$64$$[0], function() {
-          $self$$104$$.$_refresh$()
+        var $self$$107$$ = this;
+        $oj$$37$$.$DomUtils$.$addResizeListener$($element$$65$$[0], function() {
+          $self$$107$$.$_refresh$()
         });
         this.$_isResizeListenerAdded$ = !0
       }
@@ -371,8 +371,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
             $pageList$$.push($currentPage_pageAfterCurrent_pageNum$$2$$), $currentPage_pageAfterCurrent_pageNum$$2$$++, $i$$277_numPagesToAdd$$--
           }
         }
-        $pageList$$.sort(function($a$$70$$, $b$$49$$) {
-          return $a$$70$$ - $b$$49$$
+        $pageList$$.sort(function($a$$76$$, $b$$50$$) {
+          return $a$$76$$ - $b$$50$$
         });
         for($i$$277_numPagesToAdd$$ = 0;$i$$277_numPagesToAdd$$ < $pageList$$.length;$i$$277_numPagesToAdd$$++) {
           $currentPage_pageAfterCurrent_pageNum$$2$$ = $pageList$$[$i$$277_numPagesToAdd$$], this.$_createPagingControlNavPage$($errSummary$$10_pagingControlNavPagesLinks$$, $currentPage_pageAfterCurrent_pageNum$$2$$), $i$$277_numPagesToAdd$$ != $pageList$$.length - 1 && $currentPage_pageAfterCurrent_pageNum$$2$$ != $pageList$$[$i$$277_numPagesToAdd$$ + 1] - 1 && this.$_createPagingControlNavPage$($errSummary$$10_pagingControlNavPagesLinks$$, -1)

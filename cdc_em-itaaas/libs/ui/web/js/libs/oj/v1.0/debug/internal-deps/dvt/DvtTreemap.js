@@ -27,7 +27,6 @@ DvtBaseTreemap._BACKGROUND_INLINE_DEFAULT = 'background-color:' + DvtBaseTreemap
     'border-color:' + DvtBaseTreemap._BACKGROUND_BORDER_COLOR + ';' +
     'border-width:2px';
 
-
 /**
  * @override
  */
@@ -38,7 +37,6 @@ DvtBaseTreemap.prototype.Init = function(context, callback, callbackObj) {
   this.Defaults = new DvtTreemapDefaults();
 };
 
-
 /**
  * @override
  */
@@ -46,7 +44,6 @@ DvtBaseTreemap.prototype.Parse = function(xmlString) {
   var parser = new DvtTreemapParser(this);
   return parser.parse(xmlString);
 };
-
 
 /**
  * @override
@@ -66,7 +63,6 @@ DvtBaseTreemap.prototype.ApplyParsedProperties = function(props) {
   this._isolatedNodes = [];
   this._processInitialIsolate(props.isolateRowKey);
 };
-
 
 /**
  * @override
@@ -109,7 +105,6 @@ DvtBaseTreemap.prototype.Layout = function(availSpace) {
     }
   }
 };
-
 
 /**
  * @override
@@ -169,7 +164,6 @@ DvtBaseTreemap.prototype.Render = function(container, bounds) {
   }
 };
 
-
 /**
  * Hook for cleaning up animation behavior at the end of the animation.
  * @override
@@ -193,7 +187,6 @@ DvtBaseTreemap.prototype.OnAnimationEnd = function() {
   DvtBaseTreemap.superclass.OnAnimationEnd.call(this);
 };
 
-
 /**
  * Reselects the selected nodes after a re-render.
  * @protected
@@ -212,7 +205,6 @@ DvtBaseTreemap.prototype.ReselectNodes = function() {
   }
 };
 
-
 /**
  * @override
  */
@@ -221,7 +213,6 @@ DvtBaseTreemap.prototype.CreateKeyboardHandler = function(manager)
   return new DvtTreemapKeyboardHandler(manager);
 };
 
-
 /**
  * @override
  */
@@ -229,7 +220,6 @@ DvtBaseTreemap.prototype.CreateEventManager = function(view, context, callback, 
 {
   return new DvtTreemapEventManager(view, context, callback, callbackObj);
 };
-
 
 /**
  * @override
@@ -246,7 +236,6 @@ DvtBaseTreemap.prototype.GetInitialFocusedItem = function(root)
     return null;
 };
 
-
 /**
  * Updates the hover effect to display the specified stroke along the specified points.
  * @param {array} points The array of points defining the polyline.
@@ -259,14 +248,12 @@ DvtBaseTreemap.prototype.__showHoverEffect = function(points, stroke, node) {
   this._hoverEffect.setVisible(true);
 };
 
-
 /**
  * Hides the hover effect.
  */
 DvtBaseTreemap.prototype.__hideHoverEffect = function() {
   this._hoverEffect.setVisible(false);
 };
-
 
 /**
  * Returns the layer for rendering group text displayed on nodes.  This layer is above the selected
@@ -276,7 +263,6 @@ DvtBaseTreemap.prototype.__hideHoverEffect = function() {
 DvtBaseTreemap.prototype.__getGroupTextLayer = function() {
   return this._groupTextLayer;
 };
-
 
 /**
  * Moves the specified object to the selected layer, above the non-selected objects.
@@ -299,7 +285,6 @@ DvtBaseTreemap.prototype.__moveToSelectedLayer = function(rect) {
     this._selectedLayer.addChild(rect);
 };
 
-
 /**
  * @override
  */
@@ -312,7 +297,6 @@ DvtBaseTreemap.prototype.__getNodeUnderPoint = function(x, y) {
   else
     return this._root.getNodeUnderPoint(x, y);
 };
-
 
 /**
  * Isolates the specified node.
@@ -342,7 +326,6 @@ DvtBaseTreemap.prototype.__isolate = function(node) {
   this._renderIsolateRestore(node);
 };
 
-
 /**
  * Restores the full tree from the isolated state.
  */
@@ -368,7 +351,6 @@ DvtBaseTreemap.prototype.__restore = function() {
   this._renderIsolateRestore(restoreNode);
 };
 
-
 /**
  * Returns the currently isolated node, or null if no node is isolated
  *
@@ -381,7 +363,6 @@ DvtBaseTreemap.prototype.__getLastIsolatedNode = function()
   else
     return null;
 };
-
 
 /**
  * The node that was isolated or restored.
@@ -416,7 +397,6 @@ DvtBaseTreemap.prototype._renderIsolateRestore = function(node) {
   }
 };
 
-
 /**
  * Processes the initially isolated node, if any.
  * @param {string} isolateRowKey The initially isolated node, if any.
@@ -436,7 +416,6 @@ DvtBaseTreemap.prototype._processInitialIsolate = function(isolateRowKey) {
   }
 };
 
-
 /**
  * Returns whether gaps are displayed between groups.
  * @return {string} The types of groups for which gaps are displayed.
@@ -444,7 +423,6 @@ DvtBaseTreemap.prototype._processInitialIsolate = function(isolateRowKey) {
 DvtBaseTreemap.prototype.__getGroupGaps = function() {
   return this._groupGaps;
 };
-
 
 /**
  * Returns the default navigable item to receive keyboard focus.
@@ -473,15 +451,17 @@ DvtBaseTreemap.prototype.getShapesForViewSwitcher = function(bOld) {
       if (id && shape) {
         shapes[id] = shape;
         shapes[id + '_text'] = node._text;
-        if (node._borderTL) {
-          shapes[id + '_borderTL'] = node._borderTL;
+
+        // TODO private access is not allowed, so we'll need to fix this before productizing.
+        if (node._topLeftShape) {
+          shape.removeChild(node._topLeftShape);
         }
-        if (node._borderBR) {
-          shapes[id + '_borderBR'] = node._borderBR;
+        if (node._fillShape) {
+          shape.removeChild(node._fillShape);
         }
-        if (node._border) {
-          shapes[id + '_border'] = node._border;
-        }
+
+        // TODO setting the fill to deal with the issue where the animation shapes currently use the background shape
+        shape.setFill(node.GetFill());
 
         //flatten hierarchical structure of nodes so that they animate independently
         if (bOld) {

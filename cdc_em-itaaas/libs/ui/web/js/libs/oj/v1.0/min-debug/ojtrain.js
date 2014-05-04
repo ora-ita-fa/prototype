@@ -1,9 +1,9 @@
 define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$33$$, $$$$32$$) {
   (function() {
     $oj$$33$$.$__registerWidget$("oj.ojTrain", $$$$32$$.oj.baseComponent, {version:"1.0.0", defaultElement:"\x3cdiv\x3e", widgetEventPrefix:"oj", options:{steps:[], selection:"next", currentStep:"", optionChange:null}, $_stepNum$:0, $_stepArray$:null, _create:function() {
-      var $options$$296$$ = this.options;
+      var $options$$300$$ = this.options;
       this._super();
-      this.$_stepNum$ = $options$$296$$.steps.length;
+      this.$_stepNum$ = $options$$300$$.steps.length;
       this.$_marginType$ = (this.$_isRtl$ = "rtl" === this.$_GetReadingDirection$()) ? "margin-right" : "margin-left";
       this.$_alignType$ = this.$_isRtl$ ? "right" : "left";
       var $bar_i$$267$$ = $$$$32$$("\x3cdiv class\x3d'oj-train-bar'\x3e\x3c/div\x3e");
@@ -15,11 +15,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$33$$, $$$$
       this.$_progressbar$ = $$$$32$$("\x3cdiv class\x3d'oj-train-bar-overlay'\x3e\x3c/div\x3e");
       this.$_progressbar$.appendTo(this.element);
       this.$_setupArray$();
-      this.$_currentStepIndex$ = this.$_getCurrentStepIndex$($options$$296$$.currentStep);
+      this.$_currentStepIndex$ = this.$_getCurrentStepIndex$($options$$300$$.currentStep);
       for($bar_i$$267$$ = 0;$bar_i$$267$$ < this.$_stepNum$;$bar_i$$267$$++) {
         var $stepTag$$ = $$$$32$$("\x3cli\x3e").attr({id:this.$_stepArray$[$bar_i$$267$$][1]}).css({"list-style-type":"none", position:"absolute"}).css(this.$_marginType$, this.$_centerMargin$ + this.$_maxStepWidth$ * $bar_i$$267$$ + "px").css(this.$_alignType$, 0);
         this.$_stepList$.append($stepTag$$);
-        $bar_i$$267$$ == this.$_currentStepIndex$ + 1 && "next" == $options$$296$$.selection && (this.$_stepArray$[$bar_i$$267$$][2] = "on");
+        $bar_i$$267$$ == this.$_currentStepIndex$ + 1 && "next" == $options$$300$$.selection && (this.$_stepArray$[$bar_i$$267$$][2] = "on");
         this.$_drawLabel$($bar_i$$267$$);
         this.$_drawStepFill$($bar_i$$267$$);
         this.$_drawButton$($bar_i$$267$$);
@@ -31,69 +31,69 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$33$$, $$$$
       this.$_progressbar$.css({"margin-top":"7px", width:(this.$_currentStepIndex$ === this.$_stepNum$ - 1 ? (this.$_stepNum$ - 1) * this.$_maxStepWidth$ : this.$_maxStepWidth$ * this.$_currentStepIndex$ + 53.5 * (this.$_maxStepWidth$ / 107)) + "px"}).css(this.$_marginType$, this.$_centerMargin$ + 36 + "px").css(this.$_alignType$, 0);
       this.$_stepList$.appendTo(this.element)
     }, $_setupArray$:function() {
-      var $options$$297$$ = this.options;
+      var $options$$301$$ = this.options;
       this.$_stepArray$ = [];
       for(var $i$$268$$ = 0;$i$$268$$ < this.$_stepNum$;$i$$268$$++) {
-        var $step$$2$$ = $options$$297$$.steps[$i$$268$$];
+        var $step$$2$$ = $options$$301$$.steps[$i$$268$$];
         this.$_stepArray$[$i$$268$$] = Array(5);
-        this.$_stepArray$[$i$$268$$][2] = $options$$297$$.selection && "next" != $options$$297$$.selection ? $options$$297$$.selection : "off";
+        this.$_stepArray$[$i$$268$$][2] = $options$$301$$.selection && "next" != $options$$301$$.selection ? $options$$301$$.selection : "off";
         this.$_stepArray$[$i$$268$$][3] = "unvisited";
         for(var $key$$111$$ in $step$$2$$) {
           "name" === $key$$111$$ ? this.$_stepArray$[$i$$268$$][0] = $step$$2$$[$key$$111$$] : "id" === $key$$111$$ ? this.$_stepArray$[$i$$268$$][1] = $step$$2$$[$key$$111$$] : "selection" === $key$$111$$ ? this.$_stepArray$[$i$$268$$][2] = $step$$2$$[$key$$111$$] : "state" === $key$$111$$ ? this.$_stepArray$[$i$$268$$][3] = $step$$2$$[$key$$111$$] : "messageType" === $key$$111$$ && (this.$_stepArray$[$i$$268$$][4] = $step$$2$$[$key$$111$$])
         }
       }
-    }, $_drawButton$:function($index$$182$$) {
-      var $button$$1$$ = $$$$32$$("\x3cdiv/\x3e"), $scrnRead$$ = $$$$32$$("\x3cspan/\x3e"), $self$$100$$ = this, $desc$$ = "";
-      if(this.$_stepArray$[$index$$182$$]) {
-        var $state$$4_stepLi$$ = this.$_stepArray$[$index$$182$$][3];
-        this.$_currentStepIndex$ === $index$$182$$ ? ($button$$1$$.addClass("oj-train-button-current"), $desc$$ = ". This is the current step.") : "visited" === $state$$4_stepLi$$ ? ($button$$1$$.addClass("oj-train-button-visited"), $desc$$ = ". This step has been visited.") : "unvisited" === $state$$4_stepLi$$ ? ($button$$1$$.addClass("oj-train-button-unvisited"), $desc$$ = ". This step has not been visited yet.") : $button$$1$$.addClass("oj-train-button-disabled");
-        "disabled" === this.$_stepArray$[$index$$182$$][3] || null != this.options.disabled && this.options.disabled || "on" !== this.$_stepArray$[$index$$182$$][2] || (this._hoverable($button$$1$$), $button$$1$$.bind("click" + this.eventNamespace, function() {
-          var $oldStep$$ = $self$$100$$.options.currentStep;
-          $self$$100$$.options.currentStep = this.parentNode.id;
-          $self$$100$$.$_fireOptionChange$("currentStep", $oldStep$$, this.parentNode.id, !0)
+    }, $_drawButton$:function($index$$184$$) {
+      var $button$$1$$ = $$$$32$$("\x3cdiv/\x3e"), $scrnRead$$ = $$$$32$$("\x3cspan/\x3e"), $self$$103$$ = this, $desc$$ = "";
+      if(this.$_stepArray$[$index$$184$$]) {
+        var $state$$4_stepLi$$ = this.$_stepArray$[$index$$184$$][3];
+        this.$_currentStepIndex$ === $index$$184$$ ? ($button$$1$$.addClass("oj-train-button-current"), $desc$$ = ". This is the current step.") : "visited" === $state$$4_stepLi$$ ? ($button$$1$$.addClass("oj-train-button-visited"), $desc$$ = ". This step has been visited.") : "unvisited" === $state$$4_stepLi$$ ? ($button$$1$$.addClass("oj-train-button-unvisited"), $desc$$ = ". This step has not been visited yet.") : $button$$1$$.addClass("oj-train-button-disabled");
+        "disabled" === this.$_stepArray$[$index$$184$$][3] || null != this.options.disabled && this.options.disabled || "on" !== this.$_stepArray$[$index$$184$$][2] || (this._hoverable($button$$1$$), $button$$1$$.bind("click" + this.eventNamespace, function() {
+          var $oldStep$$ = $self$$103$$.options.currentStep;
+          $self$$103$$.options.currentStep = this.parentNode.id;
+          $self$$103$$.$_fireOptionChange$("currentStep", $oldStep$$, this.parentNode.id, !0)
         }));
         $button$$1$$.css({"margin-top":"4px", width:"12px", height:"12px"}).css(this.$_marginType$, "29px").css(this.$_alignType$, 0);
-        $state$$4_stepLi$$ = this.$_stepList$.children().eq($index$$182$$).children();
-        3 <= $state$$4_stepLi$$.length ? ($state$$4_stepLi$$[2].remove(), $button$$1$$.insertAfter($state$$4_stepLi$$[1])) : this.$_stepList$.children().eq($index$$182$$).append($button$$1$$);
+        $state$$4_stepLi$$ = this.$_stepList$.children().eq($index$$184$$).children();
+        3 <= $state$$4_stepLi$$.length ? ($state$$4_stepLi$$[2].remove(), $button$$1$$.insertAfter($state$$4_stepLi$$[1])) : this.$_stepList$.children().eq($index$$184$$).append($button$$1$$);
         $scrnRead$$.text($desc$$);
         $scrnRead$$.css("display", "none");
-        this.$_stepList$.children().eq($index$$182$$).find("a").append($scrnRead$$)
+        this.$_stepList$.children().eq($index$$184$$).find("a").append($scrnRead$$)
       }
-    }, $_drawMessageType$:function($index$$183$$) {
-      var $icon$$4$$ = $$$$32$$("\x3cdiv/\x3e"), $scrnRead$$1$$ = $$$$32$$("\x3cspan/\x3e"), $desc$$1$$ = "", $self$$101$$ = this;
-      if(this.$_stepArray$[$index$$183$$]) {
-        var $messageType$$ = this.$_stepArray$[$index$$183$$][4];
-        "complete" === $messageType$$ ? ($icon$$4$$.addClass("oj-train-icon-complete"), $desc$$1$$ = " Complete") : "info" === $messageType$$ ? ($icon$$4$$.addClass("oj-train-icon-info"), $desc$$1$$ = " Info") : "error" === $messageType$$ ? ($icon$$4$$.addClass("oj-train-icon-error"), $desc$$1$$ = " Error") : "warning" === $messageType$$ && ($icon$$4$$.addClass("oj-train-icon-warning"), $desc$$1$$ = " Warning");
-        var $stepLi$$1$$ = this.$_stepList$.children().eq($index$$183$$).children();
-        4 <= $stepLi$$1$$.length && $stepLi$$1$$[3].remove();
-        "disabled" === this.$_stepArray$[$index$$183$$][3] || null != this.options.disabled && this.options.disabled || "on" !== this.$_stepArray$[$index$$183$$][2] || (this._hoverable($icon$$4$$), $icon$$4$$.bind("click" + this.eventNamespace, function() {
-          var $oldStep$$1$$ = $self$$101$$.options.currentStep;
-          $self$$101$$.options.currentStep = this.parentNode.id;
-          $self$$101$$.$_fireOptionChange$("currentStep", $oldStep$$1$$, this.parentNode.id, !0)
-        }));
-        null != $messageType$$ && "none" != $messageType$$ && ($icon$$4$$.css({"margin-top":"9px", height:"9px", width:"9px"}).css(this.$_marginType$, "34px").css(this.$_alignType$, 0), $scrnRead$$1$$.text($desc$$1$$), $scrnRead$$1$$.css("display", "none"), this.$_stepList$.children().eq($index$$183$$).find("a").append($scrnRead$$1$$), this.$_stepList$.children().eq($index$$183$$).append($icon$$4$$))
-      }
-    }, $_fireOptionChange$:function($key$$112$$, $previousValue$$8$$, $value$$200$$, $originalEvent$$5$$) {
-      this._trigger("optionChange", $originalEvent$$5$$, {option:$key$$112$$, previousValue:$previousValue$$8$$, value:$value$$200$$, optionMetadata:{writeback:$originalEvent$$5$$ ? "shouldWrite" : "shouldNotWrite"}})
-    }, $_drawStepFill$:function($index$$184_stepLi$$2$$) {
-      var $stepFill$$ = $$$$32$$("\x3cdiv/\x3e");
-      this.$_stepArray$[$index$$184_stepLi$$2$$] && ($index$$184_stepLi$$2$$ <= this.$_currentStepIndex$ ? $stepFill$$.addClass("oj-train-stepBackground-overlay") : $stepFill$$.addClass("oj-train-stepBackground"), $stepFill$$.css(this.$_marginType$, "25px").css(this.$_alignType$, 0), $index$$184_stepLi$$2$$ = this.$_stepList$.children().eq($index$$184_stepLi$$2$$).children(), 1 < $index$$184_stepLi$$2$$.length && $index$$184_stepLi$$2$$[1].remove(), $stepFill$$.insertAfter($index$$184_stepLi$$2$$[0]))
-    }, $_drawLabel$:function($index$$185$$) {
-      var $self$$102$$ = this;
+    }, $_drawMessageType$:function($index$$185$$) {
+      var $icon$$4$$ = $$$$32$$("\x3cdiv/\x3e"), $scrnRead$$1$$ = $$$$32$$("\x3cspan/\x3e"), $desc$$1$$ = "", $self$$104$$ = this;
       if(this.$_stepArray$[$index$$185$$]) {
-        var $label$$5$$ = $$$$32$$("\x3ca\x3e" + this.$_stepArray$[$index$$185$$][0] + "\x3c/a\x3e");
+        var $messageType$$ = this.$_stepArray$[$index$$185$$][4];
+        "complete" === $messageType$$ ? ($icon$$4$$.addClass("oj-train-icon-complete"), $desc$$1$$ = " Complete") : "info" === $messageType$$ ? ($icon$$4$$.addClass("oj-train-icon-info"), $desc$$1$$ = " Info") : "error" === $messageType$$ ? ($icon$$4$$.addClass("oj-train-icon-error"), $desc$$1$$ = " Error") : "warning" === $messageType$$ && ($icon$$4$$.addClass("oj-train-icon-warning"), $desc$$1$$ = " Warning");
+        var $stepLi$$1$$ = this.$_stepList$.children().eq($index$$185$$).children();
+        4 <= $stepLi$$1$$.length && $stepLi$$1$$[3].remove();
+        "disabled" === this.$_stepArray$[$index$$185$$][3] || null != this.options.disabled && this.options.disabled || "on" !== this.$_stepArray$[$index$$185$$][2] || (this._hoverable($icon$$4$$), $icon$$4$$.bind("click" + this.eventNamespace, function() {
+          var $oldStep$$1$$ = $self$$104$$.options.currentStep;
+          $self$$104$$.options.currentStep = this.parentNode.id;
+          $self$$104$$.$_fireOptionChange$("currentStep", $oldStep$$1$$, this.parentNode.id, !0)
+        }));
+        null != $messageType$$ && "none" != $messageType$$ && ($icon$$4$$.css({"margin-top":"9px", height:"9px", width:"9px"}).css(this.$_marginType$, "34px").css(this.$_alignType$, 0), $scrnRead$$1$$.text($desc$$1$$), $scrnRead$$1$$.css("display", "none"), this.$_stepList$.children().eq($index$$185$$).find("a").append($scrnRead$$1$$), this.$_stepList$.children().eq($index$$185$$).append($icon$$4$$))
+      }
+    }, $_fireOptionChange$:function($key$$112$$, $previousValue$$8$$, $value$$202$$, $originalEvent$$5$$) {
+      this._trigger("optionChange", $originalEvent$$5$$, {option:$key$$112$$, previousValue:$previousValue$$8$$, value:$value$$202$$, optionMetadata:{writeback:$originalEvent$$5$$ ? "shouldWrite" : "shouldNotWrite"}})
+    }, $_drawStepFill$:function($index$$186_stepLi$$2$$) {
+      var $stepFill$$ = $$$$32$$("\x3cdiv/\x3e");
+      this.$_stepArray$[$index$$186_stepLi$$2$$] && ($index$$186_stepLi$$2$$ <= this.$_currentStepIndex$ ? $stepFill$$.addClass("oj-train-stepBackground-overlay") : $stepFill$$.addClass("oj-train-stepBackground"), $stepFill$$.css(this.$_marginType$, "25px").css(this.$_alignType$, 0), $index$$186_stepLi$$2$$ = this.$_stepList$.children().eq($index$$186_stepLi$$2$$).children(), 1 < $index$$186_stepLi$$2$$.length && $index$$186_stepLi$$2$$[1].remove(), $stepFill$$.insertAfter($index$$186_stepLi$$2$$[0]))
+    }, $_drawLabel$:function($index$$187$$) {
+      var $self$$105$$ = this;
+      if(this.$_stepArray$[$index$$187$$]) {
+        var $label$$5$$ = $$$$32$$("\x3ca\x3e" + this.$_stepArray$[$index$$187$$][0] + "\x3c/a\x3e");
         $label$$5$$.addClass("oj-train-label");
         $label$$5$$.css("margin-bottom", "7px");
         $label$$5$$.css(this.$_alignType$, 0);
-        $index$$185$$ === this.$_currentStepIndex$ ? $label$$5$$.addClass("oj-selected") : "visited" === this.$_stepArray$[$index$$185$$][3] ? $label$$5$$.addClass("oj-visited") : "disabled" === this.$_stepArray$[$index$$185$$][3] && $label$$5$$.addClass("oj-disabled");
-        "on" !== this.$_stepArray$[$index$$185$$][2] || null != this.options.disabled && this.options.disabled || ($label$$5$$.attr("href", "#"), this._hoverable($label$$5$$), $label$$5$$.bind("click keydown" + this.eventNamespace, function($e$$118_oldStep$$2$$) {
-          if(13 == $e$$118_oldStep$$2$$.keyCode || "click" == $e$$118_oldStep$$2$$.type) {
-            $e$$118_oldStep$$2$$ = $self$$102$$.options.currentStep, $self$$102$$.options.currentStep = this.parentNode.id, $self$$102$$.$_fireOptionChange$("currentStep", $e$$118_oldStep$$2$$, this.parentNode.id, !0)
+        $index$$187$$ === this.$_currentStepIndex$ ? $label$$5$$.addClass("oj-selected") : "visited" === this.$_stepArray$[$index$$187$$][3] ? $label$$5$$.addClass("oj-visited") : "disabled" === this.$_stepArray$[$index$$187$$][3] && $label$$5$$.addClass("oj-disabled");
+        "on" !== this.$_stepArray$[$index$$187$$][2] || null != this.options.disabled && this.options.disabled || ($label$$5$$.attr("href", "#"), this._hoverable($label$$5$$), $label$$5$$.bind("click keydown" + this.eventNamespace, function($e$$119_oldStep$$2$$) {
+          if(13 == $e$$119_oldStep$$2$$.keyCode || "click" == $e$$119_oldStep$$2$$.type) {
+            $e$$119_oldStep$$2$$ = $self$$105$$.options.currentStep, $self$$105$$.options.currentStep = this.parentNode.id, $self$$105$$.$_fireOptionChange$("currentStep", $e$$119_oldStep$$2$$, this.parentNode.id, !0)
           }
         }));
-        var $stepLi$$3$$ = this.$_stepList$.children().eq($index$$185$$).children();
+        var $stepLi$$3$$ = this.$_stepList$.children().eq($index$$187$$).children();
         1 <= $stepLi$$3$$.length && $stepLi$$3$$[0].remove();
-        this.$_stepList$.children().eq($index$$185$$).prepend($label$$5$$)
+        this.$_stepList$.children().eq($index$$187$$).prepend($label$$5$$)
       }
     }, $_getCurrentStepIndex$:function($id$$33$$) {
       for(var $i$$269$$ = 0;$i$$269$$ < this.$_stepNum$;$i$$269$$++) {

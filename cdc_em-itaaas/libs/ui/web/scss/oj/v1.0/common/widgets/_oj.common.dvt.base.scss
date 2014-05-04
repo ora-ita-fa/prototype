@@ -119,17 +119,17 @@
     }
     
     .oj-legend {
-      font-size: 11px;
+      font-size: $fontSize;
       color: $textColor;
     }
 
     .oj-legend-title {
-      font-size: 11px;
+      font-size: $fontSize;
       color: $textColor;
     }
 
     .oj-legend-section-title {
-      font-size: 11px;
+      font-size: $fontSize;
       color: $textColor;
     }
   }

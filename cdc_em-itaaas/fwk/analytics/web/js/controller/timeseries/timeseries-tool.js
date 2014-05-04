@@ -17,8 +17,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
            
             var qdg = dataSource.getQueryDescriptorGroup();
             var dsg = dataSource.getDataSetGroup();
-            var config = dataSource.getConfig();
-            console.log(config);
+            var timeSeriesConfig = dataSource.getConfig();
             var timeWindow = valueAccessor().timeWindow;
 
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
@@ -54,7 +53,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
 
                 var chartType = 'line';
                 try {
-                    chartType = config.chartType;
+                    chartType = timeSeriesConfig.chartType;
                 } catch (ignore) {
 
                 }
@@ -96,12 +95,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 }
 
                 var rollupConfig;
+                var enableRollup=false;
                 try {
+                    enableRollup=timeSeriesConfig.enableRollup;
                     rollupConfig = qdg.QueryDescriptor[0].startingRollupLevels;
                 } catch (ignore) {
 
                 }
-                if (rollupConfig && rollupConfig.length > 0) {
+                if (enableRollup){// &&rollupConfig && rollupConfig.length > 0) {
                     $(rollupEl).addClass("rollup-table-enabled ");
                     $(chartEl).addClass("chart-rollup-enabled");
                     ko.applyBindings({

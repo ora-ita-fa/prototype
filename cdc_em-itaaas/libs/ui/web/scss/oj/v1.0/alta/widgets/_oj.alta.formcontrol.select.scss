@@ -137,7 +137,7 @@ $includeSelectClasses:   $includeFormControlClasses !default;
     }
 
     .oj-select-search-icon {
-      text-align: center;
+/*      text-align: center; */
       vertical-align:text-bottom;
       font-size: $fontSize;
       color: $iconColorDefault;
@@ -149,7 +149,7 @@ $includeSelectClasses:   $includeFormControlClasses !default;
     .oj-select-spyglass-box {
       @include oj-box-sizing-property(border-box);
       @include oj-box-shadow(none);
-      line-height: 26px;
+      line-height: 28px;
       width: 28px;
       text-align: center;
       vertical-align: middle;
@@ -158,7 +158,6 @@ $includeSelectClasses:   $includeFormControlClasses !default;
       display: table-cell;
 */
       overflow: hidden;
-      cursor: pointer;
       display: inline-block;
       position: absolute;
       @include oj-ltr() {
@@ -195,14 +194,14 @@ $includeSelectClasses:   $includeFormControlClasses !default;
       @include oj-box-shadow(none);
 /*      display: table-cell; */
 
-      padding-top: 6px;
-      padding-bottom: 5px;
+      padding-top: 7px;
+      padding-bottom: 6px;
       @include oj-ltr() {
-        padding-right: 28px;
+        padding-right: 24px;
         padding-left: 5px;
       }
       @include oj-rtl() {
-        padding-left: 28px;
+        padding-left: 24px;
         padding-right: 5px;
       }
 
@@ -242,7 +241,8 @@ $includeSelectClasses:   $includeFormControlClasses !default;
      * Used to hide the original markup
      */
     .oj-select-offscreen, .oj-select-offscreen:focus {
-      clip: rect(0 0 0 0);
+/* 
+     clip: rect(0 0 0 0);
       width: 1px;
       height: 1px;
       border: 0;
@@ -253,11 +253,12 @@ $includeSelectClasses:   $includeFormControlClasses !default;
       outline: 0;
       left: 0;
       top: 0; 
+*/
+      display: none;
     }
 
     .oj-select-display-none {
       display: none; 
     }
-
   }
 }

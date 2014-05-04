@@ -2,6 +2,11 @@
 
 $includePopupClasses:  $includeAllClasses !default;
 
+// include dependencies
+@if $includePopupClasses != false {
+  $includeIconClasses: true !global;
+}
+
 @import "../../common/helpers/oj.common.helpers";
 @import "oj.alta.icons";
 
@@ -40,7 +45,7 @@ $includePopupClasses:  $includeAllClasses !default;
       pointer-events: none;
     }
     .oj-popup-tail.oj-popup-tail-simple {
-      @extend .oj-icon;
+      @extend .oj-component-icon;
       height: $noteWindowTailSimpleHeight;
       width: $noteWindowTailSimpleWidth;
       background-position: center center;

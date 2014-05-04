@@ -2,26 +2,26 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/in
   $oj$$15$$.$__registerWidget$("oj.ojSunburst", $$$$15$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{rotate:null, rotateInput:null, select:null}, $_CreateComponent$:function($context$$42$$, $callback$$92$$, $callbackObj$$5$$) {
     return DvtSunburst.newInstance($context$$42$$, $callback$$92$$, $callbackObj$$5$$)
   }, $_GetComponentStyleClasses$:function() {
-    var $styleClasses$$6$$ = this._super();
-    $styleClasses$$6$$.push("oj-sunburst");
-    return $styleClasses$$6$$
+    var $styleClasses$$5$$ = this._super();
+    $styleClasses$$5$$.push("oj-sunburst");
+    return $styleClasses$$5$$
   }, $_GetChildStyleClasses$:function() {
-    var $styleClasses$$7$$ = this._super();
-    $styleClasses$$7$$["oj-sunburst-attribute-type-text"] = {path:"styleDefaults/_attributeTypeTextStyle", property:"CSS_TEXT_PROPERTIES"};
-    $styleClasses$$7$$["oj-sunburst-attribute-value-text"] = {path:"styleDefaults/_attributeValueTextStyle", property:"CSS_TEXT_PROPERTIES"};
-    $styleClasses$$7$$["oj-sunburst-node"] = {path:"nodeDefaults/labelStyle", property:"CSS_TEXT_PROPERTIES"};
-    $styleClasses$$7$$["oj-sunburst-node oj-hover"] = {path:"nodeDefaults/hoverColor", property:"border-top-color"};
-    $styleClasses$$7$$["oj-sunburst-node oj-selected"] = [{path:"nodeDefaults/selectedOuterColor", property:"border-top-color"}, {path:"nodeDefaults/selectedInnerColor", property:"border-bottom-color"}];
-    return $styleClasses$$7$$
+    var $styleClasses$$6$$ = this._super();
+    $styleClasses$$6$$["oj-sunburst-attribute-type-text"] = {path:"styleDefaults/_attributeTypeTextStyle", property:"CSS_TEXT_PROPERTIES"};
+    $styleClasses$$6$$["oj-sunburst-attribute-value-text"] = {path:"styleDefaults/_attributeValueTextStyle", property:"CSS_TEXT_PROPERTIES"};
+    $styleClasses$$6$$["oj-sunburst-node"] = {path:"nodeDefaults/labelStyle", property:"CSS_TEXT_PROPERTIES"};
+    $styleClasses$$6$$["oj-sunburst-node oj-hover"] = {path:"nodeDefaults/hoverColor", property:"border-top-color"};
+    $styleClasses$$6$$["oj-sunburst-node oj-selected"] = [{path:"nodeDefaults/selectedOuterColor", property:"border-top-color"}, {path:"nodeDefaults/selectedInnerColor", property:"border-bottom-color"}];
+    return $styleClasses$$6$$
   }, $_GetTranslationMap$:function() {
-    var $superMap$$1$$ = this._super(), $selfMap$$1$$ = {"DvtSunburstBundle.COLOR":this.$_GetTranslatedResource$("labelColor"), "DvtSunburstBundle.SIZE":this.$_GetTranslatedResource$("labelSize")}, $ret$$32$$ = {}, $key$$77$$;
+    var $superMap$$1$$ = this._super(), $selfMap$$1$$ = {"DvtSunburstBundle.COLOR":this.$_GetTranslatedResource$("labelColor"), "DvtSunburstBundle.SIZE":this.$_GetTranslatedResource$("labelSize")}, $ret$$29$$ = {}, $key$$77$$;
     for($key$$77$$ in $superMap$$1$$) {
-      $ret$$32$$[$key$$77$$] = $superMap$$1$$[$key$$77$$]
+      $ret$$29$$[$key$$77$$] = $superMap$$1$$[$key$$77$$]
     }
     for($key$$77$$ in $selfMap$$1$$) {
-      $ret$$32$$[$key$$77$$] = $selfMap$$1$$[$key$$77$$]
+      $ret$$29$$[$key$$77$$] = $selfMap$$1$$[$key$$77$$]
     }
-    return $ret$$32$$
+    return $ret$$29$$
   }, $_HandleEvent$:function($event$$152_selection$$3$$) {
     var $selectedItems_type$$73$$ = $event$$152_selection$$3$$ && $event$$152_selection$$3$$.getType ? $event$$152_selection$$3$$.getType() : null, $selectedItem$$, $i$$205$$;
     if($selectedItems_type$$73$$ === DvtSelectionEvent.TYPE) {

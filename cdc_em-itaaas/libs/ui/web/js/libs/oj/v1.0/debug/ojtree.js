@@ -256,7 +256,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
       s += "shift+" ;
     }
 //  if (e.metaKey) {
-//    s += "meta+" ;                // TDO
+//    s += "meta+" ;                // TDO  Mac!
 //  }
 
     var key = e.which ;
@@ -465,9 +465,12 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
   * </br>
   * A Tree can be populated via standard HTML markup using a &lt;ul&gt; list structure - refer to
   * <code class="prettyprint">option</code> property <code class="prettyprint">"data"</code>.  In
-  * the case where HTML markup has been defined in the Tree's containing &lt;div&gt;, on startup the &lt;ul&gt;
-  * markup is detached from the containing &lt;div&gt;, saved, and used as a template to create a new
-  * tree structure in its place.  When the tree is destroyed, the original markup is restored.
+  * the case where the <code class="prettyprint">"data"</code> option has not been defined, ojTree
+  * will use any HTML markup defined in the Tree's containing &lt;div&gt;, and on startup the &lt;ul&gt;
+  * the markup will be detached from the containing &lt;div&gt;, saved, and used as a template to create a new
+  * tree structure in its place.  When the tree is destroyed, the original markup is restored.  Lazy loading of 
+  * a node's children (when expanded) is performed if any node indicates that it has children,  
+  * but its child &lt;ul&gt; list is left empty.
   * </p></br>Example: Using HTML markup to populate a Tree.
   * <pre class="prettyprint">
   * <code>
@@ -845,7 +848,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                   *                        // status = "success"
                   *                        // obj    = the AJAX object.
                   *                        trace("Ajax " + status) ;
-                  *                        // return the data, can transform it first if required ;
+                  *                        // return the data, can transform it first if required.
+                  *                        // if no return value, the data is used untransformed.
                   *          },
                   *          "error" : function(reason, feedback, obj) {
                   *                        // reason e.g. "parsererror"
@@ -1365,7 +1369,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 				deselectAll : null,
 
 				/**
-				  * Triggered when a tree node is destroyed.
+				  * Triggered when a tree is destroyed.
 				  *
 				  * @expose 
 				  * @event 
@@ -2019,7 +2023,6 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
        *  @public
        *  @instance
        *  @memberof! oj.ojTree 
-       *
        */ 
      remove : function(node)
      {
@@ -2179,7 +2182,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
      },
 
      /** Returns the full path to a node, either as an array of ID's or node names, depending on
-       * the value of the "idmode" argument.
+       * the value of the "idMode" argument.
        *
        * @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node, 
        *                       or a selector pointing to the element.
@@ -2346,15 +2349,15 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
        * </table>
        * <p>
        * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee;"><th>Property</th><th>Value</th><th>Description</th></tr>
-       *  <tr><td>subId</td><td><em>"parent"</em> |<em>"prevSib"</em> | <em>"nextSib"</em> | "first"</em> |"last"</em></td><td>Returns a node &lt;li&gt; element
+       *  <tr><td>subId</td><td><em>"parent"</em> |</br><em>"prevSib"</em> |</br> <em>"nextSib"</em> |</br> "first"</em> |</br><em>"last"</em></td><td>Returns a node &lt;li&gt; element
        *                 based on the "subId" value and the "node" value.
        *                 <ul><li>"parent" - returns the parent of the node specified by "node", or null if there is no parent</li></br>
        *                   <li>"prevSib" - returns the previous sibling of the node specified by "node", or null if there is no previous sibling</li></br>
        *                   <li>"nextSib" - returns the next sibling of the node specified by "node", or null if there is no next sibling</li></br>
        *                   <li>"first" - returns the first child of the parent node specified by "node". If "node"
-       *                                 is -1 or omitted, the top node of the tree is returned.</li></br>
+       *                                 is -1 or omitted, the first node of the tree is returned.</li></br>
        *                   <li>"last" - returns the last child of the parent node specified by "node". If "node"
-       *                                is -1 or omitted, the bottom node of the tree is returned</li></br>
+       *                                is -1 or omitted, the last node of the tree is returned</li></br>
        *                 </ul>
        *  <tr><td>node</td><td>String | Object</td><td>Can be a selector for the node (e.g. "#mynode"), a DOM
        *                 element (a node &lt;li&gt; or any element contained within the &lt;li&gt;), a jQuery
@@ -2372,11 +2375,10 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
         return this._processSubId(locator)
      },
 
-
      /**
-       *  Remove all traces of ojTree in the DOM (only the ones set using oj-tree*)
-       *  and cleans out all events.
-       *
+       *  Removes all traces of ojTree in the DOM (only the ones set using oj-tree*)
+       *  and cleans out all events.  If the tree was constructed from original user
+       *  markup found in the div, reinstate the markup.
        *  @expose 
        *  @public
        *  @instance
@@ -2384,25 +2386,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
        */
      destroy : function ()
      {
-        var  n = this._getIndex();
-
-        this._$container
-            .unbind(".oj-tree")
-            .undelegate(".oj-tree")
-            .removeData("oj-tree-instance-id")
-            .find("[class^='oj-tree']")
-            .addBack()
-            .attr("class", function ()
-                    {
-                      return this["className"].replace(/oj-tree[^ ]*|$/ig,'');
-                    });
-
-        _removeKeyFilter(this._$container_ul) ;        // keyboard listener
-
-        $(document)
-            .unbind(".oj-tree-" + n)
-            .undelegate(".oj-tree-" + n);
-
+        this._emitEvent({ "obj" : -1}, "destroy"); 
         this._super() ;
      },
 
@@ -2427,11 +2411,32 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
         this._$container_ul = null ;                                // the containing <ul>
         this._data          = {} ;                                  // working data
         this._tds           = null ;                                // Tree DataSource
-        this._index         = this._newIndex() ;
+        this._index         = this._newIndex() ;                    // index for this instance
         _aInstances.push(this) ;
         this._isRtl         = this._GetReadingDirection() === "rtl";
         this._initTree() ;
         this._bCreate       = false ;
+     },
+
+     /**
+       *  Widget is being destroyed.
+       *  @private
+       */
+     _destroy : function()
+     {
+        this._clearTree() ;    // Clean out the DOM.  After this, the tree markup has
+                               // been removed from the div, and all event handlers
+                               // removed.
+
+        // If the tree was constructed from existing user markup found in the div,
+        // reinstate that markup to reset the div to its original state pre tree create.
+        if (this._data.html.useExistingMarkup) {
+          if (this._data.html.cloneMarkup) {
+            this._$container.append(this._data.html.cloneMarkup) ;
+          }
+        }
+  
+        this._super() ;
      },
 
 
@@ -2503,6 +2508,41 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
         return ret ;
      },
 
+     /**
+       *  Clears out the tree dom
+       *  @private
+       */
+     _clearTree : function()
+     {
+        var  n = this._getIndex();
+
+        this._$container
+            .unbind(".oj-tree")
+            .undelegate(".oj-tree")
+            .removeData("oj-tree-instance-id")
+            .find("[class^='oj-tree']")
+            .addBack()
+            .attr("class", function ()
+                    {
+                      return this["className"].replace(/oj-tree[^ ]*|$/ig,'');
+                    });
+
+        var cl = this._$container.attr("class") ;      // if jQuery has left us with a
+        cl = cl.trim();                                // class of blanks, remove it.
+        if (cl.length === 0) {
+          this._$container.removeAttr("class") ;
+        }
+
+        _removeKeyFilter(this._$container_ul) ;        // remove keyboard listener because
+                                                       // _$container_ul will be removed
+        $(document)
+            .unbind(".oj-tree-" + n)
+            .undelegate(".oj-tree-" + n);
+
+        // Remove the constructed tree from the DOM.
+        this._$container_ul.remove() ;
+        this._$container_ul = null ;
+     },
 
      /**
        *  Returns a jQuery wrapped tree node.  obj can be a selector pointing 
@@ -2719,7 +2759,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
           this._data.core.locked = false;
           this._$container_ul.removeClass("oj-tree-locked").css("opacity", this._data.ui.opacity);
         }
-//      this.__callback({});
+//      this._emitEvent({});
      },
 
      /**
@@ -4646,7 +4686,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 
 
      /**
-       *   Process the user tree <ul> list placed in the tree div.
+       *   Process the user tree <ul> list placed in the tree div, or loaded via ajax.
        *   @private
        */
      _load_node_html : function (obj, s_call, e_call)
@@ -4685,22 +4725,22 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                     if (!obj || obj == -1 )  {
                       this._$container_ul
                               .empty()
-                              .append(this._data.html.originalContainerHtml)
-                              .find("li, a").filter(function () {
+                              .append(this._data.html.markup)
+                              .find("li, a")
+                              .filter(function () {
                                                return (!this.firstChild || !this.firstChild.tagName ||
                                                        this.firstChild.tagName !== "INS");
-                                             }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
-                                               .filter("a").children("ins:first-child")
-                                               .not(".oj-tree-icon")
-                                               .addClass(OJT_ICON);
+                                                   })
+                              .prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
+                              .filter("a").children("ins:first-child")
+                              .not(".oj-tree-icon")
+                              .addClass(OJT_ICON);
+
+                      //  No point in checking for empty parent <ul> because we don't have a
+                      //  "data" option in the first place, so no lazy loading posssible.
 
                       //  Add the <a> text <span> for hover/click styling
-                      $.each(this._$container_ul.find("li a"), function (i, val) {
-            	          var ih = val.innerHTML ;
-                          ih = ih.replace("ins>", "ins><span class='" + OJT_TITLE + "'>") ;
-                          ih += "</span>" ;
-            	          val.innerHTML = ih ;
-                      });
+                      this._insertHtmlTextSpan(this._$container_ul) ;
 
                       if (this._data.types.defType) {             // if "default" type defined
                         this._addDefType(this._$container_ul) ;   // apply to nodes with no asooc type
@@ -4723,15 +4763,23 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                              d = $("<ul />").append(d);
                            }
                            this._$container_ul
-                               .empty().append(d.children())
-                               .find("li, a").filter(function ()
-                                                {
-                                                   return (!this.firstChild || !this.firstChild.tagName ||
-                                                           this.firstChild.tagName !== "INS");
-                                                })
-                                             .prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
-                                             .filter("a").children("ins:first-child")
-                                             .not(".oj-tree-icon").addClass(OJT_ICON);
+                               .empty()
+                               .append(d
+                               .children())
+                               .find("li, a")
+                               .filter(function ()
+                                           {
+                                              return (!this.firstChild || !this.firstChild.tagName ||
+                                                      this.firstChild.tagName !== "INS");
+                                           })
+                               .prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
+                               .filter("a")
+                               .children("ins:first-child")
+                               .not(".oj-tree-icon")
+                               .addClass(OJT_ICON);
+
+                           //  Add the <a> text <span> for hover/click styling
+                           this._insertHtmlTextSpan(this._$container_ul) ;
 
                            if (this._data.types.defType) {             // if "default" type defined
                              this._addDefType(this._$container_ul) ;   // apply to nodes with no asooc type
@@ -4774,9 +4822,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                         };
                     success_func = function (d, t, x)
                         {
-                          var parent;
+                          var parent, lazy ;
                           var sf = this._getOptions()["data"]["ajax"]["success"];  // reget the options
-
                           if (sf) {                                                // without our updated ajax
                             d = sf.call(this, d, t, x) || d;                       // changes to avoid forever loop
                           }
@@ -4793,28 +4840,51 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                             if (obj == -1 || !obj) {
                               this._$container_ul.empty()
                                                  .append(d.children())
-                                                 .find("li, a").filter(function ()
+                                                 .find("li, a")
+                                                 .filter(function ()
                                                     {
-                                                      return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
-                                                     }).prepend("<ins class='oj-tree-icon'>&#160;</ins>")
-                                                       .end().filter("a").children("ins:first-child")
-                                                       .not(".oj-tree-icon").addClass(OJT_ICON);
+                                                      return !this.firstChild || !this.firstChild.tagName ||
+                                                                                 this.firstChild.tagName !== "INS";
+                                                    })
+                                                 .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
+                                                 .end()
+                                                 .filter("a")
+                                                 .children("ins:first-child")
+                                                 .not(".oj-tree-icon")
+                                                 .addClass(OJT_ICON);
+
                               parent = this._$container_ul ;
+
                             }
                             else  {
-                               obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                               obj.append(d).children("ul").find("li, a")
-                                                           .filter(function () {
-                                                                      return (!this.firstChild || !this.firstChild.tagName ||
-                                                                              this.firstChild.tagName !== "INS");
-                                                                   }
-                                                            ).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a")
-                                                                                                               .children("ins:first-child")
-                                                                                                               .not(".oj-tree-icon")
-                                                                                                               .addClass(OJT_ICON);
+                               obj.children("a.oj-tree-loading")
+                                  .removeClass("oj-tree-loading");
+
+                               this._removeEmptyUL(obj) ;
+
+                               obj.append(d)
+                                  .children("ul")
+                                  .find("li, a")
+                                  .filter(function () {
+                                             return (!this.firstChild || !this.firstChild.tagName ||
+                                                                         this.firstChild.tagName !== "INS");
+                                          })
+                                  .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
+                                  .end()
+                                  .filter("a")
+                                  .children("ins:first-child")
+                                  .not(".oj-tree-icon")
+                                  .addClass(OJT_ICON);
                                obj.removeData("oj-tree-is-loading");
                                parent = obj ;
                             }
+
+                            //  Look for parents with empty children <ul> list (lazy loading),
+                            //  and add the closed class to make it a parent.
+                            this._handleHtmlParentNoChildren(parent) ;
+
+                            //  Add the <a> text <span> for hover/click styling
+                            this._insertHtmlTextSpan(parent) ;
 
                             // If "default" type defined, apply to nodes with no assoc type
                             if (this._data.types.defType && parent)  {
@@ -4871,17 +4941,59 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 
 
      /**
+       *   Look for parents with empty children <ul> list (lazy loading), and add the closed
+       *   class to make it a parent.
+       *   @private
+       */
+     _handleHtmlParentNoChildren : function (parent)
+     {
+        var lazy = parent
+                     .find(parent.is("ul")?  "li ul" : "ul")
+                     .filter(function () {
+                                return (!this.firstChild ||
+                                        this.childNodes.length == 0 ||
+                                        (this.childNodes.length == 1 && this.firstChild.nodeType ==3));
+                                       }) ;
+        $.each(lazy, function() {
+                                  $(this).closest("li")
+                                         .addClass(OJT_CLOSED) ;
+                                }) ;
+     },
+
+
+     /**
+       *   Remove an empty <ul> in a node (lazy loading).
+       *   @private
+       */
+     _removeEmptyUL : function(parent)
+     {
+        var l = parent.find("ul")
+                     .filter(function () {
+                                return (!this.firstChild ||
+                                        this.childNodes.length == 0 ||
+                                        (this.childNodes.length == 1 && this.firstChild.nodeType ==3));
+                                       }) ;
+       if (l.length > 0) {
+         l.remove() ;
+       }
+     },
+
+
+
+
+     /**
        *   Load an HTML <ul><li>...</ul> markup string
        *   @private
        */
      _loadHtmlString : function (s, obj, s_call, e_call)
      {
+        var parent ;
+
         if (s && s !== "" && s.toString && s.toString().replace(/^[\s\n]+$/,"") !== "") {
           s = $(s);
           if (! s.is("ul")) {
             s = $("<ul />").append(s);
           }
-
 
           if (obj == -1 || !obj) {
             this._$container_ul.empty()
@@ -4892,24 +5004,19 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                                                  this.firstChild.tagName !== "INS");
                                        })
                                .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
-                               .end().filter("a").children("ins:first-child")
-                               .not(".oj-tree-icon").addClass(OJT_ICON);
+                               .end().filter("a")
+                               .children("ins:first-child")
+                               .not(".oj-tree-icon")
+                               .addClass(OJT_ICON);
 
-            //  Add the <a> text <span> for hover/click styling
-            $.each(this._$container_ul.find("li a"), function (i, val) {
-            	         var ih = val.innerHTML ;
-                         ih = ih.replace("ins>", "ins><span class='" + OJT_TITLE + "'>") ;
-                         ih += "</span>" ;
-            	         val.innerHTML = ih ;
-                      });
+            parent = this._$container_ul ;
 
-            //  If the "default" node type has been defined, add the def type to any nodes
-            //  that have not been given an explicit type
+            //  No point in checking for empty parent <ul> because we don't have a
+            //  "data" option in the first place, so no lazy loading posssible.
 
             //  If the "default" node type has been defined, add the def type to any nodes
             //  that have not been given an explicit type
             this._addDefType(this._$container_ul) ;
-
           }
           else  {
             obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
@@ -4917,18 +5024,29 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                .children("ul")
                .find("li, a")
                .filter(function ()
-                             {
-                                return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
-                             })
+                          {
+                             return !this.firstChild || !this.firstChild.tagName ||
+                                                         this.firstChild.tagName !== "INS";
+                          })
                .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
-               .end().filter("a").children("ins:first-child")
-               .not(".oj-tree-icon").addClass("oj-tree-icon");
+               .end().filter("a")
+               .children("ins:first-child")
+               .not(".oj-tree-icon")
+               .addClass("oj-tree-icon");
             obj.removeData("oj-tree-is-loading");
 
-            //  If the "default" node type has been defined, add the def type to any nodes
-            //  that have not been given an explicit type
+            parent = obj ;
+
+            //  If the "default" node type has been defined, add the def type to
+            //  any nodes that have not been given an explicit type
             this._addDefType(this.obj) ;
           }
+
+            //  Add the <a> text <span> for hover/click styling
+          if (parent) {
+            this._insertHtmlTextSpan(parent) ;
+          }
+
           this._clean_node(obj);
           if (s_call)  {
             s_call.call(this);
@@ -4955,6 +5073,20 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
             }
           }
         }
+     },
+
+     /**
+       *  Insert the <a> text <span> for hover/click styling
+       *  @private
+       */
+     _insertHtmlTextSpan : function(elem)
+     {
+        $.each(elem.find("li a"), function (i, val) {
+        	 var ih = val.innerHTML ;
+             ih = ih.replace("ins>", "ins><span class='" + OJT_TITLE + "'>") ;
+             ih += "</span>" ;
+        	 val.innerHTML = ih ;
+        });
      },
 
      /**
@@ -6214,11 +6346,22 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 
        if (this._data.html.useExistingMarkup) {
          // this used to use html() and clean the whitespace, but this way any attached data was lost
-         this._data.html.originalContainerHtml = this._$container.find(" > ul > li").clone(true);
+         this._data.html.markup      = this._$container.find(" > ul > li");
+         this._data.html.cloneMarkup = this._data.html.markup.clone(true);
+
          // remove white space from LI node - otherwise nodes appear a bit to the right
-         this._data.html.originalContainerHtml.find("li").addBack().contents().filter(function()
-                                                               { return this.nodeType == 3;
-                                                               }).remove();
+//         this._data.html.originalContainerHtml.find("li").addBack()
+//                                                         .contents()
+//                                                         .filter(function()
+//                                                             {
+//                                                                return this.nodeType == 3;
+//                                                             }).remove();
+         this._data.html.markup.find("li").addBack()
+                                          .contents()
+                                          .filter(function()
+                                              {
+                                                 return this.nodeType == 3;
+                                              }).remove();
        }
 
        this._load_node = this._load_node_H ;
@@ -7374,9 +7517,9 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
                               "ajax"   : false
                             };
 
-       data.html.useExistingMarkup     = false ;  // true == use existing div markup
-       data.html.originalContainerHtml = false ;
-
+       data.html.useExistingMarkup  = false ;  // true == use existing div markup
+       data.html.markup             = false ;  // the user's markup 
+       data.html.cloneMarkup        = false ;  // clone of user's orig markup
 
         //  Themes
 
@@ -8306,7 +8449,6 @@ _this._done = false ;
         //       <span class="oj-tree-title">Home</span>      <-- node title
         //    </a>
         // </li>
-
 
         var  subId      = locator["subId"],
              origNode   = locator["node"],

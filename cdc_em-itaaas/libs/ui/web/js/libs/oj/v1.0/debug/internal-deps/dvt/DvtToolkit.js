@@ -15760,10 +15760,9 @@ DvtDisplayable.prototype.getCtx = function() {
 
 
 /**
- * Internal DVT toolkit framework use only. Returns the platform specific
- * implementation for this object (such as {@link DvtSvgRect}).
+ * Internal DVT toolkit framework use only.
  * @protected
- * @type {Object}
+ * @return {DvtDisplayable}
  */
 DvtDisplayable.prototype.getImpl = function() {
   // TODO HZHANG Deprecated.  Will start removing usages outside of the shapes layer once the new toolkit is merged.
@@ -15772,7 +15771,7 @@ DvtDisplayable.prototype.getImpl = function() {
 
 
 /**
- *  @return {Object}  the controlling (js) object.
+ *  @return {DvtDisplayable}  the controlling (js) object.
  */
 DvtDisplayable.prototype.getObj = function()// TODO HZHANG REMOVE
 {
@@ -15831,7 +15830,7 @@ DvtDisplayable.prototype.setId = function(id) {
 
 /**
  * Returns the parent of this object.
- * @type {DvtDisplayable}
+ * @return {DvtDisplayable}
  */
 DvtDisplayable.prototype.getParent = function() {
   return this._parent;
@@ -15849,6 +15848,7 @@ DvtDisplayable.prototype.setParent = function(parent) {
 /**
  * Returns true if this object is a descendant of the specified object.
  * @param {DvtObj} obj
+ * @return {boolean}
  */
 DvtDisplayable.prototype.isDescendantOf = function(obj) {
   if (!obj || !this.getParent())
@@ -15970,6 +15970,7 @@ DvtDisplayable.prototype.addClipPath = function(cp, context) {
  * Converts the DvtRectangle in the local coordinate system to the target displayable's coordinate system.
  * @param {DvtRectangle} rect
  * @param {DvtDisplayable} targetCoordinateSpace
+ * @return {DvtRectangle}
  */
 DvtDisplayable.prototype.ConvertCoordSpaceRect = function(rect, targetCoordinateSpace) {
   if (!targetCoordinateSpace || targetCoordinateSpace === this)
@@ -16067,6 +16068,7 @@ DvtDisplayable.prototype.GetElemDimensionsWithStroke = function() {
  * @param {object} elem  The SVG DOM element.
  * @param {array} attrNames The array of attribute names to look for.
  * @protected
+ * @return {boolean}
  */
 DvtDisplayable.HasAttributes = function(elem, attrNames) {
   if (attrNames) {
@@ -16164,7 +16166,7 @@ DvtDisplayable.prototype.setCursor = function(cursorType) {
 
 /**
  * Gets the cursor used on this object.
- * @type {String}
+ * @return {String}
  */
 DvtDisplayable.prototype.getCursor = function() {
   return this._cursor;
@@ -16184,7 +16186,7 @@ DvtDisplayable.prototype.setMouseEnabled = function(bEnabled) {
 
 /**
  * Gets whether mouse events are enabled on this object.
- * @type {boolean}
+ * @return {boolean}
  */
 DvtDisplayable.prototype.isMouseEnabled = function() {
   return this._bMouseEnabled;
@@ -16193,8 +16195,7 @@ DvtDisplayable.prototype.isMouseEnabled = function() {
 
 /**
  *  Returns the alpha channel value.
- *  @type {number}
- *  @return A value between 0 (invisible) and 1 (opaque).
+ *  @return {number} A value between 0 (invisible) and 1 (opaque).
  */
 DvtDisplayable.prototype.getAlpha = function() {
   return this._alpha;
@@ -16204,7 +16205,6 @@ DvtDisplayable.prototype.getAlpha = function() {
 /**
  *  Sets the alpha.
  *  @param {number} alpha  A value between 0 (invisible) and 1 (opaque).
- *  @return nothing
  */
 DvtDisplayable.prototype.setAlpha = function(alpha) {
   //when animating alpha, small values are turned into strings like
@@ -16341,7 +16341,7 @@ DvtDisplayable.prototype.getAriaProperty = function(property) {
 /**
  * Convert a point from stage coords to local coords.
  * @param {DvtPoint}  point  point in stage coords
- * @type {DvtPoint}
+ * @return {DvtPoint}
  */
 DvtDisplayable.prototype.stageToLocal = function(point) {
   var pathToStage = this.getPathToStage();
@@ -16359,7 +16359,7 @@ DvtDisplayable.prototype.stageToLocal = function(point) {
 /**
  * Convert a point from local coords to stage coords.
  * @param {DvtPoint}  point  point in local coords
- * @type {DvtPoint}
+ * @return {DvtPoint}
  */
 DvtDisplayable.prototype.localToStage = function(point) {
   var pathToStage = this.getPathToStage();
@@ -16377,7 +16377,7 @@ DvtDisplayable.prototype.localToStage = function(point) {
  * Get an array of objects in the tree from this displayable to the stage.
  * The returned array is ordered with this displayable first and the stage
  * last, like [this, this.getParent(), ... , stage].
- * @type {array}
+ * @return {array}
  */
 DvtDisplayable.prototype.getPathToStage = function()
 {
@@ -31954,7 +31954,7 @@ DvtEventManager.prototype.ProcessKeyboardEvent = function(event)
     nextNavigable.showKeyboardFocusEffect();
 
     // Accessibility Support
-    this._updateActiveElement(nextNavigable);
+    this.UpdateActiveElement(nextNavigable);
 
     return true;
   }
@@ -32145,7 +32145,7 @@ DvtEventManager.prototype.OnMouseOver = function(event) {
   }
 
   // Accessibility Support
-  this._updateActiveElement(obj, currTargetForEvent);
+  this.UpdateActiveElement(obj, currTargetForEvent);
 };
 
 DvtEventManager.prototype.PreOnMouseOut = function(event) {
@@ -33351,9 +33351,9 @@ DvtEventManager._getActiveElementId = function() {
  * This is needed by accessibility client in order to determine active SVG element
  * @param {object} obj The logical object corresponding to the targeted displayable.
  * @param {DvtDisplayable} displayable The displayable being targeted.
- * @private
+ * @protected
  */
-DvtEventManager.prototype._updateActiveElement = function(obj, displayable) {
+DvtEventManager.prototype.UpdateActiveElement = function(obj, displayable) {
   // Find the displayable if needed
   if (!displayable) {
     if (obj.getDisplayable)
@@ -33370,9 +33370,6 @@ DvtEventManager.prototype._updateActiveElement = function(obj, displayable) {
     var ariaLabel = obj.getAriaLabel();
     if (ariaLabel) {
       displayable.setAriaProperty('label', ariaLabel);
-
-      // If roles other than 'img' are needed, then introduce an API on the DvtLogicalObject.
-      displayable.setAriaRole('img');
     }
   }
   else {
@@ -37235,13 +37232,14 @@ DvtUtilBundle['_defaults'] = {
   'CLEAR_SELECTION': 'Clear Selection',
 
   'STATE_SELECTED': 'Selected',
-	'STATE_UNSELECTED': 'Unselected',
-	'STATE_MAXIMIZED': 'Maximized',
-	'STATE_MINIMIZED': 'Minimized',
-	'STATE_EXPANDED': 'Expanded',
-	'STATE_COLLAPSED': 'Collapsed',
-	'STATE_ISOLATED': 'Isolated',
-	'STATE_HIDDEN': 'Hidden'
+  'STATE_UNSELECTED': 'Unselected',
+  'STATE_MAXIMIZED': 'Maximized',
+  'STATE_MINIMIZED': 'Minimized',
+  'STATE_EXPANDED': 'Expanded',
+  'STATE_COLLAPSED': 'Collapsed',
+  'STATE_ISOLATED': 'Isolated',
+  'STATE_HIDDEN': 'Hidden',
+  'STATE_VISIBLE': 'Visible'
 };
 
 

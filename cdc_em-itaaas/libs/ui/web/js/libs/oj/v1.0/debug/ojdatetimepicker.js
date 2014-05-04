@@ -229,7 +229,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   _UNSELECTABLE_CLASS : "oj-datepicker-unselectable",
   
   _DATEPICKER_DESCRIPTION_ID : "oj-datepicker-desc",
-  _GRID_LABEL_ID : "oj-datepicker-grid", 
+  _CALENDAR_DESCRIPTION_ID : "oj-datepicker-calendar", 
   _MAIN_DIV_ID : "oj-datepicker-div", 
   
   _INLINE_CLASS : "oj-datepicker-inline",
@@ -345,7 +345,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">null</code>
      */
-    min : null, 
+    min : undefined, 
 
     /**
      * The maximum selectable date. When set to null, there is no maximum.
@@ -361,7 +361,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">null</code>
      */
-    max : null, 
+    max : undefined, 
 
     /**
      * The number of months to show at once.
@@ -482,11 +482,44 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   _InitOptions : function ()
   {
     this._super();
+    
     if (!this.options["value"]) 
     {
       // we are doing same as _GetElementValue. 
       this.options["value"] = "";
     }
+    
+    var minMax = ["min", "max"];
+    
+    for(var i=0, j=minMax.length; i < j; i++) 
+    {
+      
+      if (this.options[minMax[i]] === undefined) 
+      {
+        //try to see if set to the input attribute
+        var resolved = null,
+            attrVal = this.element.attr(minMax[i]);
+        
+        if (attrVal)
+        {
+          
+          try 
+          {
+            resolved = Date.parse(attrVal);
+            if (!isNaN(resolved))
+            {
+              resolved = new Date(resolved);
+            }
+          }
+          catch (e)
+          {
+          }
+        }
+        
+        this.options[minMax[i]] = resolved;
+      }
+    }
+    
   },
   
   /**
@@ -514,7 +547,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     
     $(document).on("mousedown", $.proxy(this._checkExternalClick, this));
     
-    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this._MAIN_DIV_ID) + "' role='region' aria-labelledby='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content'></div>"));
+    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this._MAIN_DIV_ID) + "' role='region' aria-describedby='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content'></div>"));
     $("body").append(this._dpDiv);
     
     if(this._isInLine()) 
@@ -570,21 +603,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     }
     
     return retVal;
-  },
-  
-  /**
-   * @protected
-   * @override
-   * @instance
-   * @memberof! oj.ojInputDate
-   */        
-  _AfterCreate : function () 
-  {
-    var ret = this._superApply(arguments);
-    
-    this._disableEnable(this.options["disabled"]);
-    
-    return ret;
   },
   
   _setOption : function __setOption(key, value)
@@ -766,7 +784,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
       return false;
     }
   },
-
+  
   //This handler is when an user keys down with the calendar having focus
   _doKeyDown : function __doKeyDown(event)
   {
@@ -1014,7 +1032,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     }
     
     //Take care of accessibility
-    $("#" + this._GetSubId(this._GRID_LABEL_ID)).html(this.options["monthWide"][this._drawMonth] + " " + yearDisplay.format(new Date(this._drawYear, this._drawMonth, 1)));
+    $("#" + this._GetSubId(this._CALENDAR_DESCRIPTION_ID)).html(this.options["monthWide"][this._drawMonth] + " " + yearDisplay.format(new Date(this._drawYear, this._drawMonth, 1)));
 
     this._adjustDate();
   },
@@ -1056,11 +1074,11 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   //A date may be specified as an exact value or a relative one.
   _determineDate : function __determineDate(date, defaultDate)
   {
-    var _this = this, offsetNumeric = function (offset)
+    var self = this, offsetNumeric = function (offset)
     {
-      var date = _this._getTodayDate();
-      date.setDate(date.getDate() + offset);
-      return date;
+      var todayDate = self._getTodayDate();
+      todayDate.setDate(todayDate.getDate() + offset);
+      return todayDate;
     },
     newDate = (date == null || date === "" ? defaultDate : (typeof date === "number" ? (isNaN(date) ? defaultDate : offsetNumeric(date)) : new Date(date.getTime())));
 
@@ -1224,11 +1242,11 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 
     prevText = this.getTranslatedString("prevText");
 
-    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-prev-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='prev' data-event='click'" + " title='" + prevText + "'></a>" : "<a class='oj-datepicker-prev-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + prevText + "'></a>");
+    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a href='#' class='oj-datepicker-prev-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='prev' data-event='click'" + " title='" + prevText + "'></a>" : "<a class='oj-datepicker-prev-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + prevText + "'></a>");
 
     nextText = this.getTranslatedString("nextText");
 
-    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-next-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='next' data-event='click'" + " title='" + nextText + "'></a>" : "<a class='oj-datepicker-next-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + nextText + "'></a>");
+    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a href='#' class='oj-datepicker-next-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='next' data-event='click'" + " title='" + nextText + "'></a>" : "<a class='oj-datepicker-next-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + nextText + "'></a>");
 
     currentText = this.getTranslatedString("currentText");
     gotoDate = today;
@@ -1275,7 +1293,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
           calender += "'>";
         }
         calender += "<div class='oj-datepicker-header" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "'>" + (/all|left/.test(monthControl) && row === 0 ? (isRTL ? next : prev) : "") + (/all|right/.test(monthControl) && row === 0 ? (isRTL ? prev : next) : "") + this._generateMonthYearHeader(drawMonth, drawYear, minDate, maxDate, row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
-"</div><table class='oj-datepicker-calendar" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "' tabindex=-1 data-handler='calendarKey' data-event='keydown' aria-readonly='true' role='grid' " + "aria-labelledby='" + this._GetSubId(this._GRID_LABEL_ID) + "'><thead role='presentation'>" + "<tr role='row'>";
+"</div><table class='oj-datepicker-calendar" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "' tabindex=-1 data-handler='calendarKey' data-event='keydown' aria-readonly='true' role='grid' " + "aria-labelledby='" + this._GetSubId(this._CALENDAR_DESCRIPTION_ID) + "'><thead role='presentation'>" + "<tr role='row'>";
         thead = (weekDisplay === "number" ? "<th class='oj-datepicker-week-col'>" + this.getTranslatedString("weekHeader") + "</th>" : "");
         for (dow = 0;dow < 7;dow++)
         {
@@ -1447,7 +1465,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     {
       html += (secondary || !((changeMonth === "select") && (changeYear === "select")) ? "&#xa0;" : "") + monthHtml;
     }
-    html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._GRID_LABEL_ID) + "'>" + monthNames[drawMonth] + " " + yearDisplay.format(new Date(drawYear, drawMonth, 1)) + "</span>";
+    html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._CALENDAR_DESCRIPTION_ID) + "'>" + monthNames[drawMonth] + " " + yearDisplay.format(new Date(drawYear, drawMonth, 1)) + "</span>";
     html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "'>" + this.getTranslatedString("datePicker") + "</span>";
     html += "</div>";// Close datepicker_header
     return html;
@@ -1489,35 +1507,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
    */
   _getMinMaxDate : function __getMinMaxDate(minMax)
   {
-    var byProperty = this._determineDate(this.options[minMax], null);
-
-    if (byProperty)
-    {
-      return byProperty;
-    }
-    else 
-    {
-      //try to see if set to the input attribute
-      var ret = null;
-      if (this.element.attr(minMax))
-      {
-        try 
-        {
-          ret = Date.parse(this.element.attr(minMax));
-          if (isNaN(ret))
-          {
-            return;
-          }
-          ret = new Date(ret);
-        }
-        catch (e)
-        {
-        }
-      }
-
-      this.options[minMax] = ret;
-      return ret;
-    }
+    return this._determineDate(this.options[minMax], null);
   },
 
   /**
@@ -2183,21 +2173,6 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       this._inputKeyDownHandler = $.proxy(this._doInputKeyDown, this);
       this.element.on("keydown", this._inputKeyDownHandler);
     }
-    
-    return ret;
-  },
-  
-  /**
-   * @protected
-   * @override
-   * @instance
-   * @memberof! oj.ojInputTime
-   */        
-  _AfterCreate : function () 
-  {
-    var ret = this._superApply(arguments);
-
-    this._setOption("disabled", this.options["disabled"]);
     
     return ret;
   },
@@ -2970,7 +2945,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
    */
   widget : function __widget()
   {
-    return !this._isContainedInDateTimePicker() ? this._super() : this._datePicker["widget"].widget();
+    return this._isIndependentInput() ? this._super() : this._datePicker["widget"].widget();
   }
   
 });
@@ -3211,7 +3186,7 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
   {
     var ret = this._superApply(arguments),
         timeConverter = this._getTimePickerConverter(this._GetConverter());
-
+    
     this._timePicker.ojInputTime("option", "disabled", this.options["disabled"]);
     
     if(this._isInLine()) 
@@ -3433,7 +3408,7 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
    */
   _GetMessagingLauncherElement : function ()
   {
-    return !this._isInLine() ? this._super() : this._timePickerElement;
+    return !this._isInLine() ? this._super() : this._timePickerElement.ojInputTime("widget");
   },
   
   /**

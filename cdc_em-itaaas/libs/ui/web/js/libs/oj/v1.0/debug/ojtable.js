@@ -6169,16 +6169,43 @@ oj.TableDomUtils.prototype.getEmptyTableDimensions = function()
   var tableBody = this.getTableBody();
   var tableHeader = this.getTableHeader();
   var tableFooter = this.getTableFooter();
-  
-  table.empty();
+  var tableHeaderDisplay = '';
+  var tableBodyDisplay = '';
+  var tableFooterDisplay = '';
+
+  if (tableHeader != null)
+  {
+    tableHeaderDisplay = tableHeader.css('display').toString();
+    tableHeader.css('display', 'none');
+  }
+
+  if (tableBody != null)
+  {
+    tableBodyDisplay = tableBody.css('display').toString();
+    tableBody.css('display', 'none');
+  }
+  if (tableFooter != null)
+  {
+    tableFooterDisplay = tableFooter.css('display').toString();
+    tableFooter.css('display', 'none');
+  }
   table.removeClass(oj.TableDomUtils.CSS_CLASSES._TABLE_CLASS);
-  
+
   var dimensions = {height: table.height(), width: table.width()};
-  
+
   table.addClass(oj.TableDomUtils.CSS_CLASSES._TABLE_CLASS);
-  table.append(tableHeader);
-  table.append(tableFooter);
-  table.append(tableBody);
+  if (tableBody != null)
+  {
+    tableBody.css('display', tableBodyDisplay);
+  }
+  if (tableHeader != null)
+  {
+    tableHeader.css('display', tableHeaderDisplay);
+  }
+  if (tableFooter != null)
+  {
+    tableFooter.css('display', tableFooterDisplay);
+  }
 
   return dimensions;
 };

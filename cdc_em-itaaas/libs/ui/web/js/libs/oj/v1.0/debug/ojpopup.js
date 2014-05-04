@@ -511,10 +511,10 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 
       this._createTail();
       this._setChrome();
+      this._createLiveRegion();
 
       // callback that overrides the positon['using'] for setting the tail.
       this._usingCallback = $.proxy(this._usingHandler, this);
-
     },
    /**
     * @memberof! oj.ojPopup
@@ -531,10 +531,12 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
         this.close();
 
       this._destroyTail();
+      this._destroyLiveRegion();
       delete this._usingCallback;
 
       this._rootElement.replaceWith(this.element);
       this.element.hide();
+
     },
     /**
      * Returns a <code class="prettyprint">jQuery</code> object containing the generated wrapper.
@@ -582,24 +584,23 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
           return;
       }
 
+      this._setLauncher(launcher);
+
+      var rootElement = this._rootElement;
+      launcher = this._launcher;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+      oj.Assert.assertPrototype(launcher, jQuery);
+
+      if (oj.StringUtils.isEmptyOrUndefined(rootElement.attr("id")))
+        rootElement.uniqueId();
+
       if (this._trigger("beforeOpen") === false)
         return;
 
-      var options = this.options;
-      this._setLauncher(launcher);
       this._setPosition(position);
 
-      // TODO make a generic service that has a single resize listener and
-      //      only publishes to popups that are in the active layer (aka modality).
-      //      
-      // establish a window resize listener to reevaluate best fit for
-      // positioning
-      var rootElement = this._rootElement;
-      oj.Assert.assertPrototype(rootElement, jQuery);
 
-      launcher = this._launcher;
-      oj.Assert.assertPrototype(launcher, jQuery);
-
+      var options = this.options;
       this._setAutoDismiss(options["autoDismiss"]);
 
       this._on(true, $(window), 
@@ -615,11 +616,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
         'keydown' : this._keydownHandler
       });
 
-      if (oj.StringUtils.isEmptyOrUndefined(rootElement.attr("id")))
-        rootElement.uniqueId();
-
-      var popupId = rootElement.attr("id");
-      launcher.attr("aria-describedby", popupId);
+      this._addDescribedBy();
 
       rootElement.removeAttr("aria-hidden");
       rootElement.attr("role", "tooltip");
@@ -632,6 +629,11 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
       this._trigger("open");
 
       this._intialFocus();
+
+      var message = this.getTranslatedString("none" === options["initialFocus"] ?
+                                             "ariaLiveRegionInitialFocusNone":
+                                             "ariaLiveRegionInitialFocusFirstFocusable");
+      this._announceLiveRegion(message);
     },
     /**
      * Closes the popup. This method does not accept any arguments.
@@ -659,15 +661,15 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
       // if the content has focus, restore the the launcher
       this._restoreFocus();
 
+      var launcher = this._launcher;
       var rootElement = this._rootElement;
       oj.Assert.assertPrototype(rootElement, jQuery);
+      oj.Assert.assertPrototype(launcher, jQuery);
 
       rootElement.hide();
       rootElement.attr("aria-hidden", "true");
 
-      var launcher = this._launcher;
-      oj.Assert.assertPrototype(launcher, jQuery);
-      launcher.removeAttr("aria-describedby");
+      this._removeDescribedBy();
       this._setAutoDismiss();
 
       this._off($(window), "resize");
@@ -1230,6 +1232,113 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
       // if event target is not under the laucher or popup root dom subtrees, dismiss
       if (!oj.DomUtils.isAncestorOrSelf(launcher[0], target) && !oj.DomUtils.isAncestorOrSelf(rootElement[0], target))
         this.close();
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _addDescribedBy: function () 
+    {
+      var launcher = this._launcher;
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(launcher, jQuery);
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      var popupId = rootElement.attr("id");
+      var describedby = launcher.attr("aria-describedby");
+      var tokens = describedby ? describedby.split(/\s+/) : [];
+      tokens.push(popupId);
+      describedby = $.trim(tokens.join(" "));
+      launcher.attr("aria-describedby", describedby);
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _removeDescribedBy: function() {
+      var launcher = this._launcher;
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(launcher, jQuery);
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      var popupId = rootElement.attr("id");
+      var describedby = launcher.attr("aria-describedby");
+      var tokens = describedby ? describedby.split(/\s+/) : [];
+      var index = $.inArray(popupId, tokens);
+      if (index !== -1)
+        tokens.splice(index, 1);
+
+      describedby = $.trim(tokens.join(" "));
+      if (describedby)
+        launcher.attr("aria-describedby", describedby);
+      else
+        launcher.removeAttr("aria-describedby");
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _createLiveRegion: function()
+    {
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      // append the aria-live region communicating navigation keys
+      var popupId = rootElement.attr("id");
+      var liveRegionId = this._getSubId("ariaLive");
+      var liveRegion = this._liveRegion = $( "<div>" );
+      liveRegion.attr({'id': liveRegionId, 'role': 'log', 'aria-live': 'assertive', 'aria-relevant': 'additions'});
+      liveRegion.addClass("oj-helper-hidden-accessible");
+      liveRegion.appendTo(document.body);
+      rootElement.attr("aria-controls", liveRegionId);
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @param {string} message to be announced in the live region
+    * @return {void}
+    */
+    _announceLiveRegion: function(message)
+    {
+      var liveRegion = this._liveRegion;
+      oj.Assert.assertPrototype(liveRegion, jQuery);
+      liveRegion.children().remove();
+      $("<div>").text(message).appendTo(liveRegion);
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _destroyLiveRegion: function()
+    {
+      var liveRegion = this._liveRegion;
+      oj.Assert.assertPrototype(liveRegion, jQuery);
+      liveRegion.remove();
+      delete this._liveRegion;
+
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+      rootElement.removeAttr("aria-controls");
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @param {string} sub id that will become a composite id prefixed with the components uuid
+    * @return {string}
+    */
+    _getSubId: function(sub)
+    {
+      return this["uuid"] + "_" + sub;
     }
   });
 

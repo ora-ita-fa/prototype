@@ -448,11 +448,11 @@ DvtComboBox.prototype.HandleOutOfFocusCheckTimer = function(event) {
 DvtComboBox.prototype.createDropdown = function() {
   //constants for padding around items in dropdown
   var comboBoxStyles = this._styleMap ? this._styleMap['comboBox'] : null;
-  var topPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtPanZoomControlPanel.CP_PADDING_TOP, 0);
-  var leftPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtPanZoomControlPanel.CP_PADDING_LEFT, 0);
-  var bottomPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtPanZoomControlPanel.CP_PADDING_BOTTOM, 0);
-  var rightPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtPanZoomControlPanel.CP_PADDING_RIGHT, 0);
-  var interItemPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtPanZoomControlPanel.CP_PADDING_INNER, 0);
+  var topPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtControlPanel.CP_PADDING_TOP, 0);
+  var leftPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtControlPanel.CP_PADDING_LEFT, 0);
+  var bottomPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtControlPanel.CP_PADDING_BOTTOM, 0);
+  var rightPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtControlPanel.CP_PADDING_RIGHT, 0);
+  var interItemPadding = DvtStyleUtils.getStyle(comboBoxStyles, DvtControlPanel.CP_PADDING_INNER, 0);
 
   var currY = topPadding;
   var context = this.getCtx();
@@ -477,7 +477,7 @@ DvtComboBox.prototype.createDropdown = function() {
 
     //add event listeners to each item
     if (this._eventManager) {
-      var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, this.HandleDropdownItemClick, this.HandleButtonDown,
+      var proxy = new DvtControlPanelEventHandlerProxy(this, this.HandleDropdownItemClick, this.HandleButtonDown,
           null, null, null,
           this._tooltips[i]);
       this._eventManager.associate(item, proxy);
@@ -492,9 +492,9 @@ DvtComboBox.prototype.createDropdown = function() {
 
   //draw the background behind all the items now that we know the size of the dropdown
   var borderColor = DvtStyleUtils.getStyle(this._styleMap, DvtCSSStyle.BORDER_COLOR, null);
-  var borderAlpha = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA, 1);
+  var borderAlpha = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.FRAME_ROLLOUT_ALPHA, 1);
   var bgColor = DvtStyleUtils.getStyle(this._styleMap, DvtCSSStyle.BACKGROUND_COLOR, null);
-  var bgAlpha = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.BG_ALPHA, 1);
+  var bgAlpha = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.BG_ALPHA, 1);
 
   dd.setSolidStroke(borderColor, borderAlpha);
   if (bgColor)
@@ -818,26 +818,26 @@ DvtComboBoxEvent.prototype.getIndex = function() {
  * @constructor
  * Base Class for PanZoomControl
  */
-var DvtBasePanZoomControl = function(context, panZoomCanvas, resources) {
+var DvtBaseControl = function(context, panZoomCanvas, resources) {
   this.Init(context, panZoomCanvas, resources);
 };
 
 
 /*
- * make DvtBasePanZoomControl a subclass of DvtContainer
+ * make DvtBaseControl a subclass of DvtContainer
  */
-DvtObj.createSubclass(DvtBasePanZoomControl, DvtContainer, 'DvtBasePanZoomControl');
+DvtObj.createSubclass(DvtBaseControl, DvtContainer, 'DvtBaseControl');
 
 /*--------------------------------------------------------------------*/
 /*  Init()                                                            */
 /*--------------------------------------------------------------------*/
-DvtBasePanZoomControl.prototype.Init = function(context, panZoomCanvas, resources) {
-  DvtBasePanZoomControl.superclass.Init.call(this, context);
+DvtBaseControl.prototype.Init = function(context, panZoomCanvas, resources) {
+  DvtBaseControl.superclass.Init.call(this, context);
 
   this._panZoomCanvas = panZoomCanvas;
   this._context = context;
   this._tooltipManager = context.getTooltipManager();
-  this._resources = resources;
+  this.Bundle = resources;
 };
 
 
@@ -846,7 +846,7 @@ DvtBasePanZoomControl.prototype.Init = function(context, panZoomCanvas, resource
  *
  * @param tooltipManager manager to use
  */
-DvtBasePanZoomControl.prototype.setTooltipManager = function(tooltipManager) {
+DvtBaseControl.prototype.setTooltipManager = function(tooltipManager) {
   this._tooltipManager = tooltipManager;
 };
 
@@ -856,40 +856,16 @@ DvtBasePanZoomControl.prototype.setTooltipManager = function(tooltipManager) {
  *
  * @return tooltipManager being used
  */
-DvtBasePanZoomControl.prototype.getTooltipManager = function() {
+DvtBaseControl.prototype.getTooltipManager = function() {
   return this._tooltipManager;
 };
-
-
-/**
- * Set the translated resources to use.
- *
- * @param resources translated resources
- */
-DvtBasePanZoomControl.prototype.setResources = function(resources) {
-  this._resources = resources;
-};
-
-
-/**
- * Get the translated resources to use.
- *
- * @return translated resources
- */
-DvtBasePanZoomControl.prototype.getResources = function() {
-  if (this._resources == null) {
-    this._resources = new DvtPanZoomControlPanelResources();
-  }
-  return this._resources;
-};
-
 
 /**
  * Show tooltip
  *
  * @return tooltip text to display
  */
-DvtBasePanZoomControl.prototype.ShowTooltip = function(event, tooltip) {
+DvtBaseControl.prototype.ShowTooltip = function(event, tooltip) {
   this.getTooltipManager().showTooltip(event.pageX, event.pageY,
                                        tooltip, event.target);
 };
@@ -898,12 +874,12 @@ DvtBasePanZoomControl.prototype.ShowTooltip = function(event, tooltip) {
 /**
  * Hide tooltip
  */
-DvtBasePanZoomControl.prototype.HideTooltip = function() {
+DvtBaseControl.prototype.HideTooltip = function() {
   this.getTooltipManager().hideTooltip();
 };
 
 
-DvtBasePanZoomControl.prototype._logEvent = function(event) {
+DvtBaseControl.prototype._logEvent = function(event) {
   //  var name = this.getTypeName();
   //  if (name === "DvtPanControl") {
   //    logEvent(event, name);
@@ -921,10 +897,7 @@ var DvtZoomInButton = function(context, button, panZoomCanvas, resources, eventM
 DvtZoomInButton._ZOOM_INCR_TIMER_INTERVAL = 100;//in ms
 DvtZoomInButton._ZOOM_START_TIMER_INTERVAL = 250;//in ms
 
-/*
- * make DvtZoomInButton a subclass of DvtBasePanZoomControl
- */
-DvtObj.createSubclass(DvtZoomInButton, DvtBasePanZoomControl, 'DvtZoomInButton');
+DvtObj.createSubclass(DvtZoomInButton, DvtBaseControl, 'DvtZoomInButton');
 
 
 /**
@@ -951,9 +924,9 @@ DvtZoomInButton.prototype.Init = function(context, button, panZoomCanvas, resour
   this._zoomInButton = button;
   this._zoomInButton.setCallback(this.HandleZoomInClick, this);
   this._eventManager = eventManager;
-  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, this.HandleZoomInMouseDown,
+  var proxy = new DvtControlPanelEventHandlerProxy(this, null, this.HandleZoomInMouseDown,
       this.HandleZoomInMouseUp, this.HandleZoomInMouseUp, null,
-      this.getResources().getZoomInTooltip());
+      this.Bundle.getTranslatedString('CONTROL_PANEL_ZOOMIN'));
   this._eventManager.associate(this._zoomInButton, proxy);
   this.addChild(this._zoomInButton);
 };
@@ -1078,10 +1051,7 @@ var DvtZoomOutButton = function(context, button, panZoomCanvas, resources, event
 DvtZoomOutButton._ZOOM_INCR_TIMER_INTERVAL = 100;//in ms
 DvtZoomOutButton._ZOOM_START_TIMER_INTERVAL = 250;//in ms
 
-/*
- * make DvtZoomOutButton a subclass of DvtBasePanZoomControl
- */
-DvtObj.createSubclass(DvtZoomOutButton, DvtBasePanZoomControl, 'DvtZoomOutButton');
+DvtObj.createSubclass(DvtZoomOutButton, DvtBaseControl, 'DvtZoomOutButton');
 
 
 /**
@@ -1107,9 +1077,9 @@ DvtZoomOutButton.prototype.Init = function(context, button, panZoomCanvas, resou
   this._zoomOutButton.setCallback(this.HandleZoomOutClick, this);
   //this._zoomOutButton.setCursor(DvtSelectionEffectUtils.getSelectingCursor());
   this._eventManager = eventManager;
-  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, this.HandleZoomOutMouseDown,
+  var proxy = new DvtControlPanelEventHandlerProxy(this, null, this.HandleZoomOutMouseDown,
       this.HandleZoomOutMouseUp, this.HandleZoomOutMouseUp, null,
-      this.getResources().getZoomOutTooltip());
+      this.Bundle.getTranslatedString('CONTROL_PANEL_ZOOMOUT'));
   this._eventManager.associate(this._zoomOutButton, proxy);
 
   this.addChild(this._zoomOutButton);
@@ -1233,10 +1203,7 @@ var DvtZoomToFitButton = function(context, button, panZoomCanvas, resources, eve
   this.Init(context, button, panZoomCanvas, resources, eventManager);
 };
 
-/*
- * make DvtZoomToFitButton a subclass of DvtBasePanZoomControl
- */
-DvtObj.createSubclass(DvtZoomToFitButton, DvtBasePanZoomControl, 'DvtZoomToFitButton');
+DvtObj.createSubclass(DvtZoomToFitButton, DvtBaseControl, 'DvtZoomToFitButton');
 
 
 /**
@@ -1255,9 +1222,9 @@ DvtZoomToFitButton.prototype.Init = function(context, button, panZoomCanvas, res
   this._zoomToFitButton.setCallback(this.HandleZoomToFitClick, this);
   this._zoomToFitButton.setCursor(DvtSelectionEffectUtils.getSelectingCursor());
   this._eventManager = eventManager;
-  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, null,
+  var proxy = new DvtControlPanelEventHandlerProxy(this, null, null,
       null, null, null,
-      this.getResources().getZoomToFitTooltip());
+      this.Bundle.getTranslatedString('CONTROL_PANEL_ZOOMTOFIT'));
   this._eventManager.associate(this._zoomToFitButton, proxy);
 
   this.addChild(this._zoomToFitButton);
@@ -1281,387 +1248,6 @@ DvtZoomToFitButton.prototype.HandleZoomToFitClick = function(event) {
 
 /**
  * @constructor
- * ZoomSlider for use with Diagram.
- */
-var DvtZoomSlider = function(context, panZoomCanvas, resources, zoomLevels, zoomLevelsTooltips, minScale, maxScale) {
-  this.Init(context, panZoomCanvas, resources, zoomLevels, zoomLevelsTooltips, minScale, maxScale);
-};
-
-DvtZoomSlider.DEFAULT_ZOOM_LEVELS = [0, .25, .5, .75, 1];
-DvtZoomSlider.ZOOM_SLIDER_HEIGHT = 76;
-DvtZoomSlider.ZOOM_SLIDER_WIDTH = 15;
-
-/*
- * make DvtZoomSlider a subclass of DvtBasePanZoomControl
- */
-DvtObj.createSubclass(DvtZoomSlider, DvtBasePanZoomControl, 'DvtZoomSlider');
-
-/*--------------------------------------------------------------------*/
-/*  Init()                                                            */
-/*--------------------------------------------------------------------*/
-DvtZoomSlider.prototype.Init = function(context, panZoomCanvas, resources, zoomLevels, zoomLevelsTooltips, minScale, maxScale) {
-  DvtZoomSlider.superclass.Init.call(this, context, panZoomCanvas, resources);
-
-  this._zoomLevels = DvtZoomSlider.DEFAULT_ZOOM_LEVELS;
-  this._bZoomSliderThumbMouseDown = false;
-  this._panZoomCanvas.addEvtListener(ZoomEvent.ZOOM, this.HandleZoomEvent, false, this);
-
-  if (!zoomLevels)
-    zoomLevels = DvtZoomSlider.DEFAULT_ZOOM_LEVELS;
-  this._zoomLevels = zoomLevels;
-
-  this._zoomLevelsTooltips = zoomLevelsTooltips;
-  if (!minScale)
-    minScale = 0;
-  if (!maxScale)
-    maxScale = 1;
-  this._minScale = minScale;
-  this._maxScale = maxScale;
-
-  this.Render();
-
-};
-
-DvtZoomSlider.prototype.getZoomLevels = function() {
-  return this._zoomLevels;
-};
-
-
-/**
- * Set the tooltips for the discrete zoom levels in the zoom slider.
- *
- * @param zoomLevelsTooltips tooltips for discrete zoom levels in zoom slider
- */
-DvtZoomSlider.prototype.setZoomLevelsTooltips = function(zoomLevelsTooltips) {
-  this._zoomLevelsTooltips = zoomLevelsTooltips;
-
-  this.AddZoomSliderCrosslinesTooltipListeners();
-};
-
-
-/**
- * Get the tooltips for the discrete zoom levels in the zoom slider.
- *
- * @return tooltips for discrete zoom levels in zoom slider
- */
-DvtZoomSlider.prototype.getZoomLevelsTooltips = function() {
-  return this._zoomLevelsTooltips;
-};
-
-DvtZoomSlider.prototype.AddZoomSliderCrosslinesTooltipListeners = function() {
-  var zoomLevelsTooltips = this.getZoomLevelsTooltips();
-  var numZoomLevelsTooltips = 0;
-  if (zoomLevelsTooltips)
-    numZoomLevelsTooltips = zoomLevelsTooltips.length;
-
-  var crossline;
-  var zoomLevelTooltip;
-  var numCrosslines = 0;
-  if (this._zoomSliderCrosslines)
-    numCrosslines = this._zoomSliderCrosslines.length;
-
-  for (var i = 0; i < numCrosslines; i++) {
-    if (i < numZoomLevelsTooltips) {
-      crossline = this._zoomSliderCrosslines[i];
-      zoomLevelTooltip = zoomLevelsTooltips[i];
-      if (zoomLevelTooltip != null && zoomLevelTooltip.length > 0) {
-        if (!crossline.hasEventListener(DvtMouseEvent.MOUSEOVER)) {
-          crossline.addEvtListener(DvtMouseEvent.MOUSEOVER, this.HandleZoomSliderCrosslineRollOver, false, 0, true);
-        }
-        if (!crossline.hasEventListener(DvtMouseEvent.MOUSEOUT)) {
-          crossline.addEvtListener(DvtMouseEvent.MOUSEOUT, this.HandleZoomSliderCrosslineRollOut, false, 0, true);
-        }
-      }
-    }
-  }
-};
-
-
-/**
- * Create the zoom slider.
- *
- * @return zoom slider
- */
-DvtZoomSlider.prototype.Render = function() {
-  this._zoomSliderCrosslines = [];
-
-  var zoomLevels = this.getZoomLevels();
-  var numZoomLevels = 0;
-  if (zoomLevels != null)
-    numZoomLevels = zoomLevels.length;
-
-  var ww = ZOOM_SLIDER_WIDTH;
-  var gap = NaN;
-  if (numZoomLevels >= 0)
-    gap = ZOOM_SLIDER_HEIGHT / 5;
-  var padding = 4;
-
-  //set the size of the slider
-  var g = graphics;
-  g.lineStyle(0, 0, 0);
-  g.DvtPathUtils.moveTo(0, 0);
-  g.DvtPathUtils.lineTo(ww, ZOOM_SLIDER_HEIGHT);
-
-  var lineThickness = 1;//2;
-  var mouseLineThickness = 5;
-
-  this._zoomSliderStartY = 2 * padding;
-  this._zoomSliderEndY = height - 2 * padding;
-
-  //draw the incremental cross lines
-  var crossline;
-  for (var i = 0; i < numZoomLevels; i++) {
-    crossline = new Sprite();
-    crossline.buttonMode = true;
-    var intersectY = this._zoomSliderEndY - ((zoomLevels[i] - this._minScale) / (this._maxScale - this._minScale)) * (this._zoomSliderEndY - this._zoomSliderStartY);
-    crossline.y = intersectY;
-    addChild(crossline);
-    g = crossline.graphics;
-    PanZoomDvtButtonLAFUtilsPanelLAFUtils.drawZoomSliderCrossLine(crossline, padding, 0, ww);
-    //BUG #6977287: increase mouse detection region
-    g.lineStyle(mouseLineThickness, 0, 0);
-    g.DvtPathUtils.moveTo(padding, 0);
-    g.DvtPathUtils.lineTo(padding + ww, 0);
-
-    this._zoomSliderCrosslines.push(crossline);
-
-    crossline.addEvtListener(DvtMouseEvent.CLICK, this.HandleZoomSliderCrosslineClick, false, 0, true);
-  }
-
-  this.addZoomSliderCrosslinesTooltipListeners();
-
-  //create the thumb
-  this._zoomSliderThumb = this._createZoomSliderThumb();
-  this._positionZoomSliderThumb();
-
-  this.addChild(this._zoomSliderThumb);
-};
-
-
-/**
- * Create the zoom slider thumb.
- *
- * @return zoom slider thumb
- */
-DvtZoomSlider.prototype._createZoomSliderThumb = function() {
-  var padding = 4;
-  var context = this.getCtx();
-  var s = new DvtContainer(context);
-
-  // Bug 9506699 - BIDI: Control panel buttons should have local specific icons
-  // in case of R2L, zoomslider button should start from right
-  var ww = DvtStyleUtils.isLocaleL2R() ? 0 : (ZOOM_SLIDER_WIDTH - 2);
-
-  var button = new DvtButton(context,
-      DvtButtonLAFUtils.createZoomSliderButtonState(context, DvtButton.STATE_ENABLED, ww),
-      DvtButtonLAFUtils.createZoomSliderButtonState(DvtButton.STATE_OVER, ww),
-      DvtButtonLAFUtils.createZoomSliderButtonState(DvtButton.STATE_DOWN, ww));
-  s.addChild(button);
-
-  s.addEvtListener(DvtMouseEvent.MOUSEDOWN, this.HandleZoomSliderThumbMouseDown, false, this);
-  //BUG FIX #10079178: add mouseMove and mouseUp listeners when we get the mouseDown event
-  //s.addEvtListener(DvtMouseEvent.MOUSEMOVE, this.HandleZoomSliderThumbMouseMove, false, this);
-  //s.addEvtListener(DvtMouseEvent.MOUSEUP, this.HandleZoomSliderThumbMouseUp, false, this);
-  //s.addEvtListener(DvtMouseEvent.MOUSEOUT, this.HandleZoomSliderThumbMouseUp, false, this);
-  s.addEvtListener(DvtMouseEvent.CLICK, DvtEventManager.consumeEvent, false, this);
-
-  return s;
-};
-
-
-/**
- * Position the zoom slider thumb based on the current zoom factor.
- */
-DvtZoomSlider.prototype._positionZoomSliderThumb = function() {
-  if (this._panZoomCanvas && this._zoomSliderThumb) {
-    var currZoom = this._panZoomCanvas.getCurrentZoom();
-
-    var yPos = Number(this._zoomSliderEndY) - ((currZoom - this._minScale) / (this._maxScale - this._minScale)) * Number(this._zoomSliderEndY - this._zoomSliderStartY);
-
-    if (yPos > this._zoomSliderEndY)
-      yPos = this._zoomSliderEndY;
-    else if (yPos < this._zoomSliderStartY)
-      yPos = this._zoomSliderStartY;
-    this._zoomSliderThumb.y = yPos - (this._zoomSliderThumb.height / 2.0);
-  }
-};
-
-
-/**
- *this.Handle a zoom event from the view.
- * The UI should update for the new zoom state.
- *
- * @param event zoom event
- */
-DvtZoomSlider.prototype.HandleZoomEvent = function(event) {
-  if (event.getSubType() == ZoomEvent.SUBTYPE_ZOOMED) {
-    this._positionZoomSliderThumb();
-  }
-};
-
-
-/**
- *this.Handle a mouse click on the continuous zoom slider line.
- *
- * @param event MouseEvent
- */
-DvtZoomSlider.prototype.HandleZoomSliderBodyClick = function(event) {
-  //don't want click to fall through to other components
-  DvtEventManager.consumeEvent(event);
-
-  var relY = this._zoomSliderEndY - event.localY;
-  if (relY < 0)
-    relY = 0;
-  var ratio = this._minScale + (relY / (this._zoomSliderEndY - this._zoomSliderStartY)) * (this._maxScale - this._minScale);
-
-  var animator = new DvtAnimator(this.getCtx(), this._panZoomCanvas.getAnimationDuration());
-  this._panZoomCanvas.zoomTo(ratio, undefined, undefined, animator);
-  animator.play();
-};
-
-
-/**
- *this.Handle a mouse click on one of the incremental
- * cross lines on the zoom slider.
- *
- * @param event MouseEvent
- */
-DvtZoomSlider.prototype.HandleZoomSliderCrosslineClick = function(event) {
-  //don't want click to fall through to other components
-  DvtEventManager.consumeEvent(event);
-
-  var i;
-  var numCrosslines = 0;
-  if (this._zoomSliderCrosslines != null)
-    numCrosslines = this._zoomSliderCrosslines.length;
-  for (i = 0; i < numCrosslines; i++) {
-    //find the crossline that was clicked, so we know the index,
-    //which is the same as the index of its zoom level in the array
-    if (event.target == this._zoomSliderCrosslines[i])
-      break;
-  }
-  var newScale = this._zoomLevels[i];
-
-  var animator = new DvtAnimator(this.getCtx(), this._panZoomCanvas.getAnimationDuration());
-  this._panZoomCanvas.zoomTo(newScale, undefined, undefined, animator);
-  animator.play();
-};
-
-DvtZoomSlider.prototype.HandleZoomSliderCrosslineRollOver = function(event) {
-  var i;
-  var numCrosslines = 0;
-  if (this._zoomSliderCrosslines != null)
-    numCrosslines = this._zoomSliderCrosslines.length;
-  for (i = 0; i < numCrosslines; i++) {
-    //find the crossline that was rolled over, so we know the index,
-    //which is the same as the index of its tooltip in the array
-    if (event.target == this._zoomSliderCrosslines[i])
-      break;
-  }
-
-  var tooltip = null;
-  if (i < this._zoomLevelsTooltips.length)
-    tooltip = this._zoomLevelsTooltips[i];
-
-  if (tooltip && this.getTooltipManager()) {
-    this.getTooltipManager().showTooltip(tooltip, event.target);
-  }
-};
-
-DvtZoomSlider.prototype.HandleZoomSliderCrosslineRollOut = function(event) {
-  if (this.getTooltipManager() != null)
-    this.getTooltipManager().hideTooltip();
-};
-
-
-/**
- *this.Handle a mouse down on the zoom slider thumb.
- *
- * @param event MouseEvent
- */
-DvtZoomSlider.prototype.HandleZoomSliderThumbMouseDown = function(event) {
-  //don't want click to fall through to other components
-  DvtEventManager.consumeEvent(event);
-
-  this._bZoomSliderThumbMouseDown = true;
-  //save the offset of the mouse position relative to the thumb position
-  //this._zoomSliderThumbMouseDeltaY = event.localY;
-  //BUG FIX #7241349: listen to mouse move event on thumb so we can
-  //make the drag animation smooth
-  //BUG FIX #10079178: add mouseUp listener on the stage so that
-  //we can detect it even if the mouse is outside of the thumb
-  stage.addEvtListener(DvtMouseEvent.MOUSEMOVE, this.HandleZoomSliderThumbMouseMove, false, 0, true);
-  stage.addEvtListener(DvtMouseEvent.MOUSEUP, this.HandleZoomSliderThumbMouseUp, false, 0, true);
-
-  var dragBounds = new Rectangle(this._zoomSliderThumb.x, this._zoomSliderStartY - this._zoomSliderThumb.height / 2, 0, this._zoomSliderEndY - this._zoomSliderStartY);
-  this._zoomSliderThumb.startDrag(false, dragBounds);
-};
-
-
-/**
- *this.Handle a mouse move on the zoom slider thumb.
- *
- * @param event MouseEvent
- */
-DvtZoomSlider.prototype.HandleZoomSliderThumbMouseMove = function(event) {
-  //only respond if the mouse down occurred on the thumb
-  if (this._bZoomSliderThumbMouseDown) {
-    //BUG FIX #7241349: update the view while dragging so that the
-    //animation is smooth
-    event.updateAfterEvent();
-
-    /*
-        //don't want click to fall through to other components
-        DvtEventManager.consumeEvent(event);
-
-        //calculate new thumb position
-        var newY = this._zoomSliderThumb.y + event.localY - this._zoomSliderThumbMouseDeltaY;
-        //constrain thumb position to length of zoom slider line
-        if (newY < this._zoomSliderStartY - this._zoomSliderThumb.height / 2)
-          newY = this._zoomSliderStartY - this._zoomSliderThumb.height / 2;
-        else if (newY > this._zoomSliderEndY - this._zoomSliderThumb.height / 2)
-          newY = this._zoomSliderEndY - this._zoomSliderThumb.height / 2;
-        //set the new thumb position
-        this._zoomSliderThumb.y = newY;
-        */
-  }
-};
-
-
-/**
- *this.Handle a mouse up on the zoom slider thumb.
- *
- * @param event MouseEvent
- */
-DvtZoomSlider.prototype.HandleZoomSliderThumbMouseUp = function(event) {
-  //BUG FIX #7241349: remove mouse move listener on thumb
-  //BUG FIX #10079178: remove mouseUp listener that was added when we got the mouseDown event
-  stage.removeEvtListener(DvtMouseEvent.MOUSEMOVE, this.HandleZoomSliderThumbMouseMove);
-  stage.removeEvtListener(DvtMouseEvent.MOUSEUP, this.HandleZoomSliderThumbMouseUp);
-
-  if (this._bZoomSliderThumbMouseDown) {
-    //don't want click to fall through to other components
-    DvtEventManager.consumeEvent(event);
-
-    this._bZoomSliderThumbMouseDown = false;
-
-    this._zoomSliderThumb.stopDrag();
-
-    //calculate the new zoom ratio
-    var relY = this._zoomSliderEndY - (this._zoomSliderThumb.y + this._zoomSliderThumb.height / 2);
-    if (relY < 0)
-      relY = 0;
-    var ratio = this._minScale + (relY / (this._zoomSliderEndY - this._zoomSliderStartY)) * (this._maxScale - this._minScale);
-
-    var animator = new DvtAnimator(this.getCtx(), this._panZoomCanvas.getAnimationDuration());
-    this._panZoomCanvas.zoomTo(ratio, undefined, undefined, animator);
-    animator.play();
-  }
-};
-
-
-/**
- * @constructor
  * PanControl for use with Diagram.
  */
 var DvtPanControl = function(context, panButton, recenterButton, panZoomCanvas, resources, control, styleMap) {
@@ -1672,10 +1258,7 @@ DvtPanControl.PAN_TIMER_INTERVAL = 50; //in ms
 DvtPanControl.PAN_TIMER_ACCELERATE_COUNT = 2 * //seconds
     (1000 / DvtPanControl.PAN_TIMER_INTERVAL);//iterations per second
 
-/*
- * make DvtPanControl a subclass of DvtBasePanZoomControl
- */
-DvtObj.createSubclass(DvtPanControl, DvtBasePanZoomControl, 'DvtPanControl');
+DvtObj.createSubclass(DvtPanControl, DvtBaseControl, 'DvtPanControl');
 
 /*--------------------------------------------------------------------*/
 /*  Init()                                                            */
@@ -1692,7 +1275,7 @@ DvtPanControl.prototype.Init = function(context, panButton, recenterButton, panZ
     this._controls = control;
   }
   else {
-    this._controls = DvtPanZoomControlPanel.CONTROLS_ALL;
+    this._controls = DvtControlPanel.CONTROLS_ALL;
   }
 
   panButton.addChild(recenterButton);
@@ -1816,16 +1399,12 @@ DvtPanControl.prototype.HandlePanMouseUp = function(event) {
  * @param event MouseEvent
  */
 DvtPanControl.prototype.HandlePanRollOver = function(event) {
-  //  DvtEventManager.consumeEvent(event);
-  // this._logEvent(event);
-
   //show the pan center button
   if (this._panCenterSprite) {
     this._panCenterSprite.setVisible(true);
   }
 
-  //  this._panButton._mouseOverHandler(event);
-  this.ShowTooltip(event, this.getResources().getPanControlTooltip());
+  this.ShowTooltip(event, this.Bundle.getTranslatedString('CONTROL_PANEL_PAN'));
 };
 
 
@@ -1965,7 +1544,7 @@ DvtPanControl.prototype.HandlePanCenterRollOver = function(event) {
   this._logEvent(event);
 
   //  this._panCenterSprite._mouseOverHandler(event);
-  this.ShowTooltip(event, this.getResources().getPanControlCenterTooltip());
+  this.ShowTooltip(event, this.Bundle.getTranslatedString('CONTROL_PANEL_ZOOMANDCENTER'));
 
   //Bug 13399111 - Wrong tooltip for pan control center button
   //Bug 13436842 - pan control rotates when hovering over the re-center button
@@ -2029,42 +1608,46 @@ DvtPanControl.prototype._rotatePanControlDirectionalArrow = function(localX, loc
 /**
  * @constructor
  */
-var DvtPanZoomControlPanelEvent = function(subtype) {
-  this.Init(DvtPanZoomControlPanelEvent.TYPE);
+var DvtControlPanelEvent = function(subtype) {
+  this.Init(DvtControlPanelEvent.TYPE);
   this._subtype = subtype;
 };
 
-DvtObj.createSubclass(DvtPanZoomControlPanelEvent, DvtBaseComponentEvent, 'DvtPanZoomControlPanelEvent');
+DvtObj.createSubclass(DvtControlPanelEvent, DvtBaseComponentEvent, 'DvtControlPanelEvent');
 
-DvtPanZoomControlPanelEvent.TYPE = 'dvtPZCPExpand';
-DvtPanZoomControlPanelEvent.SUBTYPE_SHOW = 'show';
-DvtPanZoomControlPanelEvent.SUBTYPE_HIDE = 'hide';
+DvtControlPanelEvent.TYPE = 'dvtPZCPExpand';
+DvtControlPanelEvent.SUBTYPE_SHOW = 'show';
+DvtControlPanelEvent.SUBTYPE_HIDE = 'hide';
 
-DvtPanZoomControlPanelEvent.prototype.getSubType = function() {
+DvtControlPanelEvent.prototype.getSubType = function() {
   return this._subtype;
 };
 /**
+ * A control panel used by DvtPanZoomCanvas for pan and zoom controls.
+ * @param {DvtContext} context The rendering context
+ * @param {DvtPanZoomCanvas} canvas The panable and zoomable object this control panel controls
+ * @param {Object} images Map of control panel image key and urls
+ * @param {DvtSubcomponentBundle} The resource bundle for control translated tooltips
+ * @param {Number} controls A number indicating what controls are on/off
+ * @param {DvtAbstractPanZoomComponent} view The component that this control panel belongs to
  * @constructor
- * DvtPanZoomControlPanel for use with PanZoomCanvas.
- * This panel contains tools for zooming and panning.
- * By default, the panel is initially collapsed.
  */
-var DvtPanZoomControlPanel = function(context, canvas, buttonImages, resources, controls, view) {
+var DvtControlPanel = function(context, canvas, buttonImages, resources, controls, view) {
   this.Init(context, canvas, buttonImages, resources, controls, view);
 };
 
-DvtObj.createSubclass(DvtPanZoomControlPanel, DvtContainer, 'DvtPanZoomControlPanel');
+DvtObj.createSubclass(DvtControlPanel, DvtContainer, 'DvtControlPanel');
 
-DvtPanZoomControlPanel.STATE_COLLAPSED = 1;
-DvtPanZoomControlPanel.STATE_EXPANDED = 2;
-DvtPanZoomControlPanel.CONTROLS_ALL = 0xffffff;
-DvtPanZoomControlPanel.CONTROLS_ZOOM_SLIDER = 0x000001;
-DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON = 0x000010;
-DvtPanZoomControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON = 0x000100;
-DvtPanZoomControlPanel.CONTROLS_ZOOM = 0x001001; // include CONTROLS_ZOOM_SLIDER
+DvtControlPanel.STATE_COLLAPSED = 1;
+DvtControlPanel.STATE_EXPANDED = 2;
+DvtControlPanel.CONTROLS_ALL = 0xffffff;
+DvtControlPanel.CONTROLS_ZOOM_SLIDER = 0x000001;
+DvtControlPanel.CONTROLS_CENTER_BUTTON = 0x000010;
+DvtControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON = 0x000100;
+DvtControlPanel.CONTROLS_ZOOM = 0x001001; // include CONTROLS_ZOOM_SLIDER
+DvtControlPanel.DEFAULT_ZOOM_LEVELS = [0, .25, .5, .75, 1];
 
-
-DvtPanZoomControlPanel.CONTROL_PANEL_BEHAVIOR_KEY = 'controlPanelBehavior';
+DvtControlPanel.CONTROL_PANEL_BEHAVIOR_KEY = 'controlPanelBehavior';
 
 
 //DvtPanZoomControl style names, used in style map
@@ -2072,140 +1655,140 @@ DvtPanZoomControlPanel.CONTROL_PANEL_BEHAVIOR_KEY = 'controlPanelBehavior';
  * Attribute for background opacity
  * @const
  */
-DvtPanZoomControlPanel.BG_ALPHA = 'backgroundAlpha';
+DvtControlPanel.BG_ALPHA = 'backgroundAlpha';
 
 
 /**
  * Attribute for background opacity on hover
  * @const
  */
-DvtPanZoomControlPanel.BG_ROLLOVER_ALPHA = 'backgroundHoverAlpha';
+DvtControlPanel.BG_ROLLOVER_ALPHA = 'backgroundHoverAlpha';
 
 
 /**
  * Attribute for background opacity on drag
  * @const
  */
-DvtPanZoomControlPanel.BG_DRAG_ALPHA = 'backgroundDragAlpha';
+DvtControlPanel.BG_DRAG_ALPHA = 'backgroundDragAlpha';
 
 
 /**
  * Attribute for border opacity
  * @const
  */
-DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA = 'borderAlpha';
+DvtControlPanel.FRAME_ROLLOUT_ALPHA = 'borderAlpha';
 
 
 /**
  * Attribute for border opacity on hover
  * @const
  */
-DvtPanZoomControlPanel.FRAME_ROLLOVER_ALPHA = 'borderHoverAlpha';
+DvtControlPanel.FRAME_ROLLOVER_ALPHA = 'borderHoverAlpha';
 
 
 /**
  * Attribute for border opacity on drag
  * @const
  */
-DvtPanZoomControlPanel.FRAME_DRAG_ALPHA = 'borderDragAlpha';
+DvtControlPanel.FRAME_DRAG_ALPHA = 'borderDragAlpha';
 
 
 /**
  * Attribute for button width style
  * @const
  */
-DvtPanZoomControlPanel.CP_BUTTON_WIDTH = 'buttonWidth';
+DvtControlPanel.CP_BUTTON_WIDTH = 'buttonWidth';
 
 
 /**
  * Attribute for button height style
  * @const
  */
-DvtPanZoomControlPanel.CP_BUTTON_HEIGHT = 'buttonHeight';
+DvtControlPanel.CP_BUTTON_HEIGHT = 'buttonHeight';
 
 
 /**
  * Attribute for open/close button width style
  * @const
  */
-DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH = 'openCloseButtonWidth';
+DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH = 'openCloseButtonWidth';
 
 
 /**
  * Attribute for tab size style
  * @const
  */
-DvtPanZoomControlPanel.CP_TAB_SIZE = 'tabSize';
+DvtControlPanel.CP_TAB_SIZE = 'tabSize';
 
 
 /**
  * Attribute for top padding style
  * @const
  */
-DvtPanZoomControlPanel.CP_PADDING_TOP = 'paddingTop';
+DvtControlPanel.CP_PADDING_TOP = 'paddingTop';
 
 
 /**
  * Attribute for side padding style
  * @const
  */
-DvtPanZoomControlPanel.CP_PADDING_SIDE = 'paddingSide';
+DvtControlPanel.CP_PADDING_SIDE = 'paddingSide';
 
 
 /**
  * Attribute for bottom padding style
  * @const
  */
-DvtPanZoomControlPanel.CP_PADDING_BOTTOM = 'paddingBottom';
+DvtControlPanel.CP_PADDING_BOTTOM = 'paddingBottom';
 
 
 /**
  * Attribute for left padding style
  * @const
  */
-DvtPanZoomControlPanel.CP_PADDING_LEFT = 'paddingLeft';
+DvtControlPanel.CP_PADDING_LEFT = 'paddingLeft';
 
 
 /**
  * Attribute for right padding style
  * @const
  */
-DvtPanZoomControlPanel.CP_PADDING_RIGHT = 'paddingRight';
+DvtControlPanel.CP_PADDING_RIGHT = 'paddingRight';
 
 
 /**
  * Attribute for inner padding style (padding used between elements)
  * @const
  */
-DvtPanZoomControlPanel.CP_PADDING_INNER = 'paddingInner';
+DvtControlPanel.CP_PADDING_INNER = 'paddingInner';
 
 
 /**
  * Attribute for querying panel drawer styles
  * @const
  */
-DvtPanZoomControlPanel.CP_PANEL_DRAWER_STYLES = 'panelDrawerStyles';
+DvtControlPanel.CP_PANEL_DRAWER_STYLES = 'panelDrawerStyles';
 
 
 /**
  * Attribute for image width style
  * @const
  */
-DvtPanZoomControlPanel.CP_IMAGE_WIDTH = 'imageWidth';
+DvtControlPanel.CP_IMAGE_WIDTH = 'imageWidth';
 
 
 /**
  * Attribute for image height style
  * @const
  */
-DvtPanZoomControlPanel.CP_IMAGE_HEIGHT = 'imageHeight';
+DvtControlPanel.CP_IMAGE_HEIGHT = 'imageHeight';
 
 
 /**
  * Attribute for querying center button (pan button) existence
  * @const
  */
-DvtPanZoomControlPanel.CP_CENTER_BUTTON_DISPLAYED = 'centerButtonDisplayed';
+DvtControlPanel.CP_CENTER_BUTTON_DISPLAYED = 'centerButtonDisplayed';
 
 
 /**
@@ -2213,16 +1796,16 @@ DvtPanZoomControlPanel.CP_CENTER_BUTTON_DISPLAYED = 'centerButtonDisplayed';
  * @param {DvtContext} context An object maintaining application specific context, as well as well as providing
  *                             access to platform specific data and objects, such as the factory
  * @param {DvtPanZoomCanvas} canvas The PanZoomCanvas this control panel will be associated with
- * @param {DvtXmlNode} buttonImages The map of button images
- * @param {DvtXmlNode} resources The map of translated resource strings
+ * @param {Object} buttonImages The map of button images
+ * @param {DvtSubcomponentBundle} resources The map of translated resource strings
  * @param {number} controls The bit mask specifying which controls to show; constants are
  *        defined in this class and begin with CONTROLS_; the default
  *        is CONTROLS_ALL
  * @param {DvtAbstractPanZoomComponent} view The parent component that extends DvtAbstractPanZoomComponent
  */
-DvtPanZoomControlPanel.prototype.Init = function(context, canvas, buttonImages, resources, controls, view) {
+DvtControlPanel.prototype.Init = function(context, canvas, buttonImages, resources, controls, view) {
 
-  DvtPanZoomControlPanel.superclass.Init.call(this, context, null, '_controlPanel');
+  DvtControlPanel.superclass.Init.call(this, context, null, '_controlPanel');
 
   this._bMouseDragPanning = false;
   this._bMouseOver = false;
@@ -2230,10 +1813,10 @@ DvtPanZoomControlPanel.prototype.Init = function(context, canvas, buttonImages, 
   this._panZoomCanvas = canvas;
   this._tooltipManager = context.getTooltipManager();
 
-  this._resources = new DvtPanZoomControlPanelResources(resources);
+  this.Bundle = resources;
 
   if (controls == null)
-    this._controls = DvtPanZoomControlPanel.CONTROLS_ALL;
+    this._controls = DvtControlPanel.CONTROLS_ALL;
   else
     this._controls = controls;
 
@@ -2242,31 +1825,29 @@ DvtPanZoomControlPanel.prototype.Init = function(context, canvas, buttonImages, 
   if (this._view) {
     // retrieve the control panel style map including skinning defaults from the parent component
     this._styleMap = this._view.getControlPanelStyleMap();
-    if (!this._styleMap[DvtPanZoomControlPanel.CP_CENTER_BUTTON_DISPLAYED]) {
+    if (!this._styleMap[DvtControlPanel.CP_CENTER_BUTTON_DISPLAYED]) {
       // disable the pan control if necessary and update the parent displayed controls value
-      this._controls = this._controls & ~DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON;
+      this._controls = this._controls & ~DvtControlPanel.CONTROLS_CENTER_BUTTON;
       this._view.setDisplayedControls(this._controls);
     }
   }
 
-  this._zoomLevels = DvtZoomSlider.DEFAULT_ZOOM_LEVELS;
-  this._zoomSliderMinScale = 0;
-  this._zoomSliderMaxScale = 1;
-  this._state = DvtPanZoomControlPanel.STATE_COLLAPSED;
+  this._zoomLevels = DvtControlPanel.DEFAULT_ZOOM_LEVELS;
+  this._state = DvtControlPanel.STATE_COLLAPSED;
   this._bTransition = false;
 
   this._buttonImages = buttonImages;
 
-  this._bgAlpha = this._styleMap[DvtPanZoomControlPanel.BG_ALPHA];
+  this._bgAlpha = this._styleMap[DvtControlPanel.BG_ALPHA];
 
-  this._eventManager = new DvtPanZoomControlPanelEventManager(context, null, view);
-  this._eventManager.addRolloverType(DvtPanZoomControlPanel);
+  this._eventManager = new DvtControlPanelEventManager(context, null, view);
+  this._eventManager.addRolloverType(DvtControlPanel);
   this._eventManager.addListeners(this);
   this._eventManager.associate(this, this);
 
   var s = this.RenderCollapsed();
   this._background.setAlpha(this._bgAlpha);
-  this._frame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+  this._frame.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
   this.addChild(s);
 
   //TOOD: disable tabbing for control panel tools
@@ -2280,7 +1861,7 @@ DvtPanZoomControlPanel.prototype.Init = function(context, canvas, buttonImages, 
  *
  * @param state STATE_EXPANDED or STATE_COLLAPSED
  */
-DvtPanZoomControlPanel.prototype.setState = function(state) {
+DvtControlPanel.prototype.setState = function(state) {
   if (this._state != state) {
     this.toggleExpandCollapse();
     this._state = state;
@@ -2294,7 +1875,7 @@ DvtPanZoomControlPanel.prototype.setState = function(state) {
  *
  * @return STATE_EXPANDED or STATE_COLLAPSED
  */
-DvtPanZoomControlPanel.prototype.getState = function() {
+DvtControlPanel.prototype.getState = function() {
   return this._state;
 };
 
@@ -2304,12 +1885,11 @@ DvtPanZoomControlPanel.prototype.getState = function() {
  *
  * @param zoomLevels array of discrete zoom levels to show in the zoom slider
  */
-DvtPanZoomControlPanel.prototype.setZoomLevels = function(zoomLevels) {
+DvtControlPanel.prototype.setZoomLevels = function(zoomLevels) {
   if (! zoomLevels) {
-    zoomLevels = ZoomSlider.DEFAULT_ZOOM_LEVELS;
+    zoomLevels = DvtControlPanel.DEFAULT_ZOOM_LEVELS;
   }
   this._zoomLevels = zoomLevels;
-  this.replaceZoomSlider();
 };
 
 
@@ -2318,51 +1898,23 @@ DvtPanZoomControlPanel.prototype.setZoomLevels = function(zoomLevels) {
  *
  * @return array of discrete zoom levels to show in the zoom slider
  */
-DvtPanZoomControlPanel.prototype.getZoomLevels = function() {
+DvtControlPanel.prototype.getZoomLevels = function() {
   return this._zoomLevels;
 };
-
-
-/**
- * Set the tooltips for the discrete zoom levels in the zoom slider.
- *
- * @param zoomLevelsTooltips tooltips for discrete zoom levels in zoom slider
- */
-DvtPanZoomControlPanel.prototype.setZoomLevelsTooltips = function(zoomLevelsTooltips) {
-  this._zoomLevelsTooltips = zoomLevelsTooltips;
-  if (this._zoomSlider) {
-    this._zoomSlider.setZoomLevelsTooltips(zoomLevelsTooltips);
-  }
-};
-
-
-/**
- * Get the tooltips for the discrete zoom levels in the zoom slider.
- *
- * @return tooltips for discrete zoom levels in zoom slider
- */
-DvtPanZoomControlPanel.prototype.getZoomLevelsTooltips = function() {
-  return this._zoomLevelsTooltips;
-};
-
 
 /**
  * Set the tooltip manager to use.
  *
  * @param tooltipManager manager to use
  */
-DvtPanZoomControlPanel.prototype.setTooltipManager = function(tooltipManager) {
+DvtControlPanel.prototype.setTooltipManager = function(tooltipManager) {
   this._tooltipManager = tooltipManager;
-  if (this._zoomSlider) {
-    this._zoomSlider.setTooltipManager(tooltipManager);
-  }
   if (this._zoomInButton)
     this._zoomInButton.setTooltipManager(tooltipManager);
   if (this._zoomOutButton)
     this._zoomOutButton.setTooltipManager(tooltipManager);
   if (this._zoomToFitButton)
     this._zoomToFitButton.setTooltipManager(tooltipManager);
-
 };
 
 
@@ -2371,101 +1923,29 @@ DvtPanZoomControlPanel.prototype.setTooltipManager = function(tooltipManager) {
  *
  * @return tooltipManager being used
  */
-DvtPanZoomControlPanel.prototype.getTooltipManager = function() {
+DvtControlPanel.prototype.getTooltipManager = function() {
   return this._tooltipManager;
 };
-
-
-/**
- * Set the translated resources to use.
- *
- * @param resources translated resources
- */
-DvtPanZoomControlPanel.prototype.setResources = function(resources) {
-  this._resources = resources;
-
-  if (this._zoomSlider)
-    this._zoomSlider.setResources(resources);
-  if (this._zoomInButton)
-    this._zoomInButton.setResources(resources);
-  if (this._zoomOutButton)
-    this._zoomOutButton.setResources(resources);
-  if (this._zoomToFitButton)
-    this._zoomToFitButton.setResources(resources);
-};
-
-
-/**
- * Get the translated resources to use.
- *
- * @return translated resources
- */
-DvtPanZoomControlPanel.prototype.getResources = function() {
-  return this._resources;
-};
-
-
-/**
- * Set the min scale for the zoom slider.
- *
- * @param minScale minimum value of zoom slider
- */
-DvtPanZoomControlPanel.prototype.setZoomSliderMinScale = function(minScale) {
-  this._zoomSliderMinScale = minScale;
-  this.replaceZoomSlider();
-};
-
-
-/**
- * Get the min scale for the zoom slider.
- *
- * @return minimum value of zoom slider
- */
-DvtPanZoomControlPanel.prototype.getZoomSliderMinScale = function() {
-  return this._zoomSliderMinScale;
-};
-
-
-/**
- * Set the max scale for the zoom slider.
- *
- * @param maxScale maximum value of zoom slider
- */
-DvtPanZoomControlPanel.prototype.setZoomSliderMaxScale = function(maxScale) {
-  this._zoomSliderMaxScale = maxScale;
-  this.replaceZoomSlider();
-};
-
-
-/**
- * Get the max scale for the zoom slider.
- *
- * @return maximum value of zoom slider
- */
-DvtPanZoomControlPanel.prototype.getZoomSliderMaxScale = function() {
-  return this._zoomSliderMaxScale;
-};
-
 
 /**
  * Notify the control panel that mouse drag panning has started.
  */
-DvtPanZoomControlPanel.prototype.mouseDragPanningStarted = function() {
+DvtControlPanel.prototype.mouseDragPanningStarted = function() {
   this._bMouseDragPanning = true;
   //disable interaction
   this._background.setMouseEnabled(false);
   this._frame.setMouseEnabled(false);
 
   //change alphas of background and frame
-  this._background.setAlpha(this._styleMap[DvtPanZoomControlPanel.BG_DRAG_ALPHA]);
-  this._frame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_DRAG_ALPHA]);
+  this._background.setAlpha(this._styleMap[DvtControlPanel.BG_DRAG_ALPHA]);
+  this._frame.setAlpha(this._styleMap[DvtControlPanel.FRAME_DRAG_ALPHA]);
 };
 
 
 /**
  * Notify the control panel that mouse drag panning has ended.
  */
-DvtPanZoomControlPanel.prototype.mouseDragPanningEnded = function() {
+DvtControlPanel.prototype.mouseDragPanningEnded = function() {
   this._bMouseDragPanning = false;
   //enable interaction
   this._background.setMouseEnabled(true);
@@ -2490,7 +1970,7 @@ DvtPanZoomControlPanel.prototype.mouseDragPanningEnded = function() {
  *
  * @param dispObj DisplayObject to rotate
  */
-DvtPanZoomControlPanel.prototype.rotateControlPanelDisplayObject = function(dispObj) {
+DvtControlPanel.prototype.rotateControlPanelDisplayObject = function(dispObj) {
   dispObj.setRotation(Math.PI);
 
   var dim = DvtButtonLAFUtils._getDimForced(this._context, dispObj);
@@ -2506,7 +1986,7 @@ DvtPanZoomControlPanel.prototype.rotateControlPanelDisplayObject = function(disp
  *
  * @return true if the horizontal arm of the control panel shows a single row
  */
-DvtPanZoomControlPanel.prototype.isSingleHorzRow = function() {
+DvtControlPanel.prototype.isSingleHorzRow = function() {
   return true;
 };
 
@@ -2517,13 +1997,13 @@ DvtPanZoomControlPanel.prototype.isSingleHorzRow = function() {
  *
  * @return {number} height of the horizontal bar of the control panel
  */
-DvtPanZoomControlPanel.prototype.getViewPanelHeight = function() {
+DvtControlPanel.prototype.getViewPanelHeight = function() {
   var h = 0;
   if (this.isSingleHorzRow())
-    h = DvtPanZoomControlPanelLAFUtils.getViewPanelHalfHeight();
+    h = DvtControlPanelLAFUtils.getViewPanelHalfHeight();
   else
-    h = DvtPanZoomControlPanelLAFUtils.getViewPanelHeight();
-  var defaultHeight = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_TAB_SIZE, 0);
+    h = DvtControlPanelLAFUtils.getViewPanelHeight();
+  var defaultHeight = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_TAB_SIZE, 0);
   return Math.max(defaultHeight, h);
 };
 
@@ -2533,8 +2013,8 @@ DvtPanZoomControlPanel.prototype.getViewPanelHeight = function() {
  *
  * @return {number} the width of the vertical bar of the control panel
  */
-DvtPanZoomControlPanel.prototype.getViewPanelWidth = function() {
-  return DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_TAB_SIZE, 0);
+DvtControlPanel.prototype.getViewPanelWidth = function() {
+  return DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_TAB_SIZE, 0);
 };
 
 
@@ -2543,15 +2023,15 @@ DvtPanZoomControlPanel.prototype.getViewPanelWidth = function() {
  *
  * @return {DvtContainer} container representing collapsed state
  */
-DvtPanZoomControlPanel.prototype.RenderCollapsed = function() {
+DvtControlPanel.prototype.RenderCollapsed = function() {
   var context = this.getCtx();
 
   var contentBar = new DvtContainer(context);
   var hh = this.getViewPanelHeight();
 
   var bR2L = DvtAgent.isRightToLeft(context);
-  this._background = DvtPanZoomControlPanelLAFUtils.createEmptyViewClosedShape(context, hh, this._styleMap, bR2L);
-  this._frame = DvtPanZoomControlPanelLAFUtils.createEmptyViewClosedFrame(context, hh, this._styleMap, bR2L);
+  this._background = DvtControlPanelLAFUtils.createEmptyViewClosedShape(context, hh, this._styleMap, bR2L);
+  this._frame = DvtControlPanelLAFUtils.createEmptyViewClosedFrame(context, hh, this._styleMap, bR2L);
 
   //Note: get dimensions before adding expand button
   this._collapsedDim = DvtButtonLAFUtils._getDimForced(context, this._frame);
@@ -2560,9 +2040,8 @@ DvtPanZoomControlPanel.prototype.RenderCollapsed = function() {
   this._expandButton = DvtButtonLAFUtils.createExpandButton(this.getCtx(), this._buttonImages, this.getViewPanelHeight(), this._styleMap, bR2L);
   this._expandButton.setCallback(this.HandleExpandClick, this);
   this._expandButton.setCursor(DvtSelectionEffectUtils.getSelectingCursor());
-  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, null,
-      null, null, null,
-      this.getResources().getControlPanelExpandTooltip());
+  var proxy = new DvtControlPanelEventHandlerProxy(this, null, null,
+                                                    null, null, null, this.Bundle.getTranslatedString('CONTROL_PANEL'));
   this._eventManager.associate(this._expandButton, proxy);
 
   this._frame.addChild(this._expandButton);
@@ -2580,14 +2059,14 @@ DvtPanZoomControlPanel.prototype.RenderCollapsed = function() {
  * @param {number} currY current Y coordinate
  * @return {number} updated current Y coordinate
  */
-DvtPanZoomControlPanel.prototype._addZoomToFitButton = function(vertContentBar, currY) {
+DvtControlPanel.prototype._addZoomToFitButton = function(vertContentBar, currY) {
 
   //create the zoom to fit button
-  if ((this._controls & DvtPanZoomControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON) != 0) {
-    var paddingInner = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtPanZoomControlPanel.CP_PADDING_INNER, 0);
-    var paddingSide = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtPanZoomControlPanel.CP_PADDING_LEFT, 0);
+  if ((this._controls & DvtControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON) != 0) {
+    var paddingInner = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtControlPanel.CP_PADDING_INNER, 0);
+    var paddingSide = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtControlPanel.CP_PADDING_LEFT, 0);
     this._zoomToFitButton = DvtButtonLAFUtils.createZoomToFitButton(this.getCtx(), this._panZoomCanvas,
-        this.getResources(), this._eventManager, this._buttonImages,
+        this.Bundle, this._eventManager, this._buttonImages,
         this._styleMap);
     this._zoomToFitButton.setTranslate(paddingSide, this._zoomToFitButton.getTranslateY() + currY);
 
@@ -2606,16 +2085,16 @@ DvtPanZoomControlPanel.prototype._addZoomToFitButton = function(vertContentBar, 
  * @param {number} currY current Y coordinate
  * @return {number} updated current Y coordinate
  */
-DvtPanZoomControlPanel.prototype._addZoomControls = function(vertContentBar, currY) {
+DvtControlPanel.prototype._addZoomControls = function(vertContentBar, currY) {
 
   var dim = null;
-  var paddingInner = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtPanZoomControlPanel.CP_PADDING_INNER, 0);
-  var paddingSide = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtPanZoomControlPanel.CP_PADDING_LEFT, 0);
-  if ((this._controls & DvtPanZoomControlPanel.CONTROLS_ZOOM) != 0) {
+  var paddingInner = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtControlPanel.CP_PADDING_INNER, 0);
+  var paddingSide = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtControlPanel.CP_PADDING_LEFT, 0);
+  if ((this._controls & DvtControlPanel.CONTROLS_ZOOM) != 0) {
 
     //create the zoom in button
     this._zoomInButton = DvtButtonLAFUtils.createZoomInButton(this.getCtx(), this._panZoomCanvas,
-                                                              this.getResources(), this._eventManager, this._buttonImages,
+                                                              this.Bundle, this._eventManager, this._buttonImages,
                                                               this._styleMap);
     this._zoomInButton.setTranslate(paddingSide, this._zoomInButton.getTranslateY() + currY);
 
@@ -2623,19 +2102,9 @@ DvtPanZoomControlPanel.prototype._addZoomControls = function(vertContentBar, cur
     vertContentBar.addChild(this._zoomInButton);
     currY += (dim.h + paddingInner);
 
-    if (this.isZoomSliderShown()) {
-      //create the zoom slider
-      this._zoomSlider = this.createZoomSlider();
-      this._zoomSlider.setTranslate(paddingSide, this._zoomSlider.getTranslateY() + currY);
-
-      dim = DvtButtonLAFUtils._getDimForced(this.getCtx(), this._zoomSlider);
-      vertContentBar.addChild(this._zoomSlider);
-      currY += (dim.h + paddingInner);
-    }
-
     //create the zoom out button
     this._zoomOutButton = DvtButtonLAFUtils.createZoomOutButton(this.getCtx(), this._panZoomCanvas,
-                                                                this.getResources(), this._eventManager, this._buttonImages, this._styleMap);
+                                                                this.Bundle, this._eventManager, this._buttonImages, this._styleMap);
     this._zoomOutButton.setTranslate(paddingSide, this._zoomOutButton.getTranslateY() + currY);
 
     dim = DvtButtonLAFUtils._getDimForced(this.getCtx(), this._zoomOutButton);
@@ -2655,7 +2124,7 @@ DvtPanZoomControlPanel.prototype._addZoomControls = function(vertContentBar, cur
  * @param {number} currY current Y coordinate
  * @return {number} updated current Y coordinate
  */
-DvtPanZoomControlPanel.prototype._createVBarBackground = function(horzContentBar, vertContentBar, nKidHorzContentBar, currY) {
+DvtControlPanel.prototype._createVBarBackground = function(horzContentBar, vertContentBar, nKidHorzContentBar, currY) {
 
   var context = this.getCtx();
   if (vertContentBar) {
@@ -2672,22 +2141,22 @@ DvtPanZoomControlPanel.prototype._createVBarBackground = function(horzContentBar
         (nKidHorzContentBar > 0 && nKidsVert == 1));
 
     var openside = null; // alta style
-    if (this._styleMap && this._styleMap[DvtPanZoomControlPanel.CP_PANEL_DRAWER_STYLES]) {
+    if (this._styleMap && this._styleMap[DvtControlPanel.CP_PANEL_DRAWER_STYLES]) {
       if (nKidHorzContentBar > 0)
-        openside = DvtPanZoomControlPanelLAFUtils.OPEN_TOP;
+        openside = DvtControlPanelLAFUtils.OPEN_TOP;
       else
-        openside = DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT;
+        openside = DvtControlPanelLAFUtils.OPEN_RIGHT;
     }
 
     var dim = DvtButtonLAFUtils._getDimForced(context, horzContentBar);
 
     currY += 4;
     var cpHeight = roundedCorner ? currY : Math.max(dim.h, currY);
-    var paddingBottom = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtPanZoomControlPanel.CP_PADDING_BOTTOM, 0);
+    var paddingBottom = DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtControlPanel.CP_PADDING_BOTTOM, 0);
     cpHeight += paddingBottom;
 
-    var zoomShape = DvtPanZoomControlPanelLAFUtils.renderEmptyZoomShape(context, cpHeight, this._styleMap, openside, this.getViewPanelHeight());
-    var zoomFrame = DvtPanZoomControlPanelLAFUtils.renderEmptyZoomFrame(context, cpHeight, roundedCorner, this._styleMap, openside, this.getViewPanelHeight());
+    var zoomShape = DvtControlPanelLAFUtils.renderEmptyZoomShape(context, cpHeight, this._styleMap, openside, this.getViewPanelHeight());
+    var zoomFrame = DvtControlPanelLAFUtils.renderEmptyZoomFrame(context, cpHeight, roundedCorner, this._styleMap, openside, this.getViewPanelHeight());
 
     zoomShape.setTranslate(vertContentBar.getTranslateX(), vertContentBar.getTranslateY());
 
@@ -2706,16 +2175,16 @@ DvtPanZoomControlPanel.prototype._createVBarBackground = function(horzContentBar
  * @param {number} currY current Y coordinate
  * @return {number} updated current Y coordinate
  */
-DvtPanZoomControlPanel.prototype._positionVBarElements = function(horzContentBar, vertContentBar, currY) {
+DvtControlPanel.prototype._positionVBarElements = function(horzContentBar, vertContentBar, currY) {
 
   var dim = null;
   var context = this.getCtx();
   var bBiDi = DvtAgent.isRightToLeft(context);
 
-  var buttonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var buttonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
 
   if (! this._additionalContent &&
-      (this._controls & DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON) == 0) {
+      (this._controls & DvtControlPanel.CONTROLS_CENTER_BUTTON) == 0) {
 
     if (bBiDi) {
       horzContentBar.setTranslateX(0 - horzContentBar.getTranslateX());
@@ -2754,7 +2223,7 @@ DvtPanZoomControlPanel.prototype._positionVBarElements = function(horzContentBar
  * @param {number} nKidHorzContentBar number of child objects on the horizontal bar
  * @return {number} updated number of child objects on the horizontal bar
  */
-DvtPanZoomControlPanel.prototype._createHBarPanControl = function(horzContentBar, nKidHorzContentBar) {
+DvtControlPanel.prototype._createHBarPanControl = function(horzContentBar, nKidHorzContentBar) {
 
   var context = this.getCtx();
 
@@ -2763,8 +2232,8 @@ DvtPanZoomControlPanel.prototype._createHBarPanControl = function(horzContentBar
   var bSingleRow = this.isSingleHorzRow();
 
   // hide panControl if it is off
-  if ((this._controls & DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON) != 0) {
-    this._panControl = DvtButtonLAFUtils.createPanControl(context, this._panZoomCanvas, this.getResources(), this._controls, this._buttonImages, this._styleMap);
+  if ((this._controls & DvtControlPanel.CONTROLS_CENTER_BUTTON) != 0) {
+    this._panControl = DvtButtonLAFUtils.createPanControl(context, this._panZoomCanvas, this.Bundle, this._controls, this._buttonImages, this._styleMap);
 
     //BUG FIX #10154856: create underlays to erase the view of the intersection
     //between the horz and vert arms of the control panel under the pan control,
@@ -2802,7 +2271,7 @@ DvtPanZoomControlPanel.prototype._createHBarPanControl = function(horzContentBar
  * @param {number} nKidHorzContentBar number of child objects on the horizontal bar
  * @return {number} updated number of child objects on the horizontal bar
  */
-DvtPanZoomControlPanel.prototype._createHBarAdditionalContent = function(horzContentBar, nKidHorzContentBar) {
+DvtControlPanel.prototype._createHBarAdditionalContent = function(horzContentBar, nKidHorzContentBar) {
 
   var context = this.getCtx();
 
@@ -2827,13 +2296,13 @@ DvtPanZoomControlPanel.prototype._createHBarAdditionalContent = function(horzCon
  * Creates a collapse button for the horizontal bar
  * @param {DvtContainer} horzContentBar display object representing the horizontal bar
  */
-DvtPanZoomControlPanel.prototype._createHBarCollapseButton = function(horzContentBar) {
+DvtControlPanel.prototype._createHBarCollapseButton = function(horzContentBar) {
   this._collapseButton = DvtButtonLAFUtils.createCollapseButton(this.getCtx(), this._buttonImages, this.getViewPanelHeight(), this._styleMap, DvtAgent.isRightToLeft(this.getCtx()));
   this._collapseButton.setCallback(this.HandleCollapseClick, this);
   this._collapseButton.setCursor(DvtSelectionEffectUtils.getSelectingCursor());
-  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, null,
+  var proxy = new DvtControlPanelEventHandlerProxy(this, null, null,
       null, null, null,
-      this.getResources().getControlPanelCollapseTooltip());
+      this.Bundle.getTranslatedString('CONTROL_PANEL'));
   this._eventManager.associate(this._collapseButton, proxy);
   horzContentBar.addChild(this._collapseButton);
 };
@@ -2845,15 +2314,15 @@ DvtPanZoomControlPanel.prototype._createHBarCollapseButton = function(horzConten
  * @param {number} currX current X coordinate
  * @return {number} updated current X coordinate
  */
-DvtPanZoomControlPanel.prototype._positionHBarElements = function(bBiDi, currX) {
+DvtControlPanel.prototype._positionHBarElements = function(bBiDi, currX) {
   var context = this._context;
   var dim = null;
-  var collapseButtonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
-  var buttonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_BUTTON_WIDTH, 0);
+  var collapseButtonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var buttonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_BUTTON_WIDTH, 0);
   var panelWidth = this.getViewPanelWidth();
   var panelHeight = this.getViewPanelHeight();
-  var buttonPaddingSide = DvtStyleUtils.getStyle(this._styleMap['hbar'], DvtPanZoomControlPanel.CP_PADDING_LEFT, 0);
-  var buttonPaddingInner = DvtStyleUtils.getStyle(this._styleMap['hbar'], DvtPanZoomControlPanel.CP_PADDING_INNER, 0);
+  var buttonPaddingSide = DvtStyleUtils.getStyle(this._styleMap['hbar'], DvtControlPanel.CP_PADDING_LEFT, 0);
+  var buttonPaddingInner = DvtStyleUtils.getStyle(this._styleMap['hbar'], DvtControlPanel.CP_PADDING_INNER, 0);
 
   if (bBiDi) {
     this._collapseButton.setTranslateX(0);
@@ -2937,11 +2406,11 @@ DvtPanZoomControlPanel.prototype._positionHBarElements = function(bBiDi, currX) 
  * @param {boolean} bBiDi true if right-to-left, false otherwise
  * @param {number} currX current X coordinate
  */
-DvtPanZoomControlPanel.prototype._createHBarBackground = function(horzContentBar, vertContentBar, nKidHorzContentBar, bBiDi, currX) {
+DvtControlPanel.prototype._createHBarBackground = function(horzContentBar, vertContentBar, nKidHorzContentBar, bBiDi, currX) {
   var context = this._context;
-  var buttonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
-  var panelWidth = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_TAB_SIZE, 0);
-  var panelDrawerStyle = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_PANEL_DRAWER_STYLES, null);
+  var buttonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var panelWidth = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_TAB_SIZE, 0);
+  var panelDrawerStyle = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_PANEL_DRAWER_STYLES, null);
   var backgroundWidth = panelDrawerStyle ? currX : currX - buttonWidth;
   var backgroundHeight = this.getViewPanelHeight();
   var backgroundFrameOffsetX = 0;
@@ -2958,17 +2427,17 @@ DvtPanZoomControlPanel.prototype._createHBarBackground = function(horzContentBar
 
     var r = parseInt(DvtStyleUtils.getStyle(this._styleMap, DvtCSSStyle.BORDER_RADIUS, 0));
     if (panelDrawerStyle) {
-      var openSide = nKidHorzContentBar > 0 && vertContentBar != null ? DvtPanZoomControlPanelLAFUtils.OPEN_BOTTOM : DvtPanZoomControlPanelLAFUtils.OPEN_LEFT;
-      viewFrame = DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelperOpenSide(context, r, backgroundWidth, backgroundHeight, openSide, panelWidth);
+      var openSide = nKidHorzContentBar > 0 && vertContentBar != null ? DvtControlPanelLAFUtils.OPEN_BOTTOM : DvtControlPanelLAFUtils.OPEN_LEFT;
+      viewFrame = DvtControlPanelLAFUtils.makeViewOpenShapeHelperOpenSide(context, r, backgroundWidth, backgroundHeight, openSide, panelWidth);
     }
     else
-      viewFrame = DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelper(context, r, backgroundWidth - (2 * r), backgroundHeight - (2 * r), 0, 0, !bBiDi);
+      viewFrame = DvtControlPanelLAFUtils.makeViewOpenShapeHelper(context, r, backgroundWidth - (2 * r), backgroundHeight - (2 * r), 0, 0, !bBiDi);
     viewFrame.setSolidStroke(DvtStyleUtils.getStyle(this._styleMap, DvtCSSStyle.BORDER_COLOR, null));
     viewFrame.setFill(null);
     viewFrame.setTranslateX(horzContentBar.getTranslateX() + backgroundFrameOffsetX);
     horzContentBar.addChildAt(viewFrame, 0);
 
-    var viewShape = DvtPanZoomControlPanelLAFUtils.createEmptyViewOpenShape(context, backgroundWidth,
+    var viewShape = DvtControlPanelLAFUtils.createEmptyViewOpenShape(context, backgroundWidth,
         this.getViewPanelHeight(), !bBiDi, this._styleMap);
     viewShape.setTranslate(horzContentBar.getTranslateX() + backgroundShapeOffsetX, horzContentBar.getTranslateY());
     this._background.addChild(viewShape);
@@ -2981,7 +2450,7 @@ DvtPanZoomControlPanel.prototype._createHBarBackground = function(horzContentBar
  *
  * @return {DvtContainer} display object representing expanded state
  */
-DvtPanZoomControlPanel.prototype.RenderExpanded = function() {
+DvtControlPanel.prototype.RenderExpanded = function() {
 
   var context = this.getCtx();
   var s = new DvtContainer(context);
@@ -3016,11 +2485,11 @@ DvtPanZoomControlPanel.prototype.RenderExpanded = function() {
   //BUG FIX #10154856: if showing a single horizontal row, offset the start of the
   //vertical controls to leave room for the pan control
   if (this.isSingleHorzRow() &&
-      (this._controls & DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON) != 0)
-    currY += (DvtPanZoomControlPanelLAFUtils.getViewPanelHeight() - this.getViewPanelHeight());
+      (this._controls & DvtControlPanel.CONTROLS_CENTER_BUTTON) != 0)
+    currY += (DvtControlPanelLAFUtils.getViewPanelHeight() - this.getViewPanelHeight());
 
-  if ((this._controls & DvtPanZoomControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON) != 0 ||
-      (this._controls & DvtPanZoomControlPanel.CONTROLS_ZOOM) != 0) {
+  if ((this._controls & DvtControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON) != 0 ||
+      (this._controls & DvtControlPanel.CONTROLS_ZOOM) != 0) {
 
     vertContentBar = new DvtContainer(context);
     vertContentBar.setTranslateY(horzContentBar.getTranslateY() + this.getViewPanelHeight());
@@ -3054,7 +2523,7 @@ DvtPanZoomControlPanel.prototype.RenderExpanded = function() {
  * @param contentSprite sprite to contain additional tools that will be
  *        added to the horzContentBar
  */
-DvtPanZoomControlPanel.prototype.PopulateHorzContentBar = function(contentSprite) {
+DvtControlPanel.prototype.PopulateHorzContentBar = function(contentSprite) {
   //do nothing
 };
 
@@ -3062,12 +2531,12 @@ DvtPanZoomControlPanel.prototype.PopulateHorzContentBar = function(contentSprite
 /**
  * Toggle the state of the control panel between expanded and collapsed.
  */
-DvtPanZoomControlPanel.prototype.toggleExpandCollapse = function() {
+DvtControlPanel.prototype.toggleExpandCollapse = function() {
   if (!this._bTransition) {
-    if (this._state === DvtPanZoomControlPanel.STATE_EXPANDED) {
+    if (this._state === DvtControlPanel.STATE_EXPANDED) {
       this._doCollapse();
     }
-    else if (this._state === DvtPanZoomControlPanel.STATE_COLLAPSED) {
+    else if (this._state === DvtControlPanel.STATE_COLLAPSED) {
       this._doExpand();
     }
   }
@@ -3079,11 +2548,11 @@ DvtPanZoomControlPanel.prototype.toggleExpandCollapse = function() {
  *
  * @return dimensions of collapsed panel
  */
-DvtPanZoomControlPanel.prototype.getCollapsedDim = function() {
+DvtControlPanel.prototype.getCollapsedDim = function() {
   return this._collapsedDim;
 };
 
-DvtPanZoomControlPanel.prototype.getExpandedDim = function() {
+DvtControlPanel.prototype.getExpandedDim = function() {
   return this._expandedDim;
 };
 
@@ -3093,7 +2562,7 @@ DvtPanZoomControlPanel.prototype.getExpandedDim = function() {
  *
  * @param {DvtMouseEvent} event MouseEvent
  */
-DvtPanZoomControlPanel.prototype.HandleExpandClick = function(event) {
+DvtControlPanel.prototype.HandleExpandClick = function(event) {
   //don't want click to fall through to other components
   DvtEventManager.consumeEvent(event);
 
@@ -3111,7 +2580,7 @@ DvtPanZoomControlPanel.prototype.HandleExpandClick = function(event) {
  *
  * @private
  */
-DvtPanZoomControlPanel.prototype._doExpand = function() {
+DvtControlPanel.prototype._doExpand = function() {
   //make sure _doCollapse and _doExpand cannot be called
   this._bTransition = true;
   this.setMouseEnabled(false);
@@ -3127,7 +2596,7 @@ DvtPanZoomControlPanel.prototype._doExpand = function() {
   this.transitionExpand(this.getChildAt(0), s);
 
   //update state
-  this._state = DvtPanZoomControlPanel.STATE_EXPANDED;
+  this._state = DvtControlPanel.STATE_EXPANDED;
 
   //BUG FIX #8719343: fire expand event
   this.fireExpandEvent();
@@ -3137,7 +2606,7 @@ DvtPanZoomControlPanel.prototype._doExpand = function() {
 /**
  * Apply alphas based on whether the mouse is over the control panel.
  */
-DvtPanZoomControlPanel.prototype._applyAlphasForMouse = function() {
+DvtControlPanel.prototype._applyAlphasForMouse = function() {
   //apply alphas based on whether the mouse is over the control panel
   var bMouseOver = false;
   var stage = this.getCtx().getStage();
@@ -3158,7 +2627,7 @@ DvtPanZoomControlPanel.prototype._applyAlphasForMouse = function() {
  *
  * @param {DvtMouseEvent} event MouseEvent
  */
-DvtPanZoomControlPanel.prototype.HandleCollapseClick = function(event) {
+DvtControlPanel.prototype.HandleCollapseClick = function(event) {
   //don't want click to fall through to other components
   DvtEventManager.consumeEvent(event);
 
@@ -3173,7 +2642,7 @@ DvtPanZoomControlPanel.prototype.HandleCollapseClick = function(event) {
  *
  * @private
  */
-DvtPanZoomControlPanel.prototype._doCollapse = function() {
+DvtControlPanel.prototype._doCollapse = function() {
   //make sure _doCollapse and _doExpand cannot be called
   this._bTransition = true;
 
@@ -3188,7 +2657,7 @@ DvtPanZoomControlPanel.prototype._doCollapse = function() {
   this.transitionCollapse(this.getChildAt(0), s);
 
   //update state
-  this._state = DvtPanZoomControlPanel.STATE_COLLAPSED;
+  this._state = DvtControlPanel.STATE_COLLAPSED;
 
   //BUG FIX #8719343: fire collapse event
   this.fireCollapseEvent();
@@ -3201,9 +2670,9 @@ DvtPanZoomControlPanel.prototype._doCollapse = function() {
  * @param {DvtContainer} oldContent collapsed control
  * @param {DvtContainer} newContent expanded control
 */
-DvtPanZoomControlPanel.prototype.transitionExpand = function(oldContent, newContent) {
+DvtControlPanel.prototype.transitionExpand = function(oldContent, newContent) {
   var odim = oldContent.getDimensions();
-  var openCloseButtonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var openCloseButtonWidth = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
 
   // No need to animate if control panel was initially added to the DOM indicating this is an initial render
   if (odim && odim.w != 0) {
@@ -3265,7 +2734,7 @@ DvtPanZoomControlPanel.prototype.transitionExpand = function(oldContent, newCont
  * @param {DvtContainer} oldContent expanded control
  * @param {DvtContainer} newContent collapsed control
  */
-DvtPanZoomControlPanel.prototype.transitionCollapse = function(oldContent, newContent) {
+DvtControlPanel.prototype.transitionCollapse = function(oldContent, newContent) {
   var animator = new DvtAnimator(this.getCtx(), .25);
 
   //fade out old, fade in new
@@ -3302,8 +2771,8 @@ DvtPanZoomControlPanel.prototype.transitionCollapse = function(oldContent, newCo
  * @return true if event was dispatched successfully,
  *         false otherwise
  */
-DvtPanZoomControlPanel.prototype.fireExpandEvent = function() {
-  var event = new DvtPanZoomControlPanelEvent(DvtPanZoomControlPanelEvent.SUBTYPE_SHOW);
+DvtControlPanel.prototype.fireExpandEvent = function() {
+  var event = new DvtControlPanelEvent(DvtControlPanelEvent.SUBTYPE_SHOW);
   this.FireListener(event);
   return true;
 };
@@ -3315,8 +2784,8 @@ DvtPanZoomControlPanel.prototype.fireExpandEvent = function() {
  * @return true if event was dispatched successfully,
  *         false otherwise
  */
-DvtPanZoomControlPanel.prototype.fireCollapseEvent = function() {
-  var event = new DvtPanZoomControlPanelEvent(DvtPanZoomControlPanelEvent.SUBTYPE_HIDE);
+DvtControlPanel.prototype.fireCollapseEvent = function() {
+  var event = new DvtControlPanelEvent(DvtControlPanelEvent.SUBTYPE_HIDE);
   this.FireListener(event);
   return true;
 };
@@ -3328,7 +2797,7 @@ DvtPanZoomControlPanel.prototype.fireCollapseEvent = function() {
  * @param dispObjCon display object containing the arrow icon
  * @param offset amount to translate arrow icon
  */
-DvtPanZoomControlPanel.prototype.adjustArrowsIconForBiDi = function(dispObjCon, offset) {
+DvtControlPanel.prototype.adjustArrowsIconForBiDi = function(dispObjCon, offset) {
   var loader = this.findLoader(dispObjCon);
   if (loader) {
     loader.setTranslateX(loader.getTranslateX() + offset);
@@ -3343,7 +2812,7 @@ DvtPanZoomControlPanel.prototype.adjustArrowsIconForBiDi = function(dispObjCon, 
  *
  * @return Loader object found, or null if none found
  */
-DvtPanZoomControlPanel.prototype.findLoader = function(dispObjCon) {
+DvtControlPanel.prototype.findLoader = function(dispObjCon) {
   var childCount = dispObjCon.getNumChildren();
   var dispObj;
   for (var i = 0; i < childCount; i++) {
@@ -3359,7 +2828,7 @@ DvtPanZoomControlPanel.prototype.findLoader = function(dispObjCon) {
 };
 
 // Mouse event handling
-DvtPanZoomControlPanel.prototype.HandleRollOver = function(event) {
+DvtControlPanel.prototype.HandleRollOver = function(event) {
   this._bMouseOver = true;
   if (!this._bMouseDragPanning)
   {
@@ -3367,7 +2836,7 @@ DvtPanZoomControlPanel.prototype.HandleRollOver = function(event) {
   }
 };
 
-DvtPanZoomControlPanel.prototype.HandleRollOut = function(event) {
+DvtControlPanel.prototype.HandleRollOut = function(event) {
   this._bMouseOver = false;
   if (!this._bMouseDragPanning)
   {
@@ -3380,13 +2849,13 @@ DvtPanZoomControlPanel.prototype.HandleRollOut = function(event) {
  * Apply alphas to the background and frame for when the
  * mouse is over the control panel.
  */
-DvtPanZoomControlPanel.prototype._applyAlphasRollover = function() {
-  this._background.setAlpha(this._styleMap[DvtPanZoomControlPanel.BG_ROLLOVER_ALPHA]);
-  this._frame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOVER_ALPHA]);
+DvtControlPanel.prototype._applyAlphasRollover = function() {
+  this._background.setAlpha(this._styleMap[DvtControlPanel.BG_ROLLOVER_ALPHA]);
+  this._frame.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOVER_ALPHA]);
 
   //BUG FIX #10154856: fade underlay just like control panel fill
   if (this._panControlUnderlay) {
-    this._panControlUnderlay.setAlpha(this._styleMap[DvtPanZoomControlPanel.BG_ROLLOVER_ALPHA]);
+    this._panControlUnderlay.setAlpha(this._styleMap[DvtControlPanel.BG_ROLLOVER_ALPHA]);
   }
 };
 
@@ -3395,9 +2864,9 @@ DvtPanZoomControlPanel.prototype._applyAlphasRollover = function() {
  * Apply alphas to the background and frame for when the
  * mouse is not over the control panel.
  */
-DvtPanZoomControlPanel.prototype._applyAlphasRollout = function() {
+DvtControlPanel.prototype._applyAlphasRollout = function() {
   this._background.setAlpha(this._bgAlpha);
-  this._frame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+  this._frame.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
 
   //BUG FIX #10154856: fade underlay just like control panel fill
   if (this._panControlUnderlay) {
@@ -3405,36 +2874,25 @@ DvtPanZoomControlPanel.prototype._applyAlphasRollout = function() {
   }
 };
 
-
-/**
- * Determine if the zoom slider is supposed to be included in the control panel.
- *
- * @return true if the zoom slider is supposed to be included, false if not
- */
-DvtPanZoomControlPanel.prototype.isZoomSliderShown = function() {
-  //  return (this._controls & DvtPanZoomControlPanel.CONTROLS_ZOOM_SLIDER) > 0;
-  return false;
-};
-
-DvtPanZoomControlPanel.prototype.isPanControlShown = function() {
-  return (this._controls & DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON) > 0;
+DvtControlPanel.prototype.isPanControlShown = function() {
+  return (this._controls & DvtControlPanel.CONTROLS_CENTER_BUTTON) > 0;
 };
 
 
 /**
  * @override
  */
-DvtPanZoomControlPanel.prototype.getDimensions = function() {
+DvtControlPanel.prototype.getDimensions = function() {
   if (! this._dim) {
-    this._dim = DvtPanZoomControlPanel.superclass.getDimensions.call(this);
+    this._dim = DvtControlPanel.superclass.getDimensions.call(this);
   }
   return this._dim;
 };
 
-DvtPanZoomControlPanel.prototype.renderComponent = function() {
+DvtControlPanel.prototype.renderComponent = function() {
 };
 
-DvtPanZoomControlPanel.prototype.getButtonImages = function() {
+DvtControlPanel.prototype.getButtonImages = function() {
   return this._buttonImages;
 };
 
@@ -3443,17 +2901,17 @@ DvtPanZoomControlPanel.prototype.getButtonImages = function() {
  * Returns top padding for vertical bar
  * @return {number} number of pixels specified as top padding for vertical bar
  */
-DvtPanZoomControlPanel.prototype._getVBarButtonsOffsetY = function(nKidHorzContentBar) {
+DvtControlPanel.prototype._getVBarButtonsOffsetY = function(nKidHorzContentBar) {
   // we need extra room if we have pan control or if this is Alta style and horizontal bar is empty
-  if ((this._controls & DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON) ||
-      this._styleMap && this._styleMap[DvtPanZoomControlPanel.CP_PANEL_DRAWER_STYLES] && nKidHorzContentBar == 0)
-    return DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtPanZoomControlPanel.CP_PADDING_TOP, 0);
+  if ((this._controls & DvtControlPanel.CONTROLS_CENTER_BUTTON) ||
+      this._styleMap && this._styleMap[DvtControlPanel.CP_PANEL_DRAWER_STYLES] && nKidHorzContentBar == 0)
+    return DvtStyleUtils.getStyle(this._styleMap['vbar'], DvtControlPanel.CP_PADDING_TOP, 0);
   else
     return 0;
 };
 
 
-DvtPanZoomControlPanel.prototype.enableZoomControls = function() {
+DvtControlPanel.prototype.enableZoomControls = function() {
   var currZoom = this._panZoomCanvas.getZoom();
   var nextZoom = this._panZoomCanvas.getNextZoomLevel(currZoom);
   var prevZoom = this._panZoomCanvas.getPrevZoomLevel(currZoom);
@@ -3463,12 +2921,12 @@ DvtPanZoomControlPanel.prototype.enableZoomControls = function() {
     this._zoomOutButton.setEnabled(currZoom != prevZoom);
 };
 
-DvtPanZoomControlPanel.prototype.enableZoomInControl = function(enabled) {
+DvtControlPanel.prototype.enableZoomInControl = function(enabled) {
   if (this._zoomInButton)
     this._zoomInButton.setEnabled(enabled);
 };
 
-DvtPanZoomControlPanel.prototype.enableZoomOutControl = function(enabled) {
+DvtControlPanel.prototype.enableZoomOutControl = function(enabled) {
   if (this._zoomOutButton)
     this._zoomOutButton.setEnabled(enabled);
 };
@@ -3476,15 +2934,15 @@ DvtPanZoomControlPanel.prototype.enableZoomOutControl = function(enabled) {
  * Default values and utility functions for PanZoomControlPanel versioning.
  * @class
  */
-var DvtPanZoomControlPanelDefaults = new Object();
+var DvtControlPanelDefaults = new Object();
 
-DvtObj.createSubclass(DvtPanZoomControlPanelDefaults, DvtObj, 'DvtPanZoomControlPanelDefaults');
+DvtObj.createSubclass(DvtControlPanelDefaults, DvtObj, 'DvtControlPanelDefaults');
 
 
 /**
  * Contains overrides for the 'alta' skin.
  */
-DvtPanZoomControlPanelDefaults.SKIN_ALTA = {
+DvtControlPanelDefaults.SKIN_ALTA = {
   'fill-type': 'solid',
   'backgroundAlpha': 1,
   'backgroundDragAlpha': 1,
@@ -3535,7 +2993,7 @@ DvtPanZoomControlPanelDefaults.SKIN_ALTA = {
 /**
  * Contains overrides for the 'skyros' skin.
  */
-DvtPanZoomControlPanelDefaults.SKIN_SKYROS = {
+DvtControlPanelDefaults.SKIN_SKYROS = {
   'fill-type': 'solid'
 };
 
@@ -3543,7 +3001,7 @@ DvtPanZoomControlPanelDefaults.SKIN_SKYROS = {
 /**
  * Contains control panel defaults.
  */
-DvtPanZoomControlPanelDefaults.DEFAULT = {
+DvtControlPanelDefaults.DEFAULT = {
   'fill-type': 'gradient',
   'border-color': '#ffffff',
   'background-color': '#ffffff',
@@ -3599,8 +3057,8 @@ DvtPanZoomControlPanelDefaults.DEFAULT = {
  * @param {object} userOptions The object containing options specifications for this component.
  * @return {object} The combined options object.
  */
-DvtPanZoomControlPanelDefaults.calcOptions = function(userOptions) {
-  var defaults = DvtPanZoomControlPanelDefaults._getDefaults(userOptions);
+DvtControlPanelDefaults.calcOptions = function(userOptions) {
+  var defaults = DvtControlPanelDefaults._getDefaults(userOptions);
 
   // Use defaults if no overrides specified
   if (!userOptions)
@@ -3615,386 +3073,34 @@ DvtPanZoomControlPanelDefaults.calcOptions = function(userOptions) {
  * @param {object} userOptions The object containing options specifications for this component.
  * @private
  */
-DvtPanZoomControlPanelDefaults._getDefaults = function(userOptions) {
+DvtControlPanelDefaults._getDefaults = function(userOptions) {
   var defaults = null;
   if (userOptions && userOptions['skin'] === 'skyros')
-    defaults = DvtJSONUtils.merge(DvtPanZoomControlPanelDefaults.SKIN_SKYROS, DvtPanZoomControlPanelDefaults.DEFAULT);
+    defaults = DvtJSONUtils.merge(DvtControlPanelDefaults.SKIN_SKYROS, DvtControlPanelDefaults.DEFAULT);
   else if (userOptions && userOptions['skin'] === 'alta')
-    defaults = DvtJSONUtils.merge(DvtPanZoomControlPanelDefaults.SKIN_ALTA, DvtPanZoomControlPanelDefaults.DEFAULT);
+    defaults = DvtJSONUtils.merge(DvtControlPanelDefaults.SKIN_ALTA, DvtControlPanelDefaults.DEFAULT);
   else
-    defaults = DvtJSONUtils.clone(DvtPanZoomControlPanelDefaults.DEFAULT);
+    defaults = DvtJSONUtils.clone(DvtControlPanelDefaults.DEFAULT);
   return defaults;
 };
-/**
- * @constructor
- * Class used to maintain translated resources used by the PanZoomControlPanel.
- */
-var DvtPanZoomControlPanelResources = function(parent) {
-  this.Init(parent);
-};
-
-
-/*
- * make DvtPanZoomControlPanelResources a subclass of DvtObj
- */
-DvtObj.createSubclass(DvtPanZoomControlPanelResources, DvtObj, 'DvtPanZoomControlPanelResources');
-
-
-/**
- * Initialize
- * @param {object} parent  Object to parse
- * @protected
- */
-DvtPanZoomControlPanelResources.prototype.Init = function(parent) {
-  //control panel
-  if (!parent) {
-    this._controlPanelExpandTooltip = 'Show Control Panel (/)';
-    this._controlPanelCollapseTooltip = 'Hide (/)';
-    this._panControlCenterTooltip = 'Zoom and Center (Ctrl+Alt+0)';
-    this._panControlTooltip = 'Pan';
-    this._zoomToFitTooltip = 'Zoom to Fit (0)';
-    this._zoomInTooltip = 'Zoom In (+)';
-    this._zoomOutTooltip = 'Zoom Out (-)';
-    this._panelCardTooltip = 'View';
-    this._layoutHierVertTopTooltip = 'Vertical, Top Down';
-    this._layoutHierHorzLeftTooltip = 'Horizontal, Left-to-Right';
-    this._layoutTreeTooltip = 'Tree';
-    this._layoutRadialTooltip = 'Radial';
-    this._layoutCircleTooltip = 'Circle';
-    this._layoutTooltip = 'Layout';
-  } else {
-    if (parent.getAttr) {  //XML Node
-      this._controlPanelExpandTooltip = parent.getAttr('cpe');
-      this._controlPanelCollapseTooltip = parent.getAttr('cpc');
-      this._panControlCenterTooltip = parent.getAttr('pcc');
-      this._panControlTooltip = parent.getAttr('pc');
-      this._zoomToFitTooltip = parent.getAttr('ztf');
-      this._zoomInTooltip = parent.getAttr('zi');
-      this._zoomOutTooltip = parent.getAttr('zo');
-      this._panelCardTooltip = parent.getAttr('pcs');
-      this._layoutHierVertTopTooltip = parent.getAttr('lhvt');
-      this._layoutHierHorzLeftTooltip = parent.getAttr('lhhl');
-      this._layoutTreeTooltip = parent.getAttr('lt');
-      this._layoutRadialTooltip = parent.getAttr('lr');
-      this._layoutCircleTooltip = parent.getAttr('lc');
-      this._layoutTooltip = parent.getAttr('lo');
-    } else {  //JSON Object
-      this._controlPanelExpandTooltip = parent['cpe'];
-      this._controlPanelCollapseTooltip = parent['cpc'];
-      this._panControlCenterTooltip = parent['pcc'];
-      this._panControlTooltip = parent['pc'];
-      this._zoomToFitTooltip = parent['ztf'];
-      this._zoomInTooltip = parent['zi'];
-      this._zoomOutTooltip = parent['zo'];
-      this._panelCardTooltip = parent['pcs'];
-      this._layoutHierVertTopTooltip = parent['lhvt'];
-      this._layoutHierHorzLeftTooltip = parent['lhhl'];
-      this._layoutTreeTooltip = parent['lt'];
-      this._layoutRadialTooltip = parent['lr'];
-      this._layoutCircleTooltip = parent['lc'];
-      this._layoutTooltip = parent['lo'];
-    }
-  }
-};
-
-
-/**
- * Set the ControlPanelExpandTooltip to use.
- *
- * @param controlPanelExpandToolTip to use
- */
-DvtPanZoomControlPanelResources.prototype.setControlPanelExpandTooltip = function(s) {
-  this._controlPanelExpandTooltip = s;
-};
-
-
-/**
- * Get the ControlPanelExpandTooltip to use.
- *
- * @return controlPanelExpandToolTip being used
- */
-DvtPanZoomControlPanelResources.prototype.getControlPanelExpandTooltip = function() {
-  return this._controlPanelExpandTooltip;
-};
-
-
-/**
- * Set the ControlPanelCollapseTooltip to use.
- *
- * @param controlPanelCollapseToolTip to use
- */
-DvtPanZoomControlPanelResources.prototype.setControlPanelCollapseTooltip = function(s) {
-  this._controlPanelCollapseTooltip = s;
-};
-
-
-/**
- * Get the ControlPanelCollapseTooltip to use.
- *
- * @return controlPanelCollapseToolTip being used
- */
-DvtPanZoomControlPanelResources.prototype.getControlPanelCollapseTooltip = function() {
-  return this._controlPanelCollapseTooltip;
-};
-
-
-/**
- * Set the PanControlCenterTooltip to use.
- *
- * @param panControlCenterToolTip to use
- */
-DvtPanZoomControlPanelResources.prototype.setPanControlCenterTooltip = function(s) {
-  this._panControlCenterTooltip = s;
-};
-
-
-/**
- * Get the PanControlCenterTooltip to use.
- *
- * @return panControlCenterToolTip being used
- */
-DvtPanZoomControlPanelResources.prototype.getPanControlCenterTooltip = function() {
-  return this._panControlCenterTooltip;
-};
-
-
-/**
- * Set the PanControlTooltip to use.
- *
- * @param panControlToolTip to use
- */
-DvtPanZoomControlPanelResources.prototype.setPanControlTooltip = function(s) {
-  this._panControlTooltip = s;
-};
-
-
-/**
- * Get the PanControlTooltip to use.
- *
- * @return panControlToolTip being used
- */
-DvtPanZoomControlPanelResources.prototype.getPanControlTooltip = function() {
-  return this._panControlTooltip;
-};
-
-
-/**
- * Set the ZoomToFitTooltip to use.
- *
- * @param zoomToFitToolTip to use
- */
-DvtPanZoomControlPanelResources.prototype.setZoomToFitTooltip = function(s) {
-  this._zoomToFitTooltip = s;
-};
-
-
-/**
- * Get the ZoomToFitTooltip to use.
- *
- * @return zoomToFitToolTip being used
- */
-DvtPanZoomControlPanelResources.prototype.getZoomToFitTooltip = function() {
-  return this._zoomToFitTooltip;
-};
-
-
-/**
- * Set the ZoomInTooltip to use.
- *
- * @param zoomInToolTip to use
- */
-DvtPanZoomControlPanelResources.prototype.setZoomInTooltip = function(s) {
-  this._zoomInTooltip = s;
-};
-
-/**
- * Get the ZoomInTooltip to use.
- *
- * @return zoomInToolTip being used
- */
-
-DvtPanZoomControlPanelResources.prototype.getZoomInTooltip = function() {
-  return this._zoomInTooltip;
-};
-
-
-/**
- * Set the ZoomOutTooltip to use.
- *
- * @param zoomOutToolTip to use
- */
-DvtPanZoomControlPanelResources.prototype.setZoomOutTooltip = function(s) {
-  this._zoomOutTooltip = s;
-};
-
-
-/**
- * Get the ZoomOutTooltip to use.
- *
- * @return zoomOutToolTip being used
- */
-DvtPanZoomControlPanelResources.prototype.getZoomOutTooltip = function() {
-  return this._zoomOutTooltip;
-};
-
-
-/**
- * Set the PanelCardTooltip to use.
- *
- * @param panelCardTooltip to use
- */
-DvtPanZoomControlPanelResources.prototype.setPanelCardTooltip = function(s) {
-  this._panelCardTooltip = s;
-};
-
-
-/**
- * Get the PanelCardTooltip to use.
- *
- * @return panelCardTooltip being used
- */
-DvtPanZoomControlPanelResources.prototype.getPanelCardTooltip = function() {
-  return this._panelCardTooltip;
-};
-
-
-/**
- * Set the LayoutHierVertTopTooltip to use.
- *
- * @param LayoutHierVertTopTooltip to use
- */
-DvtPanZoomControlPanelResources.prototype.setLayoutHierVertTopTooltip = function(s) {
-  this._layoutHierVertTopTooltip = s;
-};
-
-
-/**
- * Get the LayoutHierVertTopTooltip to use.
- *
- * @return LayoutHierVertTopTooltip being used
- */
-DvtPanZoomControlPanelResources.prototype.getLayoutHierVertTopTooltip = function() {
-  return this._layoutHierVertTopTooltip;
-};
-
-
-/**
- * Set the LayoutHierHorzLeftTooltip to use.
- *
- * @param LayoutHierHorzLeftTooltip to use
- */
-DvtPanZoomControlPanelResources.prototype.setLayoutHierHorzLeftTooltip = function(s) {
-  this._layoutHierHorzLeftTooltip = s;
-};
-
-
-/**
- * Get the LayoutHierHorzLeftTooltip to use.
- *
- * @return LayoutHierHorzLeftTooltip being used
- */
-DvtPanZoomControlPanelResources.prototype.getLayoutHierHorzLeftTooltip = function() {
-  return this._layoutHierHorzLeftTooltip;
-};
-
-
-/**
- * Set the LayoutTreeTooltip to use.
- *
- * @param LayoutTreeTooltip to use
- */
-DvtPanZoomControlPanelResources.prototype.setLayoutTreeTooltip = function(s) {
-  this._layoutTreeTooltip = s;
-};
-
-
-/**
- * Get the LayoutTreeTooltip to use.
- *
- * @return LayoutTreeTooltip being used
- */
-DvtPanZoomControlPanelResources.prototype.getLayoutTreeTooltip = function() {
-  return this._layoutTreeTooltip;
-};
-
-
-/**
- * Set the LayoutRadialTooltip to use.
- *
- * @param LayoutRadialTooltip to use
- */
-DvtPanZoomControlPanelResources.prototype.setLayoutRadialTooltip = function(s) {
-  this._layoutRadialTooltip = s;
-};
-
-
-/**
- * Get the LayoutRadialTooltip to use.
- *
- * @return LayoutRadialTooltip being used
- */
-DvtPanZoomControlPanelResources.prototype.getLayoutRadialTooltip = function() {
-  return this._layoutRadialTooltip;
-};
-
-
-/**
- * Set the LayoutCircleTooltip to use.
- *
- * @param LayoutCircleTooltip to use
- */
-DvtPanZoomControlPanelResources.prototype.setLayoutCircleTooltip = function(s) {
-  this._layoutCircleTooltip = s;
-};
-
-
-/**
- * Get the LayoutCircleTooltip to use.
- *
- * @return LayoutCircleTooltip being used
- */
-DvtPanZoomControlPanelResources.prototype.getLayoutCircleTooltip = function() {
-  return this._layoutCircleTooltip;
-};
-
-
-/**
- * Set the LayoutTooltip to use.
- *
- * @param LayoutTooltip to use
- */
-DvtPanZoomControlPanelResources.prototype.setLayoutTooltip = function(s) {
-  this._layoutTooltip = s;
-};
-
-
-/**
- * Get the LayoutTooltip to use.
- *
- * @return LayoutTooltip being used
- */
-DvtPanZoomControlPanelResources.prototype.getLayoutTooltip = function() {
-  return this._layoutTooltip;
-};
-
 // Copyright (c) 2012, 2014, Oracle and/or its affiliates. All rights reserved.
 /**
  * @constructor
  */
-var DvtPanZoomControlPanelEventManager = function(context, callback, callbackObj) {
+var DvtControlPanelEventManager = function(context, callback, callbackObj) {
   this.Init(context, callback, callbackObj);
 };
 
-DvtObj.createSubclass(DvtPanZoomControlPanelEventManager, DvtEventManager, 'DvtPanZoomControlPanelEventManager');
+DvtObj.createSubclass(DvtControlPanelEventManager, DvtEventManager, 'DvtControlPanelEventManager');
 
 
 /**
  * Click event handler.
  * @protected
  */
-DvtPanZoomControlPanelEventManager.prototype.OnMouseDown = function(event) {
+DvtControlPanelEventManager.prototype.OnMouseDown = function(event) {
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
-  DvtPanZoomControlPanelEventManager.superclass.OnMouseDown.call(this, event);
+  DvtControlPanelEventManager.superclass.OnMouseDown.call(this, event);
 
   // Done if there is no object
   if (!obj) {
@@ -4007,9 +3113,9 @@ DvtPanZoomControlPanelEventManager.prototype.OnMouseDown = function(event) {
   event.stopPropagation();
 };
 
-DvtPanZoomControlPanelEventManager.prototype.OnMouseUp = function(event) {
+DvtControlPanelEventManager.prototype.OnMouseUp = function(event) {
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
-  DvtPanZoomControlPanelEventManager.superclass.OnMouseUp.call(this, event);
+  DvtControlPanelEventManager.superclass.OnMouseUp.call(this, event);
 
   // Done if there is no object
   if (!obj) {
@@ -4022,9 +3128,9 @@ DvtPanZoomControlPanelEventManager.prototype.OnMouseUp = function(event) {
   event.stopPropagation();
 };
 
-DvtPanZoomControlPanelEventManager.prototype.OnMouseOut = function(event) {
+DvtControlPanelEventManager.prototype.OnMouseOut = function(event) {
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
-  DvtPanZoomControlPanelEventManager.superclass.OnMouseOut.call(this, event);
+  DvtControlPanelEventManager.superclass.OnMouseOut.call(this, event);
 
   // Done if there is no object
   if (!obj) {
@@ -4042,13 +3148,13 @@ DvtPanZoomControlPanelEventManager.prototype.OnMouseOut = function(event) {
  * @override
  * @param {DvtMouseEvent} event  Mouse Move event
  */
-DvtPanZoomControlPanelEventManager.prototype.OnMouseMove = function(event) {
+DvtControlPanelEventManager.prototype.OnMouseMove = function(event) {
   //MouseMove event on PanZoom Control Panel is used to display tooltip
   //Once the tooltip is displayed stop the event from propagating
   //Otherwise, parent component may try to show its own tooltip which will hide the displayed tooltip
   //Note: Even if the parent component doesn't have a tooltip, it will still hide the displayed tooltip
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
-  DvtPanZoomControlPanelEventManager.superclass.OnMouseMove.call(this, event);
+  DvtControlPanelEventManager.superclass.OnMouseMove.call(this, event);
 
   // Return if no object is found
   if (!obj) {
@@ -4065,10 +3171,10 @@ DvtPanZoomControlPanelEventManager.prototype.OnMouseMove = function(event) {
  * Click event handler.
  * @protected
  */
-DvtPanZoomControlPanelEventManager.prototype.OnClick = function(event) {
+DvtControlPanelEventManager.prototype.OnClick = function(event) {
 
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
-  DvtPanZoomControlPanelEventManager.superclass.OnClick.call(this, event);
+  DvtControlPanelEventManager.superclass.OnClick.call(this, event);
 
   // Done if there is no object
   if (!obj) {
@@ -4086,8 +3192,8 @@ DvtPanZoomControlPanelEventManager.prototype.OnClick = function(event) {
  * Roll Over event handler
  * @protected
  */
-DvtPanZoomControlPanelEventManager.prototype.OnRollOver = function(event) {
-  DvtPanZoomControlPanelEventManager.superclass.OnRollOver.call(this, event);
+DvtControlPanelEventManager.prototype.OnRollOver = function(event) {
+  DvtControlPanelEventManager.superclass.OnRollOver.call(this, event);
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
 
   // Return if no object is found
@@ -4105,8 +3211,8 @@ DvtPanZoomControlPanelEventManager.prototype.OnRollOver = function(event) {
  * Roll Out event handler
  * @protected
  */
-DvtPanZoomControlPanelEventManager.prototype.OnRollOut = function(event) {
-  DvtPanZoomControlPanelEventManager.superclass.OnRollOut.call(this, event);
+DvtControlPanelEventManager.prototype.OnRollOut = function(event) {
+  DvtControlPanelEventManager.superclass.OnRollOut.call(this, event);
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
 
   // Return if no object is found
@@ -4123,7 +3229,7 @@ DvtPanZoomControlPanelEventManager.prototype.OnRollOut = function(event) {
 /**
  * @override
  */
-DvtPanZoomControlPanelEventManager.prototype.OnComponentTouchClick = function(event) {
+DvtControlPanelEventManager.prototype.OnComponentTouchClick = function(event) {
   var obj = this.GetLogicalObject(this.GetCurrentTargetForEvent(event));
 
   // Return if no object is found
@@ -4141,21 +3247,21 @@ DvtPanZoomControlPanelEventManager.prototype.OnComponentTouchClick = function(ev
 /**
  * @override
  */
-DvtPanZoomControlPanelEventManager.prototype.HandleImmediateTouchStartInternal = function(event) {
+DvtControlPanelEventManager.prototype.HandleImmediateTouchStartInternal = function(event) {
   event.blockTouchHold();
   DvtEventManager.consumeEvent(event);
 };
 
 /*
- * DvtPanZoomControlPanelEventHandlerProxy Utility
+ * DvtControlPanelEventHandlerProxy Utility
  */
-var DvtPanZoomControlPanelEventHandlerProxy = function(callback, handleClick, handleMouseDown, handleMouseUp, handleMouseOut, handleMouseOver, tooltip) {
+var DvtControlPanelEventHandlerProxy = function(callback, handleClick, handleMouseDown, handleMouseUp, handleMouseOut, handleMouseOver, tooltip) {
   this.Init(callback, handleClick, handleMouseDown, handleMouseUp, handleMouseOut, handleMouseOver, tooltip);
 };
 
-DvtObj.createSubclass(DvtPanZoomControlPanelEventHandlerProxy, DvtObj, 'DvtPanZoomControlPanelEventHandlerProxy');
+DvtObj.createSubclass(DvtControlPanelEventHandlerProxy, DvtObj, 'DvtControlPanelEventHandlerProxy');
 
-DvtPanZoomControlPanelEventHandlerProxy.prototype.Init = function(callbackObj, handleClick, handleMouseDown, handleMouseUp, handleMouseOut, handleMouseOver, tooltip) {
+DvtControlPanelEventHandlerProxy.prototype.Init = function(callbackObj, handleClick, handleMouseDown, handleMouseUp, handleMouseOut, handleMouseOver, tooltip) {
   this._callbackObj = callbackObj;
   this._handleClick = handleClick;
   this._handleMouseUp = handleMouseUp;
@@ -4165,46 +3271,46 @@ DvtPanZoomControlPanelEventHandlerProxy.prototype.Init = function(callbackObj, h
   this._tooltip = tooltip;
 };
 
-DvtPanZoomControlPanelEventHandlerProxy.prototype.HandleClick = function(event) {
+DvtControlPanelEventHandlerProxy.prototype.HandleClick = function(event) {
   if (this._handleClick)
     this._handleClick.call(this._callbackObj, event);
 };
-DvtPanZoomControlPanelEventHandlerProxy.prototype.HandleMouseDown = function(event) {
+DvtControlPanelEventHandlerProxy.prototype.HandleMouseDown = function(event) {
   if (this._handleMouseDown)
     this._handleMouseDown.call(this._callbackObj, event);
 };
-DvtPanZoomControlPanelEventHandlerProxy.prototype.HandleMouseUp = function(event) {
+DvtControlPanelEventHandlerProxy.prototype.HandleMouseUp = function(event) {
   if (this._handleMouseUp)
     this._handleMouseUp.call(this._callbackObj, event);
 };
-DvtPanZoomControlPanelEventHandlerProxy.prototype.HandleMouseOut = function(event) {
+DvtControlPanelEventHandlerProxy.prototype.HandleMouseOut = function(event) {
   if (this._handleMouseOut)
     this._handleMouseOut.call(this._callbackObj, event);
 };
-DvtPanZoomControlPanelEventHandlerProxy.prototype.HandleMouseOver = function(event) {
+DvtControlPanelEventHandlerProxy.prototype.HandleMouseOver = function(event) {
   if (this._handleMouseOver)
     this._handleMouseOver.call(this._callbackObj, event);
 };
-DvtPanZoomControlPanelEventHandlerProxy.prototype.getTooltip = function() {
+DvtControlPanelEventHandlerProxy.prototype.getTooltip = function() {
   return this._tooltip;
 };
 /*
- * DvtPanZoomControlPanelLAFUtils Utility class for providing LAF for buttons in the control panel.
+ * DvtControlPanelLAFUtils Utility class for providing LAF for buttons in the control panel.
  */
-var DvtPanZoomControlPanelLAFUtils = {};
+var DvtControlPanelLAFUtils = {};
 
-DvtObj.createSubclass(DvtPanZoomControlPanelLAFUtils, DvtObj, 'DvtPanZoomControlPanelLAFUtils');
+DvtObj.createSubclass(DvtControlPanelLAFUtils, DvtObj, 'DvtControlPanelLAFUtils');
 
-DvtPanZoomControlPanelLAFUtils.OPEN_TOP = 'top';
-DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT = 'right';
-DvtPanZoomControlPanelLAFUtils.OPEN_LEFT = 'left';
-DvtPanZoomControlPanelLAFUtils.OPEN_BOTTOM = 'bottom';
+DvtControlPanelLAFUtils.OPEN_TOP = 'top';
+DvtControlPanelLAFUtils.OPEN_RIGHT = 'right';
+DvtControlPanelLAFUtils.OPEN_LEFT = 'left';
+DvtControlPanelLAFUtils.OPEN_BOTTOM = 'bottom';
 
-DvtPanZoomControlPanelLAFUtils.VIEW_PANEL_HEIGHT = 47;
-DvtPanZoomControlPanelLAFUtils.VIEW_PANEL_HALF_HEIGHT = 26;
+DvtControlPanelLAFUtils.VIEW_PANEL_HEIGHT = 47;
+DvtControlPanelLAFUtils.VIEW_PANEL_HALF_HEIGHT = 26;
 
-DvtPanZoomControlPanelLAFUtils.SIN_PI_4 = Math.sin(Math.PI / 4);
-DvtPanZoomControlPanelLAFUtils.TAN_PI_8 = Math.tan(Math.PI / 8);
+DvtControlPanelLAFUtils.SIN_PI_4 = Math.sin(Math.PI / 4);
+DvtControlPanelLAFUtils.TAN_PI_8 = Math.tan(Math.PI / 8);
 
 
 /**
@@ -4212,8 +3318,8 @@ DvtPanZoomControlPanelLAFUtils.TAN_PI_8 = Math.tan(Math.PI / 8);
  * showing double rows of controls
  * @return {number} height of the horizontal bar for double rows
  */
-DvtPanZoomControlPanelLAFUtils.getViewPanelHeight = function() {
-  return DvtPanZoomControlPanelLAFUtils.VIEW_PANEL_HEIGHT;
+DvtControlPanelLAFUtils.getViewPanelHeight = function() {
+  return DvtControlPanelLAFUtils.VIEW_PANEL_HEIGHT;
 };
 
 
@@ -4222,9 +3328,9 @@ DvtPanZoomControlPanelLAFUtils.getViewPanelHeight = function() {
  * showing only a single row of controls, like in TMap.
  * @return {number} height of the horizontal bar for single row
  */
-DvtPanZoomControlPanelLAFUtils.getViewPanelHalfHeight = function() {
+DvtControlPanelLAFUtils.getViewPanelHalfHeight = function() {
   //BUG FIX #10154856: show single row of controls in horizontal arm of control panel in TMap
-  return DvtPanZoomControlPanelLAFUtils.VIEW_PANEL_HALF_HEIGHT;
+  return DvtControlPanelLAFUtils.VIEW_PANEL_HALF_HEIGHT;
 };
 
 
@@ -4239,7 +3345,7 @@ DvtPanZoomControlPanelLAFUtils.getViewPanelHalfHeight = function() {
  * @param {Object} styleMap The object containing style specifications for this component
  * @return {DvtPath} background for the view part of the expanded control panel
  */
-DvtPanZoomControlPanelLAFUtils.createEmptyViewOpenShape = function(context, nw, nh, bL2R, styleMap) {
+DvtControlPanelLAFUtils.createEmptyViewOpenShape = function(context, nw, nh, bL2R, styleMap) {
   //BUG FIX #10154856: pass in height to show single row of controls in
   //horizontal arm of control panel in TMap
   if (! nw)
@@ -4256,13 +3362,13 @@ DvtPanZoomControlPanelLAFUtils.createEmptyViewOpenShape = function(context, nw, 
   var xx = 0;
   var yy = 0;
 
-  var mc = DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelper(context, r, ww, hh, xx, yy, bL2R);
+  var mc = DvtControlPanelLAFUtils.makeViewOpenShapeHelper(context, r, ww, hh, xx, yy, bL2R);
   mc.setSolidFill(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BACKGROUND_COLOR, null));
 
   return mc;
 };
 
-DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelper = function(context, r, ww, hh, xx, yy, bL2R) {
+DvtControlPanelLAFUtils.makeViewOpenShapeHelper = function(context, r, ww, hh, xx, yy, bL2R) {
   var x = ww + r;
   var y = hh + r;
 
@@ -4280,10 +3386,10 @@ DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelper = function(context, r, ww
 
   if (bL2R) {
     //top left corner
-    cmds += DvtPathUtils.quadTo(- r + x, - DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + y,
-        - DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + x,
-        - DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + y) +
-        DvtPathUtils.quadTo(- DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + x, - r + y, x, - r + y) +
+    cmds += DvtPathUtils.quadTo(- r + x, - DvtControlPanelLAFUtils.TAN_PI_8 * r + y,
+        - DvtControlPanelLAFUtils.SIN_PI_4 * r + x,
+        - DvtControlPanelLAFUtils.SIN_PI_4 * r + y) +
+        DvtPathUtils.quadTo(- DvtControlPanelLAFUtils.TAN_PI_8 * r + x, - r + y, x, - r + y) +
         DvtPathUtils.lineTo(x, - r + y);
     cmds += DvtPathUtils.lineTo(x + ww + r, - r + y);
     x = x + ww;
@@ -4299,10 +3405,10 @@ DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelper = function(context, r, ww
     x = x + ww;
     y = y;
     //bottom right corner
-    cmds += DvtPathUtils.quadTo(DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + x, - r + y,
-                                DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + x,
-                                - DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + y) +
-        DvtPathUtils.quadTo(r + x, - DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + y, r + x, y) +
+    cmds += DvtPathUtils.quadTo(DvtControlPanelLAFUtils.TAN_PI_8 * r + x, - r + y,
+                                DvtControlPanelLAFUtils.SIN_PI_4 * r + x,
+                                - DvtControlPanelLAFUtils.SIN_PI_4 * r + y) +
+        DvtPathUtils.quadTo(r + x, - DvtControlPanelLAFUtils.TAN_PI_8 * r + y, r + x, y) +
         DvtPathUtils.lineTo(x + r, y + hh);
   }
 
@@ -4321,15 +3427,15 @@ DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelper = function(context, r, ww
  *        control panel is in the top left corner of the view
  * @return {DvtPath} background for the collapsed control panel
  */
-DvtPanZoomControlPanelLAFUtils.createEmptyViewClosedShape = function(context, nh, styleMap, bR2L) {
+DvtControlPanelLAFUtils.createEmptyViewClosedShape = function(context, nh, styleMap, bR2L) {
   //BUG FIX #10154856: pass in height to show single row of controls in
   //horizontal arm of control panel in TMap
   if (!nh)
     nh = 47;
 
   var r = parseInt(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BORDER_RADIUS, 0));
-  var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
-  var buttonHeight = Math.max(nh, DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_BUTTON_HEIGHT, nh));
+  var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var buttonHeight = Math.max(nh, DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_BUTTON_HEIGHT, nh));
 
   var arPoints = DvtButtonLAFUtils.GetButtonPathCommands(buttonWidth, buttonHeight, r, bR2L);
   arPoints = arPoints.concat('Z');
@@ -4354,14 +3460,14 @@ DvtPanZoomControlPanelLAFUtils.createEmptyViewClosedShape = function(context, nh
  *        control panel is in the top left corner of the view
  * @return {DvtPath} frame for the collapsed control panel
  */
-DvtPanZoomControlPanelLAFUtils.createEmptyViewClosedFrame = function(context, nh, styleMap, bR2L) {
+DvtControlPanelLAFUtils.createEmptyViewClosedFrame = function(context, nh, styleMap, bR2L) {
   //BUG FIX #10154856: pass in height to show single row of controls in
   //horizontal arm of control panel in TMap
   if (!nh)
     nh = 47;
   var r = parseInt(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BORDER_RADIUS, 0));
-  var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
-  var buttonHeight = Math.max(nh, DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_BUTTON_HEIGHT, nh));
+  var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var buttonHeight = Math.max(nh, DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_BUTTON_HEIGHT, nh));
 
   var arPoints = DvtButtonLAFUtils.GetButtonPathCommands(buttonWidth, buttonHeight, r, bR2L);
   arPoints = arPoints.concat('Z');
@@ -4378,15 +3484,15 @@ DvtPanZoomControlPanelLAFUtils.createEmptyViewClosedFrame = function(context, nh
  * @param {DvtContext} context Platform specific context object
  * @param {number} nh height of the vertical bar of the control panel
  * @param {Object} styleMap The object containing style specifications for this component
- * @param {string} openSide DvtPanZoomControlPanelLAFUtils.OPEN_TOP or DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT
+ * @param {string} openSide DvtControlPanelLAFUtils.OPEN_TOP or DvtControlPanelLAFUtils.OPEN_RIGHT
  * @param {number} openSideSize horizontal bar height
  */
-DvtPanZoomControlPanelLAFUtils.renderEmptyZoomShape = function(context, nh, styleMap, openSide, openSideSize) {
+DvtControlPanelLAFUtils.renderEmptyZoomShape = function(context, nh, styleMap, openSide, openSideSize) {
   if (!nh) {
     nh = 137;
   }
   var r = parseInt(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BORDER_RADIUS, 0));
-  var cpWidth = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_TAB_SIZE, 0);
+  var cpWidth = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_TAB_SIZE, 0);
   var ww = cpWidth - (2 * r);
   var hh = nh + 7 - (2 * r);
   var xx = 0;
@@ -4395,9 +3501,9 @@ DvtPanZoomControlPanelLAFUtils.renderEmptyZoomShape = function(context, nh, styl
   // Fill
   var mc;
   if (openSide && openSideSize)
-    mc = DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelperOpenSide(context, r, cpWidth, nh, openSide, openSideSize);
+    mc = DvtControlPanelLAFUtils.makeZoomShapeHelperOpenSide(context, r, cpWidth, nh, openSide, openSideSize);
   else
-    mc = DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelper(context, r, ww, hh, xx, yy);
+    mc = DvtControlPanelLAFUtils.makeZoomShapeHelper(context, r, ww, hh, xx, yy);
   mc.setSolidFill(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BACKGROUND_COLOR, null));
 
   return mc;
@@ -4411,17 +3517,17 @@ DvtPanZoomControlPanelLAFUtils.renderEmptyZoomShape = function(context, nh, styl
  * @param {number} nh height of the vertical bar of the control panel
  * @param {boolean} roundBottomRight indicator for rounding bottom right
  * @param {Object} styleMap The object containing style specifications for this component
- * @param {string} openSide DvtPanZoomControlPanelLAFUtils.OPEN_TOP or DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT
+ * @param {string} openSide DvtControlPanelLAFUtils.OPEN_TOP or DvtControlPanelLAFUtils.OPEN_RIGHT
  * @param {number} openSideSize horizontal bar height
  */
-DvtPanZoomControlPanelLAFUtils.renderEmptyZoomFrame = function(context, nh, roundBottomRight, styleMap, openSide, openSideSize) {
+DvtControlPanelLAFUtils.renderEmptyZoomFrame = function(context, nh, roundBottomRight, styleMap, openSide, openSideSize) {
   if (!nh)
     nh = 137;
   if (!roundBottomRight)
     roundBottomRight = true;
 
   var r = parseInt(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BORDER_RADIUS, 0));
-  var cpWidth = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_TAB_SIZE, 0);
+  var cpWidth = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_TAB_SIZE, 0);
   var ww = cpWidth - (2 * r);
   var hh = nh + 7 - (2 * r);
   var xx = 0;
@@ -4430,15 +3536,15 @@ DvtPanZoomControlPanelLAFUtils.renderEmptyZoomFrame = function(context, nh, roun
   // Line Style
   var mc = null;
   if (openSide && openSideSize)
-    mc = DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelperOpenSide(context, r, cpWidth, nh, openSide, openSideSize);
+    mc = DvtControlPanelLAFUtils.makeZoomShapeHelperOpenSide(context, r, cpWidth, nh, openSide, openSideSize);
   else
-    mc = DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelper(context, r, ww, hh, xx, yy, roundBottomRight);
+    mc = DvtControlPanelLAFUtils.makeZoomShapeHelper(context, r, ww, hh, xx, yy, roundBottomRight);
   mc.setSolidStroke(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BORDER_COLOR, null));
   mc.setFill(null);
   return mc;
 };
 
-DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelper = function(context, r, ww, hh, xx, yy, roundBottomRight) {
+DvtControlPanelLAFUtils.makeZoomShapeHelper = function(context, r, ww, hh, xx, yy, roundBottomRight) {
   if (!roundBottomRight) {
     roundBottomRight = true;
   }
@@ -4449,10 +3555,10 @@ DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelper = function(context, r, ww, hh
 
   // Bug 9686175 - controlPanel looks bad when featuresOff="pan zoom cardSync changeLayout"
   if (roundBottomRight) {
-    cmds += DvtPathUtils.quadTo(r + x, DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + y,
-                                DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + x,
-                                DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + y) +
-        DvtPathUtils.quadTo(DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + x, r + y, x, r + y) +
+    cmds += DvtPathUtils.quadTo(r + x, DvtControlPanelLAFUtils.TAN_PI_8 * r + y,
+                                DvtControlPanelLAFUtils.SIN_PI_4 * r + x,
+                                DvtControlPanelLAFUtils.SIN_PI_4 * r + y) +
+        DvtPathUtils.quadTo(DvtControlPanelLAFUtils.TAN_PI_8 * r + x, r + y, x, r + y) +
         DvtPathUtils.lineTo(x, r + y);
   }
   else {
@@ -4462,10 +3568,10 @@ DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelper = function(context, r, ww, hh
   x = x - ww;
   y = y;
 
-  cmds += DvtPathUtils.quadTo(- DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + x, r + y,
-      - DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + x,
-      DvtPanZoomControlPanelLAFUtils.SIN_PI_4 * r + y) +
-      DvtPathUtils.quadTo(- r + x, DvtPanZoomControlPanelLAFUtils.TAN_PI_8 * r + y, - r + x, y) +
+  cmds += DvtPathUtils.quadTo(- DvtControlPanelLAFUtils.TAN_PI_8 * r + x, r + y,
+      - DvtControlPanelLAFUtils.SIN_PI_4 * r + x,
+      DvtControlPanelLAFUtils.SIN_PI_4 * r + y) +
+      DvtPathUtils.quadTo(- r + x, DvtControlPanelLAFUtils.TAN_PI_8 * r + y, - r + x, y) +
       DvtPathUtils.lineTo(- r + x, y) + DvtPathUtils.lineTo(- r + x, y - hh);
   x = x;
   y = y - hh;
@@ -4482,12 +3588,12 @@ DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelper = function(context, r, ww, hh
  * @param {number} r radius for the generated shape
  * @param {number} width width of the generated shape
  * @param {number} height height of the generated shape
- * @param {string} openSide DvtPanZoomControlPanelLAFUtils.OPEN_TOP or DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT
+ * @param {string} openSide DvtControlPanelLAFUtils.OPEN_TOP or DvtControlPanelLAFUtils.OPEN_RIGHT
  * @param {number} openSideSize horizontal bar height
  * @return {DvtPath}  a path for the vertical bar
  */
-DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelperOpenSide = function(context, r, width, height, openSide, openSideSize) {
-  var arPoints = DvtPanZoomControlPanelLAFUtils.GetShapePathCommands(width, height, r, openSide, openSideSize);
+DvtControlPanelLAFUtils.makeZoomShapeHelperOpenSide = function(context, r, width, height, openSide, openSideSize) {
+  var arPoints = DvtControlPanelLAFUtils.GetShapePathCommands(width, height, r, openSide, openSideSize);
   return new DvtPath(context, arPoints);
 };
 
@@ -4499,12 +3605,12 @@ DvtPanZoomControlPanelLAFUtils.makeZoomShapeHelperOpenSide = function(context, r
  * @param {number} r radius for the generated shape
  * @param {number} width width of the generated shape
  * @param {number} height height of the generated shape
- * @param {string} openSide DvtPanZoomControlPanelLAFUtils.OPEN_TOP or DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT or DvtPanZoomControlPanelLAFUtils.OPEN_BOTTOM
+ * @param {string} openSide DvtControlPanelLAFUtils.OPEN_TOP or DvtControlPanelLAFUtils.OPEN_RIGHT or DvtControlPanelLAFUtils.OPEN_BOTTOM
  * @param {number} openSideSize horizontal bar height
  * @return {DvtPath}  a path for the horizontal bar
  */
-DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelperOpenSide = function(context, r, width, height, openSide, openSideSize) {
-  var arPoints = DvtPanZoomControlPanelLAFUtils.GetShapePathCommands(width, height, r, openSide, openSideSize);
+DvtControlPanelLAFUtils.makeViewOpenShapeHelperOpenSide = function(context, r, width, height, openSide, openSideSize) {
+  var arPoints = DvtControlPanelLAFUtils.GetShapePathCommands(width, height, r, openSide, openSideSize);
   return new DvtPath(context, arPoints);
 };
 
@@ -4515,28 +3621,28 @@ DvtPanZoomControlPanelLAFUtils.makeViewOpenShapeHelperOpenSide = function(contex
  * @param {number} width width of the generated shape
  * @param {number} height height of the generated shape
  * @param {number} r radius for the generated shape
- * @param {string} openSide DvtPanZoomControlPanelLAFUtils.OPEN_TOP or DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT or DvtPanZoomControlPanelLAFUtils.OPEN_BOTTOM
+ * @param {string} openSide DvtControlPanelLAFUtils.OPEN_TOP or DvtControlPanelLAFUtils.OPEN_RIGHT or DvtControlPanelLAFUtils.OPEN_BOTTOM
  * @param {number} openSideSize horizontal bar height
  * @return {Array} array is used to generate vertical or horizontal bar shape
  */
-DvtPanZoomControlPanelLAFUtils.GetShapePathCommands = function(width, height, r, openSide, openSideSize) {
+DvtControlPanelLAFUtils.GetShapePathCommands = function(width, height, r, openSide, openSideSize) {
   var arPoints;
   var bidi = DvtAgent.isRightToLeft();
-  if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_TOP && !bidi) { //vertical bar
+  if (openSide == DvtControlPanelLAFUtils.OPEN_TOP && !bidi) { //vertical bar
     arPoints = ['M', width, 0,
                 'L', width, height - r,
                 'A', r, r, 0, 0, 1, width - r, height,
                 'L', 0, height,
                 'L', 0, 0];
   }
-  if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_TOP && bidi) { //vertical bar
+  if (openSide == DvtControlPanelLAFUtils.OPEN_TOP && bidi) { //vertical bar
     arPoints = ['M', width, 0,
                 'L', width, height,
                 'L', r, height,
                 'A', r, r, 0, 0, 1, 0, height - r,
                 'L', 0, 0];
   }
-  else if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT && !bidi) { //vertical bar
+  else if (openSide == DvtControlPanelLAFUtils.OPEN_RIGHT && !bidi) { //vertical bar
     arPoints = ['M', width, openSideSize,
                 'L', width, height - r,
                 'A', r, r, 0, 0, 1, width - r, height,
@@ -4544,7 +3650,7 @@ DvtPanZoomControlPanelLAFUtils.GetShapePathCommands = function(width, height, r,
                 'L', 0, 0,
                 'L', width, 0];
   }
-  else if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_RIGHT && bidi) { //vertical bar
+  else if (openSide == DvtControlPanelLAFUtils.OPEN_RIGHT && bidi) { //vertical bar
     arPoints = ['M', 0, 0,
                 'L', width, 0,
                 'L', width, height,
@@ -4552,7 +3658,7 @@ DvtPanZoomControlPanelLAFUtils.GetShapePathCommands = function(width, height, r,
                 'A', r, r, 0, 0, 1, 0, height - r,
                 'L', 0, openSideSize];
   }
-  else if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_LEFT && !bidi) { //horizontal bar
+  else if (openSide == DvtControlPanelLAFUtils.OPEN_LEFT && !bidi) { //horizontal bar
     arPoints = ['M', 0, 0,
                 'L', width - r, 0,
                 'A', r, r, 0, 0, 1, width, r,
@@ -4560,7 +3666,7 @@ DvtPanZoomControlPanelLAFUtils.GetShapePathCommands = function(width, height, r,
                 'A', r, r, 0, 0, 1, width - r, height,
                 'L', 0, height];
   }
-  else if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_LEFT && bidi) { //horizontal bar
+  else if (openSide == DvtControlPanelLAFUtils.OPEN_LEFT && bidi) { //horizontal bar
     arPoints = ['M', width, height,
                 'L', r, height,
                 'A', r, r, 0, 0, 1, 0, height - r,
@@ -4568,7 +3674,7 @@ DvtPanZoomControlPanelLAFUtils.GetShapePathCommands = function(width, height, r,
                 'A', r, r, 0, 0, 1, r, 0,
                 'L', width, 0];
   }
-  else if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_BOTTOM && !bidi) { //horizontal bar
+  else if (openSide == DvtControlPanelLAFUtils.OPEN_BOTTOM && !bidi) { //horizontal bar
     arPoints = ['M', 0, height,
                 'L', 0, 0,
                 'L', width - r, 0,
@@ -4577,7 +3683,7 @@ DvtPanZoomControlPanelLAFUtils.GetShapePathCommands = function(width, height, r,
                 'A', r, r, 0, 0, 1, width - r, height,
                 'L', openSideSize, height];
   }
-  else if (openSide == DvtPanZoomControlPanelLAFUtils.OPEN_BOTTOM && bidi) { //horizontal bar
+  else if (openSide == DvtControlPanelLAFUtils.OPEN_BOTTOM && bidi) { //horizontal bar
     arPoints = ['M', width, height,
                 'L', width, 0,
                 'L', r, 0,
@@ -4935,7 +4041,10 @@ DvtAbstractComponent.prototype.GetHeight = function() {
 
 DvtAbstractComponent.prototype.getResourcesMap = function() {
   if (!this._resourcesMap) {
-    this._resourcesMap = {};
+    if (!this.Options)
+      this._resourcesMap = {};
+    else
+      this._resourcesMap = this.Options['resources'];
   }
   return this._resourcesMap;
 };
@@ -5061,7 +4170,7 @@ DvtAbstractComponent.prototype.parseWidgetJson = function(jsonObj) {
   //merge skinned styles with defaults
   //TODO: we should reevalute this code when we'll have the defaults coming from a server as a JSON string
   // and merge the defaults in the subcomponent with the corresponding subcomponent's defaults
-  cpStyleMap = DvtPanZoomControlPanelDefaults.calcOptions(cpStyleMap);
+  cpStyleMap = DvtControlPanelDefaults.calcOptions(cpStyleMap);
   this.setControlPanelStyleMap(cpStyleMap);
 
   // legend
@@ -5101,7 +4210,7 @@ DvtAbstractComponent.prototype.parseWidgetAttrs = function(xmlNode) {
   //merge skinned styles with defaults
   //TODO: we should reevalute this code when we'll have the defaults coming from a server as a JSON string
   // and merge the defaults in the subcomponent with the corresponding subcomponent's defaults
-  cpStyleMap = DvtPanZoomControlPanelDefaults.calcOptions(cpStyleMap);
+  cpStyleMap = DvtControlPanelDefaults.calcOptions(cpStyleMap);
   this.setControlPanelStyleMap(cpStyleMap);
 
   // legend
@@ -5119,6 +4228,17 @@ DvtAbstractComponent.prototype.parseWidgetAttrs = function(xmlNode) {
  */
 DvtAbstractComponent.prototype.supportsVectorEffects = function() {
   return this._bSupportsVectorEffects;
+};
+
+
+
+/**
+ * Specifies the non-data options for this component. Currently only called by json supported platforms.
+ * @param {object} options The object containing options specifications for this component.
+ * @protected
+ */
+DvtAbstractComponent.prototype.SetOptions = function(options) {
+  this.Options = options;
 };
 /**
  * @constructor
@@ -5169,7 +4289,7 @@ DvtAbstractPanZoomComponent.prototype.InitComponentInternal = function() {
     this._panZoomCanvas.renderComponent();
     var controlPanel = this._panZoomCanvas.getControlPanel();
     if (controlPanel)
-      controlPanel.addEvtListener(DvtPanZoomControlPanelEvent.TYPE, this.HandleControlPanelEvent, false, this);
+      controlPanel.addEvtListener(DvtControlPanelEvent.TYPE, this.HandleControlPanelEvent, false, this);
   }
   //if rendering null xml, update the size of the panZoomCanvas
   else {
@@ -5201,12 +4321,12 @@ DvtAbstractPanZoomComponent.prototype.ConvertControlPanelBehaviorStringToInt = f
  */
 DvtAbstractPanZoomComponent.prototype.CreatePanZoomCanvas = function(ww, hh) {
   var pzc = new DvtPanZoomCanvas(this.getCtx(),
-                                 this.getButtonImages(),
+                                 this.getResourcesMap(),
                                  ww,
                                  hh,
                                  null,
                                  this.ConvertControlPanelBehaviorStringToInt(this._controlPanelBehavior),
-                                 this.getPanZoomResources(),
+                                 this.getBundle(),
                                  this._displayedControls, this);
   pzc.addEvtListener(DvtPanEvent.TYPE, this.HandlePanEvent, false, this);
   pzc.addEvtListener(DvtZoomEvent.TYPE, this.HandleZoomEvent, false, this);
@@ -5285,27 +4405,6 @@ DvtAbstractPanZoomComponent.prototype.zoomToFit = function(animator) {
   this.getPanZoomCanvas().zoomToFit(animator);
 };
 
-
-/**
- * Get the Resources to use with this view.
- *
- * @return translated resources to use with this view
- */
-DvtAbstractPanZoomComponent.prototype.getPanZoomResources = function() {
-  return this._panZoomResources;
-};
-
-
-/**
- * Set the Resources to use with this view.
- *
- * @param resources translated resources to use with this view
- */
-DvtAbstractPanZoomComponent.prototype.setPanZoomResources = function(resources) {
-  this._panZoomResources = resources;
-};
-
-
 /**
  * Get the featuresOff
  *
@@ -5341,34 +4440,6 @@ DvtAbstractPanZoomComponent.prototype.isZoomToFitOff = function() {
 //Move this method to Diagram,er???
 DvtAbstractPanZoomComponent.prototype.isChangeLayoutOff = function() {
   return true;//return (this._featuresOff & DvtAbstractPanZoomComponent._CHANGE_LAYOUT_OFF) != 0;
-};
-
-
-/**
- * Get the Resources to use with this view.
- *
- * @return translated resources to use with this view
- */
-DvtAbstractPanZoomComponent.prototype.getResources = function() {
-  return this._resources;
-};
-
-
-/**
- * Set the Resources to use with this view.
- *
- * @param resources translated resources to use with this view
- */
-DvtAbstractPanZoomComponent.prototype.setResources = function(resources) {
-  this._resources = resources;
-};
-
-DvtAbstractPanZoomComponent.prototype.setButtonImages = function(uris) {
-  this._buttonImages = uris;
-};
-
-DvtAbstractPanZoomComponent.prototype.getButtonImages = function() {
-  return this._buttonImages;
 };
 
 /**
@@ -5474,7 +4545,7 @@ DvtPanZoomCanvas.CONTROL_PANEL_BEHAVIOR_INIT_EXPANDED = 1;
 //control panel is not shown
 DvtPanZoomCanvas.CONTROL_PANEL_BEHAVIOR_HIDDEN = 2;
 
-DvtPanZoomCanvas.DEFAULT_DISPLAYED_CONTROLS = DvtPanZoomControlPanel.CONTROLS_ALL;
+DvtPanZoomCanvas.DEFAULT_DISPLAYED_CONTROLS = DvtControlPanel.CONTROLS_ALL;
 
 DvtPanZoomCanvas.prototype.Init = function(context, buttonImages, ww, hh, id, controlPanelState, controlPanelResources, displayedControls, view)
 {
@@ -6212,14 +5283,14 @@ DvtPanZoomCanvas.RoundFloatForCompare = function(n)
 DvtPanZoomCanvas.prototype.renderComponent = function() {
   if (this._controlPanelState != DvtPanZoomCanvas.CONTROL_PANEL_BEHAVIOR_HIDDEN && !this._controlPanel) {
 
-    this._controlPanel = new DvtPanZoomControlPanel(this.getCtx(), this, this._buttonImages, this._controlPanelResources, this._displayedControls, this._view);
+    this._controlPanel = new DvtControlPanel(this.getCtx(), this, this._buttonImages, this._controlPanelResources, this._displayedControls, this._view);
     this.addChild(this._controlPanel);
 
     // set control panel state
     if (this._controlPanelState == DvtPanZoomCanvas.CONTROL_PANEL_BEHAVIOR_INIT_COLLAPSED)
-      this._controlPanel.setState(DvtPanZoomControlPanel.STATE_COLLAPSED);
+      this._controlPanel.setState(DvtControlPanel.STATE_COLLAPSED);
     else if (this._controlPanelState == DvtPanZoomCanvas.CONTROL_PANEL_BEHAVIOR_INIT_EXPANDED)
-      this._controlPanel.setState(DvtPanZoomControlPanel.STATE_EXPANDED);
+      this._controlPanel.setState(DvtControlPanel.STATE_EXPANDED);
 
     this.PositionControlPanel();
     this._controlPanel.renderComponent();
@@ -6241,9 +5312,9 @@ DvtPanZoomCanvas.prototype.setControlPanel = function(controlPanel) {
     this.addChild(this._controlPanel);
 
     if (this._controlPanelState == DvtPanZoomCanvas.CONTROL_PANEL_BEHAVIOR_INIT_COLLAPSED)
-      this._controlPanel.setState(DvtPanZoomControlPanel.STATE_COLLAPSED);
+      this._controlPanel.setState(DvtControlPanel.STATE_COLLAPSED);
     else if (this._controlPanelState == DvtPanZoomCanvas.CONTROL_PANEL_BEHAVIOR_INIT_EXPANDED)
-      this._controlPanel.setState(DvtPanZoomControlPanel.STATE_EXPANDED);
+      this._controlPanel.setState(DvtControlPanel.STATE_EXPANDED);
 
     this.PositionControlPanel();
   }
@@ -6260,10 +5331,10 @@ DvtPanZoomCanvas.prototype.getControlPanel = function() {
  */
 DvtPanZoomCanvas.prototype.PositionControlPanel = function() {
   var styleMap = this._view.getControlPanelStyleMap();
-  var posX = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_PADDING_SIDE, 0);
-  var posY = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_PADDING_TOP, 0);
+  var posX = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_PADDING_SIDE, 0);
+  var posY = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_PADDING_TOP, 0);
 
-  var openCloseButtonWidth = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var openCloseButtonWidth = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
   var transX;
   if (DvtAgent.isRightToLeft(this.getCtx())) {
     transX = this._ww - openCloseButtonWidth - posX;
@@ -7305,7 +6376,7 @@ DvtCollapsiblePanel.prototype.Init = function(context, maxWidth, maxHeight, coll
   this._borderColor = DvtStyleUtils.getStyle(this._styleMap, DvtCSSStyle.BORDER_COLOR, null);
   this._borderRadius = parseInt(DvtStyleUtils.getStyle(this._styleMap, DvtCSSStyle.BORDER_RADIUS, null));
   this._bgColor = DvtStyleUtils.getStyle(this._styleMap, DvtCSSStyle.BACKGROUND_COLOR, null);
-  this._bgAlpha = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.BG_ALPHA, 1);
+  this._bgAlpha = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.BG_ALPHA, 1);
 
   if (disclosed !== undefined)
     this._collapse = !disclosed;
@@ -7332,8 +6403,8 @@ DvtCollapsiblePanel.prototype.Init = function(context, maxWidth, maxHeight, coll
 DvtCollapsiblePanel.prototype._drawButton = function() {
   // only draw collapse/expand button if not in print or fixed mode
   if (!this._isFixed) {
-    this._buttonFrame = DvtPanZoomControlPanelLAFUtils.createEmptyViewClosedFrame(this.getCtx(), DvtCollapsiblePanel.BUTTONHEIGHT, this._styleMap, false);
-    this._buttonFrame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+    this._buttonFrame = DvtControlPanelLAFUtils.createEmptyViewClosedFrame(this.getCtx(), DvtCollapsiblePanel.BUTTONHEIGHT, this._styleMap, false);
+    this._buttonFrame.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
     this.addChild(this._buttonFrame);
     if (this.isCollapsed())
       this._collapseExpandButton = DvtButtonLAFUtils.createExpandButton(this.getCtx(), this._buttonImages, DvtCollapsiblePanel.BUTTONHEIGHT, this._styleMap, false);
@@ -7561,7 +6632,7 @@ DvtCollapsiblePanel.prototype._collapseExpand = function(animate) {
 
 DvtCollapsiblePanel.prototype._createRoundRectangle = function(width, height) {
   var rect = new DvtPath(this.getCtx(), this._getOutlinePath(width, height));
-  var alpha = this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA];
+  var alpha = this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA];
   rect.setSolidFill(this._bgColor, this._bgAlpha);
   rect.setSolidStroke(this._borderColor, alpha);
   return rect;
@@ -7628,16 +6699,16 @@ DvtCollapsiblePanel.prototype.OnAnimationEnd = function() {
   this._animation = null;
 
   var stroke = this._background.getStroke().clone();
-  stroke.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+  stroke.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
   this._background.setStroke(stroke);
 
-  var alpha = this._styleMap[DvtPanZoomControlPanel.BG_ROLLOUT_ALPHA];
+  var alpha = this._styleMap[DvtControlPanel.BG_ROLLOUT_ALPHA];
   var fill = this._background.getFill().clone();
   fill.setAlpha(alpha);
   this._background.setFill(fill);
 
   if (this._buttonFrame)
-    this._buttonFrame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+    this._buttonFrame.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
 
   if (!this.isCollapsed())
     this._scrollableContainer.setAlpha(1);
@@ -7700,16 +6771,16 @@ DvtCollapsiblePanel.prototype.OnButtonHoverOut = function(evt) {
  */
 DvtCollapsiblePanel.prototype.HandleMouseOver = function(event) {
   var stroke = this._background.getStroke().clone();
-  stroke.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOVER_ALPHA]);
+  stroke.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOVER_ALPHA]);
   this._background.setStroke(stroke);
 
-  var alpha = this._styleMap[DvtPanZoomControlPanel.BG_ROLLOVER_ALPHA];
+  var alpha = this._styleMap[DvtControlPanel.BG_ROLLOVER_ALPHA];
   var fill = this._background.getFill().clone();
   fill.setAlpha(alpha);
   this._background.setFill(fill);
 
   if (this._buttonFrame)
-    this._buttonFrame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOVER_ALPHA]);
+    this._buttonFrame.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOVER_ALPHA]);
 };
 
 
@@ -7718,7 +6789,7 @@ DvtCollapsiblePanel.prototype.HandleMouseOver = function(event) {
  */
 DvtCollapsiblePanel.prototype.HandleMouseOut = function(event) {
   var stroke = this._background.getStroke().clone();
-  stroke.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+  stroke.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
   this._background.setStroke(stroke);
 
   var fill = this._background.getFill().clone();
@@ -7726,7 +6797,7 @@ DvtCollapsiblePanel.prototype.HandleMouseOut = function(event) {
   this._background.setFill(fill);
 
   if (this._buttonFrame)
-    this._buttonFrame.setAlpha(this._styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+    this._buttonFrame.setAlpha(this._styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
 };
 /**
  * @constructor
@@ -7802,7 +6873,7 @@ DvtButtonLAFUtils.DEFAULT_MID_COLOR = '#3474D3';
 DvtButtonLAFUtils.DEFAULT_END_COLOR = '#BFD8FB';
 
 
-//Button image xml attribute names
+//Button image keys
 DvtButtonLAFUtils._ZOOMIN_ENA = 'zoominUp';
 DvtButtonLAFUtils._ZOOMIN_OVR = 'zoominOver';
 DvtButtonLAFUtils._ZOOMIN_DWN = 'zoominDown';
@@ -7852,11 +6923,6 @@ DvtButtonLAFUtils._CLEARRESULTS_ENA = 'clearResultsEna';
 DvtButtonLAFUtils._CLEARRESULTS_OVR = 'clearResultsOvr';
 DvtButtonLAFUtils._CLEARRESULTS_DWN = 'clearResultsDwn';
 
-//TODO
-DvtButtonLAFUtils._ZOOMSLIDER_ENA = '';
-DvtButtonLAFUtils._ZOOMSLIDER_OVR = '';
-DvtButtonLAFUtils._ZOOMSLIDER_DWN = '';
-
 DvtButtonLAFUtils._UP = 'Up';
 DvtButtonLAFUtils._OVER = 'Over';
 DvtButtonLAFUtils._DOWN = 'Down';
@@ -7869,61 +6935,37 @@ DvtButtonLAFUtils._SYNC = 'synchronize';
  * Creates pan control
  * @param {DvtContext} context Platform specific context object
  * @param {DvtPanZoomCanvas} panZoomCanvas The PanZoomCanvas this button will be associated with
- * @param {DvtPanZoomControlPanelResources}  resources An object that contains translated resources for the component
- * @param {DvtXmlNode} imageURIs The xml containing image URIs for the component
+ * @param {DvtSubcomponentBundle}  resources An object that contains translated resources for the component
+ * @param {Object} imageURIs The map containing image URIs for the component
  * @param {number} controls The bit mask specifying which controls to show
  * @param {object} styleMap The object containing style specifications for this component
- * @return {DvtBasePanZoomControl} a container used for the pan control
+ * @return {DvtBaseControl} a container used for the pan control
  */
 DvtButtonLAFUtils.createPanControl = function(context, panZoomCanvas, resources, controls, imageURIs, styleMap)
 {
-  var panUpState;
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    panUpState = DvtButtonLAFUtils._createPanButtonState(context, imageURIs.getAttr(DvtButtonLAFUtils._PAN_ENA), styleMap);
-  } else { //JSON Object
-    panUpState = DvtButtonLAFUtils._createPanButtonState(context, imageURIs[DvtButtonLAFUtils._PAN_ENA], styleMap);
-  }
-
+  var panUpState = DvtButtonLAFUtils._createPanButtonState(context, imageURIs[DvtButtonLAFUtils._PAN_ENA], styleMap);
   //need to offset the down state so that we can rotate the arrow around the center of the pan control
   var panDownState = new DvtContainer(context);
   panDownState.setTranslate(20, 20);
-  var downImage;
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    downImage = DvtButtonLAFUtils._createPanButtonState(context, imageURIs.getAttr(DvtButtonLAFUtils._PAN_DWN), styleMap);
-  } else { //JSON Object
-    downImage = DvtButtonLAFUtils._createPanButtonState(context, imageURIs[DvtButtonLAFUtils._PAN_DWN], styleMap);
-  }
+  var downImage = DvtButtonLAFUtils._createPanButtonState(context, imageURIs[DvtButtonLAFUtils._PAN_DWN], styleMap);
   downImage.setTranslate(- 20, - 20);
   panDownState.addChild(downImage);
 
   //need to offset the over state so that we can rotate the arrow around the center of the pan control
   var panOverState = new DvtContainer(context);
   panOverState.setTranslate(20, 20);
-  var overImage;
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    overImage = DvtButtonLAFUtils._createPanButtonState(context, imageURIs.getAttr(DvtButtonLAFUtils._PAN_OVR), styleMap);
-  } else { //JSON Object
-    overImage = DvtButtonLAFUtils._createPanButtonState(context, imageURIs[DvtButtonLAFUtils._PAN_OVR], styleMap);
-  }
+  var overImage = DvtButtonLAFUtils._createPanButtonState(context, imageURIs[DvtButtonLAFUtils._PAN_OVR], styleMap);
   overImage.setTranslate(- 20, - 20);
   panOverState.addChild(overImage);
 
   var panButton = new DvtButton(context, panUpState, panOverState, panDownState);
 
-  if ((controls & DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON) > 0) {
+  if ((controls & DvtControlPanel.CONTROLS_CENTER_BUTTON) > 0) {
     //center of pan control is smaller circle that can be used to center the view on the selected node
-    var recenterButton;
-    if (imageURIs && imageURIs.getAttr) {  //XML Node
-      recenterButton = new DvtButton(context,
-          DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs.getAttr(DvtButtonLAFUtils._RECENTER_ENA), styleMap),
-          DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs.getAttr(DvtButtonLAFUtils._RECENTER_OVR), styleMap),
-          DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs.getAttr(DvtButtonLAFUtils._RECENTER_DWN), styleMap));
-    } else {
-      recenterButton = new DvtButton(context,
-          DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs[DvtButtonLAFUtils._RECENTER_ENA], styleMap),
-          DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs[DvtButtonLAFUtils._RECENTER_OVR], styleMap),
-          DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs[DvtButtonLAFUtils._RECENTER_DWN], styleMap));
-    }
+    var recenterButton = new DvtButton(context,
+        DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs[DvtButtonLAFUtils._RECENTER_ENA], styleMap),
+        DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs[DvtButtonLAFUtils._RECENTER_OVR], styleMap),
+        DvtButtonLAFUtils._createRecenterButtonState(context, imageURIs[DvtButtonLAFUtils._RECENTER_DWN], styleMap));
     recenterButton.setTranslate(9, 9);
   }
 
@@ -7937,35 +6979,22 @@ DvtButtonLAFUtils.createPanControl = function(context, panZoomCanvas, resources,
  * @param {function} mapCallback The function that should be called to dispatch component events
  * @param {DvtPanZoomCanvas} panZoomCanvas The PanZoomCanvas this button will be associated with
  * @param {number} btype A button type - DvtMapControlButton.BUTTON_TYPE_DRILLUP,DvtMapControlButton.BUTTON_TYPE_DRILLDOWN or DvtMapControlButton.BUTTON_TYPE_RESET
- * @param {DvtPanZoomControlPanelResources}  resources An object that contains translated resources for ThematicMap
- * @param {DvtDomXmlNode} imageURIs The xml containing image URIs for the component
+ * @param {DvtSubcomponentBundle}  resources An object that contains translated resources for ThematicMap
+ * @param {Object} imageURIs The map containing image URIs for the component
  * @param {DvtEventManager} eventManager An event manager for the component
  * @param {object} styleMap The object containing style specifications for this component
- * @return {DvtBasePanZoomControl} a container used for the drill up button
+ * @return {DvtBaseControl} a container used for the drill up button
  */
-DvtButtonLAFUtils.createDrillUpButton = function(context, mapCallback, panZoomCanvas, btype, resources, imageURIs, eventManager, styleMap)
-{
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLUP_ENA), styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLUP_OVR), styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLUP_DWN), styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLUP_ENA), styleMap);
-    return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._DRILLUP_ENA], styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs[DvtButtonLAFUtils._DRILLUP_OVR], styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs[DvtButtonLAFUtils._DRILLUP_DWN], styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._DRILLUP_ENA], styleMap);
-    return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
-  }
+DvtButtonLAFUtils.createDrillUpButton = function(context, mapCallback, panZoomCanvas, btype, resources, imageURIs, eventManager, styleMap) {
+  var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._DRILLUP_ENA], styleMap);
+  var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
+      imageURIs[DvtButtonLAFUtils._DRILLUP_OVR], styleMap);
+  var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
+      imageURIs[DvtButtonLAFUtils._DRILLUP_DWN], styleMap);
+  var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._DRILLUP_ENA], styleMap);
+  return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
 };
 
 
@@ -7975,34 +7004,22 @@ DvtButtonLAFUtils.createDrillUpButton = function(context, mapCallback, panZoomCa
  * @param {function} mapCallback The function that should be called to dispatch component events
  * @param {DvtPanZoomCanvas} panZoomCanvas The PanZoomCanvas this button will be associated with
  * @param {number} btype A button type - DvtMapControlButton.BUTTON_TYPE_DRILLUP,DvtMapControlButton.BUTTON_TYPE_DRILLDOWN or DvtMapControlButton.BUTTON_TYPE_RESET
- * @param {DvtPanZoomControlPanelResources}  resources An object that contains translated resources for ThematicMap
- * @param {DvtDomXmlNode} imageURIs The xml containing image URIs for the component
+ * @param {DvtSubcomponentBundle}  resources An object that contains translated resources for ThematicMap
+ * @param {Object} imageURIs The map containing image URIs for the component
  * @param {DvtEventManager} eventManager An event manager for the component
  * @param {object} styleMap The object containing style specifications for this component
- * @return {DvtBasePanZoomControl} a container used for the drill down button
+ * @return {DvtBaseControl} a container used for the drill down button
  */
 DvtButtonLAFUtils.createDrillDownButton = function(context, mapCallback, panZoomCanvas, btype, resources, imageURIs, eventManager, styleMap) {
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLDOWN_ENA), styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLDOWN_OVR), styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLDOWN_DWN), styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._DRILLDOWN_ENA), styleMap);
-    return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._DRILLDOWN_ENA], styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs[DvtButtonLAFUtils._DRILLDOWN_OVR], styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs[DvtButtonLAFUtils._DRILLDOWN_DWN], styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._DRILLDOWN_ENA], styleMap);
-    return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
-  }
+  var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._DRILLDOWN_ENA], styleMap);
+  var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
+      imageURIs[DvtButtonLAFUtils._DRILLDOWN_OVR], styleMap);
+  var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
+      imageURIs[DvtButtonLAFUtils._DRILLDOWN_DWN], styleMap);
+  var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._DRILLDOWN_ENA], styleMap);
+  return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
 };
 
 
@@ -8012,34 +7029,22 @@ DvtButtonLAFUtils.createDrillDownButton = function(context, mapCallback, panZoom
  * @param {function} mapCallback The function that should be called to dispatch component events
  * @param {DvtPanZoomCanvas} panZoomCanvas The PanZoomCanvas this button will be associated with
  * @param {number} btype A button type - DvtMapControlButton.BUTTON_TYPE_DRILLUP,DvtMapControlButton.BUTTON_TYPE_DRILLDOWN or DvtMapControlButton.BUTTON_TYPE_RESET
- * @param {DvtPanZoomControlPanelResources}  resources An object that contains translated resources for ThematicMap
- * @param {DvtDomXmlNode} imageURIs The xml containing image URIs for the component
+ * @param {DvtSubcomponentBundle}  resources An object that contains translated resources for ThematicMap
+ * @param {Object} imageURIs The map containing image URIs for the component
  * @param {DvtEventManager} eventManager An event manager for the component
  * @param {object} styleMap The object containing style specifications for this component
- * @return {DvtBasePanZoomControl} a container used for the reset button
+ * @return {DvtBaseControl} a container used for the reset button
  */
 DvtButtonLAFUtils.createResetButton = function(context, mapCallback, panZoomCanvas, btype, resources, imageURIs, eventManager, styleMap) {
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._RESET_ENA), styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs.getAttr(DvtButtonLAFUtils._RESET_OVR), styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs.getAttr(DvtButtonLAFUtils._RESET_DWN), styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._RESET_ENA), styleMap);
-    return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._RESET_ENA], styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs[DvtButtonLAFUtils._RESET_OVR], styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs[DvtButtonLAFUtils._RESET_DWN], styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._RESET_ENA], styleMap);
-    return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
-  }
+  var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._RESET_ENA], styleMap);
+  var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
+      imageURIs[DvtButtonLAFUtils._RESET_OVR], styleMap);
+  var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
+      imageURIs[DvtButtonLAFUtils._RESET_DWN], styleMap);
+  var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._RESET_ENA], styleMap);
+  return new DvtMapControlButton(context, new DvtButton(context, ena, ovr, dwn, dis), mapCallback, panZoomCanvas, btype, resources, eventManager);
 };
 
 
@@ -8047,30 +7052,19 @@ DvtButtonLAFUtils.createResetButton = function(context, mapCallback, panZoomCanv
  * Creates a container used for the zoom-to-fit button.
  * @param {DvtContext} context Platform specific context object
  * @param {DvtPanZoomCanvas} panZoomCanvas The PanZoomCanvas this button will be associated with
- * @param {DvtPanZoomControlPanelResources} resources An object that contains translated resources for the component
- * @param {DvtDomXmlNode} imageURIs The xml containing image URIs for the component
+ * @param {DvtSubcomponentBundle} resources An object that contains translated resources for the component
+ * @param {Object} imageURIs The map containing image URIs for the component
  * @param {object} styleMap The object containing style specifications for this component
- * @return {DvtBasePanZoomControl} a container used for the zoom-to-fit button
+ * @return {DvtBaseControl} a container used for the zoom-to-fit button
  */
 DvtButtonLAFUtils.createZoomToFitButton = function(context, panZoomCanvas, resources, eventManager, imageURIs, styleMap) {
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMTOFIT_ENA), styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMTOFIT_OVR), styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMTOFIT_DWN), styleMap);
-    return new DvtZoomToFitButton(context, new DvtButton(context, ena, ovr, dwn), panZoomCanvas, resources, eventManager);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._ZOOMTOFIT_ENA], styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs[DvtButtonLAFUtils._ZOOMTOFIT_OVR], styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs[DvtButtonLAFUtils._ZOOMTOFIT_DWN], styleMap);
-    return new DvtZoomToFitButton(context, new DvtButton(context, ena, ovr, dwn), panZoomCanvas, resources, eventManager);
-  }
-
+  var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._ZOOMTOFIT_ENA], styleMap);
+  var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
+      imageURIs[DvtButtonLAFUtils._ZOOMTOFIT_OVR], styleMap);
+  var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
+      imageURIs[DvtButtonLAFUtils._ZOOMTOFIT_DWN], styleMap);
+  return new DvtZoomToFitButton(context, new DvtButton(context, ena, ovr, dwn), panZoomCanvas, resources, eventManager);
 };
 
 
@@ -8078,35 +7072,21 @@ DvtButtonLAFUtils.createZoomToFitButton = function(context, panZoomCanvas, resou
  * Creates a container used for the zoom-in button.
  * @param {DvtContext} context Platform specific context object
  * @param {DvtPanZoomCanvas} panZoomCanvas The PanZoomCanvas this button will be associated with
- * @param {DvtPanZoomControlPanelResources} resources An object that contains translated resources for the component
- * @param {DvtDomXmlNode} imageURIs The xml containing image URIs for the component
+ * @param {DvtSubcomponentBundle} resources An object that contains translated resources for the component
+ * @param {Object} imageURIs The map containing image URIs for the component
  * @param {object} styleMap The object containing style specifications for this component
- * @return {DvtBasePanZoomControl} a container used for the zoom-in button
+ * @return {DvtBaseControl} a container used for the zoom-in button
  */
-DvtButtonLAFUtils.createZoomInButton = function(context, panZoomCanvas, resources, eventManager, imageURIs, styleMap)
-{
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMIN_ENA), styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMIN_OVR), styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMIN_DWN), styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DISABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMIN_DISABLED), styleMap);
-    return new DvtZoomInButton(context, new DvtButton(context, ena, ovr, dwn, dis), panZoomCanvas, resources, eventManager);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._ZOOMIN_ENA], styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs[DvtButtonLAFUtils._ZOOMIN_OVR], styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs[DvtButtonLAFUtils._ZOOMIN_DWN], styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DISABLED,
-        imageURIs[DvtButtonLAFUtils._ZOOMIN_DISABLED], styleMap);
-    return new DvtZoomInButton(context, new DvtButton(context, ena, ovr, dwn, dis), panZoomCanvas, resources, eventManager);
-  }
-
+DvtButtonLAFUtils.createZoomInButton = function(context, panZoomCanvas, resources, eventManager, imageURIs, styleMap) {
+  var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._ZOOMIN_ENA], styleMap);
+  var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
+      imageURIs[DvtButtonLAFUtils._ZOOMIN_OVR], styleMap);
+  var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
+      imageURIs[DvtButtonLAFUtils._ZOOMIN_DWN], styleMap);
+  var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DISABLED,
+      imageURIs[DvtButtonLAFUtils._ZOOMIN_DISABLED], styleMap);
+  return new DvtZoomInButton(context, new DvtButton(context, ena, ovr, dwn, dis), panZoomCanvas, resources, eventManager);
 };
 
 
@@ -8114,34 +7094,21 @@ DvtButtonLAFUtils.createZoomInButton = function(context, panZoomCanvas, resource
  * Creates a container used for the zoom-out button.
  * @param {DvtContext} context Platform specific context object
  * @param {DvtPanZoomCanvas} panZoomCanvas The PanZoomCanvas this button will be associated with
- * @param {DvtPanZoomControlPanelResources} resources An object that contains translated resources for the component
- * @param {DvtDomXmlNode} imageURIs The xml containing image URIs for the component
+ * @param {DvtSubcomponentBundle} resources An object that contains translated resources for the component
+ * @param {Object} imageURIs The map containing image URIs for the component
  * @param {object} styleMap The object containing style specifications for this component
- * @return {DvtBasePanZoomControl} a container used for the zoom-out button
+ * @return {DvtBaseControl} a container used for the zoom-out button
  */
-DvtButtonLAFUtils.createZoomOutButton = function(context, panZoomCanvas, resources, eventManager, imageURIs, styleMap)
-{
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMOUT_ENA), styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMOUT_OVR), styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMOUT_DWN), styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DISABLED,
-        imageURIs.getAttr(DvtButtonLAFUtils._ZOOMOUT_DISABLED), styleMap);
-    return new DvtZoomOutButton(context, new DvtButton(context, ena, ovr, dwn, dis), panZoomCanvas, resources, eventManager);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
-        imageURIs[DvtButtonLAFUtils._ZOOMOUT_ENA], styleMap);
-    var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
-        imageURIs[DvtButtonLAFUtils._ZOOMOUT_OVR], styleMap);
-    var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
-        imageURIs[DvtButtonLAFUtils._ZOOMOUT_DWN], styleMap);
-    var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DISABLED,
-        imageURIs[DvtButtonLAFUtils._ZOOMOUT_DISABLED], styleMap);
-    return new DvtZoomOutButton(context, new DvtButton(context, ena, ovr, dwn, dis), panZoomCanvas, resources, eventManager);
-  }
+DvtButtonLAFUtils.createZoomOutButton = function(context, panZoomCanvas, resources, eventManager, imageURIs, styleMap) {
+  var ena = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_ENABLED,
+      imageURIs[DvtButtonLAFUtils._ZOOMOUT_ENA], styleMap);
+  var ovr = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_OVER,
+      imageURIs[DvtButtonLAFUtils._ZOOMOUT_OVR], styleMap);
+  var dwn = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DOWN,
+      imageURIs[DvtButtonLAFUtils._ZOOMOUT_DWN], styleMap);
+  var dis = DvtButtonLAFUtils._createButtonBaseImage(context, DvtButton.STATE_DISABLED,
+      imageURIs[DvtButtonLAFUtils._ZOOMOUT_DISABLED], styleMap);
+  return new DvtZoomOutButton(context, new DvtButton(context, ena, ovr, dwn, dis), panZoomCanvas, resources, eventManager);
 };
 
 
@@ -8151,28 +7118,20 @@ DvtButtonLAFUtils.createZoomOutButton = function(context, panZoomCanvas, resourc
  * @param {number} controls Button identifier
  * @param {string} bname Name used to resolve image name
  * @param {number} state Button state - ena, ovr, dwn
- * @param {DvtDomXmlNode} images The xml string that contains image urls for the control
+ * @param {Object} images The map string that contains image urls for the control
  * @param {object} styleMap The object containing style specifications for this component
  * @return {DvtDisplayable} a container used for the layout switcher button
  */
-DvtButtonLAFUtils.createLayoutItemButtonState = function(context, controls, bname, state, images, styleMap)
-{
+DvtButtonLAFUtils.createLayoutItemButtonState = function(context, controls, bname, state, images, styleMap) {
   var r = DvtStyleUtils.getStyle(styleMap, 'buttonRadius', 0);
-  var w = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_BUTTON_WIDTH, 0);
-  var h = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_BUTTON_WIDTH, 0);
+  var w = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_BUTTON_WIDTH, 0);
+  var h = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_BUTTON_WIDTH, 0);
 
   var shape = DvtButtonLAFUtils._createBaseButtonShape(context, state, r, w, h, styleMap);
   DvtButtonLAFUtils._setButtonColors(state, shape, w, h + (r * 2), 0, 0, styleMap, true);
 
   var attrb = DvtButtonLAFUtils._getLayoutURI(context, state, bname);
-  var uri;
-  if (images && images.getAttr) {  //XML Node
-    uri = images.getAttr(attrb);
-  } else { //JSON Node
-    uri = images[attrb];
-  }
-
-  var image = DvtButtonLAFUtils._loadIcon(context, uri, w, h);
+  var image = DvtButtonLAFUtils._loadIcon(context, images[attrb], w, h);
   if (image)
     shape.addChild(image);
   return shape;
@@ -8208,21 +7167,14 @@ DvtButtonLAFUtils._getLayoutURI = function(context, state, bname, bSel)
  * @param {DvtContext} context Platform specific context object
  * @param {number} state Button state - ena, ovr, dwn
  * @param {object} styleMap The object containing style specifications for this component
- * @param {DvtDomXmlNode} images The xml string that contains image urls for the control
+ * @param {Object} images The map string that contains image urls for the control
  * @return {DvtDisplayable} a shape for the panel card switcher button
  */
 DvtButtonLAFUtils.createPanelCardButtonState = function(context, state, styleMap, images)
 {
   var attrb = DvtButtonLAFUtils._getLayoutURI(context, state, DvtButtonLAFUtils._SYNC, true);
-  var shape;
-  if (images && images.getAttr) {  //XML Node
-    shape = DvtButtonLAFUtils._createButtonBaseImage(context, state,
-        images.getAttr(attrb), styleMap);
-  } else { //JSON Node
-    shape = DvtButtonLAFUtils._createButtonBaseImage(context, state,
-        images[attrb], styleMap);
-  }
-
+  var shape = DvtButtonLAFUtils._createButtonBaseImage(context, state,
+      images[attrb], styleMap);
   return shape;
 };
 
@@ -8234,7 +7186,7 @@ DvtButtonLAFUtils.createPanelCardButtonState = function(context, state, styleMap
  * @param {number} ww Button width
  * @param {number} hh Button height
  * @param {object} styleMap The object containing style specifications for this component
- * @param {DvtDomXmlNode} images The xml string that contains image urls for the control
+ * @param {Object} images The map string that contains image urls for the control
  * @return {DvtDisplayable} a shape for the panel card combo box button
  */
 DvtButtonLAFUtils.createPanelCardSyncItemState = function(context, state, ww, hh, styleMap, images)
@@ -8245,33 +7197,19 @@ DvtButtonLAFUtils.createPanelCardSyncItemState = function(context, state, ww, hh
   return base;
 };
 
-
-
-DvtButtonLAFUtils.createZoomSliderButton = function(context, state)
-{
-  return null;
-};
-
-
 /**
  * Creates a shape used for the control panel button.
  * @param {DvtContext} context Platform specific context object
  * @param {string} bname Name used to resolve image name
  * @param {number} state Button state - ena, ovr, dwn
  * @param {object} styleMap The object containing style specifications for this component
- * @param {DvtDomXmlNode} images The xml string that contains image urls for the control
+ * @param {Object} images The map string that contains image urls for the control
  * @return {DvtDisplayable} a shape for the control panel button
  */
 DvtButtonLAFUtils.createControlButtonState = function(context, bname, state, images, styleMap)
 {
   var attrb = DvtButtonLAFUtils._getLayoutURI(context, state, bname);
-  var shape;
-  if (images && images.getAttr) {  //XML Node
-    shape = DvtButtonLAFUtils._createButtonBaseImage(context, state, images.getAttr(attrb), styleMap);
-  } else { //JSON Node
-    shape = DvtButtonLAFUtils._createButtonBaseImage(context, state, images[attrb], styleMap);
-  }
-
+  var shape = DvtButtonLAFUtils._createButtonBaseImage(context, state, images[attrb], styleMap);
   return shape;
 };
 
@@ -8287,17 +7225,10 @@ DvtButtonLAFUtils.createControlButtonState = function(context, bname, state, ima
  * @return {DvtButton} The Expand button
  */
 DvtButtonLAFUtils.createExpandButton = function(context, imageURIs, h, styleMap, bR2L) {
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_ENABLED, h, imageURIs.getAttr(DvtButtonLAFUtils._EXPAND_ENA), styleMap, bR2L);
-    var ovr = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_OVER, h, imageURIs.getAttr(DvtButtonLAFUtils._EXPAND_OVR), styleMap, bR2L);
-    var dwn = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_DOWN, h, imageURIs.getAttr(DvtButtonLAFUtils._EXPAND_DWN), styleMap, bR2L);
-    return new DvtButton(context, ena, ovr, dwn);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_ENABLED, h, imageURIs[DvtButtonLAFUtils._EXPAND_ENA], styleMap, bR2L);
-    var ovr = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_OVER, h, imageURIs[DvtButtonLAFUtils._EXPAND_OVR], styleMap, bR2L);
-    var dwn = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_DOWN, h, imageURIs[DvtButtonLAFUtils._EXPAND_DWN], styleMap, bR2L);
-    return new DvtButton(context, ena, ovr, dwn);
-  }
+  var ena = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_ENABLED, h, imageURIs[DvtButtonLAFUtils._EXPAND_ENA], styleMap, bR2L);
+  var ovr = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_OVER, h, imageURIs[DvtButtonLAFUtils._EXPAND_OVR], styleMap, bR2L);
+  var dwn = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_DOWN, h, imageURIs[DvtButtonLAFUtils._EXPAND_DWN], styleMap, bR2L);
+  return new DvtButton(context, ena, ovr, dwn);
 };
 
 
@@ -8312,17 +7243,10 @@ DvtButtonLAFUtils.createExpandButton = function(context, imageURIs, h, styleMap,
  * @return {DvtButton} The collapse button
  */
 DvtButtonLAFUtils.createCollapseButton = function(context, imageURIs, h, styleMap, bR2L) {
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_ENABLED, h, imageURIs.getAttr(DvtButtonLAFUtils._COLLAPSE_ENA), styleMap, bR2L);
-    var ovr = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_OVER, h, imageURIs.getAttr(DvtButtonLAFUtils._COLLAPSE_OVR), styleMap, bR2L);
-    var dwn = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_DOWN, h, imageURIs.getAttr(DvtButtonLAFUtils._COLLAPSE_DWN), styleMap, bR2L);
-    return new DvtButton(context, ena, ovr, dwn);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_ENABLED, h, imageURIs[DvtButtonLAFUtils._COLLAPSE_ENA], styleMap, bR2L);
-    var ovr = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_OVER, h, imageURIs[DvtButtonLAFUtils._COLLAPSE_OVR], styleMap, bR2L);
-    var dwn = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_DOWN, h, imageURIs[DvtButtonLAFUtils._COLLAPSE_DWN], styleMap, bR2L);
-    return new DvtButton(context, ena, ovr, dwn);
-  }
+  var ena = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_ENABLED, h, imageURIs[DvtButtonLAFUtils._COLLAPSE_ENA], styleMap, bR2L);
+  var ovr = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_OVER, h, imageURIs[DvtButtonLAFUtils._COLLAPSE_OVR], styleMap, bR2L);
+  var dwn = DvtButtonLAFUtils._createCollapseExpandButtonState(context, DvtButton.STATE_DOWN, h, imageURIs[DvtButtonLAFUtils._COLLAPSE_DWN], styleMap, bR2L);
+  return new DvtButton(context, ena, ovr, dwn);
 };
 
 
@@ -8337,17 +7261,10 @@ DvtButtonLAFUtils.createCollapseButton = function(context, imageURIs, h, styleMa
  * @return {DvtButton} The Quick query button
  */
 DvtButtonLAFUtils.createQuickQueryButton = function(context, imageURIs) {
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_ENABLED, imageURIs.getAttr(DvtButtonLAFUtils._QUICKQUERY_ENA));
-    var ovr = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_OVER, imageURIs.getAttr(DvtButtonLAFUtils._QUICKQUERY_OVR));
-    var dwn = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_DOWN, imageURIs.getAttr(DvtButtonLAFUtils._QUICKQUERY_DWN));
-    return new DvtButton(context, ena, ovr, dwn);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_ENABLED, imageURIs[DvtButtonLAFUtils._QUICKQUERY_ENA]);
-    var ovr = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_OVER, imageURIs[DvtButtonLAFUtils._QUICKQUERY_OVR]);
-    var dwn = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_DOWN, imageURIs[DvtButtonLAFUtils._QUICKQUERY_DWN]);
-    return new DvtButton(context, ena, ovr, dwn);
-  }
+  var ena = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_ENABLED, imageURIs[DvtButtonLAFUtils._QUICKQUERY_ENA]);
+  var ovr = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_OVER, imageURIs[DvtButtonLAFUtils._QUICKQUERY_OVR]);
+  var dwn = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_DOWN, imageURIs[DvtButtonLAFUtils._QUICKQUERY_DWN]);
+  return new DvtButton(context, ena, ovr, dwn);
 };
 
 
@@ -8362,17 +7279,10 @@ DvtButtonLAFUtils.createQuickQueryButton = function(context, imageURIs) {
  * @return {DvtButton} The Clear results button
  */
 DvtButtonLAFUtils.createClearResultsButton = function(context, imageURIs) {
-  if (imageURIs && imageURIs.getAttr) {  //XML Node
-    var ena = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_ENABLED, imageURIs.getAttr(DvtButtonLAFUtils._CLEARRESULTS_ENA));
-    var ovr = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_OVER, imageURIs.getAttr(DvtButtonLAFUtils._CLEARRESULTS_OVR));
-    var dwn = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_DOWN, imageURIs.getAttr(DvtButtonLAFUtils._CLEARRESULTS_DWN));
-    return new DvtButton(context, ena, ovr, dwn);
-  } else { //JSON Node
-    var ena = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_ENABLED, imageURIs[DvtButtonLAFUtils._CLEARRESULTS_ENA]);
-    var ovr = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_OVER, imageURIs[DvtButtonLAFUtils._CLEARRESULTS_OVR]);
-    var dwn = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_DOWN, imageURIs[DvtButtonLAFUtils._CLEARRESULTS_DWN]);
-    return new DvtButton(context, ena, ovr, dwn);
-  }
+  var ena = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_ENABLED, imageURIs[DvtButtonLAFUtils._CLEARRESULTS_ENA]);
+  var ovr = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_OVER, imageURIs[DvtButtonLAFUtils._CLEARRESULTS_OVR]);
+  var dwn = DvtButtonLAFUtils._createQuickQueryButtonState(context, DvtButton.STATE_DOWN, imageURIs[DvtButtonLAFUtils._CLEARRESULTS_DWN]);
+  return new DvtButton(context, ena, ovr, dwn);
 };
 
 
@@ -8390,9 +7300,9 @@ DvtButtonLAFUtils._createButtonBaseImage = function(context, state, uri, styleMa
 
   var r = DvtStyleUtils.getStyle(styleMap, 'buttonRadius', 0);
   if (w === 'undefined' || w == null)
-    w = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_BUTTON_WIDTH, 0);
+    w = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_BUTTON_WIDTH, 0);
   if (h === 'undefined' || h == null)
-    h = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_BUTTON_WIDTH, 0);
+    h = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_BUTTON_WIDTH, 0);
 
   var base = DvtButtonLAFUtils._drawBaseButton(context, state, r, w, h, styleMap);
   var image = DvtButtonLAFUtils._loadIcon(context, uri, w, h);
@@ -8420,61 +7330,11 @@ DvtButtonLAFUtils._loadIcon = function(context, uri, buttonWidth, buttonHeight) 
   return image;
 };
 
-
-/**
- * Create a sprite used in the zoom slider thumb.
- *
- * @param state button state
- *
- * @return Sprite used in zoom slider thumb
- */
-DvtButtonLAFUtils._createZoomSliderButtonState = function(context, state, ww, uri) {
-  //  var ww = 23;
-  var hh = 16;
-  var x = ww;
-  var y = hh;
-
-  var xx = 0;
-  var yy = 0;
-
-  var cmds = DvtPathUtils.moveTo(x, y) + DvtPathUtils.lineTo(x - ww, y);
-  x = x - ww;
-  y = y;
-
-  cmds += DvtPathUtils.lineTo(x, y - hh);
-  x = x;
-  y = y - hh;
-
-  cmds += DvtPathUtils.lineTo(x + ww, y);
-  x = x + ww;
-  y = y;
-
-  cmds += DvtPathUtils.lineTo(x, y + hh) + DvtPathUtils.closePath();
-
-  var mc = new DvtPath(context, cmds);
-
-  var currLoader = DvtImageLAFUtils.loadIcon(context, uri);
-  if (currLoader) {
-    //left-align icon
-    // Bug 9506699 - BIDI: Control panel buttons should have local specific icons
-    //center icon vertically
-    currLoader.setTranslate(- 6 + sw, - 2);
-    //TODO?
-    mc.addChild(currLoader);
-  }
-
-  // Line Style & fill
-  DvtButtonLAFUtils._setSliderButtonColors(state, mc, ww, hh, xx, yy);
-
-  return mc;
-};
-
-
 /**
  * Creates a shape used in the pan button.
  * @private
  * @param {DvtContext} context Platform specific context object
- * @param {DvtXmlNode} uri The map of button images
+ * @param {Object} uri The map of button images
  * @param {object} styleMap The object containing style specifications for this component
  * @return {DvtShape} shape used in pan button
  */
@@ -8498,7 +7358,7 @@ DvtButtonLAFUtils._createPanButtonState = function(context, uri, styleMap) {
  * Creates a shape used in the re-center button.
  * @private
  * @param {DvtContext} context Platform specific context object
- * @param {DvtXmlNode} uri The map of button images
+ * @param {Object} uri The map of button images
  * @param {object} styleMap The object containing style specifications for this component
  * @return {DvtShape} shape used in re-center button
  */
@@ -8528,7 +7388,7 @@ DvtButtonLAFUtils._createRecenterButtonState = function(context, uri, styleMap)
  * @param {DvtContext} context Platform specific context object
  * @param {number} state button state
  * @param {number} nh height of the close button
- * @param {DvtXmlNode} uri The map of button images
+ * @param {Object} uri The map of button images
  * @param {Object} styleMap
  * @param {boolean} bL2R true if the reading direction is left-to-right, so that the
  *        control panel is in the top left corner of the view
@@ -8545,12 +7405,12 @@ DvtButtonLAFUtils._createCollapseExpandButtonState = function(context, state, nh
 
   //center the icon in the button
   if (iconLoader) {
-    var imageW = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_IMAGE_WIDTH, 0);
-    var imageH = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_IMAGE_HEIGHT, 0);
+    var imageW = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_IMAGE_WIDTH, 0);
+    var imageH = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_IMAGE_HEIGHT, 0);
 
     sprite.addChild(iconLoader);
 
-    var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+    var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
     var offsetX = (buttonWidth - imageW) / 2;
 
     //BUG FIX #10154856: calculate y coord instead of hardcoding because we may
@@ -8691,7 +7551,7 @@ DvtButtonLAFUtils._setGradientBorder = function(shape, ww, hh, xx, yy)
  */
 DvtButtonLAFUtils._setButtonColors = function(state, shape, ww, hh, xx, yy, styleMap, isDropdownItem)
 {
-  var panelDrawerStyle = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_PANEL_DRAWER_STYLES, null);
+  var panelDrawerStyle = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_PANEL_DRAWER_STYLES, null);
   if (panelDrawerStyle) {
     if (!isDropdownItem || (isDropdownItem && state == DvtButton.STATE_ENABLED))
       shape.setInvisibleFill();
@@ -8760,7 +7620,7 @@ DvtButtonLAFUtils._setButtonColors = function(state, shape, ww, hh, xx, yy, styl
  */
 DvtButtonLAFUtils._setCloseButtonColors = function(context, state, shape, ww, hh, xx, yy, styleMap)
 {
-  var panelDrawerStyle = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_PANEL_DRAWER_STYLES, null);
+  var panelDrawerStyle = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_PANEL_DRAWER_STYLES, null);
   if (panelDrawerStyle)
     shape.setInvisibleFill();
   else {
@@ -8771,13 +7631,13 @@ DvtButtonLAFUtils._setCloseButtonColors = function(context, state, shape, ww, hh
       var bgColor = DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BACKGROUND_COLOR, null);
       switch (state) {
         case DvtButton.STATE_ENABLED:
-          bgAlpha = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.BG_ALPHA, 1);
-          strokeAlpha = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA, 1);
+          bgAlpha = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.BG_ALPHA, 1);
+          strokeAlpha = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.FRAME_ROLLOUT_ALPHA, 1);
           break;
         case DvtButton.STATE_DOWN:
         case DvtButton.STATE_OVER:
-          bgAlpha = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.BG_ROLLOVER_ALPHA, 1);
-          strokeAlpha = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.FRAME_ROLLOVER_ALPHA, 1);
+          bgAlpha = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.BG_ROLLOVER_ALPHA, 1);
+          strokeAlpha = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.FRAME_ROLLOVER_ALPHA, 1);
           break;
         default: break;
       }
@@ -8890,8 +7750,8 @@ DvtButtonLAFUtils._drawOpenCloseButtonHelper = function(context, state, nh, styl
   var xx = 0;
   var yy = 0;
   var r = parseInt(DvtStyleUtils.getStyle(styleMap, DvtCSSStyle.BORDER_RADIUS, 0));
-  var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
-  var buttonHeight = Math.max(nh, DvtStyleUtils.getStyle(styleMap, DvtPanZoomControlPanel.CP_BUTTON_HEIGHT, nh));
+  var buttonWidth = DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_OPEN_CLOSE_BUTTON_WIDTH, 0);
+  var buttonHeight = Math.max(nh, DvtStyleUtils.getStyle(styleMap, DvtControlPanel.CP_BUTTON_HEIGHT, nh));
 
   var arPoints = DvtButtonLAFUtils.GetButtonPathCommands(buttonWidth, buttonHeight, r, bR2L);
   var shape = new DvtPath(context, arPoints);
@@ -8934,28 +7794,6 @@ DvtButtonLAFUtils._createBaseButtonShape = function(context, state, r, ww, hh, s
     return new DvtPath(context, cmds);
   }
 };
-
-
-/**
- * Draw a cross line on the zoom slider.
- *
- * @param s sprite to draw into
- * @param xx x coord for start of line
- * @param yy y coord for line
- * @param ww width of line
- */
-DvtButtonLAFUtils.drawZoomSliderCrossLine = function(context, s, xx, yy, ww) {
-  // Line Style & FILL
-  lineStyle(1, '#656D81', 1, true);
-
-  var cmds = DvtPathUtils.moveTo(xx, yy) + DvtPathUtils.lineTo(xx + ww, yy);
-
-  /// white
-  lineStyle(1, '#FFFFFF', 1, true);
-
-  cmds += DvtPathUtils.moveTo(xx, yy + 1) + DvtPathUtils.lineTo(xx + ww, yy + 1);
-};
-
 
 /**
  * Draw the background for the dropdown from the layout or panel card sync buttons.
@@ -9219,6 +8057,16 @@ DvtCommonLegend.prototype.Init = function(context, w, h, images, styleMap) {
   this._images = images;
   this._styleMap = styleMap;
   this._isWordWrap = false;
+
+  this._bundle = new DvtUtilBundle();
+};
+
+/**
+ * Retuns the translation bundle
+ * @return {Object}
+ */
+DvtCommonLegend.prototype.__getBundle = function() {
+  return this._bundle;
 };
 
 DvtCommonLegend.prototype.GetImages = function() {
@@ -9952,7 +8800,7 @@ DvtCommonLegendSectionGroup.prototype._drawArrowButton = function(parent, availS
 
 /**
  * Create button
- * @param {DvtXmlNode} images The xml node containing the collapse/expand section group button image uris
+ * @param {Object} images The map containing the collapse/expand section group button image uris
  * @param {number} x The button x coordinate
  * @param {number} y The button y coordinate
  * @param {number} width The button width
@@ -9964,53 +8812,20 @@ DvtCommonLegendSectionGroup.prototype._drawArrowButton = function(parent, availS
 DvtCommonLegendSectionGroup.prototype._createButton = function(images, x, y, width, height, buttonState) {
   if (!images)
     return new DvtButton(this.getCtx());
-  //JSON node will not have getAttribute method
-  if (!images.getAttr) {
-    return this._createButtonJson(images, x, y, width, height, buttonState);
-  }
   var button;
   switch (buttonState) {
     case DvtCommonLegendSectionGroup._COLLAPSED:
-      var ena = new DvtImage(this.getCtx(), images.getAttr(DvtAccordion.COLLAPSE_ENA), x, y, width, height);
-      var ovr = new DvtImage(this.getCtx(), images.getAttr(DvtAccordion.COLLAPSE_OVR), x, y, width, height);
-      var dwn = new DvtImage(this.getCtx(), images.getAttr(DvtAccordion.COLLAPSE_DWN), x, y, width, height);
+      var ena = new DvtImage(this.getCtx(), images['groupColEna'], x, y, width, height);
+      var ovr = new DvtImage(this.getCtx(), images['groupColOvr'], x, y, width, height);
+      var dwn = new DvtImage(this.getCtx(), images['groupColDwn'], x, y, width, height);
       return button = new DvtButton(this.getCtx(), ena, ovr, dwn);
     default:
-      var ena = new DvtImage(this.getCtx(), images.getAttr(DvtAccordion.EXPAND_ENA), x, y, width, height);
-      var ovr = new DvtImage(this.getCtx(), images.getAttr(DvtAccordion.EXPAND_OVR), x, y, width, height);
-      var dwn = new DvtImage(this.getCtx(), images.getAttr(DvtAccordion.EXPAND_DWN), x, y, width, height);
+      var ena = new DvtImage(this.getCtx(), images['groupExpDwn'], x, y, width, height);
+      var ovr = new DvtImage(this.getCtx(), images['groupExpOvr'], x, y, width, height);
+      var dwn = new DvtImage(this.getCtx(), images['groupExpDwn'], x, y, width, height);
       return button = new DvtButton(this.getCtx(), ena, ovr, dwn);
   }
 };
-
-
-/**
- * Create button
- * @param {object} images The JSON object containing the collapse/expand section group button image uris
- * @param {number} x The button x coordinate
- * @param {number} y The button y coordinate
- * @param {number} width The button width
- * @param {number} height The button height
- * @param {number} buttonState Whether the button should be rendered in a collapsed or expanded state
- * @return {DvtButton} The resulting button in the given state
- * @private
- */
-DvtCommonLegendSectionGroup.prototype._createButtonJson = function(images, x, y, width, height, buttonState) {
-  var button;
-  switch (buttonState) {
-    case DvtCommonLegendSectionGroup._COLLAPSED:
-      var ena = new DvtImage(this.getCtx(), images[DvtAccordion.COLLAPSE_ENA], x, y, width, height);
-      var ovr = new DvtImage(this.getCtx(), images[DvtAccordion.COLLAPSE_OVR], x, y, width, height);
-      var dwn = new DvtImage(this.getCtx(), images[DvtAccordion.COLLAPSE_DWN], x, y, width, height);
-      return button = new DvtButton(this.getCtx(), ena, ovr, dwn);
-    default:
-      var ena = new DvtImage(this.getCtx(), images[DvtAccordion.EXPAND_ENA], x, y, width, height);
-      var ovr = new DvtImage(this.getCtx(), images[DvtAccordion.EXPAND_OVR], x, y, width, height);
-      var dwn = new DvtImage(this.getCtx(), images[DvtAccordion.EXPAND_DWN], x, y, width, height);
-      return button = new DvtButton(this.getCtx(), ena, ovr, dwn);
-  }
-};
-
 
 /**
  * Toggles the arrow button to the opposite state and hides or unhides the legend section.
@@ -10272,12 +9087,12 @@ DvtCommonLegendRow.prototype.setMarker = function(url, shape, color, pattern, op
 DvtCommonLegendRow.prototype.filterRow = function() {
   this._bHidden = !this._bHidden;
   this._marker.setHollow(this._color);
+  this.setAriaProperty('label', this._text + '. ' + this._legend.__getBundle().getTranslatedString((this._bHidden ? 'STATE_HIDDEN' : 'STATE_VISIBLE')));
 };
 
 DvtCommonLegendRow.prototype.isRowFiltered = function() {
   return this._bHidden;
 };
-
 
 /**
  * Creates the a row in a legend containing a legend marker and text, handliing truncation and tooltips as needed.
@@ -10317,10 +9132,14 @@ DvtCommonLegendRow.prototype.render = function(parent, availSpace, isBiDi) {
       availSpace.x = availSpace.x + this._styleMap['indicatorSize'] + this._styleMap['rowColGap'];
   }
   this._marker = marker;
-
   // render text
   var textDim = new DvtRectangle();
   if (this._text) {
+    if (this._legend.showHideEnabled()) {
+      this.setAriaRole('img');
+      this.setAriaProperty('label', this._text + '. ' + this._legend.__getBundle().getTranslatedString('STATE_VISIBLE'));
+    }
+
     var fitWidth = availSpace.w - availSpace.x;
     if (isBiDi)
       fitWidth = availSpace.w - fitWidth;
@@ -10414,11 +9233,14 @@ DvtCommonLegendEventManager.prototype._handleClick = function(event) {
 };
 
 DvtCommonLegendEventManager.prototype._handleRollOver = function(event) {
-  if (this._legend.rollOverEnabled()) {
-    var obj = this.GetLogicalObject(event.target);
-    if (obj instanceof DvtCommonLegendRow) {
+  var obj = this.GetLogicalObject(event.target);
+  if (obj instanceof DvtCommonLegendRow) {
+    if (this._legend.rollOverEnabled())
       this._rollOverListener(event, obj);
-    }
+
+    // Accessibility Support
+    if (this._legend.showHideEnabled())
+      this.UpdateActiveElement(obj);
   }
 };
 

@@ -4,7 +4,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
   };
   $oj$$3$$.$ComponentMessaging$.$registerMessagingStrategy$($oj$$3$$.$ComponentMessaging$.$_DISPLAY_TYPE$.$NOTEWINDOW$, $oj$$3$$.$PopupMessagingStrategy$);
   $oj$$3$$.$Object$.$createSubclass$($oj$$3$$.$PopupMessagingStrategy$, $oj$$3$$.$MessagingStrategy$, "oj.PopupMessagingStrategy");
-  $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME$ = {ojRadioset:{open:"focusin mouseover", close:"mouseout"}, ojCheckboxset:{open:"focusin mouseover", close:"mouseout"}, "default":{open:"focusin"}};
+  $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULTS_BY_COMPONENT$ = {ojRadioset:{position:"launcher", $events$:{open:"focusin mouseover", close:"mouseout"}}, ojCheckboxset:{position:"launcher", $events$:{open:"focusin mouseover", close:"mouseout"}}, "default":{$events$:{open:"focusin"}}};
   $oj$$3$$.$PopupMessagingStrategy$.prototype.Init = function $$oj$$3$$$$PopupMessagingStrategy$$$Init$($displayOptions$$5$$) {
     $oj$$3$$.$PopupMessagingStrategy$.$superclass$.Init.call(this, $displayOptions$$5$$)
   };
@@ -17,9 +17,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     $oj$$3$$.$PopupMessagingStrategy$.$superclass$.update.call(this, $content$$19$$)
   };
   $oj$$3$$.$PopupMessagingStrategy$.prototype.$deactivate$ = function $$oj$$3$$$$PopupMessagingStrategy$$$$deactivate$$($content$$20$$) {
-    var $events$$ = $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME$[this.$_component$.widgetName] || $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME$["default"];
-    $events$$.open && this.$_launcher$.off($events$$.open, this.$_openPopup$);
-    $events$$.close && this.$_launcher$.off($events$$.close, this.$_closePopup$);
+    var $compDefaults_events$$ = $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULTS_BY_COMPONENT$[this.$_component$.widgetName], $compDefaults_events$$ = $compDefaults_events$$ ? $compDefaults_events$$.$events$ : $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULTS_BY_COMPONENT$["default"].$events$;
+    $compDefaults_events$$.open && this.$_launcher$.off($compDefaults_events$$.open, this.$_openPopup$);
+    $compDefaults_events$$.close && this.$_launcher$.off($compDefaults_events$$.close, this.$_closePopup$);
     this.$_destroyTooltip$();
     $oj$$3$$.$PopupMessagingStrategy$.$superclass$.$deactivate$.call(this, $content$$20$$)
   };
@@ -34,17 +34,21 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
   };
   $oj$$3$$.$PopupMessagingStrategy$.prototype.$_initMessagingPopup$ = function $$oj$$3$$$$PopupMessagingStrategy$$$$_initMessagingPopup$$() {
     if(!this.$_isPopupInitialized$()) {
-      var $jqLauncher$$ = this.$_launcher$, $events$$1$$ = $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME$[this.$_component$.widgetName] || $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME$["default"];
+      var $jqLauncher$$ = this.$_launcher$, $jPositionOf$$ = this.$_getPopupPosition$(), $compDefaults$$1_events$$1$$ = $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULTS_BY_COMPONENT$[this.$_component$.widgetName], $compDefaults$$1_events$$1$$ = $compDefaults$$1_events$$1$$ ? $compDefaults$$1_events$$1$$.$events$ : $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULTS_BY_COMPONENT$["default"].$events$;
       this.$$messagingContentRoot$ = $$$$3$$("\x3cdiv class\x3d'oj-messaging-popup-container'\x3e\x3c/div\x3e");
       $$$$3$$("body").append(this.$$messagingContentRoot$);
-      this.$$messagingContentRoot$.ojPopup({initialFocus:"none", tail:"simple", autoDismiss:"focusLoss", position:{my:"start bottom", at:"end top", collision:"flipfit"}});
-      if($events$$1$$.open) {
-        $jqLauncher$$.on($events$$1$$.open, {strategy:this}, this.$_openPopup$)
+      this.$$messagingContentRoot$.ojPopup({initialFocus:"none", tail:"simple", autoDismiss:"focusLoss", position:{my:"start bottom", at:"end top", collision:"flipfit", of:$jPositionOf$$}});
+      if($compDefaults$$1_events$$1$$.open) {
+        $jqLauncher$$.on($compDefaults$$1_events$$1$$.open, {strategy:this}, this.$_openPopup$)
       }
-      if($events$$1$$.close) {
-        $jqLauncher$$.on($events$$1$$.close, {strategy:this}, this.$_closePopup$)
+      if($compDefaults$$1_events$$1$$.close) {
+        $jqLauncher$$.on($compDefaults$$1_events$$1$$.close, {strategy:this}, this.$_closePopup$)
       }
     }
+  };
+  $oj$$3$$.$PopupMessagingStrategy$.prototype.$_getPopupPosition$ = function $$oj$$3$$$$PopupMessagingStrategy$$$$_getPopupPosition$$() {
+    var $compDefaults$$2$$ = $oj$$3$$.$PopupMessagingStrategy$.$_DEFAULTS_BY_COMPONENT$[this.$_component$.widgetName];
+    return $compDefaults$$2$$ && $compDefaults$$2$$.position && "launcher" === $compDefaults$$2$$.position ? this.$_launcher$ : this.$_component$.widget()
   };
   $oj$$3$$.$PopupMessagingStrategy$.prototype.$_destroyTooltip$ = function $$oj$$3$$$$PopupMessagingStrategy$$$$_destroyTooltip$$() {
     this.$_isPopupInitialized$() && this.$$messagingContentRoot$ && (this.$$messagingContentRoot$.ojPopup("destroy"), this.$$messagingContentRoot$.remove())
@@ -54,24 +58,24 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     this.$ShowMessages$() && $nwContent$$.push(this.$_buildMessagesHtml$());
     (this.$ShowConverterHint$() || this.$ShowValidatorHint$()) && $nwContent$$.push(this.$_buildHintsHtml$($document$$1$$));
     this.$ShowTitle$() && $nwContent$$.push(this.$_buildTitleHtml$($document$$1$$));
-    $$$$3$$.each($nwContent$$, function($i$$74$$, $content$$21$$) {
+    $$$$3$$.each($nwContent$$, function($i$$75$$, $content$$21$$) {
       $content$$21$$ && ($addSeparator$$ ? $nwHtml$$ = $nwHtml$$.concat($that$$1$$.$_getSeparatorHtml$($document$$1$$)) : $addSeparator$$ = !0, $nwHtml$$ = $nwHtml$$.concat($content$$21$$))
     });
     return $nwHtml$$
   };
   $oj$$3$$.$PopupMessagingStrategy$.prototype.$_buildMessagesHtml$ = function $$oj$$3$$$$PopupMessagingStrategy$$$$_buildMessagesHtml$$() {
-    var $messages$$4_messagesByType$$, $content$$22$$ = "", $i$$75$$, $j$$9_maxSeverity$$4$$, $severityStr$$, $severityLevel$$, $detail$$3_message$$27_messageObj$$;
+    var $messages$$4_messagesByType$$, $content$$22$$ = "", $i$$76$$, $j$$9_maxSeverity$$4$$, $severityStr$$, $severityLevel$$, $detail$$3_message$$27_messageObj$$;
     $j$$9_maxSeverity$$4$$ = this.$GetMaxSeverity$();
     var $summary$$, $messagesByTypes$$ = {};
     $messages$$4_messagesByType$$ = [];
     if(this.$HasMessages$()) {
       $messages$$4_messagesByType$$ = this.$GetMessages$();
-      for($i$$75$$ = 0;$i$$75$$ < $messages$$4_messagesByType$$.length;$i$$75$$++) {
-        $detail$$3_message$$27_messageObj$$ = $messages$$4_messagesByType$$[$i$$75$$], $detail$$3_message$$27_messageObj$$ = $detail$$3_message$$27_messageObj$$ instanceof $oj$$3$$.$Message$ ? $detail$$3_message$$27_messageObj$$ : new $oj$$3$$.$Message$($detail$$3_message$$27_messageObj$$.summary, $detail$$3_message$$27_messageObj$$.detail, $detail$$3_message$$27_messageObj$$.severity), $severityLevel$$ = $oj$$3$$.$Message$.$getSeverityLevel$($detail$$3_message$$27_messageObj$$.severity), $messagesByTypes$$[$severityLevel$$] || 
+      for($i$$76$$ = 0;$i$$76$$ < $messages$$4_messagesByType$$.length;$i$$76$$++) {
+        $detail$$3_message$$27_messageObj$$ = $messages$$4_messagesByType$$[$i$$76$$], $detail$$3_message$$27_messageObj$$ = $detail$$3_message$$27_messageObj$$ instanceof $oj$$3$$.$Message$ ? $detail$$3_message$$27_messageObj$$ : new $oj$$3$$.$Message$($detail$$3_message$$27_messageObj$$.summary, $detail$$3_message$$27_messageObj$$.detail, $detail$$3_message$$27_messageObj$$.severity), $severityLevel$$ = $oj$$3$$.$Message$.$getSeverityLevel$($detail$$3_message$$27_messageObj$$.severity), $messagesByTypes$$[$severityLevel$$] || 
         ($messagesByTypes$$[$severityLevel$$] = []), $messagesByTypes$$[$severityLevel$$].push($detail$$3_message$$27_messageObj$$)
       }
-      for($i$$75$$ = $j$$9_maxSeverity$$4$$;$i$$75$$ >= $oj$$3$$.$Message$.$SEVERITY_LEVEL$.CONFIRMATION;$i$$75$$--) {
-        for($messages$$4_messagesByType$$ = $messagesByTypes$$[$i$$75$$] || [], $j$$9_maxSeverity$$4$$ = 0;$j$$9_maxSeverity$$4$$ < $messages$$4_messagesByType$$.length;$j$$9_maxSeverity$$4$$++) {
+      for($i$$76$$ = $j$$9_maxSeverity$$4$$;$i$$76$$ >= $oj$$3$$.$Message$.$SEVERITY_LEVEL$.CONFIRMATION;$i$$76$$--) {
+        for($messages$$4_messagesByType$$ = $messagesByTypes$$[$i$$76$$] || [], $j$$9_maxSeverity$$4$$ = 0;$j$$9_maxSeverity$$4$$ < $messages$$4_messagesByType$$.length;$j$$9_maxSeverity$$4$$++) {
           $detail$$3_message$$27_messageObj$$ = $messages$$4_messagesByType$$[$j$$9_maxSeverity$$4$$], $oj$$3$$.$Assert$.$assertPrototype$($detail$$3_message$$27_messageObj$$, $oj$$3$$.$Message$), $severityLevel$$ = $oj$$3$$.$Message$.$getSeverityLevel$($detail$$3_message$$27_messageObj$$.severity), $severityStr$$ = this.$_getSeverityTranslatedString$($severityLevel$$), $summary$$ = $detail$$3_message$$27_messageObj$$.summary || $severityStr$$, $detail$$3_message$$27_messageObj$$ = $detail$$3_message$$27_messageObj$$.detail || 
           "", $content$$22$$ = $content$$22$$.concat("\x3cdiv class\x3d'oj-message'\x3e").concat("\x3cspan class\x3d'" + this.$_getSeverityIconSelector$($severityLevel$$) + "' title\x3d'" + $severityStr$$ + "' role\x3d'img'\x3e\x3c/span\x3e").concat("\x3cspan class\x3d'oj-message-content'\x3e").concat("\x3cdiv class\x3d'oj-message-summary'\x3e" + $summary$$ + "\x3c/div\x3e"), $detail$$3_message$$27_messageObj$$ && ($content$$22$$ = $content$$22$$.concat("\x3cdiv class\x3d'oj-message-detail'\x3e" + 
           $detail$$3_message$$27_messageObj$$ + "\x3c/div\x3e")), $content$$22$$ = $content$$22$$.concat("\x3c/div\x3e")
@@ -81,12 +85,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     return $content$$22$$
   };
   $oj$$3$$.$PopupMessagingStrategy$.prototype.$_buildHintsHtml$ = function $$oj$$3$$$$PopupMessagingStrategy$$$$_buildHintsHtml$$($document$$2$$) {
-    var $hints$$3$$ = [], $jHintsDom$$, $i$$76$$;
+    var $hints$$3$$ = [], $jHintsDom$$, $i$$77$$;
     this.$ShowConverterHint$() && ($hints$$3$$ = $hints$$3$$.concat(this.$GetConverterHint$()));
     this.$ShowValidatorHint$() && ($hints$$3$$ = $hints$$3$$.concat(this.$GetValidatorHints$()));
     if($hints$$3$$ && 0 < $hints$$3$$.length) {
-      for($jHintsDom$$ = $$$$3$$($document$$2$$.createElement("div")), $jHintsDom$$.addClass("oj-form-control-hint"), $i$$76$$ = 0;$i$$76$$ < $hints$$3$$.length;$i$$76$$++) {
-        $jHintsDom$$.append(this.$_getHintDom$($document$$2$$, $hints$$3$$[$i$$76$$]))
+      for($jHintsDom$$ = $$$$3$$($document$$2$$.createElement("div")), $jHintsDom$$.addClass("oj-form-control-hint"), $i$$77$$ = 0;$i$$77$$ < $hints$$3$$.length;$i$$77$$++) {
+        $jHintsDom$$.append(this.$_getHintDom$($document$$2$$, $hints$$3$$[$i$$77$$]))
       }
     }
     return $jHintsDom$$ ? $jHintsDom$$.get(0).outerHTML : ""
@@ -183,12 +187,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     this.$_doRunValidation$(this.options.value, void 0, $requiredOnly$$ ? this.$_VALIDATION_MODE$.$REQUIRED_VALIDATOR_ONLY$ : this.$_VALIDATION_MODE$.$VALIDATORS_ONLY$);
     return this.isValid() ? !0 : !1
   }, $_VALIDATION_MODE$:{$FULL$:1, $VALIDATORS_ONLY$:2, $REQUIRED_VALIDATOR_ONLY$:3, NONE:4}, $_ComponentCreate$:function() {
-    var $node$$8$$ = this.element, $savedAttributes$$1$$ = this.$_GetSavedAttributes$($node$$8$$);
+    var $node$$9$$ = this.element, $savedAttributes$$1$$ = this.$_GetSavedAttributes$($node$$9$$);
     this._super();
-    "boolean" === typeof this.options.disabled && $node$$8$$.prop("disabled", this.options.disabled);
+    "boolean" === typeof this.options.disabled && $node$$9$$.prop("disabled", this.options.disabled);
     this.options.placeholder && (this.$__customPlaceholderSet$ = !0);
     $$$$3$$.each(["required", "title"], function($index$$72$$, $value$$70$$) {
-      $value$$70$$ in $savedAttributes$$1$$ && $node$$8$$.removeAttr($value$$70$$)
+      $value$$70$$ in $savedAttributes$$1$$ && $node$$9$$.removeAttr($value$$70$$)
     })
   }, $_AfterCreate$:function() {
     this._super();
@@ -262,15 +266,15 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     return this.$_GetContentElement$().val()
   }, $_GetAllValidators$:function() {
     if(!this.$__allValidators$) {
-      var $allValidators$$ = [], $validatorsOption$$ = this.options.validators, $vOptions_validator$$, $isValidatorInstance$$ = !0, $defaultValidatorMap_vType$$ = this.$_GetDefaultValidators$(), $defaultValidators_normalizedValidators$$ = [], $vTypeStr$$, $i$$77_val$$20$$;
-      for($i$$77_val$$20$$ in $defaultValidatorMap_vType$$) {
-        $defaultValidatorMap_vType$$.hasOwnProperty($i$$77_val$$20$$) && $defaultValidators_normalizedValidators$$.push($defaultValidatorMap_vType$$[$i$$77_val$$20$$])
+      var $allValidators$$ = [], $validatorsOption$$ = this.options.validators, $vOptions_validator$$, $isValidatorInstance$$ = !0, $defaultValidatorMap_vType$$ = this.$_GetDefaultValidators$(), $defaultValidators_normalizedValidators$$ = [], $vTypeStr$$, $i$$78_val$$20$$;
+      for($i$$78_val$$20$$ in $defaultValidatorMap_vType$$) {
+        $defaultValidatorMap_vType$$.hasOwnProperty($i$$78_val$$20$$) && $defaultValidators_normalizedValidators$$.push($defaultValidatorMap_vType$$[$i$$78_val$$20$$])
       }
       $allValidators$$ = $allValidators$$.concat($defaultValidators_normalizedValidators$$);
       if($validatorsOption$$) {
         $defaultValidators_normalizedValidators$$ = [];
-        for($i$$77_val$$20$$ = 0;$i$$77_val$$20$$ < $validatorsOption$$.length;$i$$77_val$$20$$++) {
-          $vOptions_validator$$ = $validatorsOption$$[$i$$77_val$$20$$], "object" === typeof $vOptions_validator$$ ? ($vOptions_validator$$.validate && "function" === typeof $vOptions_validator$$.validate || ($isValidatorInstance$$ = !1), $isValidatorInstance$$ || ($vTypeStr$$ = $vOptions_validator$$.type) && "string" === typeof $vTypeStr$$ && (($defaultValidatorMap_vType$$ = $oj$$3$$.$Validation$.$validatorFactory$($vTypeStr$$)) ? ($vOptions_validator$$ = $$$$3$$.extend({}, $vOptions_validator$$.options) || 
+        for($i$$78_val$$20$$ = 0;$i$$78_val$$20$$ < $validatorsOption$$.length;$i$$78_val$$20$$++) {
+          $vOptions_validator$$ = $validatorsOption$$[$i$$78_val$$20$$], "object" === typeof $vOptions_validator$$ ? ($vOptions_validator$$.validate && "function" === typeof $vOptions_validator$$.validate || ($isValidatorInstance$$ = !1), $isValidatorInstance$$ || ($vTypeStr$$ = $vOptions_validator$$.type) && "string" === typeof $vTypeStr$$ && (($defaultValidatorMap_vType$$ = $oj$$3$$.$Validation$.$validatorFactory$($vTypeStr$$)) ? ($vOptions_validator$$ = $$$$3$$.extend({}, $vOptions_validator$$.options) || 
           {}, $vOptions_validator$$.converter = $vOptions_validator$$.converter || this.$_GetConverter$(), $vOptions_validator$$.label = $vOptions_validator$$.label || this.$_getLabelText$(), $vOptions_validator$$ = $defaultValidatorMap_vType$$.createValidator($vOptions_validator$$)) : $oj$$3$$.$Logger$.error("Unable to locate a validatorFactory for the requested type: " + $vTypeStr$$)), $defaultValidators_normalizedValidators$$.push($vOptions_validator$$)) : $oj$$3$$.$Logger$.error("Unable to parse the validator provided:" + 
           $vOptions_validator$$)
         }
@@ -344,7 +348,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     }
   }, $_ValueEquals$:function($value1$$6$$, $value2$$6$$) {
     return $oj$$3$$.$Object$.compareValues($value1$$6$$, $value2$$6$$)
-  }, _GetDefaultStyleClass:$JSCompiler_returnArg$$("oj-editablevalue"), $_OPTION_TO_CSS_MAPPING$:{disabled:"oj-disabled", required:"oj-required", readOnly:"oj-read-only"}, $__MESSAGING_CONTENT_UPDATE_TYPE$:{$ALL$:1, $VALIDITY_STATE$:2, $CONVERTER_HINT$:3, $VALIDATOR_HINTS$:4, $TITLE$:5}, $_clearMessages$:function($event$$28$$, $silentUpdate$$) {
+  }, _GetDefaultStyleClass:$JSCompiler_returnArg$$("oj-editablevalue"), $_OPTION_TO_CSS_MAPPING$:{disabled:"oj-disabled", required:"oj-required"}, $__MESSAGING_CONTENT_UPDATE_TYPE$:{$ALL$:1, $VALIDITY_STATE$:2, $CONVERTER_HINT$:3, $VALIDATOR_HINTS$:4, $TITLE$:5}, $_clearMessages$:function($event$$28$$, $silentUpdate$$) {
     if($silentUpdate$$) {
       this.options.messages = []
     }else {
@@ -353,19 +357,19 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
       this.option($msgsHash$$)
     }
   }, $_InitOptions$:function() {
-    var $node$$9$$ = this.element, $savedAttributes$$2$$ = this.$_GetSavedAttributes$($node$$9$$), $domValue$$;
+    var $node$$10$$ = this.element, $savedAttributes$$2$$ = this.$_GetSavedAttributes$($node$$10$$), $attrVal$$, $propVal$$;
     this._super();
     void 0 === this.options.disabled && (this.options.disabled = void 0 !== this.element.attr("disabled") ? !!this.element.prop("disabled") : null);
     this.$_validateOption$("disabled");
     void 0 === this.options.placeholder && (this.options.placeholder = this.element.prop("placeholder"));
     this.options.placeholder && (this.$__customPlaceholderSet$ = !0);
-    void 0 === this.options.required && ($domValue$$ = void 0 !== this.element.attr("required") ? !!this.element.prop("required") : null, this.options.required = $domValue$$ ? "required" : "optional");
+    void 0 === this.options.required && ($attrVal$$ = this.element.attr("required"), $propVal$$ = this.element.prop("required"), this.options.required = void 0 !== $attrVal$$ && (void 0 !== $propVal$$ ? $propVal$$ : $attrVal$$) ? "required" : "optional");
     this.$_validateOption$("required");
     void 0 === this.options.title && (this.options.title = this.element.prop("title"));
     void 0 === this.options.value && (this.options.value = void 0 !== this.element.attr("value") ? this.element.val() : null);
     this.options.messages || (this.options.messages = []);
     $$$$3$$.each(["required", "title"], function($index$$73$$, $value$$76$$) {
-      $value$$76$$ in $savedAttributes$$2$$ && $node$$9$$.removeAttr($value$$76$$)
+      $value$$76$$ in $savedAttributes$$2$$ && $node$$10$$.removeAttr($value$$76$$)
     })
   }, $_doRefresh$:function($fullRefresh$$1$$) {
     if($fullRefresh$$1$$ = $fullRefresh$$1$$ || !1) {
@@ -373,7 +377,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     }
     this.$_Refresh$("value", this.options.value, $fullRefresh$$1$$);
     this.$_refreshAria$("required", this.options.required);
-    this.$_refreshTheming$("required", this.options.required)
+    this.$_refreshTheming$("required", this.options.required);
+    this.$_refreshTheming$("disabled", this.options.disabled)
   }, $_getLastModelValue$:$JSCompiler_get$$("$__oj_lastModelValue$"), $_getLastElementValue$:$JSCompiler_get$$("$__oj_lastElementValue$"), $_getAriaLabelledByElement$:function($ariaId_elem$$16$$) {
     $ariaId_elem$$16$$ = $ariaId_elem$$16$$.attr("aria-labelledby");
     return void 0 !== $ariaId_elem$$16$$ ? $$$$3$$("label[id\x3d'" + $ariaId_elem$$16$$ + "']") : null
@@ -454,10 +459,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
   }, $_getHintsForAllValidators$:function($allValidators$$1$$) {
     var $vHint_validator$$1$$, $validatorHints$$ = [];
     $vHint_validator$$1$$ = "";
-    var $i$$78$$;
+    var $i$$79$$;
     this.$_IsRequired$() && ($vHint_validator$$1$$ = this.$_hasRequiredInValidators$($allValidators$$1$$), $vHint_validator$$1$$ || ($vHint_validator$$1$$ = this.$_getDefaultRequiredValidator$(), $vHint_validator$$1$$.getHint && "function" === typeof $vHint_validator$$1$$.getHint && ($vHint_validator$$1$$ = $vHint_validator$$1$$.getHint()) && $validatorHints$$.push($vHint_validator$$1$$)));
-    for($i$$78$$ = 0;$i$$78$$ < $allValidators$$1$$.length;$i$$78$$++) {
-      $vHint_validator$$1$$ = $allValidators$$1$$[$i$$78$$], "object" === typeof $vHint_validator$$1$$ && $vHint_validator$$1$$.getHint && "function" === typeof $vHint_validator$$1$$.getHint && ($vHint_validator$$1$$ = $vHint_validator$$1$$.getHint()) && $validatorHints$$.push($vHint_validator$$1$$)
+    for($i$$79$$ = 0;$i$$79$$ < $allValidators$$1$$.length;$i$$79$$++) {
+      $vHint_validator$$1$$ = $allValidators$$1$$[$i$$79$$], "object" === typeof $vHint_validator$$1$$ && $vHint_validator$$1$$.getHint && "function" === typeof $vHint_validator$$1$$.getHint && ($vHint_validator$$1$$ = $vHint_validator$$1$$.getHint()) && $validatorHints$$.push($vHint_validator$$1$$)
     }
     return $validatorHints$$
   }, $_getMessagingContent$:function($updateType$$) {
@@ -476,9 +481,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     }
     return $messagingContent$$1$$
   }, $_hasRequiredInValidators$:function($allValidators$$3$$) {
-    var $validator$$2$$ = null, $i$$79$$, $required$$ = null;
-    for($i$$79$$ = 0;$i$$79$$ < $allValidators$$3$$.length;$i$$79$$++) {
-      if($validator$$2$$ = $allValidators$$3$$[$i$$79$$], $validator$$2$$ instanceof $oj$$3$$.$RequiredValidator$) {
+    var $validator$$2$$ = null, $i$$80$$, $required$$ = null;
+    for($i$$80$$ = 0;$i$$80$$ < $allValidators$$3$$.length;$i$$80$$++) {
+      if($validator$$2$$ = $allValidators$$3$$[$i$$80$$], $validator$$2$$ instanceof $oj$$3$$.$RequiredValidator$) {
         $required$$ = $validator$$2$$;
         break
       }
@@ -492,7 +497,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     if(null == $previousMsgs$$1$$ || null == $msgs$$1$$ || $previousMsgs$$1$$.length !== $msgs$$1$$.length) {
       return!1
     }
-    $$$$3$$.each($previousMsgs$$1$$, function($i$$80$$, $pMsg$$) {
+    $$$$3$$.each($previousMsgs$$1$$, function($i$$81$$, $pMsg$$) {
       $pmo$$ = $pMsg$$ instanceof $oj$$3$$.$Message$ ? $pMsg$$ : new $oj$$3$$.$Message$($pMsg$$.summary, $pMsg$$.detail, $pMsg$$.severity);
       $match$$ = -1;
       $$$$3$$.each($msgs$$1$$, function($j$$10$$, $msg$$1$$) {
@@ -541,11 +546,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     this.$_setLastElementValue$(this.$_GetDisplayValue$())
   }, $_updateInvalidElementTracker$:$JSCompiler_emptyFn$$(), $_validateValue$:function($value$$84$$, $requiredOnly$$1$$) {
     if(this.$__valid$) {
-      var $allValidators$$4$$ = this.$_GetAllValidators$(), $validator$$3$$, $i$$81$$, $reqValRun$$ = !1;
+      var $allValidators$$4$$ = this.$_GetAllValidators$(), $validator$$3$$, $i$$82$$, $reqValRun$$ = !1;
       this.$_IsRequired$() && (($validator$$3$$ = this.$_hasRequiredInValidators$($allValidators$$4$$)) || ($validator$$3$$ = this.$_getDefaultRequiredValidator$()), $validator$$3$$.validate($value$$84$$), $reqValRun$$ = !0);
       if(!$requiredOnly$$1$$) {
-        for($i$$81$$ = 0;$i$$81$$ < $allValidators$$4$$.length;$i$$81$$++) {
-          $validator$$3$$ = $allValidators$$4$$[$i$$81$$], "object" === typeof $validator$$3$$ && ($validator$$3$$.validate && "function" === typeof $validator$$3$$.validate ? $validator$$3$$ instanceof $oj$$3$$.$RequiredValidator$ && $reqValRun$$ || $validator$$3$$.validate($value$$84$$) : $oj$$3$$.$Logger$.$level$ > $oj$$3$$.$Logger$.$LEVEL_WARN$ && $oj$$3$$.$Logger$.info("validator does not support the validate method."))
+        for($i$$82$$ = 0;$i$$82$$ < $allValidators$$4$$.length;$i$$82$$++) {
+          $validator$$3$$ = $allValidators$$4$$[$i$$82$$], "object" === typeof $validator$$3$$ && ($validator$$3$$.validate && "function" === typeof $validator$$3$$.validate ? $validator$$3$$ instanceof $oj$$3$$.$RequiredValidator$ && $reqValRun$$ || $validator$$3$$.validate($value$$84$$) : $oj$$3$$.$Logger$.$level$ > $oj$$3$$.$Logger$.$LEVEL_WARN$ && $oj$$3$$.$Logger$.info("validator does not support the validate method."))
         }
       }
     }
@@ -571,8 +576,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     var $arrayOfClasses_classes$$ = this.element.attr("class");
     this.$movedClassArray$ = [];
     if($arrayOfClasses_classes$$) {
-      for(var $arrayOfClasses_classes$$ = $arrayOfClasses_classes$$.split(/\s+/), $numClasses$$ = $arrayOfClasses_classes$$.length, $i$$82$$ = 0;$i$$82$$ < $numClasses$$;$i$$82$$++) {
-        var $className$$6$$ = $arrayOfClasses_classes$$[$i$$82$$];
+      for(var $arrayOfClasses_classes$$ = $arrayOfClasses_classes$$.split(/\s+/), $numClasses$$ = $arrayOfClasses_classes$$.length, $i$$83$$ = 0;$i$$83$$ < $numClasses$$;$i$$83$$++) {
+        var $className$$6$$ = $arrayOfClasses_classes$$[$i$$83$$];
         0 < $className$$6$$.indexOf("-label") && (this.$uiLabel$.addClass($className$$6$$), this.element.removeClass($className$$6$$), this.$movedClassArray$.push($className$$6$$))
       }
     }
@@ -628,8 +633,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojvalidation", "ojs/
     return"oj-label-help-icon" === $locator$$2_subId$$ ? this.widget().find(".oj-label-help-icon")[0] : "oj-label-help-icon-anchor" === $locator$$2_subId$$ ? this.widget().find(".oj-label-help-icon").parent()[0] : "oj-label-required-icon" === $locator$$2_subId$$ ? this.widget().find(".oj-label-required-icon")[0] : null
   }, _destroy:function() {
     this._super();
-    for(var $i$$83$$ = 0;$i$$83$$ < this.$movedClassArray$.length;$i$$83$$++) {
-      this.element.addClass(this.$movedClassArray$[$i$$83$$])
+    for(var $i$$84$$ = 0;$i$$84$$ < this.$movedClassArray$.length;$i$$84$$++) {
+      this.element.addClass(this.$movedClassArray$[$i$$84$$])
     }
     this.$_removeHelpDefToLabel$();
     this.$uiLabel$.replaceWith(this.element)

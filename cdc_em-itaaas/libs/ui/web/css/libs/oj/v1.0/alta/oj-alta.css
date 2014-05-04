@@ -474,7 +474,7 @@ ul li, ol li {
 /  generate a class ".binky-icon". You
 /  could then put class="oj-icon binky-icon" on your dom element. 
 --------------------------------------------------------------------*/
-.oj-icon, .oj-popup-tail.oj-popup-tail-simple {
+.oj-icon {
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -483,7 +483,7 @@ ul li, ol li {
   text-align: center;
   -moz-box-sizing: content-box;
   box-sizing: content-box; }
-.oj-icon:before, .oj-popup-tail.oj-popup-tail-simple:before {
+.oj-icon:before {
   display: inline-block;
   -moz-box-sizing: content-box;
   box-sizing: content-box; }
@@ -548,7 +548,7 @@ a.oj-disabled.oj-clickable-icon-nocontext,
 /  generate a class ".binky-icon". You
 /  could then put class="oj-icon binky-icon" on your dom element. 
 --------------------------------------------------------------------*/
-.oj-fwk-icon, .oj-component-icon {
+.oj-fwk-icon, .oj-component-icon, .oj-popup-tail.oj-popup-tail-simple {
   font-family: "Alta Icon Font";
   font-size: 1.34rem;
   line-height: 1;
@@ -564,7 +564,7 @@ a.oj-disabled.oj-clickable-icon-nocontext,
   box-sizing: content-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
-.oj-fwk-icon:before, .oj-component-icon:before {
+.oj-fwk-icon:before, .oj-component-icon:before, .oj-popup-tail.oj-popup-tail-simple:before {
   display: inline-block; }
 
 /* Icon Font Icons =========== */
@@ -1492,6 +1492,7 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.45);
   background: #f9f9f9;
   border: 1px solid #c4ced7;
+  overflow: hidden;
   border-radius: 1px; }
   html.oj-slow-boxshadow .oj-dialog {
     box-shadow: none; }
@@ -1569,13 +1570,14 @@ html[dir="rtl"] .oj-tabs-vertical.oj-tabs-icons-only > .oj-tabs-nav > .oj-tabs-d
   padding: 0;
   border: none; }
 
-.oj-resizable-handle.oj-icon:before, .oj-resizable-handle.oj-popup-tail.oj-popup-tail-simple:before {
+.oj-resizable-handle.oj-icon:before {
   content: none; }
 
 .oj-dialog .oj-dialog-footer {
   padding: 10px 10px;
   position: relative;
-  float: right; }
+  float: right;
+  overflow: auto; }
 
 /* popup */
 /* --------------------------------------------------------------- */
@@ -3217,15 +3219,15 @@ html[dir="rtl"] .oj-rowexpander-leaf-icon {
   z-index: 2147483647; }
 
 .oj-legend {
-  font-size: 11px;
+  font-size: 1rem;
   color: #333333; }
 
 .oj-legend-title {
-  font-size: 11px;
+  font-size: 1rem;
   color: #333333; }
 
 .oj-legend-section-title {
-  font-size: 11px;
+  font-size: 1rem;
   color: #333333; }
 
 .oj-chart {
@@ -3331,11 +3333,7 @@ html[dir="rtl"] .oj-rowexpander-leaf-icon {
 
 .oj-thematicmap {
   width: 600px;
-  height: 375px;
-  border-style: solid;
-  border-width: 1px;
-  background-color: white;
-  border-color: #d9dfe3; }
+  height: 375px; }
 
 .oj-thematicmap-arealayer {
   background-color: #dddddd;
@@ -4991,7 +4989,7 @@ html[dir="rtl"] .oj-listbox-no-results {
  * Applied to the search icon
  */
 .oj-select-search-icon {
-  text-align: center;
+  /*      text-align: center; */
   vertical-align: text-bottom;
   font-size: 1rem;
   color: #878c90; }
@@ -5003,7 +5001,7 @@ html[dir="rtl"] .oj-listbox-no-results {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   box-shadow: none;
-  line-height: 26px;
+  line-height: 28px;
   width: 28px;
   text-align: center;
   vertical-align: middle;
@@ -5012,7 +5010,6 @@ html[dir="rtl"] .oj-listbox-no-results {
         display: table-cell;
   */
   overflow: hidden;
-  cursor: pointer;
   display: inline-block;
   position: absolute; }
   html:not([dir="rtl"]) .oj-select-spyglass-box {
@@ -5048,13 +5045,13 @@ html[dir="rtl"] .oj-listbox-no-results {
   background-color: inherit;
   box-shadow: none;
   /*      display: table-cell; */
-  padding-top: 6px;
-  padding-bottom: 5px; }
+  padding-top: 7px;
+  padding-bottom: 6px; }
   html:not([dir="rtl"]) .oj-select-search .oj-select-input {
-    padding-right: 28px;
+    padding-right: 24px;
     padding-left: 5px; }
   html[dir="rtl"] .oj-select-search .oj-select-input {
-    padding-left: 28px;
+    padding-left: 24px;
     padding-right: 5px; }
 
 /* 
@@ -5085,17 +5082,20 @@ html[dir="rtl"] .oj-select-no-results {
  * Used to hide the original markup
  */
 .oj-select-offscreen, .oj-select-offscreen:focus {
-  clip: rect(0 0 0 0);
-  width: 1px;
-  height: 1px;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  position: absolute;
-  outline: 0;
-  left: 0;
-  top: 0; }
+  /* 
+       clip: rect(0 0 0 0);
+        width: 1px;
+        height: 1px;
+        border: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        position: absolute;
+        outline: 0;
+        left: 0;
+        top: 0; 
+  */
+  display: none; }
 
 .oj-select-display-none {
   display: none; }

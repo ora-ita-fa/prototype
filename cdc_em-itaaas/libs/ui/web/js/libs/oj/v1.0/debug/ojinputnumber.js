@@ -1,4 +1,4 @@
-define(['ojs/ojcore', 'jquery', 'ojs/ojeditablevalue'], 
+define(['ojs/ojcore', 'jquery', 'ojs/ojeditablevalue', 'ojs/ojbutton'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
@@ -155,13 +155,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
      * $(".selector").ojInputNumber({"readOnly": true});
      * 
      * @expose 
-     * @type {?boolean}
+     * @type {?boolean|undefined}
      * @default <code class="prettyprint">false</code>
      * @public
      * @instance
      * @memberof! oj.ojInputNumber
      */
-    readOnly: null,
+    readOnly: undefined,
     /**
      * This option allows setting HTML5's placeholder attribute. Though it is possible to set 
      * placeholder attribute on the element itself, the component will only read the value during 
@@ -191,89 +191,137 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
      * @memberof! oj.ojInputNumber */
     step : undefined
   },
+  // P U B L I C    M E T H O D S
    /**
-  * @private
-  * @const
-  */
-  _BUNDLE_KEY:
+ * <p>Increments the value by the specified number of steps. 
+ * Without the parameter, a single step is incremented.</p>
+   <p>If the resulting value is above the max, below the min, 
+   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
+ * @public
+ * @param {Number} steps - Number of steps to increment, defaults to 1.
+ * @expose
+ * @memberof! oj.ojInputNumber 
+ */
+  stepUp : function (steps)
   {
-    _TOOLTIP_DECREMENT: 'tooltipDecrement',
-    _TOOLTIP_INCREMENT: 'tooltipIncrement'    
+    this._step(steps, true);
   },
-  /**
-   * After _ComponentCreate and _AfterCreate, 
-   * the widget should be 100% set up. this._super should be called first.
-   * @override
-   * @protected
-   * @instance
-   * @memberof! oj.ojInputNumber
-   */
-  _ComponentCreate : function ()
+ /**
+ * <p>Decrements the value by the specified number of steps. 
+ * Without the parameter, a single step is decremented.</p>
+   <p>If the resulting value is above the max, below the min, 
+   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
+ * @public
+ * @param {Number} steps - Number of steps to decrement, defaults to 1.
+ * @expose
+ * @memberof! oj.ojInputNumber 
+ */
+  stepDown : function (steps)
   {
-    this._super();
-    
-    this._draw();
-    
-    this._on(this._events);
-
-    // turning off autocomplete prevents the browser from remembering the
-    // value when navigating through history, so we re-enable autocomplete
-    // if the page is unloaded before the widget is destroyed. #7790
-    this._on(this.window, 
-    {
-      "beforeunload" : function ()
-      {
-        this.element.removeAttr("autocomplete");
-      }
-    });
-    
-    // input type=number does not support the 'pattern' attribute, so
-    // neither should ojInputNumber.
-    // remove this before EditableValue grabs it and uses it.
-    this.element.removeAttr("pattern");
-    
-    this._inputNumberDefaultValidators = {};
-
-
-  },
-  
+    this._step(steps, false);
+  }, 
   /**
-   * This is where we do things right after the component was created.
-   * this._super should be called first.
+   * Reacts to changes to the 'min' and/or 'max' option by
+   * resetting the NumberRangeValidator.
    * 
+   * @param {String|Object|string=} key a single string representing a 
+   * key or an object representing a group 
+   * of options
+   * @param {Object=} value of the key
+   */
+  option : function (key, value)
+  {
+    var retVal = this._superApply(arguments);
+    
+    // key === max, key === min, key is both min and max, so it's an object
+    
+    if (key === "max" || key === "min" || 
+        (typeof key === "object" && 
+         (key['min'] !== undefined || key['max'] !== undefined)))
+    {
+      var min = undefined, max = undefined;
+      if (key === "max")
+      {      
+        max = value != null ? value : undefined;
+      }
+      else if (key === "min")
+      {
+        min = value != null ? value : undefined;
+      }
+      else
+      {
+        // it's an object
+        if (key['max'] !== undefined)
+          max = key['max'] != null ? key['max'] : undefined;
+        if (key['min'] !== undefined)
+          min = key['min'] != null ? key['min'] : undefined;
+      }
+      // since validators are immutable, they will contain min + max as local values. 
+      // Because of this will need to recreate
+      var numberRangeOptions = {'min': min, 
+          'max': max,
+          'converter': this._GetConverter()};
+
+      this._createRangeValidator(numberRangeOptions);
+      this._ResetAllValidators();
+    }
+    return retVal;
+  },
+  /**
+   * Return the subcomponent node represented by the documented locator attribute values.
+   * Test authors should target inputNumber's sub elements using the following names:
+   * <ul>
+   * <li><b>oj-inputnumber-up</b>: the inputNumber's up arrow</li>
+   * <li><b>oj-inputnumber-down</b>: the inputNumber's down arrow</li>
+   * <li><b>oj-inputnumber-input</b>: the inputNumber's input</li>
+   * </ul>
+   * @expose
    * @override
    * @memberof! oj.ojInputNumber
    * @instance
-   * @protected
+   * @param {Object} locator An Object containing at minimum a subId property 
+   * whose value is a string, documented by the component, that allows the component to 
+   * look up the subcomponent associated with that string.  It contains:
+   * <ul>
+   * <li>
+   * component: optional - in the future there may be more than one component 
+   *   contained within a page element
+   * </li>
+   * <li>
+   * subId: the string, documented by the component, that the component expects 
+   * in getNodeBySubId to locate a particular subcomponent 
+   * </li>
+   * </ul>  
+   * @returns {Element|null} the subcomponent located by the subId string 
+   * passed in locator, if found.
    */
-  _AfterCreate : function ()
+  getNodeBySubId: function(locator)
   {
-    this._super();
+    if (locator == null)
+    {
+      return this.element ? this.element[0] : null;
+    }
     
-    // handle string values that need to be parsed
-    // jmw do I really need to do this?
-    //this._setOption("max", this.options.max);
-    //this._setOption("min", this.options.min);
-    this._setOption("step", this.options.step);
+    var subId = locator['subId'];
+    if (subId === "oj-inputnumber-up") {
+      return this.widget().find(".oj-inputnumber-up")[0];
+    }
+    if (subId === "oj-inputnumber-down") {
+      return this.widget().find(".oj-inputnumber-down")[0];
+    }
+    if (subId === "oj-inputnumber-input") {
+      return this.widget().find(".oj-inputnumber-input")[0];
+    }
+    
+    
+    // Non-null locators have to be handled by the component subclasses
+    return null;
+  }, 
         
-    // READONLY:
-    // if options.readOnly is not set, or not valid, get it from the element
-    // if options.readOnly is set to a valid value (boolean), set it on the 
-    // element to keep the two in sync. 
-    if ( typeof this.options.readOnly !== "boolean" ) 
-    {
-      // !! ensures it is a boolean
-      this.options.readOnly = !!this.element.prop( "readonly" );
-    } 
-    else 
-    {
-      this.element.prop( "readonly", this.options.readOnly );
-    }  
-    
-    this._refreshAriaMinMaxValue();
-    this._updateButtons();
-  },
-    /**
+  // P R O T E C T E D    C O N S T A N T S   A N D   M E T H O D S
+
+  // *********** START WIDGET FACTORY METHODS (they retain _camelcase naming convention) **********
+  /**
    * Initializes the option represented by the 'key' using either the option
    *  value or the element value. If option is undefined, we get it from the DOM.
    *  This method sets options 'value', 'min', 'max', 'step'. 
@@ -285,6 +333,27 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
   _InitOptions : function ()
   {
     this._super();
+    
+    // READONLY:
+    // if options.readOnly is not set (undefined), read from DOM not saved attributes
+    // if options.readOnly is set to a valid value (boolean), set it on the 
+    // element to keep the two in sync. 
+    // Since inputNumber has no subclasses we will default to false. Otherwise,
+    // we want to default to null so that the subclass knows that the app
+    // dev didn't set the field see EditableValue's disabled (radioset needs
+    // disabled to be null because it treats disabled as a tri-state: true,
+    // false, not set - the children's disabled field on the html wins)
+    if (this.options['readOnly'] === undefined)
+    {
+      // In the absence of attribute set default value to false
+      this.options['readOnly'] = this.element.attr("readonly") !== undefined ? 
+        !!this.element.prop("readonly") : false;
+    }
+    if (typeof this.options['readOnly'] !== "boolean")
+    {
+      throw new Error("InputNumber's option 'readOnly' has a invalid value set; \n\
+            it should be a boolean: " + this.options['readOnly']);
+    }
     
     // EditableValue basically does the same thing. Instead of getting it
     // from this.element.val(), it gets it from the savedAttributes. 
@@ -348,9 +417,187 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
           that.options[value] = that._parse(that.options[value]);
       }
     });
-
   },
-          
+  /**
+   * After _ComponentCreate and _AfterCreate, 
+   * the widget should be 100% set up. this._super should be called first.
+   * @override
+   * @protected
+   * @instance
+   * @memberof! oj.ojInputNumber
+   */
+  _ComponentCreate : function ()
+  {
+    var node = this.element;
+    this._super();
+    // update element DOM for readOnly
+    if (typeof this.options['readOnly'] === "boolean")
+    {
+      node.prop("readonly", this.options['readOnly']);
+    }
+    
+    this._draw();
+    
+    this._on(this._events);
+
+    // turning off autocomplete prevents the browser from remembering the
+    // value when navigating through history, so we re-enable autocomplete
+    // if the page is unloaded before the widget is destroyed. #7790
+    this._on(this.window, 
+    {
+      "beforeunload" : function ()
+      {
+        node.removeAttr("autocomplete");
+      }
+    });
+
+    // input type=number does not support the 'pattern' attribute, so
+    // neither should ojInputNumber.
+    // remove this before EditableValue grabs it and uses it.
+    node.removeAttr("pattern");
+    
+    this._inputNumberDefaultValidators = {};
+  },
+  /**
+   * This is where we do things right after the component was created.
+   * this._super should be called first.
+   * 
+   * @override
+   * @memberof! oj.ojInputNumber
+   * @instance
+   * @protected
+   */
+  _AfterCreate : function ()
+  {
+    this._super();
+    this._refreshAriaMinMaxValue();
+    this._refreshStateTheming("readOnly", this.options.readOnly);
+    this._updateButtons();
+  },
+  /**
+   * Handles options specific to inputnumber.
+   * Note that _setOption does not get called during create in the super class. 
+   * It only gets called when the component has already been created.
+   * However, we do call _setOption in _draw for certain attributes 
+   * (disabled)
+   * @override
+   * @protected
+   * @memberof! oj.ojInputNumber
+   */
+  _setOption : function (key, value)
+  {
+    // we don't coerce value for null or undefined, so to clear out value
+    // they can set it to null or undefined.
+    if (key === "value")
+      value = this._coerceInputNumberValue(value);
+
+    if (key === "max" || key === "min")
+    {
+      if (typeof value === "string")
+      {
+        value = this._parse(value);
+      }
+    } 
+    if (key === "step")
+    {
+      value = this._parseStep(value);
+    }
+    
+    // the superclass calls _Refresh. Our _Refresh calls _updateButton
+    // and _refreshAriaMinMaxValue.
+    this._super(key, value);
+
+    // when a dom element supports disabled, use that, and not aria-disabled.
+    // having both is an error. 
+    // having aria-disabled on root dom element is ok (if it is added in base class)
+    if (key === "disabled")
+    {
+      if (value)
+      {
+        this.element.prop("disabled", true);
+      }
+      else 
+      {
+        this.element.prop("disabled", false);
+      }
+    }
+    // when a dom element supports readonly, use that, and not aria-readonly.
+    // having both is an error
+    if (key === "readOnly")
+    {
+      this.element.prop("readonly", !!value);
+      this._refreshStateTheming("readOnly", this.options.readOnly);   
+    }
+  }, 
+ /**
+   * Override of protected base class method.  
+   * Method name needn't be quoted since is in externs.js.
+   * @protected
+   * @memberof! oj.ojInputNumber
+   * @instance
+   */
+  _destroy : function ()
+  {    
+    this.element.removeClass("oj-inputnumber-input")
+            .prop("disabled", false)
+            .removeAttr("autocomplete")
+            .removeAttr("aria-valuemin")
+            .removeAttr("aria-valuemax")
+            .removeAttr("aria-valuenow")
+            .removeAttr("aria-valuetext")
+            .removeAttr("aria-disabled");
+    // don't have to remove the root styles since we remove the root element in _destroy
+    // TODO: need a generic way to save off attributes and then restore them.
+    // attribute name/value array.
+    this.element.attr("type", this.saveType);
+    this._super();
+    this._off(this.element, "keydown keyup focus blur mousedown mouseup mouseenter mouseleave");
+    this.uiInputNumber.replaceWith(this.element);
+    clearTimeout(this.timer);
+  }, 
+  /**
+   * Used for explicit cases where the component needs to be refreshed 
+   * (e.g., when the value option changes or other UI gestures).
+   * @override
+   * @protected
+   * @memberof! oj.ojInputNumber
+   */
+  _Refresh : function (name, value)
+  {
+    this._super(name, value);
+    if (name === "value" || name === "max" || name === "min")
+    {
+      this._refreshAriaMinMaxValue();
+    }
+    this._updateButtons();
+  },
+  // *********** END WIDGET FACTORY METHODS **********
+     /**
+   * Whether the a value can be set on the component. 
+   * If the component is disabled (or readOnly) then 
+   * then setting value on component is a no-op. 
+   * 
+   * @see #_SetValue
+   * @memberof! oj.ojInputNumber
+   * @instance
+   * @protected
+   */
+  _CanSetValue: function ()
+  {
+    var canSetValue = this._super();
+    
+    if (!canSetValue)
+      return false;
+    
+    var readOnly = this.options['readOnly'] || false;
+    
+    if (readOnly)
+    {
+      return false;
+    }
+    
+    return true;
+  }, 
   /**
    * Sets up the default numberRange validators.
    * 
@@ -378,6 +625,18 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     }
  
     return $.extend(this._inputNumberDefaultValidators, ret);
+  },
+  /**
+   * Returns the default styleclass for the component.
+   * 
+   * @return {string}
+   * @memberof! oj.ojInputNumber
+   * @override
+   * @protected
+   */
+  _GetDefaultStyleClass : function ()
+  {
+    return "oj-inputnumber";
   },
   _events : 
   {
@@ -480,6 +739,30 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       this._stop(event);
     }
   },
+  
+  // I N T E R N A L   P R I V A T E   C O N S T A N T S    A N D   M E T H O D S 
+  // Subclasses should not override or call these methods
+ /**
+  * @private
+  * @const
+  */
+  _BUNDLE_KEY:
+  {
+    _TOOLTIP_DECREMENT: 'tooltipDecrement',
+    _TOOLTIP_INCREMENT: 'tooltipIncrement'    
+  },
+  /**
+   * when below listed options are passed to the component, corresponding CSS will be toggled
+   * @private
+   * @const
+   * @type {Object}
+   */
+  _OPTION_TO_CSS_MAPPING: {
+    "readOnly": "oj-read-only"
+  },
+  /**
+   * @private
+   */
   _draw : function ()
   {
     var uiInputNumber = this.uiInputNumber = this.element.addClass("oj-inputnumber-input")
@@ -514,22 +797,10 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     // and rely on the up/down arrow keys
     this.buttons = uiInputNumber.find(".oj-inputnumber-button")
             .attr("tabIndex",  "-1").attr("aria-hidden",true);
-
-    // disable inputnumber if element was already disabled
-    if (this.options.disabled)
-    {
-      // calls _setOption disable is true
-      this.disable();
-    }
-    
-    // set readOnly on inputnumber if element was already in readonly
-    if (this.options.readOnly)
-    {
-      // calls _setOption disable is true
-      this._setOption("readOnly", true);
-    }
-
   },
+  /**
+   * @private
+   */
   _keydown : function (event)
   {
     var options = this.options, keyCode = $.ui.keyCode;
@@ -550,20 +821,32 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
 
     return false;
   },
+  /**
+   * @private
+   */
   _uiInputNumberHtml : function ()
   {
     return "<span class='oj-inputnumber oj-component'></span>";
   },
+  /**
+   * @private
+   */
   _buttonHtml : function ()
   {
     return "" + "<a class='oj-inputnumber-button oj-inputnumber-down'></a>" + 
             "<a class='oj-inputnumber-button oj-inputnumber-up'></a>";
   },
+  /**
+   * @private
+   */
   _start : function ()
   {
     this.spinning = true;
     return true;
   },
+  /**
+   * @private
+   */
   _repeat : function (i, steps, event)
   {
     // repeat spinning as long as the key is down and min/max isn't reached
@@ -578,6 +861,11 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
 
     this._spin(steps * this.options.step, event);
   },
+  /**
+   * @private
+   * @param {Number} step - Number of steps to increment.
+   * @param {Object=} event an optional event if this was a result of ui interaction.
+   */
   _spin : function (step, event)
   {
     // When the component's 'value' changes, the displayValue is automatically updated.
@@ -588,7 +876,10 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     
     this._SetValue(value, event, this._VALIDATION_MODE.VALIDATORS_ONLY);
   },
-  // called from _adjustValue
+  /**
+   * called from _adjustValue
+   * @private
+   */
   _precision : function ()
   {
     var precision = this._precisionOf(this.options.step);
@@ -598,7 +889,12 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     }
     return precision;
   },
-  // called from _adjustValue->_precision
+  /**
+   * return the number of digits after the '.'
+   * called from _adjustValue->_precision
+   * @private
+   * @param {Number} num - Number from which to calculate the precision
+   */
   _precisionOf : function (num)
   {
     var str = num.toString(), decimal = str.indexOf(".");
@@ -678,6 +974,9 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     
     return newValue;
   },
+  /**
+   * @private
+   */
   _stop : function (event)
   {
     if (!this.spinning)
@@ -687,6 +986,9 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     clearTimeout(this.timer);
     this.spinning = false;
   },
+  /**
+   * @private
+   */
   _updateButtons: function()
   {
     var value = this._GetDisplayValue() || 0;
@@ -716,6 +1018,9 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       upButton.ojButton("enable");      
     }    
   },
+  /**
+   * @private
+   */
   _blurEnterSetValue: function(event)
   {
       this._stop();
@@ -726,142 +1031,30 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       }    
   },
   /**
-   * Handles options specific to inputnumber.
-   * Note that _setOption does not get called during create in the super class. 
-   * It only gets called when the component has already been created.
-   * However, we do call _setOption in _draw for certain attributes 
-   * (disabled/readOnly)
-   * @override
-   * @protected
-   * @memberof! oj.ojInputNumber
+   * @private
    */
-  _setOption : function (key, value)
-  {
-    // we don't coerce value for null or undefined, so to clear out value
-    // they can set it to null or undefined.
-    if (key === "value")
-      value = this._coerceInputNumberValue(value);
-
-    if (key === "max" || key === "min")
-    {
-      if (typeof value === "string")
-      {
-        value = this._parse(value);
-      }
-    } 
-    if (key === "step")
-    {
-      value = this._parseStep(value);
-    }
-    
-    // the superclass calls _Refresh. Our _Refresh calls _updateButton
-    // and _refreshAriaMinMaxValue.
-    this._super(key, value);
-
-    // when a dom element supports disabled, use that, and not aria-disabled.
-    // having both is an error. 
-    // having aria-disabled on root dom element is ok (if it is added in base class)
-    if (key === "disabled")
-    {
-      if (value)
-      {
-        this.element.prop("disabled", true);
-      }
-      else 
-      {
-        this.element.prop("disabled", false);
-      }
-    }
-    // when a dom element supports readonly, use that, and not aria-readonly.
-    // having both is an error
-    if (key === "readOnly")
-    {
-      if (value)
-      {
-        this.element.prop("readonly", true);
-      }
-      else 
-      {
-        this.element.prop("readonly", false);
-      }
-    }
-//    // when min or max changes reset the validators
-//    if (key === "max" || key === "min")
-//    {
-//      // min and max need to be 'undefined' to be reset in the numberrangevalidator
-//      var min = this.options['min'] != null ? this.options['min'] : undefined, 
-//      max = this.options['max'] != null ? this.options['max'] : undefined;
-//      // since validators are immutable, they will contain min + max as local values. 
-//      // Because of this will need to recreate
-//      var numberRangeOptions = {'min': min, 
-//          'max': max,
-//          'converter': this._GetConverter()};
-//
-//      this._createRangeValidator(numberRangeOptions);
-//      this._ResetAllValidators();
-//    } 
-  }, 
-    /**
-   * Reacts to changes to the 'min' and/or 'max' option by
-   * resetting the NumberRangeValidator.
-   * 
-   * @param {String|Object|string=} key a single string representing a 
-   * key or an object representing a group 
-   * of options
-   * @param {Object=} value of the key
-   */
-  option : function (key, value)
-  {
-    var retVal = this._superApply(arguments);
-    
-    // key === max, key === min, key is both min and max, so it's an object
-    
-    if (key === "max" || key === "min" || 
-        (typeof key === "object" && 
-         (key['min'] !== undefined || key['max'] !== undefined)))
-    {
-      var min = undefined, max = undefined;
-      if (key === "max")
-      {      
-        max = value != null ? value : undefined;
-      }
-      else if (key === "min")
-      {
-        min = value != null ? value : undefined;
-      }
-      else
-      {
-        // it's an object
-        if (key['max'] !== undefined)
-          max = key['max'] != null ? key['max'] : undefined;
-        if (key['min'] !== undefined)
-          min = key['min'] != null ? key['min'] : undefined;
-      }
-      // since validators are immutable, they will contain min + max as local values. 
-      // Because of this will need to recreate
-      var numberRangeOptions = {'min': min, 
-          'max': max,
-          'converter': this._GetConverter()};
-
-      this._createRangeValidator(numberRangeOptions);
-      this._ResetAllValidators();
-    }
-    return retVal;
-  },
   _createRangeValidator : function(options)
   {
     this._inputNumberDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_NUMBERRANGE] = 
       oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_NUMBERRANGE)
       .createValidator(options);
   },
+  /**
+   * @private
+   */
   _coerceInputNumberValue : function (val)
   {
     // 
     if (val !== null)
       return val = + val;
+    else
+      return val;
   },
   // The user can clear out min/max by setting the option to null, so we
   // do not coerce null.
+  /**
+   * @private
+   */
   _parse : function (val)
   {
     // do not coerce if null
@@ -897,9 +1090,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
 //    return val === "" || isNaN(val) ? null : val;
 
   },
-  /* We are following the behavior of HTML-5 the best we can. According
+  /**
+   * parse the step's value
+   * We are following the behavior of HTML-5 the best we can. According
    * to the spec, it says step must be a number greater than 0. 
-   * Chrome defaults it to 1 if it is not. */
+   * Chrome defaults it to 1 if it is not. 
+   * @private
+   */
   _parseStep : function (val)
   {
     var defaultStep = 1;
@@ -911,10 +1108,25 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       parsedStep = defaultStep;
     return parsedStep;
   },
+  /**
+   * Toggles css selector on the widget. E.g., when readOnly option changes, 
+   * the oj-read-only selector needs to be toggled.
+   * @param {string} option
+   * @param {Object|string} value 
+   * @private
+   */        
+  _refreshStateTheming : function (option, value)
+  {
+    if (this._OPTION_TO_CSS_MAPPING.hasOwnProperty(option)) 
+    {
+      // value is a boolean
+      this.widget().toggleClass(this._OPTION_TO_CSS_MAPPING[option], !!value);
+    }
+  },
   /* updates the aria-value information */
   _refreshAriaMinMaxValue : function ()
   {
-    var valuenow = this._parse(this.options.value);
+    var valuenow = this._coerceInputNumberValue(this.options.value);
     var valuetext = this.element.val();
     
     this.element.attr(
@@ -927,162 +1139,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     if (!this._ValueEquals(""+valuenow, valuetext))
       this.element.attr({"aria-valuetext" : valuetext});
   },
-
-  /**
-   * Used for explicit cases where the component needs to be refreshed 
-   * (e.g., when the value option changes or other UI gestures).
-   * @override
-   * @protected
-   * @memberof! oj.ojInputNumber
-   */
-  _Refresh : function (name, value)
-  {
-    this._super(name, value);
-    if (name === "value" || name === "max" || name === "min")
-    {
-      this._refreshAriaMinMaxValue();
-    }
-    this._updateButtons();
-  },
-  /**
-   * Returns the default styleclass for the component.
-   * 
-   * @return {string}
-   * @memberof! oj.ojInputNumber
-   * @override
-   * @protected
-   */
-  _GetDefaultStyleClass : function ()
-  {
-    return "oj-inputnumber";
-  },
-  /**
-   * @override
-   * @private
-   */
-  _destroy : function ()
-  {    
-    this.element.removeClass("oj-inputnumber-input")
-            .prop("disabled", false)
-            .removeAttr("autocomplete")
-            .removeAttr("aria-valuemin")
-            .removeAttr("aria-valuemax")
-            .removeAttr("aria-valuenow")
-            .removeAttr("aria-valuetext")
-            .removeAttr("aria-disabled");
-    // TODO: need a generic way to save off attributes and then restore them.
-    // attribute name/value array.
-    this.element.attr("type", this.saveType);
-    this._super();
-    this._off(this.element, "keydown keyup focus blur mousedown mouseup mouseenter mouseleave");
-    this.uiInputNumber.replaceWith(this.element);
-    clearTimeout(this.timer);
-  },
   
   /**
-   * Return the subcomponent node represented by the documented locator attribute values.
-   * Test authors should target inputNumber's sub elements using the following names:
-   * <ul>
-   * <li><b>oj-inputnumber-up</b>: the inputNumber's up arrow</li>
-   * <li><b>oj-inputnumber-down</b>: the inputNumber's down arrow</li>
-   * <li><b>oj-inputnumber-input</b>: the inputNumber's input</li>
-   * </ul>
-   * @expose
-   * @override
-   * @memberof! oj.ojInputNumber
-   * @instance
-   * @param {Object} locator An Object containing at minimum a subId property 
-   * whose value is a string, documented by the component, that allows the component to 
-   * look up the subcomponent associated with that string.  It contains:
-   * <ul>
-   * <li>
-   * component: optional - in the future there may be more than one component 
-   *   contained within a page element
-   * </li>
-   * <li>
-   * subId: the string, documented by the component, that the component expects 
-   * in getNodeBySubId to locate a particular subcomponent 
-   * </li>
-   * </ul>  
-   * @returns {Element|null} the subcomponent located by the subId string 
-   * passed in locator, if found.
+   * step the inputnumber value up or down
+   * @private
+   * @param {Number} steps - Number of steps to increment.
+   * @param {boolean} up If true step up, else step down.
    */
-  getNodeBySubId: function(locator)
-  {
-    if (locator == null)
-    {
-      return this.element ? this.element[0] : null;
-    }
-    
-    var subId = locator['subId'];
-    if (subId === "oj-inputnumber-up") {
-      return this.widget().find(".oj-inputnumber-up")[0];
-    }
-    if (subId === "oj-inputnumber-down") {
-      return this.widget().find(".oj-inputnumber-down")[0];
-    }
-    if (subId === "oj-inputnumber-input") {
-      return this.widget().find(".oj-inputnumber-input")[0];
-    }
-    
-    
-    // Non-null locators have to be handled by the component subclasses
-    return null;
-  },  
-   /**
-   * Whether the a value can be set on the component. 
-   * If the component is disabled (or readOnly) then 
-   * then setting value on component is a no-op. 
-   * 
-   * @see #_SetValue
-   * @memberof! oj.ojInputNumber
-   * @instance
-   * @protected
-   */
-  _CanSetValue: function ()
-  {
-    var canSetValue = this._super();
-    
-    if (!canSetValue)
-      return false;
-    
-    var readOnly = this.options['readOnly'] || false;
-    
-    if (readOnly)
-    {
-      return false;
-    }
-    
-    return true;
-  }, 
- /**
- * <p>Increments the value by the specified number of steps. 
- * Without the parameter, a single step is incremented.</p>
-   <p>If the resulting value is above the max, below the min, 
-   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
- * @public
- * @param {Number} steps - Number of steps to increment, defaults to 1.
- * @expose
- * @memberof! oj.ojInputNumber 
- */
-  stepUp : function (steps)
-  {
-    this._step(steps, true);
-  },
- /**
- * <p>Decrements the value by the specified number of steps. 
- * Without the parameter, a single step is decremented.</p>
-   <p>If the resulting value is above the max, below the min, 
-   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
- * @public
- * @param {Number} steps - Number of steps to decrement, defaults to 1.
- * @expose
- * @memberof! oj.ojInputNumber 
- */
-  stepDown : function (steps)
-  {
-    this._step(steps, false);
-  },  
   _step : function (steps, up)
   {
     this._start();

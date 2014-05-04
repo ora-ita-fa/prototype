@@ -31,7 +31,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
       return $counter$$++
     }
   }(), $scrollBarDimensions$:null, $each2$:function($list$$, $c$$24$$) {
-    for(var $j$$18$$ = $$$$9$$($list$$[0]), $i$$144$$ = -1, $l$$4$$ = $list$$.length;++$i$$144$$ < $l$$4$$ && ($j$$18$$.context = $j$$18$$[0] = $list$$[$i$$144$$]) && !1 !== $c$$24$$.call($j$$18$$[0], $i$$144$$, $j$$18$$);) {
+    for(var $j$$18$$ = $$$$9$$($list$$[0]), $i$$145$$ = -1, $l$$4$$ = $list$$.length;++$i$$145$$ < $l$$4$$ && ($j$$18$$.context = $j$$18$$[0] = $list$$[$i$$145$$]) && !1 !== $c$$24$$.call($j$$18$$[0], $i$$145$$, $j$$18$$);) {
     }
     return $list$$
   }, $measureScrollbar$:function() {
@@ -41,14 +41,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     $$template$$.remove();
     return $dim$$
   }, $splitVal$:function($string$$3$$, $separator$$1$$) {
-    var $val$$24$$, $i$$145$$, $l$$5$$;
+    var $val$$24$$, $i$$146$$, $l$$5$$;
     if(null === $string$$3$$ || 1 > $string$$3$$.length) {
       return[]
     }
     $val$$24$$ = $string$$3$$.split($separator$$1$$);
-    $i$$145$$ = 0;
-    for($l$$5$$ = $val$$24$$.length;$i$$145$$ < $l$$5$$;$i$$145$$ += 1) {
-      $val$$24$$[$i$$145$$] = $$$$9$$.trim($val$$24$$[$i$$145$$])
+    $i$$146$$ = 0;
+    for($l$$5$$ = $val$$24$$.length;$i$$146$$ < $l$$5$$;$i$$146$$ += 1) {
+      $val$$24$$[$i$$146$$] = $$$$9$$.trim($val$$24$$[$i$$146$$])
     }
     return $val$$24$$
   }, $getSideBorderPadding$:function($element$$33$$) {
@@ -68,10 +68,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
       }
     })
   }, $thunk$:function($formula$$) {
-    var $evaluated$$ = !1, $value$$146$$;
+    var $evaluated$$ = !1, $value$$147$$;
     return function() {
-      !1 === $evaluated$$ && ($value$$146$$ = $formula$$(), $evaluated$$ = !0);
-      return $value$$146$$
+      !1 === $evaluated$$ && ($value$$147$$ = $formula$$(), $evaluated$$ = !0);
+      return $value$$147$$
     }
   }, $_focus$:function($$el$$) {
     $$el$$[0] !== document.activeElement && window.setTimeout(function() {
@@ -91,8 +91,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     $event$$50$$.preventDefault();
     $event$$50$$.stopImmediatePropagation()
   }, $defaultEscapeMarkup$:function($markup$$) {
-    var $replace_map$$ = {"\\":"\x26#92;", "\x26":"\x26amp;", "\x3c":"\x26lt;", "\x3e":"\x26gt;", '"':"\x26quot;", "'":"\x26#39;", "/":"\x26#47;"};
-    return String($markup$$).replace(/[&<>"'\/\\]/g, function($match$$13$$) {
+    var $replace_map$$ = {"\\":"\x26#92;", "\x26":"\x26amp;", "\x3c":"\x26lt;", "\x3e":"\x26gt;", '"':"\x26quot;", "'":"\x26#39;"};
+    return String($markup$$).replace(/[&<>"'\\]/g, function($match$$13$$) {
       return $replace_map$$[$match$$13$$]
     })
   }, $local$:function($dataItem_options$$213$$) {
@@ -119,14 +119,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
             $datum$$.hasOwnProperty($attr$$15$$) && ($group$$[$attr$$15$$] = $datum$$[$attr$$15$$])
           }
           $group$$.children = [];
-          $_ComboUtils$$.$each2$($$$$9$$($datum$$.children), function($i$$146$$, $childDatum$$) {
+          $_ComboUtils$$.$each2$($$$$9$$($datum$$.children), function($i$$147$$, $childDatum$$) {
             $process$$($childDatum$$, $group$$.children)
           });
           ($group$$.children.length || $query$$3$$.$matcher$($t$$, $text$$7$$($group$$), $datum$$)) && $collection$$20$$.push($group$$)
         }else {
           $query$$3$$.$matcher$($t$$, $text$$7$$($datum$$), $datum$$) && $collection$$20$$.push($datum$$)
         }
-      }, $_ComboUtils$$.$each2$($$$$9$$($data$$54$$().$results$), function($i$$147$$, $datum$$1$$) {
+      }, $_ComboUtils$$.$each2$($$$$9$$($data$$54$$().$results$), function($i$$148$$, $datum$$1$$) {
         $process$$($datum$$1$$, $filtered$$.$results$)
       }), $query$$3$$.$callback$($filtered$$))
     }
@@ -145,9 +145,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     $constructor$$1$$.prototype = $$$$9$$.extend($constructor$$1$$.prototype, $methods$$1$$);
     return $constructor$$1$$
   }}, $_AbstractOjChoice$$ = $_ComboUtils$$.$clazz$(Object, {$_bind$:function($func$$10$$) {
-    var $self$$37$$ = this;
+    var $self$$38$$ = this;
     return function() {
-      $func$$10$$.apply($self$$37$$, arguments)
+      $func$$10$$.apply($self$$38$$, arguments)
     }
   }, _init:function($opts$$11$$) {
     var $search$$1$$, $className$$9$$ = this.$_classNm$, $disabled$$1_elemName_readonly$$ = this.$_elemNm$;
@@ -221,20 +221,20 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
       return{text:$element$$37$$.attr("label"), children:[], element:$element$$37$$.get(), css:$element$$37$$.attr("class")}
     }
   }, $_prepareOpts$:function($opts$$12$$) {
-    var $element$$38$$, $datalist$$, $idKey$$, $self$$38$$ = this;
+    var $element$$38$$, $datalist$$, $idKey$$, $self$$39$$ = this;
     $element$$38$$ = $opts$$12$$.element;
     var $tagName$$1$$ = $element$$38$$.get(0).tagName.toLowerCase();
     "input" === $tagName$$1$$ && $element$$38$$.attr("list") ? this.$datalist$ = $datalist$$ = $$$$9$$("#" + $element$$38$$.attr("list")) : "select" === $tagName$$1$$ && 0 < $element$$38$$.children().length && (this.$datalist$ = $datalist$$ = $element$$38$$);
     $opts$$12$$ = $$$$9$$.extend({}, {$populateResults$:function($container$$2$$, $results$$5$$, $query$$4$$) {
       var $populate$$, $id$$12$$ = this.$opts$.id;
       $populate$$ = function $$populate$$$($results$$6$$, $container$$3$$, $depth$$18$$) {
-        var $i$$148$$, $l$$6$$, $result$$13$$, $label$$4_selectable$$, $disabled$$2_formatted_innerContainer$$, $node$$13$$;
-        $i$$148$$ = 0;
-        for($l$$6$$ = $results$$6$$.length;$i$$148$$ < $l$$6$$;$i$$148$$ += 1) {
-          $result$$13$$ = $results$$6$$[$i$$148$$], $disabled$$2_formatted_innerContainer$$ = !0 === $result$$13$$.disabled, $label$$4_selectable$$ = !$disabled$$2_formatted_innerContainer$$ && void 0 !== $id$$12$$($result$$13$$), $node$$13$$ = $$$$9$$("\x3cli\x3e\x3c/li\x3e"), $node$$13$$.addClass("oj-listbox-results-dept-" + $depth$$18$$), $node$$13$$.addClass("oj-listbox-result"), $node$$13$$.addClass($label$$4_selectable$$ ? "oj-listbox-result-selectable" : "oj-listbox-result-unselectable"), 
-          $disabled$$2_formatted_innerContainer$$ && $node$$13$$.addClass("oj-disabled"), $result$$13$$.children && $node$$13$$.addClass("oj-listbox-result-with-children"), $node$$13$$.attr("role", "presentation"), $label$$4_selectable$$ = $$$$9$$(document.createElement("div")), $label$$4_selectable$$.addClass("oj-listbox-result-label"), $label$$4_selectable$$.attr("id", "oj-listbox-result-label-" + $_ComboUtils$$.$nextUid$()), $label$$4_selectable$$.attr("role", "option"), $disabled$$2_formatted_innerContainer$$ && 
-          $label$$4_selectable$$.attr("aria-disabled", "true"), $disabled$$2_formatted_innerContainer$$ = $opts$$12$$.$formatResult$($result$$13$$, $label$$4_selectable$$, $query$$4$$, $self$$38$$.$opts$.$escapeMarkup$), void 0 !== $disabled$$2_formatted_innerContainer$$ && $label$$4_selectable$$.html($disabled$$2_formatted_innerContainer$$), $node$$13$$.append($label$$4_selectable$$), $result$$13$$.children && 0 < $result$$13$$.children.length && ($disabled$$2_formatted_innerContainer$$ = $$$$9$$("\x3cul\x3e\x3c/ul\x3e"), 
-          $disabled$$2_formatted_innerContainer$$.addClass("oj-listbox-result-sub"), $populate$$($result$$13$$.children, $disabled$$2_formatted_innerContainer$$, $depth$$18$$ + 1), $node$$13$$.append($disabled$$2_formatted_innerContainer$$)), $node$$13$$.data($self$$38$$.$_elemNm$, $result$$13$$), $container$$3$$.append($node$$13$$)
+        var $i$$149$$, $l$$6$$, $result$$13$$, $label$$4_selectable$$, $disabled$$2_formatted_innerContainer$$, $node$$14$$;
+        $i$$149$$ = 0;
+        for($l$$6$$ = $results$$6$$.length;$i$$149$$ < $l$$6$$;$i$$149$$ += 1) {
+          $result$$13$$ = $results$$6$$[$i$$149$$], $disabled$$2_formatted_innerContainer$$ = !0 === $result$$13$$.disabled, $label$$4_selectable$$ = !$disabled$$2_formatted_innerContainer$$ && void 0 !== $id$$12$$($result$$13$$), $node$$14$$ = $$$$9$$("\x3cli\x3e\x3c/li\x3e"), $node$$14$$.addClass("oj-listbox-results-dept-" + $depth$$18$$), $node$$14$$.addClass("oj-listbox-result"), $node$$14$$.addClass($label$$4_selectable$$ ? "oj-listbox-result-selectable" : "oj-listbox-result-unselectable"), 
+          $disabled$$2_formatted_innerContainer$$ && $node$$14$$.addClass("oj-disabled"), $result$$13$$.children && $node$$14$$.addClass("oj-listbox-result-with-children"), $node$$14$$.attr("role", "presentation"), $label$$4_selectable$$ = $$$$9$$(document.createElement("div")), $label$$4_selectable$$.addClass("oj-listbox-result-label"), $label$$4_selectable$$.attr("id", "oj-listbox-result-label-" + $_ComboUtils$$.$nextUid$()), $label$$4_selectable$$.attr("role", "option"), $disabled$$2_formatted_innerContainer$$ && 
+          $label$$4_selectable$$.attr("aria-disabled", "true"), $disabled$$2_formatted_innerContainer$$ = $opts$$12$$.$formatResult$($result$$13$$, $label$$4_selectable$$, $query$$4$$, $self$$39$$.$opts$.$escapeMarkup$), void 0 !== $disabled$$2_formatted_innerContainer$$ && $label$$4_selectable$$.html($disabled$$2_formatted_innerContainer$$), $node$$14$$.append($label$$4_selectable$$), $result$$13$$.children && 0 < $result$$13$$.children.length && ($disabled$$2_formatted_innerContainer$$ = $$$$9$$("\x3cul\x3e\x3c/ul\x3e"), 
+          $disabled$$2_formatted_innerContainer$$.addClass("oj-listbox-result-sub"), $populate$$($result$$13$$.children, $disabled$$2_formatted_innerContainer$$, $depth$$18$$ + 1), $node$$14$$.append($disabled$$2_formatted_innerContainer$$)), $node$$14$$.data($self$$39$$.$_elemNm$, $result$$13$$), $container$$3$$.append($node$$14$$)
         }
       };
       $populate$$($results$$5$$, $container$$2$$, 0)
@@ -246,7 +246,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
       var $data$$55$$ = {$results$:[], $more$:!1}, $term$$ = $query$$5$$.$term$, $children$$2$$, $process$$1$$;
       $process$$1$$ = function $$process$$1$$$($element$$39$$, $collection$$21$$) {
         var $group$$1$$;
-        $element$$39$$.is("option") ? $query$$5$$.$matcher$($term$$, $element$$39$$.text(), $element$$39$$) && $collection$$21$$.push($self$$38$$.$_optionToData$($element$$39$$)) : $element$$39$$.is("optgroup") && ($group$$1$$ = $self$$38$$.$_optionToData$($element$$39$$), $_ComboUtils$$.$each2$($element$$39$$.children(), function($i$$149$$, $elm$$1$$) {
+        $element$$39$$.is("option") ? $query$$5$$.$matcher$($term$$, $element$$39$$.text(), $element$$39$$) && $collection$$21$$.push($self$$39$$.$_optionToData$($element$$39$$)) : $element$$39$$.is("optgroup") && ($group$$1$$ = $self$$39$$.$_optionToData$($element$$39$$), $_ComboUtils$$.$each2$($element$$39$$.children(), function($i$$150$$, $elm$$1$$) {
           $process$$1$$($elm$$1$$, $group$$1$$.children)
         }), 0 < $group$$1$$.children.length && $collection$$21$$.push($group$$1$$))
       };
@@ -255,7 +255,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
         var $placeholderOption$$ = this.$_getPlaceholderOption$();
         $placeholderOption$$ && ($children$$2$$ = $children$$2$$.not($placeholderOption$$))
       }
-      $_ComboUtils$$.$each2$($children$$2$$, function($i$$150$$, $elm$$2$$) {
+      $_ComboUtils$$.$each2$($children$$2$$, function($i$$151$$, $elm$$2$$) {
         $process$$1$$($elm$$2$$, $data$$55$$.$results$)
       });
       $query$$5$$.$callback$($data$$55$$)
@@ -336,8 +336,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.$dropdown$[0] !== this.body().children().last()[0] && this.$dropdown$.detach().appendTo(this.body());
     $mask$$5$$ = $$$$9$$("#oj-listbox-drop-mask" + $cid$$6$$);
     0 == $mask$$5$$.length && ($mask$$5$$ = $$$$9$$(document.createElement("div")), $mask$$5$$.attr("id", "oj-listbox-drop-mask" + $cid$$6$$).attr("class", "oj-listbox-drop-mask"), $mask$$5$$.hide(), $mask$$5$$.appendTo(this.body()), $mask$$5$$.on("mousedown touchstart click", function($e$$49$$) {
-      var $dropdown_self$$39$$ = $$$$9$$("#oj-listbox-drop");
-      0 < $dropdown_self$$39$$.length && ($dropdown_self$$39$$ = $dropdown_self$$39$$.data($elemName$$1$$), $dropdown_self$$39$$.$opts$.$selectOnBlur$ && $dropdown_self$$39$$.$_selectHighlighted$({$noFocus$:!0}, $e$$49$$), $dropdown_self$$39$$.close(), $e$$49$$.preventDefault(), $e$$49$$.stopPropagation())
+      var $dropdown_self$$40$$ = $$$$9$$("#oj-listbox-drop");
+      0 < $dropdown_self$$40$$.length && ($dropdown_self$$40$$ = $dropdown_self$$40$$.data($elemName$$1$$), $dropdown_self$$40$$.$opts$.$selectOnBlur$ && $dropdown_self$$40$$.$_selectHighlighted$({$noFocus$:!0}, $e$$49$$), $dropdown_self$$40$$.close(), $e$$49$$.preventDefault(), $e$$49$$.stopPropagation())
     }));
     this.$dropdown$.prev()[0] !== $mask$$5$$[0] && this.$dropdown$.before($mask$$5$$);
     $$$$9$$("#oj-listbox-drop").removeAttr("id");
@@ -368,29 +368,29 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
       this.$_getActiveContainer$().attr("aria-expanded", !1)
     }
   }, $_clearSearch$:$JSCompiler_emptyFn$$(), $_ensureHighlightVisible$:function() {
-    var $results$$7$$ = this.$results$, $children$$3_more_rb$$, $index$$124$$, $child$$5$$, $hb_y$$38$$;
-    $index$$124$$ = this.$_highlight$();
-    0 > $index$$124$$ || (0 == $index$$124$$ ? $results$$7$$.scrollTop(0) : ($children$$3_more_rb$$ = this.$_findHighlightableChoices$().find(".oj-listbox-result-label"), $child$$5$$ = $$$$9$$($children$$3_more_rb$$[$index$$124$$]), $hb_y$$38$$ = $child$$5$$.offset().top + $child$$5$$.outerHeight(!0), $index$$124$$ === $children$$3_more_rb$$.length - 1 && ($children$$3_more_rb$$ = $results$$7$$.find("li.oj-listbox-more-results"), 0 < $children$$3_more_rb$$.length && ($hb_y$$38$$ = $children$$3_more_rb$$.offset().top + 
+    var $results$$7$$ = this.$results$, $children$$3_more_rb$$, $index$$125$$, $child$$5$$, $hb_y$$38$$;
+    $index$$125$$ = this.$_highlight$();
+    0 > $index$$125$$ || (0 == $index$$125$$ ? $results$$7$$.scrollTop(0) : ($children$$3_more_rb$$ = this.$_findHighlightableChoices$().find(".oj-listbox-result-label"), $child$$5$$ = $$$$9$$($children$$3_more_rb$$[$index$$125$$]), $hb_y$$38$$ = $child$$5$$.offset().top + $child$$5$$.outerHeight(!0), $index$$125$$ === $children$$3_more_rb$$.length - 1 && ($children$$3_more_rb$$ = $results$$7$$.find("li.oj-listbox-more-results"), 0 < $children$$3_more_rb$$.length && ($hb_y$$38$$ = $children$$3_more_rb$$.offset().top + 
     $children$$3_more_rb$$.outerHeight(!0))), $children$$3_more_rb$$ = $results$$7$$.offset().top + $results$$7$$.outerHeight(!0), $hb_y$$38$$ > $children$$3_more_rb$$ && $results$$7$$.scrollTop($results$$7$$.scrollTop() + ($hb_y$$38$$ - $children$$3_more_rb$$)), $hb_y$$38$$ = $child$$5$$.offset().top - $results$$7$$.offset().top, 0 > $hb_y$$38$$ && "none" != $child$$5$$.css("display") && $results$$7$$.scrollTop($results$$7$$.scrollTop() + $hb_y$$38$$)))
   }, $_findHighlightableChoices$:function() {
     return this.$results$.find(".oj-listbox-result-selectable:not(.oj-disabled, .oj-listbox-selected)")
   }, $_moveHighlight$:function($delta$$2$$) {
-    for(var $choices$$ = this.$_findHighlightableChoices$(), $index$$125$$ = this.$_highlight$();-1 < $index$$125$$ && $index$$125$$ < $choices$$.length;) {
-      var $index$$125$$ = $index$$125$$ + $delta$$2$$, $choice$$ = $$$$9$$($choices$$[$index$$125$$]);
+    for(var $choices$$ = this.$_findHighlightableChoices$(), $index$$126$$ = this.$_highlight$();-1 < $index$$126$$ && $index$$126$$ < $choices$$.length;) {
+      var $index$$126$$ = $index$$126$$ + $delta$$2$$, $choice$$ = $$$$9$$($choices$$[$index$$126$$]);
       if($choice$$.hasClass("oj-listbox-result-selectable") && !$choice$$.hasClass("oj-disabled") && !$choice$$.hasClass("oj-listbox-selected")) {
-        this.$_highlight$($index$$125$$);
+        this.$_highlight$($index$$126$$);
         break
       }
     }
-  }, $_highlight$:function($index$$126$$) {
+  }, $_highlight$:function($index$$127$$) {
     var $choice$$1_choices$$1$$ = this.$_findHighlightableChoices$();
     if(0 === arguments.length) {
       return $choice$$1_choices$$1$$.get().indexOf($choice$$1_choices$$1$$.filter(".oj-listbox-highlighted")[0])
     }
-    $index$$126$$ >= $choice$$1_choices$$1$$.length && ($index$$126$$ = $choice$$1_choices$$1$$.length - 1);
-    0 > $index$$126$$ && ($index$$126$$ = 0);
+    $index$$127$$ >= $choice$$1_choices$$1$$.length && ($index$$127$$ = $choice$$1_choices$$1$$.length - 1);
+    0 > $index$$127$$ && ($index$$127$$ = 0);
     this.$_removeHighlight$();
-    $choice$$1_choices$$1$$ = $$$$9$$($choice$$1_choices$$1$$[$index$$126$$]);
+    $choice$$1_choices$$1$$ = $$$$9$$($choice$$1_choices$$1$$[$index$$127$$]);
     $choice$$1_choices$$1$$.addClass("oj-listbox-highlighted");
     this.$_getActiveContainer$().attr("aria-activedescendant", $choice$$1_choices$$1$$.find(".oj-listbox-result-label").attr("id"));
     this.$_ensureHighlightVisible$()
@@ -407,26 +407,26 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
   }, $_updateResults$:function($initial$$) {
     function $render$$($html$$) {
       $results$$8$$.html($html$$);
-      $self$$40$$.$_positionDropdown$()
+      $self$$41$$.$_positionDropdown$()
     }
-    var $search$$2$$ = this.search, $results$$8$$ = this.$results$, $opts$$13$$ = this.$opts$, $self$$40$$ = this, $input_term$$1$$;
+    var $search$$2$$ = this.search, $results$$8$$ = this.$results$, $opts$$13$$ = this.$opts$, $self$$41$$ = this, $input_term$$1$$;
     $input_term$$1$$ = $search$$2$$.val();
     var $lastTerm$$ = $$$$9$$.data(this.$container$, this.$_classNm$ + "-last-term"), $queryNumber$$;
     !0 !== $initial$$ && $lastTerm$$ && $input_term$$1$$ === $lastTerm$$ || ($$$$9$$.data(this.$container$, this.$_classNm$ + "-last-term", $input_term$$1$$), $queryNumber$$ = ++this.$queryCount$, this.$_removeHighlight$(), $input_term$$1$$ = this.search.val(), this.$resultsPage$ = 1, $opts$$13$$.$query$({element:$opts$$13$$.element, $term$:void 0 !== $input_term$$1$$ && null != $input_term$$1$$ && !0 !== $initial$$ ? $input_term$$1$$ : "", page:this.$resultsPage$, context:null, $matcher$:$opts$$13$$.$matcher$, 
     $callback$:this.$_bind$(function($data$$59$$) {
       var $def$$;
-      $queryNumber$$ == this.$queryCount$ && this.$_opened$() && (this.context = void 0 === $data$$59$$.context ? null : $data$$59$$.context, 0 === $data$$59$$.$results$.length && (this.$opts$.$manageNewEntry$ && "" !== $search$$2$$.val()) && ($def$$ = this.$opts$.$manageNewEntry$.call($self$$40$$, $search$$2$$.val(), $data$$59$$.$results$), void 0 !== $def$$ && null !== $def$$ && void 0 !== $self$$40$$.id($def$$) && null !== $self$$40$$.id($def$$) && 0 === $$$$9$$($data$$59$$.$results$).filter(function() {
-        return $self$$40$$.id(this) === $self$$40$$.id($def$$)
-      }).length && $data$$59$$.$results$.unshift($def$$)), 0 === $data$$59$$.$results$.length && $_ComboUtils$$.$checkFormatter$($self$$40$$.$ojContext$, $opts$$13$$.$formatNoMatches$, "formatNoMatches") ? $render$$("\x3cli class\x3d'oj-listbox-no-results'\x3e" + $opts$$13$$.$formatNoMatches$($self$$40$$.$ojContext$, $search$$2$$.val()) + "\x3c/li\x3e") : ($results$$8$$.empty(), $self$$40$$.$opts$.$populateResults$.call(this, $results$$8$$, $data$$59$$.$results$, {$term$:$search$$2$$.val(), page:this.$resultsPage$, 
-      context:null}), this.$_postprocessResults$($data$$59$$, $initial$$), $self$$40$$.$_positionDropdown$()))
+      $queryNumber$$ == this.$queryCount$ && this.$_opened$() && (this.context = void 0 === $data$$59$$.context ? null : $data$$59$$.context, 0 === $data$$59$$.$results$.length && (this.$opts$.$manageNewEntry$ && "" !== $search$$2$$.val()) && ($def$$ = this.$opts$.$manageNewEntry$.call($self$$41$$, $search$$2$$.val(), $data$$59$$.$results$), void 0 !== $def$$ && null !== $def$$ && void 0 !== $self$$41$$.id($def$$) && null !== $self$$41$$.id($def$$) && 0 === $$$$9$$($data$$59$$.$results$).filter(function() {
+        return $self$$41$$.id(this) === $self$$41$$.id($def$$)
+      }).length && $data$$59$$.$results$.unshift($def$$)), 0 === $data$$59$$.$results$.length && $_ComboUtils$$.$checkFormatter$($self$$41$$.$ojContext$, $opts$$13$$.$formatNoMatches$, "formatNoMatches") ? $render$$("\x3cli class\x3d'oj-listbox-no-results'\x3e" + $opts$$13$$.$formatNoMatches$($self$$41$$.$ojContext$, $search$$2$$.val()) + "\x3c/li\x3e") : ($results$$8$$.empty(), $self$$41$$.$opts$.$populateResults$.call(this, $results$$8$$, $data$$59$$.$results$, {$term$:$search$$2$$.val(), page:this.$resultsPage$, 
+      context:null}), this.$_postprocessResults$($data$$59$$, $initial$$), $self$$41$$.$_positionDropdown$()))
     })}))
   }, $_cancel$:function() {
     this.close()
   }, $_focusSearch$:function() {
     $_ComboUtils$$.$_focus$(this.search)
   }, $_selectHighlighted$:function($options$$214$$, $event$$53$$) {
-    var $index$$127$$ = this.$_highlight$(), $data$$60$$ = this.$results$.find(".oj-listbox-highlighted").closest(".oj-listbox-result").data(this.$_elemNm$);
-    $data$$60$$ ? (this.$_highlight$($index$$127$$), this.$_onSelect$($data$$60$$, $options$$214$$, $event$$53$$)) : $options$$214$$ && $options$$214$$.$noFocus$ && this.close()
+    var $index$$128$$ = this.$_highlight$(), $data$$60$$ = this.$results$.find(".oj-listbox-highlighted").closest(".oj-listbox-result").data(this.$_elemNm$);
+    $data$$60$$ ? (this.$_highlight$($index$$128$$), this.$_onSelect$($data$$60$$, $options$$214$$, $event$$53$$)) : $options$$214$$ && $options$$214$$.$noFocus$ && this.close()
   }, $_getPlaceholder$:function() {
     return this.$opts$.element.attr("placeholder") || this.$opts$.element.attr("data-placeholder") || this.$opts$.element.data("placeholder") || this.$opts$.placeholder
   }, $_getPlaceholderOption$:$JSCompiler_emptyFn$$(), $_initContainerWidth$:function() {
@@ -475,14 +475,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.selection.data(this.$_elemNm$) && (this.$setVal$([]), this.search.val(""), this.selection.removeData(this.$_elemNm$));
     this.$_setPlaceholder$()
   }, $_initSelection$:function() {
-    var $self$$41$$ = this;
+    var $self$$42$$ = this;
     this.$opts$.$initSelection$.call(null, this.$datalist$ ? this.$datalist$ : this.$opts$.element, function($selected$$1$$) {
       if(void 0 !== $selected$$1$$ && null !== $selected$$1$$) {
-        var $prevVal$$ = $self$$41$$.$getVal$();
+        var $prevVal$$ = $self$$42$$.$getVal$();
         Array.isArray($prevVal$$) && ($prevVal$$ = $prevVal$$[0]);
-        $self$$41$$.id($selected$$1$$) !== $prevVal$$ && $self$$41$$.$setVal$($self$$41$$.id($selected$$1$$));
-        $self$$41$$.$_updateSelection$($selected$$1$$);
-        $self$$41$$.close()
+        $self$$42$$.id($selected$$1$$) !== $prevVal$$ && $self$$42$$.$setVal$($self$$42$$.id($selected$$1$$));
+        $self$$42$$.$_updateSelection$($selected$$1$$);
+        $self$$42$$.close()
       }
     })
   }, $_containerKeydownHandler$:function($e$$52$$) {
@@ -531,7 +531,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     $container$$6_selection$$.on("mousedown", "abbr", this.$_bind$(function($e$$54$$) {
       this.$_isInterfaceEnabled$() && (this.$_clear$(), $_ComboUtils$$.$killEventImmediately$($e$$54$$), this.close(), this.selection.focus())
     }));
-    $container$$6_selection$$.on("mousedown", this.$_bind$(function() {
+    $container$$6_selection$$.on("mousedown", this.$_bind$(function($e$$55$$) {
+      this.$opts$.element.prop("disabled") && $_ComboUtils$$.$killEvent$($e$$55$$);
       this.$_opened$() ? this.close() : this.$_isInterfaceEnabled$() && this.open();
       this.search.focus()
     }));
@@ -545,21 +546,21 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.$opts$.element.addClass(this.$_classNm$ + "-offscreen");
     this.$_setPlaceholder$()
   }, $_prepareOpts$:function() {
-    var $opts$$14$$ = $_AbstractSingleChoice$$.$superclass$.$_prepareOpts$.apply(this, arguments), $self$$42$$ = this, $tagName$$2$$ = $opts$$14$$.element.get(0).tagName.toLowerCase();
+    var $opts$$14$$ = $_AbstractSingleChoice$$.$superclass$.$_prepareOpts$.apply(this, arguments), $self$$43$$ = this, $tagName$$2$$ = $opts$$14$$.element.get(0).tagName.toLowerCase();
     if("input" === $tagName$$2$$ && $opts$$14$$.element.prop("list") || "select" === $tagName$$2$$ && 0 < $opts$$14$$.element.children().length) {
       $opts$$14$$.$initSelection$ = function $$opts$$14$$$$initSelection$$($element$$41$$, $callback$$83$$) {
-        var $selected$$2$$, $value$$147$$ = $self$$42$$.$getVal$();
-        Array.isArray($value$$147$$) && ($value$$147$$ = $value$$147$$[0]);
-        $selected$$2$$ = void 0 !== $value$$147$$ && null !== $value$$147$$ ? $self$$42$$.$_optionToData$($element$$41$$.find("option").filter(function() {
-          return this.value === $value$$147$$
-        })) : $self$$42$$.$_optionToData$($element$$41$$.find("option").filter($JSCompiler_get$$("selected")));
+        var $selected$$2$$, $value$$148$$ = $self$$43$$.$getVal$();
+        Array.isArray($value$$148$$) && ($value$$148$$ = $value$$148$$[0]);
+        $selected$$2$$ = void 0 !== $value$$148$$ && null !== $value$$148$$ ? $self$$43$$.$_optionToData$($element$$41$$.find("option").filter(function() {
+          return this.value === $value$$148$$
+        })) : $self$$43$$.$_optionToData$($element$$41$$.find("option").filter($JSCompiler_get$$("selected")));
         $callback$$83$$($selected$$2$$)
       }
     }else {
       if("data" in $opts$$14$$ || this.$getVal$() && 0 < this.$getVal$().length) {
         $opts$$14$$.$initSelection$ = $opts$$14$$.$initSelection$ || function($element$$42$$, $callback$$84$$) {
           var $id$$13$$ = "";
-          $self$$42$$.$getVal$() && $self$$42$$.$getVal$().length && ($id$$13$$ = $self$$42$$.$getVal$()[0]);
+          $self$$43$$.$getVal$() && $self$$43$$.$getVal$().length && ($id$$13$$ = $self$$43$$.$getVal$()[0]);
           var $first$$3$$ = null, $match$$14$$ = null;
           $opts$$14$$.$query$({$matcher$:function($is_match_term$$4$$, $text$$9$$, $el$$6$$) {
             ($is_match_term$$4$$ = $id$$13$$ === $opts$$14$$.id($el$$6$$)) && ($match$$14$$ = $el$$6$$);
@@ -579,18 +580,18 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.search.val($placeholder$$).addClass(this.$_classNm$ + "-default");
     this.$container$.removeClass(this.$_classNm$ + "-allowclear")
   }, $_postprocessResults$:function($data$$63_highlightableChoices$$, $initial$$1$$, $noHighlightUpdate$$) {
-    var $selected$$3$$ = 0, $self$$43$$ = this;
+    var $selected$$3$$ = 0, $self$$44$$ = this;
     $data$$63_highlightableChoices$$ = this.$_findHighlightableChoices$();
-    $_ComboUtils$$.$each2$($data$$63_highlightableChoices$$, function($i$$152$$, $elm$$3$$) {
-      if($self$$43$$.$getVal$() && $self$$43$$.$getVal$()[0] === $self$$43$$.id($elm$$3$$.data($self$$43$$.$_elemNm$))) {
-        return $selected$$3$$ = $i$$152$$, !1
+    $_ComboUtils$$.$each2$($data$$63_highlightableChoices$$, function($i$$153$$, $elm$$3$$) {
+      if($self$$44$$.$getVal$() && $self$$44$$.$getVal$()[0] === $self$$44$$.id($elm$$3$$.data($self$$44$$.$_elemNm$))) {
+        return $selected$$3$$ = $i$$153$$, !1
       }
     });
     !1 !== $noHighlightUpdate$$ && (!0 === $initial$$1$$ && 0 <= $selected$$3$$ ? this.$_highlight$($selected$$3$$) : this.$_highlight$(0))
   }, $_onSelect$:function($data$$64$$, $old_options$$215$$, $event$$55$$) {
     this.$_triggerSelect$($data$$64$$) && ($old_options$$215$$ = this.$getVal$() ? this.$getVal$()[0] : null, this.$_data$(), this.$_updateSelection$($data$$64$$), this.close(), $old_options$$215$$ !== this.id($data$$64$$) && this.$setVal$(this.id($data$$64$$), $event$$55$$))
   }, val:function() {
-    var $val$$28$$, $data$$65$$ = null, $self$$44$$ = this;
+    var $val$$28$$, $data$$65$$ = null, $self$$45$$ = this;
     this.$_data$();
     if(0 === arguments.length) {
       return this.$getVal$()
@@ -599,8 +600,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     if(this.$datalist$) {
       var $selected$$4$$;
       $selected$$4$$ = this.$datalist$.val($val$$28$$).find("option").filter($JSCompiler_get$$("selected"));
-      $_ComboUtils$$.$each2$($selected$$4$$, function($i$$153$$, $elm$$4$$) {
-        $data$$65$$ = $self$$44$$.$_optionToData$($elm$$4$$);
+      $_ComboUtils$$.$each2$($selected$$4$$, function($i$$154$$, $elm$$4$$) {
+        $data$$65$$ = $self$$45$$.$_optionToData$($elm$$4$$);
         return!1
       });
       this.$setVal$($val$$28$$);
@@ -613,9 +614,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
         }
         this.$setVal$($val$$28$$);
         this.$opts$.$initSelection$(this.$opts$.element, function($data$$66$$) {
-          $self$$44$$.$setVal$($data$$66$$ ? $self$$44$$.id($data$$66$$) : []);
-          $self$$44$$.$_updateSelection$($data$$66$$);
-          $self$$44$$.$_setPlaceholder$()
+          $self$$45$$.$setVal$($data$$66$$ ? $self$$45$$.id($data$$66$$) : []);
+          $self$$45$$.$_updateSelection$($data$$66$$);
+          $self$$45$$.$_setPlaceholder$()
         })
       }else {
         this.$_clear$()
@@ -623,12 +624,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     }
   }, $_clearSearch$:function() {
     this.search.val("")
-  }, $_data$:function($value$$148$$) {
+  }, $_data$:function($value$$149$$) {
     var $data$$67$$;
     if(0 === arguments.length) {
       return $data$$67$$ = this.selection.data(this.$_elemNm$), void 0 === $data$$67$$ && ($data$$67$$ = null), $data$$67$$
     }
-    $value$$148$$ ? (this.$_data$(), this.$setVal$($value$$148$$ ? this.id($value$$148$$) : []), this.$_updateSelection$($value$$148$$)) : this.$_clear$()
+    $value$$149$$ ? (this.$_data$(), this.$setVal$($value$$149$$ ? this.id($value$$149$$) : []), this.$_updateSelection$($value$$149$$)) : this.$_clear$()
   }}), $_OjSingleCombobox$$ = $_ComboUtils$$.$clazz$($_AbstractSingleChoice$$, {$_elemNm$:"ojcombobox", $_classNm$:"oj-combobox", $_createContainer$:function() {
     return $$$$9$$(document.createElement("div")).attr({"class":"oj-combobox oj-component"}).html("\x3cdiv class\x3d'oj-combobox-choice' tabindex\x3d'-1' role\x3d'presentation'\x3e   \x3cspan class\x3d'oj-combobox-search'\x3e\x3cinput type\x3d'text' autocomplete\x3d'off' autocorrect\x3d'off' autocapitalize\x3d'off'       spellcheck\x3d'false' class\x3d'oj-combobox-input' role\x3d'combobox' aria-expanded\x3d'false' aria-autocomplete\x3d'list' /\x3e   \x3c/span\x3e\x3cabbr class\x3d'oj-combobox-search-choice-close' role\x3d'presentation'\x3e\x3c/abbr\x3e   \x3ca class\x3d'oj-combobox-arrow' role\x3d'presentation'\x3e\x3cb class\x3d'oj-combobox-icon oj-component-icon oj-clickable-icon oj-combobox-open-icon' role\x3d'presentation'\x3e\x3c/b\x3e\x3c/a\x3e\x3c/div\x3e\x3cdiv class\x3d'oj-listbox-drop oj-combobox-display-none' role\x3d'presentation'\x3e   \x3cul class\x3d'oj-listbox-results' role\x3d'listbox'\x3e   \x3c/ul\x3e\x3c/div\x3e")
   }, close:function() {
@@ -649,10 +650,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.$opts$.$allowClear$ && this.$container$.addClass(this.$_classNm$ + "-allowclear")
   }}), $_OjSingleSelect$$ = $_ComboUtils$$.$clazz$($_AbstractSingleChoice$$, {$_elemNm$:"ojselect", $_classNm$:"oj-select", $_userTyping$:!1, $_createContainer$:function() {
     var $container$$8$$ = $$$$9$$(document.createElement("div")).attr({"class":"oj-select oj-component"}).html("\x3cdiv class\x3d'oj-select-choice' tabindex\x3d'0' role\x3d'combobox'      aria-autocomplete\x3d'none' aria-expanded\x3d'false' aria-ready\x3d'true'\x3e  \x3cspan class\x3d'oj-select-box'\x3e    \x3cspan class\x3d'oj-select-chosen'\x3e\x3c/span\x3e    \x3cabbr class\x3d'oj-select-search-choice-close' role\x3d'presentation'\x3e\x3c/abbr\x3e    \x3ca class\x3d'oj-component-icon oj-clickable-icon oj-select-open-icon' role\x3d'presentation'\x3e    \x3cb role\x3d'presentation'\x3e\x3c/b\x3e\x3c/a\x3e  \x3c/span\x3e\x3c/div\x3e\x3cdiv class\x3d'oj-listbox-drop oj-select-display-none' role\x3d'presentation'\x3e  \x3cdiv class\x3d'oj-select-search-wrapper'\x3e  \x3cdiv class\x3d'oj-select-search'\x3e    \x3cinput type\x3d'text' autocomplete\x3d'off' autocorrect\x3d'off' autocapitalize\x3d'off'           spellcheck\x3d'false' class\x3d'oj-select-input' title\x3d'Search field'            role\x3d'combobox' aria-expanded\x3d'false' aria-autocomplete\x3d'list' /\x3e    \x3cspan class\x3d'oj-select-spyglass-box'\x3e      \x3cspan class\x3d'oj-component-icon oj-select-search-icon' role\x3d'presentation'\x3e       \x3cb role\x3d'presentation'\x3e\x3c/b\x3e\x3c/span\x3e    \x3c/span\x3e  \x3c/div\x3e  \x3c/div\x3e   \x3cul class\x3d'oj-listbox-results' role\x3d'listbox'\x3e   \x3c/ul\x3e\x3c/div\x3e");
-    this.$opts$.element.prop("disabled") && $container$$8$$.find(".oj-select-choice").attr("tabindex", "-1");
+    this.$opts$.element.prop("disabled") && ($container$$8$$.find(".oj-select-choice").attr("tabindex", "-1"), $container$$8$$.find(".oj-select-open-icon").addClass("oj-disabled"));
     return $container$$8$$
   }, close:function() {
-    this.$_opened$() && ($_OjSingleSelect$$.$superclass$.close.apply(this, arguments), "" == this.text.text() ? this.$_clear$() : this.$_clearSearch$(), $_ComboUtils$$.$_focus$(this.selection))
+    this.$_opened$() && ($_OjSingleSelect$$.$superclass$.close.apply(this, arguments), "" == this.text.text() ? this.$_clear$() : this.$_clearSearch$(), $_ComboUtils$$.$_focus$(this.selection), this.$container$.find(".oj-select-spyglass-box").off("mouseup click"))
   }, $_opening$:function($event$$57$$) {
     var $el$$8_range$$20$$, $len$$8$$;
     $_OjSingleSelect$$.$superclass$.$_opening$.apply(this, arguments);
@@ -698,11 +699,32 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     $_OjSingleSelect$$.$superclass$.$setVal$.call(this, $val$$29$$, $event$$58$$);
     this.selection.data("selectVal", $val$$29$$)
   }, $_containerKeydownHandler$:function($e$$57$$) {
-    $_ComboUtils$$.$KEY$.$isControl$($e$$57$$) || $_ComboUtils$$.$KEY$.$isFunctionKey$($e$$57$$) || ($e$$57$$.which === $_ComboUtils$$.$KEY$.TAB ? (this.$_selectHighlighted$({$noFocus$:!0}, $e$$57$$), this.selection.focus()) : $_OjSingleSelect$$.$superclass$.$_containerKeydownHandler$.apply(this, arguments))
+    if(!$_ComboUtils$$.$KEY$.$isControl$($e$$57$$) && !$_ComboUtils$$.$KEY$.$isFunctionKey$($e$$57$$)) {
+      switch($e$$57$$.which) {
+        case $_ComboUtils$$.$KEY$.TAB:
+          this.$_selectHighlighted$({$noFocus$:!0}, $e$$57$$);
+          this.selection.focus();
+          return;
+        case $_ComboUtils$$.$KEY$.ENTER:
+          if($e$$57$$.target === this.selection[0] && !this.$_opened$()) {
+            this.open();
+            $_ComboUtils$$.$killEvent$($e$$57$$);
+            return
+          }
+      }
+      $_OjSingleSelect$$.$superclass$.$_containerKeydownHandler$.apply(this, arguments)
+    }
   }, $_showSearchBox$:function() {
     var $focusOnSearchBox$$ = !1, $searchBox$$ = this.$dropdown$.find(".oj-select-search");
     $searchBox$$ && (this.$_hasSearchBox$() ? (this.$dropdown$.find(".oj-select-search-wrapper").removeClass("oj-helper-hidden-accessible"), $$$$9$$($searchBox$$).removeAttr("aria-hidden"), $focusOnSearchBox$$ = !0) : (this.$dropdown$.find(".oj-select-search-wrapper").addClass("oj-helper-hidden-accessible"), $$$$9$$($searchBox$$).attr({"aria-hidden":"true"})));
-    $_ComboUtils$$.$_focus$($focusOnSearchBox$$ ? this.search : this.selection)
+    $_ComboUtils$$.$_focus$($focusOnSearchBox$$ ? this.search : this.selection);
+    if($focusOnSearchBox$$) {
+      var $self$$46$$ = this;
+      $searchBox$$.find(".oj-select-spyglass-box").on("mouseup click", function($e$$58$$) {
+        $self$$46$$.search.focus();
+        $e$$58$$.stopPropagation()
+      })
+    }
   }, $_hasSearchBox$:function() {
     return(this.$datalist$ ? this.$datalist$[0].length : this.$opts$.data.length) > this.$opts$.minimumResultsForSearch || this.$_userTyping$
   }});
@@ -730,9 +752,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this._trigger("ojexpand", $event$$59$$)
   }, collapse:function() {
     this.$combobox$.close()
-  }, _setOption:function($key$$64$$, $value$$149$$) {
-    this._super($key$$64$$, $value$$149$$);
-    "disabled" === $key$$64$$ ? $value$$149$$ ? this.$combobox$.$_disable$() : this.$combobox$.$_enable$() : "value" === $key$$64$$ && this.$combobox$.$_initSelection$()
+  }, _setOption:function($key$$64$$, $value$$150$$) {
+    this._super($key$$64$$, $value$$150$$);
+    "disabled" === $key$$64$$ ? $value$$150$$ ? this.$combobox$.$_disable$() : this.$combobox$.$_enable$() : "value" === $key$$64$$ && this.$combobox$.$_initSelection$()
   }, _GetMessagingLauncherElement:function() {
     return this.$combobox$.$container$
   }, _GetDefaultStyleClass:$JSCompiler_returnArg$$("oj-combobox"), getNodeBySubId:function($locator$$5_subId$$2$$) {
@@ -757,8 +779,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
   $oj$$9$$.$__registerWidget$("oj.ojSelect", $$$$9$$.oj.editableValue, {version:"1.0.0", defaultElement:"\x3cselect\x3e", widgetEventPrefix:"oj", options:{minimumResultsForSearch:10, placeholder:"", data:null, expand:null}, widget:function() {
     return this.select.$container$
   }, $_ComponentCreate$:function() {
-    this.$_setup$();
-    this._super()
+    this._super();
+    this.$_setup$()
   }, $_setup$:function() {
     var $opts$$16$$ = {};
     $opts$$16$$.element = this.element;
@@ -776,13 +798,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.select.open()
   }, collapse:function() {
     this.select.close()
-  }, _SetPlaceholder:function($value$$150$$) {
-    this._super($value$$150$$);
-    this.select.$opts$.placeholder = $value$$150$$;
+  }, _SetPlaceholder:function($value$$151$$) {
+    this._super($value$$151$$);
+    this.select.$opts$.placeholder = $value$$151$$;
     this.select.$_setPlaceholder$()
-  }, _setOption:function($key$$65$$, $value$$151$$) {
-    this._super($key$$65$$, $value$$151$$);
-    "disabled" === $key$$65$$ ? $value$$151$$ ? this.select.$_disable$() : this.select.$_enable$() : "data" === $key$$65$$ ? this.$_setup$() : "value" === $key$$65$$ && this.select.$_initSelection$()
+  }, _setOption:function($key$$65$$, $value$$152$$) {
+    this._super($key$$65$$, $value$$152$$);
+    "disabled" === $key$$65$$ ? $value$$152$$ ? this.select.$_disable$() : this.select.$_enable$() : "data" === $key$$65$$ ? this.$_setup$() : "value" === $key$$65$$ && this.select.$_initSelection$()
   }, getNodeBySubId:function($locator$$6_subId$$3$$) {
     if(null == $locator$$6_subId$$3$$) {
       return this.select.$container$ ? this.select.$container$[0] : null
@@ -807,20 +829,20 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
   var $_OjMultiCombobox$$ = $_ComboUtils$$.$clazz$($_AbstractOjChoice$$, {$_elemNm$:"ojcombobox", $_classNm$:"oj-combobox", $_createContainer$:function() {
     return $$$$9$$(document.createElement("div")).attr({"class":"oj-combobox oj-combobox-multi oj-component"}).html("\x3cul class\x3d'oj-combobox-choices'\x3e  \x3cli class\x3d'oj-combobox-search-field'\x3e    \x3cinput type\x3d'text' role\x3d'combobox' aria-expanded\x3d'false' aria-autocomplete\x3d'list' autocomplete\x3d'off' autocorrect\x3d'off' autocapitalize\x3d'off' spellcheck\x3d'false' class\x3d'oj-combobox-input'\x3e  \x3c/li\x3e\x3c/ul\x3e\x3cdiv class\x3d'oj-combobox-description oj-helper-hidden-accessible'/\x3e\x3cdiv class\x3d'oj-listbox-drop oj-listbox-drop-multi oj-combobox-display-none'\x3e   \x3cul class\x3d'oj-listbox-results' role\x3d'listbox'\x3e   \x3c/ul\x3e\x3c/div\x3e")
   }, $_prepareOpts$:function() {
-    var $opts$$17$$ = $_OjMultiCombobox$$.$superclass$.$_prepareOpts$.apply(this, arguments), $self$$45$$ = this;
+    var $opts$$17$$ = $_OjMultiCombobox$$.$superclass$.$_prepareOpts$.apply(this, arguments), $self$$47$$ = this;
     "input" === $opts$$17$$.element.get(0).tagName.toLowerCase() && $opts$$17$$.element.prop("list") ? $opts$$17$$.$initSelection$ = function $$opts$$17$$$$initSelection$$($element$$44$$, $callback$$85$$) {
       var $data$$70$$ = [];
       if($opts$$17$$.element.val()) {
-        for(var $selected$$5$$, $ids$$ = $_ComboUtils$$.$splitVal$($opts$$17$$.element.val(), $opts$$17$$.separator), $i$$154$$ = 0;$i$$154$$ < $ids$$.length;$i$$154$$++) {
-          var $id$$14$$ = $ids$$[$i$$154$$];
+        for(var $selected$$5$$, $ids$$ = $_ComboUtils$$.$splitVal$($opts$$17$$.element.val(), $opts$$17$$.separator), $i$$155$$ = 0;$i$$155$$ < $ids$$.length;$i$$155$$++) {
+          var $id$$14$$ = $ids$$[$i$$155$$];
           $selected$$5$$ = $element$$44$$.find("option").filter(function() {
             return this.value === $id$$14$$
           });
-          $data$$70$$.push($self$$45$$.$_optionToData$($selected$$5$$))
+          $data$$70$$.push($self$$47$$.$_optionToData$($selected$$5$$))
         }
       }else {
-        $selected$$5$$ = $element$$44$$.find("option").filter($JSCompiler_get$$("selected")), $_ComboUtils$$.$each2$($selected$$5$$, function($i$$155$$, $elm$$5$$) {
-          $data$$70$$.push($self$$45$$.$_optionToData$($elm$$5$$))
+        $selected$$5$$ = $element$$44$$.find("option").filter($JSCompiler_get$$("selected")), $_ComboUtils$$.$each2$($selected$$5$$, function($i$$156$$, $elm$$5$$) {
+          $data$$70$$.push($self$$47$$.$_optionToData$($elm$$5$$))
         })
       }
       $callback$$85$$($data$$70$$)
@@ -832,8 +854,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
         }).length) && $matches$$2$$.push($el$$9$$);
         return $is_match$$1_term$$5$$
       }, $callback$:$$$$9$$.isFunction($callback$$86$$) ? function() {
-        for(var $ordered$$ = [], $i$$156$$ = 0;$i$$156$$ < $ids$$1$$.length;$i$$156$$++) {
-          for(var $id$$16$$ = $ids$$1$$[$i$$156$$], $j$$19$$ = 0;$j$$19$$ < $matches$$2$$.length;$j$$19$$++) {
+        for(var $ordered$$ = [], $i$$157$$ = 0;$i$$157$$ < $ids$$1$$.length;$i$$157$$++) {
+          for(var $id$$16$$ = $ids$$1$$[$i$$157$$], $j$$19$$ = 0;$j$$19$$ < $matches$$2$$.length;$j$$19$$++) {
             var $match$$15$$ = $matches$$2$$[$j$$19$$];
             if($id$$16$$ === $opts$$17$$.id($match$$15$$)) {
               $ordered$$.push($match$$15$$);
@@ -872,43 +894,43 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     }));
     this.search.attr("tabindex", this.$elementTabIndex$);
     this.$keydowns$ = 0;
-    this.search.on("keydown", this.$_bind$(function($e$$59$$) {
+    this.search.on("keydown", this.$_bind$(function($e$$60$$) {
       if(this.$_isInterfaceEnabled$()) {
         ++this.$keydowns$;
         var $selected$$7$$ = $selection$$1$$.find("." + this.$_classNm$ + "-search-choice-focus"), $prev$$ = $selected$$7$$.prev("." + this.$_classNm$ + "-search-choice:not(." + this.$_classNm$ + "-locked)"), $next$$ = $selected$$7$$.next("." + this.$_classNm$ + "-search-choice:not(." + this.$_classNm$ + "-locked)"), $pos$$6_selectedChoice$$ = $_ComboUtils$$.$getCursorInfo$(this.search);
-        if(!$selected$$7$$.length || $e$$59$$.which != $_ComboUtils$$.$KEY$.LEFT && $e$$59$$.which != $_ComboUtils$$.$KEY$.RIGHT && $e$$59$$.which != $_ComboUtils$$.$KEY$.$BACKSPACE$ && $e$$59$$.which != $_ComboUtils$$.$KEY$.$DELETE$ && $e$$59$$.which != $_ComboUtils$$.$KEY$.ENTER) {
-          if(($e$$59$$.which !== $_ComboUtils$$.$KEY$.$BACKSPACE$ || 1 != this.$keydowns$) && $e$$59$$.which != $_ComboUtils$$.$KEY$.LEFT || 0 != $pos$$6_selectedChoice$$.offset || $pos$$6_selectedChoice$$.length) {
+        if(!$selected$$7$$.length || $e$$60$$.which != $_ComboUtils$$.$KEY$.LEFT && $e$$60$$.which != $_ComboUtils$$.$KEY$.RIGHT && $e$$60$$.which != $_ComboUtils$$.$KEY$.$BACKSPACE$ && $e$$60$$.which != $_ComboUtils$$.$KEY$.$DELETE$ && $e$$60$$.which != $_ComboUtils$$.$KEY$.ENTER) {
+          if(($e$$60$$.which !== $_ComboUtils$$.$KEY$.$BACKSPACE$ || 1 != this.$keydowns$) && $e$$60$$.which != $_ComboUtils$$.$KEY$.LEFT || 0 != $pos$$6_selectedChoice$$.offset || $pos$$6_selectedChoice$$.length) {
             this.$_selectChoice$(null);
             if(this.$_opened$()) {
-              switch($e$$59$$.which) {
+              switch($e$$60$$.which) {
                 case $_ComboUtils$$.$KEY$.UP:
                 ;
                 case $_ComboUtils$$.$KEY$.DOWN:
-                  this.$_moveHighlight$($e$$59$$.which === $_ComboUtils$$.$KEY$.UP ? -1 : 1);
-                  $_ComboUtils$$.$killEvent$($e$$59$$);
+                  this.$_moveHighlight$($e$$60$$.which === $_ComboUtils$$.$KEY$.UP ? -1 : 1);
+                  $_ComboUtils$$.$killEvent$($e$$60$$);
                   return;
                 case $_ComboUtils$$.$KEY$.ENTER:
                   this.$_selectHighlighted$();
-                  $_ComboUtils$$.$killEvent$($e$$59$$);
+                  $_ComboUtils$$.$killEvent$($e$$60$$);
                   return;
                 case $_ComboUtils$$.$KEY$.TAB:
                   this.$_selectHighlighted$({$noFocus$:!0});
                   this.close();
                   return;
                 case $_ComboUtils$$.$KEY$.$ESC$:
-                  this.$_cancel$($e$$59$$);
-                  $_ComboUtils$$.$killEvent$($e$$59$$);
+                  this.$_cancel$($e$$60$$);
+                  $_ComboUtils$$.$killEvent$($e$$60$$);
                   return
               }
             }
-            $e$$59$$.which === $_ComboUtils$$.$KEY$.TAB || ($_ComboUtils$$.$KEY$.$isControl$($e$$59$$) || $_ComboUtils$$.$KEY$.$isFunctionKey$($e$$59$$) || $e$$59$$.which === $_ComboUtils$$.$KEY$.$BACKSPACE$ || $e$$59$$.which === $_ComboUtils$$.$KEY$.$ESC$) || $e$$59$$.which === $_ComboUtils$$.$KEY$.ENTER && (!1 === this.$opts$.$openOnEnter$ || $e$$59$$.altKey || $e$$59$$.ctrlKey || $e$$59$$.shiftKey || $e$$59$$.metaKey) || (this.open(), $e$$59$$.which !== $_ComboUtils$$.$KEY$.PAGE_UP && $e$$59$$.which !== 
-            $_ComboUtils$$.$KEY$.PAGE_DOWN || $_ComboUtils$$.$killEvent$($e$$59$$), $e$$59$$.which === $_ComboUtils$$.$KEY$.ENTER && $_ComboUtils$$.$killEvent$($e$$59$$))
+            $e$$60$$.which === $_ComboUtils$$.$KEY$.TAB || ($_ComboUtils$$.$KEY$.$isControl$($e$$60$$) || $_ComboUtils$$.$KEY$.$isFunctionKey$($e$$60$$) || $e$$60$$.which === $_ComboUtils$$.$KEY$.$BACKSPACE$ || $e$$60$$.which === $_ComboUtils$$.$KEY$.$ESC$) || $e$$60$$.which === $_ComboUtils$$.$KEY$.ENTER && (!1 === this.$opts$.$openOnEnter$ || $e$$60$$.altKey || $e$$60$$.ctrlKey || $e$$60$$.shiftKey || $e$$60$$.metaKey) || (this.open(), $e$$60$$.which !== $_ComboUtils$$.$KEY$.PAGE_UP && $e$$60$$.which !== 
+            $_ComboUtils$$.$KEY$.PAGE_DOWN || $_ComboUtils$$.$killEvent$($e$$60$$), $e$$60$$.which === $_ComboUtils$$.$KEY$.ENTER && $_ComboUtils$$.$killEvent$($e$$60$$))
           }else {
-            this.$_selectChoice$($selection$$1$$.find("." + this.$_classNm$ + "-search-choice:not(." + this.$_classNm$ + "-locked)").last()), $_ComboUtils$$.$killEvent$($e$$59$$)
+            this.$_selectChoice$($selection$$1$$.find("." + this.$_classNm$ + "-search-choice:not(." + this.$_classNm$ + "-locked)").last()), $_ComboUtils$$.$killEvent$($e$$60$$)
           }
         }else {
-          $pos$$6_selectedChoice$$ = $selected$$7$$, $e$$59$$.which == $_ComboUtils$$.$KEY$.LEFT && $prev$$.length ? $pos$$6_selectedChoice$$ = $prev$$ : $e$$59$$.which == $_ComboUtils$$.$KEY$.RIGHT ? $pos$$6_selectedChoice$$ = $next$$.length ? $next$$ : null : $e$$59$$.which === $_ComboUtils$$.$KEY$.$BACKSPACE$ ? (this.$_unselect$($selected$$7$$.first()), this.search.width(10), $pos$$6_selectedChoice$$ = $prev$$.length ? $prev$$ : $next$$) : $e$$59$$.which == $_ComboUtils$$.$KEY$.$DELETE$ ? (this.$_unselect$($selected$$7$$.first()), 
-          this.search.width(10), $pos$$6_selectedChoice$$ = $next$$.length ? $next$$ : null) : $e$$59$$.which == $_ComboUtils$$.$KEY$.ENTER && ($pos$$6_selectedChoice$$ = null), this.$_selectChoice$($pos$$6_selectedChoice$$), $_ComboUtils$$.$killEvent$($e$$59$$), $pos$$6_selectedChoice$$ && $pos$$6_selectedChoice$$.length || this.open()
+          $pos$$6_selectedChoice$$ = $selected$$7$$, $e$$60$$.which == $_ComboUtils$$.$KEY$.LEFT && $prev$$.length ? $pos$$6_selectedChoice$$ = $prev$$ : $e$$60$$.which == $_ComboUtils$$.$KEY$.RIGHT ? $pos$$6_selectedChoice$$ = $next$$.length ? $next$$ : null : $e$$60$$.which === $_ComboUtils$$.$KEY$.$BACKSPACE$ ? (this.$_unselect$($selected$$7$$.first()), this.search.width(10), $pos$$6_selectedChoice$$ = $prev$$.length ? $prev$$ : $next$$) : $e$$60$$.which == $_ComboUtils$$.$KEY$.$DELETE$ ? (this.$_unselect$($selected$$7$$.first()), 
+          this.search.width(10), $pos$$6_selectedChoice$$ = $next$$.length ? $next$$ : null) : $e$$60$$.which == $_ComboUtils$$.$KEY$.ENTER && ($pos$$6_selectedChoice$$ = null), this.$_selectChoice$($pos$$6_selectedChoice$$), $_ComboUtils$$.$killEvent$($e$$60$$), $pos$$6_selectedChoice$$ && $pos$$6_selectedChoice$$.length || this.open()
         }
       }
     }));
@@ -916,14 +938,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
       this.$keydowns$ = 0;
       this.$_resizeSearch$()
     }));
-    this.search.on("blur", this.$_bind$(function($e$$61$$) {
+    this.search.on("blur", this.$_bind$(function($e$$62$$) {
       this.search.removeClass(this.$_classNm$ + "-focused");
       this.$_selectChoice$(null);
       this.$_opened$() || this.$_clearSearch$();
-      $e$$61$$.stopImmediatePropagation()
+      $e$$62$$.stopImmediatePropagation()
     }));
-    this.$container$.on("click", $selector$$14$$, this.$_bind$(function($e$$62$$) {
-      !this.$_isInterfaceEnabled$() || 0 < $$$$9$$($e$$62$$.target).closest("." + this.$_classNm$ + "-search-choice").length || (this.$_selectChoice$(null), this.$_clearPlaceholder$(), this.open(), this.$_focusSearch$(), $e$$62$$.preventDefault())
+    this.$container$.on("click", $selector$$14$$, this.$_bind$(function($e$$63$$) {
+      !this.$_isInterfaceEnabled$() || 0 < $$$$9$$($e$$63$$.target).closest("." + this.$_classNm$ + "-search-choice").length || (this.$_selectChoice$(null), this.$_clearPlaceholder$(), this.open(), this.$_focusSearch$(), $e$$63$$.preventDefault())
     }));
     this.$container$.on("focus", $selector$$14$$, this.$_bind$(function() {
       this.$_isInterfaceEnabled$() && this.$_clearPlaceholder$()
@@ -936,9 +958,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
   }, $_initSelection$:function() {
     "" === this.$opts$.element.val() && "" === this.$opts$.element.text() && (this.$_updateSelection$([]), this.close(), this.$_clearSearch$());
     if(this.$datalist$ || "" !== this.$opts$.element.val()) {
-      var $self$$46$$ = this;
+      var $self$$48$$ = this;
       this.$opts$.$initSelection$.call(null, this.$datalist$ ? this.$datalist$ : this.$opts$.element, function($data$$72$$) {
-        void 0 !== $data$$72$$ && null !== $data$$72$$ && ($self$$46$$.$_updateSelection$($data$$72$$), $self$$46$$.close(), $self$$46$$.$_clearSearch$())
+        void 0 !== $data$$72$$ && null !== $data$$72$$ && ($self$$48$$.$_updateSelection$($data$$72$$), $self$$48$$.close(), $self$$48$$.$_clearSearch$())
       })
     }
   }, $_clearSearch$:function() {
@@ -959,16 +981,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.close();
     this.search.focus()
   }, $_updateSelection$:function($data$$73$$) {
-    var $ids$$2$$ = [], $filtered$$1$$ = [], $self$$47$$ = this;
+    var $ids$$2$$ = [], $filtered$$1$$ = [], $self$$49$$ = this;
     $$$$9$$($data$$73$$).each(function() {
-      0 > $ids$$2$$.indexOf($self$$47$$.id(this)) && ($ids$$2$$.push($self$$47$$.id(this)), $filtered$$1$$.push(this))
+      0 > $ids$$2$$.indexOf($self$$49$$.id(this)) && ($ids$$2$$.push($self$$49$$.id(this)), $filtered$$1$$.push(this))
     });
     $data$$73$$ = $filtered$$1$$;
     this.selection.find("." + this.$_classNm$ + "-search-choice").remove();
     $$$$9$$($data$$73$$).each(function() {
-      $self$$47$$.$_addSelectedChoice$(this)
+      $self$$49$$.$_addSelectedChoice$(this)
     });
-    $self$$47$$.$_postprocessResults$()
+    $self$$49$$.$_postprocessResults$()
   }, $_onSelect$:function($data$$74$$, $options$$216$$) {
     this.$_triggerSelect$($data$$74$$) && (this.$_addSelectedChoice$($data$$74$$), !this.select && this.$opts$.$closeOnSelect$ || this.$_postprocessResults$($data$$74$$, !1, !0 === this.$opts$.$closeOnSelect$), this.$opts$.$closeOnSelect$ ? (this.close(), this.search.width(10)) : 0 < this.$_findHighlightableChoices$().length ? (this.$_clearSearch$(), this.search.width(10), this.$_resizeSearch$(), this.$_positionDropdown$()) : (this.close(), this.search.width(10)), this.$_triggerChange$(), $options$$216$$ && 
     $options$$216$$.$noFocus$ || this.$_focusSearch$())
@@ -980,13 +1002,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     $enableChoice$$ ? $choice$$3_enabledItem$$ : $disabledItem_formatted$$3$$, $id$$17$$ = this.id($data$$75$$), $val$$30$$ = this.$getVal$(), $disabledItem_formatted$$3$$ = this.$opts$.$formatSelection$($data$$75$$, $choice$$3_enabledItem$$.find("div"), this.$opts$.$escapeMarkup$);
     void 0 !== $disabledItem_formatted$$3$$ && ($choice$$3_enabledItem$$.find("div").replaceWith("\x3cdiv\x3e" + $disabledItem_formatted$$3$$ + "\x3c/div\x3e"), $choice$$3_enabledItem$$.attr("valueText", $disabledItem_formatted$$3$$));
     if($enableChoice$$) {
-      $choice$$3_enabledItem$$.find("." + this.$_classNm$ + "-search-choice-close").on("mousedown", $_ComboUtils$$.$killEvent$).on("click dblclick", this.$_bind$(function($e$$63$$) {
-        this.$_isInterfaceEnabled$() && ($$$$9$$($e$$63$$.target).closest("." + this.$_classNm$ + "-search-choice").fadeOut("fast", this.$_bind$(function() {
-          this.$_unselect$($$$$9$$($e$$63$$.target));
+      $choice$$3_enabledItem$$.find("." + this.$_classNm$ + "-search-choice-close").on("mousedown", $_ComboUtils$$.$killEvent$).on("click dblclick", this.$_bind$(function($e$$64$$) {
+        this.$_isInterfaceEnabled$() && ($$$$9$$($e$$64$$.target).closest("." + this.$_classNm$ + "-search-choice").fadeOut("fast", this.$_bind$(function() {
+          this.$_unselect$($$$$9$$($e$$64$$.target));
           this.selection.find("." + this.$_classNm$ + "-search-choice-focus").removeClass(this.$_classNm$ + "-search-choice-focus");
           this.close();
           this.$_focusSearch$()
-        })).dequeue(), $_ComboUtils$$.$killEvent$($e$$63$$))
+        })).dequeue(), $_ComboUtils$$.$killEvent$($e$$64$$))
       }))
     }
     $choice$$3_enabledItem$$.data(this.$_elemNm$, $data$$75$$);
@@ -996,14 +1018,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     });
     this.$setVal$($val$$30$$)
   }, $_unselect$:function($selected$$8$$) {
-    var $val$$31$$ = this.$getVal$(), $data$$76$$, $index$$128$$;
+    var $val$$31$$ = this.$getVal$(), $data$$76$$, $index$$129$$;
     $selected$$8$$ = $selected$$8$$.closest("." + this.$_classNm$ + "-search-choice");
     if(0 === $selected$$8$$.length) {
       throw"Invalid argument: " + $selected$$8$$ + ". Must be ." + this.$_classNm$ + "-search-choice";
     }
     if($data$$76$$ = $selected$$8$$.data(this.$_elemNm$)) {
-      for(;0 <= ($index$$128$$ = $val$$31$$.indexOf(this.id($data$$76$$)));) {
-        $val$$31$$.splice($index$$128$$, 1), this.$setVal$($val$$31$$), this.select && this.$_postprocessResults$()
+      for(;0 <= ($index$$129$$ = $val$$31$$.indexOf(this.id($data$$76$$)));) {
+        $val$$31$$.splice($index$$129$$, 1), this.$setVal$($val$$31$$), this.select && this.$_postprocessResults$()
       }
       $selected$$8$$.remove();
       this.$_triggerChange$()
@@ -1011,16 +1033,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
   }, $_postprocessResults$:function($data$$77$$, $choices$$3_initial$$2$$, $noHighlightUpdate$$1$$) {
     var $val$$32$$ = this.$getVal$();
     $choices$$3_initial$$2$$ = this.$results$.find(".oj-listbox-result");
-    var $compound$$ = this.$results$.find(".oj-listbox-result-with-children"), $self$$48$$ = this;
-    $_ComboUtils$$.$each2$($choices$$3_initial$$2$$, function($i$$157$$, $choice$$4$$) {
-      var $id$$18$$ = $self$$48$$.id($choice$$4$$.data($self$$48$$.$_elemNm$));
+    var $compound$$ = this.$results$.find(".oj-listbox-result-with-children"), $self$$50$$ = this;
+    $_ComboUtils$$.$each2$($choices$$3_initial$$2$$, function($i$$158$$, $choice$$4$$) {
+      var $id$$18$$ = $self$$50$$.id($choice$$4$$.data($self$$50$$.$_elemNm$));
       0 <= $val$$32$$.indexOf($id$$18$$) && ($choice$$4$$.addClass("oj-listbox-selected"), $choice$$4$$.find(".oj-listbox-result-selectable").addClass("oj-listbox-selected"))
     });
-    $_ComboUtils$$.$each2$($compound$$, function($i$$158$$, $choice$$5$$) {
+    $_ComboUtils$$.$each2$($compound$$, function($i$$159$$, $choice$$5$$) {
       $choice$$5$$.is(".oj-listbox-result-selectable") || 0 !== $choice$$5$$.find(".oj-listbox-result-selectable:not(.oj-listbox-selected)").length || $choice$$5$$.addClass("oj-listbox-selected")
     });
-    -1 == this.$_highlight$() && !1 !== $noHighlightUpdate$$1$$ && $self$$48$$.$_highlight$(0);
-    !this.$opts$.$manageNewEntry$ && 0 < !$choices$$3_initial$$2$$.filter(".oj-listbox-result:not(.oj-listbox-selected)").length && (!$data$$77$$ || $data$$77$$ && !$data$$77$$.$more$ && 0 === this.$results$.find(".oj-listbox-no-results").length) && $_ComboUtils$$.$checkFormatter$($self$$48$$.$ojContext$, $self$$48$$.$opts$.$formatNoMatches$, "formatNoMatches") && this.$results$.append("\x3cli class\x3d'oj-listbox-no-results'\x3e" + $self$$48$$.$opts$.$formatNoMatches$($self$$48$$.$ojContext$, $self$$48$$.search.val()) + 
+    -1 == this.$_highlight$() && !1 !== $noHighlightUpdate$$1$$ && $self$$50$$.$_highlight$(0);
+    !this.$opts$.$manageNewEntry$ && 0 < !$choices$$3_initial$$2$$.filter(".oj-listbox-result:not(.oj-listbox-selected)").length && (!$data$$77$$ || $data$$77$$ && !$data$$77$$.$more$ && 0 === this.$results$.find(".oj-listbox-no-results").length) && $_ComboUtils$$.$checkFormatter$($self$$50$$.$ojContext$, $self$$50$$.$opts$.$formatNoMatches$, "formatNoMatches") && this.$results$.append("\x3cli class\x3d'oj-listbox-no-results'\x3e" + $self$$50$$.$opts$.$formatNoMatches$($self$$50$$.$ojContext$, $self$$50$$.search.val()) + 
     "\x3c/li\x3e")
   }, $_getMaxSearchWidth$:function() {
     return this.selection.width() - $_ComboUtils$$.$getSideBorderPadding$(this.search)
@@ -1049,7 +1071,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
     this.$opts$.element.val(0 === $unique$$.length ? "" : $unique$$.join(this.$opts$.separator));
     this.search.attr("aria-activedescendant", this.$opts$.element.attr("id"))
   }, val:function($val$$35$$) {
-    var $oldData$$4$$, $self$$49$$ = this;
+    var $oldData$$4$$, $self$$51$$ = this;
     if(0 === arguments.length) {
       return this.$getVal$()
     }
@@ -1064,11 +1086,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
           throw Error("cannot call val() if initSelection() is not defined");
         }
         this.$opts$.$initSelection$(this.$opts$.element, function($data$$78$$) {
-          var $ids$$3$$ = $$$$9$$.map($data$$78$$, $self$$49$$.id);
-          $self$$49$$.$setVal$($ids$$3$$);
-          $self$$49$$.$_updateSelection$($data$$78$$);
-          $self$$49$$.$_clearSearch$();
-          $self$$49$$.$_triggerChange$()
+          var $ids$$3$$ = $$$$9$$.map($data$$78$$, $self$$51$$.id);
+          $self$$51$$.$setVal$($ids$$3$$);
+          $self$$51$$.$_updateSelection$($data$$78$$);
+          $self$$51$$.$_clearSearch$();
+          $self$$51$$.$_triggerChange$()
         })
       }
       this.$_clearSearch$()
@@ -1076,16 +1098,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$9$$, $$$$9
       this.$opts$.element.val(null), this.$_updateSelection$([]), this.$_clearSearch$(), this.$_triggerChange$()
     }
   }, $_data$:function($values$$11$$) {
-    var $self$$50$$ = this, $ids$$4$$;
+    var $self$$52$$ = this, $ids$$4$$;
     if(0 === arguments.length) {
       return this.selection.find("." + this.$_classNm$ + "-search-choice").map(function() {
-        return $$$$9$$(this).data($self$$50$$.$_elemNm$)
+        return $$$$9$$(this).data($self$$52$$.$_elemNm$)
       }).get()
     }
     this.$_data$();
     $values$$11$$ || ($values$$11$$ = []);
-    $ids$$4$$ = $$$$9$$.map($values$$11$$, function($e$$64$$) {
-      return $self$$50$$.$opts$.id($e$$64$$)
+    $ids$$4$$ = $$$$9$$.map($values$$11$$, function($e$$65$$) {
+      return $self$$52$$.$opts$.id($e$$65$$)
     });
     this.$setVal$($ids$$4$$);
     this.$_updateSelection$($values$$11$$);

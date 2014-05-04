@@ -2,35 +2,35 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojdvt-base", "ojs/in
   $oj$$23$$.$__registerWidget$("oj.ojTreemap", $$$$23$$.oj.dvtBaseComponent, {version:"1.0.0", widgetEventPrefix:"oj", options:{isolate:null, select:null}, $_CreateComponent$:function($context$$47$$, $callback$$98$$, $callbackObj$$7$$) {
     return DvtTreemap.newInstance($context$$47$$, $callback$$98$$, $callbackObj$$7$$)
   }, $_GetComponentStyleClasses$:function() {
-    var $styleClasses$$10$$ = this._super();
-    $styleClasses$$10$$.push("oj-treemap");
-    return $styleClasses$$10$$
+    var $styleClasses$$9$$ = this._super();
+    $styleClasses$$9$$.push("oj-treemap");
+    return $styleClasses$$9$$
   }, $_GetChildStyleClasses$:function() {
-    var $styleClasses$$11$$ = this._super();
-    $styleClasses$$11$$["oj-treemap-isolate-icon"] = {path:"_resources/isolate", property:"CSS_URL"};
-    $styleClasses$$11$$["oj-treemap-isolate-icon oj-hover"] = {path:"_resources/isolateOver", property:"CSS_URL"};
-    $styleClasses$$11$$["oj-treemap-isolate-icon oj-active"] = {path:"_resources/isolateDown", property:"CSS_URL"};
-    $styleClasses$$11$$["oj-treemap-restore-icon"] = {path:"_resources/restore", property:"CSS_URL"};
-    $styleClasses$$11$$["oj-treemap-restore-icon oj-hover"] = {path:"_resources/restoreOver", property:"CSS_URL"};
-    $styleClasses$$11$$["oj-treemap-restore-icon oj-active"] = {path:"_resources/restoreDown", property:"CSS_URL"};
-    $styleClasses$$11$$["oj-treemap-attribute-type-text"] = {path:"styleDefaults/_attributeTypeTextStyle", property:"CSS_TEXT_PROPERTIES"};
-    $styleClasses$$11$$["oj-treemap-attribute-value-text"] = {path:"styleDefaults/_attributeValueTextStyle", property:"CSS_TEXT_PROPERTIES"};
-    $styleClasses$$11$$["oj-treemap-node"] = {path:"nodeDefaults/labelStyle", property:"CSS_TEXT_PROPERTIES"};
-    $styleClasses$$11$$["oj-treemap-node oj-hover"] = {path:"nodeDefaults/hoverColor", property:"border-top-color"};
-    $styleClasses$$11$$["oj-treemap-node oj-selected"] = [{path:"nodeDefaults/selectedOuterColor", property:"border-top-color"}, {path:"nodeDefaults/selectedInnerColor", property:"border-bottom-color"}];
-    $styleClasses$$11$$["oj-treemap-node-header"] = [{path:"nodeDefaults/header/backgroundColor", property:"background-color"}, {path:"nodeDefaults/header/borderColor", property:"border-top-color"}, {path:"nodeDefaults/header/labelStyle", property:"CSS_TEXT_PROPERTIES"}];
-    $styleClasses$$11$$["oj-treemap-node-header oj-hover"] = [{path:"nodeDefaults/header/hoverBackgroundColor", property:"background-color"}, {path:"nodeDefaults/header/hoverOuterColor", property:"border-top-color"}, {path:"nodeDefaults/header/hoverInnerColor", property:"border-bottom-color"}];
-    $styleClasses$$11$$["oj-treemap-node-header oj-selected"] = [{path:"nodeDefaults/header/selectedBackgroundColor", property:"background-color"}, {path:"nodeDefaults/header/selectedOuterColor", property:"border-top-color"}, {path:"nodeDefaults/header/selectedInnerColor", property:"border-bottom-color"}];
-    return $styleClasses$$11$$
+    var $styleClasses$$10$$ = this._super();
+    $styleClasses$$10$$["oj-treemap-isolate-icon"] = {path:"_resources/isolate", property:"CSS_URL"};
+    $styleClasses$$10$$["oj-treemap-isolate-icon oj-hover"] = {path:"_resources/isolateOver", property:"CSS_URL"};
+    $styleClasses$$10$$["oj-treemap-isolate-icon oj-active"] = {path:"_resources/isolateDown", property:"CSS_URL"};
+    $styleClasses$$10$$["oj-treemap-restore-icon"] = {path:"_resources/restore", property:"CSS_URL"};
+    $styleClasses$$10$$["oj-treemap-restore-icon oj-hover"] = {path:"_resources/restoreOver", property:"CSS_URL"};
+    $styleClasses$$10$$["oj-treemap-restore-icon oj-active"] = {path:"_resources/restoreDown", property:"CSS_URL"};
+    $styleClasses$$10$$["oj-treemap-attribute-type-text"] = {path:"styleDefaults/_attributeTypeTextStyle", property:"CSS_TEXT_PROPERTIES"};
+    $styleClasses$$10$$["oj-treemap-attribute-value-text"] = {path:"styleDefaults/_attributeValueTextStyle", property:"CSS_TEXT_PROPERTIES"};
+    $styleClasses$$10$$["oj-treemap-node"] = {path:"nodeDefaults/labelStyle", property:"CSS_TEXT_PROPERTIES"};
+    $styleClasses$$10$$["oj-treemap-node oj-hover"] = {path:"nodeDefaults/hoverColor", property:"border-top-color"};
+    $styleClasses$$10$$["oj-treemap-node oj-selected"] = [{path:"nodeDefaults/selectedOuterColor", property:"border-top-color"}, {path:"nodeDefaults/selectedInnerColor", property:"border-bottom-color"}];
+    $styleClasses$$10$$["oj-treemap-node-header"] = [{path:"nodeDefaults/header/backgroundColor", property:"background-color"}, {path:"nodeDefaults/header/borderColor", property:"border-top-color"}, {path:"nodeDefaults/header/labelStyle", property:"CSS_TEXT_PROPERTIES"}];
+    $styleClasses$$10$$["oj-treemap-node-header oj-hover"] = [{path:"nodeDefaults/header/hoverBackgroundColor", property:"background-color"}, {path:"nodeDefaults/header/hoverOuterColor", property:"border-top-color"}, {path:"nodeDefaults/header/hoverInnerColor", property:"border-bottom-color"}];
+    $styleClasses$$10$$["oj-treemap-node-header oj-selected"] = [{path:"nodeDefaults/header/selectedBackgroundColor", property:"background-color"}, {path:"nodeDefaults/header/selectedOuterColor", property:"border-top-color"}, {path:"nodeDefaults/header/selectedInnerColor", property:"border-bottom-color"}];
+    return $styleClasses$$10$$
   }, $_GetTranslationMap$:function() {
-    var $superMap$$2$$ = this._super(), $selfMap$$2$$ = {"DvtTreemapBundle.COLOR":this.$_GetTranslatedResource$("labelColor"), "DvtTreemapBundle.SIZE":this.$_GetTranslatedResource$("labelSize")}, $ret$$38$$ = {}, $key$$91$$;
+    var $superMap$$2$$ = this._super(), $selfMap$$2$$ = {"DvtTreemapBundle.COLOR":this.$_GetTranslatedResource$("labelColor"), "DvtTreemapBundle.SIZE":this.$_GetTranslatedResource$("labelSize")}, $ret$$35$$ = {}, $key$$91$$;
     for($key$$91$$ in $superMap$$2$$) {
-      $ret$$38$$[$key$$91$$] = $superMap$$2$$[$key$$91$$]
+      $ret$$35$$[$key$$91$$] = $superMap$$2$$[$key$$91$$]
     }
     for($key$$91$$ in $selfMap$$2$$) {
-      $ret$$38$$[$key$$91$$] = $selfMap$$2$$[$key$$91$$]
+      $ret$$35$$[$key$$91$$] = $selfMap$$2$$[$key$$91$$]
     }
-    return $ret$$38$$
+    return $ret$$35$$
   }, $_HandleEvent$:function($event$$278_selection$$5$$) {
     var $selectedItems$$2$$, $i$$256$$, $selectedItem$$2$$;
     if(($event$$278_selection$$5$$ && $event$$278_selection$$5$$.getType ? $event$$278_selection$$5$$.getType() : null) === DvtSelectionEvent.TYPE) {

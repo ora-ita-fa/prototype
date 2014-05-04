@@ -22,10 +22,10 @@ define(['ojs/ojcore', 'knockout', 'jquery',
                     var $newChart = $($("#chart-template").html());
                     $(".chart-list").append($newChart);
                     
-                    var _itaTimeSeriesConfig=new itaTimeSeriesConfig(faConfig.chartType);
+                    var _itaTimeSeriesConfig=new itaTimeSeriesConfig(faConfig.chartType,faConfig.enableRollup);
                     console.log(_itaTimeSeriesConfig);
                     var _dataSource = new itaToolRemoteDataSource("/flex_analyzer/data/sample-qdg-fa.json",null,_itaTimeSeriesConfig);
-
+                    
                     ko.applyBindings({dataSource: _dataSource}, $newChart.get(0));
                         
                 }

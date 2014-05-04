@@ -82,7 +82,9 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
   },
   
   _loadedBasemaps : [],
-  _checkBasemaps : [],
+  _checkBasemaps : [],  
+  _supportedLocales : ['ar','cs','da','de','el','es','fi','fr','hu','it','iw','ja','ko','nl','no','pl','pt','pt_BR','ro','ru','sk','sv','th','tr','zh_CN','zh_TW'],
+ 
   
   /**
    * @override
@@ -174,26 +176,56 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
     }
   },
   
-  _loadBasemapHelper : function(basemap, layer, locale) {
-    var relativeUrl = 'resources/internal-deps/dvt/thematicMap/basemaps/DvtBaseMap'+basemap+layer+'.js';
-    var resolvedUrl = oj.Config.getResourceUrl(relativeUrl);
-
-    var loadedBasemaps = this._loadedBasemaps;
-    // check to see if basemap is already loaded
-    if (loadedBasemaps[relativeUrl])
+  /**
+   * Utility function for loading resource bundles by url.
+   * @param {string} url The url of the resource to load
+   * @private
+   */
+  _loadResourceByUrl : function(url) {
+    // resource is already loaded or function tried to load this resource but failed
+    if(this._loadedBasemaps[url])
       return;
-
-    this._checkBasemaps.push(relativeUrl);
+    
+    var resolvedUrl = oj.Config.getResourceUrl(url);
     var thisRef = this;
+    var loadedBundles = this._loadedBasemaps;
     $.getScript(resolvedUrl, function( data, textStatus, jqxhr ) {
-      loadedBasemaps[relativeUrl] = true;
+      loadedBundles[url] = true;
       thisRef._Render();
     });
+  },
+  
+  _loadBasemapHelper : function(basemap, layer, locale) {
+    var relativeUrl = 'resources/internal-deps/dvt/thematicMap/basemaps/DvtBaseMap'+basemap+layer+'.js';
+    this._checkBasemaps.push(relativeUrl);
 
     if (locale.indexOf('en') === -1) {
-      var bundleName = basemap+layer+'Bundle';
-      this._LoadResourceBundle('resources/internal-deps/dvt/thematicMap/resourceBundles/'+bundleName);
+      // split locale by subtags and try to load resource bundle that satisfies
+      var splitLocale = locale.split('_');
+      var localeList = [];
+      for (var j = 0; j < splitLocale.length; j++) {
+        var tempLocale = '';
+        for (var k = 0; k < (j + 1); k++) {
+          if (k != 0)
+            tempLocale += '_';
+          tempLocale += splitLocale[k];
+        }
+        localeList.push(tempLocale)
+      }
+
+      var bundleName = 'resources/internal-deps/dvt/thematicMap/resourceBundles/'+basemap+layer+'Bundle';
+      // Go thru list of supported DVT languages
+      for (var i = localeList.length - 1; i >= 0; i++) {
+        if (this._supportedLocales.indexOf(localeList[i]) !== -1) {
+          var bundleUrl = bundleName + "_" + localeList[i] + ".js";
+//          this._checkBasemaps.push(bundleUrl);
+          this._loadResourceByUrl(bundleUrl);
+          break;
+        }
+      }
     }
+    
+    this._loadResourceByUrl(relativeUrl);
   },
   
   /**
@@ -223,7 +255,17 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
    * @override
    */
   getNodeBySubId : function(locator) {
-    this._super(locator);
+    return this._super(locator);
+  },
+  
+  /**
+   * Thematic map supports the following ids for sub elements:
+   * dataLayerId:area[id] - An area indexed by the given id in a data layer with id dataLayerId
+   * dataLayerId:marker[id] - A marker indexed by the given id in a data layer with id dataLayerId
+   * @override
+   */
+  getSubIdByNode : function(locator) {
+    return this._super(locator);
   },
   
   /**
@@ -232,6 +274,7 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
    * @param {String} id The area id 
    * @return {Object} The thematic map area with the given id 
    *                             within the given data layer or null if none exists
+   * @expose
    */
   getArea : function(dataLayerId, id) {
     var auto = this._component.getAutomation();
@@ -244,6 +287,7 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
    * @param {String} id The marker id 
    * @return {Object} The thematic map marker with the given id 
    *                             within the given data layer or null if none exists
+   * @expose
    */
   getMarker : function(dataLayerId, id) {
     var auto = this._component.getAutomation();

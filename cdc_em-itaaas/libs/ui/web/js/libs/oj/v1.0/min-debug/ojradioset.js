@@ -37,14 +37,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue", "ojs/ojradiocheckbox"], f
     null == this.options.value && ($checkedRadio$$1_radios$$1_result$$20$$ = this.$_findRadiosWithMatchingName$(), $checkedRadio$$1_radios$$1_result$$20$$ = $checkedRadio$$1_radios$$1_result$$20$$.filter(":checked"), $checkedRadio$$1_radios$$1_result$$20$$ = 0 === $checkedRadio$$1_radios$$1_result$$20$$.length ? null : $checkedRadio$$1_radios$$1_result$$20$$.val(), this.options.value = $checkedRadio$$1_radios$$1_result$$20$$)
   }, _GetDefaultStyleClass:$JSCompiler_returnArg$$("oj-radioset"), $_GetContentElement$:function() {
     return this.$_findRadiosWithMatchingName$()
-  }, $_RefreshAriaRequired$:function($ariaValue$$3_value$$202$$) {
+  }, $_RefreshAriaRequired$:function($ariaValue$$3_value$$204$$) {
     var $rootNode$$1$$ = this.$uiRadioset$;
-    ($ariaValue$$3_value$$202$$ = "required" == $ariaValue$$3_value$$202$$ ? !0 : !1) && $rootNode$$1$$ ? $rootNode$$1$$.attr("aria-required", $ariaValue$$3_value$$202$$) : $rootNode$$1$$.removeAttr("aria-required")
-  }, _setOption:function($key$$113$$, $value$$203$$) {
-    this._super($key$$113$$, $value$$203$$);
-    "disabled" === $key$$113$$ && this.$$radios$._ojRadioCheckbox("option", $key$$113$$, $value$$203$$)
-  }, getNodeBySubId:function($locator$$21$$) {
-    return null == $locator$$21$$ ? this.element ? this.element[0] : null : "oj-radioset-inputs" === $locator$$21$$.subId ? this.$$radios$ : null
+    ($ariaValue$$3_value$$204$$ = "required" == $ariaValue$$3_value$$204$$ ? !0 : !1) && $rootNode$$1$$ ? $rootNode$$1$$.attr("aria-required", $ariaValue$$3_value$$204$$) : $rootNode$$1$$.removeAttr("aria-required")
+  }, _setOption:function($key$$113$$, $value$$205$$) {
+    this._super($key$$113$$, $value$$205$$);
+    "disabled" === $key$$113$$ && this.$$radios$._ojRadioCheckbox("option", $key$$113$$, $value$$205$$)
+  }, getNodeBySubId:function($locator$$23$$) {
+    return null == $locator$$23$$ ? this.element ? this.element[0] : null : "oj-radioset-inputs" === $locator$$23$$.subId ? this.$$radios$ : null
   }, _destroy:function() {
     this._super();
     this.element.removeClass("oj-radioset oj-enabled oj-component").removeAttr("role");

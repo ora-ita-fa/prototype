@@ -11,35 +11,37 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$4$$, $$$$4
     }
     void 0 === this.options.pattern && (this.options.pattern = this.element.prop("pattern"))
   }, $_ComponentCreate$:function() {
-    var $node$$10$$ = this.element, $ret$$3$$ = this._superApply(arguments), $savedAttributes$$3$$ = this.$_GetSavedAttributes$($node$$10$$);
+    var $node$$11$$ = this.element, $ret$$3$$ = this._superApply(arguments), $savedAttributes$$3$$ = this.$_GetSavedAttributes$($node$$11$$);
     "boolean" === typeof this.options.readOnly && this.element.prop("readonly", this.options.readOnly);
     this.$_DoWrapElement$() && this.$_wrapElement$();
-    "pattern" in $savedAttributes$$3$$ && $node$$10$$.removeAttr("pattern");
+    "pattern" in $savedAttributes$$3$$ && $node$$11$$.removeAttr("pattern");
     return $ret$$3$$
   }, $_AfterCreate$:function() {
-    var $ret$$4$$ = this._superApply(arguments);
-    this.options.disabled && this.disable();
+    var $ret$$4$$ = this._superApply(arguments), $self$$33$$ = this;
     this._CLASS_NAMES && this.element.addClass(this._CLASS_NAMES);
     this.element.on("blur", $$$$4$$.proxy(this.$_onBlurHandler$, this));
     this.$_AppendInputHelper$();
+    this.$_refreshStateTheming$("readOnly", this.options.readOnly);
+    $$$$4$$.each(["disabled", "readOnly"], function($index$$74$$, $ele$$2$$) {
+      $self$$33$$._setOption($ele$$2$$, $self$$33$$.options[$ele$$2$$])
+    });
     return $ret$$4$$
   }, _setOption:function __setOption($key$$34$$, $value$$86$$) {
     var $retVal$$6$$ = this._super($key$$34$$, $value$$86$$);
     "disabled" === $key$$34$$ && this.element.attr("disabled", $value$$86$$);
-    "readOnly" === $key$$34$$ && this.element.prop("readonly", !!$value$$86$$);
+    "readOnly" === $key$$34$$ && ($value$$86$$ = !!$value$$86$$, this.element.prop("readonly", $value$$86$$), this.widget().toggleClass("oj-read-only", $value$$86$$), this.$_refreshStateTheming$("readOnly", this.options.readOnly));
     "pattern" === $key$$34$$ && (this.$__defaultRegExpOptions$.pattern = $value$$86$$);
     return $retVal$$6$$
   }, _destroy:function __destroy() {
     var $ret$$5$$ = this._superApply(arguments);
     this.element.off("blur");
-    this.element.removeClass(this._CLASS_NAMES);
     this.$_inputHelper$ && this.$_inputHelper$.remove();
     this.$_DoWrapElement$() && this.element.unwrap();
     return $ret$$5$$
-  }, $_processAttrCheck$:function __processAttrCheck() {
-    for(var $attrCheck$$ = this._ATTR_CHECK, $i$$84$$ = 0, $j$$11$$ = $attrCheck$$.length;$i$$84$$ < $j$$11$$;$i$$84$$++) {
-      var $attr$$12$$ = $attrCheck$$[$i$$84$$].attr;
-      "setMandatory" in $attrCheck$$[$i$$84$$] && this.element.attr($attr$$12$$, $attrCheck$$[$i$$84$$].setMandatory)
+  }, $_OPTION_TO_CSS_MAPPING$:{readOnly:"oj-read-only"}, $_processAttrCheck$:function __processAttrCheck() {
+    for(var $attrCheck$$ = this._ATTR_CHECK, $i$$85$$ = 0, $j$$11$$ = $attrCheck$$.length;$i$$85$$ < $j$$11$$;$i$$85$$++) {
+      var $attr$$12$$ = $attrCheck$$[$i$$85$$].attr;
+      "setMandatory" in $attrCheck$$[$i$$85$$] && this.element.attr($attr$$12$$, $attrCheck$$[$i$$85$$].setMandatory)
     }
   }, $_onBlurHandler$:function __onBlurHandler($event$$34$$) {
     this.$_SetValue$(this.$_GetDisplayValue$(), $event$$34$$)
@@ -48,9 +50,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$4$$, $$$$4
     this.$_wrapper$ = this.element.parent()
   }, $_AppendInputHelper$:function __AppendInputHelper() {
     if(this.$_INPUT_HELPER_KEY$ && this.$_DoWrapElement$()) {
-      var $helperLabeledById$$ = this.$_GetSubId$(this.$_INPUT_HELPER_KEY$);
-      this.element.attr("aria-labelledby", $helperLabeledById$$);
-      this.$_inputHelper$ = $$$$4$$("\x3cdiv class\x3d'oj-helper-hidden-accessible' id\x3d'" + $helperLabeledById$$ + "'\x3e" + this.$getTranslatedString$(this.$_INPUT_HELPER_KEY$) + "\x3c/div\x3e");
+      var $describedBy$$ = this.element.attr("aria-describedby") || "", $helperDescribedById$$ = this.$_GetSubId$(this.$_INPUT_HELPER_KEY$);
+      this.element.attr("aria-describedby", $describedBy$$ + (" " + $helperDescribedById$$));
+      this.$_inputHelper$ = $$$$4$$("\x3cdiv class\x3d'oj-helper-hidden-accessible' id\x3d'" + $helperDescribedById$$ + "'\x3e" + this.$getTranslatedString$(this.$_INPUT_HELPER_KEY$) + "\x3c/div\x3e");
       this.widget().append(this.$_inputHelper$)
     }
   }, $_RefreshLabelDependents$:function() {
@@ -60,12 +62,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$4$$, $$$$4
     var $ret$$6$$ = this._superApply(arguments), $validatorMap$$ = {};
     this.options.pattern && ($validatorMap$$[$oj$$4$$.$ValidatorFactory$.VALIDATOR_TYPE_REGEXP] = this.$_getDefaultRegExpValidator$());
     return $$$$4$$.extend($validatorMap$$, $ret$$6$$)
+  }, $_refreshStateTheming$:function($option$$3$$, $value$$87$$) {
+    this.$_OPTION_TO_CSS_MAPPING$.hasOwnProperty($option$$3$$) && this.widget().toggleClass(this.$_OPTION_TO_CSS_MAPPING$[$option$$3$$], !!$value$$87$$)
   }, $_getDefaultRegExpValidator$:function() {
     var $vf$$1$$;
     this.$__defaultRegExpOptions$ = {pattern:this.options.pattern, label:this.$_getLabelText$()};
     return($vf$$1$$ = $oj$$4$$.$Validation$.$validatorFactory$($oj$$4$$.$ValidatorFactory$.VALIDATOR_TYPE_REGEXP)) ? $vf$$1$$.createValidator(this.$__defaultRegExpOptions$) : null
   }, $_GetSubId$:function __getSubId($sub$$) {
     return this.uuid + "_" + $sub$$
+  }, _GetMessagingLauncherElement:function() {
+    return this.widget()
   }, $_IsRTL$:function() {
     return"rtl" === this.$_GetReadingDirection$()
   }, getNodeBySubId:function($locator$$3$$) {

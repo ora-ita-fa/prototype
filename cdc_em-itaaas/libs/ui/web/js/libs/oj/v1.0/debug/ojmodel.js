@@ -665,7 +665,7 @@ oj.Model._init = function(model, attributes, options, properties) {
             // Move them in
             for (prop in attrCopy) {
                 if (attrCopy.hasOwnProperty(prop)) {
-                    model._setProp(prop, attrCopy[prop], options);
+                    model._setProp(prop, attrCopy[prop], false, false, options);
                 }
             }
         }
@@ -896,11 +896,14 @@ oj.Model.prototype.SetupId = function() {
     this['id'] = this.attributes[idAttr];
 };
 
-oj.Model.prototype._setPropInternal = function(prop, value) {
-    if (!oj.Object.innerEquals(this.attributes[prop], value)) {
+oj.Model.prototype._setPropInternal = function(prop, value, copyRegardless) {
+    var equality = oj.Object.innerEquals(this.attributes[prop], value);
+    if (copyRegardless || !equality) {
         this.attributes[prop] = value;
         this.SetupId();
-        return true;
+        // Return value management here seems bizarre due to backbone tests: do the direct set if copyRegardless, but only return if the
+        // inner equals was different
+        return !equality;
     }
     return false;
 };
@@ -916,18 +919,20 @@ oj.Model.prototype._addChange = function(property, value) {
 /**
  * @param {Object||string} prop
  * @param {Object} value
+ * @param {boolean} copyRegardless
+ * @param {boolean} propertyBag
  * @param {Object=} options
  * @returns {boolean}
  */
-oj.Model.prototype._setProp = function(prop, value, options) {
+oj.Model.prototype._setProp = function(prop, value, copyRegardless, propertyBag, options) {
     if (prop == null) {
         return true;
     }
     
-    var attrs = {}, p, isNested = this.nestedSet, changes, opts;
+    var attrs = {}, p, isNested = this.nestedSet, opts;
     opts = oj.Model._copyOptions(options);
 
-    if (arguments.length > 2) {
+    if (!propertyBag) {
         attrs[prop] = value;
     }
     else {
@@ -937,10 +942,8 @@ oj.Model.prototype._setProp = function(prop, value, options) {
                 attrs[p] = prop[p];
             }
         }
-        opts = value;
     }
-    opts = opts || {};
-    changes = [];
+    opts = opts || {};    
     
     if (!this._checkValid(attrs, {'validate':opts['validate']}, false)) {
         return false;
@@ -948,6 +951,7 @@ oj.Model.prototype._setProp = function(prop, value, options) {
     
     if (!isNested) {
         this._clearChanged();
+        this.changes = [];
     }
     
     // Store old value
@@ -958,32 +962,31 @@ oj.Model.prototype._setProp = function(prop, value, options) {
     this.nestedSet = true;
     for (p in attrs) {
         if (attrs.hasOwnProperty(p)) {
-            if (this._setPropInternal(p, attrs[p])) {    
+            if (this._setPropInternal(p, attrs[p], copyRegardless)) {    
                 // Trigger changes
                 this._addChange(p, attrs[p]);
-                changes.push(p);
+                this.changes.push(p);
             }
             else {
                 delete attrs[p];
             }
         }
     }
-    // Fire events
+    // Fire events: don't fire if silent 
     var silent = opts['silent'];
-    //if (!opts['silent']) {
-        for (p in attrs) {
-            if (attrs.hasOwnProperty(p)) {
-                if (changes.length && !silent) {
-                    this.pendingChanges = true;
-                }
-                this._fireAttrChange(p, attrs[p], opts, silent);
+    for (p in attrs) {
+        if (attrs.hasOwnProperty(p)) {
+            if (!silent && (this.changes.length > 0 || (isNested && this.changes.indexOf(p) === -1))) {
+                this.pendingChanges = true;
             }
+            this._fireAttrChange(p, attrs[p], opts, silent);
         }
-   //}
+    }
+    
     if (isNested) {
         return true;
     }
-    if (!silent) {
+    if (!silent && !isNested) {
         while (this.pendingChanges) {
             this.pendingChanges = false;
             this._fireChange(opts, silent);
@@ -992,6 +995,9 @@ oj.Model.prototype._setProp = function(prop, value, options) {
     
     this.nestedSet = false;
     return true;
+};
+
+oj.Model.prototype._areTherePendingChanges = function() {
 };
 
 /**
@@ -1031,6 +1037,9 @@ oj.Model.prototype.clear = function(options) {
 
 oj.Model._cloneAttributes = function(oldData, newData) {    
     var prop;
+    if (oldData === null) {
+        return null;
+    }
     newData = newData || {};
     for (prop in oldData) { 
         if (oldData.hasOwnProperty(prop)){// && oldData[prop] !== undefined) {
@@ -1046,7 +1055,27 @@ oj.Model._cloneAttributes = function(oldData, newData) {
                 }
             }
             else {
-                newData[prop] = oj.Model._cloneAttributes(oldData[prop], null);
+                if (oj.Model.IsArray(oldData[prop])) {
+                    // Handle arrays
+                    if (oldData[prop] === null) {
+                        newData[prop] = null;
+                    }
+                    else {
+                        newData[prop] = [];
+                        // Special case zero length array because of backbone unit test checking actual object value--strange
+                        if (oldData[prop].length === 0) {
+                            newData[prop] = oldData[prop];
+                        }
+                        else {
+                            for (var i = 0; i < oldData[prop].length; i++) {
+                                newData[prop].push(oj.Model._cloneAttributes(oldData[prop][i], null));
+                            }
+                        }
+                    }
+                }
+                else {
+                    newData[prop] = oj.Model._cloneAttributes(oldData[prop], null);
+                }
             }
         }
     }
@@ -1124,7 +1153,7 @@ oj.Model.prototype.set = function (property, value, options) {
                     }
                 }
                 else {
-                    if (!this._setProp(property, opts)) {
+                    if (!this._setProp(property, null, true, true, opts)) {
                         valid = false;
                     }
                 }
@@ -1139,7 +1168,7 @@ oj.Model.prototype.set = function (property, value, options) {
                             this._unsetInternal(arguments[i], null, false);
                         }
                         else {
-                            if (!this._setProp(arguments[i], arguments[i+1], opts)) {
+                            if (!this._setProp(arguments[i], arguments[i+1], false, false, opts)) {
                                 valid = false;
                             }
                         }
@@ -1661,7 +1690,7 @@ oj.Model.prototype._attrUnion = function(attrs) {
 };
 
 oj.Model.IsArray = function(obj) {
-    return obj.constructor === Array;
+    return obj != null && obj.constructor === Array;
 };
 
 oj.Model.IsFunction = function(obj) {
@@ -2059,7 +2088,7 @@ oj.Collection.prototype.url = null;
  * recordID : id of the record involved, if relevant<p>
  * fetchSize : how many records to return.  If not set, return all.<p>
  * startIndex: Starting record number of the set to return.<p>
- * fromID: Retrieve records starting with the record with the given unique ID. <p>
+ * startID: Retrieve records starting with the record with the given unique ID. <p>
  * since: Retrieve records with timestamps after the given timestamp.<p>
  * until: Retrieve records with timestamps up to the given timestamp.  Default is "until"<p>
  * sort:  field(s) by which to sort, if set<p>
@@ -2584,6 +2613,7 @@ oj.Collection.prototype._newModel = function(m, options) {
  *                          at: splice the new model into the collection at the value given (at:index) <p>
  *                          merge: if set, and if the given model already exists in the collection (matched by id), then merge the attribute/value sets, firing change events<p>
  *                          sort: if set, do not re-sort the collection even if the comparator is set. <p>
+ *                          force: if set to true, do an add to the collection no matter whether the item is found or not <p>
  *                          deferred: if true, return a promise as though this collection were virtual whether it is or not
  * 
  * @returns {Object} if deferred or virtual, return a promise when the set has completed
@@ -2603,6 +2633,7 @@ oj.Collection.prototype._addInternal = function(m, options, fillIn, deferred) {
     var modelArray = [], 
         at = options['at'],
         silent = options['silent'],
+        force = options['force'],
         i, index, cid,
         merge = options['merge'] || false,
         sort = options['sort'], needSort = true, added = false;
@@ -2677,13 +2708,15 @@ oj.Collection.prototype._addInternal = function(m, options, fillIn, deferred) {
     function mergeAttrs(collection, modelToTryAndMerge, modelFoundInCollection, newModel, deferred) {
         var existingModel;
         
-        if (merge && modelFoundInCollection) {
+        if (!force && merge && modelFoundInCollection) {
             // Try to merge the attributes--we're merging and the model (by id) was already in the collection
             needSort = modelFoundInCollection.Merge(modelToTryAndMerge, collection['comparator']);
         }
         else {
             // Make sure model is not already in there
-            existingModel = collection._getLocal(newModel);
+            if (!force) {
+                existingModel = collection._getLocal(newModel);
+            }
 
             addToCollection(collection, newModel, existingModel);
         }        
@@ -2701,6 +2734,10 @@ oj.Collection.prototype._addInternal = function(m, options, fillIn, deferred) {
             // Use original model array not cloned model if merging--otherwise we won't find the model in the collection
             modelToTryAndMerge = model instanceof oj.Model ? model : newModel;
             if (deferred) {
+                if (force) {
+                    mergeAttrs(collection, modelToTryAndMerge, undefined, newModel, deferred);
+                    return $.Deferred().resolve();
+                }
                 return collection._getInternal(modelToTryAndMerge, null, deferred, true).done(function (modInfo) {
                                                                     modelFoundInCollection = modInfo['m'];
                                                                     return mergeAttrs(collection, modelToTryAndMerge, modelFoundInCollection, newModel, deferred);
@@ -3485,6 +3522,9 @@ oj.Collection.prototype.get = function(id, options)
                 return modInfo['m'];
             });
         }
+        if (this._isVirtual()) {
+            return $.Deferred().resolve(internalGet['m']);
+        }
         if (internalGet.hasOwnProperty('m')) {
             return internalGet['m'];
         }
@@ -3562,14 +3602,23 @@ oj.Collection.prototype._getInternal = function(id, options, deferred, fillIn) {
     if (this._isVirtual()) {
         // Try to fetch using start ID.  cid not supported
         if (id === undefined && cid !== undefined) {
-            throw new Error("cid not supported on virtual get by ID: only id supported");
+            //throw new Error("cid not supported on virtual get by ID: only id supported");
+            var dfd = $.Deferred();
+            return dfd.resolve(oj.Collection._getModinfo(-1, undefined));
         }
         var dfd = $.Deferred();
         var self = this;
         var resp = function (resp) {
                         if (resp != null) {                            
                             var index = self._getOffset();
-                            dfd.resolve(oj.Collection._getModinfo(index, self._getModel(index)));
+                            // Check that the model at index is the right one
+                            var model = self._getModel(index);
+                            if (model !== undefined && model.Match(id, cid)) {
+                                dfd.resolve(oj.Collection._getModinfo(index, model));
+                            }
+                            else {
+                                dfd.resolve(oj.Collection._getModinfo(-1, undefined));
+                            }
                         }
                         else {
                             dfd.resolve(oj.Collection._getModinfo(-1, undefined));

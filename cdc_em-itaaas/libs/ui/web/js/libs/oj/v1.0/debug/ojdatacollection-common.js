@@ -2445,7 +2445,7 @@ oj.Row.prototype.values = function()
  * @export
  * Return an array of attributes/value pairs found in the Row 
  * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
+ * @returns {Object} returns the Row's attribute/value pairs as an object property bag
  */
 oj.Row.prototype.pairs = function()
 {
@@ -2945,7 +2945,7 @@ oj.ArrayRow.prototype.values = function()
  * @export
  * Return an array of attributes/value pairs found in the Row 
  * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
+ * @returns {Object} returns the Row's attribute/value pairs as an object property bag
  */
 oj.ArrayRow.prototype.pairs = function()
 {
@@ -3545,7 +3545,7 @@ oj.ArrayRowSet.prototype._getRowArray = function(values, idAttribute, startIndex
   var rowArray = [], i, prop;
   for (i = 0; i <= endIndex; i++)
   {
-    var clonedRowValues = [];
+    var clonedRowValues = {};
     var rowValues = null;
     if (values[i] instanceof oj.Row)
     {

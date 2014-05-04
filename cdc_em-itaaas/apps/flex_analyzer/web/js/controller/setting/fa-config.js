@@ -8,7 +8,10 @@
 define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
     '/analytics/js/view_model/timeseries/ChartRegionModel.js',
     'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita, ChartRegionModel) {
-    var faConfig={};
+    var faConfig={
+        selectedMeasures:{},
+        selectedDimensions:{}
+    };
     ita.registerTool(
             {
                 name: 'fa-config',
@@ -80,7 +83,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                         ko.applyBindings(model, $('#chart-container')[0]);
                         ko.applyBindings(chartTypeModel, $('#tabs')[0]);
                     }
-
+                    function registerListeners(){
+                        $("#measure-selector").on("ojselect", function(event, data) {
+                            console.log(event);
+                            var id = data.item.attr("id");     //  get tree node id attribute
+                            //.if()
+                            faConfig.selectedMeasures=id;
+                        });
+                    }
                     function initTabs() {
                         $('#lowest-level-div').hide();
                         $('#check-by-month-of-year').change(function() {
@@ -89,6 +99,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             } else {
                                 $('#lowest-level-div').hide();
                             }
+                            faConfig.enableRollup=this.checked;
                         });
 
                         $('.top-bottom-editable :input').attr("disabled", true).css('background-color', '#B2B2B2');
@@ -122,6 +133,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                         var $container = $(element);
                         $container.append(resp);
                         koBind();
+                        registerListeners();
                         initTabs();
                     });
                 }

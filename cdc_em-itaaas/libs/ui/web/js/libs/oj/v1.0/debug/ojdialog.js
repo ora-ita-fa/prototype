@@ -1036,16 +1036,16 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 		return { height: this.originalSize.height + dy };
 	    },
 	    "se": function(event, dx, dy) {
-		return $.extend(this._change.s.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		return $.extend(this._change["s"].apply(this, arguments), this._change["e"].apply(this, [event, dx, dy]));
 	    },
 	    "sw": function(event, dx, dy) {
-		return $.extend(this._change.s.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		return $.extend(this._change["s"].apply(this, arguments), this._change["w"].apply(this, [event, dx, dy]));
 	    },
 	    "ne": function(event, dx, dy) {
-		return $.extend(this._change.n.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		return $.extend(this._change["n"].apply(this, arguments), this._change["e"].apply(this, [event, dx, dy]));
 	    },
 	    "nw": function(event, dx, dy) {
-		return $.extend(this._change.n.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		return $.extend(this._change["n"].apply(this, arguments), this._change["w"].apply(this, [event, dx, dy]));
 	    }
 	},
 
@@ -2966,22 +2966,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 	    // we do not need to put the dialog at the end during create.
 	    // 
 
-	    /*
-
-	    this.uiDialog.appendTo( this._appendTo() ); 
-
-	    if (_putback) {
-
-		this._placeHolderId = _placeHolderPrefix + this._elementId;
-
-		this._placeHolder = $("<div>")
-		    .hide()
-		    .attr({'id' : this._placeHolderId});
-
-		this._placeHolder.insertBefore(this.element);  // position placeHolder at original in-line DOM location
-	    }
-
-*/
+	    // this._relocateWithPutback();
 
 	    /*
 	    if (this.options.location === "auto") 
@@ -3236,6 +3221,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 	    this._resizableComponent = this.uiDialog['ojResizable'].bind(this.uiDialog);
 
 	    // this.uiDialog.['ojResizable']({
+	    // this.uiDialog.resizable({
+
 	    this._resizableComponent({
 		cancel: ".oj-dialog-content",
 		containment: "document",
@@ -3244,7 +3231,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 		// maxWidth: options.maxWidth,
 		// maxHeight: options.maxHeight,
 		// minWidth: options.minWidth,
-		// minHeight: this._minHeight(),
+		minHeight: this._minHeight(),
 
 		handles: resizeHandles,
 		start: function( event, ui ) {
@@ -3566,24 +3553,6 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore'],
 	    //
 	    this.overlay = $("<div>")
 		.addClass("oj-component-overlay oj-dialog-front");
-
-/*
-
-
-	    if (_putback) {
-
-		this._placeHolderId = _placeHolderPrefix + this._elementId;
-
-		this._placeHolder = $("<div>")
-		    .hide()
-		    .attr({'id' : this._placeHolderId});
-
-		// this._placeHolder.insertBefore(this.element);  // position placeHolder at original in-line DOM location
-		this._placeHolder.insertBefore($('#' + this._wrapperId));  // position placeHolder at original in-line DOM location, before the wrapper id
-	    }
-
-	    this.uiDialog.appendTo( this._appendTo() ); 
-*/
 
 	    this.overlay.appendTo( this._appendTo() ); // original
 

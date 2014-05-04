@@ -288,6 +288,16 @@ define({
         }
       },
 
+      'oj-ojTabs':
+      {
+        'removeCueText': 'Removable'
+      },
+
+      'oj-ojSelect':
+      {
+        'noMatchesFound': 'No matches found'
+      },
+
       'oj-ojTree':
       {
 		'm_loading': 'Loading...',
@@ -399,8 +409,18 @@ define({
         'stateCollapsed': 'Collapsed',
         'stateIsolated': 'Isolated',
         'stateHidden': 'Hidden'
+      },
+      'oj-ojPopup': {
+        'ariaLiveRegionInitialFocusFirstFocusable': 'Entering popup, press F6 to navigate between the popup and associated control.',
+        'ariaLiveRegionInitialFocusNone': 'Popup opened, press F6 to navigate between the popup and associated control.'
       }
 },
+'zh-Hant': 1,
+'it': 1,
+'fr': 1,
+'zh-Hans': 1,
 'ja': 1,
-'de': 1
+'de': 1,
+'ko': 1,
+'es': 1
 });
