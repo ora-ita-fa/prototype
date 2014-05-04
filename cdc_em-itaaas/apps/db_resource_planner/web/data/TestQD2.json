@@ -57,7 +57,7 @@
         },
         {
             "type": "grpbyLevel",
-            "withRollup": false,
+            "withRollup": true,
             "level": {
                 "parentHierarchyName": "TIMEHIERBYMONTHOFYEAR",
                 "parentDimName": "START_TIME",
@@ -80,7 +80,13 @@
         }
 
     ],
-    "startingRollupLevels": [],
+    "startingRollupLevels": [
+        {
+                "parentHierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                "parentDimName": "START_TIME",
+                "name": "TIMELEVELMONTHOFYEAR",
+                "displayName": "TIMELEVELMONTHOFYEAR"
+            }],
     "rollupLowestLevels": [],
     "hasDynamicHierarchy": false,
     "dynHierList": null,

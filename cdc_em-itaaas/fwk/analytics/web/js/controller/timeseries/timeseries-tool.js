@@ -17,7 +17,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
            
             var qdg = dataSource.getQueryDescriptorGroup();
             var dsg = dataSource.getDataSetGroup();
-            
+            var config = dataSource.getConfig();
+            console.log(config);
             var timeWindow = valueAccessor().timeWindow;
 
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
@@ -51,9 +52,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                     });
                 }
 
-                var chartType = "line";
+                var chartType = 'line';
                 try {
-                    chartType = qdg.Parameters.FAUICONFIG.chartType;
+                    chartType = config.chartType;
                 } catch (ignore) {
 
                 }
@@ -96,7 +97,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
 
                 var rollupConfig;
                 try {
-                    rollupConfig = qdg.QueryDescriptor[0].RollupLevels;
+                    rollupConfig = qdg.QueryDescriptor[0].startingRollupLevels;
                 } catch (ignore) {
 
                 }
