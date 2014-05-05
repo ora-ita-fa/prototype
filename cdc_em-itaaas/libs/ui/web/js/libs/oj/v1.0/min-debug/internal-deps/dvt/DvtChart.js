@@ -2,13 +2,13 @@ define(['./DvtToolkit', './DvtAxis', './DvtLegend', './DvtOverview'], function()
   // Internal use only.  All APIs and functionality are subject to change at any time.
     // Map the D namespace to dvt, which is used to provide access across partitions.
   var D = dvt;
-  D.$DvtGraphSelectableArc$$ = function $$DvtGraphSelectableArc$$$($context$$673$$, $cx$$45$$, $cy$$46$$, $rx$$36$$, $ry$$32$$, $sa$$14$$, $ae$$9$$, $clos$$2$$, $id$$276$$) {
-  this.Init($context$$673$$, $cx$$45$$, $cy$$46$$, $rx$$36$$, $ry$$32$$, $sa$$14$$, $ae$$9$$, $clos$$2$$, $id$$276$$)
+  D.$DvtGraphSelectableArc$$ = function $$DvtGraphSelectableArc$$$($context$$667$$, $cx$$45$$, $cy$$46$$, $rx$$36$$, $ry$$32$$, $sa$$14$$, $ae$$9$$, $clos$$2$$, $id$$276$$) {
+  this.Init($context$$667$$, $cx$$45$$, $cy$$46$$, $rx$$36$$, $ry$$32$$, $sa$$14$$, $ae$$9$$, $clos$$2$$, $id$$276$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtGraphSelectableArc$$, D.$DvtArc$$, "DvtGraphSelectableArc");
 D.$JSCompiler_prototypeAlias$$ = D.$DvtGraphSelectableArc$$.prototype;
-D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$674$$, $cx$$46$$, $cy$$47$$, $rx$$37$$, $ry$$33$$, $sa$$15$$, $ae$$10$$, $clos$$3$$, $id$$277$$) {
-  D.$DvtGraphSelectableArc$$.$superclass$.Init.call(this, $context$$674$$, $cx$$46$$, $cy$$47$$, $rx$$37$$, $ry$$33$$, $sa$$15$$, $ae$$10$$, $clos$$3$$, $id$$277$$);
+D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$668$$, $cx$$46$$, $cy$$47$$, $rx$$37$$, $ry$$33$$, $sa$$15$$, $ae$$10$$, $clos$$3$$, $id$$277$$) {
+  D.$DvtGraphSelectableArc$$.$superclass$.Init.call(this, $context$$668$$, $cx$$46$$, $cy$$47$$, $rx$$37$$, $ry$$33$$, $sa$$15$$, $ae$$10$$, $clos$$3$$, $id$$277$$);
   this.$_bHover$ = this.$_bSelected$ = D.$JSCompiler_alias_FALSE$$;
   this.$_savedStroke$ = this.$_selectionEffects$ = D.$JSCompiler_alias_NULL$$;
   this.$_bSavedStroke$ = D.$JSCompiler_alias_FALSE$$
@@ -33,13 +33,13 @@ D.$JSCompiler_prototypeAlias$$.$setDataColor$ = function $$JSCompiler_prototypeA
   this.$_outerColor$ = $outerColor$$9$$
 };
 D.$JSCompiler_prototypeAlias$$.$UpdateSelectionEffect$ = (0,D.$JSCompiler_emptyFn$$)();
-D.$DvtGraphSelectablePath$$ = function $$DvtGraphSelectablePath$$$($context$$669$$, $cmds$$24$$, $id$$272$$) {
-  this.Init($context$$669$$, $cmds$$24$$, $id$$272$$)
+D.$DvtGraphSelectablePath$$ = function $$DvtGraphSelectablePath$$$($context$$663$$, $cmds$$22$$, $id$$272$$) {
+  this.Init($context$$663$$, $cmds$$22$$, $id$$272$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtGraphSelectablePath$$, D.$DvtPath$$, "DvtGraphSelectablePath");
 D.$JSCompiler_prototypeAlias$$ = D.$DvtGraphSelectablePath$$.prototype;
-D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$670$$, $cmds$$25$$, $id$$273$$) {
-  D.$DvtGraphSelectablePath$$.$superclass$.Init.call(this, $context$$670$$, $cmds$$25$$, $id$$273$$);
+D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$664$$, $cmds$$23$$, $id$$273$$) {
+  D.$DvtGraphSelectablePath$$.$superclass$.Init.call(this, $context$$664$$, $cmds$$23$$, $id$$273$$);
   this.$_bHover$ = this.$_bSelected$ = D.$JSCompiler_alias_FALSE$$;
   this.$_savedStroke$ = this.$_selectionEffects$ = D.$JSCompiler_alias_NULL$$;
   this.$_bSavedStroke$ = D.$JSCompiler_alias_FALSE$$
@@ -64,13 +64,13 @@ D.$JSCompiler_prototypeAlias$$.$setDataColor$ = function $$JSCompiler_prototypeA
   this.$_outerColor$ = $outerColor$$7$$
 };
 D.$JSCompiler_prototypeAlias$$.$UpdateSelectionEffect$ = (0,D.$JSCompiler_emptyFn$$)();
-D.$DvtGraphSelectablePolygon$$ = function $$DvtGraphSelectablePolygon$$$($color$$80$$, $context$$671$$, $arPoints$$29$$, $id$$274$$) {
-  this.Init($color$$80$$, $context$$671$$, $arPoints$$29$$, $id$$274$$)
+D.$DvtGraphSelectablePolygon$$ = function $$DvtGraphSelectablePolygon$$$($color$$80$$, $context$$665$$, $arPoints$$29$$, $id$$274$$) {
+  this.Init($color$$80$$, $context$$665$$, $arPoints$$29$$, $id$$274$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtGraphSelectablePolygon$$, D.$DvtPolygon$$, "DvtGraphSelectablePolygon");
 D.$JSCompiler_prototypeAlias$$ = D.$DvtGraphSelectablePolygon$$.prototype;
-D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$672$$, $arPoints$$30$$, $id$$275$$) {
-  D.$DvtGraphSelectablePolygon$$.$superclass$.Init.call(this, $context$$672$$, $arPoints$$30$$, $id$$275$$);
+D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Init$($context$$666$$, $arPoints$$30$$, $id$$275$$) {
+  D.$DvtGraphSelectablePolygon$$.$superclass$.Init.call(this, $context$$666$$, $arPoints$$30$$, $id$$275$$);
   this.$_bHover$ = this.$_bSelected$ = D.$JSCompiler_alias_FALSE$$;
   this.$_savedStroke$ = this.$_selectionEffects$ = D.$JSCompiler_alias_NULL$$;
   this.$_bSavedStroke$ = D.$JSCompiler_alias_FALSE$$
@@ -95,8 +95,8 @@ D.$JSCompiler_prototypeAlias$$.$setDataColor$ = function $$JSCompiler_prototypeA
   this.$_outerColor$ = $outerColor$$8$$
 };
 D.$JSCompiler_prototypeAlias$$.$UpdateSelectionEffect$ = (0,D.$JSCompiler_emptyFn$$)();
-D.$DvtChartBar$$ = function $$DvtChartBar$$$($context$$532$$, $bHoriz$$, $bStacked$$, $axisCoord$$, $baselineCoord$$, $endCoord$$2$$, $x1$$26$$, $x2$$23$$) {
-  this.Init($context$$532$$);
+D.$DvtChartBar$$ = function $$DvtChartBar$$$($context$$526$$, $bHoriz$$, $bStacked$$, $axisCoord$$, $baselineCoord$$, $endCoord$$2$$, $x1$$26$$, $x2$$23$$) {
+  this.Init($context$$526$$);
   this.$_bHoriz$ = $bHoriz$$;
   this.$_bStacked$ = $bStacked$$;
   this.$_axisCoord$ = $axisCoord$$;
@@ -131,11 +131,11 @@ D.$JSCompiler_prototypeAlias$$.$getAnimationParams$ = function $$JSCompiler_prot
 D.$JSCompiler_prototypeAlias$$.$setAnimationParams$ = function $$JSCompiler_prototypeAlias$$$$setAnimationParams$$($params$$23$$, $indicator$$) {
   this.$_setBarCoords$($params$$23$$[0], $params$$23$$[1], $params$$23$$[2], $params$$23$$[3]);
   if($indicator$$) {
-    var $indicatorPosition_x$$inline_5043$$, $widthCoord$$inline_5042_y$$inline_5044$$ = (this.$_x1$ + this.$_x2$) / 2, $lengthCoord$$inline_5046_midLength$$inline_5045$$ = this.$_bStacked$ ? (this.$_endCoord$ + this.$_baselineCoord$) / 2 : this.$_endCoord$ >= this.$_baselineCoord$ ? this.$_endCoord$ + 8 : this.$_endCoord$ - 8;
-    $indicatorPosition_x$$inline_5043$$ = this.$_bHoriz$ ? $lengthCoord$$inline_5046_midLength$$inline_5045$$ : $widthCoord$$inline_5042_y$$inline_5044$$;
-    $widthCoord$$inline_5042_y$$inline_5044$$ = this.$_bHoriz$ ? $widthCoord$$inline_5042_y$$inline_5044$$ : $lengthCoord$$inline_5046_midLength$$inline_5045$$;
-    $indicatorPosition_x$$inline_5043$$ = new D.$DvtPoint$$($indicatorPosition_x$$inline_5043$$, $widthCoord$$inline_5042_y$$inline_5044$$);
-    (0,D.$JSCompiler_StaticMethods_setTranslate$$)($indicator$$, $indicatorPosition_x$$inline_5043$$.x, $indicatorPosition_x$$inline_5043$$.y);
+    var $indicatorPosition_x$$inline_4985$$, $widthCoord$$inline_4984_y$$inline_4986$$ = (this.$_x1$ + this.$_x2$) / 2, $lengthCoord$$inline_4988_midLength$$inline_4987$$ = this.$_bStacked$ ? (this.$_endCoord$ + this.$_baselineCoord$) / 2 : this.$_endCoord$ >= this.$_baselineCoord$ ? this.$_endCoord$ + 8 : this.$_endCoord$ - 8;
+    $indicatorPosition_x$$inline_4985$$ = this.$_bHoriz$ ? $lengthCoord$$inline_4988_midLength$$inline_4987$$ : $widthCoord$$inline_4984_y$$inline_4986$$;
+    $widthCoord$$inline_4984_y$$inline_4986$$ = this.$_bHoriz$ ? $widthCoord$$inline_4984_y$$inline_4986$$ : $lengthCoord$$inline_4988_midLength$$inline_4987$$;
+    $indicatorPosition_x$$inline_4985$$ = new D.$DvtPoint$$($indicatorPosition_x$$inline_4985$$, $widthCoord$$inline_4984_y$$inline_4986$$);
+    (0,D.$JSCompiler_StaticMethods_setTranslate$$)($indicator$$, $indicatorPosition_x$$inline_4985$$.x, $indicatorPosition_x$$inline_4985$$.y);
     $indicator$$.getParent().$addChild$($indicator$$)
   }
 };
@@ -189,14 +189,14 @@ D.$JSCompiler_StaticMethods__showNestedBorders$$ = function $$JSCompiler_StaticM
   (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($JSCompiler_StaticMethods__showNestedBorders$self$$.$_innerChild$))
 };
 D.$DvtChartBar$$.prototype.$getBoundingBox$ = function $$DvtChartBar$$$$$getBoundingBox$$() {
-  var $x$$252$$ = window.Math.min(this.$_x2$, this.$_x1$), $y$$223$$ = window.Math.min(this.$_endCoord$, this.$_baselineCoord$), $w$$69$$ = window.Math.abs(this.$_x2$ - this.$_x1$), $h$$68$$ = window.Math.abs(this.$_endCoord$ - this.$_baselineCoord$);
-  return this.$_bHoriz$ ? new D.$DvtRectangle$$($y$$223$$, $x$$252$$, $h$$68$$, $w$$69$$) : new D.$DvtRectangle$$($x$$252$$, $y$$223$$, $w$$69$$, $h$$68$$)
+  var $x$$250$$ = window.Math.min(this.$_x2$, this.$_x1$), $y$$221$$ = window.Math.min(this.$_endCoord$, this.$_baselineCoord$), $w$$69$$ = window.Math.abs(this.$_x2$ - this.$_x1$), $h$$68$$ = window.Math.abs(this.$_endCoord$ - this.$_baselineCoord$);
+  return this.$_bHoriz$ ? new D.$DvtRectangle$$($y$$221$$, $x$$250$$, $h$$68$$, $w$$69$$) : new D.$DvtRectangle$$($x$$250$$, $y$$221$$, $w$$69$$, $h$$68$$)
 };
 D.$DvtChartBar$$.prototype.$getDimensionsSelf$ = function $$DvtChartBar$$$$$getDimensionsSelf$$($targetCoordinateSpace$$28$$) {
   return(0,D.$JSCompiler_StaticMethods_ConvertCoordSpaceRect$$)(this, this.$getBoundingBox$(), $targetCoordinateSpace$$28$$)
 };
-D.$DvtChartLineMarker$$ = function $$DvtChartLineMarker$$$($context$$531$$, $type$$164$$, $x$$250$$, $y$$221$$, $size$$25$$) {
-  this.Init($context$$531$$, $type$$164$$, D.$JSCompiler_alias_NULL$$, $x$$250$$, $y$$221$$, $size$$25$$, $size$$25$$)
+D.$DvtChartLineMarker$$ = function $$DvtChartLineMarker$$$($context$$525$$, $type$$164$$, $x$$248$$, $y$$219$$, $size$$25$$) {
+  this.Init($context$$525$$, $type$$164$$, D.$JSCompiler_alias_NULL$$, $x$$248$$, $y$$219$$, $size$$25$$, $size$$25$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtChartLineMarker$$, D.$DvtMarker$$, "DvtChartLineMarker");
 D.$DvtChartLineMarker$_SELECTED_FILL$$ = new D.$DvtSolidFill$$("#FFFFFF");
@@ -218,8 +218,8 @@ D.$JSCompiler_prototypeAlias$$.$setSelected$ = function $$JSCompiler_prototypeAl
   this.$IsSelected$ != $selected$$10$$ && (this.$IsSelected$ = $selected$$10$$, this.$isSelected$() ? (this.$setFill$(D.$DvtChartLineMarker$_SELECTED_FILL$$), this.$setStroke$(this.$isHoverEffectShown$() ? this.$_hoverStroke$ : D.$DvtChartLineMarker$_SELECTED_STROKE$$)) : ((0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)(this), this.$setStroke$(this.$isHoverEffectShown$() ? this.$_hoverStroke$ : D.$JSCompiler_alias_NULL$$)))
 };
 D.$JSCompiler_prototypeAlias$$.$UpdateSelectionEffect$ = (0,D.$JSCompiler_emptyFn$$)();
-D.$DvtChartPolarBar$$ = function $$DvtChartPolarBar$$$($context$$533$$, $axisCoord$$1$$, $baselineCoord$$3$$, $endCoord$$5$$, $x1$$29$$, $x2$$26$$, $availSpace$$39$$) {
-  this.Init($context$$533$$);
+D.$DvtChartPolarBar$$ = function $$DvtChartPolarBar$$$($context$$527$$, $axisCoord$$1$$, $baselineCoord$$3$$, $endCoord$$5$$, $x1$$29$$, $x2$$26$$, $availSpace$$39$$) {
+  this.Init($context$$527$$);
   this.$_axisCoord$ = $axisCoord$$1$$;
   this.$_availSpace$ = $availSpace$$39$$.clone();
   this.$_bbox$ = D.$JSCompiler_alias_NULL$$;
@@ -262,70 +262,70 @@ D.$JSCompiler_prototypeAlias$$.$getInsertAnimation$ = function $$JSCompiler_prot
   return $duration$$70_nodePlayable$$5$$
 };
 D.$JSCompiler_prototypeAlias$$.$_setBarCoords$ = function $$JSCompiler_prototypeAlias$$$$_setBarCoords$$($baselineCoord$$4$$, $endCoord$$6$$, $x1$$30$$, $x2$$27$$) {
-  var $inner1_maxY$$5$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($baselineCoord$$4$$, $x1$$30$$, this.$_availSpace$), $inner2$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($baselineCoord$$4$$, $x2$$27$$, this.$_availSpace$), $outer1$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($endCoord$$6$$, $x1$$30$$, this.$_availSpace$), $outer2$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($endCoord$$6$$, $x2$$27$$, this.$_availSpace$), $cmds$$21_minX$$8$$ = window.DvtPathUtils.moveTo($inner1_maxY$$5$$.x, 
+  var $inner1_maxY$$5$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($baselineCoord$$4$$, $x1$$30$$, this.$_availSpace$), $inner2$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($baselineCoord$$4$$, $x2$$27$$, this.$_availSpace$), $outer1$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($endCoord$$6$$, $x1$$30$$, this.$_availSpace$), $outer2$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($endCoord$$6$$, $x2$$27$$, this.$_availSpace$), $cmds$$19_minX$$8$$ = window.DvtPathUtils.moveTo($inner1_maxY$$5$$.x, 
   $inner1_maxY$$5$$.y) + window.DvtPathUtils.arcTo($baselineCoord$$4$$, $baselineCoord$$4$$, $x2$$27$$ - $x1$$30$$, 1, $inner2$$.x, $inner2$$.y) + window.DvtPathUtils.lineTo($outer2$$.x, $outer2$$.y) + window.DvtPathUtils.arcTo($endCoord$$6$$, $endCoord$$6$$, $x2$$27$$ - $x1$$30$$, 0, $outer1$$.x, $outer1$$.y) + window.DvtPathUtils.lineTo($inner1_maxY$$5$$.x, $inner1_maxY$$5$$.y) + window.DvtPathUtils.closePath();
-  this.$setCmds$($cmds$$21_minX$$8$$);
-  var $cmds$$21_minX$$8$$ = window.Math.min($inner1_maxY$$5$$.x, $inner2$$.x, $outer1$$.x, $outer2$$.x), $maxX$$5$$ = window.Math.max($inner1_maxY$$5$$.x, $inner2$$.x, $outer1$$.x, $outer2$$.x), $minY$$8$$ = window.Math.min($inner1_maxY$$5$$.y, $inner2$$.y, $outer1$$.y, $outer2$$.y), $inner1_maxY$$5$$ = window.Math.max($inner1_maxY$$5$$.y, $inner2$$.y, $outer1$$.y, $outer2$$.y);
-  this.$_bbox$ = new D.$DvtRectangle$$($cmds$$21_minX$$8$$, $minY$$8$$, $maxX$$5$$ - $cmds$$21_minX$$8$$, $inner1_maxY$$5$$ - $minY$$8$$);
+  this.$setCmds$($cmds$$19_minX$$8$$);
+  var $cmds$$19_minX$$8$$ = window.Math.min($inner1_maxY$$5$$.x, $inner2$$.x, $outer1$$.x, $outer2$$.x), $maxX$$5$$ = window.Math.max($inner1_maxY$$5$$.x, $inner2$$.x, $outer1$$.x, $outer2$$.x), $minY$$8$$ = window.Math.min($inner1_maxY$$5$$.y, $inner2$$.y, $outer1$$.y, $outer2$$.y), $inner1_maxY$$5$$ = window.Math.max($inner1_maxY$$5$$.y, $inner2$$.y, $outer1$$.y, $outer2$$.y);
+  this.$_bbox$ = new D.$DvtRectangle$$($cmds$$19_minX$$8$$, $minY$$8$$, $maxX$$5$$ - $cmds$$19_minX$$8$$, $inner1_maxY$$5$$ - $minY$$8$$);
   this.$_baselineCoord$ = $baselineCoord$$4$$;
   this.$_endCoord$ = $endCoord$$6$$;
   this.$_x1$ = $x1$$30$$;
   this.$_x2$ = $x2$$27$$
 };
 D.$JSCompiler_prototypeAlias$$.$getBoundingBox$ = (0,D.$JSCompiler_get$$)("$_bbox$");
-D.$DvtFunnelSlice$$ = function $$DvtFunnelSlice$$$($chart$$3$$, $seriesIndex$$3$$, $numDrawnSeries$$, $funnelWidth$$, $funnelHeight$$, $startPercent$$, $valuePercent$$, $fillPercent$$, $gap$$8$$) {
-  this.Init($chart$$3$$, $seriesIndex$$3$$, $numDrawnSeries$$, $funnelWidth$$, $funnelHeight$$, $startPercent$$, $valuePercent$$, $fillPercent$$, $gap$$8$$)
+D.$DvtFunnelSlice$$ = function $$DvtFunnelSlice$$$($chart$$3$$, $seriesIndex$$3$$, $numDrawnSeries$$, $funnelWidth$$, $funnelHeight$$, $startPercent$$, $valuePercent$$, $fillPercent$$, $gap$$7$$) {
+  this.Init($chart$$3$$, $seriesIndex$$3$$, $numDrawnSeries$$, $funnelWidth$$, $funnelHeight$$, $startPercent$$, $valuePercent$$, $fillPercent$$, $gap$$7$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtFunnelSlice$$, D.$DvtPath$$, "DvtFunnelSlice");
-D.$DvtFunnelSlice$$.prototype.Init = function $$DvtFunnelSlice$$$$Init$($chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$, $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$, $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$, $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$, 
-$funnelHeight$$1_shapeForSelection$$inline_5148$$, $startPercent$$1$$, $valuePercent$$1$$, $fillPercent$$1$$, $gap$$9$$) {
-  D.$DvtFunnelSlice$$.$superclass$.Init.call(this, $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$.$_context$);
-  this.$_chart$ = $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$;
-  this.$_seriesIndex$ = $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$;
-  this.$_numDrawnSeries$ = $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$;
-  this.$_funnelWidth$ = $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$;
-  this.$_funnelHeight$ = $funnelHeight$$1_shapeForSelection$$inline_5148$$;
+D.$DvtFunnelSlice$$.prototype.Init = function $$DvtFunnelSlice$$$$Init$($chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$, $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$, $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$, $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$, 
+$funnelHeight$$1_shapeForSelection$$inline_5090$$, $startPercent$$1$$, $valuePercent$$1$$, $fillPercent$$1$$, $gap$$8$$) {
+  D.$DvtFunnelSlice$$.$superclass$.Init.call(this, $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$.$_context$);
+  this.$_chart$ = $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$;
+  this.$_seriesIndex$ = $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$;
+  this.$_numDrawnSeries$ = $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$;
+  this.$_funnelWidth$ = $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$;
+  this.$_funnelHeight$ = $funnelHeight$$1_shapeForSelection$$inline_5090$$;
   this.$_startPercent$ = $startPercent$$1$$;
   this.$_valuePercent$ = $valuePercent$$1$$;
   this.$_fillPercent$ = $fillPercent$$1$$;
-  this.$_gap$ = $gap$$9$$;
-  $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$ = (0,D.$JSCompiler_StaticMethods__getPath$$)(this);
+  this.$_gap$ = $gap$$8$$;
+  $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$ = (0,D.$JSCompiler_StaticMethods__getPath$$)(this);
   this.$_dataColor$ = D.$DvtChartStyleUtils$$.$getColor$(this.$_chart$, this.$_seriesIndex$, 0);
-  this.$_backgroundColor$ = $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$.$getOptions$().styleDefaults.backgroundColor;
+  this.$_backgroundColor$ = $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$.$getOptions$().styleDefaults.backgroundColor;
   this.$_backgroundColor$ || (this.$_backgroundColor$ = D.$DvtFunnelSlice$_BACKGROUND_COLOR$$);
-  this.$setCmds$($JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.slice);
-  $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.bar && (this.$_bar$ = new D.$DvtPath$$(this.$_context$, $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.bar), this.$addChild$(this.$_bar$), this.$_bar$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$));
-  $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$ = $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.sliceBounds;
-  $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$ = D.$DvtChartSeriesEffectUtils$$.$getFunnelSliceFill$(this.$_chart$, this.$_seriesIndex$, this.$_dataColor$, $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$);
-  $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ = D.$DvtChartStyleUtils$$.$getBorderColor$(this.$_chart$, this.$_seriesIndex$, 0);
-  $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$ = D.$DvtChartSeriesEffectUtils$$.$getFunnelSliceFill$(this.$_chart$, this.$_seriesIndex$, this.$_backgroundColor$, $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$, D.$JSCompiler_alias_TRUE$$);
-  this.$_bar$ ? (this.$setFill$($backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$), this.$_bar$.$setFill$($chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$)) : this.$setFill$($chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$);
-  this.$setSolidStroke$($barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ != D.$JSCompiler_alias_NULL$$ ? $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ : "#FFFFFF");
+  this.$setCmds$($JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.slice);
+  $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.bar && (this.$_bar$ = new D.$DvtPath$$(this.$_context$, $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.bar), this.$addChild$(this.$_bar$), this.$_bar$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$));
+  $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$ = $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.sliceBounds;
+  $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$ = D.$DvtChartSeriesEffectUtils$$.$getFunnelSliceFill$(this.$_chart$, this.$_seriesIndex$, this.$_dataColor$, $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$);
+  $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ = D.$DvtChartStyleUtils$$.$getBorderColor$(this.$_chart$, this.$_seriesIndex$, 0);
+  $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$ = D.$DvtChartSeriesEffectUtils$$.$getFunnelSliceFill$(this.$_chart$, this.$_seriesIndex$, this.$_backgroundColor$, $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$, D.$JSCompiler_alias_TRUE$$);
+  this.$_bar$ ? (this.$setFill$($backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$), this.$_bar$.$setFill$($chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$)) : this.$setFill$($chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$);
+  this.$setSolidStroke$($barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ != D.$JSCompiler_alias_NULL$$ ? $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ : "#FFFFFF");
   this.$OriginalStroke$ = this.$getStroke$();
-  this.$_chart$.$isSelectionSupported$() && ($chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$ = D.$DvtSelectionEffectUtils$$.$getHoverBorderColor$(this.$_dataColor$), $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ = D.$DvtChartStyleUtils$$.$getSelectedInnerColor$(this.$_chart$), $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$ = 
-  D.$DvtChartStyleUtils$$.$getSelectedOuterColor$(this.$_chart$) ? D.$DvtChartStyleUtils$$.$getSelectedOuterColor$(this.$_chart$) : this.$_dataColor$, $funnelHeight$$1_shapeForSelection$$inline_5148$$ = this.$_bar$ != D.$JSCompiler_alias_NULL$$ ? this.$_bar$ : this, $funnelHeight$$1_shapeForSelection$$inline_5148$$.$setHoverStroke$(new D.$DvtSolidStroke$$($chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$, 1, 2)), $funnelHeight$$1_shapeForSelection$$inline_5148$$.$setSelectedStroke$(new D.$DvtSolidStroke$$($barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$, 
-  1, 1.5), new D.$DvtSolidStroke$$($backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$, 1, 4.5)), $funnelHeight$$1_shapeForSelection$$inline_5148$$.$setSelectedHoverStroke$(new D.$DvtSolidStroke$$($barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$, 1, 1.5), new D.$DvtSolidStroke$$($chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$, 
+  this.$_chart$.$isSelectionSupported$() && ($chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$ = D.$DvtSelectionEffectUtils$$.$getHoverBorderColor$(this.$_dataColor$), $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ = D.$DvtChartStyleUtils$$.$getSelectedInnerColor$(this.$_chart$), $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$ = 
+  D.$DvtChartStyleUtils$$.$getSelectedOuterColor$(this.$_chart$) ? D.$DvtChartStyleUtils$$.$getSelectedOuterColor$(this.$_chart$) : this.$_dataColor$, $funnelHeight$$1_shapeForSelection$$inline_5090$$ = this.$_bar$ != D.$JSCompiler_alias_NULL$$ ? this.$_bar$ : this, $funnelHeight$$1_shapeForSelection$$inline_5090$$.$setHoverStroke$(new D.$DvtSolidStroke$$($chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$, 1, 2)), $funnelHeight$$1_shapeForSelection$$inline_5090$$.$setSelectedStroke$(new D.$DvtSolidStroke$$($barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$, 
+  1, 1.5), new D.$DvtSolidStroke$$($backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$, 1, 4.5)), $funnelHeight$$1_shapeForSelection$$inline_5090$$.$setSelectedHoverStroke$(new D.$DvtSolidStroke$$($barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$, 1, 1.5), new D.$DvtSolidStroke$$($chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$, 
   1, 4.5)), this.setCursor("pointer"));
   a: {
-    $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$ = $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.sliceBounds;
-    $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ = $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.barBounds;
-    if($JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$ = D.$DvtChartDataUtils$$.$getSeriesLabel$(this.$_chart$, this.$_seriesIndex$)) {
-      if($JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$ = new D.$DvtOutputText$$(this.$_context$, $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$, 0, 0), D.$DvtTextUtils$$.$fitText$($JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$, $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$.$h$, $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$.$w$, 
+    $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$ = $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.sliceBounds;
+    $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ = $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.barBounds;
+    if($JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$ = D.$DvtChartDataUtils$$.$getSeriesLabel$(this.$_chart$, this.$_seriesIndex$)) {
+      if($JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$ = new D.$DvtOutputText$$(this.$_context$, $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$, 0, 0), D.$DvtTextUtils$$.$fitText$($JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$, $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$.$h$, $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$.$w$, 
       this, 3)) {
-        $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$ = $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.$measureDimensions$();
-        $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ = D.$DvtChartStyleUtils$$.$getPattern$(this.$_chart$, this.$_seriesIndex$, 0) != D.$JSCompiler_alias_NULL$$ ? "#0000000" : (0,D.$JSCompiler_StaticMethods_containsPoint$$)($barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$, $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$.x, 
-        $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$.y + ($chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$.$h$ - $backgroundFill$$inline_5144_funnelWidth$$1_outerColor$$inline_5147_sliceBounds$$inline_5141_textDim$$inline_5155$$.$w$) / 2) ? D.$DvtColorUtils$$.$getContrastingTextColor$(this.$_dataColor$) : D.$DvtColorUtils$$.$getContrastingTextColor$(this.$_backgroundColor$);
-        $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ = [new D.$DvtCSSStyle$$("color: " + $barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$ + ";"), this.$_chart$.$getOptions$().styleDefaults.sliceLabelStyle, new D.$DvtCSSStyle$$(D.$DvtChartDataUtils$$.$getDataItem$(this.$_chart$, this.$_seriesIndex$, 0).labelStyle)];
-        $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.$setCSSStyle$((0,D.$DvtCSSStyle$mergeStyles$$)($barBounds$$inline_5152_innerColor$$inline_5146_labelColor$$inline_5156_labelStyleArray$$inline_5157_numDrawnSeries$$1_sliceBorder$$inline_5143$$));
-        $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.$setMatrix$((0,D.$JSCompiler_StaticMethods__getSliceLabelPosition$$)(this, $chart$$4_hoverColor$$inline_5145_sliceBounds$$inline_5151_sliceFill$$inline_5142$$));
-        $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.$alignCenter$();
-        $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$.$alignMiddle$();
+        $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$ = $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.$measureDimensions$();
+        $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ = D.$DvtChartStyleUtils$$.$getPattern$(this.$_chart$, this.$_seriesIndex$, 0) != D.$JSCompiler_alias_NULL$$ ? "#0000000" : (0,D.$JSCompiler_StaticMethods_containsPoint$$)($barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$, $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$.x, 
+        $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$.y + ($chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$.$h$ - $backgroundFill$$inline_5086_funnelWidth$$1_outerColor$$inline_5089_sliceBounds$$inline_5083_textDim$$inline_5097$$.$w$) / 2) ? D.$DvtColorUtils$$.$getContrastingTextColor$(this.$_dataColor$) : D.$DvtColorUtils$$.$getContrastingTextColor$(this.$_backgroundColor$);
+        $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ = [new D.$DvtCSSStyle$$("color: " + $barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$ + ";"), this.$_chart$.$getOptions$().styleDefaults.sliceLabelStyle, new D.$DvtCSSStyle$$(D.$DvtChartDataUtils$$.$getDataItem$(this.$_chart$, this.$_seriesIndex$, 0).labelStyle)];
+        $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.$setCSSStyle$((0,D.$DvtCSSStyle$mergeStyles$$)($barBounds$$inline_5094_innerColor$$inline_5088_labelColor$$inline_5098_labelStyleArray$$inline_5099_numDrawnSeries$$1_sliceBorder$$inline_5085$$));
+        $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.$setMatrix$((0,D.$JSCompiler_StaticMethods__getSliceLabelPosition$$)(this, $chart$$4_hoverColor$$inline_5087_sliceBounds$$inline_5093_sliceFill$$inline_5084$$));
+        $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.$alignCenter$();
+        $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$.$alignMiddle$();
         break a
       }
     }
-    $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$ = D.$JSCompiler_alias_VOID$$
+    $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$ = D.$JSCompiler_alias_VOID$$
   }
-  this.$_label$ = $JSCompiler_inline_result$$482_cmds$$19_label$$inline_5154_labelString$$inline_5153_seriesIndex$$4$$;
+  this.$_label$ = $JSCompiler_inline_result$$467_cmds$$17_label$$inline_5096_labelString$$inline_5095_seriesIndex$$4$$;
   this.$_label$ != D.$JSCompiler_alias_NULL$$ && (this.$_label$.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$), this.$addChild$(this.$_label$))
 };
 D.$DvtFunnelSlice$_FUNNEL_ANGLE_2D$$ = D.$DvtMath$$.$degreesToRads$(31);
@@ -336,7 +336,7 @@ D.$JSCompiler_StaticMethods__getPath$$ = function $$JSCompiler_StaticMethods__ge
   var $is3D_rx$$27$$ = "on" == $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_chart$.$getOptions$().styleDefaults.threeDEffect ? D.$JSCompiler_alias_TRUE$$ : D.$JSCompiler_alias_FALSE$$, $isBiDi$$8$$ = D.$DvtAgent$$.$isRightToLeft$($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_context$), $gapCount_ry$$27$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_chart$), $ar$$34_offset$$25$$ = ($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_numDrawnSeries$ + 
   1) * $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_gap$;
   if($is3D_rx$$27$$) {
-    var $is3D_rx$$27$$ = ($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelWidth$ - $gapCount_ry$$27$$ * $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_gap$) / window.Math.sin(D.$DvtFunnelSlice$_FUNNEL_ANGLE_2D$$), $gapCount_ry$$27$$ = $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelHeight$ / window.Math.sin(D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$), $ratio$$10$$ = 0.12 * ($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelWidth$ / $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelHeight$), 
+    var $is3D_rx$$27$$ = ($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelWidth$ - $gapCount_ry$$27$$ * $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_gap$) / window.Math.sin(D.$DvtFunnelSlice$_FUNNEL_ANGLE_2D$$), $gapCount_ry$$27$$ = $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelHeight$ / window.Math.sin(D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$), $ratio$$8$$ = 0.12 * ($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelWidth$ / $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelHeight$), 
     $delta$$14_pathCommands$$ = D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$ * (1 - $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_startPercent$), $barCommands_gamma$$ = D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$ * (1 - $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_startPercent$ - $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_valuePercent$), $c1$$2_sliceBounds$$ = (1 + D.$DvtFunnelSlice$_FUNNEL_RATIO$$) / 2 * $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelHeight$ + $gapCount_ry$$27$$, 
     $c2$$2$$ = (1 - D.$DvtFunnelSlice$_FUNNEL_RATIO$$) / 2 * $JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_funnelHeight$ - $gapCount_ry$$27$$, $arcDir1$$ = 1, $arcDir2$$ = 0;
     $isBiDi$$8$$ ? ($ar$$34_offset$$25$$ = [$is3D_rx$$27$$ * window.Math.sin($delta$$14_pathCommands$$) + $ar$$34_offset$$25$$, $c1$$2_sliceBounds$$ - $gapCount_ry$$27$$ * window.Math.cos($delta$$14_pathCommands$$), $is3D_rx$$27$$ * window.Math.sin($barCommands_gamma$$) + $ar$$34_offset$$25$$, $c1$$2_sliceBounds$$ - $gapCount_ry$$27$$ * window.Math.cos($barCommands_gamma$$), $is3D_rx$$27$$ * window.Math.sin($barCommands_gamma$$) + $ar$$34_offset$$25$$, $c2$$2$$ + $gapCount_ry$$27$$ * window.Math.cos($barCommands_gamma$$), 
@@ -345,10 +345,10 @@ D.$JSCompiler_StaticMethods__getPath$$ = function $$JSCompiler_StaticMethods__ge
     $c2$$2$$ + $gapCount_ry$$27$$ * window.Math.cos($delta$$14_pathCommands$$)];
     $delta$$14_pathCommands$$ = window.DvtPathUtils.moveTo($ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[1]);
     $barCommands_gamma$$ = D.$JSCompiler_alias_NULL$$;
-    $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($ratio$$10$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, window.Math.PI, $arcDir2$$, $ar$$34_offset$$25$$[6], $ar$$34_offset$$25$$[7]);
-    $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($ratio$$10$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, window.Math.PI, $arcDir2$$, $ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[1]);
+    $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($ratio$$8$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, window.Math.PI, $arcDir2$$, $ar$$34_offset$$25$$[6], $ar$$34_offset$$25$$[7]);
+    $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($ratio$$8$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, window.Math.PI, $arcDir2$$, $ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[1]);
     $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($is3D_rx$$27$$, $gapCount_ry$$27$$, D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$, $arcDir1$$, $ar$$34_offset$$25$$[2], $ar$$34_offset$$25$$[3]);
-    $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($ratio$$10$$ * ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, window.Math.PI, $arcDir2$$, $ar$$34_offset$$25$$[4], $ar$$34_offset$$25$$[5]);
+    $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($ratio$$8$$ * ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, window.Math.PI, $arcDir2$$, $ar$$34_offset$$25$$[4], $ar$$34_offset$$25$$[5]);
     $delta$$14_pathCommands$$ += window.DvtPathUtils.arcTo($is3D_rx$$27$$, $gapCount_ry$$27$$, D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$, $arcDir1$$, $ar$$34_offset$$25$$[6], $ar$$34_offset$$25$$[7]);
     $c1$$2_sliceBounds$$ = new D.$DvtRectangle$$(window.Math.min($ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[2]), $ar$$34_offset$$25$$[5], window.Math.abs($ar$$34_offset$$25$$[0] - $ar$$34_offset$$25$$[2]), window.Math.abs($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]));
     if($JSCompiler_StaticMethods__getPath$self_alpha$$36$$.$_fillPercent$ != D.$JSCompiler_alias_NULL$$) {
@@ -356,10 +356,10 @@ D.$JSCompiler_StaticMethods__getPath$$ = function $$JSCompiler_StaticMethods__ge
       $JSCompiler_StaticMethods__getPath$self_alpha$$36$$ = $isBiDi$$8$$ ? -$barBounds_percent$$4$$ * window.Math.PI : $barBounds_percent$$4$$ * window.Math.PI;
       $barCommands_gamma$$ = window.DvtPathUtils.moveTo($ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[1]);
       $barCommands_gamma$$ += window.DvtPathUtils.arcTo($is3D_rx$$27$$, $gapCount_ry$$27$$, D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$, $arcDir1$$, $ar$$34_offset$$25$$[2], $ar$$34_offset$$25$$[3]);
-      $barCommands_gamma$$ += window.DvtPathUtils.arcTo($ratio$$10$$ * ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, $JSCompiler_StaticMethods__getPath$self_alpha$$36$$, $arcDir2$$, $ar$$34_offset$$25$$[2] + $ratio$$10$$ * ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2 * window.Math.sin($JSCompiler_StaticMethods__getPath$self_alpha$$36$$), ($ar$$34_offset$$25$$[5] + $ar$$34_offset$$25$$[3]) / 2 + ($ar$$34_offset$$25$$[3] - 
+      $barCommands_gamma$$ += window.DvtPathUtils.arcTo($ratio$$8$$ * ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2, $JSCompiler_StaticMethods__getPath$self_alpha$$36$$, $arcDir2$$, $ar$$34_offset$$25$$[2] + $ratio$$8$$ * ($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) / 2 * window.Math.sin($JSCompiler_StaticMethods__getPath$self_alpha$$36$$), ($ar$$34_offset$$25$$[5] + $ar$$34_offset$$25$$[3]) / 2 + ($ar$$34_offset$$25$$[3] - 
       $ar$$34_offset$$25$$[5]) / 2 * window.Math.cos($JSCompiler_StaticMethods__getPath$self_alpha$$36$$));
-      $barCommands_gamma$$ += window.DvtPathUtils.arcTo($is3D_rx$$27$$, $gapCount_ry$$27$$, D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$, $arcDir1$$, $ar$$34_offset$$25$$[6] + $ratio$$10$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2 * window.Math.sin($JSCompiler_StaticMethods__getPath$self_alpha$$36$$), ($ar$$34_offset$$25$$[7] + $ar$$34_offset$$25$$[1]) / 2 + ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2 * window.Math.cos($JSCompiler_StaticMethods__getPath$self_alpha$$36$$));
-      $barCommands_gamma$$ += window.DvtPathUtils.arcTo($ratio$$10$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, $JSCompiler_StaticMethods__getPath$self_alpha$$36$$, $arcDir1$$, $ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[1]);
+      $barCommands_gamma$$ += window.DvtPathUtils.arcTo($is3D_rx$$27$$, $gapCount_ry$$27$$, D.$DvtFunnelSlice$_FUNNEL_ANGLE_3D$$, $arcDir1$$, $ar$$34_offset$$25$$[6] + $ratio$$8$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2 * window.Math.sin($JSCompiler_StaticMethods__getPath$self_alpha$$36$$), ($ar$$34_offset$$25$$[7] + $ar$$34_offset$$25$$[1]) / 2 + ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2 * window.Math.cos($JSCompiler_StaticMethods__getPath$self_alpha$$36$$));
+      $barCommands_gamma$$ += window.DvtPathUtils.arcTo($ratio$$8$$ * ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, ($ar$$34_offset$$25$$[1] - $ar$$34_offset$$25$$[7]) / 2, $JSCompiler_StaticMethods__getPath$self_alpha$$36$$, $arcDir1$$, $ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[1]);
       $barBounds_percent$$4$$ = new D.$DvtRectangle$$(window.Math.min($ar$$34_offset$$25$$[0], $ar$$34_offset$$25$$[2]), $ar$$34_offset$$25$$[5] + window.Math.abs($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) * (1 - $barBounds_percent$$4$$), window.Math.abs($ar$$34_offset$$25$$[0] - $ar$$34_offset$$25$$[2]), window.Math.abs($ar$$34_offset$$25$$[3] - $ar$$34_offset$$25$$[5]) * $barBounds_percent$$4$$)
     }
   }else {
@@ -387,15 +387,15 @@ D.$JSCompiler_prototypeAlias$$ = D.$DvtFunnelSlice$$.prototype;
 D.$JSCompiler_prototypeAlias$$.$getAnimationParams$ = function $$JSCompiler_prototypeAlias$$$$getAnimationParams$$() {
   return[this.$_startPercent$, this.$_valuePercent$, this.$_fillPercent$, this.$getAlpha$()]
 };
-D.$JSCompiler_prototypeAlias$$.$setAnimationParams$ = function $$JSCompiler_prototypeAlias$$$$setAnimationParams$$($ar$$35_cmds$$20$$) {
-  this.$_startPercent$ = $ar$$35_cmds$$20$$[0];
-  this.$_valuePercent$ = $ar$$35_cmds$$20$$[1];
-  this.$_fillPercent$ = this.$_fillPercent$ != D.$JSCompiler_alias_NULL$$ ? $ar$$35_cmds$$20$$[2] : D.$JSCompiler_alias_NULL$$;
-  this.$setAlpha$($ar$$35_cmds$$20$$[3]);
-  $ar$$35_cmds$$20$$ = (0,D.$JSCompiler_StaticMethods__getPath$$)(this);
-  this.$setCmds$($ar$$35_cmds$$20$$.slice);
-  $ar$$35_cmds$$20$$.bar && this.$_bar$ && this.$_bar$.$setCmds$($ar$$35_cmds$$20$$.bar);
-  this.$_label$ && this.$_label$.$setMatrix$((0,D.$JSCompiler_StaticMethods__getSliceLabelPosition$$)(this, $ar$$35_cmds$$20$$.sliceBounds))
+D.$JSCompiler_prototypeAlias$$.$setAnimationParams$ = function $$JSCompiler_prototypeAlias$$$$setAnimationParams$$($ar$$35_cmds$$18$$) {
+  this.$_startPercent$ = $ar$$35_cmds$$18$$[0];
+  this.$_valuePercent$ = $ar$$35_cmds$$18$$[1];
+  this.$_fillPercent$ = this.$_fillPercent$ != D.$JSCompiler_alias_NULL$$ ? $ar$$35_cmds$$18$$[2] : D.$JSCompiler_alias_NULL$$;
+  this.$setAlpha$($ar$$35_cmds$$18$$[3]);
+  $ar$$35_cmds$$18$$ = (0,D.$JSCompiler_StaticMethods__getPath$$)(this);
+  this.$setCmds$($ar$$35_cmds$$18$$.slice);
+  $ar$$35_cmds$$18$$.bar && this.$_bar$ && this.$_bar$.$setCmds$($ar$$35_cmds$$18$$.bar);
+  this.$_label$ && this.$_label$.$setMatrix$((0,D.$JSCompiler_StaticMethods__getSliceLabelPosition$$)(this, $ar$$35_cmds$$18$$.sliceBounds))
 };
 D.$JSCompiler_prototypeAlias$$.$setSelected$ = function $$JSCompiler_prototypeAlias$$$$setSelected$$($selected$$13$$) {
   if(this.$_bar$ != D.$JSCompiler_alias_NULL$$) {
@@ -433,41 +433,41 @@ D.$DvtPieChart$$.prototype.Init = function $$DvtPieChart$$$$Init$($chart$$2$$, $
   this.$_labelPosition$ = this.$_options$.styleDefaults.sliceLabelPosition;
   "auto" == this.$_labelPosition$ && (this.$_labelPosition$ = "outside");
   this.$_center$ = new D.$DvtPoint$$($availSpace$$38$$.x + window.Math.floor($availSpace$$38$$.$w$ / 2), $availSpace$$38$$.y + window.Math.floor($availSpace$$38$$.$h$ / 2));
-  var $radiusScale_slices$$inline_5074$$ = "outside" == this.$_labelPosition$ ? 0.38 : 0.45;
-  this.$_radiusY$ = this.$_radiusX$ = window.Math.floor(window.Math.min($availSpace$$38$$.$w$, $availSpace$$38$$.$h$) * $radiusScale_slices$$inline_5074$$);
+  var $radiusScale_slices$$inline_5016$$ = "outside" == this.$_labelPosition$ ? 0.38 : 0.45;
+  this.$_radiusY$ = this.$_radiusX$ = window.Math.floor(window.Math.min($availSpace$$38$$.$w$, $availSpace$$38$$.$h$) * $radiusScale_slices$$inline_5016$$);
   this.$_depth$ = 0;
   this.$_anchorOffset$ = 90;
   (0,D.$JSCompiler_StaticMethods_is3D$$)(this) && (this.$_depth$ = 0.1 * $availSpace$$38$$.$h$, this.$_center$.y -= window.Math.floor(this.$_depth$ / 2), this.$_radiusY$ *= D.$DvtPieChart$_THREED_TILT$$);
-  for(var $radiusScale_slices$$inline_5074$$ = [], $seriesIndex$$inline_5077_slice$$inline_5075$$, $seriesIndices$$inline_5076$$ = D.$DvtPieChartUtils$$.$getRenderedSeriesIndices$(this.$chart$), $otherValue$$inline_5078$$ = D.$DvtPieChartUtils$$.$getOtherValue$(this.$chart$), $i$$inline_5079$$ = 0;$i$$inline_5079$$ < $seriesIndices$$inline_5076$$.length;$i$$inline_5079$$++) {
-    $seriesIndex$$inline_5077_slice$$inline_5075$$ = $seriesIndices$$inline_5076$$[$i$$inline_5079$$], D.$DvtChartStyleUtils$$.$isSeriesRendered$(this.$chart$, $seriesIndex$$inline_5077_slice$$inline_5075$$) && ($seriesIndex$$inline_5077_slice$$inline_5075$$ = new D.$DvtPieSlice$$(this, $seriesIndex$$inline_5077_slice$$inline_5075$$), 0 >= $seriesIndex$$inline_5077_slice$$inline_5075$$.getValue() || $radiusScale_slices$$inline_5074$$.push($seriesIndex$$inline_5077_slice$$inline_5075$$))
+  for(var $radiusScale_slices$$inline_5016$$ = [], $seriesIndex$$inline_5019_slice$$inline_5017$$, $seriesIndices$$inline_5018$$ = D.$DvtPieChartUtils$$.$getRenderedSeriesIndices$(this.$chart$), $otherValue$$inline_5020$$ = D.$DvtPieChartUtils$$.$getOtherValue$(this.$chart$), $i$$inline_5021$$ = 0;$i$$inline_5021$$ < $seriesIndices$$inline_5018$$.length;$i$$inline_5021$$++) {
+    $seriesIndex$$inline_5019_slice$$inline_5017$$ = $seriesIndices$$inline_5018$$[$i$$inline_5021$$], D.$DvtChartStyleUtils$$.$isSeriesRendered$(this.$chart$, $seriesIndex$$inline_5019_slice$$inline_5017$$) && ($seriesIndex$$inline_5019_slice$$inline_5017$$ = new D.$DvtPieSlice$$(this, $seriesIndex$$inline_5019_slice$$inline_5017$$), 0 >= $seriesIndex$$inline_5019_slice$$inline_5017$$.getValue() || $radiusScale_slices$$inline_5016$$.push($seriesIndex$$inline_5019_slice$$inline_5017$$))
   }
-  0 < $otherValue$$inline_5078$$ && $radiusScale_slices$$inline_5074$$.push(new D.$DvtPieSlice$$(this));
-  D.$DvtAgent$$.$isRightToLeft$(this.$_context$) && $radiusScale_slices$$inline_5074$$.reverse();
-  this.$_slices$ = $radiusScale_slices$$inline_5074$$;
+  0 < $otherValue$$inline_5020$$ && $radiusScale_slices$$inline_5016$$.push(new D.$DvtPieSlice$$(this));
+  D.$DvtAgent$$.$isRightToLeft$(this.$_context$) && $radiusScale_slices$$inline_5016$$.reverse();
+  this.$_slices$ = $radiusScale_slices$$inline_5016$$;
   this.$_shapesContainer$ = new D.$DvtContainer$$(this.$_context$);
   this.$_numSelectedObjsInFront$ = this.$_numFrontObjs$ = 0
 };
 D.$DvtPieChart$$.prototype.$getOptions$ = (0,D.$JSCompiler_get$$)("$_options$");
-D.$DvtPieChart$$.prototype.$processEvent$ = function $$DvtPieChart$$$$$processEvent$$($bHide$$inline_5084_event$$405$$) {
-  var $objs$$inline_5082_type$$165$$ = $bHide$$inline_5084_event$$405$$.$getType$();
-  if($objs$$inline_5082_type$$165$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$ || $objs$$inline_5082_type$$165$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_SHOW$) {
-    if($objs$$inline_5082_type$$165$$ = this.$_slices$, $bHide$$inline_5084_event$$405$$ && $objs$$inline_5082_type$$165$$) {
-      var $category$$inline_5083$$ = $bHide$$inline_5084_event$$405$$.$_category$;
-      $bHide$$inline_5084_event$$405$$ = $bHide$$inline_5084_event$$405$$.$getType$() === D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$;
-      for(var $i$$inline_5085$$ = 0;$i$$inline_5085$$ < $objs$$inline_5082_type$$165$$.length;$i$$inline_5085$$++) {
-        var $displayables$$inline_9637_obj$$inline_5086$$ = $objs$$inline_5082_type$$165$$[$i$$inline_5085$$];
-        if($displayables$$inline_9637_obj$$inline_5086$$ && $displayables$$inline_9637_obj$$inline_5086$$.$getCategories$ && 0 <= D.$DvtArrayUtils$$.$getIndex$($displayables$$inline_9637_obj$$inline_5086$$.$getCategories$(), $category$$inline_5083$$)) {
-          var $displayables$$inline_5087$$ = $displayables$$inline_9637_obj$$inline_5086$$.$getDisplayables$($displayables$$inline_5087$$), $displayables$$inline_9637_obj$$inline_5086$$ = $displayables$$inline_5087$$, $bVisible$$inline_9638$$ = !$bHide$$inline_5084_event$$405$$;
-          if($displayables$$inline_9637_obj$$inline_5086$$) {
-            for(var $i$$inline_9639$$ = 0;$i$$inline_9639$$ < $displayables$$inline_9637_obj$$inline_5086$$.length;$i$$inline_9639$$++) {
-              $displayables$$inline_9637_obj$$inline_5086$$[$i$$inline_9639$$].$setVisible$($bVisible$$inline_9638$$)
+D.$DvtPieChart$$.prototype.$processEvent$ = function $$DvtPieChart$$$$$processEvent$$($bHide$$inline_5026_event$$396$$) {
+  var $objs$$inline_5024_type$$165$$ = $bHide$$inline_5026_event$$396$$.$getType$();
+  if($objs$$inline_5024_type$$165$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$ || $objs$$inline_5024_type$$165$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_SHOW$) {
+    if($objs$$inline_5024_type$$165$$ = this.$_slices$, $bHide$$inline_5026_event$$396$$ && $objs$$inline_5024_type$$165$$) {
+      var $category$$inline_5025$$ = $bHide$$inline_5026_event$$396$$.$_category$;
+      $bHide$$inline_5026_event$$396$$ = $bHide$$inline_5026_event$$396$$.$getType$() === D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$;
+      for(var $i$$inline_5027$$ = 0;$i$$inline_5027$$ < $objs$$inline_5024_type$$165$$.length;$i$$inline_5027$$++) {
+        var $displayables$$inline_9582_obj$$inline_5028$$ = $objs$$inline_5024_type$$165$$[$i$$inline_5027$$];
+        if($displayables$$inline_9582_obj$$inline_5028$$ && $displayables$$inline_9582_obj$$inline_5028$$.$getCategories$ && 0 <= D.$DvtArrayUtils$$.$getIndex$($displayables$$inline_9582_obj$$inline_5028$$.$getCategories$(), $category$$inline_5025$$)) {
+          var $displayables$$inline_5029$$ = $displayables$$inline_9582_obj$$inline_5028$$.$getDisplayables$($displayables$$inline_5029$$), $displayables$$inline_9582_obj$$inline_5028$$ = $displayables$$inline_5029$$, $bVisible$$inline_9583$$ = !$bHide$$inline_5026_event$$396$$;
+          if($displayables$$inline_9582_obj$$inline_5028$$) {
+            for(var $i$$inline_9584$$ = 0;$i$$inline_9584$$ < $displayables$$inline_9582_obj$$inline_5028$$.length;$i$$inline_9584$$++) {
+              $displayables$$inline_9582_obj$$inline_5028$$[$i$$inline_9584$$].$setVisible$($bVisible$$inline_9583$$)
             }
           }
         }
       }
     }
   }else {
-    ("categoryRollOver" == $objs$$inline_5082_type$$165$$ || "categoryRollOut" == $objs$$inline_5082_type$$165$$) && (0,D.$DvtCategoryRolloverHandler$processEvent$$)($bHide$$inline_5084_event$$405$$, this.$_slices$)
+    ("categoryRollOver" == $objs$$inline_5024_type$$165$$ || "categoryRollOut" == $objs$$inline_5024_type$$165$$) && (0,D.$DvtCategoryRolloverHandler$processEvent$$)($bHide$$inline_5026_event$$396$$, this.$_slices$)
   }
 };
 D.$DvtPieChart$$.prototype.$highlight$ = function $$DvtPieChart$$$$$highlight$$($categories$$5$$) {
@@ -475,109 +475,109 @@ D.$DvtPieChart$$.prototype.$highlight$ = function $$DvtPieChart$$$$$highlight$$(
 };
 (0,D.$goog$exportSymbol$$)("DvtPieChart.prototype.highlight", D.$DvtPieChart$$.prototype.$highlight$);
 D.$DvtPieChart$$.prototype.$render$ = function $$DvtPieChart$$$$$render$$() {
-  var $handler$$inline_5132_shadow$$6$$;
-  this.contains(this.$_shapesContainer$) || (this.$_shapesContainer$ || (this.$_shapesContainer$ = new D.$DvtContainer$$(this.$_context$)), this.$addChild$(this.$_shapesContainer$), !(0,D.$JSCompiler_StaticMethods_is3D$$)(this) && "skyros" == this.$getSkin$() && ($handler$$inline_5132_shadow$$6$$ = new D.$DvtShadow$$(D.$DvtColorUtils$$.$makeRGBA$(78, 87, 101, 0.45), 4, 7, 7, 54, 2, 3, D.$JSCompiler_alias_FALSE$$, D.$JSCompiler_alias_FALSE$$, D.$JSCompiler_alias_FALSE$$)));
-  var $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = this.$_slices$, $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = this.$_anchorOffset$, $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$, $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$, 
-  $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ = 0, $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ ? $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$.length : 0;
-  360 < $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ && ($anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ -= 360);
-  0 > $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ && ($anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ += 360);
-  var $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ = $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ = 0;
-  0 < $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ && ($accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ = $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$[0].$_pieChart$.$getTotalValue$());
-  for($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$ = 0;$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$ < $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$;$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$++) {
-    $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ = $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$[$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$], window.value = $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$.getValue(), $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ = 
-    0 == $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ ? 0 : 100 * (window.Math.abs(window.value) / $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$), $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ *= 3.6, $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ -= 
-    $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$, 0 > $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ && ($anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ += 360), $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$.$setAngleStart$($anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$), 
-    $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$.$setAngleExtent$($angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$), $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$.$getAngleStart$()
+  var $handler$$inline_5074_shadow$$6$$;
+  this.contains(this.$_shapesContainer$) || (this.$_shapesContainer$ || (this.$_shapesContainer$ = new D.$DvtContainer$$(this.$_context$)), this.$addChild$(this.$_shapesContainer$), !(0,D.$JSCompiler_StaticMethods_is3D$$)(this) && "skyros" == this.$getSkin$() && ($handler$$inline_5074_shadow$$6$$ = new D.$DvtShadow$$(D.$DvtColorUtils$$.$makeRGBA$(78, 87, 101, 0.45), 4, 7, 7, 54, 2, 3, D.$JSCompiler_alias_FALSE$$, D.$JSCompiler_alias_FALSE$$, D.$JSCompiler_alias_FALSE$$)));
+  var $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = this.$_slices$, $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = this.$_anchorOffset$, $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$, $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$, 
+  $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ = 0, $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ ? $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$.length : 0;
+  360 < $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ && ($anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ -= 360);
+  0 > $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ && ($anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ += 360);
+  var $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ = $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ = 0;
+  0 < $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ && ($accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ = $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$[0].$_pieChart$.$getTotalValue$());
+  for($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$ = 0;$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$ < $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$;$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$++) {
+    $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ = $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$[$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$], window.value = $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$.getValue(), $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ = 
+    0 == $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ ? 0 : 100 * (window.Math.abs(window.value) / $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$), $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ *= 3.6, $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ -= 
+    $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$, 0 > $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ && ($anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ += 360), $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$.$setAngleStart$($anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$), 
+    $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$.$setAngleExtent$($angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$), $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$.$getAngleStart$()
   }
-  for($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = 0;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ < this.$_slices$.length;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$++) {
-    $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$ = this.$_slices$[$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$];
-    $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_bFillerSlice$ ? "color" : D.$DvtChartStyleUtils$$.$getSeriesEffect$($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_chart$);
-    $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$getFillColor$();
-    $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$getFillPattern$();
-    $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ = $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = D.$JSCompiler_alias_VOID$$;
-    if("pattern" == $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ || $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ != D.$JSCompiler_alias_NULL$$) {
-      $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = new D.$DvtPatternFill$$($accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$, $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$)
+  for($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = 0;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ < this.$_slices$.length;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$++) {
+    $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$ = this.$_slices$[$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$];
+    $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_bFillerSlice$ ? "color" : D.$DvtChartStyleUtils$$.$getSeriesEffect$($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_chart$);
+    $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$getFillColor$();
+    $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$getFillPattern$();
+    $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ = $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = D.$JSCompiler_alias_VOID$$;
+    if("pattern" == $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ || $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ != D.$JSCompiler_alias_NULL$$) {
+      $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = new D.$DvtPatternFill$$($accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$, $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$)
     }else {
-      if("gradient" == $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$) {
-        var $arRatios$$inline_5110_skin$$inline_5105$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_pieChart$.$getSkin$(), $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ = "skyros" == $arRatios$$inline_5110_skin$$inline_5105$$ ? 297 : 270, $arBounds$$inline_5111_style$$inline_5107$$ = !(0,D.$JSCompiler_StaticMethods_is3D$$)($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_pieChart$) ? 
-        "2D" : "3D", $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = D.$DvtPieRenderUtils$$.$getGradientColors$(D.$DvtColorUtils$$.$getRGB$($angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$), $arBounds$$inline_5111_style$$inline_5107$$, $arRatios$$inline_5110_skin$$inline_5105$$), $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ = 
-        D.$DvtPieRenderUtils$$.$getGradientAlphas$(D.$DvtColorUtils$$.$getAlpha$($angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$), $arBounds$$inline_5111_style$$inline_5107$$), $arRatios$$inline_5110_skin$$inline_5105$$ = D.$DvtPieRenderUtils$$.$getGradientRatios$($arBounds$$inline_5111_style$$inline_5107$$, $arRatios$$inline_5110_skin$$inline_5105$$), $arBounds$$inline_5111_style$$inline_5107$$ = [window.Math.floor($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_pieChart$.$getCenter$().x - 
-        $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_radiusX$), window.Math.floor($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_pieChart$.$getCenter$().y - $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_radiusY$), window.Math.ceil(2 * $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_radiusX$), 
-        window.Math.ceil(2 * $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_radiusY$)], $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = new D.$DvtLinearGradientFill$$($accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$, $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$, 
-        $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$, $arRatios$$inline_5110_skin$$inline_5105$$, $arBounds$$inline_5111_style$$inline_5107$$)
+      if("gradient" == $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$) {
+        var $arRatios$$inline_5052_skin$$inline_5047$$ = $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_pieChart$.$getSkin$(), $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ = "skyros" == $arRatios$$inline_5052_skin$$inline_5047$$ ? 297 : 270, $arBounds$$inline_5053_style$$inline_5049$$ = !(0,D.$JSCompiler_StaticMethods_is3D$$)($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_pieChart$) ? 
+        "2D" : "3D", $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = D.$DvtPieRenderUtils$$.$getGradientColors$(D.$DvtColorUtils$$.$getRGB$($angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$), $arBounds$$inline_5053_style$$inline_5049$$, $arRatios$$inline_5052_skin$$inline_5047$$), $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ = 
+        D.$DvtPieRenderUtils$$.$getGradientAlphas$(D.$DvtColorUtils$$.$getAlpha$($angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$), $arBounds$$inline_5053_style$$inline_5049$$), $arRatios$$inline_5052_skin$$inline_5047$$ = D.$DvtPieRenderUtils$$.$getGradientRatios$($arBounds$$inline_5053_style$$inline_5049$$, $arRatios$$inline_5052_skin$$inline_5047$$), $arBounds$$inline_5053_style$$inline_5049$$ = [window.Math.floor($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_pieChart$.$getCenter$().x - 
+        $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_radiusX$), window.Math.floor($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_pieChart$.$getCenter$().y - $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_radiusY$), window.Math.ceil(2 * $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_radiusX$), 
+        window.Math.ceil(2 * $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_radiusY$)], $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = new D.$DvtLinearGradientFill$$($accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$, $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$, 
+        $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$, $arRatios$$inline_5052_skin$$inline_5047$$, $arBounds$$inline_5053_style$$inline_5049$$)
       }else {
-        $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = new D.$DvtSolidFill$$($angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$), $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ = new D.$DvtSolidFill$$(D.$DvtColorUtils$$.$getDarker$($angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$, 
+        $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = new D.$DvtSolidFill$$($angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$), $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ = new D.$DvtSolidFill$$(D.$DvtColorUtils$$.$getDarker$($angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$, 
         0.6))
       }
     }
-    $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_topSurface$ = D.$DvtPieRenderUtils$$.$createTopSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$, $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$);
-    if((0,D.$JSCompiler_StaticMethods_is3D$$)($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_pieChart$) && (0 < $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_pieChart$.$getDepth$() || $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_radiusX$ != $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$radiusY$)) {
-      $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = ($accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ = "gradient" == $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ || "pattern" == $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$) ? 
-      D.$DvtPieRenderUtils$$.$generateLateralGradientFill$($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$, D.$DvtPieRenderUtils$$.$SIDE$) : $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$, $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ = $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ ? 
-      D.$DvtPieRenderUtils$$.$generateLateralGradientFill$($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$, D.$DvtPieRenderUtils$$.$CRUST$) : $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$, $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_leftSurface$ = D.$DvtPieRenderUtils$$.$createLateralSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$, 
-      D.$DvtPieRenderUtils$$.$SURFACE_LEFT$, $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$), $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_rightSurface$ = D.$DvtPieRenderUtils$$.$createLateralSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$, D.$DvtPieRenderUtils$$.$SURFACE_RIGHT$, 
-      $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$), $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.$_crustSurface$ = D.$DvtPieRenderUtils$$.$createLateralSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$, D.$DvtPieRenderUtils$$.$SURFACE_CRUST$, $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$)
+    $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_topSurface$ = D.$DvtPieRenderUtils$$.$createTopSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$, $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$);
+    if((0,D.$JSCompiler_StaticMethods_is3D$$)($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_pieChart$) && (0 < $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_pieChart$.$getDepth$() || $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_radiusX$ != $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$radiusY$)) {
+      $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = ($accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ = "gradient" == $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ || "pattern" == $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$) ? 
+      D.$DvtPieRenderUtils$$.$generateLateralGradientFill$($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$, D.$DvtPieRenderUtils$$.$SIDE$) : $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$, $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ = $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ ? 
+      D.$DvtPieRenderUtils$$.$generateLateralGradientFill$($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$, D.$DvtPieRenderUtils$$.$CRUST$) : $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$, $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_leftSurface$ = D.$DvtPieRenderUtils$$.$createLateralSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$, 
+      D.$DvtPieRenderUtils$$.$SURFACE_LEFT$, $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$), $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_rightSurface$ = D.$DvtPieRenderUtils$$.$createLateralSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$, D.$DvtPieRenderUtils$$.$SURFACE_RIGHT$, 
+      $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$), $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.$_crustSurface$ = D.$DvtPieRenderUtils$$.$createLateralSurface$($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$, D.$DvtPieRenderUtils$$.$SURFACE_CRUST$, $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$)
     }
   }
-  $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ = this.$_slices$;
-  $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$ = [];
-  $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ = $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ ? $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$.length : 0;
-  for(var $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = -1, $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$, $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = 0;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ < $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$++) {
-    if($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$[$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$], $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ = 
-    $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$.$getAngleStart$(), $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$.$getAngleExtent$(), 
-    $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ + $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$, 360 < $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ && 
-    ($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ -= 360), 0 > $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ && ($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ += 360), 
-    90 == $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ || 90 > $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ && 90 < $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$) {
-      $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$;
-      $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$ = $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ - 90;
+  $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ = this.$_slices$;
+  $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$ = [];
+  $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ = $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ ? $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$.length : 0;
+  for(var $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = -1, $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$, $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = 0;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ < $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$++) {
+    if($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$[$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$], $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ = 
+    $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$.$getAngleStart$(), $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$.$getAngleExtent$(), 
+    $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ + $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$, 360 < $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ && 
+    ($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ -= 360), 0 > $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ && ($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ += 360), 
+    90 == $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ || 90 > $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ && 90 < $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$) {
+      $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$;
+      $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$ = $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ - 90;
       break
     }
   }
-  $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$ = [];
-  for($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ < $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$++) {
-    $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$.push($accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$[$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$])
+  $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$ = [];
+  for($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ < $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$++) {
+    $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$.push($accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$[$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$])
   }
-  for($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = 0;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ < $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$++) {
-    $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$.push($accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$[$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$])
+  for($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = 0;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ < $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$++) {
+    $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$.push($accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$[$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$])
   }
-  $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ = 0;
-  $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$ = 180 + $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$;
-  for($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = 0;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ < $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$++) {
-    if($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$[$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$]) {
-      if($accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ + $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$.$getAngleExtent$() > $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$) {
-        $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$ = $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$;
+  $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ = 0;
+  $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$ = 180 + $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$;
+  for($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = 0;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ < $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$++) {
+    if($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$[$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$]) {
+      if($accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ + $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$.$getAngleExtent$() > $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$) {
+        $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$ = $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$;
         break
       }
-      $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.push($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$);
-      $accumAngle$$inline_5127_dataTotal$$inline_5097_grAngle$$inline_5106_pattern$$inline_5102_slices$$inline_5116_useGradientFill$$inline_5112$$ += $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$.$getAngleExtent$()
+      $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.push($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$);
+      $accumAngle$$inline_5069_dataTotal$$inline_5039_grAngle$$inline_5048_pattern$$inline_5044_slices$$inline_5058_useGradientFill$$inline_5054$$ += $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$.$getAngleExtent$()
     }
   }
-  for($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = $crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ - 1;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ >= $anchorOffset$$inline_5090_angle$$inline_5093_arColors$$inline_5108_lastSliceIndexToProcess$$inline_5128_rotateIdx$$inline_5121_topFill$$inline_5103$$;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$--) {
-    ($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = $angleStart$$inline_5122_arAlphas$$inline_5109_arc$$inline_5094_color$$inline_5101_percentage$$inline_5096_rotatedSlices$$inline_5126$$[$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$]) && $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.push($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$)
+  for($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = $crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ - 1;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ >= $anchorOffset$$inline_5032_angle$$inline_5035_arColors$$inline_5050_lastSliceIndexToProcess$$inline_5070_rotateIdx$$inline_5063_topFill$$inline_5045$$;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$--) {
+    ($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = $angleStart$$inline_5064_arAlphas$$inline_5051_arc$$inline_5036_color$$inline_5043_percentage$$inline_5038_rotatedSlices$$inline_5068$$[$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$]) && $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.push($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$)
   }
   this.$_duringDisplayAnim$ || D.$DvtPieLabelUtils$$.$layoutLabelsAndFeelers$(this);
-  for($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = 0;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ < $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$.length;$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$++) {
-    $JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$[$i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$].$render$(this.$_duringDisplayAnim$)
+  for($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = 0;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ < $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$.length;$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$++) {
+    $JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$[$i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$].$render$(this.$_duringDisplayAnim$)
   }
-  D.$DvtAgent$$.$isPlatformWebkit$() || $handler$$inline_5132_shadow$$6$$ && (0,D.$JSCompiler_StaticMethods_addDrawEffect$$)(this.$_shapesContainer$, $handler$$inline_5132_shadow$$6$$);
-  if($handler$$inline_5132_shadow$$6$$ = this.$chart$.$getSelectionHandler$()) {
-    $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = D.$DvtChartDataUtils$$.$getInitialSelection$(this.$chart$);
-    $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$ = [];
-    for($JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$ = 0;$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$ < $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$.length;$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$++) {
-      for($crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ = 0;$crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$ < this.$_slices$.length;$crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$++) {
-        ($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$ = this.$_slices$[$crustFill$$inline_5114_j$$inline_5136_lateralFill$$inline_5104_nSlices$$inline_5119_slice$$inline_5092$$].getId()) && ($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$[$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$].id && 
-        $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$.getId() == $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$[$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$].id || $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$.$getSeries$() == 
-        $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$[$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$].series && $angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$.$getGroup$() == $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$[$JSCompiler_StaticMethods_preRender$self$$inline_5099_i$$inline_5091_i$$inline_5135_zOrderedSlices$$inline_5117$$].group) && 
-        $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$.push($angleExtent$$inline_5123_fillType$$inline_5100_nSlices$$inline_5095_peerId$$inline_5137_sideFill$$inline_5113_slice$$inline_5120_sliceSpanEnd$$inline_5124$$)
+  D.$DvtAgent$$.$isPlatformWebkit$() || $handler$$inline_5074_shadow$$6$$ && (0,D.$JSCompiler_StaticMethods_addDrawEffect$$)(this.$_shapesContainer$, $handler$$inline_5074_shadow$$6$$);
+  if($handler$$inline_5074_shadow$$6$$ = this.$chart$.$getSelectionHandler$()) {
+    $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = D.$DvtChartDataUtils$$.$getInitialSelection$(this.$chart$);
+    $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$ = [];
+    for($JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$ = 0;$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$ < $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$.length;$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$++) {
+      for($crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ = 0;$crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$ < this.$_slices$.length;$crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$++) {
+        ($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$ = this.$_slices$[$crustFill$$inline_5056_j$$inline_5078_lateralFill$$inline_5046_nSlices$$inline_5061_slice$$inline_5034$$].getId()) && ($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$[$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$].id && 
+        $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$.getId() == $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$[$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$].id || $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$.$getSeries$() == 
+        $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$[$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$].series && $angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$.$getGroup$() == $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$[$JSCompiler_StaticMethods_preRender$self$$inline_5041_i$$inline_5033_i$$inline_5077_zOrderedSlices$$inline_5059$$].group) && 
+        $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$.push($angleExtent$$inline_5065_fillType$$inline_5042_nSlices$$inline_5037_peerId$$inline_5079_sideFill$$inline_5055_slice$$inline_5062_sliceSpanEnd$$inline_5066$$)
       }
     }
-    D.$DvtPieChartUtils$$.$isOtherSliceSelected$(this.$chart$, $i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$) && ($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$ = D.$DvtPieChartUtils$$.$getOtherSliceId$(this.$chart$), $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$.push($i$$466_i$$inline_5118_otherPeerId$$inline_5138_selected$$inline_5133_slices$$inline_5089$$));
-    (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($handler$$inline_5132_shadow$$6$$, $accumAngleThreshold$$inline_5129_selectedIds$$inline_5134_sliceSpanBeforeNoon$$inline_5125$$, this.$_slices$)
+    D.$DvtPieChartUtils$$.$isOtherSliceSelected$(this.$chart$, $i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$) && ($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$ = D.$DvtPieChartUtils$$.$getOtherSliceId$(this.$chart$), $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$.push($i$$462_i$$inline_5060_otherPeerId$$inline_5080_selected$$inline_5075_slices$$inline_5031$$));
+    (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($handler$$inline_5074_shadow$$6$$, $accumAngleThreshold$$inline_5071_selectedIds$$inline_5076_sliceSpanBeforeNoon$$inline_5067$$, this.$_slices$)
   }
 };
 D.$DvtPieChart$$.prototype.$getTotalValue$ = function $$DvtPieChart$$$$$getTotalValue$$() {
-  for(var $total$$ = 0, $i$$467$$ = 0;$i$$467$$ < this.$_slices$.length;$i$$467$$++) {
-    var $sliceValue$$ = this.$_slices$[$i$$467$$].getValue();
+  for(var $total$$ = 0, $i$$463$$ = 0;$i$$463$$ < this.$_slices$.length;$i$$463$$++) {
+    var $sliceValue$$ = this.$_slices$[$i$$463$$].getValue();
     0 <= $sliceValue$$ && ($total$$ += $sliceValue$$)
   }
   return $total$$
@@ -652,46 +652,46 @@ D.$DvtPieSlice$$.prototype.Init = function $$DvtPieSlice$$$$Init$($pieChart$$1$$
   this.$_selecting$ = this.$_selected$ = D.$JSCompiler_alias_FALSE$$;
   this.$_radiusX$ = this.$_pieChart$.$_radiusX$;
   this.$_radiusY$ = this.$_pieChart$.$_radiusY$;
-  var $dataItem$$1_options$$65$$ = this.$_chart$.$getOptions$();
-  $seriesIndex$$1$$ != D.$JSCompiler_alias_NULL$$ ? ($dataItem$$1_options$$65$$ = D.$DvtChartDataUtils$$.$getDataItem$(this.$_chart$, $seriesIndex$$1$$, 0), this.$_value$ = D.$DvtChartDataUtils$$.getValue(this.$_chart$, $seriesIndex$$1$$, 0), this.$_explode$ = D.$DvtPieChartUtils$$.$getSliceExplode$(this.$_chart$, $seriesIndex$$1$$), this.$_fillColor$ = D.$DvtChartStyleUtils$$.$getColor$(this.$_chart$, $seriesIndex$$1$$), this.$_fillPattern$ = D.$DvtChartStyleUtils$$.$getPattern$(this.$_chart$, $seriesIndex$$1$$, 
-  0), this.$_strokeColor$ = D.$DvtChartStyleUtils$$.$getBorderColor$(this.$_chart$, $seriesIndex$$1$$), this.$_customLabel$ = $dataItem$$1_options$$65$$.label, this.$_seriesLabel$ = D.$DvtChartDataUtils$$.$getSeries$(this.$_chart$, $seriesIndex$$1$$), this.$_tooltip$ = D.$DvtChartTooltipUtils$$.$getDatatip$(D.$JSCompiler_alias_NULL$$, this.$_chart$, $seriesIndex$$1$$, 0), this.$_action$ = $dataItem$$1_options$$65$$.action, this.$_showPopupBehaviors$ = this.$_chart$.$getShowPopupBehaviors$($dataItem$$1_options$$65$$._id), 
-  this.$_id$ = D.$DvtPieChartUtils$$.$getSliceId$(this.$_chart$, $seriesIndex$$1$$), this.$_seriesIndex$ = $seriesIndex$$1$$) : (this.$_value$ = D.$DvtPieChartUtils$$.$getOtherValue$(this.$_chart$), this.$_explode$ = 0, this.$_fillColor$ = $dataItem$$1_options$$65$$.styleDefaults.otherColor, this.$_fillPattern$ = D.$JSCompiler_alias_NULL$$, this.$_strokeColor$ = $dataItem$$1_options$$65$$.styleDefaults.borderColor, this.$_customLabel$ = D.$JSCompiler_alias_NULL$$, this.$_seriesLabel$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)(this.$_chart$.$Bundle$, 
+  var $dataItem$$1_options$$66$$ = this.$_chart$.$getOptions$();
+  $seriesIndex$$1$$ != D.$JSCompiler_alias_NULL$$ ? ($dataItem$$1_options$$66$$ = D.$DvtChartDataUtils$$.$getDataItem$(this.$_chart$, $seriesIndex$$1$$, 0), this.$_value$ = D.$DvtChartDataUtils$$.getValue(this.$_chart$, $seriesIndex$$1$$, 0), this.$_explode$ = D.$DvtPieChartUtils$$.$getSliceExplode$(this.$_chart$, $seriesIndex$$1$$), this.$_fillColor$ = D.$DvtChartStyleUtils$$.$getColor$(this.$_chart$, $seriesIndex$$1$$), this.$_fillPattern$ = D.$DvtChartStyleUtils$$.$getPattern$(this.$_chart$, $seriesIndex$$1$$, 
+  0), this.$_strokeColor$ = D.$DvtChartStyleUtils$$.$getBorderColor$(this.$_chart$, $seriesIndex$$1$$), this.$_customLabel$ = $dataItem$$1_options$$66$$.label, this.$_seriesLabel$ = D.$DvtChartDataUtils$$.$getSeries$(this.$_chart$, $seriesIndex$$1$$), this.$_tooltip$ = D.$DvtChartTooltipUtils$$.$getDatatip$(D.$JSCompiler_alias_NULL$$, this.$_chart$, $seriesIndex$$1$$, 0), this.$_action$ = $dataItem$$1_options$$66$$.action, this.$_showPopupBehaviors$ = this.$_chart$.$getShowPopupBehaviors$($dataItem$$1_options$$66$$._id), 
+  this.$_id$ = D.$DvtPieChartUtils$$.$getSliceId$(this.$_chart$, $seriesIndex$$1$$), this.$_seriesIndex$ = $seriesIndex$$1$$) : (this.$_value$ = D.$DvtPieChartUtils$$.$getOtherValue$(this.$_chart$), this.$_explode$ = 0, this.$_fillColor$ = $dataItem$$1_options$$66$$.styleDefaults.otherColor, this.$_fillPattern$ = D.$JSCompiler_alias_NULL$$, this.$_strokeColor$ = $dataItem$$1_options$$66$$.styleDefaults.borderColor, this.$_customLabel$ = D.$JSCompiler_alias_NULL$$, this.$_seriesLabel$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)(this.$_chart$.$Bundle$, 
   "LABEL_OTHER", D.$JSCompiler_alias_NULL$$), this.$_tooltip$ = D.$DvtChartTooltipUtils$$.$getOtherSliceDatatip$(this.$_chart$, this.$_value$), this.$_action$ = D.$JSCompiler_alias_NULL$$, this.$_showPopupBehaviors$ = D.$DvtPieChartUtils$$.$getOtherSliceShowPopupBehaviors$(this.$_chart$), this.$_id$ = D.$DvtPieChartUtils$$.$getOtherSliceId$(this.$_chart$))
 };
-D.$DvtPieSlice$$.prototype.$render$ = function $$DvtPieSlice$$$$$render$$($duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$) {
-  var $explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ = this.$_topSurface$, $leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$ = this.$_leftSurface$, $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$ = this.$_rightSurface$, $crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$ = this.$_crustSurface$, $angleStart$$inline_5054$$ = this.$_angleStart$, $angleExtent$$inline_5055$$ = this.$_angleExtent$, $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$ = 
+D.$DvtPieSlice$$.prototype.$render$ = function $$DvtPieSlice$$$$$render$$($duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$) {
+  var $explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ = this.$_topSurface$, $leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$ = this.$_leftSurface$, $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$ = this.$_rightSurface$, $crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$ = this.$_crustSurface$, $angleStart$$inline_4996$$ = this.$_angleStart$, $angleExtent$$inline_4997$$ = this.$_angleExtent$, $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$ = 
   [];
-  $leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$ && ($oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$ && $crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$) && (270 >= $angleStart$$inline_5054$$ && 270 < $angleStart$$inline_5054$$ + $angleExtent$$inline_5055$$ ? ($feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$), $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$), 
-  $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$)) : 270 < $angleStart$$inline_5054$$ || 90 >= $angleStart$$inline_5054$$ + $angleExtent$$inline_5055$$ ? ($feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$), $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$), 
-  $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$)) : ($feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$), $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$), $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$)));
-  $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.push($explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$);
-  $leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$ = $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$.length;
-  for($explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ = 0;$explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ < $leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$;$explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$++) {
-    $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$ = $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$[$explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$];
-    window.shapeCount = $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$.length;
-    for($crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$ = 0;$crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$ < window.shapeCount;$crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$++) {
-      this.$_pieChart$.$_shapesContainer$.$addChild$($oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$[$crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$]), $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$[$crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$].$render$ && $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$[$crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$].$render$()
+  $leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$ && ($oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$ && $crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$) && (270 >= $angleStart$$inline_4996$$ && 270 < $angleStart$$inline_4996$$ + $angleExtent$$inline_4997$$ ? ($feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$), $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$), 
+  $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$)) : 270 < $angleStart$$inline_4996$$ || 90 >= $angleStart$$inline_4996$$ + $angleExtent$$inline_4997$$ ? ($feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$), $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$), 
+  $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$)) : ($feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$), $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$), $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$)));
+  $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.push($explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$);
+  $leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$ = $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$.length;
+  for($explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ = 0;$explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ < $leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$;$explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$++) {
+    $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$ = $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$[$explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$];
+    window.shapeCount = $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$.length;
+    for($crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$ = 0;$crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$ < window.shapeCount;$crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$++) {
+      this.$_pieChart$.$_shapesContainer$.$addChild$($oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$[$crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$]), $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$[$crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$].$render$ && $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$[$crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$].$render$()
     }
   }
-  this.$_sliceLabel$ && (this.$_pieChart$.$addChild$(this.$_sliceLabel$), D.$DvtPieRenderUtils$$.$associate$(this, [this.$_sliceLabel$]), "outside" == this.$_pieChart$.$getLabelPosition$() && ($duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$ ? (this.$_pieChart$.$addChild$(this.$_feelerRad$), this.$_pieChart$.$addChild$(this.$_feelerHoriz$)) : this.$_hasFeeler$ && ($duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$ = 
-  (0,D.$JSCompiler_StaticMethods__feelerFromPts$$)(this, this.$_outsideFeelerStart$, this.$_outsideFeelerMid$), $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$ = (0,D.$JSCompiler_StaticMethods__feelerFromPts$$)(this, this.$_outsideFeelerMid$, this.$_outsideFeelerEnd$), this.$_feelerRad$ = $duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$, this.$_feelerHoriz$ = $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$)));
-  0 != this.$_explode$ ? ($duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$ = (360 - (this.$_angleStart$ + this.$_angleExtent$ / 2)) * D.$DvtMath$$.$RADS_PER_DEGREE$, $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$ = (0,D.$JSCompiler_StaticMethods_is3D$$)(this.$_pieChart$) ? D.$DvtPieChart$_THREED_TILT$$ : 1, $explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ = 
-  this.$_explode$ * this.$_pieChart$.$_radiusX$ * (0.5 / 0.45 - 1), this.$_explodeOffsetX$ = window.Math.cos($duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$) * $explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$, this.$_explodeOffsetY$ = window.Math.sin($duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$) * $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$ * 
-  $explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$, D.$DvtAgent$$.$isPlatformWebkit$() && (this.$_explodeOffsetX$ = window.Math.round(this.$_explodeOffsetX$), this.$_explodeOffsetY$ = window.Math.round(this.$_explodeOffsetY$))) : this.$_explodeOffsetY$ = this.$_explodeOffsetX$ = 0;
+  this.$_sliceLabel$ && (this.$_pieChart$.$addChild$(this.$_sliceLabel$), D.$DvtPieRenderUtils$$.$associate$(this, [this.$_sliceLabel$]), "outside" == this.$_pieChart$.$getLabelPosition$() && ($duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$ ? (this.$_pieChart$.$addChild$(this.$_feelerRad$), this.$_pieChart$.$addChild$(this.$_feelerHoriz$)) : this.$_hasFeeler$ && ($duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$ = 
+  (0,D.$JSCompiler_StaticMethods__feelerFromPts$$)(this, this.$_outsideFeelerStart$, this.$_outsideFeelerMid$), $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$ = (0,D.$JSCompiler_StaticMethods__feelerFromPts$$)(this, this.$_outsideFeelerMid$, this.$_outsideFeelerEnd$), this.$_feelerRad$ = $duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$, this.$_feelerHoriz$ = $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$)));
+  0 != this.$_explode$ ? ($duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$ = (360 - (this.$_angleStart$ + this.$_angleExtent$ / 2)) * D.$DvtMath$$.$RADS_PER_DEGREE$, $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$ = (0,D.$JSCompiler_StaticMethods_is3D$$)(this.$_pieChart$) ? D.$DvtPieChart$_THREED_TILT$$ : 1, $explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ = 
+  this.$_explode$ * this.$_pieChart$.$_radiusX$ * (0.5 / 0.45 - 1), this.$_explodeOffsetX$ = window.Math.cos($duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$) * $explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$, this.$_explodeOffsetY$ = window.Math.sin($duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$) * $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$ * 
+  $explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$, D.$DvtAgent$$.$isPlatformWebkit$() && (this.$_explodeOffsetX$ = window.Math.round(this.$_explodeOffsetX$), this.$_explodeOffsetY$ = window.Math.round(this.$_explodeOffsetY$))) : this.$_explodeOffsetY$ = this.$_explodeOffsetX$ = 0;
   this.$_topSurface$ && (0,D.$DvtPieSlice$_translateShapes$$)(this.$_topSurface$, this.$_explodeOffsetX$, this.$_explodeOffsetY$);
   this.$_rightSurface$ && (0,D.$DvtPieSlice$_translateShapes$$)(this.$_rightSurface$, this.$_explodeOffsetX$, this.$_explodeOffsetY$);
   this.$_leftSurface$ && (0,D.$DvtPieSlice$_translateShapes$$)(this.$_leftSurface$, this.$_explodeOffsetX$, this.$_explodeOffsetY$);
   this.$_crustSurface$ && (0,D.$DvtPieSlice$_translateShapes$$)(this.$_crustSurface$, this.$_explodeOffsetX$, this.$_explodeOffsetY$);
-  this.$_hasFeeler$ && ($duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$ = this.$_outsideFeelerStart$.x, $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$ = this.$_outsideFeelerStart$.y, $explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ = $duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$ + this.$_explodeOffsetX$, 
-  $leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$ = $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$ + this.$_explodeOffsetY$, this.$_feelerRad$.$setX1$($explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$), this.$_feelerRad$.$setY1$($leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$), $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$ = this.$_outsideFeelerMid$.x, $crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$ = 
-  this.$_outsideFeelerMid$.y, 0 < $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$ - $duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$ != 0 < $oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$ - $explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ ? (this.$_feelerRad$.$setX2$($explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$), this.$_feelerHoriz$.$setX1$($explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$)) : 
-  (this.$_feelerRad$.$setX2$($oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$), this.$_feelerHoriz$.$setX1$($oldMidX$$inline_5070_rightSurface$$inline_5052_shapeArray$$)), 0 < $crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$ - $feelerHoriz$$inline_5060_oldStartY$$inline_5067_sortedSurfaces$$inline_5056_tilt$$inline_5064$$ != 0 < $crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$ - $leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$ ? (this.$_feelerRad$.$setY2$($leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$), 
-  this.$_feelerHoriz$.$setY1$($leftSurface$$inline_5051_len$$37_newStartY$$inline_5069$$)) : (this.$_feelerRad$.$setY2$($crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$), this.$_feelerHoriz$.$setY1$($crustSurface$$inline_5053_j$$51_oldMidY$$inline_5071$$)));
+  this.$_hasFeeler$ && ($duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$ = this.$_outsideFeelerStart$.x, $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$ = this.$_outsideFeelerStart$.y, $explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ = $duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$ + this.$_explodeOffsetX$, 
+  $leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$ = $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$ + this.$_explodeOffsetY$, this.$_feelerRad$.$setX1$($explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$), this.$_feelerRad$.$setY1$($leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$), $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$ = this.$_outsideFeelerMid$.x, $crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$ = 
+  this.$_outsideFeelerMid$.y, 0 < $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$ - $duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$ != 0 < $oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$ - $explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ ? (this.$_feelerRad$.$setX2$($explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$), this.$_feelerHoriz$.$setX1$($explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$)) : 
+  (this.$_feelerRad$.$setX2$($oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$), this.$_feelerHoriz$.$setX1$($oldMidX$$inline_5012_rightSurface$$inline_4994_shapeArray$$)), 0 < $crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$ - $feelerHoriz$$inline_5002_oldStartY$$inline_5009_sortedSurfaces$$inline_4998_tilt$$inline_5006$$ != 0 < $crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$ - $leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$ ? (this.$_feelerRad$.$setY2$($leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$), 
+  this.$_feelerHoriz$.$setY1$($leftSurface$$inline_4993_len$$37_newStartY$$inline_5011$$)) : (this.$_feelerRad$.$setY2$($crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$), this.$_feelerHoriz$.$setY1$($crustSurface$$inline_4995_j$$51_oldMidY$$inline_5013$$)));
   this.$_sliceLabel$ && !this.$_hasFeeler$ && (0,D.$JSCompiler_StaticMethods_setTranslate$$)(this.$_sliceLabel$, this.$_explodeOffsetX$, this.$_explodeOffsetY$);
   if(this.$_action$) {
-    $duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$ = this.$getDisplayables$();
-    for($explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ = 0;$explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$ < $duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$.length;$explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$++) {
-      $duringDisplayAnim_feelerRad$$inline_5059_oldStartX$$inline_5066_radian$$inline_5063_sliceDisplayables$$[$explodeOffset$$inline_5065_i$$461_newStartX$$inline_5068_topSurface$$inline_5050$$].setCursor("pointer")
+    $duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$ = this.$getDisplayables$();
+    for($explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ = 0;$explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$ < $duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$.length;$explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$++) {
+      $duringDisplayAnim_feelerRad$$inline_5001_oldStartX$$inline_5008_radian$$inline_5005_sliceDisplayables$$[$explodeOffset$$inline_5007_i$$457_newStartX$$inline_5010_topSurface$$inline_4992$$].setCursor("pointer")
     }
   }
 };
@@ -705,8 +705,8 @@ D.$JSCompiler_StaticMethods__feelerFromPts$$ = function $$JSCompiler_StaticMetho
 };
 D.$DvtPieSlice$_translateShapes$$ = function $$DvtPieSlice$_translateShapes$$$($shapes$$7$$, $tx$$12$$, $ty$$12$$) {
   if($shapes$$7$$) {
-    for(var $len$$38$$ = $shapes$$7$$.length, $i$$462$$ = 0;$i$$462$$ < $len$$38$$;$i$$462$$++) {
-      (0,D.$JSCompiler_StaticMethods_setTranslate$$)($shapes$$7$$[$i$$462$$], $tx$$12$$, $ty$$12$$)
+    for(var $len$$38$$ = $shapes$$7$$.length, $i$$458$$ = 0;$i$$458$$ < $len$$38$$;$i$$458$$++) {
+      (0,D.$JSCompiler_StaticMethods_setTranslate$$)($shapes$$7$$[$i$$458$$], $tx$$12$$, $ty$$12$$)
     }
   }
 };
@@ -735,8 +735,8 @@ D.$DvtPieSlice$_shapeIsSelectable$$ = function $$DvtPieSlice$_shapeIsSelectable$
   return $shape$$70$$ instanceof D.$DvtGraphSelectableArc$$ || $shape$$70$$ instanceof D.$DvtGraphSelectablePolygon$$ || $shape$$70$$ instanceof D.$DvtGraphSelectablePath$$
 };
 D.$JSCompiler_prototypeAlias$$ = D.$DvtPieSlice$$.prototype;
-D.$JSCompiler_prototypeAlias$$.contains = function $$JSCompiler_prototypeAlias$$$contains$($x$$254$$, $y$$224$$) {
-  for(var $c$$29_sin$$ = this.$_pieChart$.$getCenter$(), $cos$$ = ($x$$254$$ - $c$$29_sin$$.x) / this.$_radiusX$, $c$$29_sin$$ = ($y$$224$$ - $c$$29_sin$$.y) / this.$_radiusY$, $angle$$31_containsAngle$$ = -window.Math.atan2($c$$29_sin$$, $cos$$) * (180 / window.Math.PI);$angle$$31_containsAngle$$ < this.$_angleStart$;) {
+D.$JSCompiler_prototypeAlias$$.contains = function $$JSCompiler_prototypeAlias$$$contains$($x$$252$$, $y$$222$$) {
+  for(var $c$$29_sin$$ = this.$_pieChart$.$getCenter$(), $cos$$ = ($x$$252$$ - $c$$29_sin$$.x) / this.$_radiusX$, $c$$29_sin$$ = ($y$$222$$ - $c$$29_sin$$.y) / this.$_radiusY$, $angle$$31_containsAngle$$ = -window.Math.atan2($c$$29_sin$$, $cos$$) * (180 / window.Math.PI);$angle$$31_containsAngle$$ < this.$_angleStart$;) {
     $angle$$31_containsAngle$$ += 360
   }
   for(;360 <= $angle$$31_containsAngle$$ - this.$_angleStart$;) {
@@ -770,12 +770,12 @@ D.$JSCompiler_prototypeAlias$$.$animateInsert$ = function $$JSCompiler_prototype
   this.$SetAnimationParams$([0, 0, 0, 0])
 };
 D.$JSCompiler_prototypeAlias$$.$animateDelete$ = function $$JSCompiler_prototypeAlias$$$$animateDelete$$($handler$$19$$, $container$$52$$) {
-  var $anim$$23_newSlices$$ = $container$$52$$.$_slices$, $oldSlices_prevId$$ = this.$_pieChart$.$_slices$, $i$$463_prevIndex$$1$$ = D.$DvtArrayUtils$$.$getIndex$($oldSlices_prevId$$, this) - 1;
-  if(0 <= $i$$463_prevIndex$$1$$) {
-    $oldSlices_prevId$$ = $oldSlices_prevId$$[$i$$463_prevIndex$$1$$].getId();
-    for($i$$463_prevIndex$$1$$ = 0;$i$$463_prevIndex$$1$$ < $anim$$23_newSlices$$.length;$i$$463_prevIndex$$1$$++) {
-      if($anim$$23_newSlices$$[$i$$463_prevIndex$$1$$].getId().$equals$($oldSlices_prevId$$)) {
-        $anim$$23_newSlices$$.splice($i$$463_prevIndex$$1$$ + 1, 0, this);
+  var $anim$$23_newSlices$$ = $container$$52$$.$_slices$, $oldSlices_prevId$$ = this.$_pieChart$.$_slices$, $i$$459_prevIndex$$2$$ = D.$DvtArrayUtils$$.$getIndex$($oldSlices_prevId$$, this) - 1;
+  if(0 <= $i$$459_prevIndex$$2$$) {
+    $oldSlices_prevId$$ = $oldSlices_prevId$$[$i$$459_prevIndex$$2$$].getId();
+    for($i$$459_prevIndex$$2$$ = 0;$i$$459_prevIndex$$2$$ < $anim$$23_newSlices$$.length;$i$$459_prevIndex$$2$$++) {
+      if($anim$$23_newSlices$$[$i$$459_prevIndex$$2$$].getId().$equals$($oldSlices_prevId$$)) {
+        $anim$$23_newSlices$$.splice($i$$459_prevIndex$$2$$ + 1, 0, this);
         break
       }
     }
@@ -803,10 +803,10 @@ D.$JSCompiler_prototypeAlias$$.$getDisplayables$ = function $$JSCompiler_prototy
   this.$_feelerHoriz$ && $ret$$50$$.push(this.$_feelerHoriz$);
   return $ret$$50$$
 };
-D.$JSCompiler_StaticMethods_getPhysicalShape$$ = function $$JSCompiler_StaticMethods_getPhysicalShape$$$($JSCompiler_StaticMethods_getPhysicalShape$self$$, $obj$$256$$) {
-  $obj$$256$$.$setDataColor$($JSCompiler_StaticMethods_getPhysicalShape$self$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($JSCompiler_StaticMethods_getPhysicalShape$self$$.$_chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($JSCompiler_StaticMethods_getPhysicalShape$self$$.$_chart$));
-  $obj$$256$$.setCursor("pointer");
-  return $obj$$256$$
+D.$JSCompiler_StaticMethods_getPhysicalShape$$ = function $$JSCompiler_StaticMethods_getPhysicalShape$$$($JSCompiler_StaticMethods_getPhysicalShape$self$$, $obj$$257$$) {
+  $obj$$257$$.$setDataColor$($JSCompiler_StaticMethods_getPhysicalShape$self$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($JSCompiler_StaticMethods_getPhysicalShape$self$$.$_chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($JSCompiler_StaticMethods_getPhysicalShape$self$$.$_chart$));
+  $obj$$257$$.setCursor("pointer");
+  return $obj$$257$$
 };
 D.$JSCompiler_prototypeAlias$$ = D.$DvtPieSlice$$.prototype;
 D.$JSCompiler_prototypeAlias$$.$isSelectable$ = (0,D.$JSCompiler_returnArg$$)(D.$JSCompiler_alias_TRUE$$);
@@ -843,12 +843,12 @@ D.$JSCompiler_prototypeAlias$$.$getDatatipColor$ = function $$JSCompiler_prototy
 D.$JSCompiler_prototypeAlias$$.$getCategories$ = function $$JSCompiler_prototypeAlias$$$$getCategories$$() {
   return[this.getId().$getSeries$()]
 };
-D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_prototypeAlias$$$$getNextNavigable$$($event$$404$$) {
-  if($event$$404$$.type == D.$DvtMouseEvent$CLICK$$ || 32 == $event$$404$$.keyCode && $event$$404$$.ctrlKey) {
+D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_prototypeAlias$$$$getNextNavigable$$($event$$395$$) {
+  if($event$$395$$.type == D.$DvtMouseEvent$CLICK$$ || 32 == $event$$395$$.keyCode && $event$$395$$.ctrlKey) {
     return this
   }
   var $slices$$1$$ = this.$_pieChart$.$_slices$, $idx$$27$$ = $slices$$1$$.indexOf(this), $next$$5$$ = D.$JSCompiler_alias_NULL$$;
-  39 == $event$$404$$.keyCode ? $next$$5$$ = $idx$$27$$ < $slices$$1$$.length - 1 ? $slices$$1$$[$idx$$27$$ + 1] : $slices$$1$$[0] : 37 == $event$$404$$.keyCode && ($next$$5$$ = 0 == $idx$$27$$ ? $slices$$1$$[$slices$$1$$.length - 1] : $slices$$1$$[$idx$$27$$ - 1]);
+  39 == $event$$395$$.keyCode ? $next$$5$$ = $idx$$27$$ < $slices$$1$$.length - 1 ? $slices$$1$$[$idx$$27$$ + 1] : $slices$$1$$[0] : 37 == $event$$395$$.keyCode && ($next$$5$$ = 0 == $idx$$27$$ ? $slices$$1$$[$slices$$1$$.length - 1] : $slices$$1$$[$idx$$27$$ - 1]);
   return $next$$5$$
 };
 D.$JSCompiler_prototypeAlias$$.$getKeyboardBoundingBox$ = function $$JSCompiler_prototypeAlias$$$$getKeyboardBoundingBox$$() {
@@ -873,60 +873,60 @@ D.$JSCompiler_prototypeAlias$$.$getAction$ = (0,D.$JSCompiler_get$$)("$_action$"
 D.$JSCompiler_prototypeAlias$$.$getShowPopupBehaviors$ = (0,D.$JSCompiler_get$$)("$_showPopupBehaviors$");
 D.$DvtAnimOnDisplay$$ = (0,D.$JSCompiler_emptyFn$$)();
 D.$DvtObj$$.$createSubclass$(D.$DvtAnimOnDisplay$$, D.$DvtObj$$, "DvtAnimOnDisplay");
-D.$DvtAnimOnDisplay$$.$createAnimation$ = function $$DvtAnimOnDisplay$$$$createAnimation$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$, $anim$$inline_5226_duration$$75_handler$$inline_5219$$) {
-  $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$ = [];
-  if(D.$DvtChartTypeUtils$$.$isBLAC$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$)) {
-    D.$DvtAnimOnDisplay$$.$_animBarLineArea$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$, $anim$$inline_5226_duration$$75_handler$$inline_5219$$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$)
+D.$DvtAnimOnDisplay$$.$createAnimation$ = function $$DvtAnimOnDisplay$$$$createAnimation$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$, $anim$$inline_5168_duration$$75_handler$$inline_5161$$) {
+  $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$ = [];
+  if(D.$DvtChartTypeUtils$$.$isBLAC$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$)) {
+    D.$DvtAnimOnDisplay$$.$_animBarLineArea$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$, $anim$$inline_5168_duration$$75_handler$$inline_5161$$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$)
   }else {
-    if(D.$DvtChartTypeUtils$$.$isScatterBubble$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$) || D.$DvtChartTypeUtils$$.$isFunnel$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$)) {
-      D.$DvtAnimOnDisplay$$.$_animBubbleScatterFunnel$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$, $anim$$inline_5226_duration$$75_handler$$inline_5219$$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$)
+    if(D.$DvtChartTypeUtils$$.$isScatterBubble$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$) || D.$DvtChartTypeUtils$$.$isFunnel$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$)) {
+      D.$DvtAnimOnDisplay$$.$_animBubbleScatterFunnel$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$, $anim$$inline_5168_duration$$75_handler$$inline_5161$$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$)
     }else {
-      if(D.$DvtChartTypeUtils$$.$isPie$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$) && $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$pieChart$) {
-        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$ = $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$pieChart$;
-        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_duringDisplayAnim$ = D.$JSCompiler_alias_TRUE$$;
-        $anim$$inline_5226_duration$$75_handler$$inline_5219$$ = new D.$DvtDataAnimationHandler$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_context$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$);
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$ = [];
-        for(var $fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$ = 0;$fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$ < $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_slices$.length;$fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$++) {
-          $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$ = $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.concat((0,D.$JSCompiler_StaticMethods_getLabelAndFeeler$$)($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_slices$[$fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$]))
+      if(D.$DvtChartTypeUtils$$.$isPie$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$) && $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$pieChart$) {
+        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$ = $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$pieChart$;
+        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_duringDisplayAnim$ = D.$JSCompiler_alias_TRUE$$;
+        $anim$$inline_5168_duration$$75_handler$$inline_5161$$ = new D.$DvtDataAnimationHandler$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_context$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$);
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$ = [];
+        for(var $fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$ = 0;$fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$ < $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_slices$.length;$fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$++) {
+          $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$ = $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.concat((0,D.$JSCompiler_StaticMethods_getLabelAndFeeler$$)($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_slices$[$fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$]))
         }
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$ = new D.$DvtAnimFadeIn$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_context$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$getAnimationDuration$());
-        $anim$$inline_5226_duration$$75_handler$$inline_5219$$.add($ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$, 0);
-        $fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$ = $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$getTotalValue$();
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$ = new D.$DvtPieSlice$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$);
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_value$ = $fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$;
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_bFillerSlice$ = D.$JSCompiler_alias_TRUE$$;
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_fillColor$ = "rgba(255,255,255,0)";
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_strokeColor$ = "rgba(255,255,255,0)";
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_tooltip$ = D.$JSCompiler_alias_NULL$$;
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_id$ = D.$JSCompiler_alias_NULL$$;
-        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_slices$.push($ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$);
-        $fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$ = new D.$DvtCustomAnimation$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_context$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$getAnimationDuration$());
-        (0,D.$JSCompiler_StaticMethods_addProp$$)($fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$.$_animator$, "typeNumberArray", $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$GetAnimationParams$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$SetAnimationParams$, 
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$ = new D.$DvtAnimFadeIn$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_context$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$getAnimationDuration$());
+        $anim$$inline_5168_duration$$75_handler$$inline_5161$$.add($ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$, 0);
+        $fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$ = $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$getTotalValue$();
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$ = new D.$DvtPieSlice$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$);
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_value$ = $fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$;
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_bFillerSlice$ = D.$JSCompiler_alias_TRUE$$;
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_fillColor$ = "rgba(255,255,255,0)";
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_strokeColor$ = "rgba(255,255,255,0)";
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_tooltip$ = D.$JSCompiler_alias_NULL$$;
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_id$ = D.$JSCompiler_alias_NULL$$;
+        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_slices$.push($ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$);
+        $fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$ = new D.$DvtCustomAnimation$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_context$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$getAnimationDuration$());
+        (0,D.$JSCompiler_StaticMethods_addProp$$)($fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$.$_animator$, "typeNumberArray", $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$GetAnimationParams$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$SetAnimationParams$, 
         [0, 0, 0]);
-        $fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$.$setOnEnd$($ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_removeDeletedSlice$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$);
-        $anim$$inline_5226_duration$$75_handler$$inline_5219$$.add($fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$, 0);
-        for($fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$ = 0;$fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$ < $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_slices$.length - 1;$fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$++) {
-          $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_slices$[$fillerAnim$$inline_5224_i$$inline_5221_value$$inline_9650$$].$animateInsert$($anim$$inline_5226_duration$$75_handler$$inline_5219$$)
+        $fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$.$setOnEnd$($ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_removeDeletedSlice$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$);
+        $anim$$inline_5168_duration$$75_handler$$inline_5161$$.add($fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$, 0);
+        for($fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$ = 0;$fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$ < $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_slices$.length - 1;$fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$++) {
+          $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_slices$[$fillerAnim$$inline_5166_i$$inline_5163_value$$inline_9595$$].$animateInsert$($anim$$inline_5168_duration$$75_handler$$inline_5161$$)
         }
-        $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$ = new D.$DvtCustomAnimation$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_context$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$getAnimationDuration$());
-        (0,D.$JSCompiler_StaticMethods_addProp$$)($ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.$_animator$, "typeNumberArray", $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_getAnimationParams$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_setAnimationParams$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_getAnimationParams$());
-        $anim$$inline_5226_duration$$75_handler$$inline_5219$$.add($ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$, 0);
-        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_setAnimationParams$();
-        $anim$$inline_5226_duration$$75_handler$$inline_5219$$ = $anim$$inline_5226_duration$$75_handler$$inline_5219$$.$getAnimation$();
-        $anim$$inline_5226_duration$$75_handler$$inline_5219$$.$setOnEnd$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_restoreLabelPosition$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$);
-        $anim$$inline_5226_duration$$75_handler$$inline_5219$$.play();
+        $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$ = new D.$DvtCustomAnimation$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_context$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$getAnimationDuration$());
+        (0,D.$JSCompiler_StaticMethods_addProp$$)($ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.$_animator$, "typeNumberArray", $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_getAnimationParams$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_setAnimationParams$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_getAnimationParams$());
+        $anim$$inline_5168_duration$$75_handler$$inline_5161$$.add($ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$, 0);
+        $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_setAnimationParams$();
+        $anim$$inline_5168_duration$$75_handler$$inline_5161$$ = $anim$$inline_5168_duration$$75_handler$$inline_5161$$.$getAnimation$();
+        $anim$$inline_5168_duration$$75_handler$$inline_5161$$.$setOnEnd$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_restoreLabelPosition$, $JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$);
+        $anim$$inline_5168_duration$$75_handler$$inline_5161$$.play();
         return D.$JSCompiler_alias_NULL$$
       }
     }
   }
-  return 0 < $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$.length ? new D.$DvtParallelPlayable$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5218_chart$$65$$.$_context$, $ar$$inline_5220_arPlayables$$4_labelAnim$$inline_5222_renderAnim$$inline_5225_slice$$inline_9651_type$$170$$) : D.$JSCompiler_alias_NULL$$
+  return 0 < $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$.length ? new D.$DvtParallelPlayable$$($JSCompiler_StaticMethods_doDisplayAnimation$self$$inline_5160_chart$$65$$.$_context$, $ar$$inline_5162_arPlayables$$4_labelAnim$$inline_5164_renderAnim$$inline_5167_slice$$inline_9596_type$$170$$) : D.$JSCompiler_alias_NULL$$
 };
 D.$DvtAnimOnDisplay$$.$_animBarLineArea$ = function $$DvtAnimOnDisplay$$$$_animBarLineArea$$($chart$$66$$, $duration$$76$$, $arPlayables$$5$$) {
   var $objs$$53$$ = $chart$$66$$.$getObjects$(), $objCount$$ = $objs$$53$$ ? $objs$$53$$.length : 0, $isPolar$$3$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$66$$);
   if($objCount$$) {
-    for(var $obj$$261$$, $peer$$8$$, $nodePlayable$$13$$, $i$$485$$ = 0;$i$$485$$ < $objCount$$;$i$$485$$++) {
-      $peer$$8$$ = $objs$$53$$[$i$$485$$], $obj$$261$$ = $peer$$8$$.$getDisplayables$()[0], window.seriesType = $peer$$8$$.$getSeriesType$(), $nodePlayable$$13$$ = D.$JSCompiler_alias_NULL$$, $obj$$261$$ instanceof D.$DvtChartBar$$ || $obj$$261$$ instanceof D.$DvtChartPolarBar$$ ? $nodePlayable$$13$$ = $obj$$261$$.$getDisplayAnimation$($duration$$76$$) : $obj$$261$$ instanceof D.$DvtPolygonalShape$$ ? $isPolar$$3$$ ? $nodePlayable$$13$$ = D.$DvtAnimOnDisplay$$.$_getPolarLineAreaPlayable$($chart$$66$$, 
-      $obj$$261$$, $duration$$76$$) : "line" == window.seriesType ? $nodePlayable$$13$$ = D.$DvtAnimOnDisplay$$.$_getLinePlayable$($chart$$66$$, $obj$$261$$, $duration$$76$$) : "area" == window.seriesType && ($nodePlayable$$13$$ = D.$DvtAnimOnDisplay$$.$_getAreaPlayable$($chart$$66$$, $obj$$261$$, $duration$$76$$)) : "on" == $peer$$8$$.$getSeriesItem$().markerDisplayed && ($nodePlayable$$13$$ = new D.$DvtAnimFadeIn$$($chart$$66$$.$_context$, $obj$$261$$, $duration$$76$$ - 0.8, 0.8)), $nodePlayable$$13$$ && 
+    for(var $obj$$262$$, $peer$$8$$, $nodePlayable$$13$$, $i$$481$$ = 0;$i$$481$$ < $objCount$$;$i$$481$$++) {
+      $peer$$8$$ = $objs$$53$$[$i$$481$$], $obj$$262$$ = $peer$$8$$.$getDisplayables$()[0], window.seriesType = $peer$$8$$.$getSeriesType$(), $nodePlayable$$13$$ = D.$JSCompiler_alias_NULL$$, $obj$$262$$ instanceof D.$DvtChartBar$$ || $obj$$262$$ instanceof D.$DvtChartPolarBar$$ ? $nodePlayable$$13$$ = $obj$$262$$.$getDisplayAnimation$($duration$$76$$) : $obj$$262$$ instanceof D.$DvtPolygonalShape$$ ? $isPolar$$3$$ ? $nodePlayable$$13$$ = D.$DvtAnimOnDisplay$$.$_getPolarLineAreaPlayable$($chart$$66$$, 
+      $obj$$262$$, $duration$$76$$) : "line" == window.seriesType ? $nodePlayable$$13$$ = D.$DvtAnimOnDisplay$$.$_getLinePlayable$($chart$$66$$, $obj$$262$$, $duration$$76$$) : "area" == window.seriesType && ($nodePlayable$$13$$ = D.$DvtAnimOnDisplay$$.$_getAreaPlayable$($chart$$66$$, $obj$$262$$, $duration$$76$$)) : "on" == $peer$$8$$.$getSeriesItem$().markerDisplayed && ($nodePlayable$$13$$ = new D.$DvtAnimFadeIn$$($chart$$66$$.$_context$, $obj$$262$$, $duration$$76$$ - 0.8, 0.8)), $nodePlayable$$13$$ && 
       $arPlayables$$5$$.push($nodePlayable$$13$$)
     }
   }
@@ -934,9 +934,9 @@ D.$DvtAnimOnDisplay$$.$_animBarLineArea$ = function $$DvtAnimOnDisplay$$$$_animB
 D.$DvtAnimOnDisplay$$.$_animBubbleScatterFunnel$ = function $$DvtAnimOnDisplay$$$$_animBubbleScatterFunnel$$($chart$$67$$, $duration$$77$$, $arPlayables$$6$$) {
   var $objs$$54$$ = $chart$$67$$.$getObjects$(), $objCount$$1$$ = $objs$$54$$ ? $objs$$54$$.length : 0, $chartType$$2$$ = $chart$$67$$.$getType$();
   if($objCount$$1$$) {
-    for(var $obj$$262_peer$$9$$, $nodePlayable$$14$$, $i$$486$$ = 0;$i$$486$$ < $objCount$$1$$;$i$$486$$++) {
-      $obj$$262_peer$$9$$ = $objs$$54$$[$i$$486$$], $obj$$262_peer$$9$$ = $obj$$262_peer$$9$$.$getDisplayables$()[0], $obj$$262_peer$$9$$ instanceof D.$DvtMarker$$ ? $nodePlayable$$14$$ = "bubble" === $chartType$$2$$ ? D.$DvtAnimOnDisplay$$.$_getBubblePlayable$($chart$$67$$, $obj$$262_peer$$9$$, $duration$$77$$) : D.$DvtAnimOnDisplay$$.$_getScatterPlayable$($chart$$67$$, $obj$$262_peer$$9$$, $duration$$77$$) : $obj$$262_peer$$9$$ instanceof D.$DvtFunnelSlice$$ && ($nodePlayable$$14$$ = D.$DvtAnimOnDisplay$$.$_getFunnelPlayable$($chart$$67$$, 
-      $obj$$262_peer$$9$$, $duration$$77$$)), $nodePlayable$$14$$ && $arPlayables$$6$$.push($nodePlayable$$14$$)
+    for(var $obj$$263_peer$$9$$, $nodePlayable$$14$$, $i$$482$$ = 0;$i$$482$$ < $objCount$$1$$;$i$$482$$++) {
+      $obj$$263_peer$$9$$ = $objs$$54$$[$i$$482$$], $obj$$263_peer$$9$$ = $obj$$263_peer$$9$$.$getDisplayables$()[0], $obj$$263_peer$$9$$ instanceof D.$DvtMarker$$ ? $nodePlayable$$14$$ = "bubble" === $chartType$$2$$ ? D.$DvtAnimOnDisplay$$.$_getBubblePlayable$($chart$$67$$, $obj$$263_peer$$9$$, $duration$$77$$) : D.$DvtAnimOnDisplay$$.$_getScatterPlayable$($chart$$67$$, $obj$$263_peer$$9$$, $duration$$77$$) : $obj$$263_peer$$9$$ instanceof D.$DvtFunnelSlice$$ && ($nodePlayable$$14$$ = D.$DvtAnimOnDisplay$$.$_getFunnelPlayable$($chart$$67$$, 
+      $obj$$263_peer$$9$$, $duration$$77$$)), $nodePlayable$$14$$ && $arPlayables$$6$$.push($nodePlayable$$14$$)
     }
   }
 };
@@ -962,15 +962,15 @@ D.$DvtAnimOnDisplay$$.$_getFunnelPlayable$ = function $$DvtAnimOnDisplay$$$$_get
   (0,D.$JSCompiler_StaticMethods_addProp$$)($chart$$69_nodePlayable$$16$$.$_animator$, "typeNumberArray", $slice$$10$$, $slice$$10$$.$getAnimationParams$, $slice$$10$$.$setAnimationParams$, $endState$$14$$);
   return $chart$$69_nodePlayable$$16$$
 };
-D.$DvtAnimOnDisplay$$.$_getBubblePlayable$ = function $$DvtAnimOnDisplay$$$$_getBubblePlayable$$($chart$$70_context$$545$$, $marker$$26_p3$$2$$, $duration$$80$$) {
-  $chart$$70_context$$545$$ = $chart$$70_context$$545$$.$_context$;
+D.$DvtAnimOnDisplay$$.$_getBubblePlayable$ = function $$DvtAnimOnDisplay$$$$_getBubblePlayable$$($chart$$70_context$$539$$, $marker$$26_p3$$2$$, $duration$$80$$) {
+  $chart$$70_context$$539$$ = $chart$$70_context$$539$$.$_context$;
   var $endScale_p1$$3$$ = new D.$DvtPoint$$($marker$$26_p3$$2$$.$getScaleX$(), $marker$$26_p3$$2$$.$getScaleY$());
   $marker$$26_p3$$2$$.$setScale$(1, 1);
-  var $endScale_p1$$3$$ = new D.$DvtAnimScaleBy$$($chart$$70_context$$545$$, $marker$$26_p3$$2$$, $endScale_p1$$3$$, $duration$$80$$), $p2$$3$$ = new D.$DvtAnimFadeIn$$($chart$$70_context$$545$$, $marker$$26_p3$$2$$, $duration$$80$$), $size$$28$$ = $marker$$26_p3$$2$$.$getSize$(), $matrix$$10$$ = $marker$$26_p3$$2$$.$getMatrix$().clone();
+  var $endScale_p1$$3$$ = new D.$DvtAnimScaleBy$$($chart$$70_context$$539$$, $marker$$26_p3$$2$$, $endScale_p1$$3$$, $duration$$80$$), $p2$$3$$ = new D.$DvtAnimFadeIn$$($chart$$70_context$$539$$, $marker$$26_p3$$2$$, $duration$$80$$), $size$$28$$ = $marker$$26_p3$$2$$.$getSize$(), $matrix$$10$$ = $marker$$26_p3$$2$$.$getMatrix$().clone();
   $matrix$$10$$.translate($size$$28$$ / 2, $size$$28$$ / 2);
   $marker$$26_p3$$2$$.$setMatrix$($matrix$$10$$);
-  $marker$$26_p3$$2$$ = new D.$DvtAnimMoveBy$$($chart$$70_context$$545$$, $marker$$26_p3$$2$$, new D.$DvtPoint$$(-$size$$28$$ / 2, -$size$$28$$ / 2), $duration$$80$$);
-  return new D.$DvtParallelPlayable$$($chart$$70_context$$545$$, [$endScale_p1$$3$$, $p2$$3$$, $marker$$26_p3$$2$$])
+  $marker$$26_p3$$2$$ = new D.$DvtAnimMoveBy$$($chart$$70_context$$539$$, $marker$$26_p3$$2$$, new D.$DvtPoint$$(-$size$$28$$ / 2, -$size$$28$$ / 2), $duration$$80$$);
+  return new D.$DvtParallelPlayable$$($chart$$70_context$$539$$, [$endScale_p1$$3$$, $p2$$3$$, $marker$$26_p3$$2$$])
 };
 D.$DvtAnimOnDisplay$$.$_getLinePlayable$ = function $$DvtAnimOnDisplay$$$$_getLinePlayable$$($chart$$71_nodePlayable$$17$$, $line$$9$$, $duration$$81$$) {
   var $arPoints$$24$$ = $line$$9$$.$getPoints$(), $endState$$15$$ = $arPoints$$24$$.slice(0);
@@ -994,16 +994,16 @@ D.$DvtAnimOnDisplay$$.$_getScatterPlayable$ = function $$DvtAnimOnDisplay$$$$_ge
   return new D.$DvtAnimPopIn$$($chart$$73$$.$_context$, $marker$$27$$, D.$JSCompiler_alias_TRUE$$, $duration$$83$$)
 };
 D.$DvtAnimOnDisplay$$.$_getMeanPoints$ = function $$DvtAnimOnDisplay$$$$_getMeanPoints$$($arPoints$$26$$, $isHoriz$$10$$) {
-  var $mean$$ = 0, $min$$4$$ = window.Number.MAX_VALUE, $max$$4$$ = window.Number.MIN_VALUE, $len$$41$$ = $arPoints$$26$$.length, $i$$487$$;
-  for($i$$487$$ = $isHoriz$$10$$ ? 0 : 1;$i$$487$$ < $len$$41$$;$i$$487$$ += 2) {
-    var $v$$11$$ = $arPoints$$26$$[$i$$487$$];
+  var $mean$$ = 0, $min$$4$$ = window.Number.MAX_VALUE, $max$$4$$ = window.Number.MIN_VALUE, $len$$41$$ = $arPoints$$26$$.length, $i$$483$$;
+  for($i$$483$$ = $isHoriz$$10$$ ? 0 : 1;$i$$483$$ < $len$$41$$;$i$$483$$ += 2) {
+    var $v$$11$$ = $arPoints$$26$$[$i$$483$$];
     $v$$11$$ < $min$$4$$ && ($min$$4$$ = $v$$11$$);
     $v$$11$$ > $max$$4$$ && ($max$$4$$ = $v$$11$$);
     $mean$$ += $v$$11$$
   }
   4 < $len$$41$$ ? ($mean$$ = $mean$$ - $min$$4$$ - $max$$4$$, $mean$$ /= ($len$$41$$ - 4) / 2) : $mean$$ /= $len$$41$$ / 2;
-  for($i$$487$$ = $isHoriz$$10$$ ? 0 : 1;$i$$487$$ < $len$$41$$;$i$$487$$ += 2) {
-    $arPoints$$26$$[$i$$487$$] = $mean$$
+  for($i$$483$$ = $isHoriz$$10$$ ? 0 : 1;$i$$483$$ < $len$$41$$;$i$$483$$ += 2) {
+    $arPoints$$26$$[$i$$483$$] = $mean$$
   }
 };
 D.$DvtAnimOnDC$$ = (0,D.$JSCompiler_emptyFn$$)();
@@ -1022,12 +1022,12 @@ D.$DvtAnimOnDC$$.$createAnimation$ = function $$DvtAnimOnDC$$$$createAnimation$$
   0 < $handler$$36_oldChart$$4$$.$_playables$.length && ($playable$$19$$ = $handler$$36_oldChart$$4$$.$getAnimation$());
   return $playable$$19$$
 };
-D.$DvtAnimOnDC$$.$_buildAnimLists$ = function $$DvtAnimOnDC$$$$_buildAnimLists$$($arOldList$$1_i$$489$$, $oldChart$$5$$, $arNewList$$1$$, $newChart$$4$$, $duration$$85$$) {
-  var $j$$58$$, $ar$$37$$ = $oldChart$$5$$.$peers$, $aOut$$ = $arOldList$$1_i$$489$$, $peer$$10$$, $obj$$263$$, $dch$$, $chartType$$3$$ = $oldChart$$5$$.type;
-  for($arOldList$$1_i$$489$$ = 0;2 > $arOldList$$1_i$$489$$;$arOldList$$1_i$$489$$++) {
+D.$DvtAnimOnDC$$.$_buildAnimLists$ = function $$DvtAnimOnDC$$$$_buildAnimLists$$($arOldList$$1_i$$485$$, $oldChart$$5$$, $arNewList$$1$$, $newChart$$4$$, $duration$$85$$) {
+  var $j$$58$$, $ar$$37$$ = $oldChart$$5$$.$peers$, $aOut$$ = $arOldList$$1_i$$485$$, $peer$$10$$, $obj$$264$$, $dch$$, $chartType$$3$$ = $oldChart$$5$$.type;
+  for($arOldList$$1_i$$485$$ = 0;2 > $arOldList$$1_i$$485$$;$arOldList$$1_i$$485$$++) {
     for($j$$58$$ = 0;$j$$58$$ < $ar$$37$$.length;$j$$58$$++) {
-      $peer$$10$$ = $ar$$37$$[$j$$58$$], $obj$$263$$ = $peer$$10$$.$getDisplayables$()[0], $dch$$ = D.$JSCompiler_alias_NULL$$, $obj$$263$$ instanceof D.$DvtFunnelSlice$$ ? $dch$$ = new D.$DvtDCFunnelSlice$$($peer$$10$$, $duration$$85$$) : $obj$$263$$ instanceof D.$DvtChartBar$$ || $obj$$263$$ instanceof D.$DvtChartPolarBar$$ ? $dch$$ = new D.$DvtDCChart2DBar$$($peer$$10$$, $duration$$85$$) : $obj$$263$$ instanceof D.$DvtPolygonalShape$$ ? $dch$$ = new D.$DvtDCChartLineArea$$($peer$$10$$, $duration$$85$$) : 
-      $obj$$263$$ instanceof D.$DvtMarker$$ && ("scatter" === $chartType$$3$$ || "bubble" === $chartType$$3$$ || (1 == $arOldList$$1_i$$489$$ ? "on" == $peer$$10$$.$getSeriesItem$().markerDisplayed : "on" == D.$DvtChartDataUtils$$.$getSeriesItem$($oldChart$$5$$, $peer$$10$$.$getSeriesIndex$()).markerDisplayed)) && ($dch$$ = new D.$DvtDCChartMarker$$($peer$$10$$, $duration$$85$$)), $dch$$ && ($aOut$$.push($dch$$), $dch$$.$_oldChart$ = $oldChart$$5$$)
+      $peer$$10$$ = $ar$$37$$[$j$$58$$], $obj$$264$$ = $peer$$10$$.$getDisplayables$()[0], $dch$$ = D.$JSCompiler_alias_NULL$$, $obj$$264$$ instanceof D.$DvtFunnelSlice$$ ? $dch$$ = new D.$DvtDCFunnelSlice$$($peer$$10$$, $duration$$85$$) : $obj$$264$$ instanceof D.$DvtChartBar$$ || $obj$$264$$ instanceof D.$DvtChartPolarBar$$ ? $dch$$ = new D.$DvtDCChart2DBar$$($peer$$10$$, $duration$$85$$) : $obj$$264$$ instanceof D.$DvtPolygonalShape$$ ? $dch$$ = new D.$DvtDCChartLineArea$$($peer$$10$$, $duration$$85$$) : 
+      $obj$$264$$ instanceof D.$DvtMarker$$ && ("scatter" === $chartType$$3$$ || "bubble" === $chartType$$3$$ || (1 == $arOldList$$1_i$$485$$ ? "on" == $peer$$10$$.$getSeriesItem$().markerDisplayed : "on" == D.$DvtChartDataUtils$$.$getSeriesItem$($oldChart$$5$$, $peer$$10$$.$getSeriesIndex$()).markerDisplayed)) && ($dch$$ = new D.$DvtDCChartMarker$$($peer$$10$$, $duration$$85$$)), $dch$$ && ($aOut$$.push($dch$$), $dch$$.$_oldChart$ = $oldChart$$5$$)
     }
     $aOut$$ = $arNewList$$1$$;
     $ar$$37$$ = $newChart$$4$$.$getObjects$()
@@ -1106,7 +1106,7 @@ D.$JSCompiler_prototypeAlias$$.$animateUpdate$ = function $$JSCompiler_prototype
   var $iPTLen_startState$$7$$ = $oldDC$$4$$.$_getAnimationParams$(), $endState$$17$$ = this.$_getAnimationParams$();
   this.$_finalState$ = D.$JSCompiler_alias_NULL$$;
   if(!D.$DvtArrayUtils$$.$equals$($iPTLen_startState$$7$$, $endState$$17$$)) {
-    var $i$$490_oldChart$$7$$ = this.$_oldChart$, $newChart$$6_nodePlayable$$19$$ = this.$_peer$.$_chart$, $arOldGroups_iConsec$$ = D.$DvtChartDataUtils$$.$getGroups$($i$$490_oldChart$$7$$), $arNewGroups_bFinalGroup_pt1x$$ = D.$DvtChartDataUtils$$.$getGroups$($newChart$$6_nodePlayable$$19$$), $oldGroupLen_pt1y$$ = $arOldGroups_iConsec$$.length, $newGroupLen_pt2x_xInc$$ = $arNewGroups_bFinalGroup_pt1x$$.length, $arCompare_arDeletes$$ = D.$DvtDCChartUtils$$.$compareGroups$($arOldGroups_iConsec$$, $arNewGroups_bFinalGroup_pt1x$$), 
+    var $i$$486_oldChart$$7$$ = this.$_oldChart$, $newChart$$6_nodePlayable$$19$$ = this.$_peer$.$_chart$, $arOldGroups_iConsec$$ = D.$DvtChartDataUtils$$.$getGroups$($i$$486_oldChart$$7$$), $arNewGroups_bFinalGroup_pt1x$$ = D.$DvtChartDataUtils$$.$getGroups$($newChart$$6_nodePlayable$$19$$), $oldGroupLen_pt1y$$ = $arOldGroups_iConsec$$.length, $newGroupLen_pt2x_xInc$$ = $arNewGroups_bFinalGroup_pt1x$$.length, $arCompare_arDeletes$$ = D.$DvtDCChartUtils$$.$compareGroups$($arOldGroups_iConsec$$, $arNewGroups_bFinalGroup_pt1x$$), 
     $aptsOld_arUpdates$$ = $arCompare_arDeletes$$[0], $arInserts_n$$27_pt2y$$ = $arCompare_arDeletes$$[1], $arCompare_arDeletes$$ = $arCompare_arDeletes$$[2], $bInsertDelete_ix$$ = 0 < $arInserts_n$$27_pt2y$$.length || 0 < $arCompare_arDeletes$$.length, $arPointType$$ = [], $iPT_yInc$$ = 0, $arOldPt$$ = D.$JSCompiler_alias_NULL$$, $arNewPt$$ = D.$JSCompiler_alias_NULL$$;
     $bInsertDelete_ix$$ && ($arOldPt$$ = [], $arNewPt$$ = []);
     this.$_arDirection$ = this.$_arPointers$ = D.$JSCompiler_alias_NULL$$;
@@ -1115,12 +1115,12 @@ D.$JSCompiler_prototypeAlias$$.$animateUpdate$ = function $$JSCompiler_prototype
       if($ixOld$$ < $oldGroupLen_pt1y$$ && $ixNew$$ < $newGroupLen_pt2x_xInc$$ && $ixOldPts$$ < $aptsOldLen$$ && $ixNewPts$$ < $aptsNewLen$$) {
         if($arOldGroups_iConsec$$[$ixOld$$] === $arNewGroups_bFinalGroup_pt1x$$[$ixNew$$]) {
           $arPointType$$[$iPT_yInc$$] = D.$DvtDCChartUtils$$.$UPDATE$;
-          var $xPos$$2$$ = $aptsOld_arUpdates$$[$ixOldPts$$++], $yPos$$3$$ = $aptsOld_arUpdates$$[$ixOldPts$$++];
-          this.$_arPointers$ != D.$JSCompiler_alias_NULL$$ && this.$_makeDirPointer$($xPos$$2$$, $yPos$$3$$, $i$$490_oldChart$$7$$, $oldSIdx$$4$$, $ixOld$$, $newChart$$6_nodePlayable$$19$$, $newSIdx$$4$$, $ixNew$$, $iPT_yInc$$);
+          var $xPos$$2$$ = $aptsOld_arUpdates$$[$ixOldPts$$++], $yPos$$2$$ = $aptsOld_arUpdates$$[$ixOldPts$$++];
+          this.$_arPointers$ != D.$JSCompiler_alias_NULL$$ && this.$_makeDirPointer$($xPos$$2$$, $yPos$$2$$, $i$$486_oldChart$$7$$, $oldSIdx$$4$$, $ixOld$$, $newChart$$6_nodePlayable$$19$$, $newSIdx$$4$$, $ixNew$$, $iPT_yInc$$);
           $ixOld$$++;
           $ixNew$$++;
           $iPT_yInc$$++;
-          $bInsertDelete_ix$$ && ($arOldPt$$.push($xPos$$2$$), $arOldPt$$.push($yPos$$3$$), $arNewPt$$.push($aptsNew$$[$ixNewPts$$++]), $arNewPt$$.push($aptsNew$$[$ixNewPts$$++]))
+          $bInsertDelete_ix$$ && ($arOldPt$$.push($xPos$$2$$), $arOldPt$$.push($yPos$$2$$), $arNewPt$$.push($aptsNew$$[$ixNewPts$$++]), $arNewPt$$.push($aptsNew$$[$ixNewPts$$++]))
         }else {
           -1 < D.$DvtArrayUtils$$.$getIndex$($arCompare_arDeletes$$, $arOldGroups_iConsec$$[$ixOld$$]) ? ($arPointType$$[$iPT_yInc$$] = D.$DvtDCChartUtils$$.$DELETE$, $arOldPt$$.push($aptsOld_arUpdates$$[$ixOldPts$$++]), $arOldPt$$.push($aptsOld_arUpdates$$[$ixOldPts$$++]), $arNewPt$$.push(0), $arNewPt$$.push(0), $ixOld$$++, this.$_arPointers$ != D.$JSCompiler_alias_NULL$$ && (this.$_arPointers$[$iPT_yInc$$] = D.$JSCompiler_alias_NULL$$, this.$_arDirection$[$iPT_yInc$$] = D.$JSCompiler_alias_NULL$$), 
           $iPT_yInc$$++) : -1 < D.$DvtArrayUtils$$.$getIndex$($arInserts_n$$27_pt2y$$, $arNewGroups_bFinalGroup_pt1x$$[$ixNew$$]) ? ($arPointType$$[$iPT_yInc$$] = D.$DvtDCChartUtils$$.$INSERT$, $arOldPt$$.push(0), $arOldPt$$.push(0), $arNewPt$$.push($aptsNew$$[$ixNewPts$$++]), $arNewPt$$.push($aptsNew$$[$ixNewPts$$++]), $ixNew$$++, this.$_arPointers$ != D.$JSCompiler_alias_NULL$$ && (this.$_arPointers$[$iPT_yInc$$] = D.$JSCompiler_alias_NULL$$, this.$_arDirection$[$iPT_yInc$$] = D.$JSCompiler_alias_NULL$$), 
@@ -1142,66 +1142,66 @@ D.$JSCompiler_prototypeAlias$$.$animateUpdate$ = function $$JSCompiler_prototype
     if($bInsertDelete_ix$$) {
       $iPT_yInc$$ = $newGroupLen_pt2x_xInc$$ = $arInserts_n$$27_pt2y$$ = $newGroupLen_pt2x_xInc$$ = $oldGroupLen_pt1y$$ = $arNewGroups_bFinalGroup_pt1x$$ = 0;
       $iPTLen_startState$$7$$ = $arPointType$$.length;
-      for($i$$490_oldChart$$7$$ = 0;$i$$490_oldChart$$7$$ < $iPTLen_startState$$7$$;$i$$490_oldChart$$7$$++) {
-        if($arPointType$$[$i$$490_oldChart$$7$$] != D.$DvtDCChartUtils$$.$UPDATE$) {
-          $arInserts_n$$27_pt2y$$ = $arPointType$$[$i$$490_oldChart$$7$$];
+      for($i$$486_oldChart$$7$$ = 0;$i$$486_oldChart$$7$$ < $iPTLen_startState$$7$$;$i$$486_oldChart$$7$$++) {
+        if($arPointType$$[$i$$486_oldChart$$7$$] != D.$DvtDCChartUtils$$.$UPDATE$) {
+          $arInserts_n$$27_pt2y$$ = $arPointType$$[$i$$486_oldChart$$7$$];
           $arOldGroups_iConsec$$ = 1;
-          for($bInsertDelete_ix$$ = $i$$490_oldChart$$7$$ + 1;$bInsertDelete_ix$$ < $iPTLen_startState$$7$$ && $arPointType$$[$bInsertDelete_ix$$] == $arInserts_n$$27_pt2y$$;$bInsertDelete_ix$$++) {
+          for($bInsertDelete_ix$$ = $i$$486_oldChart$$7$$ + 1;$bInsertDelete_ix$$ < $iPTLen_startState$$7$$ && $arPointType$$[$bInsertDelete_ix$$] == $arInserts_n$$27_pt2y$$;$bInsertDelete_ix$$++) {
             $arOldGroups_iConsec$$++
           }
           $arNewGroups_bFinalGroup_pt1x$$ = $bInsertDelete_ix$$ === $iPTLen_startState$$7$$;
-          if(0 === $i$$490_oldChart$$7$$) {
+          if(0 === $i$$486_oldChart$$7$$) {
             if($arInserts_n$$27_pt2y$$ === D.$DvtDCChartUtils$$.$INSERT$) {
-              $arInserts_n$$27_pt2y$$ = 2 * ($i$$490_oldChart$$7$$ + $arOldGroups_iConsec$$);
+              $arInserts_n$$27_pt2y$$ = 2 * ($i$$486_oldChart$$7$$ + $arOldGroups_iConsec$$);
               $arNewGroups_bFinalGroup_pt1x$$ = $arOldPt$$[$arInserts_n$$27_pt2y$$];
               $oldGroupLen_pt1y$$ = $arOldPt$$[$arInserts_n$$27_pt2y$$ + 1];
               for($bInsertDelete_ix$$ = 0;$bInsertDelete_ix$$ < $arOldGroups_iConsec$$;$bInsertDelete_ix$$++) {
-                0 < $bInsertDelete_ix$$ && $i$$490_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$490_oldChart$$7$$, $arOldPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arOldPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
+                0 < $bInsertDelete_ix$$ && $i$$486_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$486_oldChart$$7$$, $arOldPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arOldPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
               }
             }else {
-              $arInserts_n$$27_pt2y$$ = 2 * ($i$$490_oldChart$$7$$ + $arOldGroups_iConsec$$);
+              $arInserts_n$$27_pt2y$$ = 2 * ($i$$486_oldChart$$7$$ + $arOldGroups_iConsec$$);
               $arNewGroups_bFinalGroup_pt1x$$ = $arNewPt$$[$arInserts_n$$27_pt2y$$];
               $oldGroupLen_pt1y$$ = $arNewPt$$[$arInserts_n$$27_pt2y$$ + 1];
               for($bInsertDelete_ix$$ = 0;$bInsertDelete_ix$$ < $arOldGroups_iConsec$$;$bInsertDelete_ix$$++) {
-                0 < $bInsertDelete_ix$$ && $i$$490_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$490_oldChart$$7$$, $arNewPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arNewPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
+                0 < $bInsertDelete_ix$$ && $i$$486_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$486_oldChart$$7$$, $arNewPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arNewPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
               }
             }
           }else {
-            if($i$$490_oldChart$$7$$ === $iPTLen_startState$$7$$ - 1 || $arNewGroups_bFinalGroup_pt1x$$) {
+            if($i$$486_oldChart$$7$$ === $iPTLen_startState$$7$$ - 1 || $arNewGroups_bFinalGroup_pt1x$$) {
               if($arInserts_n$$27_pt2y$$ === D.$DvtDCChartUtils$$.$INSERT$) {
-                $arInserts_n$$27_pt2y$$ = 2 * ($i$$490_oldChart$$7$$ - 1), $arNewGroups_bFinalGroup_pt1x$$ = $arOldPt$$[$arInserts_n$$27_pt2y$$], $oldGroupLen_pt1y$$ = $arOldPt$$[$arInserts_n$$27_pt2y$$ + 1], $arInserts_n$$27_pt2y$$ = 2 * $i$$490_oldChart$$7$$, $arOldPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arOldPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
+                $arInserts_n$$27_pt2y$$ = 2 * ($i$$486_oldChart$$7$$ - 1), $arNewGroups_bFinalGroup_pt1x$$ = $arOldPt$$[$arInserts_n$$27_pt2y$$], $oldGroupLen_pt1y$$ = $arOldPt$$[$arInserts_n$$27_pt2y$$ + 1], $arInserts_n$$27_pt2y$$ = 2 * $i$$486_oldChart$$7$$, $arOldPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arOldPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
               }else {
-                $arInserts_n$$27_pt2y$$ = 2 * ($i$$490_oldChart$$7$$ - 1);
+                $arInserts_n$$27_pt2y$$ = 2 * ($i$$486_oldChart$$7$$ - 1);
                 $arNewGroups_bFinalGroup_pt1x$$ = $arNewPt$$[$arInserts_n$$27_pt2y$$];
                 $oldGroupLen_pt1y$$ = $arNewPt$$[$arInserts_n$$27_pt2y$$ + 1];
                 for($bInsertDelete_ix$$ = 0;$bInsertDelete_ix$$ < $arOldGroups_iConsec$$;$bInsertDelete_ix$$++) {
-                  0 < $bInsertDelete_ix$$ && $i$$490_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$490_oldChart$$7$$, $arNewPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arNewPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
+                  0 < $bInsertDelete_ix$$ && $i$$486_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$486_oldChart$$7$$, $arNewPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arNewPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
                 }
               }
             }else {
               if($arInserts_n$$27_pt2y$$ === D.$DvtDCChartUtils$$.$INSERT$) {
-                $bInsertDelete_ix$$ = 2 * ($i$$490_oldChart$$7$$ - 1);
+                $bInsertDelete_ix$$ = 2 * ($i$$486_oldChart$$7$$ - 1);
                 $arNewGroups_bFinalGroup_pt1x$$ = $arOldPt$$[$bInsertDelete_ix$$++];
                 $oldGroupLen_pt1y$$ = $arOldPt$$[$bInsertDelete_ix$$];
-                $bInsertDelete_ix$$ = 2 * ($i$$490_oldChart$$7$$ + $arOldGroups_iConsec$$);
+                $bInsertDelete_ix$$ = 2 * ($i$$486_oldChart$$7$$ + $arOldGroups_iConsec$$);
                 $newGroupLen_pt2x_xInc$$ = $arOldPt$$[$bInsertDelete_ix$$++];
                 $arInserts_n$$27_pt2y$$ = $arOldPt$$[$bInsertDelete_ix$$];
                 $newGroupLen_pt2x_xInc$$ = ($newGroupLen_pt2x_xInc$$ - $arNewGroups_bFinalGroup_pt1x$$) / ($arOldGroups_iConsec$$ + 1);
                 $iPT_yInc$$ = ($arInserts_n$$27_pt2y$$ - $oldGroupLen_pt1y$$) / ($arOldGroups_iConsec$$ + 1);
                 for($bInsertDelete_ix$$ = 0;$bInsertDelete_ix$$ < $arOldGroups_iConsec$$;$bInsertDelete_ix$$++) {
-                  0 < $bInsertDelete_ix$$ && $i$$490_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$490_oldChart$$7$$, $arNewGroups_bFinalGroup_pt1x$$ += $newGroupLen_pt2x_xInc$$, $oldGroupLen_pt1y$$ += $iPT_yInc$$, $arOldPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arOldPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
+                  0 < $bInsertDelete_ix$$ && $i$$486_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$486_oldChart$$7$$, $arNewGroups_bFinalGroup_pt1x$$ += $newGroupLen_pt2x_xInc$$, $oldGroupLen_pt1y$$ += $iPT_yInc$$, $arOldPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arOldPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
                 }
               }else {
-                $bInsertDelete_ix$$ = 2 * ($i$$490_oldChart$$7$$ - 1);
+                $bInsertDelete_ix$$ = 2 * ($i$$486_oldChart$$7$$ - 1);
                 $arNewGroups_bFinalGroup_pt1x$$ = $arNewPt$$[$bInsertDelete_ix$$++];
                 $oldGroupLen_pt1y$$ = $arNewPt$$[$bInsertDelete_ix$$];
-                $bInsertDelete_ix$$ = 2 * ($i$$490_oldChart$$7$$ + $arOldGroups_iConsec$$);
+                $bInsertDelete_ix$$ = 2 * ($i$$486_oldChart$$7$$ + $arOldGroups_iConsec$$);
                 $newGroupLen_pt2x_xInc$$ = $arNewPt$$[$bInsertDelete_ix$$++];
                 $arInserts_n$$27_pt2y$$ = $arNewPt$$[$bInsertDelete_ix$$];
                 $newGroupLen_pt2x_xInc$$ = ($newGroupLen_pt2x_xInc$$ - $arNewGroups_bFinalGroup_pt1x$$) / ($arOldGroups_iConsec$$ + 1);
                 $iPT_yInc$$ = ($arInserts_n$$27_pt2y$$ - $oldGroupLen_pt1y$$) / ($arOldGroups_iConsec$$ + 1);
                 for($bInsertDelete_ix$$ = 0;$bInsertDelete_ix$$ < $arOldGroups_iConsec$$;$bInsertDelete_ix$$++) {
-                  0 < $bInsertDelete_ix$$ && $i$$490_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$490_oldChart$$7$$, $arNewGroups_bFinalGroup_pt1x$$ += $newGroupLen_pt2x_xInc$$, $oldGroupLen_pt1y$$ += $iPT_yInc$$, $arNewPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arNewPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
+                  0 < $bInsertDelete_ix$$ && $i$$486_oldChart$$7$$++, $arInserts_n$$27_pt2y$$ = 2 * $i$$486_oldChart$$7$$, $arNewGroups_bFinalGroup_pt1x$$ += $newGroupLen_pt2x_xInc$$, $oldGroupLen_pt1y$$ += $iPT_yInc$$, $arNewPt$$[$arInserts_n$$27_pt2y$$++] = $arNewGroups_bFinalGroup_pt1x$$, $arNewPt$$[$arInserts_n$$27_pt2y$$] = $oldGroupLen_pt1y$$
                 }
               }
             }
@@ -1224,8 +1224,8 @@ D.$JSCompiler_prototypeAlias$$.$animateUpdate$ = function $$JSCompiler_prototype
 D.$JSCompiler_prototypeAlias$$.$_onEndAnimation$ = function $$JSCompiler_prototypeAlias$$$$_onEndAnimation$$() {
   this.$_finalState$ && this.$_shape$.$setPoints$(this.$_finalState$);
   if(this.$_arPointers$ !== D.$JSCompiler_alias_NULL$$) {
-    for(var $arPointers$$ = this.$_arPointers$, $len$$42$$ = $arPointers$$.length, $plot$$ = this.$_peer$.$_chart$.$getPlotArea$(), $ptr$$, $i$$491$$ = 0;$i$$491$$ < $len$$42$$;$i$$491$$++) {
-      ($ptr$$ = $arPointers$$[$i$$491$$]) && $plot$$.removeChild($ptr$$)
+    for(var $arPointers$$ = this.$_arPointers$, $len$$42$$ = $arPointers$$.length, $plot$$ = this.$_peer$.$_chart$.$getPlotArea$(), $ptr$$, $i$$487$$ = 0;$i$$487$$ < $len$$42$$;$i$$487$$++) {
+      ($ptr$$ = $arPointers$$[$i$$487$$]) && $plot$$.removeChild($ptr$$)
     }
     this.$_arDirections$ = this.$_arPointers$ = D.$JSCompiler_alias_NULL$$
   }
@@ -1235,17 +1235,17 @@ D.$JSCompiler_prototypeAlias$$.$animateInsert$ = function $$JSCompiler_prototype
   $handler$$41$$.add($nodePlayable$$20$$, 0)
 };
 D.$JSCompiler_prototypeAlias$$.$animateDelete$ = function $$JSCompiler_prototypeAlias$$$$animateDelete$$($handler$$42$$, $delContainer$$5$$) {
-  var $context$$547_nodePlayable$$21$$ = this.$_shape$.$_context$;
+  var $context$$541_nodePlayable$$21$$ = this.$_shape$.$_context$;
   if(this.$_shape$ instanceof D.$DvtPolygon$$ && "area" == this.$_peer$.$getSeriesType$()) {
     var $areaContainer$$1$$ = this.$_peer$.$_chart$.$_areaContainer$;
     this.$_deletedAreas$ = this.$_shape$.getParent().getParent();
     $areaContainer$$1$$.$addChild$(this.$_deletedAreas$);
-    $context$$547_nodePlayable$$21$$ = new D.$DvtAnimFadeOut$$($context$$547_nodePlayable$$21$$, this.$_deletedAreas$, this.$_duration$);
-    $context$$547_nodePlayable$$21$$.$setOnEnd$(this.$_removeDeletedAreas$, this)
+    $context$$541_nodePlayable$$21$$ = new D.$DvtAnimFadeOut$$($context$$541_nodePlayable$$21$$, this.$_deletedAreas$, this.$_duration$);
+    $context$$541_nodePlayable$$21$$.$setOnEnd$(this.$_removeDeletedAreas$, this)
   }else {
-    $delContainer$$5$$.$addChild$(this.$_shape$), $context$$547_nodePlayable$$21$$ = new D.$DvtAnimFadeOut$$($context$$547_nodePlayable$$21$$, this.$_shape$, this.$_duration$)
+    $delContainer$$5$$.$addChild$(this.$_shape$), $context$$541_nodePlayable$$21$$ = new D.$DvtAnimFadeOut$$($context$$541_nodePlayable$$21$$, this.$_shape$, this.$_duration$)
   }
-  $handler$$42$$.add($context$$547_nodePlayable$$21$$, 0)
+  $handler$$42$$.add($context$$541_nodePlayable$$21$$, 0)
 };
 D.$JSCompiler_prototypeAlias$$.$_removeDeletedAreas$ = function $$JSCompiler_prototypeAlias$$$$_removeDeletedAreas$$() {
   this.$_peer$.$_chart$.$_areaContainer$.removeChild(this.$_deletedAreas$)
@@ -1257,10 +1257,10 @@ D.$JSCompiler_prototypeAlias$$.Init = function $$JSCompiler_prototypeAlias$$$Ini
   D.$DvtDCChartLineArea$$.$superclass$.Init.call(this, $peer$$14$$, $duration$$89$$);
   this.$_animId$ = $peer$$14$$.$getSeries$()
 };
-D.$JSCompiler_prototypeAlias$$.$_makeDirPointer$ = function $$JSCompiler_prototypeAlias$$$$_makeDirPointer$$($dirptr$$1_xPos$$3$$, $chart$$75_isHoriz$$11_yPos$$4$$, $bDown$$2_oldChart$$8$$, $fc$$10_iDirection_oldSIdx$$5$$, $oldGIdx$$4$$, $newChart$$7$$, $newSIdx$$5$$, $newGIdx$$4$$, $iPT$$1$$) {
-  $chart$$75_isHoriz$$11_yPos$$4$$ = this.$_peer$.$_chart$;
-  D.$DvtChartTypeUtils$$.$isPolar$($chart$$75_isHoriz$$11_yPos$$4$$) || ($dirptr$$1_xPos$$3$$ = D.$JSCompiler_alias_NULL$$, $chart$$75_isHoriz$$11_yPos$$4$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$75_isHoriz$$11_yPos$$4$$), $fc$$10_iDirection_oldSIdx$$5$$ = D.$DvtDCChartUtils$$.$getDirection$($bDown$$2_oldChart$$8$$, $fc$$10_iDirection_oldSIdx$$5$$, $oldGIdx$$4$$, $newChart$$7$$, $newSIdx$$5$$, $newGIdx$$4$$), $bDown$$2_oldChart$$8$$ = $fc$$10_iDirection_oldSIdx$$5$$ == D.$DvtDCChartUtils$$.$DIR_DOWN$, 
-  $fc$$10_iDirection_oldSIdx$$5$$ !== D.$DvtDCChartUtils$$.$DIR_NOCHANGE$ && ($fc$$10_iDirection_oldSIdx$$5$$ = $bDown$$2_oldChart$$8$$ ? D.$DvtChartStyleUtils$$.$getAnimationDownColor$($newChart$$7$$) : D.$DvtChartStyleUtils$$.$getAnimationUpColor$($newChart$$7$$), $dirptr$$1_xPos$$3$$ = D.$DvtDCChartUtils$$.$drawDirectionPointer$(this.$_shape$.$_context$, $bDown$$2_oldChart$$8$$, $chart$$75_isHoriz$$11_yPos$$4$$, $fc$$10_iDirection_oldSIdx$$5$$), $newChart$$7$$.$getPlotArea$().$addChild$($dirptr$$1_xPos$$3$$)), 
+D.$JSCompiler_prototypeAlias$$.$_makeDirPointer$ = function $$JSCompiler_prototypeAlias$$$$_makeDirPointer$$($dirptr$$1_xPos$$3$$, $chart$$75_isHoriz$$11_yPos$$3$$, $bDown$$2_oldChart$$8$$, $fc$$10_iDirection_oldSIdx$$5$$, $oldGIdx$$4$$, $newChart$$7$$, $newSIdx$$5$$, $newGIdx$$4$$, $iPT$$1$$) {
+  $chart$$75_isHoriz$$11_yPos$$3$$ = this.$_peer$.$_chart$;
+  D.$DvtChartTypeUtils$$.$isPolar$($chart$$75_isHoriz$$11_yPos$$3$$) || ($dirptr$$1_xPos$$3$$ = D.$JSCompiler_alias_NULL$$, $chart$$75_isHoriz$$11_yPos$$3$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$75_isHoriz$$11_yPos$$3$$), $fc$$10_iDirection_oldSIdx$$5$$ = D.$DvtDCChartUtils$$.$getDirection$($bDown$$2_oldChart$$8$$, $fc$$10_iDirection_oldSIdx$$5$$, $oldGIdx$$4$$, $newChart$$7$$, $newSIdx$$5$$, $newGIdx$$4$$), $bDown$$2_oldChart$$8$$ = $fc$$10_iDirection_oldSIdx$$5$$ == D.$DvtDCChartUtils$$.$DIR_DOWN$, 
+  $fc$$10_iDirection_oldSIdx$$5$$ !== D.$DvtDCChartUtils$$.$DIR_NOCHANGE$ && ($fc$$10_iDirection_oldSIdx$$5$$ = $bDown$$2_oldChart$$8$$ ? D.$DvtChartStyleUtils$$.$getAnimationDownColor$($newChart$$7$$) : D.$DvtChartStyleUtils$$.$getAnimationUpColor$($newChart$$7$$), $dirptr$$1_xPos$$3$$ = D.$DvtDCChartUtils$$.$drawDirectionPointer$(this.$_shape$.$_context$, $bDown$$2_oldChart$$8$$, $chart$$75_isHoriz$$11_yPos$$3$$, $fc$$10_iDirection_oldSIdx$$5$$), $newChart$$7$$.$getPlotArea$().$addChild$($dirptr$$1_xPos$$3$$)), 
   this.$_arPointers$[$iPT$$1$$] = $dirptr$$1_xPos$$3$$, this.$_arDirection$[$iPT$$1$$] = $bDown$$2_oldChart$$8$$)
 };
 D.$JSCompiler_prototypeAlias$$.$_setAnimationParams$ = function $$JSCompiler_prototypeAlias$$$$_setAnimationParams$$($ar$$38$$) {
@@ -1268,9 +1268,9 @@ D.$JSCompiler_prototypeAlias$$.$_setAnimationParams$ = function $$JSCompiler_pro
   if(this.$_arPointers$ !== D.$JSCompiler_alias_NULL$$) {
     var $chart$$76_ptr$$1$$, $offset$$27$$;
     $chart$$76_ptr$$1$$ = this.$_peer$.$_chart$;
-    for(var $isHoriz$$12$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$76_ptr$$1$$), $isRTL$$8$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$76_ptr$$1$$.$_context$), $plotArea$$1$$ = $chart$$76_ptr$$1$$.$getPlotArea$(), $len$$43$$ = this.$_arPointers$.length, $i$$492$$ = 0;$i$$492$$ < $len$$43$$;$i$$492$$++) {
-      if($chart$$76_ptr$$1$$ = this.$_arPointers$[$i$$492$$]) {
-        $plotArea$$1$$.removeChild($chart$$76_ptr$$1$$), $offset$$27$$ = this.$_arDirection$[$i$$492$$] ? 12 : -12, $chart$$76_ptr$$1$$.$setTranslateX$($ar$$38$$[2 * $i$$492$$] + ($isHoriz$$12$$ ? $offset$$27$$ : 0) * ($isRTL$$8$$ ? 1 : -1)), $chart$$76_ptr$$1$$.$setTranslateY$($ar$$38$$[2 * $i$$492$$ + 1] + ($isHoriz$$12$$ ? 0 : $offset$$27$$)), $plotArea$$1$$.$addChild$($chart$$76_ptr$$1$$)
+    for(var $isHoriz$$12$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$76_ptr$$1$$), $isRTL$$8$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$76_ptr$$1$$.$_context$), $plotArea$$1$$ = $chart$$76_ptr$$1$$.$getPlotArea$(), $len$$43$$ = this.$_arPointers$.length, $i$$488$$ = 0;$i$$488$$ < $len$$43$$;$i$$488$$++) {
+      if($chart$$76_ptr$$1$$ = this.$_arPointers$[$i$$488$$]) {
+        $plotArea$$1$$.removeChild($chart$$76_ptr$$1$$), $offset$$27$$ = this.$_arDirection$[$i$$488$$] ? 12 : -12, $chart$$76_ptr$$1$$.$setTranslateX$($ar$$38$$[2 * $i$$488$$] + ($isHoriz$$12$$ ? $offset$$27$$ : 0) * ($isRTL$$8$$ ? 1 : -1)), $chart$$76_ptr$$1$$.$setTranslateY$($ar$$38$$[2 * $i$$488$$ + 1] + ($isHoriz$$12$$ ? 0 : $offset$$27$$)), $plotArea$$1$$.$addChild$($chart$$76_ptr$$1$$)
       }
     }
   }
@@ -1280,25 +1280,25 @@ D.$DvtDCChartMarker$$ = function $$DvtDCChartMarker$$$($peer$$4$$, $duration$$71
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtDCChartMarker$$, D.$DvtDCChartAbstract$$, "DvtDCChartMarker");
 D.$DvtDCChartMarker$$.prototype.$animateUpdate$ = function $$DvtDCChartMarker$$$$$animateUpdate$$($handler$$27$$, $oldDC$$) {
-  var $oldObj$$2$$ = $oldDC$$.$_shape$, $newObj$$2$$ = this.$_shape$, $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$ = $newObj$$2$$.$getMatrix$(), $alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$ = new D.$DvtMatrix$$;
-  $alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$.translate(-$newObj$$2$$.$getX$(), -$newObj$$2$$.$getY$());
-  $alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$.scale($oldObj$$2$$.getWidth() / $newObj$$2$$.getWidth(), $oldObj$$2$$.getHeight() / $newObj$$2$$.getHeight());
-  $alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$.translate($oldObj$$2$$.$getX$(), $oldObj$$2$$.$getY$());
-  if(!$bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$.$equals$($alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$)) {
+  var $oldObj$$2$$ = $oldDC$$.$_shape$, $newObj$$2$$ = this.$_shape$, $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$ = $newObj$$2$$.$getMatrix$(), $alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$ = new D.$DvtMatrix$$;
+  $alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$.translate(-$newObj$$2$$.$getX$(), -$newObj$$2$$.$getY$());
+  $alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$.scale($oldObj$$2$$.getWidth() / $newObj$$2$$.getWidth(), $oldObj$$2$$.getHeight() / $newObj$$2$$.getHeight());
+  $alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$.translate($oldObj$$2$$.$getX$(), $oldObj$$2$$.$getY$());
+  if(!$bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$.$equals$($alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$)) {
     var $nodePlayable$$6$$ = new D.$DvtCustomAnimation$$(this.$_shape$.$_context$, this, this.$_duration$);
-    this.$_shape$.$setMatrix$($alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$);
-    (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, "typeMatrix", this.$_shape$, this.$_shape$.$getMatrix$, this.$_shape$.$setMatrix$, $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$);
-    $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$ = D.$JSCompiler_alias_FALSE$$;
+    this.$_shape$.$setMatrix$($alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$);
+    (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, "typeMatrix", this.$_shape$, this.$_shape$.$getMatrix$, this.$_shape$.$setMatrix$, $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$);
+    $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$ = D.$JSCompiler_alias_FALSE$$;
     if($oldDC$$) {
-      var $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$ = $oldDC$$.$_peer$.$getSeriesIndex$(), $alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$ = $oldDC$$.$_peer$.$getGroupIndex$(), $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$ = this.$_peer$.$getSeriesIndex$(), $newGIdx$$inline_5210$$ = this.$_peer$.$getGroupIndex$(), $oldData$$inline_5211$$ = $oldDC$$.$_oldChart$.$getOptions$(), $newData$$inline_5212$$ = this.$_peer$.$_chart$.$getOptions$(), $oldY$$inline_5213$$ = $oldData$$inline_5211$$.series[$bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$].items[$alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$].y, 
-      $oldZ$$inline_5214$$ = $oldData$$inline_5211$$.series[$bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$].items[$alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$].z, $newY$$inline_5215$$ = $newData$$inline_5212$$.series[$fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$].items[$newGIdx$$inline_5210$$].y, $newZ$$inline_5216$$ = $newData$$inline_5212$$.series[$fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$].items[$newGIdx$$inline_5210$$].z, $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$ = 
-      $newData$$inline_5212$$.series[$fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$].items[$newGIdx$$inline_5210$$].x !== $oldData$$inline_5211$$.series[$bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$].items[$alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$].x || $newY$$inline_5215$$ !== $oldY$$inline_5213$$ || $newZ$$inline_5216$$ !== $oldZ$$inline_5214$$
+      var $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$ = $oldDC$$.$_peer$.$getSeriesIndex$(), $alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$ = $oldDC$$.$_peer$.$getGroupIndex$(), $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$ = this.$_peer$.$getSeriesIndex$(), $newGIdx$$inline_5152$$ = this.$_peer$.$getGroupIndex$(), $oldData$$inline_5153$$ = $oldDC$$.$_oldChart$.$getOptions$(), $newData$$inline_5154$$ = this.$_peer$.$_chart$.$getOptions$(), $oldY$$inline_5155$$ = $oldData$$inline_5153$$.series[$bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$].items[$alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$].y, 
+      $oldZ$$inline_5156$$ = $oldData$$inline_5153$$.series[$bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$].items[$alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$].z, $newY$$inline_5157$$ = $newData$$inline_5154$$.series[$fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$].items[$newGIdx$$inline_5152$$].y, $newZ$$inline_5158$$ = $newData$$inline_5154$$.series[$fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$].items[$newGIdx$$inline_5152$$].z, $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$ = 
+      $newData$$inline_5154$$.series[$fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$].items[$newGIdx$$inline_5152$$].x !== $oldData$$inline_5153$$.series[$bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$].items[$alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$].x || $newY$$inline_5157$$ !== $oldY$$inline_5155$$ || $newZ$$inline_5158$$ !== $oldZ$$inline_5156$$
     }
-    $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$ && "none" !== D.$DvtChartStyleUtils$$.$getAnimationIndicators$(this.$_peer$.$_chart$) && ($bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$ = $oldDC$$.$_shape$, "scatter" === $oldDC$$.$_peer$.$_chart$.$getType$() ? ($alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$ = "#FFFF2B", $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$ = 0.7) : ($alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$ = "#D5D500", $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$ = 
-    0.4), $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$ = new D.$DvtSolidFill$$($alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$, $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$), $alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$ = this.$_shape$.$getAlpha$(), this.$_shape$.$setAlpha$(0), $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$.$setFill$($fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$), this.$_peer$.$_chart$.$getPlotArea$().$addChild$($bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$), 
-    $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$ = new D.$DvtMatrix$$, $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$.translate(-$oldObj$$2$$.$getX$(), -$oldObj$$2$$.$getY$()), $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$.scale($newObj$$2$$.getWidth() / $oldObj$$2$$.getWidth(), $newObj$$2$$.getHeight() / $oldObj$$2$$.getHeight()), $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$.translate($newObj$$2$$.$getX$(), $newObj$$2$$.$getY$()), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, 
-    "typeNumber", this.$_shape$, this.$_shape$.$getAlpha$, this.$_shape$.$setAlpha$, $alpha$$37_fc$$8_oldGIdx$$inline_5208_startMatrix$$), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, "typeMatrix", $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$, $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$.$getMatrix$, $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$.$setMatrix$, $fa$$4_fill$$47_newSIdx$$inline_5209_overlayEndMatrix$$), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, 
-    "typeNumber", $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$, $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$.$getAlpha$, $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$.$setAlpha$, 0), this.$_overlay$ = $bRet$$inline_5206_endMatrix_oldSIdx$$inline_5207_overlay$$, $nodePlayable$$6$$.$setOnEnd$(this.$_onEndAnimation$, this));
+    $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$ && "none" !== D.$DvtChartStyleUtils$$.$getAnimationIndicators$(this.$_peer$.$_chart$) && ($bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$ = $oldDC$$.$_shape$, "scatter" === $oldDC$$.$_peer$.$_chart$.$getType$() ? ($alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$ = "#FFFF2B", $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$ = 0.7) : ($alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$ = "#D5D500", $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$ = 
+    0.4), $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$ = new D.$DvtSolidFill$$($alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$, $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$), $alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$ = this.$_shape$.$getAlpha$(), this.$_shape$.$setAlpha$(0), $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$.$setFill$($fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$), this.$_peer$.$_chart$.$getPlotArea$().$addChild$($bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$), 
+    $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$ = new D.$DvtMatrix$$, $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$.translate(-$oldObj$$2$$.$getX$(), -$oldObj$$2$$.$getY$()), $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$.scale($newObj$$2$$.getWidth() / $oldObj$$2$$.getWidth(), $newObj$$2$$.getHeight() / $oldObj$$2$$.getHeight()), $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$.translate($newObj$$2$$.$getX$(), $newObj$$2$$.$getY$()), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, 
+    "typeNumber", this.$_shape$, this.$_shape$.$getAlpha$, this.$_shape$.$setAlpha$, $alpha$$37_fc$$8_oldGIdx$$inline_5150_startMatrix$$), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, "typeMatrix", $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$, $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$.$getMatrix$, $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$.$setMatrix$, $fa$$4_fill$$47_newSIdx$$inline_5151_overlayEndMatrix$$), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$6$$.$_animator$, 
+    "typeNumber", $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$, $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$.$getAlpha$, $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$.$setAlpha$, 0), this.$_overlay$ = $bRet$$inline_5148_endMatrix_oldSIdx$$inline_5149_overlay$$, $nodePlayable$$6$$.$setOnEnd$(this.$_onEndAnimation$, this));
     $handler$$27$$.add($nodePlayable$$6$$, 0)
   }
 };
@@ -1328,10 +1328,10 @@ D.$DvtDCChartUtils$$.$getDirection$ = function $$DvtDCChartUtils$$$$getDirection
   return $newChart$$2_newValue$$1$$ > $oldChart$$3_oldValue$$2$$ ? D.$DvtDCChartUtils$$.$DIR_UP$ : $newChart$$2_newValue$$1$$ < $oldChart$$3_oldValue$$2$$ ? D.$DvtDCChartUtils$$.$DIR_DOWN$ : D.$DvtDCChartUtils$$.$DIR_NOCHANGE$
 };
 D.$DvtDCChartUtils$$.$compareGroups$ = function $$DvtDCChartUtils$$$$compareGroups$$($oldList$$1$$, $newList$$1$$) {
-  var $updates$$ = [], $inserts$$ = [], $deletes$$ = [], $i$$488_oldLen$$ = $oldList$$1$$.length;
+  var $updates$$ = [], $inserts$$ = [], $deletes$$ = [], $i$$484_oldLen$$ = $oldList$$1$$.length;
   $newList$$1$$ = $newList$$1$$.slice(0);
   if($oldList$$1$$) {
-    for(var $oldIndex$$3$$ = 0;$oldIndex$$3$$ < $i$$488_oldLen$$;$oldIndex$$3$$++) {
+    for(var $oldIndex$$3$$ = 0;$oldIndex$$3$$ < $i$$484_oldLen$$;$oldIndex$$3$$++) {
       for(var $oldItem$$1$$ = $oldList$$1$$[$oldIndex$$3$$], $bMatchFound$$1$$ = D.$JSCompiler_alias_FALSE$$, $newIndex$$6$$ = 0;$newIndex$$6$$ < $newList$$1$$.length;$newIndex$$6$$++) {
         if($oldItem$$1$$ === $newList$$1$$[$newIndex$$6$$]) {
           $newList$$1$$.splice($newIndex$$6$$, 1);
@@ -1344,59 +1344,59 @@ D.$DvtDCChartUtils$$.$compareGroups$ = function $$DvtDCChartUtils$$$$compareGrou
       $bMatchFound$$1$$ || $deletes$$.push($oldItem$$1$$)
     }
   }
-  for($i$$488_oldLen$$ = 0;$i$$488_oldLen$$ < $newList$$1$$.length;$i$$488_oldLen$$++) {
-    $newList$$1$$[$i$$488_oldLen$$] && $inserts$$.push($newList$$1$$[$i$$488_oldLen$$])
+  for($i$$484_oldLen$$ = 0;$i$$484_oldLen$$ < $newList$$1$$.length;$i$$484_oldLen$$++) {
+    $newList$$1$$[$i$$484_oldLen$$] && $inserts$$.push($newList$$1$$[$i$$484_oldLen$$])
   }
   return[$updates$$, $inserts$$, $deletes$$]
 };
-D.$DvtDCChartUtils$$.$drawDirectionPointer$ = function $$DvtDCChartUtils$$$$drawDirectionPointer$$($context$$546_ret$$52$$, $bDown$$1_ptrCmds$$, $bHoriz$$4$$, $fc$$9$$) {
-  $bDown$$1_ptrCmds$$ = $bHoriz$$4$$ ? (D.$DvtAgent$$.$isRightToLeft$($context$$546_ret$$52$$) ? !$bDown$$1_ptrCmds$$ : $bDown$$1_ptrCmds$$) ? "M3.5,-5L3.5,5L-3.5,0L3.5,-5" : "M-3.5,-5L-3.5,5L3.5,0L-3.5,-5" : $bDown$$1_ptrCmds$$ ? "M-5,-3.5L5,-3.5L0,3.5L-5,-3.5Z" : "M-5,3.5L5,3.5L0,-3.5L-5,3.5Z";
-  $context$$546_ret$$52$$ = new D.$DvtPath$$($context$$546_ret$$52$$, $bDown$$1_ptrCmds$$);
-  $context$$546_ret$$52$$.$setSolidFill$($fc$$9$$);
-  return $context$$546_ret$$52$$
+D.$DvtDCChartUtils$$.$drawDirectionPointer$ = function $$DvtDCChartUtils$$$$drawDirectionPointer$$($context$$540_ret$$52$$, $bDown$$1_ptrCmds$$, $bHoriz$$4$$, $fc$$9$$) {
+  $bDown$$1_ptrCmds$$ = $bHoriz$$4$$ ? (D.$DvtAgent$$.$isRightToLeft$($context$$540_ret$$52$$) ? !$bDown$$1_ptrCmds$$ : $bDown$$1_ptrCmds$$) ? "M3.5,-5L3.5,5L-3.5,0L3.5,-5" : "M-3.5,-5L-3.5,5L3.5,0L-3.5,-5" : $bDown$$1_ptrCmds$$ ? "M-5,-3.5L5,-3.5L0,3.5L-5,-3.5Z" : "M-5,3.5L5,3.5L0,-3.5L-5,3.5Z";
+  $context$$540_ret$$52$$ = new D.$DvtPath$$($context$$540_ret$$52$$, $bDown$$1_ptrCmds$$);
+  $context$$540_ret$$52$$.$setSolidFill$($fc$$9$$);
+  return $context$$540_ret$$52$$
 };
 D.$DvtDCFunnelSlice$$ = function $$DvtDCFunnelSlice$$$($peer$$7$$, $duration$$74$$) {
   this.Init($peer$$7$$, $duration$$74$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtDCFunnelSlice$$, D.$DvtDCChartAbstract$$, "DvtDCFunnelSlice");
 D.$DvtDCFunnelSlice$$.prototype.$animateUpdate$ = function $$DvtDCFunnelSlice$$$$$animateUpdate$$($handler$$33$$, $oldDC$$3$$) {
-  var $obj$$258$$ = this.$_shape$, $nodePlayable$$10_startState$$4$$ = $oldDC$$3$$.$_shape$.$getAnimationParams$(), $endState$$10$$ = $obj$$258$$.$getAnimationParams$();
-  D.$DvtArrayUtils$$.$equals$($nodePlayable$$10_startState$$4$$, $endState$$10$$) || ($obj$$258$$.$setAnimationParams$($nodePlayable$$10_startState$$4$$), $nodePlayable$$10_startState$$4$$ = new D.$DvtCustomAnimation$$($obj$$258$$.$_context$, this, this.$_duration$), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$10_startState$$4$$.$_animator$, "typeNumberArray", $obj$$258$$, $obj$$258$$.$getAnimationParams$, $obj$$258$$.$setAnimationParams$, $endState$$10$$), this.$_indicator$ && $nodePlayable$$10_startState$$4$$.$setOnEnd$(this.$_onEndAnimation$, 
+  var $obj$$259$$ = this.$_shape$, $nodePlayable$$10_startState$$4$$ = $oldDC$$3$$.$_shape$.$getAnimationParams$(), $endState$$10$$ = $obj$$259$$.$getAnimationParams$();
+  D.$DvtArrayUtils$$.$equals$($nodePlayable$$10_startState$$4$$, $endState$$10$$) || ($obj$$259$$.$setAnimationParams$($nodePlayable$$10_startState$$4$$), $nodePlayable$$10_startState$$4$$ = new D.$DvtCustomAnimation$$($obj$$259$$.$_context$, this, this.$_duration$), (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$10_startState$$4$$.$_animator$, "typeNumberArray", $obj$$259$$, $obj$$259$$.$getAnimationParams$, $obj$$259$$.$setAnimationParams$, $endState$$10$$), this.$_indicator$ && $nodePlayable$$10_startState$$4$$.$setOnEnd$(this.$_onEndAnimation$, 
   this), $handler$$33$$.add($nodePlayable$$10_startState$$4$$, 0))
 };
 D.$DvtDCFunnelSlice$$.prototype.$animateInsert$ = function $$DvtDCFunnelSlice$$$$$animateInsert$$($handler$$34$$) {
-  var $obj$$259$$ = this.$_shape$, $endState$$11$$ = $obj$$259$$.$getAnimationParams$(), $nodePlayable$$11_startState$$5$$ = $endState$$11$$.slice(0);
+  var $obj$$260$$ = this.$_shape$, $endState$$11$$ = $obj$$260$$.$getAnimationParams$(), $nodePlayable$$11_startState$$5$$ = $endState$$11$$.slice(0);
   $nodePlayable$$11_startState$$5$$[0] += $nodePlayable$$11_startState$$5$$[1] / 2;
   $nodePlayable$$11_startState$$5$$[1] = 0;
   $nodePlayable$$11_startState$$5$$[3] = 0;
-  $obj$$259$$.$setAnimationParams$($nodePlayable$$11_startState$$5$$);
-  $nodePlayable$$11_startState$$5$$ = new D.$DvtCustomAnimation$$($obj$$259$$.$_context$, this, this.$_duration$);
-  (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$11_startState$$5$$.$_animator$, "typeNumberArray", $obj$$259$$, $obj$$259$$.$getAnimationParams$, $obj$$259$$.$setAnimationParams$, $endState$$11$$);
+  $obj$$260$$.$setAnimationParams$($nodePlayable$$11_startState$$5$$);
+  $nodePlayable$$11_startState$$5$$ = new D.$DvtCustomAnimation$$($obj$$260$$.$_context$, this, this.$_duration$);
+  (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$11_startState$$5$$.$_animator$, "typeNumberArray", $obj$$260$$, $obj$$260$$.$getAnimationParams$, $obj$$260$$.$setAnimationParams$, $endState$$11$$);
   $handler$$34$$.add($nodePlayable$$11_startState$$5$$, 0)
 };
 D.$DvtDCFunnelSlice$$.prototype.$animateDelete$ = function $$DvtDCFunnelSlice$$$$$animateDelete$$($handler$$35$$, $delContainer$$2$$) {
-  var $obj$$260$$ = this.$_shape$;
-  $delContainer$$2$$.$addChild$($obj$$260$$);
-  var $nodePlayable$$12_startState$$6$$ = $obj$$260$$.$getAnimationParams$(), $endState$$12$$ = $nodePlayable$$12_startState$$6$$.slice(0);
+  var $obj$$261$$ = this.$_shape$;
+  $delContainer$$2$$.$addChild$($obj$$261$$);
+  var $nodePlayable$$12_startState$$6$$ = $obj$$261$$.$getAnimationParams$(), $endState$$12$$ = $nodePlayable$$12_startState$$6$$.slice(0);
   $endState$$12$$[0] += $nodePlayable$$12_startState$$6$$[1] / 2;
   $endState$$12$$[1] = 0;
   $endState$$12$$[3] = 0;
-  $nodePlayable$$12_startState$$6$$ = new D.$DvtCustomAnimation$$($obj$$260$$.$_context$, this, this.$_duration$);
-  (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$12_startState$$6$$.$_animator$, "typeNumberArray", $obj$$260$$, $obj$$260$$.$getAnimationParams$, $obj$$260$$.$setAnimationParams$, $endState$$12$$);
+  $nodePlayable$$12_startState$$6$$ = new D.$DvtCustomAnimation$$($obj$$261$$.$_context$, this, this.$_duration$);
+  (0,D.$JSCompiler_StaticMethods_addProp$$)($nodePlayable$$12_startState$$6$$.$_animator$, "typeNumberArray", $obj$$261$$, $obj$$261$$.$getAnimationParams$, $obj$$261$$.$setAnimationParams$, $endState$$12$$);
   $handler$$35$$.add($nodePlayable$$12_startState$$6$$, 0)
 };
 D.$DvtChart$$ = (0,D.$JSCompiler_emptyFn$$)();
 (0,D.$goog$exportSymbol$$)("DvtChart", D.$DvtChart$$);
 D.$DvtObj$$.$createSubclass$(D.$DvtChart$$, D.$DvtBaseComponent$$, "DvtChart");
-D.$DvtChart$newInstance$$ = function $$DvtChart$newInstance$$$($context$$299$$, $callback$$50$$, $callbackObj$$26$$) {
-  return new D.$DvtChartImpl$$($context$$299$$, $callback$$50$$, $callbackObj$$26$$)
+D.$DvtChart$newInstance$$ = function $$DvtChart$newInstance$$$($context$$293$$, $callback$$50$$, $callbackObj$$26$$) {
+  return new D.$DvtChartImpl$$($context$$293$$, $callback$$50$$, $callbackObj$$26$$)
 };
 D.$DvtChart$$.newInstance = D.$DvtChart$newInstance$$;
 D.$DvtChart$$.getDefaults = function $$DvtChart$$$getDefaults$($skin$$8$$) {
   return(0,D.$JSCompiler_StaticMethods_getDefaults$$)(new D.$DvtChartDefaults$$, $skin$$8$$)
 };
-D.$DvtChart$$.prototype.Init = function $$DvtChart$$$$Init$($context$$300$$, $callback$$51$$, $callbackObj$$27$$) {
-  D.$DvtChart$$.$superclass$.Init.call(this, $context$$300$$, $callback$$51$$, $callbackObj$$27$$);
+D.$DvtChart$$.prototype.Init = function $$DvtChart$$$$Init$($context$$294$$, $callback$$51$$, $callbackObj$$27$$) {
+  D.$DvtChart$$.$superclass$.Init.call(this, $context$$294$$, $callback$$51$$, $callbackObj$$27$$);
   this.$Bundle$ = new D.$DvtChartBundle$$;
   this.$Defaults$ = new D.$DvtChartDefaults$$;
   this.$EventManager$ = new D.$DvtChartEventManager$$(this);
@@ -1405,33 +1405,32 @@ D.$DvtChart$$.prototype.Init = function $$DvtChart$$$$Init$($context$$300$$, $ca
   this.setId("chart1000" + window.Math.floor(1E9 * window.Math.random()));
   this.$_animation$ = D.$JSCompiler_alias_NULL$$
 };
-D.$DvtChart$$.prototype.$SetOptions$ = function $$DvtChart$$$$$SetOptions$$($handler$$inline_2130_options$$17$$) {
-  $handler$$inline_2130_options$$17$$ ? (this.$Options$ = this.$Defaults$.$calcOptions$($handler$$inline_2130_options$$17$$), "horizontalBar" == this.$Options$.type && (this.$Options$.type = "bar", this.$Options$.orientation = "horizontal"), D.$DvtChartDataUtils$$.$processDataObject$(this), "dim" == D.$DvtChartEventUtils$$.$getHoverBehavior$(this) ? ($handler$$inline_2130_options$$17$$ = new D.$DvtChartSeriesRolloverHandler$$(this, this.$EventManager$), this.$EventManager$.$_seriesRolloverHandler$ = 
-  $handler$$inline_2130_options$$17$$) : this.$EventManager$.$_seriesRolloverHandler$ = D.$JSCompiler_alias_NULL$$, D.$DvtAgent$$.$isEnvironmentBrowser$() || (this.$Options$.animationOnDisplay = "none", this.$Options$.animationOnDataChange = "none")) : this.$Options$ || (this.$Options$ = (0,D.$JSCompiler_StaticMethods_GetDefaults$$)(this))
+D.$DvtChart$$.prototype.$SetOptions$ = function $$DvtChart$$$$$SetOptions$$($handler$$inline_2077_options$$17$$) {
+  $handler$$inline_2077_options$$17$$ ? (this.$Options$ = this.$Defaults$.$calcOptions$($handler$$inline_2077_options$$17$$), "horizontalBar" == this.$Options$.type && (this.$Options$.type = "bar", this.$Options$.orientation = "horizontal"), D.$DvtChartDataUtils$$.$processDataObject$(this), "dim" == D.$DvtChartEventUtils$$.$getHoverBehavior$(this) ? ($handler$$inline_2077_options$$17$$ = new D.$DvtChartSeriesRolloverHandler$$(this, this.$EventManager$), this.$EventManager$.$_seriesRolloverHandler$ = 
+  $handler$$inline_2077_options$$17$$) : this.$EventManager$.$_seriesRolloverHandler$ = D.$JSCompiler_alias_NULL$$, D.$DvtAgent$$.$isEnvironmentBrowser$() || (this.$Options$.animationOnDisplay = "none", this.$Options$.animationOnDataChange = "none")) : this.$Options$ || (this.$Options$ = (0,D.$JSCompiler_StaticMethods_GetDefaults$$)(this))
 };
-D.$DvtChart$$.prototype.$render$ = function $$DvtChart$$$$$render$$($options$$18_paSpace$$, $container$$14_width$$39$$, $animationDuration_height$$33$$) {
-  var $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ = D.$DvtChartStyleUtils$$.$getAnimationOnDataChange$(this), $oldChart$$ = D.$JSCompiler_alias_NULL$$;
-  this.$Options$ && "none" !== $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ && ($oldChart$$ = {type:this.$getType$(), options:this.$Options$, $peers$:this.$getObjects$().slice(0), $getOptions$:(0,D.$JSCompiler_get$$)("options"), $pieChart$:this.$pieChart$});
+D.$DvtChart$$.prototype.$render$ = function $$DvtChart$$$$$render$$($options$$18_paSpace$$, $container$$14_width$$38$$, $animationDuration_height$$31$$) {
+  var $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ = D.$DvtChartStyleUtils$$.$getAnimationOnDataChange$(this), $oldChart$$ = D.$JSCompiler_alias_NULL$$;
+  this.$Options$ && "none" !== $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ && ($oldChart$$ = {type:this.$getType$(), options:this.$Options$, $peers$:this.$getObjects$().slice(0), $getOptions$:(0,D.$JSCompiler_get$$)("options"), $pieChart$:this.$pieChart$});
   this.$__cleanUp$();
   this.$SetOptions$($options$$18_paSpace$$);
-  !(0,window.isNaN)($container$$14_width$$39$$) && !(0,window.isNaN)($animationDuration_height$$33$$) && (this.$Width$ = $container$$14_width$$39$$, this.$Height$ = $animationDuration_height$$33$$);
-  D.$DvtAgent$$.$isTouchDevice$() && this.$EventManager$.$setTouchRegionBounds$(new D.$DvtRectangle$$(0, 0, (0,window.parseInt)($container$$14_width$$39$$), (0,window.parseInt)($animationDuration_height$$33$$)));
-  $container$$14_width$$39$$ = new D.$DvtContainer$$(this.$_context$);
-  this.$addChild$($container$$14_width$$39$$);
-  D.$DvtChartRenderer$$.$render$(this, $container$$14_width$$39$$, new D.$DvtRectangle$$(0, 0, this.$Width$, this.$Height$));
-  this.$_animation$ && (this.$_animationStopped$ = D.$JSCompiler_alias_TRUE$$, this.$_animation$.stop());
+  !(0,window.isNaN)($container$$14_width$$38$$) && !(0,window.isNaN)($animationDuration_height$$31$$) && (this.$Width$ = $container$$14_width$$38$$, this.$Height$ = $animationDuration_height$$31$$);
+  $container$$14_width$$38$$ = new D.$DvtContainer$$(this.$_context$);
+  this.$addChild$($container$$14_width$$38$$);
+  D.$DvtChartRenderer$$.$render$(this, $container$$14_width$$38$$, new D.$DvtRectangle$$(0, 0, this.$Width$, this.$Height$));
+  this.$_animation$ && this.$_animation$.stop();
   var $animationOnDisplay$$ = D.$DvtChartStyleUtils$$.$getAnimationOnDisplay$(this);
-  $animationDuration_height$$33$$ = D.$DvtChartStyleUtils$$.$getAnimationDuration$(this);
+  $animationDuration_height$$31$$ = D.$DvtChartStyleUtils$$.$getAnimationDuration$(this);
   var $bounds$$34$$ = new D.$DvtRectangle$$(0, 0, this.$Width$, this.$Height$), $bBlackBoxUpdate$$1$$ = D.$JSCompiler_alias_FALSE$$;
-  this.$_container$ ? "none" != $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ && $options$$18_paSpace$$ && ((this.$_animation$ = D.$DvtBlackBoxAnimationHandler$$.$getCombinedAnimation$(this.$_context$, $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$, this.$_container$, $container$$14_width$$39$$, $bounds$$34$$, $animationDuration_height$$33$$)) ? $bBlackBoxUpdate$$1$$ = D.$JSCompiler_alias_TRUE$$ : ($options$$18_paSpace$$ = this.$_plotAreaSpace$, this.$_delContainer$ = 
-  D.$DvtPlotAreaRenderer$$.$createClippedGroup$(this, this.$_container$, new D.$DvtRectangle$$(0, 0, $options$$18_paSpace$$.$w$, $options$$18_paSpace$$.$h$)), this.$_animation$ = D.$DvtAnimOnDC$$.$createAnimation$($oldChart$$, this, $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$, $animationDuration_height$$33$$, this.$_delContainer$), 0 < this.$_delContainer$.$getNumChildren$() && (D.$DvtChartTypeUtils$$.$isFunnel$(this) ? this.$_funnelContainer$.$addChild$(this.$_delContainer$) : 
-  this.$getPlotArea$().$addChild$(this.$_delContainer$)))) : "none" !== $animationOnDisplay$$ && (this.$_animation$ = D.$DvtBlackBoxAnimationHandler$$.$getInAnimation$(this.$_context$, $animationOnDisplay$$, $container$$14_width$$39$$, $bounds$$34$$, $animationDuration_height$$33$$), this.$_animation$ || (this.$_animation$ = D.$DvtAnimOnDisplay$$.$createAnimation$(this, $animationOnDisplay$$, $animationDuration_height$$33$$)));
+  this.$_container$ ? "none" != $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ && $options$$18_paSpace$$ && ((this.$_animation$ = D.$DvtBlackBoxAnimationHandler$$.$getCombinedAnimation$(this.$_context$, $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$, this.$_container$, $container$$14_width$$38$$, $bounds$$34$$, $animationDuration_height$$31$$)) ? $bBlackBoxUpdate$$1$$ = D.$JSCompiler_alias_TRUE$$ : ($options$$18_paSpace$$ = this.$_plotAreaSpace$, this.$_delContainer$ = 
+  D.$DvtPlotAreaRenderer$$.$createClippedGroup$(this, this.$_container$, new D.$DvtRectangle$$(0, 0, $options$$18_paSpace$$.$w$, $options$$18_paSpace$$.$h$)), this.$_animation$ = D.$DvtAnimOnDC$$.$createAnimation$($oldChart$$, this, $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$, $animationDuration_height$$31$$, this.$_delContainer$), 0 < this.$_delContainer$.$getNumChildren$() && (D.$DvtChartTypeUtils$$.$isFunnel$(this) ? this.$_funnelContainer$.$addChild$(this.$_delContainer$) : 
+  this.$getPlotArea$().$addChild$(this.$_delContainer$)))) : "none" !== $animationOnDisplay$$ && (this.$_animation$ = D.$DvtBlackBoxAnimationHandler$$.$getInAnimation$(this.$_context$, $animationOnDisplay$$, $container$$14_width$$38$$, $bounds$$34$$, $animationDuration_height$$31$$), this.$_animation$ || (this.$_animation$ = D.$DvtAnimOnDisplay$$.$createAnimation$(this, $animationOnDisplay$$, $animationDuration_height$$31$$)));
   this.$_animation$ && (this.$_animation$.play(), this.$_animation$.$setOnEnd$(this.$_onAnimationEnd$, this));
   $bBlackBoxUpdate$$1$$ ? this.$_oldContainer$ = this.$_container$ : this.$_container$ && (this.removeChild(this.$_container$), this.$_container$.$destroy$(), this.$_container$ = D.$JSCompiler_alias_NULL$$);
-  this.$_container$ = $container$$14_width$$39$$;
+  this.$_container$ = $container$$14_width$$38$$;
   (D.$DvtChartTypeUtils$$.$isPie$(this) || D.$DvtChartTypeUtils$$.$isFunnel$(this) || D.$DvtChartTypeUtils$$.$isPolar$(this) ? 0 : "on" === this.$Options$.dataCursor || "auto" === this.$Options$.dataCursor && D.$DvtAgent$$.$isTouchDevice$() && (D.$DvtChartTypeUtils$$.$isLine$(this) || D.$DvtChartTypeUtils$$.$isArea$(this))) ? (this.$DataCursor$ = D.$DvtChartTypeUtils$$.$isHorizontal$(this) ? new D.$DvtDataCursor$$(this.$_context$, D.$JSCompiler_alias_TRUE$$) : new D.$DvtDataCursor$$(this.$_context$, 
-  D.$JSCompiler_alias_FALSE$$), $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ = this.$Options$.dataCursorBehavior, "auto" == $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ && ($animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ = D.$DvtChartTypeUtils$$.$isLine$(this) || D.$DvtChartTypeUtils$$.$isArea$(this) ? "smooth" : "snap"), "snap" == $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ ? this.$DataCursor$.$_behavior$ = "SNAP" : "smooth" == 
-  $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ && (this.$DataCursor$.$_behavior$ = "SMOOTH"), this.$addChild$(this.$DataCursor$), $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$ = new D.$DvtChartDCEH$$(this), this.$EventManager$.$_dataCursorHandler$ = $animationOnDataChange_dataCursorBehavior_handler$$inline_2142$$) : this.$EventManager$.$_dataCursorHandler$ = D.$JSCompiler_alias_NULL$$
+  D.$JSCompiler_alias_FALSE$$), $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ = this.$Options$.dataCursorBehavior, "auto" == $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ && ($animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ = D.$DvtChartTypeUtils$$.$isLine$(this) || D.$DvtChartTypeUtils$$.$isArea$(this) ? "smooth" : "snap"), "snap" == $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ ? this.$DataCursor$.$_behavior$ = "SNAP" : "smooth" == 
+  $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ && (this.$DataCursor$.$_behavior$ = "SMOOTH"), this.$addChild$(this.$DataCursor$), $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$ = new D.$DvtChartDCEH$$(this), this.$EventManager$.$_dataCursorHandler$ = $animationOnDataChange_dataCursorBehavior_handler$$inline_2089$$) : this.$EventManager$.$_dataCursorHandler$ = D.$JSCompiler_alias_NULL$$
 };
 D.$DvtChart$$.prototype.render = D.$DvtChart$$.prototype.$render$;
 D.$JSCompiler_prototypeAlias$$ = D.$DvtChart$$.prototype;
@@ -1441,16 +1440,14 @@ D.$JSCompiler_prototypeAlias$$.$destroy$ = function $$JSCompiler_prototypeAlias$
 };
 D.$JSCompiler_prototypeAlias$$.$__cleanUp$ = function $$JSCompiler_prototypeAlias$$$$__cleanUp$$() {
   this.$DataCursor$ && (this.removeChild(this.$DataCursor$), this.$DataCursor$ = D.$JSCompiler_alias_NULL$$);
-  var $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2151$$ = this.$EventManager$;
-  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2151$$.$hideTooltip$();
-  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2151$$.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2151$$.$_dataCursorHandler$)
+  var $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2098$$ = this.$EventManager$;
+  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2098$$.$hideTooltip$();
+  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2098$$.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_2098$$.$_dataCursorHandler$)
 };
 D.$JSCompiler_prototypeAlias$$.$_onAnimationEnd$ = function $$JSCompiler_prototypeAlias$$$$_onAnimationEnd$$() {
   this.$_oldContainer$ && (this.removeChild(this.$_oldContainer$), this.$_oldContainer$.$destroy$(), this.$_oldContainer$ = D.$JSCompiler_alias_NULL$$);
   this.$_delContainer$ && 0 < this.$_delContainer$.$getNumChildren$() && (D.$DvtChartTypeUtils$$.$isFunnel$(this) ? this.$_funnelContainer$.removeChild(this.$_delContainer$) : this.$getPlotArea$().removeChild(this.$_delContainer$));
-  this.$_delContainer$ = D.$JSCompiler_alias_NULL$$;
-  this.$_animationStopped$ = D.$JSCompiler_alias_FALSE$$;
-  this.$_animation$ = D.$JSCompiler_alias_NULL$$
+  this.$_animation$ = this.$_delContainer$ = D.$JSCompiler_alias_NULL$$
 };
 D.$JSCompiler_prototypeAlias$$.$CreateKeyboardHandler$ = function $$JSCompiler_prototypeAlias$$$$CreateKeyboardHandler$$($manager$$4$$) {
   return new D.$DvtChartKeyboardHandler$$($manager$$4$$, this)
@@ -1550,28 +1547,28 @@ D.$DvtChartViewportChangeEvent$$.prototype.$getYMin$ = (0,D.$JSCompiler_get$$)("
 D.$DvtChartViewportChangeEvent$$.prototype.getYMin = D.$DvtChartViewportChangeEvent$$.prototype.$getYMin$;
 D.$DvtChartViewportChangeEvent$$.prototype.$getYMax$ = (0,D.$JSCompiler_get$$)("$_yMax$");
 D.$DvtChartViewportChangeEvent$$.prototype.getYMax = D.$DvtChartViewportChangeEvent$$.prototype.$getYMax$;
-D.$DvtChartImpl$$ = function $$DvtChartImpl$$$($context$$553$$, $callback$$110$$, $callbackObj$$84$$) {
-  this.Init($context$$553$$, $callback$$110$$, $callbackObj$$84$$)
+D.$DvtChartImpl$$ = function $$DvtChartImpl$$$($context$$547$$, $callback$$110$$, $callbackObj$$84$$) {
+  this.Init($context$$547$$, $callback$$110$$, $callbackObj$$84$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtChartImpl$$, D.$DvtChart$$, "DvtChartImpl");
-D.$DvtChartImpl$$.prototype.Init = function $$DvtChartImpl$$$$Init$($context$$554$$, $callback$$111$$, $callbackObj$$85$$) {
-  D.$DvtChartImpl$$.$superclass$.Init.call(this, $context$$554$$, $callback$$111$$, $callbackObj$$85$$);
+D.$DvtChartImpl$$.prototype.Init = function $$DvtChartImpl$$$$Init$($context$$548$$, $callback$$111$$, $callbackObj$$85$$) {
+  D.$DvtChartImpl$$.$superclass$.Init.call(this, $context$$548$$, $callback$$111$$, $callbackObj$$85$$);
   this.$pieChart$ = this.$dragButtons$ = this.$yScrollbar$ = this.$xScrollbar$ = this.$overview$ = this.$y2Axis$ = this.$yAxis$ = this.$xAxis$ = this.$legend$ = D.$JSCompiler_alias_NULL$$;
   this.$_peers$ = [];
   this.$_seriesStyleArray$ = [];
   this.$_numSelectedObjsInFront$ = this.$_numFrontObjs$ = 0
 };
-D.$DvtChartImpl$$.prototype.$SetOptions$ = function $$DvtChartImpl$$$$$SetOptions$$($options$$92_popupBehaviors_selectionMode$$2$$) {
-  D.$DvtChartImpl$$.$superclass$.$SetOptions$.call(this, $options$$92_popupBehaviors_selectionMode$$2$$);
-  $options$$92_popupBehaviors_selectionMode$$2$$ = this.$Options$.selection;
-  this.$_selectionHandler$ = "single" == $options$$92_popupBehaviors_selectionMode$$2$$ ? new D.$DvtSelectionHandler$$("s") : "multiple" == $options$$92_popupBehaviors_selectionMode$$2$$ ? new D.$DvtSelectionHandler$$("m") : D.$JSCompiler_alias_NULL$$;
+D.$DvtChartImpl$$.prototype.$SetOptions$ = function $$DvtChartImpl$$$$$SetOptions$$($options$$93_popupBehaviors_selectionMode$$2$$) {
+  D.$DvtChartImpl$$.$superclass$.$SetOptions$.call(this, $options$$93_popupBehaviors_selectionMode$$2$$);
+  $options$$93_popupBehaviors_selectionMode$$2$$ = this.$Options$.selection;
+  this.$_selectionHandler$ = "single" == $options$$93_popupBehaviors_selectionMode$$2$$ ? new D.$DvtSelectionHandler$$("s") : "multiple" == $options$$93_popupBehaviors_selectionMode$$2$$ ? new D.$DvtSelectionHandler$$("m") : D.$JSCompiler_alias_NULL$$;
   this.$EventManager$.$setSelectionHandler$(this.$_selectionHandler$);
-  if($options$$92_popupBehaviors_selectionMode$$2$$ = this.$Options$._spb) {
+  if($options$$93_popupBehaviors_selectionMode$$2$$ = this.$Options$._spb) {
     this.$_popupBehaviors$ = {};
-    for(var $stampId$$ in $options$$92_popupBehaviors_selectionMode$$2$$) {
-      for(var $popupBehaviorArray$$ = $options$$92_popupBehaviors_selectionMode$$2$$[$stampId$$], $i$$493$$ = 0;$i$$493$$ < $popupBehaviorArray$$.length;$i$$493$$++) {
+    for(var $stampId$$ in $options$$93_popupBehaviors_selectionMode$$2$$) {
+      for(var $popupBehaviorArray$$ = $options$$93_popupBehaviors_selectionMode$$2$$[$stampId$$], $i$$489$$ = 0;$i$$489$$ < $popupBehaviorArray$$.length;$i$$489$$++) {
         this.$_popupBehaviors$[$stampId$$] || (this.$_popupBehaviors$[$stampId$$] = []);
-        var $popupBehavior$$ = $popupBehaviorArray$$[$i$$493$$];
+        var $popupBehavior$$ = $popupBehaviorArray$$[$i$$489$$];
         this.$_popupBehaviors$[$stampId$$].push(new D.$DvtShowPopupBehavior$$($popupBehavior$$.popupId, $popupBehavior$$.triggerType, $popupBehavior$$.alignId, $popupBehavior$$.align))
       }
     }
@@ -1589,53 +1586,53 @@ D.$DvtChart$$.prototype.$highlight$ = function $$DvtChart$$$$$highlight$$($categ
 };
 D.$DvtChart$$.prototype.highlight = D.$DvtChart$$.prototype.$highlight$;
 D.$DvtChartImpl$$.prototype.$getEventManager$ = (0,D.$JSCompiler_get$$)("$EventManager$");
-D.$DvtChartImpl$$.prototype.$processEvent$ = function $$DvtChartImpl$$$$$processEvent$$($event$$410$$, $source$$14$$) {
-  var $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ = $event$$410$$.$getType$();
-  if($actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$ || $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_SHOW$) {
-    this.filter($event$$410$$.$_category$, $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$ ? "out" : "in")
+D.$DvtChartImpl$$.prototype.$processEvent$ = function $$DvtChartImpl$$$$$processEvent$$($event$$401$$, $source$$14$$) {
+  var $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ = $event$$401$$.$getType$();
+  if($actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$ || $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_SHOW$) {
+    this.filter($event$$401$$.$_category$, $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ == D.$DvtCategoryHideShowEvent$$.$TYPE_HIDE$ ? "out" : "in")
   }else {
-    if("categoryRollOver" == $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ || "categoryRollOut" == $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$) {
-      "dim" == D.$DvtChartEventUtils$$.$getHoverBehavior$(this) && ((0,D.$DvtCategoryRolloverHandler$processEvent$$)($event$$410$$, this.$getObjects$()), this.$_distributeToChildren$($event$$410$$, $source$$14$$))
+    if("categoryRollOver" == $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ || "categoryRollOut" == $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$) {
+      "dim" == D.$DvtChartEventUtils$$.$getHoverBehavior$(this) && ((0,D.$DvtCategoryRolloverHandler$processEvent$$)($event$$401$$, this.$getObjects$()), this.$_distributeToChildren$($event$$401$$, $source$$14$$))
     }else {
-      if("selection" == $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$) {
-        $event$$410$$ = this.$_processSelectionEvent$($event$$410$$)
+      if("selection" == $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$) {
+        $event$$401$$ = this.$_processSelectionEvent$($event$$401$$)
       }else {
-        if("dvtPanZoom" == $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$) {
-          var $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$ = $event$$410$$, $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ = $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$getSubtype$(), $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ = "dvtPanEndEvent" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ || 
-          "dvtZoomEvent" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ || "dvtPinchEndEvent" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$, $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ = "dvtPanStartEvent" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ || 
-          "dvtPinchStartEvent" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$;
-          D.$DvtAgent$$.$isTouchDevice$() && ($actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ && this.$_panZoomTarget$ != this.$_plotArea$) && (this.$_container$.removeChild(this.$_panZoomTarget$), this.$_panZoomTarget$ = this.$_plotArea$);
-          D.$DvtChartEventUtils$$.$isLiveScroll$(this) ? ($bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$ = D.$DvtChartEventUtils$$.$getAxisBoundsByDelta$(this, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dxMin$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dxMax$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dyMin$, 
-          $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dyMax$), $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ || (this.$setViewport$($bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$, $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$), (0,D.$JSCompiler_StaticMethods_setScrollbarViewport$$)(this, 
-          $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$))) : ($bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$ = D.$DvtChartEventUtils$$.$getAxisBoundsByDelta$(this, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dxMinTotal$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dxMaxTotal$, 
-          $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dyMinTotal$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$dyMaxTotal$), (0,D.$JSCompiler_StaticMethods_setScrollbarViewport$$)(this, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$), $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ && this.$setViewport$($bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$, 
-          $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$));
-          $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ ? (D.$DvtChartRenderer$$.$_setEventHandlers$(this), this.$_panZoomTarget$ != this.$_plotArea$ && (this.$_container$.removeChild(this.$_panZoomTarget$), this.$_panZoomTarget$ = D.$JSCompiler_alias_NULL$$), $event$$410$$ = D.$DvtChartTypeUtils$$.$isBLAC$(this) ? new D.$DvtChartViewportChangeEvent$$($bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$xMin$, 
-          $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$xMax$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$startGroup$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$endGroup$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$) : new D.$DvtChartViewportChangeEvent$$($bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$xMin$, 
-          $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$xMax$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$yMin$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.$yMax$)) : $event$$410$$ = D.$JSCompiler_alias_NULL$$
+        if("dvtPanZoom" == $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$) {
+          var $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$ = $event$$401$$, $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ = $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$getSubtype$(), $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ = "dvtPanEndEvent" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ || 
+          "dvtZoomEvent" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ || "dvtPinchEndEvent" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$, $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ = "dvtPanStartEvent" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ || 
+          "dvtPinchStartEvent" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$;
+          D.$DvtAgent$$.$isTouchDevice$() && ($actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ && this.$_panZoomTarget$ != this.$_plotArea$) && (this.$_container$.removeChild(this.$_panZoomTarget$), this.$_panZoomTarget$ = this.$_plotArea$);
+          D.$DvtChartEventUtils$$.$isLiveScroll$(this) ? ($bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$ = D.$DvtChartEventUtils$$.$getAxisBoundsByDelta$(this, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dxMin$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dxMax$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dyMin$, 
+          $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dyMax$), $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ || (this.$setViewport$($bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$, $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$), (0,D.$JSCompiler_StaticMethods_setScrollbarViewport$$)(this, 
+          $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$))) : ($bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$ = D.$DvtChartEventUtils$$.$getAxisBoundsByDelta$(this, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dxMinTotal$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dxMaxTotal$, 
+          $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dyMinTotal$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$dyMaxTotal$), (0,D.$JSCompiler_StaticMethods_setScrollbarViewport$$)(this, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$), $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ && this.$setViewport$($bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$, 
+          $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$));
+          $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ ? (D.$DvtChartRenderer$$.$_setEventHandlers$(this), this.$_panZoomTarget$ != this.$_plotArea$ && (this.$_container$.removeChild(this.$_panZoomTarget$), this.$_panZoomTarget$ = D.$JSCompiler_alias_NULL$$), $event$$401$$ = D.$DvtChartTypeUtils$$.$isBLAC$(this) ? new D.$DvtChartViewportChangeEvent$$($bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$xMin$, 
+          $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$xMax$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$startGroup$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$endGroup$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$) : new D.$DvtChartViewportChangeEvent$$($bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$xMin$, 
+          $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$xMax$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$yMin$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.$yMax$)) : $event$$401$$ = D.$JSCompiler_alias_NULL$$
         }else {
-          if("dvtMarquee" == $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$) {
-            $event$$410$$ = (0,D.$JSCompiler_StaticMethods__processMarqueeEvent$$)(this, $event$$410$$)
+          if("dvtMarquee" == $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$) {
+            $event$$401$$ = (0,D.$JSCompiler_StaticMethods__processMarqueeEvent$$)(this, $event$$401$$)
           }else {
-            if("overview" == $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$) {
-              if($actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ = $event$$410$$.$getSubType$(), "dropCallback" != $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$) {
-                $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ = $event$$410$$.$getParamValue$("newStartTime");
-                $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$ = $event$$410$$.$getParamValue$("newEndTime");
-                $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ = "scrollTime" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ || "scrollEnd" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ || "rangeChange" == $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$;
-                if(D.$DvtChartEventUtils$$.$isLiveScroll$(this) || $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$) {
-                  $source$$14$$ == this.$yScrollbar$ ? this.$setViewport$({$yMin$:$actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$, $yMax$:$bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$}, $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$) : this.$setViewport$({$xMin$:$actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$, 
-                  $xMax$:$bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$}, $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$)
+            if("overview" == $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$) {
+              if($actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ = $event$$401$$.$getSubType$(), "dropCallback" != $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$) {
+                $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ = $event$$401$$.$getParamValue$("newStartTime");
+                $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$ = $event$$401$$.$getParamValue$("newEndTime");
+                $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ = "scrollTime" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ || "scrollEnd" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ || "rangeChange" == $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$;
+                if(D.$DvtChartEventUtils$$.$isLiveScroll$(this) || $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$) {
+                  $source$$14$$ == this.$yScrollbar$ ? this.$setViewport$({$yMin$:$actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$, $yMax$:$bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$}, $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$) : this.$setViewport$({$xMin$:$actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$, 
+                  $xMax$:$bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$}, $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$)
                 }
-                $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ ? $source$$14$$ == this.$yScrollbar$ ? $event$$410$$ = new D.$DvtChartViewportChangeEvent$$(D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$) : 
-                ($actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ = D.$DvtChartEventUtils$$.$getAxisStartEndGroup$(this.$xAxis$, $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$), $event$$410$$ = new D.$DvtChartViewportChangeEvent$$($actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$, 
-                $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$, $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$.$startGroup$, $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$.$endGroup$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$)) : $event$$410$$ = D.$JSCompiler_alias_NULL$$
+                $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ ? $source$$14$$ == this.$yScrollbar$ ? $event$$401$$ = new D.$DvtChartViewportChangeEvent$$(D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$) : 
+                ($actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ = D.$DvtChartEventUtils$$.$getAxisStartEndGroup$(this.$xAxis$, $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$), $event$$401$$ = new D.$DvtChartViewportChangeEvent$$($actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$, 
+                $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$, $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$.$startGroup$, $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$.$endGroup$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$)) : $event$$401$$ = D.$JSCompiler_alias_NULL$$
               }else {
-                $event$$410$$ = D.$JSCompiler_alias_VOID$$
+                $event$$401$$ = D.$JSCompiler_alias_VOID$$
               }
             }else {
-              "showPopup" == $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ ? ($actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ = $event$$410$$, "mouseHover" != $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$.triggerType && (this.$isSelectionSupported$() && 0 < this.$getSelectionHandler$().$_selection$.length) && ($bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$ = 
-              D.$DvtChartEventUtils$$.$processIds$(this, (0,D.$JSCompiler_StaticMethods_getSelectedIds$$)(this.$getSelectionHandler$())), $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ = new D.$DvtShowPopupEvent$$($actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$.$_showPopupBehavior$, $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$.$_launcherBounds$, $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$.$_launcherId$), 
-              (0,D.$JSCompiler_StaticMethods_addParam$$)($actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$, "clientRowKey", $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$)), $event$$410$$ = $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$) : $event$$410$$ instanceof D.$DvtComponentUIEvent$$ && ($event$$410$$ = (0,D.$JSCompiler_StaticMethods__processComponentUIEvent$$)(this, $event$$410$$, 
+              "showPopup" == $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ ? ($actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ = $event$$401$$, "mouseHover" != $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$.triggerType && (this.$isSelectionSupported$() && 0 < this.$getSelectionHandler$().$_selection$.length) && ($bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$ = 
+              D.$DvtChartEventUtils$$.$processIds$(this, (0,D.$JSCompiler_StaticMethods_getSelectedIds$$)(this.$getSelectionHandler$())), $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ = new D.$DvtShowPopupEvent$$($actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$.$_showPopupBehavior$, $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$.$_launcherBounds$, $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$.$_launcherId$), 
+              (0,D.$JSCompiler_StaticMethods_addParam$$)($actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$, "clientRowKey", $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$)), $event$$401$$ = $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$) : $event$$401$$ instanceof D.$DvtComponentUIEvent$$ && ($event$$401$$ = (0,D.$JSCompiler_StaticMethods__processComponentUIEvent$$)(this, $event$$401$$, 
               $source$$14$$))
             }
           }
@@ -1643,56 +1640,56 @@ D.$DvtChartImpl$$.prototype.$processEvent$ = function $$DvtChartImpl$$$$$process
       }
     }
   }
-  if($event$$410$$ instanceof D.$DvtChartSelectionEvent$$) {
-    var $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$ = this.$getOptions$(), $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ = $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.selectedItems, $newItems_removedSet$$ = D.$DvtChartDataUtils$$.$getCurrentSelection$(this);
-    $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$.selectedItems = $newItems_removedSet$$;
-    var $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ = $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ ? $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$ : [], $newItems_removedSet$$ = $newItems_removedSet$$ ? $newItems_removedSet$$ : [], $newIndex$$7_oldIndex$$4$$, $oldItemId_oldSet$$ = {};
-    for($newIndex$$7_oldIndex$$4$$ = 0;$newIndex$$7_oldIndex$$4$$ < $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$.length;$newIndex$$7_oldIndex$$4$$++) {
-      $oldItemId_oldSet$$[$actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$[$newIndex$$7_oldIndex$$4$$].id] = D.$JSCompiler_alias_TRUE$$
+  if($event$$401$$ instanceof D.$DvtChartSelectionEvent$$) {
+    var $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$ = this.$getOptions$(), $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ = $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.selectedItems, $newItems_removedSet$$ = D.$DvtChartDataUtils$$.$getCurrentSelection$(this);
+    $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$.selectedItems = $newItems_removedSet$$;
+    var $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ = $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ ? $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$ : [], $newItems_removedSet$$ = $newItems_removedSet$$ ? $newItems_removedSet$$ : [], $newIndex$$7_oldIndex$$4$$, $oldItemId_oldSet$$ = {};
+    for($newIndex$$7_oldIndex$$4$$ = 0;$newIndex$$7_oldIndex$$4$$ < $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$.length;$newIndex$$7_oldIndex$$4$$++) {
+      $oldItemId_oldSet$$[$actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$[$newIndex$$7_oldIndex$$4$$].id] = D.$JSCompiler_alias_TRUE$$
     }
-    $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$ = {};
+    $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$ = {};
     for($newIndex$$7_oldIndex$$4$$ = 0;$newIndex$$7_oldIndex$$4$$ < $newItems_removedSet$$.length;$newIndex$$7_oldIndex$$4$$++) {
-      $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$[$newItems_removedSet$$[$newIndex$$7_oldIndex$$4$$].id] = D.$JSCompiler_alias_TRUE$$
+      $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$[$newItems_removedSet$$[$newIndex$$7_oldIndex$$4$$].id] = D.$JSCompiler_alias_TRUE$$
     }
-    $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$ = {};
+    $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$ = {};
     for($newIndex$$7_oldIndex$$4$$ = 0;$newIndex$$7_oldIndex$$4$$ < $newItems_removedSet$$.length;$newIndex$$7_oldIndex$$4$$++) {
       var $newItemId$$ = $newItems_removedSet$$[$newIndex$$7_oldIndex$$4$$].id;
-      $oldItemId_oldSet$$[$newItemId$$] || ($actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$[$newItemId$$] = D.$JSCompiler_alias_TRUE$$)
+      $oldItemId_oldSet$$[$newItemId$$] || ($actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$[$newItemId$$] = D.$JSCompiler_alias_TRUE$$)
     }
     $newItems_removedSet$$ = {};
-    for($newIndex$$7_oldIndex$$4$$ = 0;$newIndex$$7_oldIndex$$4$$ < $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$.length;$newIndex$$7_oldIndex$$4$$++) {
-      $oldItemId_oldSet$$ = $actionDone$$inline_5248_event$$inline_5262_oldItems_start$$inline_5256_type$$173$$[$newIndex$$7_oldIndex$$4$$].id, $bounds$$inline_5250_end$$inline_5257_event$$inline_5246_newSet_options$$93_selection$$inline_5263$$[$oldItemId_oldSet$$] || ($newItems_removedSet$$[$oldItemId_oldSet$$] = D.$JSCompiler_alias_TRUE$$)
+    for($newIndex$$7_oldIndex$$4$$ = 0;$newIndex$$7_oldIndex$$4$$ < $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$.length;$newIndex$$7_oldIndex$$4$$++) {
+      $oldItemId_oldSet$$ = $actionDone$$inline_5190_event$$inline_5204_oldItems_start$$inline_5198_type$$173$$[$newIndex$$7_oldIndex$$4$$].id, $bounds$$inline_5192_end$$inline_5199_event$$inline_5188_newSet_options$$94_selection$$inline_5205$$[$oldItemId_oldSet$$] || ($newItems_removedSet$$[$oldItemId_oldSet$$] = D.$JSCompiler_alias_TRUE$$)
     }
-    $event$$410$$.addedSet = $actionDone$$inline_5258_actionStart$$inline_5249_addedSet_startEndGroup$$inline_5259_subtype$$inline_5247_subtype$$inline_5255$$;
-    $event$$410$$.removedSet = $newItems_removedSet$$
+    $event$$401$$.addedSet = $actionDone$$inline_5200_actionStart$$inline_5191_addedSet_startEndGroup$$inline_5201_subtype$$inline_5189_subtype$$inline_5197$$;
+    $event$$401$$.removedSet = $newItems_removedSet$$
   }
-  $event$$410$$ && this.$__dispatchEvent$($event$$410$$)
+  $event$$401$$ && this.$__dispatchEvent$($event$$401$$)
 };
-D.$DvtChartImpl$$.prototype.$_processSelectionEvent$ = function $$DvtChartImpl$$$$$_processSelectionEvent$$($event$$411_selection$$9$$) {
-  $event$$411_selection$$9$$ = D.$DvtChartEventUtils$$.$processIds$(this, $event$$411_selection$$9$$.getSelection());
+D.$DvtChartImpl$$.prototype.$_processSelectionEvent$ = function $$DvtChartImpl$$$$$_processSelectionEvent$$($event$$402_selection$$9$$) {
+  $event$$402_selection$$9$$ = D.$DvtChartEventUtils$$.$processIds$(this, $event$$402_selection$$9$$.getSelection());
   if(this.$overview$) {
     var $ovChart$$ = this.$overview$.$_chart$;
-    (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($ovChart$$.$getSelectionHandler$(), $event$$411_selection$$9$$, $ovChart$$.$getObjects$())
+    (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($ovChart$$.$getSelectionHandler$(), $event$$402_selection$$9$$, $ovChart$$.$getObjects$())
   }
-  return new D.$DvtChartSelectionEvent$$($event$$411_selection$$9$$)
+  return new D.$DvtChartSelectionEvent$$($event$$402_selection$$9$$)
 };
-D.$JSCompiler_StaticMethods__processMarqueeEvent$$ = function $$JSCompiler_StaticMethods__processMarqueeEvent$$$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$413$$) {
-  var $selection$$10_subtype$$8$$ = $event$$413$$.$getSubtype$(), $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$EventManager$;
-  D.$DvtChartEventUtils$$.$adjustBounds$($event$$413$$);
+D.$JSCompiler_StaticMethods__processMarqueeEvent$$ = function $$JSCompiler_StaticMethods__processMarqueeEvent$$$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$404$$) {
+  var $selection$$10_subtype$$8$$ = $event$$404$$.$getSubtype$(), $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$EventManager$;
+  D.$DvtChartEventUtils$$.$adjustBounds$($event$$404$$);
   if("select" == $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$_dragMode$) {
     $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$getSelectionHandler$();
     if("dvtMarqueeStartEvent" == $selection$$10_subtype$$8$$) {
-      $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$_initSelection$ = $event$$413$$.ctrlKey ? (0,D.$JSCompiler_StaticMethods_getSelectedIds$$)($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$) : []
+      $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$_initSelection$ = $event$$404$$.ctrlKey ? (0,D.$JSCompiler_StaticMethods_getSelectedIds$$)($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$) : []
     }else {
-      var $targets$$5$$ = D.$DvtChartEventUtils$$.$getBoundedObjects$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$413$$);
+      var $targets$$5$$ = D.$DvtChartEventUtils$$.$getBoundedObjects$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$404$$);
       (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$, $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$_initSelection$, $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$getObjects$());
-      for(var $target$$inline_5268$$, $i$$inline_5269$$ = 0;$i$$inline_5269$$ < $targets$$5$$.length;$i$$inline_5269$$++) {
-        $target$$inline_5268$$ = $targets$$5$$[$i$$inline_5269$$], (!$target$$inline_5268$$ || !$target$$inline_5268$$.$isUnrelatedToSelection$) && (0,D.$JSCompiler_StaticMethods__addToSelection$$)($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$, $target$$inline_5268$$, D.$JSCompiler_alias_TRUE$$)
+      for(var $target$$inline_5210$$, $i$$inline_5211$$ = 0;$i$$inline_5211$$ < $targets$$5$$.length;$i$$inline_5211$$++) {
+        $target$$inline_5210$$ = $targets$$5$$[$i$$inline_5211$$], (!$target$$inline_5210$$ || !$target$$inline_5210$$.$isUnrelatedToSelection$) && (0,D.$JSCompiler_StaticMethods__addToSelection$$)($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$, $target$$inline_5210$$, D.$JSCompiler_alias_TRUE$$)
       }
     }
     if("dvtMarqueeEndEvent" == $selection$$10_subtype$$8$$) {
       return $selection$$10_subtype$$8$$ = (0,D.$JSCompiler_StaticMethods_getSelectedIds$$)($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$), $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$overview$ && ($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$overview$.$_chart$, (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$getSelectionHandler$(), $selection$$10_subtype$$8$$, 
-      $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$getObjects$())), $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = D.$DvtChartEventUtils$$.$getAxisBounds$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$413$$, D.$JSCompiler_alias_FALSE$$), new D.$DvtChartSelectionEvent$$($selection$$10_subtype$$8$$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$xMin$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$xMax$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$startGroup$, 
+      $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$getObjects$())), $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = D.$DvtChartEventUtils$$.$getAxisBounds$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$404$$, D.$JSCompiler_alias_FALSE$$), new D.$DvtChartSelectionEvent$$($selection$$10_subtype$$8$$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$xMin$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$xMax$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$startGroup$, 
       $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$endGroup$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$yMin$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$yMax$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$y2Min$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$.$y2Max$)
     }
   }else {
@@ -1700,7 +1697,7 @@ D.$JSCompiler_StaticMethods__processMarqueeEvent$$ = function $$JSCompiler_Stati
       if("dvtMarqueeEndEvent" != $selection$$10_subtype$$8$$) {
         return D.$JSCompiler_alias_NULL$$
       }
-      $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = D.$DvtChartEventUtils$$.$getAxisBounds$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$413$$, D.$JSCompiler_alias_TRUE$$);
+      $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$ = D.$DvtChartEventUtils$$.$getAxisBounds$($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $event$$404$$, D.$JSCompiler_alias_TRUE$$);
       $JSCompiler_StaticMethods__processMarqueeEvent$self$$.$setViewport$($bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$, D.$JSCompiler_alias_TRUE$$);
       (0,D.$JSCompiler_StaticMethods_setScrollbarViewport$$)($JSCompiler_StaticMethods__processMarqueeEvent$self$$, $bounds$$82_em$$3_ovChart$$1_selectionHandler$$12$$);
       D.$DvtChartRenderer$$.$_setEventHandlers$($JSCompiler_StaticMethods__processMarqueeEvent$self$$);
@@ -1710,17 +1707,17 @@ D.$JSCompiler_StaticMethods__processMarqueeEvent$$ = function $$JSCompiler_Stati
   }
   return D.$JSCompiler_alias_NULL$$
 };
-D.$JSCompiler_StaticMethods__processComponentUIEvent$$ = function $$JSCompiler_StaticMethods__processComponentUIEvent$$$($JSCompiler_StaticMethods__processComponentUIEvent$self$$, $event$$416$$, $source$$16$$) {
-  var $params$$29$$ = $event$$416$$.params, $chartObjType$$ = $params$$29$$.type;
-  return $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$legend$ ? ($chartObjType$$ == D.$DvtLegendConstants$$.$LEGEND_ITEM$ ? $chartObjType$$ = D.$DvtChartConstants$$.$LEGEND_ITEM$ : $chartObjType$$ == D.$DvtLegendConstants$$.$TITLE$ ? $chartObjType$$ = D.$DvtChartConstants$$.$LEGEND_TITLE$ : $chartObjType$$ == D.$DvtLegendConstants$$.$BACKGROUND$ && ($chartObjType$$ = D.$DvtChartConstants$$.$LEGEND$), new D.$DvtComponentUIEvent$$($event$$416$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, 
-  D.$JSCompiler_alias_NULL$$, $params$$29$$.id))) : $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$xAxis$ ? ($chartObjType$$ == D.$DvtAxisConstants$$.$TICK_LABEL$ ? $chartObjType$$ = D.$DvtChartConstants$$.$X_AXIS_LABEL$ : $chartObjType$$ == D.$DvtAxisConstants$$.$TITLE$ && ($chartObjType$$ = D.$DvtChartConstants$$.$X_AXIS_TITLE$), new D.$DvtComponentUIEvent$$($event$$416$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, $params$$29$$.id))) : 
-  $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$yAxis$ ? ($chartObjType$$ == D.$DvtAxisConstants$$.$TICK_LABEL$ ? $chartObjType$$ = D.$DvtChartConstants$$.$Y_AXIS_LABEL$ : $chartObjType$$ == D.$DvtAxisConstants$$.$TITLE$ && ($chartObjType$$ = D.$DvtChartConstants$$.$Y_AXIS_TITLE$), new D.$DvtComponentUIEvent$$($event$$416$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, $params$$29$$.id))) : $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$y2Axis$ ? 
-  ($chartObjType$$ == D.$DvtAxisConstants$$.$TICK_LABEL$ ? $chartObjType$$ = D.$DvtChartConstants$$.$Y2_AXIS_LABEL$ : $chartObjType$$ == D.$DvtAxisConstants$$.$TITLE$ && ($chartObjType$$ = D.$DvtChartConstants$$.$Y2_AXIS_TITLE$), new D.$DvtComponentUIEvent$$($event$$416$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, $params$$29$$.id))) : $event$$416$$
+D.$JSCompiler_StaticMethods__processComponentUIEvent$$ = function $$JSCompiler_StaticMethods__processComponentUIEvent$$$($JSCompiler_StaticMethods__processComponentUIEvent$self$$, $event$$407$$, $source$$16$$) {
+  var $params$$29$$ = $event$$407$$.params, $chartObjType$$ = $params$$29$$.type;
+  return $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$legend$ ? ($chartObjType$$ == D.$DvtLegendConstants$$.$LEGEND_ITEM$ ? $chartObjType$$ = D.$DvtChartConstants$$.$LEGEND_ITEM$ : $chartObjType$$ == D.$DvtLegendConstants$$.$TITLE$ ? $chartObjType$$ = D.$DvtChartConstants$$.$LEGEND_TITLE$ : $chartObjType$$ == D.$DvtLegendConstants$$.$BACKGROUND$ && ($chartObjType$$ = D.$DvtChartConstants$$.$LEGEND$), new D.$DvtComponentUIEvent$$($event$$407$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, 
+  D.$JSCompiler_alias_NULL$$, $params$$29$$.id))) : $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$xAxis$ ? ($chartObjType$$ == D.$DvtAxisConstants$$.$TICK_LABEL$ ? $chartObjType$$ = D.$DvtChartConstants$$.$X_AXIS_LABEL$ : $chartObjType$$ == D.$DvtAxisConstants$$.$TITLE$ && ($chartObjType$$ = D.$DvtChartConstants$$.$X_AXIS_TITLE$), new D.$DvtComponentUIEvent$$($event$$407$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, $params$$29$$.id))) : 
+  $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$yAxis$ ? ($chartObjType$$ == D.$DvtAxisConstants$$.$TICK_LABEL$ ? $chartObjType$$ = D.$DvtChartConstants$$.$Y_AXIS_LABEL$ : $chartObjType$$ == D.$DvtAxisConstants$$.$TITLE$ && ($chartObjType$$ = D.$DvtChartConstants$$.$Y_AXIS_TITLE$), new D.$DvtComponentUIEvent$$($event$$407$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, $params$$29$$.id))) : $source$$16$$ === $JSCompiler_StaticMethods__processComponentUIEvent$self$$.$y2Axis$ ? 
+  ($chartObjType$$ == D.$DvtAxisConstants$$.$TICK_LABEL$ ? $chartObjType$$ = D.$DvtChartConstants$$.$Y2_AXIS_LABEL$ : $chartObjType$$ == D.$DvtAxisConstants$$.$TITLE$ && ($chartObjType$$ = D.$DvtChartConstants$$.$Y2_AXIS_TITLE$), new D.$DvtComponentUIEvent$$($event$$407$$.$getType$(), (0,D.$DvtChartEventManager$getUIEventParams$$)($chartObjType$$, $params$$29$$.id))) : $event$$407$$
 };
 D.$JSCompiler_prototypeAlias$$ = D.$DvtChartImpl$$.prototype;
-D.$JSCompiler_prototypeAlias$$.$_distributeToChildren$ = function $$JSCompiler_prototypeAlias$$$$_distributeToChildren$$($event$$417$$, $source$$17$$) {
-  this.$legend$ && this.$legend$ != $source$$17$$ && this.$legend$.$processEvent$($event$$417$$, $source$$17$$);
-  this.$pieChart$ && this.$pieChart$ != $source$$17$$ && this.$pieChart$.$processEvent$($event$$417$$, $source$$17$$)
+D.$JSCompiler_prototypeAlias$$.$_distributeToChildren$ = function $$JSCompiler_prototypeAlias$$$$_distributeToChildren$$($event$$408$$, $source$$17$$) {
+  this.$legend$ && this.$legend$ != $source$$17$$ && this.$legend$.$processEvent$($event$$408$$, $source$$17$$);
+  this.$pieChart$ && this.$pieChart$ != $source$$17$$ && this.$pieChart$.$processEvent$($event$$408$$, $source$$17$$)
 };
 D.$JSCompiler_prototypeAlias$$.$__cleanUp$ = function $$JSCompiler_prototypeAlias$$$$__cleanUp$$() {
   D.$DvtChartImpl$$.$superclass$.$__cleanUp$.call(this);
@@ -1730,9 +1727,9 @@ D.$JSCompiler_prototypeAlias$$.$__cleanUp$ = function $$JSCompiler_prototypeAlia
   this.$dragButtons$ = D.$JSCompiler_alias_NULL$$
 };
 D.$JSCompiler_prototypeAlias$$.$__cleanUpAxisAndPlotArea$ = function $$JSCompiler_prototypeAlias$$$$__cleanUpAxisAndPlotArea$$() {
-  var $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5271$$ = this.$EventManager$;
-  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5271$$.$hideTooltip$();
-  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5271$$.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5271$$.$_dataCursorHandler$);
+  var $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5213$$ = this.$EventManager$;
+  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5213$$.$hideTooltip$();
+  $JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5213$$.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_hideHoverFeedback$self$$inline_5213$$.$_dataCursorHandler$);
   this.$_peers$.length = 0;
   this.$_container$.removeChild(this.$xAxis$);
   this.$_container$.removeChild(this.$yAxis$);
@@ -1754,12 +1751,12 @@ D.$JSCompiler_prototypeAlias$$.$getType$ = function $$JSCompiler_prototypeAlias$
   return this.$getOptions$().type
 };
 D.$JSCompiler_prototypeAlias$$.$getGapRatio$ = function $$JSCompiler_prototypeAlias$$$$getGapRatio$$() {
-  var $options$$94_wRatio$$1$$ = this.$getOptions$();
-  if($options$$94_wRatio$$1$$.layout.gapRatio !== D.$JSCompiler_alias_NULL$$ && !(0,window.isNaN)($options$$94_wRatio$$1$$.layout.gapRatio)) {
-    return $options$$94_wRatio$$1$$.layout.gapRatio
+  var $options$$95_wRatio$$1$$ = this.$getOptions$();
+  if($options$$95_wRatio$$1$$.layout.gapRatio !== D.$JSCompiler_alias_NULL$$ && !(0,window.isNaN)($options$$95_wRatio$$1$$.layout.gapRatio)) {
+    return $options$$95_wRatio$$1$$.layout.gapRatio
   }
-  var $options$$94_wRatio$$1$$ = window.Math.min(this.$Width$ / 400, 1), $hRatio$$1$$ = window.Math.min(this.$Height$ / 300, 1);
-  return window.Math.min($options$$94_wRatio$$1$$, $hRatio$$1$$)
+  var $options$$95_wRatio$$1$$ = window.Math.min(this.$Width$ / 400, 1), $hRatio$$1$$ = window.Math.min(this.$Height$ / 300, 1);
+  return window.Math.min($options$$95_wRatio$$1$$, $hRatio$$1$$)
 };
 D.$JSCompiler_prototypeAlias$$.$getSelectionHandler$ = (0,D.$JSCompiler_get$$)("$_selectionHandler$");
 D.$JSCompiler_prototypeAlias$$.$isSelectionSupported$ = function $$JSCompiler_prototypeAlias$$$$isSelectionSupported$$() {
@@ -1800,92 +1797,92 @@ D.$JSCompiler_StaticMethods_hideDragButtons$$ = function $$JSCompiler_StaticMeth
 D.$DvtChartAutomation$$ = function $$DvtChartAutomation$$$($dvtComponent$$3$$) {
   this.$_chart$ = $dvtComponent$$3$$;
   this.$_options$ = this.$_chart$.$getOptions$();
-  this.$_legend$ = this.$_chart$.$legend$;
+  this.$_legend$ = this.$_chart$.legend;
   this.$_axis$ = this.$_chart$.$xAxis$;
   this.$_legendAutomation$ = this.$_legend$ ? this.$_legend$.$getAutomation$() : D.$JSCompiler_alias_NULL$$;
   this.$_axisAutomation$ = this.$_axis$ ? this.$_axis$.$getAutomation$() : D.$JSCompiler_alias_NULL$$
 };
 (0,D.$goog$exportSymbol$$)("DvtChartAutomation", D.$DvtChartAutomation$$);
 D.$DvtObj$$.$createSubclass$(D.$DvtChartAutomation$$, D.$DvtAutomation$$, "DvtChartAutomation");
-D.$DvtChartAutomation$$.prototype.$GetSubIdForDomElement$ = function $$DvtChartAutomation$$$$$GetSubIdForDomElement$$($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$) {
-  if($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$.$isDescendantOf$(this.$_legend$)) {
-    $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ = this.$_legendAutomation$.$GetSubIdForDomElement$($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$);
+D.$DvtChartAutomation$$.prototype.$GetSubIdForDomElement$ = function $$DvtChartAutomation$$$$$GetSubIdForDomElement$$($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$) {
+  if($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$.$isDescendantOf$(this.$_legend$)) {
+    $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ = this.$_legendAutomation$.$GetSubIdForDomElement$($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$);
     a: {
-      if($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ = (0,D.$JSCompiler_StaticMethods__getLegendItem$$)(this.$_legendAutomation$, this.$_legend$.$__getOptions$(), $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$)) {
-        for(var $groupIndex$$11_logicalObj$$11_s$$inline_5370$$ = 0;$groupIndex$$11_logicalObj$$11_s$$inline_5370$$ < this.$_options$.series.length;$groupIndex$$11_logicalObj$$11_s$$inline_5370$$++) {
-          if(this.$_options$.series[$groupIndex$$11_logicalObj$$11_s$$inline_5370$$].name == $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$.text) {
-            $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ = "series[" + $groupIndex$$11_logicalObj$$11_s$$inline_5370$$ + "]";
+      if($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ = (0,D.$JSCompiler_StaticMethods__getLegendItem$$)(this.$_legendAutomation$, this.$_legend$.$__getOptions$(), $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$)) {
+        for(var $groupIndex$$11_logicalObj$$11_s$$inline_5312$$ = 0;$groupIndex$$11_logicalObj$$11_s$$inline_5312$$ < this.$_options$.series.length;$groupIndex$$11_logicalObj$$11_s$$inline_5312$$++) {
+          if(this.$_options$.series[$groupIndex$$11_logicalObj$$11_s$$inline_5312$$].name == $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$.text) {
+            $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ = "series[" + $groupIndex$$11_logicalObj$$11_s$$inline_5312$$ + "]";
             break a
           }
         }
       }
-      $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ = D.$JSCompiler_alias_NULL$$
+      $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ = D.$JSCompiler_alias_NULL$$
     }
-    return $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$
+    return $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$
   }
-  if($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$.$isDescendantOf$(this.$_axis$)) {
-    return $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ = this.$_axisAutomation$.$GetSubIdForDomElement$($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$), ($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ = $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$.substring($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$.indexOf("[") + 
-    1, $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$.indexOf("]"))) ? "group[" + $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ + "]" : D.$JSCompiler_alias_NULL$$
+  if($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$.$isDescendantOf$(this.$_axis$)) {
+    return $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ = this.$_axisAutomation$.$GetSubIdForDomElement$($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$), ($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ = $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$.substring($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$.indexOf("[") + 
+    1, $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$.indexOf("]"))) ? "group[" + $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ + "]" : D.$JSCompiler_alias_NULL$$
   }
   if("pie" == this.$_options$.type) {
-    if($groupIndex$$11_logicalObj$$11_s$$inline_5370$$ = $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$.$_logicalObjects$[0].logicalObject) {
-      return"dataItem[" + $groupIndex$$11_logicalObj$$11_s$$inline_5370$$.$getSeriesIndex$() + "]"
+    if($groupIndex$$11_logicalObj$$11_s$$inline_5312$$ = $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$.$_logicalObjects$[0].logicalObject) {
+      return"dataItem[" + $groupIndex$$11_logicalObj$$11_s$$inline_5312$$.$getSeriesIndex$() + "]"
     }
   }else {
-    if($groupIndex$$11_logicalObj$$11_s$$inline_5370$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this.$_chart$.$getEventManager$(), $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$), $groupIndex$$11_logicalObj$$11_s$$inline_5370$$ instanceof D.$DvtChartObjPeer$$) {
-      $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ = $groupIndex$$11_logicalObj$$11_s$$inline_5370$$.$getSeriesIndex$();
-      $groupIndex$$11_logicalObj$$11_s$$inline_5370$$ = $groupIndex$$11_logicalObj$$11_s$$inline_5370$$.$getGroupIndex$();
-      if($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ != D.$JSCompiler_alias_NULL$$ && 0 <= $groupIndex$$11_logicalObj$$11_s$$inline_5370$$ && "funnel" != this.$_options$.type) {
-        return"dataItem[" + $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ + "][" + $groupIndex$$11_logicalObj$$11_s$$inline_5370$$ + "]"
+    if($groupIndex$$11_logicalObj$$11_s$$inline_5312$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this.$_chart$.$getEventManager$(), $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$), $groupIndex$$11_logicalObj$$11_s$$inline_5312$$ instanceof D.$DvtChartObjPeer$$) {
+      $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ = $groupIndex$$11_logicalObj$$11_s$$inline_5312$$.$getSeriesIndex$();
+      $groupIndex$$11_logicalObj$$11_s$$inline_5312$$ = $groupIndex$$11_logicalObj$$11_s$$inline_5312$$.$getGroupIndex$();
+      if($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ != D.$JSCompiler_alias_NULL$$ && 0 <= $groupIndex$$11_logicalObj$$11_s$$inline_5312$$ && "funnel" != this.$_options$.type) {
+        return"dataItem[" + $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ + "][" + $groupIndex$$11_logicalObj$$11_s$$inline_5312$$ + "]"
       }
-      if($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ != D.$JSCompiler_alias_NULL$$ && $groupIndex$$11_logicalObj$$11_s$$inline_5370$$ == D.$DvtFunnelRenderer$$.$_GROUP_INDEX$ && "funnel" == this.$_options$.type) {
-        return"dataItem[" + $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ + "]"
+      if($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ != D.$JSCompiler_alias_NULL$$ && $groupIndex$$11_logicalObj$$11_s$$inline_5312$$ == D.$DvtFunnelRenderer$$.$_GROUP_INDEX$ && "funnel" == this.$_options$.type) {
+        return"dataItem[" + $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ + "]"
       }
-      if($JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ != D.$JSCompiler_alias_NULL$$ && ($groupIndex$$11_logicalObj$$11_s$$inline_5370$$ == D.$JSCompiler_alias_NULL$$ || 0 > $groupIndex$$11_logicalObj$$11_s$$inline_5370$$)) {
-        return"series[" + $JSCompiler_inline_result$$327_axisSubId_displayable$$54_index$$inline_5373_legendItem$$inline_5369_legendSubId_seriesIndex$$24$$ + "]"
+      if($JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ != D.$JSCompiler_alias_NULL$$ && ($groupIndex$$11_logicalObj$$11_s$$inline_5312$$ == D.$JSCompiler_alias_NULL$$ || 0 > $groupIndex$$11_logicalObj$$11_s$$inline_5312$$)) {
+        return"series[" + $JSCompiler_inline_result$$319_axisSubId_displayable$$54_index$$inline_5315_legendItem$$inline_5311_legendSubId_seriesIndex$$24$$ + "]"
       }
     }
   }
   return D.$JSCompiler_alias_NULL$$
 };
-D.$DvtChartAutomation$$.prototype.$getDomElementForSubId$ = function $$DvtChartAutomation$$$$$getDomElementForSubId$$($secondIndex$$inline_5381_subId$$9$$) {
-  var $firstIndex$$2_logicalObj$$12_openParen1$$ = $secondIndex$$inline_5381_subId$$9$$.indexOf("["), $closeParen1_i$$inline_5383_openParen2$$ = $secondIndex$$inline_5381_subId$$9$$.indexOf("]");
-  if(0 < $firstIndex$$2_logicalObj$$12_openParen1$$ && 0 < $closeParen1_i$$inline_5383_openParen2$$) {
-    var $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ = $secondIndex$$inline_5381_subId$$9$$.substring(0, $firstIndex$$2_logicalObj$$12_openParen1$$);
-    if("group" == $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$) {
-      return this.$_axisAutomation$.$getDomElementForSubId$($secondIndex$$inline_5381_subId$$9$$)
+D.$DvtChartAutomation$$.prototype.$getDomElementForSubId$ = function $$DvtChartAutomation$$$$$getDomElementForSubId$$($secondIndex$$inline_5323_subId$$9$$) {
+  var $firstIndex$$2_logicalObj$$12_openParen1$$ = $secondIndex$$inline_5323_subId$$9$$.indexOf("["), $closeParen1_i$$inline_5325_openParen2$$ = $secondIndex$$inline_5323_subId$$9$$.indexOf("]");
+  if(0 < $firstIndex$$2_logicalObj$$12_openParen1$$ && 0 < $closeParen1_i$$inline_5325_openParen2$$) {
+    var $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ = $secondIndex$$inline_5323_subId$$9$$.substring(0, $firstIndex$$2_logicalObj$$12_openParen1$$);
+    if("group" == $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$) {
+      return this.$_axisAutomation$.$getDomElementForSubId$($secondIndex$$inline_5323_subId$$9$$)
     }
-    if("series" == $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$) {
-      return $secondIndex$$inline_5381_subId$$9$$ = "item" + (0,D.$JSCompiler_StaticMethods__getIndicesFromSeries$$)(this.$_legendAutomation$, this.$_options$.series[$secondIndex$$inline_5381_subId$$9$$.substring($secondIndex$$inline_5381_subId$$9$$.indexOf("[") + 1, $secondIndex$$inline_5381_subId$$9$$.indexOf("]"))], this.$_legend$.$__getOptions$()), this.$_legendAutomation$.$getDomElementForSubId$($secondIndex$$inline_5381_subId$$9$$)
+    if("series" == $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$) {
+      return $secondIndex$$inline_5323_subId$$9$$ = "item" + (0,D.$JSCompiler_StaticMethods__getIndicesFromSeries$$)(this.$_legendAutomation$, this.$_options$.series[$secondIndex$$inline_5323_subId$$9$$.substring($secondIndex$$inline_5323_subId$$9$$.indexOf("[") + 1, $secondIndex$$inline_5323_subId$$9$$.indexOf("]"))], this.$_legend$.$__getOptions$()), this.$_legendAutomation$.$getDomElementForSubId$($secondIndex$$inline_5323_subId$$9$$)
     }
-    $firstIndex$$2_logicalObj$$12_openParen1$$ = $secondIndex$$inline_5381_subId$$9$$.substring($firstIndex$$2_logicalObj$$12_openParen1$$ + 1, $closeParen1_i$$inline_5383_openParen2$$);
+    $firstIndex$$2_logicalObj$$12_openParen1$$ = $secondIndex$$inline_5323_subId$$9$$.substring($firstIndex$$2_logicalObj$$12_openParen1$$ + 1, $closeParen1_i$$inline_5325_openParen2$$);
     if("pie" == this.$_options$.type) {
       a: {
-        $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ = this.$_chart$.$pieChart$;
-        if(0 <= $firstIndex$$2_logicalObj$$12_openParen1$$ && $firstIndex$$2_logicalObj$$12_openParen1$$ < $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$.$_slices$.length && ($JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ = $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$.$_slices$[$firstIndex$$2_logicalObj$$12_openParen1$$].$_topSurface$) && 
-        0 < $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$.length) {
-          $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ = $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$[0];
+        $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ = this.$_chart$.$pieChart$;
+        if(0 <= $firstIndex$$2_logicalObj$$12_openParen1$$ && $firstIndex$$2_logicalObj$$12_openParen1$$ < $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$.$_slices$.length && ($JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ = $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$.$_slices$[$firstIndex$$2_logicalObj$$12_openParen1$$].$_topSurface$) && 
+        0 < $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$.length) {
+          $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ = $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$[0];
           break a
         }
-        $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ = D.$JSCompiler_alias_NULL$$
+        $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ = D.$JSCompiler_alias_NULL$$
       }
-      if($JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$) {
-        return $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$.$getElem$()
+      if($JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$) {
+        return $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$.$getElem$()
       }
     }
     if("funnel" == this.$_options$.type) {
-      var $peers$$inline_5382_secondIndex$$ = D.$DvtFunnelRenderer$$.$_GROUP_INDEX$
+      var $peers$$inline_5324_secondIndex$$ = D.$DvtFunnelRenderer$$.$_GROUP_INDEX$
     }else {
-      $secondIndex$$inline_5381_subId$$9$$ = $secondIndex$$inline_5381_subId$$9$$.substring($closeParen1_i$$inline_5383_openParen2$$ + 1), $closeParen1_i$$inline_5383_openParen2$$ = $secondIndex$$inline_5381_subId$$9$$.indexOf("["), $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ = $secondIndex$$inline_5381_subId$$9$$.indexOf("]"), 0 <= $closeParen1_i$$inline_5383_openParen2$$ && 0 <= $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ && 
-      ($peers$$inline_5382_secondIndex$$ = $secondIndex$$inline_5381_subId$$9$$.substring($closeParen1_i$$inline_5383_openParen2$$ + 1, $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$))
+      $secondIndex$$inline_5323_subId$$9$$ = $secondIndex$$inline_5323_subId$$9$$.substring($closeParen1_i$$inline_5325_openParen2$$ + 1), $closeParen1_i$$inline_5325_openParen2$$ = $secondIndex$$inline_5323_subId$$9$$.indexOf("["), $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ = $secondIndex$$inline_5323_subId$$9$$.indexOf("]"), 0 <= $closeParen1_i$$inline_5325_openParen2$$ && 0 <= $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ && 
+      ($peers$$inline_5324_secondIndex$$ = $secondIndex$$inline_5323_subId$$9$$.substring($closeParen1_i$$inline_5325_openParen2$$ + 1, $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$))
     }
     a: {
-      $secondIndex$$inline_5381_subId$$9$$ = $peers$$inline_5382_secondIndex$$;
-      $peers$$inline_5382_secondIndex$$ = this.$_chart$.$getObjects$();
-      for($closeParen1_i$$inline_5383_openParen2$$ = 0;$closeParen1_i$$inline_5383_openParen2$$ < $peers$$inline_5382_secondIndex$$.length;$closeParen1_i$$inline_5383_openParen2$$++) {
-        var $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ = $peers$$inline_5382_secondIndex$$[$closeParen1_i$$inline_5383_openParen2$$].$getSeriesIndex$(), $groupIndex$$inline_5385$$ = $peers$$inline_5382_secondIndex$$[$closeParen1_i$$inline_5383_openParen2$$].$getGroupIndex$();
-        if($JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5375_closeParen2_objType_pieSlice_seriesIndex$$inline_5384_topSurface$$inline_5377$$ == $firstIndex$$2_logicalObj$$12_openParen1$$ && $groupIndex$$inline_5385$$ == $secondIndex$$inline_5381_subId$$9$$) {
-          $firstIndex$$2_logicalObj$$12_openParen1$$ = $peers$$inline_5382_secondIndex$$[$closeParen1_i$$inline_5383_openParen2$$];
+      $secondIndex$$inline_5323_subId$$9$$ = $peers$$inline_5324_secondIndex$$;
+      $peers$$inline_5324_secondIndex$$ = this.$_chart$.$getObjects$();
+      for($closeParen1_i$$inline_5325_openParen2$$ = 0;$closeParen1_i$$inline_5325_openParen2$$ < $peers$$inline_5324_secondIndex$$.length;$closeParen1_i$$inline_5325_openParen2$$++) {
+        var $JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ = $peers$$inline_5324_secondIndex$$[$closeParen1_i$$inline_5325_openParen2$$].$getSeriesIndex$(), $groupIndex$$inline_5327$$ = $peers$$inline_5324_secondIndex$$[$closeParen1_i$$inline_5325_openParen2$$].$getGroupIndex$();
+        if($JSCompiler_StaticMethods__getSliceDisplayable$self$$inline_5317_closeParen2_objType_pieSlice_seriesIndex$$inline_5326_topSurface$$inline_5319$$ == $firstIndex$$2_logicalObj$$12_openParen1$$ && $groupIndex$$inline_5327$$ == $secondIndex$$inline_5323_subId$$9$$) {
+          $firstIndex$$2_logicalObj$$12_openParen1$$ = $peers$$inline_5324_secondIndex$$[$closeParen1_i$$inline_5325_openParen2$$];
           break a
         }
       }
@@ -1962,8 +1959,8 @@ D.$DvtChartAutomation$$.prototype.$getY2Axis$ = function $$DvtChartAutomation$$$
   return D.$JSCompiler_alias_NULL$$
 };
 D.$DvtChartAutomation$$.prototype.getY2Axis = D.$DvtChartAutomation$$.prototype.$getY2Axis$;
-D.$DvtChartAxis$$ = function $$DvtChartAxis$$$($context$$549$$, $callback$$109$$, $callbackObj$$83$$) {
-  this.Init($context$$549$$, $callback$$109$$, $callbackObj$$83$$)
+D.$DvtChartAxis$$ = function $$DvtChartAxis$$$($context$$543$$, $callback$$109$$, $callbackObj$$83$$) {
+  this.Init($context$$543$$, $callback$$109$$, $callbackObj$$83$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtChartAxis$$, D.$DvtAxis$$, "DvtChartAxis");
 D.$DvtChartAxis$$.prototype.$getOptions$ = function $$DvtChartAxis$$$$$getOptions$$() {
@@ -2018,14 +2015,14 @@ D.$JSCompiler_prototypeAlias$$ = D.$DvtChartAxis$$.prototype;
 D.$JSCompiler_prototypeAlias$$.$getGroupWidth$ = function $$JSCompiler_prototypeAlias$$$$getGroupWidth$$() {
   return(0,D.$JSCompiler_StaticMethods_isGroupAxis$$)(this) ? window.Math.abs(this.$getUnboundedCoordAt$(1) - this.$getUnboundedCoordAt$(0)) : this.$Info$ instanceof D.$DvtTimeAxisInfo$$ ? this.$Info$.$getGroupWidth$() : 0
 };
-D.$JSCompiler_prototypeAlias$$.$getAxisLine$ = function $$JSCompiler_prototypeAlias$$$$getAxisLine$$($context$$550$$) {
-  return this.$Info$ ? this.$Info$.$getAxisLine$($context$$550$$) : D.$JSCompiler_alias_NULL$$
+D.$JSCompiler_prototypeAlias$$.$getAxisLine$ = function $$JSCompiler_prototypeAlias$$$$getAxisLine$$($context$$544$$) {
+  return this.$Info$ ? this.$Info$.$getAxisLine$($context$$544$$) : D.$JSCompiler_alias_NULL$$
 };
-D.$JSCompiler_prototypeAlias$$.$getMajorGridLines$ = function $$JSCompiler_prototypeAlias$$$$getMajorGridLines$$($context$$551$$) {
-  return this.$Info$ ? this.$Info$.$getMajorGridLines$($context$$551$$) : []
+D.$JSCompiler_prototypeAlias$$.$getMajorGridLines$ = function $$JSCompiler_prototypeAlias$$$$getMajorGridLines$$($context$$545$$) {
+  return this.$Info$ ? this.$Info$.$getMajorGridLines$($context$$545$$) : []
 };
-D.$JSCompiler_prototypeAlias$$.$getMinorGridLines$ = function $$JSCompiler_prototypeAlias$$$$getMinorGridLines$$($context$$552$$) {
-  return this.$Info$ ? this.$Info$.$getMinorGridLines$($context$$552$$) : []
+D.$JSCompiler_prototypeAlias$$.$getMinorGridLines$ = function $$JSCompiler_prototypeAlias$$$$getMinorGridLines$$($context$$546$$) {
+  return this.$Info$ ? this.$Info$.$getMinorGridLines$($context$$546$$) : []
 };
 D.$JSCompiler_prototypeAlias$$.$getMajorTickCount$ = function $$JSCompiler_prototypeAlias$$$$getMajorTickCount$$() {
   return this.$Info$ ? this.$Info$.$getMajorTickCount$() : D.$JSCompiler_alias_NULL$$
@@ -2126,171 +2123,171 @@ D.$JSCompiler_StaticMethods__getDragHandler$$ = function $$JSCompiler_StaticMeth
   return"pan" == $JSCompiler_StaticMethods__getDragHandler$self$$.$_dragMode$ ? $JSCompiler_StaticMethods__getDragHandler$self$$.$_panZoomHandler$ : "zoom" == $JSCompiler_StaticMethods__getDragHandler$self$$.$_dragMode$ ? $JSCompiler_StaticMethods__getDragHandler$self$$.$_marqueeZoomHandler$ : "select" == $JSCompiler_StaticMethods__getDragHandler$self$$.$_dragMode$ ? $JSCompiler_StaticMethods__getDragHandler$self$$.$_marqueeSelectHandler$ : D.$JSCompiler_alias_NULL$$
 };
 D.$JSCompiler_prototypeAlias$$ = D.$DvtChartEventManager$$.prototype;
-D.$JSCompiler_prototypeAlias$$.$_onDragStart$ = function $$JSCompiler_prototypeAlias$$$$_onDragStart$$($JSCompiler_temp$$274_event$$420$$) {
+D.$JSCompiler_prototypeAlias$$.$_onDragStart$ = function $$JSCompiler_prototypeAlias$$$$_onDragStart$$($JSCompiler_temp$$267_event$$411$$) {
   if(D.$DvtAgent$$.$isTouchDevice$()) {
-    var $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$ = $JSCompiler_temp$$274_event$$420$$.touches, $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$, $dataCursorOn$$inline_5304_relPos$$inline_5312$$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$;
-    1 == $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$.length ? ($JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this)) ? ($chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$ = this.$_getRelativePosition$($chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[0].pageX, $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[0].pageY), 
-    $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$processDragStart$($chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$, D.$JSCompiler_alias_TRUE$$)) : this.$_dataCursorHandler$ && ((0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[0].pageX, 
-    $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[0].pageY, $JSCompiler_temp$$274_event$$420$$.target, (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $JSCompiler_temp$$274_event$$420$$.target)), $dataCursorOn$$inline_5304_relPos$$inline_5312$$ = D.$JSCompiler_alias_TRUE$$) : 2 == $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$.length && (this.$_panZoomHandler$ && D.$DvtChartEventUtils$$.$isZoomable$(this.$_chart$)) && 
-    (this.$endDrag$(), $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ = this.$_getRelativePosition$($chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[0].pageX, $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[0].pageY), $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$ = this.$_getRelativePosition$($chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[1].pageX, 
-    $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$[1].pageY), $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$ = this.$_panZoomHandler$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_pinchOn$ ? $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ = D.$JSCompiler_alias_NULL$$ : ($JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt1$ = 
-    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_container$.$stageToLocal$($chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$), $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt2$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_container$.$stageToLocal$($chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$), 
-    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_lastPt1$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt1$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_lastPt2$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt2$, !(0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_bounds$, 
-    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt1$.x, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt1$.y) || !(0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_bounds$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt2$.x, 
-    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_origPt2$.y) ? $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ = D.$JSCompiler_alias_NULL$$ : ($JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$_pinchOn$ = D.$JSCompiler_alias_TRUE$$, $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ = new D.$DvtPanZoomEvent$$("dvtPinchStartEvent", 0, 
+    var $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$ = $JSCompiler_temp$$267_event$$411$$.touches, $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$, $dataCursorOn$$inline_5246_relPos$$inline_5254$$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$;
+    1 == $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$.length ? ($JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this)) ? ($chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$ = this.$_getRelativePosition$($chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[0].pageX, $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[0].pageY), 
+    $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$processDragStart$($chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$, D.$JSCompiler_alias_TRUE$$)) : this.$_dataCursorHandler$ && ((0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[0].pageX, 
+    $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[0].pageY, $JSCompiler_temp$$267_event$$411$$.target, (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $JSCompiler_temp$$267_event$$411$$.target)), $dataCursorOn$$inline_5246_relPos$$inline_5254$$ = D.$JSCompiler_alias_TRUE$$) : 2 == $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$.length && (this.$_panZoomHandler$ && D.$DvtChartEventUtils$$.$isZoomable$(this.$_chart$)) && 
+    (this.$endDrag$(), $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ = this.$_getRelativePosition$($chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[0].pageX, $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[0].pageY), $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$ = this.$_getRelativePosition$($chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[1].pageX, 
+    $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$[1].pageY), $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$ = this.$_panZoomHandler$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_pinchOn$ ? $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ = D.$JSCompiler_alias_NULL$$ : ($JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt1$ = 
+    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_container$.$stageToLocal$($chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$), $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt2$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_container$.$stageToLocal$($chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$), 
+    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_lastPt1$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt1$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_lastPt2$ = $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt2$, !(0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_bounds$, 
+    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt1$.x, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt1$.y) || !(0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_bounds$, $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt2$.x, 
+    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_origPt2$.y) ? $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ = D.$JSCompiler_alias_NULL$$ : ($JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$_pinchOn$ = D.$JSCompiler_alias_TRUE$$, $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ = new D.$DvtPanZoomEvent$$("dvtPinchStartEvent", 0, 
     0, 0, 0, 0, 0, 0, 0))));
-    $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ && (this.$_callback$.call(this.$_callbackObj$, $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$), this.$_context$.$getTooltipManager$().$hideTooltip$());
-    $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ || $dataCursorOn$$inline_5304_relPos$$inline_5312$$ ? ($JSCompiler_temp$$274_event$$420$$.preventDefault(), $JSCompiler_temp$$274_event$$420$$.stopPropagation(), (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, D.$JSCompiler_alias_FALSE$$), $JSCompiler_temp$$274_event$$420$$ = D.$JSCompiler_alias_TRUE$$) : $JSCompiler_temp$$274_event$$420$$ = D.$JSCompiler_alias_FALSE$$
+    $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ && (this.$_callback$.call(this.$_callbackObj$, $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$), this.$_context$.$getTooltipManager$().$hideTooltip$());
+    $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ || $dataCursorOn$$inline_5246_relPos$$inline_5254$$ ? ($JSCompiler_temp$$267_event$$411$$.preventDefault(), $JSCompiler_temp$$267_event$$411$$.stopPropagation(), (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, D.$JSCompiler_alias_FALSE$$), $JSCompiler_temp$$267_event$$411$$ = D.$JSCompiler_alias_TRUE$$) : $JSCompiler_temp$$267_event$$411$$ = D.$JSCompiler_alias_FALSE$$
   }else {
-    $dataCursorOn$$inline_5304_relPos$$inline_5312$$ = this.$_getRelativePosition$($JSCompiler_temp$$274_event$$420$$.pageX, $JSCompiler_temp$$274_event$$420$$.pageY);
-    $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this);
-    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, (0,D.$JSCompiler_StaticMethods_GetCurrentTargetForEvent$$)(this, $JSCompiler_temp$$274_event$$420$$));
-    if((!$JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$ || !$JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$isSelectable$ || !$JSCompiler_StaticMethods_processPinchStart$self$$inline_9679_dragHandler$$inline_5305_obj$$inline_5315$$.$isSelectable$()) && 0 == $JSCompiler_temp$$274_event$$420$$.button && $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$) {
-      ($chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$ = $chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$.$processDragStart$($dataCursorOn$$inline_5304_relPos$$inline_5312$$, $JSCompiler_temp$$274_event$$420$$.ctrlKey)) && this.$_callback$.call(this.$_callbackObj$, $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$), this.$_chart$.setCursor($chartEvent$$inline_5303_dragHandler$$inline_5313_relPos1$$inline_5307$$.getCursor($dataCursorOn$$inline_5304_relPos$$inline_5312$$)), 
+    $dataCursorOn$$inline_5246_relPos$$inline_5254$$ = this.$_getRelativePosition$($JSCompiler_temp$$267_event$$411$$.pageX, $JSCompiler_temp$$267_event$$411$$.pageY);
+    $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this);
+    $JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, (0,D.$JSCompiler_StaticMethods_GetCurrentTargetForEvent$$)(this, $JSCompiler_temp$$267_event$$411$$));
+    if((!$JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$ || !$JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$isSelectable$ || !$JSCompiler_StaticMethods_processPinchStart$self$$inline_9624_dragHandler$$inline_5247_obj$$inline_5257$$.$isSelectable$()) && 0 == $JSCompiler_temp$$267_event$$411$$.button && $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$) {
+      ($chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$ = $chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$.$processDragStart$($dataCursorOn$$inline_5246_relPos$$inline_5254$$, $JSCompiler_temp$$267_event$$411$$.ctrlKey)) && this.$_callback$.call(this.$_callbackObj$, $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$), this.$_chart$.setCursor($chartEvent$$inline_5245_dragHandler$$inline_5255_relPos1$$inline_5249$$.getCursor($dataCursorOn$$inline_5246_relPos$$inline_5254$$)), 
       (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, D.$JSCompiler_alias_FALSE$$)
     }
-    $chartEvent$$inline_5314_relPos$$inline_5306_relPos2$$inline_5308_touches$$inline_5302$$ ? (this.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)(this.$_dataCursorHandler$), $JSCompiler_temp$$274_event$$420$$ = D.$JSCompiler_alias_TRUE$$) : $JSCompiler_temp$$274_event$$420$$ = D.$JSCompiler_alias_FALSE$$
+    $chartEvent$$inline_5256_relPos$$inline_5248_relPos2$$inline_5250_touches$$inline_5244$$ ? (this.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)(this.$_dataCursorHandler$), $JSCompiler_temp$$267_event$$411$$ = D.$JSCompiler_alias_TRUE$$) : $JSCompiler_temp$$267_event$$411$$ = D.$JSCompiler_alias_FALSE$$
   }
-  return $JSCompiler_temp$$274_event$$420$$
+  return $JSCompiler_temp$$267_event$$411$$
 };
-D.$JSCompiler_prototypeAlias$$.$_onDragMove$ = function $$JSCompiler_prototypeAlias$$$$_onDragMove$$($event$$421$$) {
+D.$JSCompiler_prototypeAlias$$.$_onDragMove$ = function $$JSCompiler_prototypeAlias$$$$_onDragMove$$($event$$412$$) {
   if(D.$DvtAgent$$.$isTouchDevice$()) {
-    var $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$ = $event$$421$$.touches, $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$, $dataCursorOn$$inline_5321_relPos$$inline_5329$$;
-    if(1 == $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.length) {
-      var $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this);
-      $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$ ? ($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$ = this.$_getRelativePosition$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[0].pageX, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[0].pageY), 
-      $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ = $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$.$processDragMove$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$, D.$JSCompiler_alias_TRUE$$)) : this.$_dataCursorHandler$ && ((0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[0].pageX, 
-      $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[0].pageY, $event$$421$$.target, (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$421$$.target)), $dataCursorOn$$inline_5321_relPos$$inline_5329$$ = D.$JSCompiler_alias_TRUE$$)
+    var $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$ = $event$$412$$.touches, $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$, $dataCursorOn$$inline_5263_relPos$$inline_5271$$;
+    if(1 == $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.length) {
+      var $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this);
+      $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$ ? ($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$ = this.$_getRelativePosition$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[0].pageX, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[0].pageY), 
+      $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ = $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$.$processDragMove$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$, D.$JSCompiler_alias_TRUE$$)) : this.$_dataCursorHandler$ && ((0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[0].pageX, 
+      $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[0].pageY, $event$$412$$.target, (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$412$$.target)), $dataCursorOn$$inline_5263_relPos$$inline_5271$$ = D.$JSCompiler_alias_TRUE$$)
     }else {
-      if(2 == $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.length && this.$_panZoomHandler$ && D.$DvtChartEventUtils$$.$isZoomable$(this.$_chart$)) {
-        if($chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ = this.$_getRelativePosition$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[0].pageX, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[0].pageY), $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$ = this.$_getRelativePosition$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[1].pageX, 
-        $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$[1].pageY), $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$ = this.$_panZoomHandler$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_pinchOn$) {
-          $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ = $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_container$.$stageToLocal$($chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$);
-          var $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$ = $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_container$.$stageToLocal$($dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$), $deltas$$inline_9690$$ = (0,D.$JSCompiler_StaticMethods__computePinchDeltas$$)($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$, 
-          $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$, $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_lastPt1$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_lastPt2$), $totalDeltas$$inline_9691$$ = (0,D.$JSCompiler_StaticMethods__computePinchDeltas$$)($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$, 
-          $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$, $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_origPt1$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_origPt2$);
-          $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_lastPt1$ = $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$;
-          $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$.$_lastPt2$ = $dragHandler$$inline_5322_newPt2$$inline_9689_relPos2$$inline_5325$$;
-          $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ = new D.$DvtPanZoomEvent$$("dvtPinchMoveEvent", $deltas$$inline_9690$$.$dxMin$, $deltas$$inline_9690$$.$dxMax$, $deltas$$inline_9690$$.$dyMin$, $deltas$$inline_9690$$.$dyMax$, $totalDeltas$$inline_9691$$.$dxMin$, $totalDeltas$$inline_9691$$.$dxMax$, $totalDeltas$$inline_9691$$.$dyMin$, $totalDeltas$$inline_9691$$.$dyMax$)
+      if(2 == $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.length && this.$_panZoomHandler$ && D.$DvtChartEventUtils$$.$isZoomable$(this.$_chart$)) {
+        if($chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ = this.$_getRelativePosition$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[0].pageX, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[0].pageY), $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$ = this.$_getRelativePosition$($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[1].pageX, 
+        $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$[1].pageY), $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$ = this.$_panZoomHandler$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_pinchOn$) {
+          $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ = $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_container$.$stageToLocal$($chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$);
+          var $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$ = $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_container$.$stageToLocal$($dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$), $deltas$$inline_9635$$ = (0,D.$JSCompiler_StaticMethods__computePinchDeltas$$)($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$, 
+          $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$, $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_lastPt1$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_lastPt2$), $totalDeltas$$inline_9636$$ = (0,D.$JSCompiler_StaticMethods__computePinchDeltas$$)($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$, 
+          $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$, $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_origPt1$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_origPt2$);
+          $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_lastPt1$ = $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$;
+          $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$.$_lastPt2$ = $dragHandler$$inline_5264_newPt2$$inline_9634_relPos2$$inline_5267$$;
+          $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ = new D.$DvtPanZoomEvent$$("dvtPinchMoveEvent", $deltas$$inline_9635$$.$dxMin$, $deltas$$inline_9635$$.$dxMax$, $deltas$$inline_9635$$.$dyMin$, $deltas$$inline_9635$$.$dyMax$, $totalDeltas$$inline_9636$$.$dxMin$, $totalDeltas$$inline_9636$$.$dxMax$, $totalDeltas$$inline_9636$$.$dyMin$, $totalDeltas$$inline_9636$$.$dyMax$)
         }else {
-          $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ = D.$JSCompiler_alias_NULL$$
+          $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ = D.$JSCompiler_alias_NULL$$
         }
       }
     }
-    ($chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ || $dataCursorOn$$inline_5321_relPos$$inline_5329$$) && $event$$421$$.preventDefault();
-    $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ && (this.$_callback$.call(this.$_callbackObj$, $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$), this.$_context$.$getTooltipManager$().$hideTooltip$())
+    ($chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ || $dataCursorOn$$inline_5263_relPos$$inline_5271$$) && $event$$412$$.preventDefault();
+    $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ && (this.$_callback$.call(this.$_callbackObj$, $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$), this.$_context$.$getTooltipManager$().$hideTooltip$())
   }else {
-    $dataCursorOn$$inline_5321_relPos$$inline_5329$$ = this.$_getRelativePosition$($event$$421$$.pageX, $event$$421$$.pageY);
-    if($chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this)) {
-      if($JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$ = $chartEvent$$inline_5320_dragHandler$$inline_5330_newPt1$$inline_9688_relPos1$$inline_5324$$.$processDragMove$($dataCursorOn$$inline_5321_relPos$$inline_5329$$, $event$$421$$.ctrlKey)) {
-        this.$_callback$.call(this.$_callbackObj$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$), (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, D.$JSCompiler_alias_FALSE$$)
+    $dataCursorOn$$inline_5263_relPos$$inline_5271$$ = this.$_getRelativePosition$($event$$412$$.pageX, $event$$412$$.pageY);
+    if($chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this)) {
+      if($JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$ = $chartEvent$$inline_5262_dragHandler$$inline_5272_newPt1$$inline_9633_relPos1$$inline_5266$$.$processDragMove$($dataCursorOn$$inline_5263_relPos$$inline_5271$$, $event$$412$$.ctrlKey)) {
+        this.$_callback$.call(this.$_callbackObj$, $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$), (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, D.$JSCompiler_alias_FALSE$$)
       }
     }
-    $JSCompiler_StaticMethods_processPinchMove$self$$inline_9685_chartEvent$$inline_5331_relPos$$inline_5323_touches$$inline_5319$$ && $event$$421$$.stopPropagation()
+    $JSCompiler_StaticMethods_processPinchMove$self$$inline_9630_chartEvent$$inline_5273_relPos$$inline_5265_touches$$inline_5261$$ && $event$$412$$.stopPropagation()
   }
 };
-D.$JSCompiler_prototypeAlias$$.$_onDragEnd$ = function $$JSCompiler_prototypeAlias$$$$_onDragEnd$$($axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$) {
+D.$JSCompiler_prototypeAlias$$.$_onDragEnd$ = function $$JSCompiler_prototypeAlias$$$$_onDragEnd$$($axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$) {
   if(D.$DvtAgent$$.$isTouchDevice$()) {
-    var $chartEvent1$$inline_5335_relPos$$inline_5340$$ = this.$endDrag$(), $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$;
+    var $chartEvent1$$inline_5277_relPos$$inline_5282$$ = this.$endDrag$(), $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$;
     if(this.$_panZoomHandler$ && D.$DvtChartEventUtils$$.$isZoomable$(this.$_chart$)) {
-      $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$ = this.$_panZoomHandler$;
-      if($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_pinchOn$) {
-        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_pinchOn$ = D.$JSCompiler_alias_FALSE$$;
-        var $totalDeltas$$inline_9694$$ = (0,D.$JSCompiler_StaticMethods__computePinchDeltas$$)($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_lastPt1$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_lastPt2$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_origPt1$, 
-        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_origPt2$);
-        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_lastPt1$ = D.$JSCompiler_alias_NULL$$;
-        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$_lastPt2$ = D.$JSCompiler_alias_NULL$$;
-        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$ = new D.$DvtPanZoomEvent$$("dvtPinchEndEvent", 0, 0, 0, 0, $totalDeltas$$inline_9694$$.$dxMin$, $totalDeltas$$inline_9694$$.$dxMax$, $totalDeltas$$inline_9694$$.$dyMin$, $totalDeltas$$inline_9694$$.$dyMax$)
+      $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$ = this.$_panZoomHandler$;
+      if($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_pinchOn$) {
+        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_pinchOn$ = D.$JSCompiler_alias_FALSE$$;
+        var $totalDeltas$$inline_9639$$ = (0,D.$JSCompiler_StaticMethods__computePinchDeltas$$)($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_lastPt1$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_lastPt2$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_origPt1$, 
+        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_origPt2$);
+        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_lastPt1$ = D.$JSCompiler_alias_NULL$$;
+        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$_lastPt2$ = D.$JSCompiler_alias_NULL$$;
+        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$ = new D.$DvtPanZoomEvent$$("dvtPinchEndEvent", 0, 0, 0, 0, $totalDeltas$$inline_9639$$.$dxMin$, $totalDeltas$$inline_9639$$.$dxMax$, $totalDeltas$$inline_9639$$.$dyMin$, $totalDeltas$$inline_9639$$.$dyMax$)
       }else {
-        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$ = D.$JSCompiler_alias_NULL$$
+        $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$ = D.$JSCompiler_alias_NULL$$
       }
-      $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$ && this.$_callback$.call(this.$_callbackObj$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$)
+      $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$ && this.$_callback$.call(this.$_callbackObj$, $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$)
     }
-    if($chartEvent1$$inline_5335_relPos$$inline_5340$$ || $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$) {
-      $axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$.preventDefault(), this.$_context$.$getTooltipManager$().$hideTooltip$()
+    if($chartEvent1$$inline_5277_relPos$$inline_5282$$ || $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$) {
+      $axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$.preventDefault(), this.$_context$.$getTooltipManager$().$hideTooltip$()
     }
     this.$_stageAbsolutePosition$ = D.$JSCompiler_alias_NULL$$;
     (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, D.$JSCompiler_alias_TRUE$$)
   }else {
-    $chartEvent1$$inline_5335_relPos$$inline_5340$$ = this.$_getRelativePosition$($axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$.pageX, $axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$.pageY);
-    if($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this)) {
-      if($axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$ = $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.$processDragEnd$($chartEvent1$$inline_5335_relPos$$inline_5340$$, $axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$.ctrlKey)) {
-        this.$_callback$.call(this.$_callbackObj$, $axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$), (0,D.$JSCompiler_StaticMethods_autoToggleZoomButton$$)(this)
+    $chartEvent1$$inline_5277_relPos$$inline_5282$$ = this.$_getRelativePosition$($axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$.pageX, $axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$.pageY);
+    if($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this)) {
+      if($axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$ = $JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.$processDragEnd$($chartEvent1$$inline_5277_relPos$$inline_5282$$, $axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$.ctrlKey)) {
+        this.$_callback$.call(this.$_callbackObj$, $axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$), (0,D.$JSCompiler_StaticMethods_autoToggleZoomButton$$)(this)
       }
-      this.$_chart$.setCursor($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9693_chartEvent2$$inline_5336_dragHandler$$inline_5341$$.getCursor($chartEvent1$$inline_5335_relPos$$inline_5340$$));
-      ($axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$ = this.$_chart$.$_axisSpace$) && (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, (0,D.$JSCompiler_StaticMethods_containsPoint$$)($axisSpace$$inline_5343_chartEvent$$inline_5342_event$$422$$, $chartEvent1$$inline_5335_relPos$$inline_5340$$.x, $chartEvent1$$inline_5335_relPos$$inline_5340$$.y))
+      this.$_chart$.setCursor($JSCompiler_StaticMethods_processPinchEnd$self$$inline_9638_chartEvent2$$inline_5278_dragHandler$$inline_5283$$.getCursor($chartEvent1$$inline_5277_relPos$$inline_5282$$));
+      ($axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$ = this.$_chart$.$_axisSpace$) && (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, (0,D.$JSCompiler_StaticMethods_containsPoint$$)($axisSpace$$inline_5285_chartEvent$$inline_5284_event$$413$$, $chartEvent1$$inline_5277_relPos$$inline_5282$$.x, $chartEvent1$$inline_5277_relPos$$inline_5282$$.y))
     }
     this.$_stageAbsolutePosition$ = D.$JSCompiler_alias_NULL$$
   }
 };
-D.$JSCompiler_prototypeAlias$$.$OnMouseMove$ = function $$JSCompiler_prototypeAlias$$$$OnMouseMove$$($event$$426_relPos$$22$$) {
-  D.$DvtChartEventManager$$.$superclass$.$OnMouseMove$.call(this, $event$$426_relPos$$22$$);
-  this.$_dataCursorHandler$ && ((0,D.$JSCompiler_StaticMethods_GetCurrentTargetForEvent$$)(this, $event$$426_relPos$$22$$) instanceof D.$DvtButton$$ ? (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)(this.$_dataCursorHandler$) : (0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $event$$426_relPos$$22$$.pageX, $event$$426_relPos$$22$$.pageY, $event$$426_relPos$$22$$.target));
+D.$JSCompiler_prototypeAlias$$.$OnMouseMove$ = function $$JSCompiler_prototypeAlias$$$$OnMouseMove$$($event$$417_relPos$$22$$) {
+  D.$DvtChartEventManager$$.$superclass$.$OnMouseMove$.call(this, $event$$417_relPos$$22$$);
+  this.$_dataCursorHandler$ && ((0,D.$JSCompiler_StaticMethods_GetCurrentTargetForEvent$$)(this, $event$$417_relPos$$22$$) instanceof D.$DvtButton$$ ? (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)(this.$_dataCursorHandler$) : (0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $event$$417_relPos$$22$$.pageX, $event$$417_relPos$$22$$.pageY, $event$$417_relPos$$22$$.target));
   var $dragHandler$$3$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this);
-  $event$$426_relPos$$22$$ = this.$_getRelativePosition$($event$$426_relPos$$22$$.pageX, $event$$426_relPos$$22$$.pageY);
-  $dragHandler$$3$$ && this.$_chart$.setCursor($dragHandler$$3$$.getCursor($event$$426_relPos$$22$$))
+  $event$$417_relPos$$22$$ = this.$_getRelativePosition$($event$$417_relPos$$22$$.pageX, $event$$417_relPos$$22$$.pageY);
+  $dragHandler$$3$$ && this.$_chart$.setCursor($dragHandler$$3$$.getCursor($event$$417_relPos$$22$$))
 };
-D.$JSCompiler_prototypeAlias$$.$OnMouseOver$ = function $$JSCompiler_prototypeAlias$$$$OnMouseOver$$($event$$427_obj$$265$$) {
-  D.$DvtChartEventManager$$.$superclass$.$OnMouseOver$.call(this, $event$$427_obj$$265$$);
-  ($event$$427_obj$$265$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$427_obj$$265$$.target)) && this.$_seriesRolloverHandler$ && this.$_seriesRolloverHandler$.$processMouseOver$($event$$427_obj$$265$$)
+D.$JSCompiler_prototypeAlias$$.$OnMouseOver$ = function $$JSCompiler_prototypeAlias$$$$OnMouseOver$$($event$$418_obj$$266$$) {
+  D.$DvtChartEventManager$$.$superclass$.$OnMouseOver$.call(this, $event$$418_obj$$266$$);
+  ($event$$418_obj$$266$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$418_obj$$266$$.target)) && this.$_seriesRolloverHandler$ && this.$_seriesRolloverHandler$.$processMouseOver$($event$$418_obj$$266$$)
 };
-D.$JSCompiler_prototypeAlias$$.$OnMouseOut$ = function $$JSCompiler_prototypeAlias$$$$OnMouseOut$$($event$$428_obj$$266$$) {
-  D.$DvtChartEventManager$$.$superclass$.$OnMouseOut$.call(this, $event$$428_obj$$266$$);
-  var $relPos$$23$$ = this.$_getRelativePosition$($event$$428_obj$$266$$.pageX, $event$$428_obj$$266$$.pageY), $JSCompiler_StaticMethods_processOut$self$$inline_5349_axisSpace$$1$$ = this.$_chart$.$_axisSpace$;
-  $JSCompiler_StaticMethods_processOut$self$$inline_5349_axisSpace$$1$$ && (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, (0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processOut$self$$inline_5349_axisSpace$$1$$, $relPos$$23$$.x, $relPos$$23$$.y));
-  this.$_dataCursorHandler$ && ($JSCompiler_StaticMethods_processOut$self$$inline_5349_axisSpace$$1$$ = this.$_dataCursorHandler$, (0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processOut$self$$inline_5349_axisSpace$$1$$.$getPlotRect$(), $relPos$$23$$.x, $relPos$$23$$.y) || (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_processOut$self$$inline_5349_axisSpace$$1$$));
+D.$JSCompiler_prototypeAlias$$.$OnMouseOut$ = function $$JSCompiler_prototypeAlias$$$$OnMouseOut$$($event$$419_obj$$267$$) {
+  D.$DvtChartEventManager$$.$superclass$.$OnMouseOut$.call(this, $event$$419_obj$$267$$);
+  var $relPos$$23$$ = this.$_getRelativePosition$($event$$419_obj$$267$$.pageX, $event$$419_obj$$267$$.pageY), $JSCompiler_StaticMethods_processOut$self$$inline_5291_axisSpace$$1$$ = this.$_chart$.$_axisSpace$;
+  $JSCompiler_StaticMethods_processOut$self$$inline_5291_axisSpace$$1$$ && (0,D.$JSCompiler_StaticMethods_setDragButtonsVisible$$)(this, (0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processOut$self$$inline_5291_axisSpace$$1$$, $relPos$$23$$.x, $relPos$$23$$.y));
+  this.$_dataCursorHandler$ && ($JSCompiler_StaticMethods_processOut$self$$inline_5291_axisSpace$$1$$ = this.$_dataCursorHandler$, (0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processOut$self$$inline_5291_axisSpace$$1$$.$getPlotRect$(), $relPos$$23$$.x, $relPos$$23$$.y) || (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_processOut$self$$inline_5291_axisSpace$$1$$));
   this.$_stageAbsolutePosition$ = D.$JSCompiler_alias_NULL$$;
-  ($event$$428_obj$$266$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$428_obj$$266$$.target)) && this.$_seriesRolloverHandler$ && this.$_seriesRolloverHandler$.$processMouseOut$($event$$428_obj$$266$$)
+  ($event$$419_obj$$267$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$419_obj$$267$$.target)) && this.$_seriesRolloverHandler$ && this.$_seriesRolloverHandler$.$processMouseOut$($event$$419_obj$$267$$)
 };
-D.$JSCompiler_prototypeAlias$$.$OnMouseWheel$ = function $$JSCompiler_prototypeAlias$$$$OnMouseWheel$$($event$$429$$) {
+D.$JSCompiler_prototypeAlias$$.$OnMouseWheel$ = function $$JSCompiler_prototypeAlias$$$$OnMouseWheel$$($event$$420$$) {
   if(D.$DvtChartEventUtils$$.$isZoomable$(this.$_chart$)) {
-    var $delta$$15_delta$$inline_5354$$ = $event$$429$$.wheelDelta != D.$JSCompiler_alias_NULL$$ ? $event$$429$$.wheelDelta : 0, $deltaXMin$$inline_5356_relPos$$24$$ = this.$_getRelativePosition$($event$$429$$.pageX, $event$$429$$.pageY);
+    var $delta$$15_delta$$inline_5296$$ = $event$$420$$.wheelDelta != D.$JSCompiler_alias_NULL$$ ? $event$$420$$.wheelDelta : 0, $deltaXMin$$inline_5298_relPos$$24$$ = this.$_getRelativePosition$($event$$420$$.pageX, $event$$420$$.pageY);
     if(this.$_panZoomHandler$) {
-      var $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$;
-      $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$ = this.$_panZoomHandler$;
-      var $startPt$$inline_5355$$ = $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_container$.$stageToLocal$($deltaXMin$$inline_5356_relPos$$24$$);
-      if((0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_bounds$, $startPt$$inline_5355$$.x, $startPt$$inline_5355$$.y)) {
-        var $delta$$15_delta$$inline_5354$$ = $delta$$15_delta$$inline_5354$$ * $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_zoomRate$, $deltaXMin$$inline_5356_relPos$$24$$ = $delta$$15_delta$$inline_5354$$ * ($startPt$$inline_5355$$.x - $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_bounds$.x), $deltaXMax$$inline_5357$$ = -$delta$$15_delta$$inline_5354$$ * ($JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_bounds$.x + 
-        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_bounds$.$w$ - $startPt$$inline_5355$$.x), $deltaYMin$$inline_5358$$ = $delta$$15_delta$$inline_5354$$ * ($startPt$$inline_5355$$.y - $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_bounds$.y);
-        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$ = -$delta$$15_delta$$inline_5354$$ * ($JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_bounds$.y + $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$.$_bounds$.$h$ - $startPt$$inline_5355$$.y);
-        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$ = new D.$DvtPanZoomEvent$$("dvtZoomEvent", $deltaXMin$$inline_5356_relPos$$24$$, $deltaXMax$$inline_5357$$, $deltaYMin$$inline_5358$$, $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$, $deltaXMin$$inline_5356_relPos$$24$$, $deltaXMax$$inline_5357$$, $deltaYMin$$inline_5358$$, $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$)
+      var $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$;
+      $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$ = this.$_panZoomHandler$;
+      var $startPt$$inline_5297$$ = $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_container$.$stageToLocal$($deltaXMin$$inline_5298_relPos$$24$$);
+      if((0,D.$JSCompiler_StaticMethods_containsPoint$$)($JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_bounds$, $startPt$$inline_5297$$.x, $startPt$$inline_5297$$.y)) {
+        var $delta$$15_delta$$inline_5296$$ = $delta$$15_delta$$inline_5296$$ * $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_zoomRate$, $deltaXMin$$inline_5298_relPos$$24$$ = $delta$$15_delta$$inline_5296$$ * ($startPt$$inline_5297$$.x - $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_bounds$.x), $deltaXMax$$inline_5299$$ = -$delta$$15_delta$$inline_5296$$ * ($JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_bounds$.x + 
+        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_bounds$.$w$ - $startPt$$inline_5297$$.x), $deltaYMin$$inline_5300$$ = $delta$$15_delta$$inline_5296$$ * ($startPt$$inline_5297$$.y - $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_bounds$.y);
+        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$ = -$delta$$15_delta$$inline_5296$$ * ($JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_bounds$.y + $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$.$_bounds$.$h$ - $startPt$$inline_5297$$.y);
+        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$ = new D.$DvtPanZoomEvent$$("dvtZoomEvent", $deltaXMin$$inline_5298_relPos$$24$$, $deltaXMax$$inline_5299$$, $deltaYMin$$inline_5300$$, $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$, $deltaXMin$$inline_5298_relPos$$24$$, $deltaXMax$$inline_5299$$, $deltaYMin$$inline_5300$$, $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$)
       }else {
-        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$ = D.$JSCompiler_alias_NULL$$
+        $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$ = D.$JSCompiler_alias_NULL$$
       }
-      $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$ && ($event$$429$$.preventDefault(), $event$$429$$.stopPropagation(), this.$_callback$.call(this.$_callbackObj$, $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5352_deltaYMax$$inline_5359_panZoomEvent$$), this.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $event$$429$$.pageX, $event$$429$$.pageY, $event$$429$$.target))
+      $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$ && ($event$$420$$.preventDefault(), $event$$420$$.stopPropagation(), this.$_callback$.call(this.$_callbackObj$, $JSCompiler_StaticMethods_processMouseWheel$self$$inline_5294_deltaYMax$$inline_5301_panZoomEvent$$), this.$_dataCursorHandler$ && (0,D.$JSCompiler_StaticMethods_processMove$$)(this.$_dataCursorHandler$, $event$$420$$.pageX, $event$$420$$.pageY, $event$$420$$.target))
     }
   }
 };
-D.$JSCompiler_prototypeAlias$$.$OnClickInternal$ = function $$JSCompiler_prototypeAlias$$$$OnClickInternal$$($event$$430_pos$$36$$) {
-  var $obj$$267$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$430_pos$$36$$.target);
-  $event$$430_pos$$36$$ = this.$_getRelativePosition$($event$$430_pos$$36$$.pageX, $event$$430_pos$$36$$.pageY);
-  this.$SeriesFocusHandler$ && this.$SeriesFocusHandler$.$processSeriesFocus$($event$$430_pos$$36$$, $obj$$267$$);
-  $obj$$267$$ && $obj$$267$$.$getAction$ && $obj$$267$$.$_action$ && this.$FireEvent$(new D.$DvtActionEvent$$("action", $obj$$267$$.$_action$, $obj$$267$$.getId()))
+D.$JSCompiler_prototypeAlias$$.$OnClickInternal$ = function $$JSCompiler_prototypeAlias$$$$OnClickInternal$$($event$$421_pos$$36$$) {
+  var $obj$$268$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $event$$421_pos$$36$$.target);
+  $event$$421_pos$$36$$ = this.$_getRelativePosition$($event$$421_pos$$36$$.pageX, $event$$421_pos$$36$$.pageY);
+  this.$SeriesFocusHandler$ && this.$SeriesFocusHandler$.$processSeriesFocus$($event$$421_pos$$36$$, $obj$$268$$);
+  $obj$$268$$ && $obj$$268$$.$getAction$ && $obj$$268$$.$_action$ && this.$FireEvent$(new D.$DvtActionEvent$$("action", $obj$$268$$.$_action$, $obj$$268$$.getId()))
 };
-D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverStartInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverStartInternal$$($dlo$$6_event$$431$$) {
-  var $touch$$48$$ = $dlo$$6_event$$431$$.$touch$, $pos$$37$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$48$$.pageX, $touch$$48$$.pageY);
-  $dlo$$6_event$$431$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$6_event$$431$$.target);
-  (0,D.$JSCompiler_StaticMethods_setTooltipEnabled$$)(this.$TouchManager$, $touch$$48$$.identifier, !$dlo$$6_event$$431$$ ? D.$JSCompiler_alias_TRUE$$ : this.$IsTooltipShowableInternal$ && this.$IsTooltipShowableInternal$($dlo$$6_event$$431$$, $pos$$37$$));
+D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverStartInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverStartInternal$$($dlo$$6_event$$422$$) {
+  var $touch$$48$$ = $dlo$$6_event$$422$$.$touch$, $pos$$37$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$48$$.pageX, $touch$$48$$.pageY);
+  $dlo$$6_event$$422$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$6_event$$422$$.target);
+  (0,D.$JSCompiler_StaticMethods_setTooltipEnabled$$)(this.$TouchManager$, $touch$$48$$.identifier, !$dlo$$6_event$$422$$ ? D.$JSCompiler_alias_TRUE$$ : this.$IsTooltipShowableInternal$ && this.$IsTooltipShowableInternal$($dlo$$6_event$$422$$, $pos$$37$$));
   return D.$JSCompiler_alias_FALSE$$
 };
-D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverMoveInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverMoveInternal$$($dlo$$7_event$$432$$) {
-  var $touch$$49$$ = $dlo$$7_event$$432$$.$touch$, $pos$$38$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$49$$.pageX, $touch$$49$$.pageY);
-  $dlo$$7_event$$432$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$7_event$$432$$.target);
-  (0,D.$JSCompiler_StaticMethods_setTooltipEnabled$$)(this.$TouchManager$, $touch$$49$$.identifier, !$dlo$$7_event$$432$$ ? D.$JSCompiler_alias_TRUE$$ : this.$IsTooltipShowableInternal$ && this.$IsTooltipShowableInternal$($dlo$$7_event$$432$$, $pos$$38$$));
+D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverMoveInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverMoveInternal$$($dlo$$7_event$$423$$) {
+  var $touch$$49$$ = $dlo$$7_event$$423$$.$touch$, $pos$$38$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)(this.$_context$, $touch$$49$$.pageX, $touch$$49$$.pageY);
+  $dlo$$7_event$$423$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$7_event$$423$$.target);
+  (0,D.$JSCompiler_StaticMethods_setTooltipEnabled$$)(this.$TouchManager$, $touch$$49$$.identifier, !$dlo$$7_event$$423$$ ? D.$JSCompiler_alias_TRUE$$ : this.$IsTooltipShowableInternal$ && this.$IsTooltipShowableInternal$($dlo$$7_event$$423$$, $pos$$38$$));
   return D.$JSCompiler_alias_FALSE$$
 };
-D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverEndInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverEndInternal$$($dlo$$8_event$$433$$) {
-  this.$_seriesRolloverHandler$ && ($dlo$$8_event$$433$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$8_event$$433$$.target), this.$_seriesRolloverHandler$.$processMouseOut$($dlo$$8_event$$433$$))
+D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverEndInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverEndInternal$$($dlo$$8_event$$424$$) {
+  this.$_seriesRolloverHandler$ && ($dlo$$8_event$$424$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$8_event$$424$$.target), this.$_seriesRolloverHandler$.$processMouseOut$($dlo$$8_event$$424$$))
 };
-D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverOverInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverOverInternal$$($dlo$$9_event$$434$$) {
-  this.$_seriesRolloverHandler$ && ($dlo$$9_event$$434$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$9_event$$434$$.target), this.$_seriesRolloverHandler$.$processMouseOver$($dlo$$9_event$$434$$))
+D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverOverInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverOverInternal$$($dlo$$9_event$$425$$) {
+  this.$_seriesRolloverHandler$ && ($dlo$$9_event$$425$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$9_event$$425$$.target), this.$_seriesRolloverHandler$.$processMouseOver$($dlo$$9_event$$425$$))
 };
-D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverOutInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverOutInternal$$($dlo$$10_event$$435$$) {
-  this.$_seriesRolloverHandler$ && ($dlo$$10_event$$435$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$10_event$$435$$.target), this.$_seriesRolloverHandler$.$processMouseOut$($dlo$$10_event$$435$$))
+D.$JSCompiler_prototypeAlias$$.$HandleTouchHoverOutInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchHoverOutInternal$$($dlo$$10_event$$426$$) {
+  this.$_seriesRolloverHandler$ && ($dlo$$10_event$$426$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $dlo$$10_event$$426$$.target), this.$_seriesRolloverHandler$.$processMouseOut$($dlo$$10_event$$426$$))
 };
-D.$JSCompiler_prototypeAlias$$.$HandleTouchClickInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchClickInternal$$($evt$$47_obj$$268$$) {
-  D.$DvtChartEventManager$$.$superclass$.$HandleTouchClickInternal$.call(this, $evt$$47_obj$$268$$);
-  ($evt$$47_obj$$268$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $evt$$47_obj$$268$$.target)) && $evt$$47_obj$$268$$.$getAction$ && $evt$$47_obj$$268$$.$_action$ && this.$FireEvent$(new D.$DvtActionEvent$$("action", $evt$$47_obj$$268$$.$_action$, $evt$$47_obj$$268$$.getId()))
+D.$JSCompiler_prototypeAlias$$.$HandleTouchClickInternal$ = function $$JSCompiler_prototypeAlias$$$$HandleTouchClickInternal$$($evt$$47_obj$$269$$) {
+  D.$DvtChartEventManager$$.$superclass$.$HandleTouchClickInternal$.call(this, $evt$$47_obj$$269$$);
+  ($evt$$47_obj$$269$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)(this, $evt$$47_obj$$269$$.target)) && $evt$$47_obj$$269$$.$getAction$ && $evt$$47_obj$$269$$.$_action$ && this.$FireEvent$(new D.$DvtActionEvent$$("action", $evt$$47_obj$$269$$.$_action$, $evt$$47_obj$$269$$.getId()))
 };
 D.$JSCompiler_prototypeAlias$$.$endDrag$ = function $$JSCompiler_prototypeAlias$$$$endDrag$$() {
   var $dragHandler$$6$$ = (0,D.$JSCompiler_StaticMethods__getDragHandler$$)(this), $chartEvent$$5$$;
@@ -2299,8 +2296,8 @@ D.$JSCompiler_prototypeAlias$$.$endDrag$ = function $$JSCompiler_prototypeAlias$
   $chartEvent$$5$$ && this.$_callback$.call(this.$_callbackObj$, $chartEvent$$5$$);
   return $chartEvent$$5$$
 };
-D.$JSCompiler_prototypeAlias$$.$IsTooltipShowableInternal$ = function $$JSCompiler_prototypeAlias$$$$IsTooltipShowableInternal$$($obj$$269$$) {
-  return this.$_dataCursorHandler$ ? $obj$$269$$ instanceof D.$DvtChartObjPeer$$ ? D.$JSCompiler_alias_FALSE$$ : !this.$_dataCursorHandler$.$_dataCursorShown$ : D.$JSCompiler_alias_TRUE$$
+D.$JSCompiler_prototypeAlias$$.$IsTooltipShowableInternal$ = function $$JSCompiler_prototypeAlias$$$$IsTooltipShowableInternal$$($obj$$270$$) {
+  return this.$_dataCursorHandler$ ? $obj$$270$$ instanceof D.$DvtChartObjPeer$$ ? D.$JSCompiler_alias_FALSE$$ : !this.$_dataCursorHandler$.$_dataCursorShown$ : D.$JSCompiler_alias_TRUE$$
 };
 D.$JSCompiler_prototypeAlias$$.$hideTooltip$ = function $$JSCompiler_prototypeAlias$$$$hideTooltip$$() {
   (!this.$_dataCursorHandler$ || !this.$_dataCursorHandler$.$_dataCursorShown$) && D.$DvtChartEventManager$$.$superclass$.$hideTooltip$.call(this)
@@ -2308,8 +2305,8 @@ D.$JSCompiler_prototypeAlias$$.$hideTooltip$ = function $$JSCompiler_prototypeAl
 D.$JSCompiler_prototypeAlias$$.$getTooltipsEnabled$ = function $$JSCompiler_prototypeAlias$$$$getTooltipsEnabled$$() {
   return this.$_dataCursorHandler$ && this.$_dataCursorHandler$.$_dataCursorShown$ ? D.$JSCompiler_alias_FALSE$$ : D.$DvtChartEventManager$$.$superclass$.$getTooltipsEnabled$.call(this)
 };
-D.$JSCompiler_prototypeAlias$$.$cancelMarquee$ = function $$JSCompiler_prototypeAlias$$$$cancelMarquee$$($event$$439$$) {
-  "zoom" == this.$_dragMode$ ? this.$_marqueeZoomHandler$.$cancelMarquee$() && $event$$439$$.preventDefault() : "select" == this.$_dragMode$ && this.$_marqueeSelectHandler$ && this.$_marqueeSelectHandler$.$cancelMarquee$() && this.$_chart$.$render$()
+D.$JSCompiler_prototypeAlias$$.$cancelMarquee$ = function $$JSCompiler_prototypeAlias$$$$cancelMarquee$$($event$$430$$) {
+  "zoom" == this.$_dragMode$ ? this.$_marqueeZoomHandler$.$cancelMarquee$() && $event$$430$$.preventDefault() : "select" == this.$_dragMode$ && this.$_marqueeSelectHandler$ && this.$_marqueeSelectHandler$.$cancelMarquee$() && this.$_chart$.$render$()
 };
 D.$JSCompiler_StaticMethods_setDragMode$$ = function $$JSCompiler_StaticMethods_setDragMode$$$($JSCompiler_StaticMethods_setDragMode$self$$, $dragMode$$) {
   $JSCompiler_StaticMethods_setDragMode$self$$.$_dragMode$ = $dragMode$$ == D.$JSCompiler_alias_NULL$$ ? D.$DvtAgent$$.$isTouchDevice$() ? "tooltip" : D.$DvtChartEventUtils$$.$isScrollable$($JSCompiler_StaticMethods_setDragMode$self$$.$_chart$) ? "pan" : "multiple" == $JSCompiler_StaticMethods_setDragMode$self$$.$_chart$.$getOptions$().selection ? "select" : D.$JSCompiler_alias_NULL$$ : $dragMode$$;
@@ -2326,8 +2323,8 @@ D.$DvtChartEventManager$$.prototype.$onSelectButtonClick$ = function $$DvtChartE
 };
 D.$JSCompiler_StaticMethods_setDragButtonsVisible$$ = function $$JSCompiler_StaticMethods_setDragButtonsVisible$$$($JSCompiler_StaticMethods_setDragButtonsVisible$self$$, $visible$$3$$) {
   if($visible$$3$$ && !$JSCompiler_StaticMethods_setDragButtonsVisible$self$$.$_dragButtonsVisible$) {
-    var $JSCompiler_StaticMethods_showDragButtons$self$$inline_5365$$ = $JSCompiler_StaticMethods_setDragButtonsVisible$self$$.$_chart$;
-    $JSCompiler_StaticMethods_showDragButtons$self$$inline_5365$$.$dragButtons$ && $JSCompiler_StaticMethods_showDragButtons$self$$inline_5365$$.$dragButtons$.$setVisible$(D.$JSCompiler_alias_TRUE$$);
+    var $JSCompiler_StaticMethods_showDragButtons$self$$inline_5307$$ = $JSCompiler_StaticMethods_setDragButtonsVisible$self$$.$_chart$;
+    $JSCompiler_StaticMethods_showDragButtons$self$$inline_5307$$.$dragButtons$ && $JSCompiler_StaticMethods_showDragButtons$self$$inline_5307$$.$dragButtons$.$setVisible$(D.$JSCompiler_alias_TRUE$$);
     $JSCompiler_StaticMethods_setDragButtonsVisible$self$$.$_dragButtonsVisible$ = D.$JSCompiler_alias_TRUE$$
   }else {
     !$visible$$3$$ && $JSCompiler_StaticMethods_setDragButtonsVisible$self$$.$_dragButtonsVisible$ && ((0,D.$JSCompiler_StaticMethods_hideDragButtons$$)($JSCompiler_StaticMethods_setDragButtonsVisible$self$$.$_chart$), $JSCompiler_StaticMethods_setDragButtonsVisible$self$$.$_dragButtonsVisible$ = D.$JSCompiler_alias_FALSE$$)
@@ -2345,34 +2342,34 @@ D.$DvtChartKeyboardHandler$$.prototype.Init = function $$DvtChartKeyboardHandler
   D.$DvtChartKeyboardHandler$$.$superclass$.Init.call(this, $manager$$13$$);
   this.$_chart$ = $chart$$64$$
 };
-D.$DvtChartKeyboardHandler$$.prototype.$isSelectionEvent$ = function $$DvtChartKeyboardHandler$$$$$isSelectionEvent$$($event$$407$$) {
-  return this.$isNavigationEvent$($event$$407$$) && !$event$$407$$.ctrlKey
+D.$DvtChartKeyboardHandler$$.prototype.$isSelectionEvent$ = function $$DvtChartKeyboardHandler$$$$$isSelectionEvent$$($event$$398$$) {
+  return this.$isNavigationEvent$($event$$398$$) && !$event$$398$$.ctrlKey
 };
-D.$DvtChartKeyboardHandler$$.prototype.$isMultiSelectEvent$ = function $$DvtChartKeyboardHandler$$$$$isMultiSelectEvent$$($event$$408$$) {
-  return 32 == $event$$408$$.keyCode && $event$$408$$.ctrlKey
+D.$DvtChartKeyboardHandler$$.prototype.$isMultiSelectEvent$ = function $$DvtChartKeyboardHandler$$$$$isMultiSelectEvent$$($event$$399$$) {
+  return 32 == $event$$399$$.keyCode && $event$$399$$.ctrlKey
 };
-D.$DvtChartKeyboardHandler$$.prototype.$processKeyDown$ = function $$DvtChartKeyboardHandler$$$$$processKeyDown$$($event$$409_navigables$$4$$) {
-  var $currentNavigable$$6_keyCode$$17$$ = $event$$409_navigables$$4$$.keyCode;
-  if(9 == $currentNavigable$$6_keyCode$$17$$) {
-    var $currentNavigable$$6_keyCode$$17$$ = (0,D.$JSCompiler_StaticMethods_getFocus$$)(this.$_eventManager$), $next$$6$$ = D.$JSCompiler_alias_NULL$$;
-    $event$$409_navigables$$4$$.preventDefault();
-    $currentNavigable$$6_keyCode$$17$$ ? $next$$6$$ = $currentNavigable$$6_keyCode$$17$$ : ($event$$409_navigables$$4$$ = D.$DvtChartTypeUtils$$.$isPie$(this.$_chart$) ? this.$_chart$.$pieChart$.$_slices$ : this.$_chart$.$getObjects$(), $next$$6$$ = D.$DvtChartKeyboardHandler$$.$superclass$.$getDefaultNavigable$.call(this, $event$$409_navigables$$4$$));
+D.$DvtChartKeyboardHandler$$.prototype.$processKeyDown$ = function $$DvtChartKeyboardHandler$$$$$processKeyDown$$($event$$400_navigables$$4$$) {
+  var $currentNavigable$$6_keyCode$$16$$ = $event$$400_navigables$$4$$.keyCode;
+  if(9 == $currentNavigable$$6_keyCode$$16$$) {
+    var $currentNavigable$$6_keyCode$$16$$ = (0,D.$JSCompiler_StaticMethods_getFocus$$)(this.$_eventManager$), $next$$6$$ = D.$JSCompiler_alias_NULL$$;
+    $event$$400_navigables$$4$$.preventDefault();
+    $currentNavigable$$6_keyCode$$16$$ ? $next$$6$$ = $currentNavigable$$6_keyCode$$16$$ : ($event$$400_navigables$$4$$ = D.$DvtChartTypeUtils$$.$isPie$(this.$_chart$) ? this.$_chart$.$pieChart$.$_slices$ : this.$_chart$.$getObjects$(), $next$$6$$ = D.$DvtChartKeyboardHandler$$.$superclass$.$getDefaultNavigable$.call(this, $event$$400_navigables$$4$$));
     $next$$6$$ && this.$_eventManager$.$setFocus$($next$$6$$);
     return $next$$6$$
   }
-  27 == $currentNavigable$$6_keyCode$$17$$ && this.$_eventManager$.$cancelMarquee$($event$$409_navigables$$4$$);
-  return D.$DvtChartKeyboardHandler$$.$superclass$.$processKeyDown$.call(this, $event$$409_navigables$$4$$)
+  27 == $currentNavigable$$6_keyCode$$16$$ && this.$_eventManager$.$cancelMarquee$($event$$400_navigables$$4$$);
+  return D.$DvtChartKeyboardHandler$$.$superclass$.$processKeyDown$.call(this, $event$$400_navigables$$4$$)
 };
 D.$DvtSeriesRolloverHandler$$ = function $$DvtSeriesRolloverHandler$$$($chart$$235$$) {
   this.Init($chart$$235$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtSeriesRolloverHandler$$, D.$DvtObj$$, "DvtSeriesRolloverHandler");
 D.$DvtSeriesRolloverHandler$$.prototype.Init = (0,D.$JSCompiler_emptyFn$$)();
-D.$DvtSeriesRolloverHandler$$.prototype.$processMouseOver$ = function $$DvtSeriesRolloverHandler$$$$$processMouseOver$$($obj$$342$$) {
-  this.$ProcessEvent$($obj$$342$$, D.$JSCompiler_alias_TRUE$$)
+D.$DvtSeriesRolloverHandler$$.prototype.$processMouseOver$ = function $$DvtSeriesRolloverHandler$$$$$processMouseOver$$($obj$$343$$) {
+  this.$ProcessEvent$($obj$$343$$, D.$JSCompiler_alias_TRUE$$)
 };
-D.$DvtSeriesRolloverHandler$$.prototype.$processMouseOut$ = function $$DvtSeriesRolloverHandler$$$$$processMouseOut$$($obj$$343$$) {
-  this.$ProcessEvent$($obj$$343$$, D.$JSCompiler_alias_FALSE$$)
+D.$DvtSeriesRolloverHandler$$.prototype.$processMouseOut$ = function $$DvtSeriesRolloverHandler$$$$$processMouseOut$$($obj$$344$$) {
+  this.$ProcessEvent$($obj$$344$$, D.$JSCompiler_alias_FALSE$$)
 };
 D.$DvtSeriesRolloverHandler$$.prototype.$ProcessEvent$ = (0,D.$JSCompiler_emptyFn$$)();
 D.$DvtChartSeriesRolloverHandler$$ = function $$DvtChartSeriesRolloverHandler$$$($chart$$5$$, $handler$$25$$) {
@@ -2384,68 +2381,68 @@ D.$DvtChartSeriesRolloverHandler$$.prototype.Init = function $$DvtChartSeriesRol
   this.$_chart$ = $chart$$6$$;
   this.$EventHandler$ = $handler$$26$$
 };
-D.$DvtChartSeriesRolloverHandler$$.prototype.$ProcessEvent$ = function $$DvtChartSeriesRolloverHandler$$$$$ProcessEvent$$($obj$$257$$, $bOver$$1$$) {
+D.$DvtChartSeriesRolloverHandler$$.prototype.$ProcessEvent$ = function $$DvtChartSeriesRolloverHandler$$$$$ProcessEvent$$($obj$$258$$, $bOver$$1$$) {
   this.$_rolloverHandled$ = D.$JSCompiler_alias_FALSE$$;
-  if($obj$$257$$) {
-    var $rolloverContainer$$ = this.$_chart$, $eventType$$23$$ = $bOver$$1$$ ? "categoryRollOver" : "categoryRollOut", $categories$$6$$ = $obj$$257$$.$getCategories$ ? $obj$$257$$.$getCategories$() : D.$JSCompiler_alias_NULL$$;
+  if($obj$$258$$) {
+    var $rolloverContainer$$ = this.$_chart$, $eventType$$23$$ = $bOver$$1$$ ? "categoryRollOver" : "categoryRollOut", $categories$$6$$ = $obj$$258$$.$getCategories$ ? $obj$$258$$.$getCategories$() : D.$JSCompiler_alias_NULL$$;
     $categories$$6$$ && 0 < $categories$$6$$.length && (this.$EventHandler$.$FireEvent$(new D.$DvtCategoryRolloverEvent$$($eventType$$23$$, $categories$$6$$), $rolloverContainer$$), this.$_rolloverHandled$ = D.$JSCompiler_alias_TRUE$$)
   }
 };
-D.$DvtChartOverview$$ = function $$DvtChartOverview$$$($context$$548$$, $callback$$108$$, $callbackObj$$82$$, $id$$193$$, $oldChart$$9$$) {
-  this.Init($context$$548$$, $callback$$108$$, $callbackObj$$82$$);
+D.$DvtChartOverview$$ = function $$DvtChartOverview$$$($context$$542$$, $callback$$108$$, $callbackObj$$82$$, $id$$193$$, $oldChart$$9$$) {
+  this.Init($context$$542$$, $callback$$108$$, $callbackObj$$82$$);
   this.$_chart$ = $oldChart$$9$$;
   this.$_id$ = $id$$193$$ + "_overview"
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtChartOverview$$, D.$DvtOverview$$, "DvtChartOverview");
 D.$DvtChartOverview$$.prototype.$createBackground$ = (0,D.$JSCompiler_emptyFn$$)();
-D.$DvtChartOverview$$.prototype.$render$ = function $$DvtChartOverview$$$$$render$$($options$$91$$, $width$$103$$, $glassPane$$inline_5235_height$$85$$) {
-  $options$$91$$.style = {overviewBackgroundColor:"rgba(0,0,0,0)", windowBackgroundColor:"rgba(0,0,0,0)", windowBorderTopColor:"#333333", windowBorderRightColor:"#333333", windowBorderBottomColor:"#333333", windowBorderLeftColor:"#333333", leftFilterPanelColor:"rgba(5,65,135,0.1)", rightFilterPanelColor:"rgba(5,65,135,0.1)", handleBackgroundImage:$options$$91$$.chart._resources.overviewGrippy, handleWidth:3, handleHeight:15, handleFillColor:"rgba(0,0,0,0)"};
-  $options$$91$$.animationOnClick = "off";
-  var $options$$inline_5232$$ = $options$$91$$.chart;
+D.$DvtChartOverview$$.prototype.$render$ = function $$DvtChartOverview$$$$$render$$($options$$92$$, $width$$102$$, $glassPane$$inline_5177_height$$83$$) {
+  $options$$92$$.style = {overviewBackgroundColor:"rgba(0,0,0,0)", windowBackgroundColor:"rgba(0,0,0,0)", windowBorderTopColor:"#333333", windowBorderRightColor:"#333333", windowBorderBottomColor:"#333333", windowBorderLeftColor:"#333333", leftFilterPanelColor:"rgba(5,65,135,0.1)", rightFilterPanelColor:"rgba(5,65,135,0.1)", handleBackgroundImage:$options$$92$$.chart._resources.overviewGrippy, handleWidth:3, handleHeight:15, handleFillColor:"rgba(0,0,0,0)"};
+  $options$$92$$.animationOnClick = "off";
+  var $options$$inline_5174$$ = $options$$92$$.chart;
   this.$_chartContainer$ = new D.$DvtContainer$$(this.$_context$);
   this.$addChild$(this.$_chartContainer$);
   window.optionsOverride = {zoomAndScroll:"off", legend:{rendered:"off"}, xAxis:{viewportMin:D.$JSCompiler_alias_NULL$$, viewportMax:D.$JSCompiler_alias_NULL$$, viewportStartGroup:D.$JSCompiler_alias_NULL$$, viewportEndGroup:D.$JSCompiler_alias_NULL$$, axisLine:{rendered:"off"}, title:D.$JSCompiler_alias_NULL$$}, yAxis:{rendered:"off"}, y2Axis:{rendered:"off"}, title:{text:D.$JSCompiler_alias_NULL$$}, subtitle:{text:D.$JSCompiler_alias_NULL$$}, footnote:{text:D.$JSCompiler_alias_NULL$$}, titleSeparator:{rendered:"off"}, 
   layout:{outerGapWidth:0, outerGapHeight:0}, _isOverview:D.$JSCompiler_alias_TRUE$$};
-  $options$$inline_5232$$ = D.$DvtJSONUtils$$.$merge$(window.optionsOverride, $options$$inline_5232$$);
-  "disabled" == $options$$inline_5232$$.timeAxisType && ($options$$inline_5232$$.xAxis.tickLabel.rendered = "off");
+  $options$$inline_5174$$ = D.$DvtJSONUtils$$.$merge$(window.optionsOverride, $options$$inline_5174$$);
+  "disabled" == $options$$inline_5174$$.timeAxisType && ($options$$inline_5174$$.xAxis.tickLabel.rendered = "off");
   this.$_chart$ || (this.$_chart$ = (0,D.$DvtChart$newInstance$$)(this.$_context$), this.$_chart$.setId(this.$_id$));
   this.$_chartContainer$.$addChild$(this.$_chart$);
-  this.$_chart$.$render$($options$$inline_5232$$, $width$$103$$, $glassPane$$inline_5235_height$$85$$);
-  $glassPane$$inline_5235_height$$85$$ = new D.$DvtRect$$(this.$_context$, 0, 0, $width$$103$$, $glassPane$$inline_5235_height$$85$$);
-  (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($glassPane$$inline_5235_height$$85$$);
-  this.$_chartContainer$.$addChild$($glassPane$$inline_5235_height$$85$$);
-  D.$DvtChartOverview$$.$superclass$.$render$.call(this, $options$$91$$, $width$$103$$, this.$_chart$.$_plotAreaSpace$.$h$)
+  this.$_chart$.$render$($options$$inline_5174$$, $width$$102$$, $glassPane$$inline_5177_height$$83$$);
+  $glassPane$$inline_5177_height$$83$$ = new D.$DvtRect$$(this.$_context$, 0, 0, $width$$102$$, $glassPane$$inline_5177_height$$83$$);
+  (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($glassPane$$inline_5177_height$$83$$);
+  this.$_chartContainer$.$addChild$($glassPane$$inline_5177_height$$83$$);
+  D.$DvtChartOverview$$.$superclass$.$render$.call(this, $options$$92$$, $width$$102$$, this.$_chart$.$_plotAreaSpace$.$h$)
 };
 D.$DvtChartOverview$$.prototype.$isLeftAndRightFilterRendered$ = (0,D.$JSCompiler_returnArg$$)(D.$JSCompiler_alias_TRUE$$);
 D.$DvtChartObjPeer$$ = function $$DvtChartObjPeer$$$($chart$$79$$, $displayables$$15$$, $seriesIndex$$18$$, $groupIndex$$5$$, $dataPos$$2$$) {
   this.Init($chart$$79$$, $displayables$$15$$, $seriesIndex$$18$$, $groupIndex$$5$$, $dataPos$$2$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtChartObjPeer$$, D.$DvtObj$$, "DvtChartObjPeer");
-D.$DvtChartObjPeer$$.prototype.Init = function $$DvtChartObjPeer$$$$Init$($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$, $displayables$$16$$, $index$$103_seriesIndex$$19$$, $groupIndex$$6$$, $dataPos$$3_seriesItem$$1$$) {
-  this.$_chart$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$;
+D.$DvtChartObjPeer$$.prototype.Init = function $$DvtChartObjPeer$$$$Init$($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$, $displayables$$16$$, $index$$103_seriesIndex$$19$$, $groupIndex$$6$$, $dataPos$$3_seriesItem$$1$$) {
+  this.$_chart$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$;
   this.$_displayables$ = $displayables$$16$$;
   this.$_group$ = this.$_series$ = D.$JSCompiler_alias_NULL$$;
   this.$_dataPos$ = $dataPos$$3_seriesItem$$1$$;
   this.$_seriesIndex$ = (0,window.isNaN)($index$$103_seriesIndex$$19$$) ? -1 : $index$$103_seriesIndex$$19$$;
-  0 <= this.$_seriesIndex$ && (this.$_series$ = D.$DvtChartDataUtils$$.$getSeries$($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$, this.$_seriesIndex$));
+  0 <= this.$_seriesIndex$ && (this.$_series$ = D.$DvtChartDataUtils$$.$getSeries$($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$, this.$_seriesIndex$));
   this.$_groupIndex$ = (0,window.isNaN)($groupIndex$$6$$) ? -1 : $groupIndex$$6$$;
-  0 <= this.$_groupIndex$ && (this.$_group$ = D.$DvtChartDataUtils$$.$getGroup$($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$, this.$_groupIndex$));
-  if($dataPos$$3_seriesItem$$1$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$, $index$$103_seriesIndex$$19$$)) {
+  0 <= this.$_groupIndex$ && (this.$_group$ = D.$DvtChartDataUtils$$.$getGroup$($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$, this.$_groupIndex$));
+  if($dataPos$$3_seriesItem$$1$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$, $index$$103_seriesIndex$$19$$)) {
     this.$_action$ = $dataPos$$3_seriesItem$$1$$.action, this.$_stampId$ = $dataPos$$3_seriesItem$$1$$._id
   }
   this.$_categories$ = this.$_series$ != D.$JSCompiler_alias_NULL$$ ? [this.$_series$] : [];
-  if($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$ = D.$DvtChartDataUtils$$.$getDataItem$($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$, $index$$103_seriesIndex$$19$$, $groupIndex$$6$$)) {
-    $ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$.categories && (this.$_categories$ = this.$_categories$.concat($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$.categories)), this.$_dataItemId$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$.id, this.$_action$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$.action, this.$_stampId$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$._id
+  if($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$ = D.$DvtChartDataUtils$$.$getDataItem$($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$, $index$$103_seriesIndex$$19$$, $groupIndex$$6$$)) {
+    $ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$.categories && (this.$_categories$ = this.$_categories$.concat($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$.categories)), this.$_dataItemId$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$.id, this.$_action$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$.action, this.$_stampId$ = $ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$._id
   }
   if(this.$_action$) {
-    for($ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$ = 0;$ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$ < this.$_displayables$.length;$ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$++) {
-      this.$_displayables$[$ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$].setCursor("pointer")
+    for($ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$ = 0;$ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$ < this.$_displayables$.length;$ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$++) {
+      this.$_displayables$[$ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$].setCursor("pointer")
     }
   }
   if(!D.$DvtAgent$$.$deferAriaCreation$()) {
-    $ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$ = this.$getDatatip$(D.$JSCompiler_alias_NULL$$);
+    $ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$ = this.$getDatatip$(D.$JSCompiler_alias_NULL$$);
     for($index$$103_seriesIndex$$19$$ = 0;$index$$103_seriesIndex$$19$$ < $displayables$$16$$.length;$index$$103_seriesIndex$$19$$++) {
-      (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($displayables$$16$$[$index$$103_seriesIndex$$19$$]), (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($displayables$$16$$[$index$$103_seriesIndex$$19$$], "label", $ariaLabel$$1_chart$$80_dataItem$$7_i$$495$$)
+      (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($displayables$$16$$[$index$$103_seriesIndex$$19$$], "img"), (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($displayables$$16$$[$index$$103_seriesIndex$$19$$], "label", $ariaLabel$$1_chart$$80_dataItem$$7_i$$491$$)
     }
   }
   this.$_isSelected$ = D.$JSCompiler_alias_FALSE$$
@@ -2481,18 +2478,18 @@ D.$JSCompiler_prototypeAlias$$.$isSelectable$ = function $$JSCompiler_prototypeA
 D.$JSCompiler_prototypeAlias$$.$isSelected$ = (0,D.$JSCompiler_get$$)("$_isSelected$");
 D.$JSCompiler_prototypeAlias$$.$setSelected$ = function $$JSCompiler_prototypeAlias$$$$setSelected$$($bSelected$$6$$) {
   this.$_isSelected$ = $bSelected$$6$$;
-  for(var $i$$496$$ = 0;$i$$496$$ < this.$_displayables$.length;$i$$496$$++) {
-    this.$_displayables$[$i$$496$$].$setSelected$ && this.$_displayables$[$i$$496$$].$setSelected$($bSelected$$6$$)
+  for(var $i$$492$$ = 0;$i$$492$$ < this.$_displayables$.length;$i$$492$$++) {
+    this.$_displayables$[$i$$492$$].$setSelected$ && this.$_displayables$[$i$$492$$].$setSelected$($bSelected$$6$$)
   }
 };
 D.$JSCompiler_prototypeAlias$$.$showHoverEffect$ = function $$JSCompiler_prototypeAlias$$$$showHoverEffect$$() {
-  for(var $i$$497$$ = 0;$i$$497$$ < this.$_displayables$.length;$i$$497$$++) {
-    this.$_displayables$[$i$$497$$].$showHoverEffect$ && this.$_displayables$[$i$$497$$].$showHoverEffect$()
+  for(var $i$$493$$ = 0;$i$$493$$ < this.$_displayables$.length;$i$$493$$++) {
+    this.$_displayables$[$i$$493$$].$showHoverEffect$ && this.$_displayables$[$i$$493$$].$showHoverEffect$()
   }
 };
 D.$JSCompiler_prototypeAlias$$.$hideHoverEffect$ = function $$JSCompiler_prototypeAlias$$$$hideHoverEffect$$() {
-  for(var $i$$498$$ = 0;$i$$498$$ < this.$_displayables$.length;$i$$498$$++) {
-    this.$_displayables$[$i$$498$$].$hideHoverEffect$ && this.$_displayables$[$i$$498$$].$hideHoverEffect$()
+  for(var $i$$494$$ = 0;$i$$494$$ < this.$_displayables$.length;$i$$494$$++) {
+    this.$_displayables$[$i$$494$$].$hideHoverEffect$ && this.$_displayables$[$i$$494$$].$hideHoverEffect$()
   }
 };
 D.$JSCompiler_prototypeAlias$$.$getShowPopupBehaviors$ = function $$JSCompiler_prototypeAlias$$$$getShowPopupBehaviors$$() {
@@ -2503,75 +2500,75 @@ D.$JSCompiler_prototypeAlias$$.$getAriaLabel$ = function $$JSCompiler_prototypeA
   return this.$getDatatip$(D.$JSCompiler_alias_NULL$$)
 };
 D.$JSCompiler_prototypeAlias$$.$getCategories$ = (0,D.$JSCompiler_get$$)("$_categories$");
-D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_prototypeAlias$$$$getNextNavigable$$($chart$$inline_5276_event$$418_next$$7$$) {
-  var $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$;
-  $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ = $chart$$inline_5276_event$$418_next$$7$$.keyCode;
-  if($chart$$inline_5276_event$$418_next$$7$$.type == D.$DvtMouseEvent$CLICK$$ || 32 == $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ && $chart$$inline_5276_event$$418_next$$7$$.ctrlKey) {
+D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_prototypeAlias$$$$getNextNavigable$$($chart$$inline_5218_event$$409_next$$7$$) {
+  var $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$;
+  $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ = $chart$$inline_5218_event$$409_next$$7$$.keyCode;
+  if($chart$$inline_5218_event$$409_next$$7$$.type == D.$DvtMouseEvent$CLICK$$ || 32 == $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ && $chart$$inline_5218_event$$409_next$$7$$.ctrlKey) {
     return this
   }
-  $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ = this.$_chart$;
-  for(var $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$.$getObjects$(), $navigables$$5_seriesIndex$$inline_5278$$ = [], $i$$499_seriesCount$$inline_5280$$ = 0;$i$$499_seriesCount$$inline_5280$$ < $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$.length;$i$$499_seriesCount$$inline_5280$$++) {
-    (0,D.$JSCompiler_StaticMethods_isNavigable$$)($chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$[$i$$499_seriesCount$$inline_5280$$]) && $navigables$$5_seriesIndex$$inline_5278$$.push($chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$[$i$$499_seriesCount$$inline_5280$$])
+  $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ = this.$_chart$;
+  for(var $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$.$getObjects$(), $navigables$$5_seriesIndex$$inline_5220$$ = [], $i$$495_seriesCount$$inline_5222$$ = 0;$i$$495_seriesCount$$inline_5222$$ < $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$.length;$i$$495_seriesCount$$inline_5222$$++) {
+    (0,D.$JSCompiler_StaticMethods_isNavigable$$)($chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$[$i$$495_seriesCount$$inline_5222$$]) && $navigables$$5_seriesIndex$$inline_5220$$.push($chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$[$i$$495_seriesCount$$inline_5222$$])
   }
-  if(D.$DvtChartTypeUtils$$.$isScatterBubble$($chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$)) {
-    $chart$$inline_5276_event$$418_next$$7$$ = (0,D.$DvtKeyboardHandler$getNextAdjacentNavigable$$)(this, $chart$$inline_5276_event$$418_next$$7$$, $navigables$$5_seriesIndex$$inline_5278$$)
+  if(D.$DvtChartTypeUtils$$.$isScatterBubble$($chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$)) {
+    $chart$$inline_5218_event$$409_next$$7$$ = (0,D.$DvtKeyboardHandler$getNextAdjacentNavigable$$)(this, $chart$$inline_5218_event$$409_next$$7$$, $navigables$$5_seriesIndex$$inline_5220$$)
   }else {
-    if(D.$DvtChartTypeUtils$$.$isArea$($chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$) || D.$DvtChartTypeUtils$$.$isLine$($chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$) || D.$DvtChartTypeUtils$$.$isStacked$($chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$)) {
+    if(D.$DvtChartTypeUtils$$.$isArea$($chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$) || D.$DvtChartTypeUtils$$.$isLine$($chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$) || D.$DvtChartTypeUtils$$.$isStacked$($chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$)) {
       a: {
-        $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $chart$$inline_5276_event$$418_next$$7$$.keyCode;
-        $chart$$inline_5276_event$$418_next$$7$$ = this.$_chart$;
-        var $context$$inline_5277_isRTL$$inline_5286$$ = $chart$$inline_5276_event$$418_next$$7$$.$_context$, $navigables$$5_seriesIndex$$inline_5278$$ = this.$getSeriesIndex$();
-        $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ = this.$getGroupIndex$();
-        var $i$$499_seriesCount$$inline_5280$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$inline_5276_event$$418_next$$7$$), $groupCount$$inline_5281$$ = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$inline_5276_event$$418_next$$7$$), $nextUpSeriesIndex$$inline_5282_seriesCount$$inline_9658$$;
-        $nextUpSeriesIndex$$inline_5282_seriesCount$$inline_9658$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$inline_5276_event$$418_next$$7$$);
-        for(var $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5276_event$$418_next$$7$$, $navigables$$5_seriesIndex$$inline_5278$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$), $nextValue$$inline_9660_nextValue$$inline_9670$$ = D.$JSCompiler_alias_NULL$$, $nextSeriesIndex$$inline_9661_nextSeriesIndex$$inline_9671$$ = D.$JSCompiler_alias_NULL$$, $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$ = 
-        0;$i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$ < $nextUpSeriesIndex$$inline_5282_seriesCount$$inline_9658$$;$i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$++) {
-          var $itemValue$$inline_9663_itemValue$$inline_9673$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5276_event$$418_next$$7$$, $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$);
-          if($itemValue$$inline_9663_itemValue$$inline_9673$$ > $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ || $itemValue$$inline_9663_itemValue$$inline_9673$$ == $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ && $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$ > $navigables$$5_seriesIndex$$inline_5278$$) {
-            if($nextValue$$inline_9660_nextValue$$inline_9670$$ !== D.$JSCompiler_alias_NULL$$ && $itemValue$$inline_9663_itemValue$$inline_9673$$ < $nextValue$$inline_9660_nextValue$$inline_9670$$ || $nextValue$$inline_9660_nextValue$$inline_9670$$ == D.$JSCompiler_alias_NULL$$) {
-              $nextValue$$inline_9660_nextValue$$inline_9670$$ = $itemValue$$inline_9663_itemValue$$inline_9673$$, $nextSeriesIndex$$inline_9661_nextSeriesIndex$$inline_9671$$ = $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$
+        $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $chart$$inline_5218_event$$409_next$$7$$.keyCode;
+        $chart$$inline_5218_event$$409_next$$7$$ = this.$_chart$;
+        var $context$$inline_5219_isRTL$$inline_5228$$ = $chart$$inline_5218_event$$409_next$$7$$.$_context$, $navigables$$5_seriesIndex$$inline_5220$$ = this.$getSeriesIndex$();
+        $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ = this.$getGroupIndex$();
+        var $i$$495_seriesCount$$inline_5222$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$inline_5218_event$$409_next$$7$$), $groupCount$$inline_5223$$ = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$inline_5218_event$$409_next$$7$$), $nextUpSeriesIndex$$inline_5224_seriesCount$$inline_9603$$;
+        $nextUpSeriesIndex$$inline_5224_seriesCount$$inline_9603$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$inline_5218_event$$409_next$$7$$);
+        for(var $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5218_event$$409_next$$7$$, $navigables$$5_seriesIndex$$inline_5220$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$), $nextValue$$inline_9605_nextValue$$inline_9615$$ = D.$JSCompiler_alias_NULL$$, $nextSeriesIndex$$inline_9606_nextSeriesIndex$$inline_9616$$ = D.$JSCompiler_alias_NULL$$, $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$ = 
+        0;$i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$ < $nextUpSeriesIndex$$inline_5224_seriesCount$$inline_9603$$;$i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$++) {
+          var $itemValue$$inline_9608_itemValue$$inline_9618$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5218_event$$409_next$$7$$, $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$);
+          if($itemValue$$inline_9608_itemValue$$inline_9618$$ > $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ || $itemValue$$inline_9608_itemValue$$inline_9618$$ == $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ && $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$ > $navigables$$5_seriesIndex$$inline_5220$$) {
+            if($nextValue$$inline_9605_nextValue$$inline_9615$$ !== D.$JSCompiler_alias_NULL$$ && $itemValue$$inline_9608_itemValue$$inline_9618$$ < $nextValue$$inline_9605_nextValue$$inline_9615$$ || $nextValue$$inline_9605_nextValue$$inline_9615$$ == D.$JSCompiler_alias_NULL$$) {
+              $nextValue$$inline_9605_nextValue$$inline_9615$$ = $itemValue$$inline_9608_itemValue$$inline_9618$$, $nextSeriesIndex$$inline_9606_nextSeriesIndex$$inline_9616$$ = $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$
             }
           }
         }
-        $nextUpSeriesIndex$$inline_5282_seriesCount$$inline_9658$$ = $nextSeriesIndex$$inline_9661_nextSeriesIndex$$inline_9671$$;
-        $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$inline_5276_event$$418_next$$7$$);
-        $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5276_event$$418_next$$7$$, $navigables$$5_seriesIndex$$inline_5278$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$);
-        $nextSeriesIndex$$inline_9661_nextSeriesIndex$$inline_9671$$ = $nextValue$$inline_9660_nextValue$$inline_9670$$ = D.$JSCompiler_alias_NULL$$;
-        for($i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$ -= 1;0 <= $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$;$i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$--) {
-          if($itemValue$$inline_9663_itemValue$$inline_9673$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5276_event$$418_next$$7$$, $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$), $itemValue$$inline_9663_itemValue$$inline_9673$$ < $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ || $itemValue$$inline_9663_itemValue$$inline_9673$$ == $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ && 
-          $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$ < $navigables$$5_seriesIndex$$inline_5278$$) {
-            if($nextValue$$inline_9660_nextValue$$inline_9670$$ !== D.$JSCompiler_alias_NULL$$ && $itemValue$$inline_9663_itemValue$$inline_9673$$ > $nextValue$$inline_9660_nextValue$$inline_9670$$ || $nextValue$$inline_9660_nextValue$$inline_9670$$ == D.$JSCompiler_alias_NULL$$) {
-              $nextValue$$inline_9660_nextValue$$inline_9670$$ = $itemValue$$inline_9663_itemValue$$inline_9673$$, $nextSeriesIndex$$inline_9661_nextSeriesIndex$$inline_9671$$ = $i$$inline_9662_i$$inline_9672_seriesCount$$inline_9668$$
+        $nextUpSeriesIndex$$inline_5224_seriesCount$$inline_9603$$ = $nextSeriesIndex$$inline_9606_nextSeriesIndex$$inline_9616$$;
+        $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$inline_5218_event$$409_next$$7$$);
+        $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5218_event$$409_next$$7$$, $navigables$$5_seriesIndex$$inline_5220$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$);
+        $nextSeriesIndex$$inline_9606_nextSeriesIndex$$inline_9616$$ = $nextValue$$inline_9605_nextValue$$inline_9615$$ = D.$JSCompiler_alias_NULL$$;
+        for($i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$ -= 1;0 <= $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$;$i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$--) {
+          if($itemValue$$inline_9608_itemValue$$inline_9618$$ = D.$DvtChartDataUtils$$.getValue($chart$$inline_5218_event$$409_next$$7$$, $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$), $itemValue$$inline_9608_itemValue$$inline_9618$$ < $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ || $itemValue$$inline_9608_itemValue$$inline_9618$$ == $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ && 
+          $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$ < $navigables$$5_seriesIndex$$inline_5220$$) {
+            if($nextValue$$inline_9605_nextValue$$inline_9615$$ !== D.$JSCompiler_alias_NULL$$ && $itemValue$$inline_9608_itemValue$$inline_9618$$ > $nextValue$$inline_9605_nextValue$$inline_9615$$ || $nextValue$$inline_9605_nextValue$$inline_9615$$ == D.$JSCompiler_alias_NULL$$) {
+              $nextValue$$inline_9605_nextValue$$inline_9615$$ = $itemValue$$inline_9608_itemValue$$inline_9618$$, $nextSeriesIndex$$inline_9606_nextSeriesIndex$$inline_9616$$ = $i$$inline_9607_i$$inline_9617_seriesCount$$inline_9613$$
             }
           }
         }
-        $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ = $nextSeriesIndex$$inline_9661_nextSeriesIndex$$inline_9671$$;
-        $context$$inline_5277_isRTL$$inline_5286$$ = D.$DvtAgent$$.$isRightToLeft$($context$$inline_5277_isRTL$$inline_5286$$);
-        if(D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5276_event$$418_next$$7$$) && 40 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && 0 < $navigables$$5_seriesIndex$$inline_5278$$) {
-          $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $navigables$$5_seriesIndex$$inline_5278$$ - 1
+        $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ = $nextSeriesIndex$$inline_9606_nextSeriesIndex$$inline_9616$$;
+        $context$$inline_5219_isRTL$$inline_5228$$ = D.$DvtAgent$$.$isRightToLeft$($context$$inline_5219_isRTL$$inline_5228$$);
+        if(D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5218_event$$409_next$$7$$) && 40 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && 0 < $navigables$$5_seriesIndex$$inline_5220$$) {
+          $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $navigables$$5_seriesIndex$$inline_5220$$ - 1
         }else {
-          if(D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5276_event$$418_next$$7$$) && 38 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && $navigables$$5_seriesIndex$$inline_5278$$ < $i$$499_seriesCount$$inline_5280$$ - 1) {
-            $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $navigables$$5_seriesIndex$$inline_5278$$ + 1
+          if(D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5218_event$$409_next$$7$$) && 38 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && $navigables$$5_seriesIndex$$inline_5220$$ < $i$$495_seriesCount$$inline_5222$$ - 1) {
+            $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $navigables$$5_seriesIndex$$inline_5220$$ + 1
           }else {
-            if(!D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5276_event$$418_next$$7$$) && 38 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && $nextUpSeriesIndex$$inline_5282_seriesCount$$inline_9658$$ != D.$JSCompiler_alias_NULL$$) {
-              $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $nextUpSeriesIndex$$inline_5282_seriesCount$$inline_9658$$
+            if(!D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5218_event$$409_next$$7$$) && 38 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && $nextUpSeriesIndex$$inline_5224_seriesCount$$inline_9603$$ != D.$JSCompiler_alias_NULL$$) {
+              $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $nextUpSeriesIndex$$inline_5224_seriesCount$$inline_9603$$
             }else {
-              if(!D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5276_event$$418_next$$7$$) && 40 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$ != D.$JSCompiler_alias_NULL$$) {
-                $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $currentValue$$inline_9659_currentValue$$inline_9669_nextDownSeriesIndex$$inline_5283$$
+              if(!D.$DvtChartTypeUtils$$.$isStacked$($chart$$inline_5218_event$$409_next$$7$$) && 40 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$ != D.$JSCompiler_alias_NULL$$) {
+                $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $currentValue$$inline_9604_currentValue$$inline_9614_nextDownSeriesIndex$$inline_5225$$
               }else {
-                if(39 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ < $groupCount$$inline_5281$$ - 1 && !$context$$inline_5277_isRTL$$inline_5286$$) {
-                  $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $navigables$$5_seriesIndex$$inline_5278$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ += 1
+                if(39 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ < $groupCount$$inline_5223$$ - 1 && !$context$$inline_5219_isRTL$$inline_5228$$) {
+                  $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $navigables$$5_seriesIndex$$inline_5220$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ += 1
                 }else {
-                  if(37 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && 0 < $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ && !$context$$inline_5277_isRTL$$inline_5286$$) {
-                    $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $navigables$$5_seriesIndex$$inline_5278$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ -= 1
+                  if(37 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && 0 < $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ && !$context$$inline_5219_isRTL$$inline_5228$$) {
+                    $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $navigables$$5_seriesIndex$$inline_5220$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ -= 1
                   }else {
-                    if(39 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && 0 < $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ && $context$$inline_5277_isRTL$$inline_5286$$) {
-                      $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $navigables$$5_seriesIndex$$inline_5278$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ -= 1
+                    if(39 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && 0 < $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ && $context$$inline_5219_isRTL$$inline_5228$$) {
+                      $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $navigables$$5_seriesIndex$$inline_5220$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ -= 1
                     }else {
-                      if(37 == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ < $groupCount$$inline_5281$$ - 1 && $context$$inline_5277_isRTL$$inline_5286$$) {
-                        $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ = $navigables$$5_seriesIndex$$inline_5278$$, $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$ += 1
+                      if(37 == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ < $groupCount$$inline_5223$$ - 1 && $context$$inline_5219_isRTL$$inline_5228$$) {
+                        $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ = $navigables$$5_seriesIndex$$inline_5220$$, $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$ += 1
                       }else {
-                        $chart$$inline_5276_event$$418_next$$7$$ = this;
+                        $chart$$inline_5218_event$$409_next$$7$$ = this;
                         break a
                       }
                     }
@@ -2582,23 +2579,23 @@ D.$JSCompiler_prototypeAlias$$.$getNextNavigable$ = function $$JSCompiler_protot
           }
         }
         b: {
-          for(window.i = 0;window.i < $chart$$inline_5276_event$$418_next$$7$$.$_peers$.length;window.i++) {
-            if($chart$$inline_5276_event$$418_next$$7$$.$_peers$[window.i].$getSeriesIndex$() == $chartObjs_keyCode$$inline_5275_nextSeriesIndex$$inline_5284_seriesIndex$$inline_9676$$ && $chart$$inline_5276_event$$418_next$$7$$.$_peers$[window.i].$getGroupIndex$() == $chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$) {
-              $chart$$inline_5276_event$$418_next$$7$$ = $chart$$inline_5276_event$$418_next$$7$$.$_peers$[window.i];
+          for(window.i = 0;window.i < $chart$$inline_5218_event$$409_next$$7$$.$_peers$.length;window.i++) {
+            if($chart$$inline_5218_event$$409_next$$7$$.$_peers$[window.i].$getSeriesIndex$() == $chartObjs_keyCode$$inline_5217_nextSeriesIndex$$inline_5226_seriesIndex$$inline_9621$$ && $chart$$inline_5218_event$$409_next$$7$$.$_peers$[window.i].$getGroupIndex$() == $chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$) {
+              $chart$$inline_5218_event$$409_next$$7$$ = $chart$$inline_5218_event$$409_next$$7$$.$_peers$[window.i];
               break b
             }
           }
-          $chart$$inline_5276_event$$418_next$$7$$ = D.$JSCompiler_alias_NULL$$
+          $chart$$inline_5218_event$$409_next$$7$$ = D.$JSCompiler_alias_NULL$$
         }
       }
     }else {
-      if(D.$DvtChartTypeUtils$$.$isFunnel$($chart$$82_groupIndex$$inline_5279_groupIndex$$inline_9677_keyCode$$18_nextGroupIndex$$inline_5285$$) && (38 == $chart$$inline_5276_event$$418_next$$7$$.keyCode || 40 == $chart$$inline_5276_event$$418_next$$7$$.keyCode)) {
-        $chart$$inline_5276_event$$418_next$$7$$.clone(), $chart$$inline_5276_event$$418_next$$7$$.keyCode -= 1
+      if(D.$DvtChartTypeUtils$$.$isFunnel$($chart$$82_groupIndex$$inline_5221_groupIndex$$inline_9622_keyCode$$17_nextGroupIndex$$inline_5227$$) && (38 == $chart$$inline_5218_event$$409_next$$7$$.keyCode || 40 == $chart$$inline_5218_event$$409_next$$7$$.keyCode)) {
+        $chart$$inline_5218_event$$409_next$$7$$.clone(), $chart$$inline_5218_event$$409_next$$7$$.keyCode -= 1
       }
-      $chart$$inline_5276_event$$418_next$$7$$ = (0,D.$DvtKeyboardHandler$getNextNavigable$$)(this, $chart$$inline_5276_event$$418_next$$7$$, $navigables$$5_seriesIndex$$inline_5278$$)
+      $chart$$inline_5218_event$$409_next$$7$$ = (0,D.$DvtKeyboardHandler$getNextNavigable$$)(this, $chart$$inline_5218_event$$409_next$$7$$, $navigables$$5_seriesIndex$$inline_5220$$)
     }
   }
-  return $chart$$inline_5276_event$$418_next$$7$$
+  return $chart$$inline_5218_event$$409_next$$7$$
 };
 D.$JSCompiler_prototypeAlias$$.$getKeyboardBoundingBox$ = function $$JSCompiler_prototypeAlias$$$$getKeyboardBoundingBox$$() {
   return this.$_displayables$[0] ? this.$_displayables$[0].$getDimensions$() : new D.$DvtRectangle$$(0, 0, 0, 0)
@@ -2676,19 +2673,19 @@ D.$DvtChartAxisUtils$$.$isAxisRendered$ = function $$DvtChartAxisUtils$$$$isAxis
   if("y" == $type$$176$$ && D.$DvtChartTypeUtils$$.$hasY2DataOnly$($chart$$156$$) || "y2" == $type$$176$$ && !D.$DvtChartTypeUtils$$.$hasY2Data$($chart$$156$$)) {
     return D.$JSCompiler_alias_FALSE$$
   }
-  var $axisOptions$$4_options$$116$$ = $chart$$156$$.$getOptions$(), $axisOptions$$4_options$$116$$ = "x" == $type$$176$$ ? $axisOptions$$4_options$$116$$.xAxis : "y" == $type$$176$$ ? $axisOptions$$4_options$$116$$.yAxis : $axisOptions$$4_options$$116$$.y2Axis;
-  return"off" == $axisOptions$$4_options$$116$$.rendered || "off" == $axisOptions$$4_options$$116$$.tickLabel.rendered && !$axisOptions$$4_options$$116$$.title ? D.$JSCompiler_alias_FALSE$$ : D.$JSCompiler_alias_TRUE$$
+  var $axisOptions$$4_options$$117$$ = $chart$$156$$.$getOptions$(), $axisOptions$$4_options$$117$$ = "x" == $type$$176$$ ? $axisOptions$$4_options$$117$$.xAxis : "y" == $type$$176$$ ? $axisOptions$$4_options$$117$$.yAxis : $axisOptions$$4_options$$117$$.y2Axis;
+  return"off" == $axisOptions$$4_options$$117$$.rendered || "off" == $axisOptions$$4_options$$117$$.tickLabel.rendered && !$axisOptions$$4_options$$117$$.title ? D.$JSCompiler_alias_FALSE$$ : D.$JSCompiler_alias_TRUE$$
 };
 D.$DvtChartDataUtils$$ = {};
 D.$DvtObj$$.$createSubclass$(D.$DvtChartDataUtils$$, D.$DvtObj$$, "DvtChartDataUtils");
 D.$DvtChartDataUtils$$.$_TYPE_LABEL$ = "label";
 D.$DvtChartDataUtils$$.$hasData$ = function $$DvtChartDataUtils$$$$hasData$$($chart$$203$$) {
-  var $options$$124_seriesCount$$22$$ = $chart$$203$$.$getOptions$();
-  if(!$options$$124_seriesCount$$22$$ || !$options$$124_seriesCount$$22$$.series || 1 > $options$$124_seriesCount$$22$$.series.length) {
+  var $options$$125_seriesCount$$22$$ = $chart$$203$$.$getOptions$();
+  if(!$options$$125_seriesCount$$22$$ || !$options$$125_seriesCount$$22$$.series || 1 > $options$$125_seriesCount$$22$$.series.length) {
     return D.$JSCompiler_alias_FALSE$$
   }
-  for(var $options$$124_seriesCount$$22$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$203$$), $i$$525$$ = 0;$i$$525$$ < $options$$124_seriesCount$$22$$;$i$$525$$++) {
-    var $seriesItem$$18$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$203$$, $i$$525$$);
+  for(var $options$$125_seriesCount$$22$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$203$$), $i$$521$$ = 0;$i$$521$$ < $options$$125_seriesCount$$22$$;$i$$521$$++) {
+    var $seriesItem$$18$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$203$$, $i$$521$$);
     if($seriesItem$$18$$ && $seriesItem$$18$$.items && 1 <= $seriesItem$$18$$.items.length) {
       return D.$JSCompiler_alias_TRUE$$
     }
@@ -2698,8 +2695,8 @@ D.$DvtChartDataUtils$$.$hasData$ = function $$DvtChartDataUtils$$$$hasData$$($ch
 D.$DvtChartDataUtils$$.$hasSeriesData$ = function $$DvtChartDataUtils$$$$hasSeriesData$$($chart$$204$$, $seriesIndex$$63$$) {
   var $dataItems$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$204$$, $seriesIndex$$63$$).items;
   if($dataItems$$) {
-    for(var $i$$526$$ = 0;$i$$526$$ < $dataItems$$.length;$i$$526$$++) {
-      if($dataItems$$[$i$$526$$] != D.$JSCompiler_alias_NULL$$) {
+    for(var $i$$522$$ = 0;$i$$522$$ < $dataItems$$.length;$i$$522$$++) {
+      if($dataItems$$[$i$$522$$] != D.$JSCompiler_alias_NULL$$) {
         return D.$JSCompiler_alias_TRUE$$
       }
     }
@@ -2708,20 +2705,20 @@ D.$DvtChartDataUtils$$.$hasSeriesData$ = function $$DvtChartDataUtils$$$$hasSeri
 };
 D.$DvtChartDataUtils$$.$processDataObject$ = function $$DvtChartDataUtils$$$$processDataObject$$($chart$$205$$) {
   if(D.$DvtChartDataUtils$$.$hasData$($chart$$205$$)) {
-    for(var $maxGroups$$ = 0, $arSeriesStyle_options$$125$$ = $chart$$205$$.$_seriesStyleArray$, $bundle$$4_seriesCount$$23$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$205$$), $group$$12_i$$527$$ = 0;$group$$12_i$$527$$ < $bundle$$4_seriesCount$$23$$;$group$$12_i$$527$$++) {
-      var $series$$20_seriesItem$$20$$ = D.$DvtChartDataUtils$$.$getSeries$($chart$$205$$, $group$$12_i$$527$$);
-      $series$$20_seriesItem$$20$$ != D.$JSCompiler_alias_NULL$$ && 0 > D.$DvtArrayUtils$$.$getIndex$($arSeriesStyle_options$$125$$, $series$$20_seriesItem$$20$$) && $arSeriesStyle_options$$125$$.push($series$$20_seriesItem$$20$$);
-      if(($series$$20_seriesItem$$20$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$205$$, $group$$12_i$$527$$)) && $series$$20_seriesItem$$20$$.items && $series$$20_seriesItem$$20$$.items.length > $maxGroups$$) {
+    for(var $maxGroups$$ = 0, $arSeriesStyle_options$$126$$ = $chart$$205$$.$_seriesStyleArray$, $bundle$$4_seriesCount$$23$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$205$$), $group$$12_i$$523$$ = 0;$group$$12_i$$523$$ < $bundle$$4_seriesCount$$23$$;$group$$12_i$$523$$++) {
+      var $series$$20_seriesItem$$20$$ = D.$DvtChartDataUtils$$.$getSeries$($chart$$205$$, $group$$12_i$$523$$);
+      $series$$20_seriesItem$$20$$ != D.$JSCompiler_alias_NULL$$ && 0 > D.$DvtArrayUtils$$.$getIndex$($arSeriesStyle_options$$126$$, $series$$20_seriesItem$$20$$) && $arSeriesStyle_options$$126$$.push($series$$20_seriesItem$$20$$);
+      if(($series$$20_seriesItem$$20$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$205$$, $group$$12_i$$523$$)) && $series$$20_seriesItem$$20$$.items && $series$$20_seriesItem$$20$$.items.length > $maxGroups$$) {
         $maxGroups$$ = $series$$20_seriesItem$$20$$.items.length
       }
       D.$DvtChartTypeUtils$$.$isFunnel$($chart$$205$$) && ($series$$20_seriesItem$$20$$.displayInLegend = "off")
     }
-    $arSeriesStyle_options$$125$$ = $chart$$205$$.$getOptions$();
-    $arSeriesStyle_options$$125$$.groups || ($arSeriesStyle_options$$125$$.groups = []);
-    for($bundle$$4_seriesCount$$23$$ = $chart$$205$$.$Bundle$;$arSeriesStyle_options$$125$$.groups.length < $maxGroups$$;) {
-      $group$$12_i$$527$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$4_seriesCount$$23$$, "DEFAULT_GROUP_NAME", $arSeriesStyle_options$$125$$.groups.length + 1), $arSeriesStyle_options$$125$$.groups.push($group$$12_i$$527$$)
+    $arSeriesStyle_options$$126$$ = $chart$$205$$.$getOptions$();
+    $arSeriesStyle_options$$126$$.groups || ($arSeriesStyle_options$$126$$.groups = []);
+    for($bundle$$4_seriesCount$$23$$ = $chart$$205$$.$Bundle$;$arSeriesStyle_options$$126$$.groups.length < $maxGroups$$;) {
+      $group$$12_i$$523$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$4_seriesCount$$23$$, "DEFAULT_GROUP_NAME", $arSeriesStyle_options$$126$$.groups.length + 1), $arSeriesStyle_options$$126$$.groups.push($group$$12_i$$523$$)
     }
-    D.$DvtChartTypeUtils$$.$isFunnel$($chart$$205$$) && ($arSeriesStyle_options$$125$$.styleDefaults.groupTooltipType = "none")
+    D.$DvtChartTypeUtils$$.$isFunnel$($chart$$205$$) && ($arSeriesStyle_options$$126$$.styleDefaults.groupTooltipType = "none")
   }
 };
 D.$DvtChartDataUtils$$.$getSeriesCount$ = function $$DvtChartDataUtils$$$$getSeriesCount$$($chart$$206$$) {
@@ -2750,9 +2747,9 @@ D.$DvtChartDataUtils$$.$getSeriesItem$ = function $$DvtChartDataUtils$$$$getSeri
   if((0,window.isNaN)($seriesIndex$$67$$) || $seriesIndex$$67$$ == D.$JSCompiler_alias_NULL$$) {
     return D.$JSCompiler_alias_NULL$$
   }
-  var $options$$126$$ = $chart$$211$$.$getOptions$();
-  if($options$$126$$.series && $options$$126$$.series.length > $seriesIndex$$67$$) {
-    return $options$$126$$.series[$seriesIndex$$67$$]
+  var $options$$127$$ = $chart$$211$$.$getOptions$();
+  if($options$$127$$.series && $options$$127$$.series.length > $seriesIndex$$67$$) {
+    return $options$$127$$.series[$seriesIndex$$67$$]
   }
 };
 D.$DvtChartDataUtils$$.$getDataItem$ = function $$DvtChartDataUtils$$$$getDataItem$$($chart$$212_seriesItem$$23$$, $seriesIndex$$68$$, $groupIndex$$32$$) {
@@ -2801,9 +2798,9 @@ D.$DvtChartDataUtils$$.getValue = function $$DvtChartDataUtils$$$getValue$($char
 };
 D.$DvtChartDataUtils$$.$getCumulativeValue$ = function $$DvtChartDataUtils$$$$getCumulativeValue$$($chart$$219$$, $seriesIndex$$70$$, $groupIndex$$37$$, $bIncludeHiddenSeries$$) {
   if(D.$DvtChartTypeUtils$$.$isStacked$($chart$$219$$)) {
-    for(var $bCombo$$ = D.$DvtChartTypeUtils$$.$isCombo$($chart$$219$$), $seriesType$$2$$ = D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$219$$, $seriesIndex$$70$$), $bAssignedToY2$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$219$$, $seriesIndex$$70$$), $total$$1$$ = 0, $i$$528$$ = 0;$i$$528$$ <= $seriesIndex$$70$$;$i$$528$$++) {
-      if(($bIncludeHiddenSeries$$ || D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$219$$, $i$$528$$)) && !($bCombo$$ && $seriesType$$2$$ != D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$219$$, $i$$528$$)) && $bAssignedToY2$$ == D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$219$$, $i$$528$$)) {
-        var $groupValue$$ = D.$DvtChartDataUtils$$.getValue($chart$$219$$, $i$$528$$, $groupIndex$$37$$), $total$$1$$ = $total$$1$$ + ($groupValue$$ == D.$JSCompiler_alias_NULL$$ || (0,window.isNaN)($groupValue$$) ? 0 : $groupValue$$)
+    for(var $bCombo$$ = D.$DvtChartTypeUtils$$.$isCombo$($chart$$219$$), $seriesType$$2$$ = D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$219$$, $seriesIndex$$70$$), $bAssignedToY2$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$219$$, $seriesIndex$$70$$), $total$$1$$ = 0, $i$$524$$ = 0;$i$$524$$ <= $seriesIndex$$70$$;$i$$524$$++) {
+      if(($bIncludeHiddenSeries$$ || D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$219$$, $i$$524$$)) && !($bCombo$$ && $seriesType$$2$$ != D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$219$$, $i$$524$$)) && $bAssignedToY2$$ == D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$219$$, $i$$524$$)) {
+        var $groupValue$$ = D.$DvtChartDataUtils$$.getValue($chart$$219$$, $i$$524$$, $groupIndex$$37$$), $total$$1$$ = $total$$1$$ + ($groupValue$$ == D.$JSCompiler_alias_NULL$$ || (0,window.isNaN)($groupValue$$) ? 0 : $groupValue$$)
       }
     }
     return $total$$1$$
@@ -2841,17 +2838,17 @@ D.$DvtChartDataUtils$$.$getViewportEdgeYValues$ = function $$DvtChartDataUtils$$
   if(!$seriesData$$) {
     return{min:D.$JSCompiler_alias_NULL$$, max:D.$JSCompiler_alias_NULL$$}
   }
-  for(var $bIncludeHiddenSeries$$1$$ = "withoutRescale" == D.$DvtChartEventUtils$$.$getHideAndShowBehavior$($chart$$223$$), $max$$10_minMax$$2$$ = D.$DvtChartDataUtils$$.$_getXAxisViewportMinMax$($chart$$223$$), $min$$10$$ = $max$$10_minMax$$2$$.min, $max$$10_minMax$$2$$ = $max$$10_minMax$$2$$.max, $x$$259$$, $y$$229$$, $prevX$$4$$, $prevY$$4$$, $yMin$$3$$, $yMax$$3$$, $groupIndex$$40$$ = 0;$groupIndex$$40$$ < $seriesData$$.length;$groupIndex$$40$$++) {
+  for(var $bIncludeHiddenSeries$$1$$ = "withoutRescale" == D.$DvtChartEventUtils$$.$getHideAndShowBehavior$($chart$$223$$), $max$$10_minMax$$2$$ = D.$DvtChartDataUtils$$.$_getXAxisViewportMinMax$($chart$$223$$), $min$$10$$ = $max$$10_minMax$$2$$.min, $max$$10_minMax$$2$$ = $max$$10_minMax$$2$$.max, $x$$257$$, $y$$227$$, $prevX$$4$$, $prevY$$4$$, $yMin$$3$$, $yMax$$3$$, $groupIndex$$40$$ = 0;$groupIndex$$40$$ < $seriesData$$.length;$groupIndex$$40$$++) {
     if($bIncludeHiddenSeries$$1$$ || D.$DvtChartStyleUtils$$.$isDataItemRendered$($chart$$223$$, $seriesIndex$$74$$, $groupIndex$$40$$)) {
-      $x$$259$$ = D.$DvtChartDataUtils$$.$getXValue$($chart$$223$$, $seriesIndex$$74$$, $groupIndex$$40$$), $y$$229$$ = D.$DvtChartDataUtils$$.$getCumulativeValue$($chart$$223$$, $seriesIndex$$74$$, $groupIndex$$40$$, $bIncludeHiddenSeries$$1$$), $prevX$$4$$ != D.$JSCompiler_alias_NULL$$ && ($min$$10$$ != D.$JSCompiler_alias_NULL$$ && ($min$$10$$ > $prevX$$4$$ && $min$$10$$ < $x$$259$$) && ($yMin$$3$$ = D.$DvtChartDataUtils$$.$_computeYAlongLine$($prevX$$4$$, $prevY$$4$$, $x$$259$$, $y$$229$$, $min$$10$$)), 
-      $max$$10_minMax$$2$$ != D.$JSCompiler_alias_NULL$$ && ($max$$10_minMax$$2$$ > $prevX$$4$$ && $max$$10_minMax$$2$$ < $x$$259$$) && ($yMax$$3$$ = D.$DvtChartDataUtils$$.$_computeYAlongLine$($prevX$$4$$, $prevY$$4$$, $x$$259$$, $y$$229$$, $max$$10_minMax$$2$$))), $prevX$$4$$ = $x$$259$$, $prevY$$4$$ = $y$$229$$
+      $x$$257$$ = D.$DvtChartDataUtils$$.$getXValue$($chart$$223$$, $seriesIndex$$74$$, $groupIndex$$40$$), $y$$227$$ = D.$DvtChartDataUtils$$.$getCumulativeValue$($chart$$223$$, $seriesIndex$$74$$, $groupIndex$$40$$, $bIncludeHiddenSeries$$1$$), $prevX$$4$$ != D.$JSCompiler_alias_NULL$$ && ($min$$10$$ != D.$JSCompiler_alias_NULL$$ && ($min$$10$$ > $prevX$$4$$ && $min$$10$$ < $x$$257$$) && ($yMin$$3$$ = D.$DvtChartDataUtils$$.$_computeYAlongLine$($prevX$$4$$, $prevY$$4$$, $x$$257$$, $y$$227$$, $min$$10$$)), 
+      $max$$10_minMax$$2$$ != D.$JSCompiler_alias_NULL$$ && ($max$$10_minMax$$2$$ > $prevX$$4$$ && $max$$10_minMax$$2$$ < $x$$257$$) && ($yMax$$3$$ = D.$DvtChartDataUtils$$.$_computeYAlongLine$($prevX$$4$$, $prevY$$4$$, $x$$257$$, $y$$227$$, $max$$10_minMax$$2$$))), $prevX$$4$$ = $x$$257$$, $prevY$$4$$ = $y$$227$$
     }
   }
   return{min:$yMin$$3$$, max:$yMax$$3$$}
 };
 D.$DvtChartDataUtils$$.$_getXAxisViewportMinMax$ = function $$DvtChartDataUtils$$$$_getXAxisViewportMinMax$$($chart$$224$$) {
-  var $options$$127$$ = $chart$$224$$.$getOptions$().xAxis, $isGroupAxis$$ = D.$DvtChartAxisUtils$$.$hasGroupAxis$($chart$$224$$), $min$$11$$ = D.$JSCompiler_alias_NULL$$, $min$$11$$ = $options$$127$$.viewportMin != D.$JSCompiler_alias_NULL$$ ? $options$$127$$.viewportMin : $options$$127$$.viewportStartGroup != D.$JSCompiler_alias_NULL$$ ? $isGroupAxis$$ ? D.$DvtChartDataUtils$$.$getGroupIndex$($chart$$224$$, $options$$127$$.viewportStartGroup) : $options$$127$$.viewportStartGroup : $options$$127$$.min, 
-  $max$$11$$ = D.$JSCompiler_alias_NULL$$, $max$$11$$ = $options$$127$$.viewportMax != D.$JSCompiler_alias_NULL$$ ? $options$$127$$.viewportMax : $options$$127$$.viewportEndGroup != D.$JSCompiler_alias_NULL$$ ? $isGroupAxis$$ ? D.$DvtChartDataUtils$$.$getGroupIndex$($chart$$224$$, $options$$127$$.viewportEndGroup) : $options$$127$$.viewportEndGroup : $options$$127$$.max;
+  var $options$$128$$ = $chart$$224$$.$getOptions$().xAxis, $isGroupAxis$$ = D.$DvtChartAxisUtils$$.$hasGroupAxis$($chart$$224$$), $min$$11$$ = D.$JSCompiler_alias_NULL$$, $min$$11$$ = $options$$128$$.viewportMin != D.$JSCompiler_alias_NULL$$ ? $options$$128$$.viewportMin : $options$$128$$.viewportStartGroup != D.$JSCompiler_alias_NULL$$ ? $isGroupAxis$$ ? D.$DvtChartDataUtils$$.$getGroupIndex$($chart$$224$$, $options$$128$$.viewportStartGroup) : $options$$128$$.viewportStartGroup : $options$$128$$.min, 
+  $max$$11$$ = D.$JSCompiler_alias_NULL$$, $max$$11$$ = $options$$128$$.viewportMax != D.$JSCompiler_alias_NULL$$ ? $options$$128$$.viewportMax : $options$$128$$.viewportEndGroup != D.$JSCompiler_alias_NULL$$ ? $isGroupAxis$$ ? D.$DvtChartDataUtils$$.$getGroupIndex$($chart$$224$$, $options$$128$$.viewportEndGroup) : $options$$128$$.viewportEndGroup : $options$$128$$.max;
   return{min:$min$$11$$, max:$max$$11$$}
 };
 D.$DvtChartDataUtils$$.$getMinMaxValue$ = function $$DvtChartDataUtils$$$$getMinMaxValue$$($chart$$225$$, $type$$182$$, $limitToViewport$$) {
@@ -2861,18 +2858,18 @@ D.$DvtChartDataUtils$$.$getMinMaxValue$ = function $$DvtChartDataUtils$$$$getMin
   if(!$isYValue$$ || !D.$DvtChartTypeUtils$$.$isBLAC$($chart$$225$$)) {
     $limitToViewport$$ = D.$JSCompiler_alias_FALSE$$
   }
-  for(var $bIncludeHiddenSeries$$2$$ = "withoutRescale" == D.$DvtChartEventUtils$$.$getHideAndShowBehavior$($chart$$225$$), $isBubble$$ = "bubble" == $chart$$225$$.$getType$(), $maxValue$$10$$ = -window.Infinity, $minValue$$9$$ = window.Infinity, $options$$128$$ = $chart$$225$$.$getOptions$(), $seriesCount$$24$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$225$$), $seriesIndex$$75$$ = 0;$seriesIndex$$75$$ < $seriesCount$$24$$;$seriesIndex$$75$$++) {
+  for(var $bIncludeHiddenSeries$$2$$ = "withoutRescale" == D.$DvtChartEventUtils$$.$getHideAndShowBehavior$($chart$$225$$), $isBubble$$ = "bubble" == $chart$$225$$.$getType$(), $maxValue$$10$$ = -window.Infinity, $minValue$$9$$ = window.Infinity, $options$$129$$ = $chart$$225$$.$getOptions$(), $seriesCount$$24$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$225$$), $seriesIndex$$75$$ = 0;$seriesIndex$$75$$ < $seriesCount$$24$$;$seriesIndex$$75$$++) {
     var $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$225$$, $seriesIndex$$75$$);
     if($bIncludeHiddenSeries$$2$$ || D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$225$$, $seriesIndex$$75$$)) {
-      var $groupIndex$$41_i$$529_isY2Series$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$225$$, $seriesIndex$$75$$);
-      if(!($isYValue$$ && $isY2Value$$ != $groupIndex$$41_i$$529_isY2Series$$) && ($edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ = $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$.items)) {
-        for($groupIndex$$41_i$$529_isY2Series$$ = 0;$groupIndex$$41_i$$529_isY2Series$$ < $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$.length;$groupIndex$$41_i$$529_isY2Series$$++) {
-          if($bIncludeHiddenSeries$$2$$ || D.$DvtChartStyleUtils$$.$isDataItemRendered$($chart$$225$$, $seriesIndex$$75$$, $groupIndex$$41_i$$529_isY2Series$$)) {
-            "object" != typeof $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$529_isY2Series$$] && ($edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$529_isY2Series$$] = {y:$edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$529_isY2Series$$]});
-            var $data$$43_items$$7$$ = $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$529_isY2Series$$], $timeAxisGroupLabel_value$$90$$;
-            $isYValue$$ ? $timeAxisGroupLabel_value$$90$$ = D.$DvtChartDataUtils$$.$getCumulativeValue$($chart$$225$$, $seriesIndex$$75$$, $groupIndex$$41_i$$529_isY2Series$$, $bIncludeHiddenSeries$$2$$) : $data$$43_items$$7$$ != D.$JSCompiler_alias_NULL$$ && ($options$$128$$.timeAxisType && ("enabled" == $options$$128$$.timeAxisType && $data$$43_items$$7$$.x == D.$JSCompiler_alias_NULL$$) && ($timeAxisGroupLabel_value$$90$$ = D.$DvtChartDataUtils$$.$getGroupLabel$($chart$$225$$, $groupIndex$$41_i$$529_isY2Series$$), 
+      var $groupIndex$$41_i$$525_isY2Series$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$225$$, $seriesIndex$$75$$);
+      if(!($isYValue$$ && $isY2Value$$ != $groupIndex$$41_i$$525_isY2Series$$) && ($edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ = $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$.items)) {
+        for($groupIndex$$41_i$$525_isY2Series$$ = 0;$groupIndex$$41_i$$525_isY2Series$$ < $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$.length;$groupIndex$$41_i$$525_isY2Series$$++) {
+          if($bIncludeHiddenSeries$$2$$ || D.$DvtChartStyleUtils$$.$isDataItemRendered$($chart$$225$$, $seriesIndex$$75$$, $groupIndex$$41_i$$525_isY2Series$$)) {
+            "object" != typeof $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$525_isY2Series$$] && ($edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$525_isY2Series$$] = {y:$edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$525_isY2Series$$]});
+            var $data$$43_items$$7$$ = $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$525_isY2Series$$], $timeAxisGroupLabel_value$$90$$;
+            $isYValue$$ ? $timeAxisGroupLabel_value$$90$$ = D.$DvtChartDataUtils$$.$getCumulativeValue$($chart$$225$$, $seriesIndex$$75$$, $groupIndex$$41_i$$525_isY2Series$$, $bIncludeHiddenSeries$$2$$) : $data$$43_items$$7$$ != D.$JSCompiler_alias_NULL$$ && ($options$$129$$.timeAxisType && ("enabled" == $options$$129$$.timeAxisType && $data$$43_items$$7$$.x == D.$JSCompiler_alias_NULL$$) && ($timeAxisGroupLabel_value$$90$$ = D.$DvtChartDataUtils$$.$getGroupLabel$($chart$$225$$, $groupIndex$$41_i$$525_isY2Series$$), 
             (0,window.isNaN)($timeAxisGroupLabel_value$$90$$) || ($data$$43_items$$7$$.x = $timeAxisGroupLabel_value$$90$$)), $timeAxisGroupLabel_value$$90$$ = $data$$43_items$$7$$[$type$$182$$]);
-            if((!$limitToViewport$$ || D.$DvtChartDataUtils$$.$isXInViewport$($chart$$225$$, $seriesIndex$$75$$, $groupIndex$$41_i$$529_isY2Series$$)) && !(0,window.isNaN)($timeAxisGroupLabel_value$$90$$)) {
+            if((!$limitToViewport$$ || D.$DvtChartDataUtils$$.$isXInViewport$($chart$$225$$, $seriesIndex$$75$$, $groupIndex$$41_i$$525_isY2Series$$)) && !(0,window.isNaN)($timeAxisGroupLabel_value$$90$$)) {
               var $j$$66_radius$$9$$ = 0;
               $isBubble$$ && $data$$43_items$$7$$.markerSize && ($isYValue$$ ? $j$$66_radius$$9$$ = $data$$43_items$$7$$._yAxisRadius : "x" == $type$$182$$ && ($j$$66_radius$$9$$ = $data$$43_items$$7$$._xAxisRadius));
               $maxValue$$10$$ = window.Math.max($maxValue$$10$$, $timeAxisGroupLabel_value$$90$$ + $j$$66_radius$$9$$);
@@ -2883,8 +2880,8 @@ D.$DvtChartDataUtils$$.$getMinMaxValue$ = function $$DvtChartDataUtils$$$$getMin
         $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ = D.$JSCompiler_alias_NULL$$;
         "x" == $type$$182$$ ? $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ = D.$DvtChartRefObjUtils$$.$getXAxisObjects$($chart$$225$$) : "y" == $type$$182$$ ? $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ = D.$DvtChartRefObjUtils$$.$getYAxisObjects$($chart$$225$$) : "y2" == $type$$182$$ && ($edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ = D.$DvtChartRefObjUtils$$.$getY2AxisObjects$($chart$$225$$));
         if($edgeValues_refObjects_seriesData$$1_seriesItem$$25$$ != D.$JSCompiler_alias_NULL$$) {
-          for($groupIndex$$41_i$$529_isY2Series$$ = 0;$groupIndex$$41_i$$529_isY2Series$$ < $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$.length;$groupIndex$$41_i$$529_isY2Series$$++) {
-            if($data$$43_items$$7$$ = $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$529_isY2Series$$].items, $data$$43_items$$7$$ != D.$JSCompiler_alias_NULL$$) {
+          for($groupIndex$$41_i$$525_isY2Series$$ = 0;$groupIndex$$41_i$$525_isY2Series$$ < $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$.length;$groupIndex$$41_i$$525_isY2Series$$++) {
+            if($data$$43_items$$7$$ = $edgeValues_refObjects_seriesData$$1_seriesItem$$25$$[$groupIndex$$41_i$$525_isY2Series$$].items, $data$$43_items$$7$$ != D.$JSCompiler_alias_NULL$$) {
               for($j$$66_radius$$9$$ = 0;$j$$66_radius$$9$$ < $data$$43_items$$7$$.length;$j$$66_radius$$9$$++) {
                 if($data$$43_items$$7$$[$j$$66_radius$$9$$] != D.$JSCompiler_alias_NULL$$) {
                   var $min$$12$$ = $data$$43_items$$7$$[$j$$66_radius$$9$$].min, $max$$12$$ = $data$$43_items$$7$$[$j$$66_radius$$9$$].max, $val$$76$$ = (0,window.isNaN)($data$$43_items$$7$$[$j$$66_radius$$9$$]) ? $data$$43_items$$7$$[$j$$66_radius$$9$$].value : $data$$43_items$$7$$[$j$$66_radius$$9$$];
@@ -2914,14 +2911,14 @@ D.$DvtChartDataUtils$$.$getInitialSelection$ = function $$DvtChartDataUtils$$$$g
   var $selection$$13$$ = $chart$$228_peers$$3$$.$getOptions$().selectedItems;
   $selection$$13$$ || ($selection$$13$$ = []);
   $chart$$228_peers$$3$$ = $chart$$228_peers$$3$$.$getObjects$();
-  for(var $i$$530$$ = 0;$i$$530$$ < $selection$$13$$.length;$i$$530$$++) {
-    var $id$$199$$ = $selection$$13$$[$i$$530$$].id;
-    if($id$$199$$ && (!$selection$$13$$[$i$$530$$].series || !$selection$$13$$[$i$$530$$].group)) {
+  for(var $i$$526$$ = 0;$i$$526$$ < $selection$$13$$.length;$i$$526$$++) {
+    var $id$$199$$ = $selection$$13$$[$i$$526$$].id;
+    if($id$$199$$ && (!$selection$$13$$[$i$$526$$].series || !$selection$$13$$[$i$$526$$].group)) {
       for(var $j$$67$$ = 0;$j$$67$$ < $chart$$228_peers$$3$$.length;$j$$67$$++) {
         var $peer$$19$$ = $chart$$228_peers$$3$$[$j$$67$$];
         if($id$$199$$ == $peer$$19$$.$_dataItemId$) {
-          $selection$$13$$[$i$$530$$].series = $peer$$19$$.$getSeries$();
-          $selection$$13$$[$i$$530$$].group = $peer$$19$$.$getGroup$();
+          $selection$$13$$[$i$$526$$].series = $peer$$19$$.$getSeries$();
+          $selection$$13$$[$i$$526$$].group = $peer$$19$$.$getGroup$();
           break
         }
       }
@@ -2933,21 +2930,21 @@ D.$DvtChartDataUtils$$.$getCurrentSelection$ = function $$DvtChartDataUtils$$$$g
   var $selection$$14$$ = [];
   if($chart$$229_handler$$49_selectedIds$$7$$ = $chart$$229_handler$$49_selectedIds$$7$$.$getSelectionHandler$()) {
     $chart$$229_handler$$49_selectedIds$$7$$ = (0,D.$JSCompiler_StaticMethods_getSelectedIds$$)($chart$$229_handler$$49_selectedIds$$7$$);
-    for(var $i$$531$$ = 0;$i$$531$$ < $chart$$229_handler$$49_selectedIds$$7$$.length;$i$$531$$++) {
-      var $selectedId$$1$$ = $chart$$229_handler$$49_selectedIds$$7$$[$i$$531$$];
+    for(var $i$$527$$ = 0;$i$$527$$ < $chart$$229_handler$$49_selectedIds$$7$$.length;$i$$527$$++) {
+      var $selectedId$$1$$ = $chart$$229_handler$$49_selectedIds$$7$$[$i$$527$$];
       $selection$$14$$.push({series:$selectedId$$1$$.$getSeries$(), group:$selectedId$$1$$.$getGroup$(), id:$selectedId$$1$$.getId()})
     }
   }
   return $selection$$14$$
 };
-D.$DvtChartDataUtils$$.$isDataSelected$ = function $$DvtChartDataUtils$$$$isDataSelected$$($chart$$230_group$$16$$, $series$$23_seriesIndex$$77$$, $groupIndex$$42_i$$532$$) {
+D.$DvtChartDataUtils$$.$isDataSelected$ = function $$DvtChartDataUtils$$$$isDataSelected$$($chart$$230_group$$16$$, $series$$23_seriesIndex$$77$$, $groupIndex$$42_i$$528$$) {
   var $handler$$50_selectedIds$$8$$ = $chart$$230_group$$16$$.$getSelectionHandler$();
   $series$$23_seriesIndex$$77$$ = D.$DvtChartDataUtils$$.$getSeries$($chart$$230_group$$16$$, $series$$23_seriesIndex$$77$$);
-  $chart$$230_group$$16$$ = D.$DvtChartDataUtils$$.$getGroup$($chart$$230_group$$16$$, $groupIndex$$42_i$$532$$);
+  $chart$$230_group$$16$$ = D.$DvtChartDataUtils$$.$getGroup$($chart$$230_group$$16$$, $groupIndex$$42_i$$528$$);
   if($handler$$50_selectedIds$$8$$ && $series$$23_seriesIndex$$77$$ != D.$JSCompiler_alias_NULL$$ && $chart$$230_group$$16$$ != D.$JSCompiler_alias_NULL$$) {
     $handler$$50_selectedIds$$8$$ = (0,D.$JSCompiler_StaticMethods_getSelectedIds$$)($handler$$50_selectedIds$$8$$);
-    for($groupIndex$$42_i$$532$$ = 0;$groupIndex$$42_i$$532$$ < $handler$$50_selectedIds$$8$$.length;$groupIndex$$42_i$$532$$++) {
-      var $selectedId$$2$$ = $handler$$50_selectedIds$$8$$[$groupIndex$$42_i$$532$$];
+    for($groupIndex$$42_i$$528$$ = 0;$groupIndex$$42_i$$528$$ < $handler$$50_selectedIds$$8$$.length;$groupIndex$$42_i$$528$$++) {
+      var $selectedId$$2$$ = $handler$$50_selectedIds$$8$$[$groupIndex$$42_i$$528$$];
       if($selectedId$$2$$.$getSeries$() == $series$$23_seriesIndex$$77$$ && $selectedId$$2$$.$getGroup$() == $chart$$230_group$$16$$) {
         return D.$JSCompiler_alias_TRUE$$
       }
@@ -2956,17 +2953,17 @@ D.$DvtChartDataUtils$$.$isDataSelected$ = function $$DvtChartDataUtils$$$$isData
   return D.$JSCompiler_alias_FALSE$$
 };
 D.$DvtChartDataUtils$$.$getDataLabel$ = function $$DvtChartDataUtils$$$$getDataLabel$$($axis$$34_chart$$231$$, $seriesIndex$$78$$, $groupIndex$$43_label$$35$$) {
-  var $dataItem$$27_options$$129$$ = D.$DvtChartDataUtils$$.$getDataItem$($axis$$34_chart$$231$$, $seriesIndex$$78$$, $groupIndex$$43_label$$35$$);
-  if($dataItem$$27_options$$129$$.label) {
-    $groupIndex$$43_label$$35$$ = (0,window.parseFloat)($dataItem$$27_options$$129$$.label);
+  var $dataItem$$27_options$$130$$ = D.$DvtChartDataUtils$$.$getDataItem$($axis$$34_chart$$231$$, $seriesIndex$$78$$, $groupIndex$$43_label$$35$$);
+  if($dataItem$$27_options$$130$$.label) {
+    $groupIndex$$43_label$$35$$ = (0,window.parseFloat)($dataItem$$27_options$$130$$.label);
     if((0,window.isNaN)($groupIndex$$43_label$$35$$)) {
-      return $dataItem$$27_options$$129$$.label
+      return $dataItem$$27_options$$130$$.label
     }
-    var $dataItem$$27_options$$129$$ = $axis$$34_chart$$231$$.$getOptions$(), $min$$13$$, $max$$13$$;
+    var $dataItem$$27_options$$130$$ = $axis$$34_chart$$231$$.$getOptions$(), $min$$13$$, $max$$13$$;
     if($axis$$34_chart$$231$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($axis$$34_chart$$231$$, $seriesIndex$$78$$) && $axis$$34_chart$$231$$.$y2Axis$ ? $axis$$34_chart$$231$$.$y2Axis$ : $axis$$34_chart$$231$$.$yAxis$) {
       $min$$13$$ = $axis$$34_chart$$231$$.$getGlobalMin$(), $max$$13$$ = $axis$$34_chart$$231$$.$getGlobalMax$(), window.majorIncrement = $axis$$34_chart$$231$$.$getMajorIncrement$()
     }
-    return $groupIndex$$43_label$$35$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($dataItem$$27_options$$129$$.valueFormats, D.$DvtChartDataUtils$$.$_TYPE_LABEL$, $groupIndex$$43_label$$35$$, $min$$13$$, $max$$13$$, window.majorIncrement)
+    return $groupIndex$$43_label$$35$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($dataItem$$27_options$$130$$.valueFormats, D.$DvtChartDataUtils$$.$_TYPE_LABEL$, $groupIndex$$43_label$$35$$, $min$$13$$, $max$$13$$, window.majorIncrement)
   }
   return D.$JSCompiler_alias_NULL$$
 };
@@ -2978,22 +2975,22 @@ D.$DvtChartEventUtils$$.$getHideAndShowBehavior$ = function $$DvtChartEventUtils
 D.$DvtChartEventUtils$$.$getHoverBehavior$ = function $$DvtChartEventUtils$$$$getHoverBehavior$$($chart$$136$$) {
   return $chart$$136$$.$getOptions$().hoverBehavior
 };
-D.$DvtChartEventUtils$$.$setVisibility$ = function $$DvtChartEventUtils$$$$setVisibility$$($chart$$137_options$$114$$, $category$$12$$, $visibility$$3$$) {
-  var $hiddenCategories$$1_i$$512_seriesItem$$15$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$137_options$$114$$, D.$DvtChartDataUtils$$.$getSeriesIndex$($chart$$137_options$$114$$, $category$$12$$));
-  if($category$$12$$ == D.$DvtPieChartUtils$$.$OTHER_SLICE_SERIES_ID$ && D.$DvtPieChartUtils$$.$getOtherSliceVisibility$($chart$$137_options$$114$$) !== $visibility$$3$$) {
-    D.$DvtPieChartUtils$$.$setOtherSliceVisibility$($chart$$137_options$$114$$, $visibility$$3$$)
+D.$DvtChartEventUtils$$.$setVisibility$ = function $$DvtChartEventUtils$$$$setVisibility$$($chart$$137_options$$115$$, $category$$12$$, $visibility$$3$$) {
+  var $hiddenCategories$$1_i$$508_seriesItem$$15$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$137_options$$115$$, D.$DvtChartDataUtils$$.$getSeriesIndex$($chart$$137_options$$115$$, $category$$12$$));
+  if($category$$12$$ == D.$DvtPieChartUtils$$.$OTHER_SLICE_SERIES_ID$ && D.$DvtPieChartUtils$$.$getOtherSliceVisibility$($chart$$137_options$$115$$) !== $visibility$$3$$) {
+    D.$DvtPieChartUtils$$.$setOtherSliceVisibility$($chart$$137_options$$115$$, $visibility$$3$$)
   }else {
-    if($hiddenCategories$$1_i$$512_seriesItem$$15$$ && $hiddenCategories$$1_i$$512_seriesItem$$15$$.visibility !== $visibility$$3$$) {
-      $hiddenCategories$$1_i$$512_seriesItem$$15$$.visibility = $visibility$$3$$
+    if($hiddenCategories$$1_i$$508_seriesItem$$15$$ && $hiddenCategories$$1_i$$508_seriesItem$$15$$.visibility !== $visibility$$3$$) {
+      $hiddenCategories$$1_i$$508_seriesItem$$15$$.visibility = $visibility$$3$$
     }else {
-      if(!D.$DvtChartTypeUtils$$.$isScatterBubble$($chart$$137_options$$114$$)) {
+      if(!D.$DvtChartTypeUtils$$.$isScatterBubble$($chart$$137_options$$115$$)) {
         return D.$JSCompiler_alias_FALSE$$
       }
-      $hiddenCategories$$1_i$$512_seriesItem$$15$$ = D.$DvtChartStyleUtils$$.$getHiddenCategories$($chart$$137_options$$114$$);
-      "hidden" == $visibility$$3$$ ? $hiddenCategories$$1_i$$512_seriesItem$$15$$.push($category$$12$$) : $hiddenCategories$$1_i$$512_seriesItem$$15$$.splice(D.$DvtArrayUtils$$.$getIndex$($hiddenCategories$$1_i$$512_seriesItem$$15$$, $category$$12$$), 1);
-      if(($chart$$137_options$$114$$ = $chart$$137_options$$114$$.$getOptions$()) && $chart$$137_options$$114$$.legend && $chart$$137_options$$114$$.legend.sections) {
-        for($hiddenCategories$$1_i$$512_seriesItem$$15$$ = 0;$hiddenCategories$$1_i$$512_seriesItem$$15$$ < $chart$$137_options$$114$$.legend.sections.length;$hiddenCategories$$1_i$$512_seriesItem$$15$$++) {
-          var $dataSection$$2$$ = $chart$$137_options$$114$$.legend.sections[$hiddenCategories$$1_i$$512_seriesItem$$15$$];
+      $hiddenCategories$$1_i$$508_seriesItem$$15$$ = D.$DvtChartStyleUtils$$.$getHiddenCategories$($chart$$137_options$$115$$);
+      "hidden" == $visibility$$3$$ ? $hiddenCategories$$1_i$$508_seriesItem$$15$$.push($category$$12$$) : $hiddenCategories$$1_i$$508_seriesItem$$15$$.splice(D.$DvtArrayUtils$$.$getIndex$($hiddenCategories$$1_i$$508_seriesItem$$15$$, $category$$12$$), 1);
+      if(($chart$$137_options$$115$$ = $chart$$137_options$$115$$.$getOptions$()) && $chart$$137_options$$115$$.legend && $chart$$137_options$$115$$.legend.sections) {
+        for($hiddenCategories$$1_i$$508_seriesItem$$15$$ = 0;$hiddenCategories$$1_i$$508_seriesItem$$15$$ < $chart$$137_options$$115$$.legend.sections.length;$hiddenCategories$$1_i$$508_seriesItem$$15$$++) {
+          var $dataSection$$2$$ = $chart$$137_options$$115$$.legend.sections[$hiddenCategories$$1_i$$508_seriesItem$$15$$];
           if($dataSection$$2$$ && $dataSection$$2$$.items) {
             for(var $j$$61$$ = 0;$j$$61$$ < $dataSection$$2$$.items.length;$j$$61$$++) {
               $dataSection$$2$$.items[$j$$61$$].id == $category$$12$$ && ($dataSection$$2$$.items[$j$$61$$].categoryVisibility = $visibility$$3$$)
@@ -3021,38 +3018,38 @@ D.$DvtChartEventUtils$$.$isDelayedScroll$ = function $$DvtChartEventUtils$$$$isD
   return"delayed" == $chart$$141_zs$$2$$ || "delayedScrollOnly" == $chart$$141_zs$$2$$
 };
 D.$DvtChartEventUtils$$.$processIds$ = function $$DvtChartEventUtils$$$$processIds$$($chart$$142$$, $selection$$12$$) {
-  for(var $ret$$55$$ = [], $i$$513$$ = 0;$i$$513$$ < $selection$$12$$.length;$i$$513$$++) {
-    var $item$$32_otherItems$$ = $selection$$12$$[$i$$513$$];
+  for(var $ret$$55$$ = [], $i$$509$$ = 0;$i$$509$$ < $selection$$12$$.length;$i$$509$$++) {
+    var $item$$32_otherItems$$ = $selection$$12$$[$i$$509$$];
     $item$$32_otherItems$$.$getSeries$() == D.$DvtPieChartUtils$$.$OTHER_SLICE_SERIES_ID$ ? ($item$$32_otherItems$$ = D.$DvtPieChartUtils$$.$getOtherSliceIds$($chart$$142$$), $ret$$55$$ = $ret$$55$$.concat($item$$32_otherItems$$)) : $ret$$55$$.push($item$$32_otherItems$$)
   }
   return $ret$$55$$
 };
-D.$DvtChartEventUtils$$.$adjustBounds$ = function $$DvtChartEventUtils$$$$adjustBounds$$($event$$443$$) {
-  $event$$443$$.x != D.$JSCompiler_alias_NULL$$ && ($event$$443$$.x -= 1);
-  $event$$443$$.$w$ != D.$JSCompiler_alias_NULL$$ && ($event$$443$$.$w$ += 2);
-  $event$$443$$.y != D.$JSCompiler_alias_NULL$$ && ($event$$443$$.y -= 1);
-  $event$$443$$.$h$ != D.$JSCompiler_alias_NULL$$ && ($event$$443$$.$h$ += 2)
+D.$DvtChartEventUtils$$.$adjustBounds$ = function $$DvtChartEventUtils$$$$adjustBounds$$($event$$434$$) {
+  $event$$434$$.x != D.$JSCompiler_alias_NULL$$ && ($event$$434$$.x -= 1);
+  $event$$434$$.$w$ != D.$JSCompiler_alias_NULL$$ && ($event$$434$$.$w$ += 2);
+  $event$$434$$.y != D.$JSCompiler_alias_NULL$$ && ($event$$434$$.y -= 1);
+  $event$$434$$.$h$ != D.$JSCompiler_alias_NULL$$ && ($event$$434$$.$h$ += 2)
 };
-D.$DvtChartEventUtils$$.$getBoundedObjects$ = function $$DvtChartEventUtils$$$$getBoundedObjects$$($chart$$143$$, $event$$444$$) {
-  for(var $peers$$1$$ = $chart$$143$$.$getObjects$(), $boundedPeers$$ = [], $i$$514$$ = 0;$i$$514$$ < $peers$$1$$.length;$i$$514$$++) {
-    var $peer$$17$$ = $peers$$1$$[$i$$514$$], $dataPos$$5$$ = $peer$$17$$.$_dataPos$;
+D.$DvtChartEventUtils$$.$getBoundedObjects$ = function $$DvtChartEventUtils$$$$getBoundedObjects$$($chart$$143$$, $event$$435$$) {
+  for(var $peers$$1$$ = $chart$$143$$.$getObjects$(), $boundedPeers$$ = [], $i$$510$$ = 0;$i$$510$$ < $peers$$1$$.length;$i$$510$$++) {
+    var $peer$$17$$ = $peers$$1$$[$i$$510$$], $dataPos$$5$$ = $peer$$17$$.$_dataPos$;
     if($dataPos$$5$$) {
-      var $dataPos$$5$$ = (0,D.$JSCompiler_StaticMethods_localToStage$$)($chart$$143$$.$getPlotArea$(), $dataPos$$5$$), $withinY$$ = $event$$444$$.y == D.$JSCompiler_alias_NULL$$ || $dataPos$$5$$.y >= $event$$444$$.y && $dataPos$$5$$.y <= $event$$444$$.y + $event$$444$$.$h$;
-      ($event$$444$$.x == D.$JSCompiler_alias_NULL$$ || $dataPos$$5$$.x >= $event$$444$$.x && $dataPos$$5$$.x <= $event$$444$$.x + $event$$444$$.$w$) && $withinY$$ && $boundedPeers$$.push($peer$$17$$)
+      var $dataPos$$5$$ = (0,D.$JSCompiler_StaticMethods_localToStage$$)($chart$$143$$.$getPlotArea$(), $dataPos$$5$$), $withinY$$ = $event$$435$$.y == D.$JSCompiler_alias_NULL$$ || $dataPos$$5$$.y >= $event$$435$$.y && $dataPos$$5$$.y <= $event$$435$$.y + $event$$435$$.$h$;
+      ($event$$435$$.x == D.$JSCompiler_alias_NULL$$ || $dataPos$$5$$.x >= $event$$435$$.x && $dataPos$$5$$.x <= $event$$435$$.x + $event$$435$$.$w$) && $withinY$$ && $boundedPeers$$.push($peer$$17$$)
     }
   }
   return $boundedPeers$$
 };
-D.$DvtChartEventUtils$$.$getAxisBounds$ = function $$DvtChartEventUtils$$$$getAxisBounds$$($chart$$144$$, $event$$445_maxPt_xMinMax$$, $limitExtent$$) {
-  var $plotArea$$3_yMinMax$$ = $chart$$144$$.$getPlotArea$(), $coords$$8_minPt$$ = $plotArea$$3_yMinMax$$.$stageToLocal$(new D.$DvtPoint$$($event$$445_maxPt_xMinMax$$.x, $event$$445_maxPt_xMinMax$$.y));
-  $event$$445_maxPt_xMinMax$$ = $plotArea$$3_yMinMax$$.$stageToLocal$(new D.$DvtPoint$$($event$$445_maxPt_xMinMax$$.x + $event$$445_maxPt_xMinMax$$.$w$, $event$$445_maxPt_xMinMax$$.y + $event$$445_maxPt_xMinMax$$.$h$));
-  $coords$$8_minPt$$ = D.$DvtChartEventUtils$$.$_convertToAxisCoord$($chart$$144$$, $coords$$8_minPt$$.x, $event$$445_maxPt_xMinMax$$.x, $coords$$8_minPt$$.y, $event$$445_maxPt_xMinMax$$.y);
-  $event$$445_maxPt_xMinMax$$ = {};
+D.$DvtChartEventUtils$$.$getAxisBounds$ = function $$DvtChartEventUtils$$$$getAxisBounds$$($chart$$144$$, $event$$436_maxPt_xMinMax$$, $limitExtent$$) {
+  var $plotArea$$3_yMinMax$$ = $chart$$144$$.$getPlotArea$(), $coords$$8_minPt$$ = $plotArea$$3_yMinMax$$.$stageToLocal$(new D.$DvtPoint$$($event$$436_maxPt_xMinMax$$.x, $event$$436_maxPt_xMinMax$$.y));
+  $event$$436_maxPt_xMinMax$$ = $plotArea$$3_yMinMax$$.$stageToLocal$(new D.$DvtPoint$$($event$$436_maxPt_xMinMax$$.x + $event$$436_maxPt_xMinMax$$.$w$, $event$$436_maxPt_xMinMax$$.y + $event$$436_maxPt_xMinMax$$.$h$));
+  $coords$$8_minPt$$ = D.$DvtChartEventUtils$$.$_convertToAxisCoord$($chart$$144$$, $coords$$8_minPt$$.x, $event$$436_maxPt_xMinMax$$.x, $coords$$8_minPt$$.y, $event$$436_maxPt_xMinMax$$.y);
+  $event$$436_maxPt_xMinMax$$ = {};
   var $plotArea$$3_yMinMax$$ = {}, $y2MinMax$$ = {}, $startEndGroup$$1$$ = {};
-  $chart$$144$$.$xAxis$ && ($event$$445_maxPt_xMinMax$$ = D.$DvtChartEventUtils$$.$_getAxisMinMax$($chart$$144$$.$xAxis$, $coords$$8_minPt$$.$xMin$, $coords$$8_minPt$$.$xMax$, $limitExtent$$), $startEndGroup$$1$$ = D.$DvtChartEventUtils$$.$getAxisStartEndGroup$($chart$$144$$.$xAxis$, $event$$445_maxPt_xMinMax$$.min, $event$$445_maxPt_xMinMax$$.max));
+  $chart$$144$$.$xAxis$ && ($event$$436_maxPt_xMinMax$$ = D.$DvtChartEventUtils$$.$_getAxisMinMax$($chart$$144$$.$xAxis$, $coords$$8_minPt$$.$xMin$, $coords$$8_minPt$$.$xMax$, $limitExtent$$), $startEndGroup$$1$$ = D.$DvtChartEventUtils$$.$getAxisStartEndGroup$($chart$$144$$.$xAxis$, $event$$436_maxPt_xMinMax$$.min, $event$$436_maxPt_xMinMax$$.max));
   $chart$$144$$.$yAxis$ && ($plotArea$$3_yMinMax$$ = D.$DvtChartEventUtils$$.$_getAxisMinMax$($chart$$144$$.$yAxis$, $coords$$8_minPt$$.$yMin$, $coords$$8_minPt$$.$yMax$, $limitExtent$$));
   $chart$$144$$.$y2Axis$ && ($y2MinMax$$ = D.$DvtChartEventUtils$$.$_getAxisMinMax$($chart$$144$$.$y2Axis$, $coords$$8_minPt$$.$yMin$, $coords$$8_minPt$$.$yMax$, $limitExtent$$));
-  return{$xMin$:$event$$445_maxPt_xMinMax$$.min, $xMax$:$event$$445_maxPt_xMinMax$$.max, $yMin$:$plotArea$$3_yMinMax$$.min, $yMax$:$plotArea$$3_yMinMax$$.max, $y2Min$:$y2MinMax$$.min, $y2Max$:$y2MinMax$$.max, $startGroup$:$startEndGroup$$1$$.$startGroup$, $endGroup$:$startEndGroup$$1$$.$endGroup$}
+  return{$xMin$:$event$$436_maxPt_xMinMax$$.min, $xMax$:$event$$436_maxPt_xMinMax$$.max, $yMin$:$plotArea$$3_yMinMax$$.min, $yMax$:$plotArea$$3_yMinMax$$.max, $y2Min$:$y2MinMax$$.min, $y2Max$:$y2MinMax$$.max, $startGroup$:$startEndGroup$$1$$.$startGroup$, $endGroup$:$startEndGroup$$1$$.$endGroup$}
 };
 D.$DvtChartEventUtils$$.$_getAxisMinMax$ = function $$DvtChartEventUtils$$$$_getAxisMinMax$$($axis$$30$$, $center$$10_min$$5_minCoord$$1$$, $max$$5_maxCoord$$1$$, $limitExtent$$1_minExtent$$) {
   $center$$10_min$$5_minCoord$$1$$ = $axis$$30$$.$getUnboundedValueAt$($center$$10_min$$5_minCoord$$1$$);
@@ -3098,10 +3095,10 @@ D.$DvtChartEventUtils$$.$getAxisStartEndGroup$ = function $$DvtChartEventUtils$$
 D.$DvtChartEventUtils$$.$setInitialSelection$ = function $$DvtChartEventUtils$$$$setInitialSelection$$($chart$$147$$, $selected$$17$$) {
   var $handler$$48$$ = $chart$$147$$.$getSelectionHandler$();
   if($handler$$48$$) {
-    for(var $peers$$2$$ = $chart$$147$$.$getObjects$(), $selectedIds$$6$$ = [], $i$$515$$ = 0;$i$$515$$ < $selected$$17$$.length;$i$$515$$++) {
+    for(var $peers$$2$$ = $chart$$147$$.$getObjects$(), $selectedIds$$6$$ = [], $i$$511$$ = 0;$i$$511$$ < $selected$$17$$.length;$i$$511$$++) {
       for(var $j$$62$$ = 0;$j$$62$$ < $peers$$2$$.length;$j$$62$$++) {
         var $peer$$18$$ = $peers$$2$$[$j$$62$$];
-        $peer$$18$$.$getSeries$() === $selected$$17$$[$i$$515$$].series && $peer$$18$$.$getGroup$() === $selected$$17$$[$i$$515$$].group && $selectedIds$$6$$.push($peer$$18$$.getId())
+        $peer$$18$$.$getSeries$() === $selected$$17$$[$i$$511$$].series && $peer$$18$$.$getGroup$() === $selected$$17$$[$i$$511$$].group && $selectedIds$$6$$.push($peer$$18$$.getId())
       }
     }
     (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($handler$$48$$, $selectedIds$$6$$, $peers$$2$$)
@@ -3110,18 +3107,18 @@ D.$DvtChartEventUtils$$.$setInitialSelection$ = function $$DvtChartEventUtils$$$
 D.$DvtChartRefObjUtils$$ = {};
 D.$DvtObj$$.$createSubclass$(D.$DvtChartRefObjUtils$$, D.$DvtObj$$, "DvtChartRefObjUtils");
 D.$DvtChartRefObjUtils$$.$getObjects$ = function $$DvtChartRefObjUtils$$$$getObjects$$($chart$$131_y2$$21$$) {
-  var $x$$257$$ = D.$DvtChartRefObjUtils$$.$getXAxisObjects$($chart$$131_y2$$21$$), $y$$227$$ = D.$DvtChartRefObjUtils$$.$getYAxisObjects$($chart$$131_y2$$21$$);
+  var $x$$255$$ = D.$DvtChartRefObjUtils$$.$getXAxisObjects$($chart$$131_y2$$21$$), $y$$225$$ = D.$DvtChartRefObjUtils$$.$getYAxisObjects$($chart$$131_y2$$21$$);
   $chart$$131_y2$$21$$ = D.$DvtChartRefObjUtils$$.$getY2AxisObjects$($chart$$131_y2$$21$$);
-  return $x$$257$$.concat($y$$227$$, $chart$$131_y2$$21$$)
+  return $x$$255$$.concat($y$$225$$, $chart$$131_y2$$21$$)
 };
-D.$DvtChartRefObjUtils$$.$getXAxisObjects$ = function $$DvtChartRefObjUtils$$$$getXAxisObjects$$($chart$$132_options$$111$$) {
-  return($chart$$132_options$$111$$ = $chart$$132_options$$111$$.$getOptions$()) && $chart$$132_options$$111$$.xAxis && $chart$$132_options$$111$$.xAxis.referenceObjects ? $chart$$132_options$$111$$.xAxis.referenceObjects : []
+D.$DvtChartRefObjUtils$$.$getXAxisObjects$ = function $$DvtChartRefObjUtils$$$$getXAxisObjects$$($chart$$132_options$$112$$) {
+  return($chart$$132_options$$112$$ = $chart$$132_options$$112$$.$getOptions$()) && $chart$$132_options$$112$$.xAxis && $chart$$132_options$$112$$.xAxis.referenceObjects ? $chart$$132_options$$112$$.xAxis.referenceObjects : []
 };
-D.$DvtChartRefObjUtils$$.$getYAxisObjects$ = function $$DvtChartRefObjUtils$$$$getYAxisObjects$$($chart$$133_options$$112$$) {
-  return($chart$$133_options$$112$$ = $chart$$133_options$$112$$.$getOptions$()) && $chart$$133_options$$112$$.yAxis && $chart$$133_options$$112$$.yAxis.referenceObjects ? $chart$$133_options$$112$$.yAxis.referenceObjects : []
+D.$DvtChartRefObjUtils$$.$getYAxisObjects$ = function $$DvtChartRefObjUtils$$$$getYAxisObjects$$($chart$$133_options$$113$$) {
+  return($chart$$133_options$$113$$ = $chart$$133_options$$113$$.$getOptions$()) && $chart$$133_options$$113$$.yAxis && $chart$$133_options$$113$$.yAxis.referenceObjects ? $chart$$133_options$$113$$.yAxis.referenceObjects : []
 };
-D.$DvtChartRefObjUtils$$.$getY2AxisObjects$ = function $$DvtChartRefObjUtils$$$$getY2AxisObjects$$($chart$$134_options$$113$$) {
-  return($chart$$134_options$$113$$ = $chart$$134_options$$113$$.$getOptions$()) && $chart$$134_options$$113$$.y2Axis && $chart$$134_options$$113$$.y2Axis.referenceObjects ? $chart$$134_options$$113$$.y2Axis.referenceObjects : []
+D.$DvtChartRefObjUtils$$.$getY2AxisObjects$ = function $$DvtChartRefObjUtils$$$$getY2AxisObjects$$($chart$$134_options$$114$$) {
+  return($chart$$134_options$$114$$ = $chart$$134_options$$114$$.$getOptions$()) && $chart$$134_options$$114$$.y2Axis && $chart$$134_options$$114$$.y2Axis.referenceObjects ? $chart$$134_options$$114$$.y2Axis.referenceObjects : []
 };
 D.$DvtChartRefObjUtils$$.$getType$ = function $$DvtChartRefObjUtils$$$$getType$$($refObj$$4$$) {
   return"area" == $refObj$$4$$.type ? "area" : "line"
@@ -3203,40 +3200,40 @@ D.$DvtChartStyleUtils$$.$getSeriesType$ = function $$DvtChartStyleUtils$$$$getSe
 D.$DvtChartStyleUtils$$.$getSeriesEffect$ = function $$DvtChartStyleUtils$$$$getSeriesEffect$$($chart$$101$$) {
   return $chart$$101$$.$getOptions$().styleDefaults.seriesEffect
 };
-D.$DvtChartStyleUtils$$.$getColor$ = function $$DvtChartStyleUtils$$$$getColor$$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$, $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$) {
-  if(($dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$, $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$)) && $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$.color || ($dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$)) && $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$.color) {
-    return $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$.color
+D.$DvtChartStyleUtils$$.$getColor$ = function $$DvtChartStyleUtils$$$$getColor$$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$, $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$) {
+  if(($dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$, $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$)) && $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$.color || ($dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$)) && $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$.color) {
+    return $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$.color
   }
-  $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$ = $chart$$102_colorIndex$$.$getOptions$();
-  var $defaultColors$$ = $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$.styleDefaults.colors;
+  $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$ = $chart$$102_colorIndex$$.$getOptions$();
+  var $defaultColors$$ = $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$.styleDefaults.colors;
   $series$$17_seriesIndex$$37$$ = D.$DvtChartDataUtils$$.$getSeries$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$);
   $chart$$102_colorIndex$$ = D.$DvtChartDataUtils$$.$getSeriesStyleIndex$($chart$$102_colorIndex$$, $series$$17_seriesIndex$$37$$) % $defaultColors$$.length;
-  return $dataItem$$11_groupIndex$$14_options$$97_seriesItem$$5$$.styleDefaults.colors[$chart$$102_colorIndex$$]
+  return $dataItem$$11_groupIndex$$14_options$$98_seriesItem$$5$$.styleDefaults.colors[$chart$$102_colorIndex$$]
 };
-D.$DvtChartStyleUtils$$.$getPattern$ = function $$DvtChartStyleUtils$$$$getPattern$$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$, $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$) {
+D.$DvtChartStyleUtils$$.$getPattern$ = function $$DvtChartStyleUtils$$$$getPattern$$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$, $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$) {
   if(D.$DvtChartTypeUtils$$.$isLine$($chart$$103_patternIndex$$) || D.$DvtChartTypeUtils$$.$isScatter$($chart$$103_patternIndex$$) || "line" == D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$)) {
     return D.$JSCompiler_alias_NULL$$
   }
-  if(($dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$, $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$)) && $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$.pattern && "auto" != $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$.pattern || ($dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$)) && 
-  $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$.pattern && "auto" != $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$.pattern) {
-    return $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$.pattern
+  if(($dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$, $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$)) && $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$.pattern && "auto" != $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$.pattern || ($dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$)) && 
+  $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$.pattern && "auto" != $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$.pattern) {
+    return $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$.pattern
   }
   if("pattern" == D.$DvtChartStyleUtils$$.$getSeriesEffect$($chart$$103_patternIndex$$)) {
-    $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$ = $chart$$103_patternIndex$$.$getOptions$();
-    var $defaultPatterns$$ = $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$.styleDefaults.patterns;
+    $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$ = $chart$$103_patternIndex$$.$getOptions$();
+    var $defaultPatterns$$ = $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$.styleDefaults.patterns;
     $series$$18_seriesIndex$$38$$ = D.$DvtChartDataUtils$$.$getSeries$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$);
     $chart$$103_patternIndex$$ = D.$DvtChartDataUtils$$.$getSeriesStyleIndex$($chart$$103_patternIndex$$, $series$$18_seriesIndex$$38$$) % $defaultPatterns$$.length;
-    return $dataItem$$12_groupIndex$$15_options$$98_seriesItem$$6$$.styleDefaults.patterns[$chart$$103_patternIndex$$]
+    return $dataItem$$12_groupIndex$$15_options$$99_seriesItem$$6$$.styleDefaults.patterns[$chart$$103_patternIndex$$]
   }
   return D.$JSCompiler_alias_NULL$$
 };
 D.$DvtChartStyleUtils$$.$getBorderColor$ = function $$DvtChartStyleUtils$$$$getBorderColor$$($chart$$104_markerColor$$, $seriesIndex$$39$$, $groupIndex$$16$$) {
-  var $dataItem$$13_options$$99_seriesItem$$7$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$104_markerColor$$, $seriesIndex$$39$$, $groupIndex$$16$$);
-  if($dataItem$$13_options$$99_seriesItem$$7$$ && $dataItem$$13_options$$99_seriesItem$$7$$.borderColor || ($dataItem$$13_options$$99_seriesItem$$7$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$104_markerColor$$, $seriesIndex$$39$$)) && $dataItem$$13_options$$99_seriesItem$$7$$.borderColor) {
-    return $dataItem$$13_options$$99_seriesItem$$7$$.borderColor
+  var $dataItem$$13_options$$100_seriesItem$$7$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$104_markerColor$$, $seriesIndex$$39$$, $groupIndex$$16$$);
+  if($dataItem$$13_options$$100_seriesItem$$7$$ && $dataItem$$13_options$$100_seriesItem$$7$$.borderColor || ($dataItem$$13_options$$100_seriesItem$$7$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$104_markerColor$$, $seriesIndex$$39$$)) && $dataItem$$13_options$$100_seriesItem$$7$$.borderColor) {
+    return $dataItem$$13_options$$100_seriesItem$$7$$.borderColor
   }
-  $dataItem$$13_options$$99_seriesItem$$7$$ = $chart$$104_markerColor$$.$getOptions$();
-  return"undefined" != typeof $dataItem$$13_options$$99_seriesItem$$7$$.styleDefaults.borderColor ? $dataItem$$13_options$$99_seriesItem$$7$$.styleDefaults.borderColor : "bubble" == $chart$$104_markerColor$$.$getType$() && "alta" == $chart$$104_markerColor$$.$getOptions$().skin && "gradient" != D.$DvtChartStyleUtils$$.$getSeriesEffect$($chart$$104_markerColor$$) ? ($chart$$104_markerColor$$ = this.$getMarkerColor$($chart$$104_markerColor$$, $seriesIndex$$39$$, $groupIndex$$16$$), D.$DvtColorUtils$$.$adjustHSL$($chart$$104_markerColor$$, 
+  $dataItem$$13_options$$100_seriesItem$$7$$ = $chart$$104_markerColor$$.$getOptions$();
+  return"undefined" != typeof $dataItem$$13_options$$100_seriesItem$$7$$.styleDefaults.borderColor ? $dataItem$$13_options$$100_seriesItem$$7$$.styleDefaults.borderColor : "bubble" == $chart$$104_markerColor$$.$getType$() && "alta" == $chart$$104_markerColor$$.$getOptions$().skin && "gradient" != D.$DvtChartStyleUtils$$.$getSeriesEffect$($chart$$104_markerColor$$) ? ($chart$$104_markerColor$$ = this.$getMarkerColor$($chart$$104_markerColor$$, $seriesIndex$$39$$, $groupIndex$$16$$), D.$DvtColorUtils$$.$adjustHSL$($chart$$104_markerColor$$, 
   0.15, -0.25)) : D.$JSCompiler_alias_NULL$$
 };
 D.$DvtChartStyleUtils$$.$getMarkerColor$ = function $$DvtChartStyleUtils$$$$getMarkerColor$$($chart$$105$$, $seriesIndex$$40$$, $groupIndex$$17$$) {
@@ -3245,19 +3242,19 @@ D.$DvtChartStyleUtils$$.$getMarkerColor$ = function $$DvtChartStyleUtils$$$$getM
   $dataItem$$14_defaultMarkerColor_seriesItem$$8$$ : D.$DvtChartStyleUtils$$.$getColor$($chart$$105$$, $seriesIndex$$40$$, $groupIndex$$17$$)
 };
 D.$DvtChartStyleUtils$$.$getMarkerShape$ = function $$DvtChartStyleUtils$$$$getMarkerShape$$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$, $dataItem$$15_groupIndex$$18$$) {
-  var $options$$101_shapeRamp$$ = $chart$$106_styleIndex$$3$$.$getOptions$(), $shape$$80$$ = $options$$101_shapeRamp$$.styleDefaults.markerShape, $seriesItem$$9$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$);
+  var $options$$102_shapeRamp$$ = $chart$$106_styleIndex$$3$$.$getOptions$(), $shape$$80$$ = $options$$102_shapeRamp$$.styleDefaults.markerShape, $seriesItem$$9$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$);
   $seriesItem$$9$$ && $seriesItem$$9$$.markerShape && ($shape$$80$$ = $seriesItem$$9$$.markerShape);
   ($dataItem$$15_groupIndex$$18$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$, $dataItem$$15_groupIndex$$18$$)) && $dataItem$$15_groupIndex$$18$$.markerShape && ($shape$$80$$ = $dataItem$$15_groupIndex$$18$$.markerShape);
-  "auto" == $shape$$80$$ && ("bubble" == $chart$$106_styleIndex$$3$$.$getType$() ? $shape$$80$$ = "circle" : ($series$$19_seriesIndex$$41$$ = D.$DvtChartDataUtils$$.$getSeries$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$), $chart$$106_styleIndex$$3$$ = D.$DvtChartDataUtils$$.$getSeriesStyleIndex$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$), $options$$101_shapeRamp$$ = $options$$101_shapeRamp$$.styleDefaults.shapes, $shape$$80$$ = $options$$101_shapeRamp$$[$chart$$106_styleIndex$$3$$ % 
-  $options$$101_shapeRamp$$.length]));
+  "auto" == $shape$$80$$ && ("bubble" == $chart$$106_styleIndex$$3$$.$getType$() ? $shape$$80$$ = "circle" : ($series$$19_seriesIndex$$41$$ = D.$DvtChartDataUtils$$.$getSeries$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$), $chart$$106_styleIndex$$3$$ = D.$DvtChartDataUtils$$.$getSeriesStyleIndex$($chart$$106_styleIndex$$3$$, $series$$19_seriesIndex$$41$$), $options$$102_shapeRamp$$ = $options$$102_shapeRamp$$.styleDefaults.shapes, $shape$$80$$ = $options$$102_shapeRamp$$[$chart$$106_styleIndex$$3$$ % 
+  $options$$102_shapeRamp$$.length]));
   return $shape$$80$$
 };
-D.$DvtChartStyleUtils$$.$getMarkerSize$ = function $$DvtChartStyleUtils$$$$getMarkerSize$$($chart$$107_options$$102$$, $seriesIndex$$42_seriesItem$$10$$, $dataItem$$16_groupIndex$$19_markerSize$$4$$) {
-  $dataItem$$16_groupIndex$$19_markerSize$$4$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$107_options$$102$$, $seriesIndex$$42_seriesItem$$10$$, $dataItem$$16_groupIndex$$19_markerSize$$4$$);
-  $seriesIndex$$42_seriesItem$$10$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$107_options$$102$$, $seriesIndex$$42_seriesItem$$10$$);
-  $chart$$107_options$$102$$ = $chart$$107_options$$102$$.$getOptions$();
-  $dataItem$$16_groupIndex$$19_markerSize$$4$$ = $dataItem$$16_groupIndex$$19_markerSize$$4$$ && $dataItem$$16_groupIndex$$19_markerSize$$4$$.markerSize ? $dataItem$$16_groupIndex$$19_markerSize$$4$$.markerSize : $seriesIndex$$42_seriesItem$$10$$ && $seriesIndex$$42_seriesItem$$10$$.markerSize ? $seriesIndex$$42_seriesItem$$10$$.markerSize : $chart$$107_options$$102$$.styleDefaults.markerSize;
-  $chart$$107_options$$102$$._isOverview && ($dataItem$$16_groupIndex$$19_markerSize$$4$$ = window.Math.ceil(0.6 * $dataItem$$16_groupIndex$$19_markerSize$$4$$));
+D.$DvtChartStyleUtils$$.$getMarkerSize$ = function $$DvtChartStyleUtils$$$$getMarkerSize$$($chart$$107_options$$103$$, $seriesIndex$$42_seriesItem$$10$$, $dataItem$$16_groupIndex$$19_markerSize$$4$$) {
+  $dataItem$$16_groupIndex$$19_markerSize$$4$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$107_options$$103$$, $seriesIndex$$42_seriesItem$$10$$, $dataItem$$16_groupIndex$$19_markerSize$$4$$);
+  $seriesIndex$$42_seriesItem$$10$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$107_options$$103$$, $seriesIndex$$42_seriesItem$$10$$);
+  $chart$$107_options$$103$$ = $chart$$107_options$$103$$.$getOptions$();
+  $dataItem$$16_groupIndex$$19_markerSize$$4$$ = $dataItem$$16_groupIndex$$19_markerSize$$4$$ && $dataItem$$16_groupIndex$$19_markerSize$$4$$.markerSize ? $dataItem$$16_groupIndex$$19_markerSize$$4$$.markerSize : $seriesIndex$$42_seriesItem$$10$$ && $seriesIndex$$42_seriesItem$$10$$.markerSize ? $seriesIndex$$42_seriesItem$$10$$.markerSize : $chart$$107_options$$103$$.styleDefaults.markerSize;
+  $chart$$107_options$$103$$._isOverview && ($dataItem$$16_groupIndex$$19_markerSize$$4$$ = window.Math.ceil(0.6 * $dataItem$$16_groupIndex$$19_markerSize$$4$$));
   return $dataItem$$16_groupIndex$$19_markerSize$$4$$
 };
 D.$DvtChartStyleUtils$$.$getMarkerDisplayed$ = function $$DvtChartStyleUtils$$$$getMarkerDisplayed$$($chart$$108$$, $seriesIndex$$43_seriesItem$$11$$, $dataItem$$17_groupIndex$$20$$) {
@@ -3266,8 +3263,8 @@ D.$DvtChartStyleUtils$$.$getMarkerDisplayed$ = function $$DvtChartStyleUtils$$$$
   ("on" === $seriesIndex$$43_seriesItem$$11$$.markerDisplayed || "off" === $seriesIndex$$43_seriesItem$$11$$.markerDisplayed) ? $seriesIndex$$43_seriesItem$$11$$.markerDisplayed : $chart$$108$$.$getOptions$().styleDefaults.markerDisplayed
 };
 D.$DvtChartStyleUtils$$.$getLineWidth$ = function $$DvtChartStyleUtils$$$$getLineWidth$$($chart$$109$$, $seriesIndex$$44$$) {
-  var $lineWidth$$4_seriesItem$$12$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$109$$, $seriesIndex$$44$$), $options$$104$$ = $chart$$109$$.$getOptions$(), $lineWidth$$4_seriesItem$$12$$ = $lineWidth$$4_seriesItem$$12$$ && $lineWidth$$4_seriesItem$$12$$.lineWidth ? $lineWidth$$4_seriesItem$$12$$.lineWidth : $options$$104$$.styleDefaults.lineWidth;
-  $options$$104$$._isOverview && ($lineWidth$$4_seriesItem$$12$$ = window.Math.ceil(0.6 * $lineWidth$$4_seriesItem$$12$$));
+  var $lineWidth$$4_seriesItem$$12$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$109$$, $seriesIndex$$44$$), $options$$105$$ = $chart$$109$$.$getOptions$(), $lineWidth$$4_seriesItem$$12$$ = $lineWidth$$4_seriesItem$$12$$ && $lineWidth$$4_seriesItem$$12$$.lineWidth ? $lineWidth$$4_seriesItem$$12$$.lineWidth : $options$$105$$.styleDefaults.lineWidth;
+  $options$$105$$._isOverview && ($lineWidth$$4_seriesItem$$12$$ = window.Math.ceil(0.6 * $lineWidth$$4_seriesItem$$12$$));
   return $lineWidth$$4_seriesItem$$12$$
 };
 D.$DvtChartStyleUtils$$.$getLineStyle$ = function $$DvtChartStyleUtils$$$$getLineStyle$$($chart$$110$$, $seriesIndex$$45$$) {
@@ -3278,14 +3275,14 @@ D.$DvtChartStyleUtils$$.$getBarSpacing$ = function $$DvtChartStyleUtils$$$$getBa
   return $chart$$111$$.$getOptions$().__sparkBarSpacing
 };
 D.$DvtChartStyleUtils$$.$getBarWidth$ = function $$DvtChartStyleUtils$$$$getBarWidth$$($chart$$112$$, $barCount_barSeriesCount$$1$$, $axis$$29_barWidth$$2$$) {
-  var $maxBarWidth_options$$107$$ = $chart$$112$$.$getOptions$(), $isPolar$$4$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$112$$);
+  var $maxBarWidth_options$$108$$ = $chart$$112$$.$getOptions$(), $isPolar$$4$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$112$$);
   $barCount_barSeriesCount$$1$$ = D.$DvtChartTypeUtils$$.$isStacked$($chart$$112$$) ? D.$DvtChartTypeUtils$$.$hasY2BarData$($chart$$112$$) ? 2 : 1 : $barCount_barSeriesCount$$1$$;
-  var $barGapRatio$$ = $maxBarWidth_options$$107$$.styleDefaults.barGapRatio;
+  var $barGapRatio$$ = $maxBarWidth_options$$108$$.styleDefaults.barGapRatio;
   "string" == typeof $barGapRatio$$ && "%" == $barGapRatio$$.slice(-1) && ($barGapRatio$$ = (0,window.Number)($barGapRatio$$.slice(0, -1)) / 100);
   $barGapRatio$$ == D.$JSCompiler_alias_NULL$$ && ($barGapRatio$$ = $isPolar$$4$$ ? 1 == $barCount_barSeriesCount$$1$$ || D.$DvtChartTypeUtils$$.$isStacked$($chart$$112$$) ? 0 : 0.25 : 1 == $barCount_barSeriesCount$$1$$ ? 0.625 : 0.25);
   $axis$$29_barWidth$$2$$ = $axis$$29_barWidth$$2$$.$getGroupWidth$() * (1 - $barGapRatio$$) / $barCount_barSeriesCount$$1$$;
-  $maxBarWidth_options$$107$$ = $maxBarWidth_options$$107$$.styleDefaults.maxBarWidth;
-  $maxBarWidth_options$$107$$ != D.$JSCompiler_alias_NULL$$ && !$isPolar$$4$$ && ($axis$$29_barWidth$$2$$ = window.Math.min($axis$$29_barWidth$$2$$, $maxBarWidth_options$$107$$));
+  $maxBarWidth_options$$108$$ = $maxBarWidth_options$$108$$.styleDefaults.maxBarWidth;
+  $maxBarWidth_options$$108$$ != D.$JSCompiler_alias_NULL$$ && !$isPolar$$4$$ && ($axis$$29_barWidth$$2$$ = window.Math.min($axis$$29_barWidth$$2$$, $maxBarWidth_options$$108$$));
   "pixel" == D.$DvtChartStyleUtils$$.$getBarSpacing$($chart$$112$$) && ($axis$$29_barWidth$$2$$ = window.Math.max(window.Math.floor($axis$$29_barWidth$$2$$), 1));
   return $axis$$29_barWidth$$2$$
 };
@@ -3306,15 +3303,15 @@ D.$DvtChartStyleUtils$$.$getVisibility$ = function $$DvtChartStyleUtils$$$$getVi
 D.$DvtChartStyleUtils$$.$isSeriesRendered$ = function $$DvtChartStyleUtils$$$$isSeriesRendered$$($chart$$116$$, $seriesIndex$$47$$) {
   return"hidden" == D.$DvtChartStyleUtils$$.$getVisibility$($chart$$116$$, $seriesIndex$$47$$) ? D.$JSCompiler_alias_FALSE$$ : D.$JSCompiler_alias_TRUE$$
 };
-D.$DvtChartStyleUtils$$.$isDataItemRendered$ = function $$DvtChartStyleUtils$$$$isDataItemRendered$$($chart$$117_dataItem$$18$$, $i$$508_seriesIndex$$48$$, $groupIndex$$21$$) {
-  if("hidden" == D.$DvtChartStyleUtils$$.$getVisibility$($chart$$117_dataItem$$18$$, $i$$508_seriesIndex$$48$$)) {
+D.$DvtChartStyleUtils$$.$isDataItemRendered$ = function $$DvtChartStyleUtils$$$$isDataItemRendered$$($chart$$117_dataItem$$18$$, $i$$504_seriesIndex$$48$$, $groupIndex$$21$$) {
+  if("hidden" == D.$DvtChartStyleUtils$$.$getVisibility$($chart$$117_dataItem$$18$$, $i$$504_seriesIndex$$48$$)) {
     return D.$JSCompiler_alias_FALSE$$
   }
   var $hiddenCategories$$ = D.$DvtChartStyleUtils$$.$getHiddenCategories$($chart$$117_dataItem$$18$$);
-  $chart$$117_dataItem$$18$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$117_dataItem$$18$$, $i$$508_seriesIndex$$48$$, $groupIndex$$21$$);
+  $chart$$117_dataItem$$18$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$117_dataItem$$18$$, $i$$504_seriesIndex$$48$$, $groupIndex$$21$$);
   if(0 < $hiddenCategories$$.length && $chart$$117_dataItem$$18$$ && $chart$$117_dataItem$$18$$.categories) {
-    for($i$$508_seriesIndex$$48$$ = 0;$i$$508_seriesIndex$$48$$ < $chart$$117_dataItem$$18$$.categories.length;$i$$508_seriesIndex$$48$$++) {
-      if(0 <= D.$DvtArrayUtils$$.$getIndex$($hiddenCategories$$, $chart$$117_dataItem$$18$$.categories[$i$$508_seriesIndex$$48$$])) {
+    for($i$$504_seriesIndex$$48$$ = 0;$i$$504_seriesIndex$$48$$ < $chart$$117_dataItem$$18$$.categories.length;$i$$504_seriesIndex$$48$$++) {
+      if(0 <= D.$DvtArrayUtils$$.$getIndex$($hiddenCategories$$, $chart$$117_dataItem$$18$$.categories[$i$$504_seriesIndex$$48$$])) {
         return D.$JSCompiler_alias_FALSE$$
       }
     }
@@ -3339,10 +3336,10 @@ D.$DvtChartStyleUtils$$.$getAnimationUpColor$ = function $$DvtChartStyleUtils$$$
 D.$DvtChartStyleUtils$$.$getAnimationDownColor$ = function $$DvtChartStyleUtils$$$$getAnimationDownColor$$($chart$$123$$) {
   return $chart$$123$$.$getOptions$().styleDefaults.animationDownColor
 };
-D.$DvtChartStyleUtils$$.$getHiddenCategories$ = function $$DvtChartStyleUtils$$$$getHiddenCategories$$($chart$$124_options$$108$$) {
-  $chart$$124_options$$108$$ = $chart$$124_options$$108$$.$getOptions$();
-  $chart$$124_options$$108$$._hiddenCategories || ($chart$$124_options$$108$$._hiddenCategories = []);
-  return $chart$$124_options$$108$$._hiddenCategories
+D.$DvtChartStyleUtils$$.$getHiddenCategories$ = function $$DvtChartStyleUtils$$$$getHiddenCategories$$($chart$$124_options$$109$$) {
+  $chart$$124_options$$109$$ = $chart$$124_options$$109$$.$getOptions$();
+  $chart$$124_options$$109$$._hiddenCategories || ($chart$$124_options$$109$$._hiddenCategories = []);
+  return $chart$$124_options$$109$$._hiddenCategories
 };
 D.$DvtChartStyleUtils$$.$getSelectedInnerColor$ = function $$DvtChartStyleUtils$$$$getSelectedInnerColor$$($chart$$125$$) {
   return $chart$$125$$.$getOptions$().styleDefaults.selectedInnerColor
@@ -3391,27 +3388,27 @@ D.$DvtChartStyleUtils$$.$getDataLabelPosition$ = function $$DvtChartStyleUtils$$
   return!$bBidi$$1$$ && "afterMarker" == $position$$42$$ || $bBidi$$1$$ && "beforeMarker" == $position$$42$$ ? "right" : !$bBidi$$1$$ && "beforeMarker" == $position$$42$$ || $bBidi$$1$$ && "afterMarker" == $position$$42$$ ? "left" : "center"
 };
 D.$DvtChartStyleUtils$$.$isOverviewRendered$ = function $$DvtChartStyleUtils$$$$isOverviewRendered$$($chart$$129$$) {
-  var $options$$109$$ = $chart$$129$$.$getOptions$();
-  return D.$DvtChartTypeUtils$$.$isOverviewSupported$($chart$$129$$) && "off" != $options$$109$$.overview.rendered
+  var $options$$110$$ = $chart$$129$$.$getOptions$();
+  return D.$DvtChartTypeUtils$$.$isOverviewSupported$($chart$$129$$) && "off" != $options$$110$$.overview.rendered
 };
 D.$DvtChartStyleUtils$$.$getOverviewHeight$ = function $$DvtChartStyleUtils$$$$getOverviewHeight$$($chart$$130$$) {
-  var $defaultRatio_options$$110$$ = $chart$$130$$.$getOptions$(), $height$$86$$ = $defaultRatio_options$$110$$.overview.height;
-  if($height$$86$$ != D.$JSCompiler_alias_NULL$$ && ("string" == typeof $height$$86$$ && ($height$$86$$ = "%" == $height$$86$$.slice(-1) ? $chart$$130$$.getHeight() * (0,window.Number)($height$$86$$.slice(0, -1)) / 100 : "px" == $height$$86$$.slice(-2) ? (0,window.Number)($height$$86$$.slice(0, -2)) : (0,window.Number)($height$$86$$)), !(0,window.isNaN)($height$$86$$) && 0 < $height$$86$$)) {
-    return $height$$86$$
+  var $defaultRatio_options$$111$$ = $chart$$130$$.$getOptions$(), $height$$84$$ = $defaultRatio_options$$111$$.overview.height;
+  if($height$$84$$ != D.$JSCompiler_alias_NULL$$ && ("string" == typeof $height$$84$$ && ($height$$84$$ = "%" == $height$$84$$.slice(-1) ? $chart$$130$$.getHeight() * (0,window.Number)($height$$84$$.slice(0, -1)) / 100 : "px" == $height$$84$$.slice(-2) ? (0,window.Number)($height$$84$$.slice(0, -2)) : (0,window.Number)($height$$84$$)), !(0,window.isNaN)($height$$84$$) && 0 < $height$$84$$)) {
+    return $height$$84$$
   }
-  $defaultRatio_options$$110$$ = "disabled" == $defaultRatio_options$$110$$.timeAxisType ? 0.2 : 0.25;
-  return $chart$$130$$.getHeight() * $defaultRatio_options$$110$$
+  $defaultRatio_options$$111$$ = "disabled" == $defaultRatio_options$$111$$.timeAxisType ? 0.2 : 0.25;
+  return $chart$$130$$.getHeight() * $defaultRatio_options$$111$$
 };
 D.$DvtChartTextUtils$$ = {};
 D.$DvtObj$$.$createSubclass$(D.$DvtChartTextUtils$$, D.$DvtObj$$, "DvtChartTextUtils");
-D.$DvtChartTextUtils$$.$createText$ = function $$DvtChartTextUtils$$$$createText$$($eventManager$$26$$, $container$$92$$, $text$$72_textString$$11$$, $cssStyle$$34$$, $x$$258$$, $y$$228$$, $width$$104$$, $height$$87$$, $params$$31$$) {
-  $text$$72_textString$$11$$ = new D.$DvtOutputText$$($container$$92$$.$_context$, $text$$72_textString$$11$$, $x$$258$$, $y$$228$$);
+D.$DvtChartTextUtils$$.$createText$ = function $$DvtChartTextUtils$$$$createText$$($eventManager$$26$$, $container$$92$$, $text$$72_textString$$11$$, $cssStyle$$34$$, $x$$256$$, $y$$226$$, $width$$103$$, $height$$85$$, $params$$31$$) {
+  $text$$72_textString$$11$$ = new D.$DvtOutputText$$($container$$92$$.$_context$, $text$$72_textString$$11$$, $x$$256$$, $y$$226$$);
   $text$$72_textString$$11$$.$setCSSStyle$($cssStyle$$34$$);
-  return D.$DvtTextUtils$$.$fitText$($text$$72_textString$$11$$, $width$$104$$, $height$$87$$, $container$$92$$) ? ($eventManager$$26$$.$associate$($text$$72_textString$$11$$, new D.$DvtSimpleObjPeer$$($text$$72_textString$$11$$.$_untruncatedTextString$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $params$$31$$)), $text$$72_textString$$11$$) : D.$JSCompiler_alias_NULL$$
+  return D.$DvtTextUtils$$.$fitText$($text$$72_textString$$11$$, $width$$103$$, $height$$85$$, $container$$92$$) ? ($eventManager$$26$$.$associate$($text$$72_textString$$11$$, new D.$DvtSimpleObjPeer$$($text$$72_textString$$11$$.$_untruncatedTextString$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $params$$31$$)), $text$$72_textString$$11$$) : D.$JSCompiler_alias_NULL$$
 };
-D.$DvtChartTextUtils$$.$areTitlesRendered$ = function $$DvtChartTextUtils$$$$areTitlesRendered$$($chart$$148_options$$115$$) {
-  $chart$$148_options$$115$$ = $chart$$148_options$$115$$.$getOptions$();
-  return $chart$$148_options$$115$$.title.text || $chart$$148_options$$115$$.subtitle.text || $chart$$148_options$$115$$.footnote.text
+D.$DvtChartTextUtils$$.$areTitlesRendered$ = function $$DvtChartTextUtils$$$$areTitlesRendered$$($chart$$148_options$$116$$) {
+  $chart$$148_options$$116$$ = $chart$$148_options$$116$$.$getOptions$();
+  return $chart$$148_options$$116$$.title.text || $chart$$148_options$$116$$.subtitle.text || $chart$$148_options$$116$$.footnote.text
 };
 D.$DvtChartTooltipUtils$$ = {};
 D.$DvtObj$$.$createSubclass$(D.$DvtChartTooltipUtils$$, D.$DvtObj$$, "DvtChartTooltipUtils");
@@ -3421,9 +3418,9 @@ D.$DvtChartTooltipUtils$$.$_TYPE_Y2$ = "y2";
 D.$DvtChartTooltipUtils$$.$_TYPE_Z$ = "z";
 D.$DvtChartTooltipUtils$$.$_TYPE_VALUE$ = "value";
 D.$DvtChartTooltipUtils$$.$_TYPE_TARGET_VALUE$ = "targetValue";
-D.$DvtChartTooltipUtils$$.$hasDatatips$ = function $$DvtChartTooltipUtils$$$$hasDatatips$$($chart$$157_options$$117$$) {
-  $chart$$157_options$$117$$ = $chart$$157_options$$117$$.$getOptions$();
-  return"none" == $chart$$157_options$$117$$.styleDefaults.seriesTooltipType && "none" == $chart$$157_options$$117$$.styleDefaults.groupTooltipType && "none" == $chart$$157_options$$117$$.styleDefaults.valueTooltipType ? D.$JSCompiler_alias_FALSE$$ : D.$JSCompiler_alias_TRUE$$
+D.$DvtChartTooltipUtils$$.$hasDatatips$ = function $$DvtChartTooltipUtils$$$$hasDatatips$$($chart$$157_options$$118$$) {
+  $chart$$157_options$$118$$ = $chart$$157_options$$118$$.$getOptions$();
+  return"none" == $chart$$157_options$$118$$.styleDefaults.seriesTooltipType && "none" == $chart$$157_options$$118$$.styleDefaults.groupTooltipType && "none" == $chart$$157_options$$118$$.styleDefaults.valueTooltipType ? D.$JSCompiler_alias_FALSE$$ : D.$JSCompiler_alias_TRUE$$
 };
 D.$DvtChartTooltipUtils$$.$getDatatipColor$ = function $$DvtChartTooltipUtils$$$$getDatatipColor$$($chart$$158$$, $seriesIndex$$51$$, $groupIndex$$24$$) {
   return D.$DvtChartStyleUtils$$.$getColor$($chart$$158$$, $seriesIndex$$51$$, $groupIndex$$24$$)
@@ -3442,13 +3439,13 @@ D.$DvtChartTooltipUtils$$.$getDatatip$ = function $$DvtChartTooltipUtils$$$$getD
   return D.$DvtChartTooltipUtils$$.$_convertLinesToString$($arTooltip_dataItem$$19_target$$94$$)
 };
 D.$DvtChartTooltipUtils$$.$getOtherSliceDatatip$ = function $$DvtChartTooltipUtils$$$$getOtherSliceDatatip$$($chart$$160$$, $otherValue$$2$$) {
-  var $arTooltip$$1$$ = [], $options$$118_val$$74$$ = $chart$$160$$.$getOptions$(), $bundle_labelValue$$ = $chart$$160$$.$Bundle$;
-  if("none" != $options$$118_val$$74$$.styleDefaults.seriesTooltipType) {
+  var $arTooltip$$1$$ = [], $options$$119_val$$74$$ = $chart$$160$$.$getOptions$(), $bundle_labelValue$$ = $chart$$160$$.$Bundle$;
+  if("none" != $options$$119_val$$74$$.styleDefaults.seriesTooltipType) {
     var $otherStr$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle_labelValue$$, "LABEL_OTHER", D.$JSCompiler_alias_NULL$$);
     $arTooltip$$1$$.push($otherStr$$)
   }
   D.$DvtChartTooltipUtils$$.$_addGroupStrings$($arTooltip$$1$$, $chart$$160$$, 0, 0);
-  "none" != $options$$118_val$$74$$.styleDefaults.valueTooltipType && ($options$$118_val$$74$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$118_val$$74$$.valueFormats, D.$DvtChartTooltipUtils$$.$_TYPE_VALUE$, $otherValue$$2$$), $bundle_labelValue$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle_labelValue$$, "LABEL_VALUE", $options$$118_val$$74$$), $arTooltip$$1$$.push($bundle_labelValue$$));
+  "none" != $options$$119_val$$74$$.styleDefaults.valueTooltipType && ($options$$119_val$$74$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$119_val$$74$$.valueFormats, D.$DvtChartTooltipUtils$$.$_TYPE_VALUE$, $otherValue$$2$$), $bundle_labelValue$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle_labelValue$$, "LABEL_VALUE", $options$$119_val$$74$$), $arTooltip$$1$$.push($bundle_labelValue$$));
   return D.$DvtChartTooltipUtils$$.$_convertLinesToString$($arTooltip$$1$$)
 };
 D.$DvtChartTooltipUtils$$.$getRefObjTooltip$ = function $$DvtChartTooltipUtils$$$$getRefObjTooltip$$($refObj$$8$$) {
@@ -3464,35 +3461,35 @@ D.$DvtChartTooltipUtils$$.$_addSeriesStrings$ = function $$DvtChartTooltipUtils$
     }
   }
 };
-D.$DvtChartTooltipUtils$$.$_addGroupStrings$ = function $$DvtChartTooltipUtils$$$$_addGroupStrings$$($arTooltip$$3$$, $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$, $bundle$$2_labelGroup_seriesIndex$$54$$, $groupIndex$$28$$) {
-  var $options$$120$$ = $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$.$getOptions$(), $dataItem$$20$$ = D.$DvtChartDataUtils$$.$getDataItem$($JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$, $bundle$$2_labelGroup_seriesIndex$$54$$, $groupIndex$$28$$);
-  "none" == $options$$120$$.styleDefaults.groupTooltipType || D.$DvtChartTypeUtils$$.$isPie$($JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$) || ($bundle$$2_labelGroup_seriesIndex$$54$$ = $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$.$Bundle$, $options$$120$$.timeAxisType && "disabled" != $options$$120$$.timeAxisType ? ($JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$ = 
-  $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$.$xAxis$.$Info$, $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$ = (0,D.$JSCompiler_StaticMethods__formatAxisLabel$$)($JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$, new window.Date($dataItem$$20$$.x + $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$.$_timeZoneOffset$), 
-  D.$JSCompiler_alias_NULL$$), $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$ = $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$[1] != D.$JSCompiler_alias_NULL$$ ? $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$[0] + " " + $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$[1] : 
-  $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$[0]) : $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$ = D.$DvtChartDataUtils$$.$getGroupLabel$($JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$, $groupIndex$$28$$), $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$ && 
-  ($bundle$$2_labelGroup_seriesIndex$$54$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$2_labelGroup_seriesIndex$$54$$, "LABEL_GROUP", $JSCompiler_StaticMethods_formatLabel$self$$inline_5435_JSCompiler_temp$$311_chart$$163_groupLabel$$1_twoLabels$$inline_5437$$), $arTooltip$$3$$.push($bundle$$2_labelGroup_seriesIndex$$54$$)))
+D.$DvtChartTooltipUtils$$.$_addGroupStrings$ = function $$DvtChartTooltipUtils$$$$_addGroupStrings$$($arTooltip$$3$$, $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$, $bundle$$2_labelGroup_seriesIndex$$54$$, $groupIndex$$28$$) {
+  var $options$$121$$ = $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$.$getOptions$(), $dataItem$$20$$ = D.$DvtChartDataUtils$$.$getDataItem$($JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$, $bundle$$2_labelGroup_seriesIndex$$54$$, $groupIndex$$28$$);
+  "none" == $options$$121$$.styleDefaults.groupTooltipType || D.$DvtChartTypeUtils$$.$isPie$($JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$) || ($bundle$$2_labelGroup_seriesIndex$$54$$ = $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$.$Bundle$, $options$$121$$.timeAxisType && "disabled" != $options$$121$$.timeAxisType ? ($JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$ = 
+  $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$.$xAxis$.$Info$, $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$ = (0,D.$JSCompiler_StaticMethods__formatAxisLabel$$)($JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$, new window.Date($dataItem$$20$$.x + $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$.$_timeZoneOffset$), 
+  D.$JSCompiler_alias_NULL$$), $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$ = $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$[1] != D.$JSCompiler_alias_NULL$$ ? $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$[0] + " " + $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$[1] : 
+  $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$[0]) : $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$ = D.$DvtChartDataUtils$$.$getGroupLabel$($JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$, $groupIndex$$28$$), $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$ && 
+  ($bundle$$2_labelGroup_seriesIndex$$54$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$2_labelGroup_seriesIndex$$54$$, "LABEL_GROUP", $JSCompiler_StaticMethods_formatLabel$self$$inline_5377_JSCompiler_temp$$303_chart$$163_groupLabel$$1_twoLabels$$inline_5379$$), $arTooltip$$3$$.push($bundle$$2_labelGroup_seriesIndex$$54$$)))
 };
 D.$DvtChartTooltipUtils$$.$_addValueStrings$ = function $$DvtChartTooltipUtils$$$$_addValueStrings$$($arTooltip$$4$$, $chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$) {
-  var $options$$121_valueFormats$$1$$ = $chart$$164_target$$95_type$$177_zValue$$.$getOptions$();
-  if("none" != $options$$121_valueFormats$$1$$.styleDefaults.valueTooltipType) {
-    var $bundle$$3_labelValue2_labelZ$$ = $chart$$164_target$$95_type$$177_zValue$$.$Bundle$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $options$$121_valueFormats$$1$$ = $options$$121_valueFormats$$1$$.valueFormats;
+  var $options$$122_valueFormats$$1$$ = $chart$$164_target$$95_type$$177_zValue$$.$getOptions$();
+  if("none" != $options$$122_valueFormats$$1$$.styleDefaults.valueTooltipType) {
+    var $bundle$$3_labelValue2_labelZ$$ = $chart$$164_target$$95_type$$177_zValue$$.$Bundle$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $options$$122_valueFormats$$1$$ = $options$$122_valueFormats$$1$$.valueFormats;
     if("scatter" == $chart$$164_target$$95_type$$177_zValue$$.$getType$() || "bubble" == $chart$$164_target$$95_type$$177_zValue$$.$getType$()) {
-      $groupIndex$$29_labelX_xValue$$3$$ = $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$.x, $labelY_seriesIndex$$55_y1Value$$ = $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$.y, $groupIndex$$29_labelX_xValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$121_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_X$, $groupIndex$$29_labelX_xValue$$3$$), $labelY_seriesIndex$$55_y1Value$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$121_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_Y$, 
+      $groupIndex$$29_labelX_xValue$$3$$ = $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$.x, $labelY_seriesIndex$$55_y1Value$$ = $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$.y, $groupIndex$$29_labelX_xValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$122_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_X$, $groupIndex$$29_labelX_xValue$$3$$), $labelY_seriesIndex$$55_y1Value$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$122_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_Y$, 
       $labelY_seriesIndex$$55_y1Value$$), $groupIndex$$29_labelX_xValue$$3$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, "LABEL_X", $groupIndex$$29_labelX_xValue$$3$$), $labelY_seriesIndex$$55_y1Value$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, "LABEL_Y", $labelY_seriesIndex$$55_y1Value$$), $arTooltip$$4$$.push($groupIndex$$29_labelX_xValue$$3$$), $arTooltip$$4$$.push($labelY_seriesIndex$$55_y1Value$$), "bubble" == 
-      $chart$$164_target$$95_type$$177_zValue$$.$getType$() && ($chart$$164_target$$95_type$$177_zValue$$ = $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$.z, $chart$$164_target$$95_type$$177_zValue$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$121_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_Z$, $chart$$164_target$$95_type$$177_zValue$$), $bundle$$3_labelValue2_labelZ$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, "LABEL_Z", $chart$$164_target$$95_type$$177_zValue$$), 
+      $chart$$164_target$$95_type$$177_zValue$$.$getType$() && ($chart$$164_target$$95_type$$177_zValue$$ = $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$.z, $chart$$164_target$$95_type$$177_zValue$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$122_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_Z$, $chart$$164_target$$95_type$$177_zValue$$), $bundle$$3_labelValue2_labelZ$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, "LABEL_Z", $chart$$164_target$$95_type$$177_zValue$$), 
       $arTooltip$$4$$.push($bundle$$3_labelValue2_labelZ$$))
     }else {
       if("pie" == $chart$$164_target$$95_type$$177_zValue$$.$getType$()) {
-        $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.getValue($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$121_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_VALUE$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, 
+        $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.getValue($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$122_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_VALUE$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, 
         "LABEL_VALUE", $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $arTooltip$$4$$.push($dataItem$$21_labelValue$$1_val$$75_yValue$$3$$)
       }else {
         if("funnel" == $chart$$164_target$$95_type$$177_zValue$$.$getType$()) {
-          if($dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.getValue($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$121_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_VALUE$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, 
+          if($dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.getValue($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$122_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_VALUE$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, 
           "LABEL_VALUE", $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $arTooltip$$4$$.push($dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $chart$$164_target$$95_type$$177_zValue$$ = D.$DvtChartDataUtils$$.$getTargetValue$($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$)) {
-            $chart$$164_target$$95_type$$177_zValue$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$121_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_TARGET_VALUE$, $chart$$164_target$$95_type$$177_zValue$$), $bundle$$3_labelValue2_labelZ$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, "LABEL_TARGET_VALUE", $chart$$164_target$$95_type$$177_zValue$$), $arTooltip$$4$$.push($bundle$$3_labelValue2_labelZ$$)
+            $chart$$164_target$$95_type$$177_zValue$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$122_valueFormats$$1$$, D.$DvtChartTooltipUtils$$.$_TYPE_TARGET_VALUE$, $chart$$164_target$$95_type$$177_zValue$$), $bundle$$3_labelValue2_labelZ$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, "LABEL_TARGET_VALUE", $chart$$164_target$$95_type$$177_zValue$$), $arTooltip$$4$$.push($bundle$$3_labelValue2_labelZ$$)
           }
         }else {
-          $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.getValue($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $chart$$164_target$$95_type$$177_zValue$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$) ? D.$DvtChartTooltipUtils$$.$_TYPE_Y2$ : D.$DvtChartTooltipUtils$$.$_TYPE_Y$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$121_valueFormats$$1$$, 
+          $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartDataUtils$$.getValue($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$, $groupIndex$$29_labelX_xValue$$3$$), $chart$$164_target$$95_type$$177_zValue$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$164_target$$95_type$$177_zValue$$, $labelY_seriesIndex$$55_y1Value$$) ? D.$DvtChartTooltipUtils$$.$_TYPE_Y2$ : D.$DvtChartTooltipUtils$$.$_TYPE_Y$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($options$$122_valueFormats$$1$$, 
           $chart$$164_target$$95_type$$177_zValue$$, $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $bundle$$3_labelValue2_labelZ$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($bundle$$3_labelValue2_labelZ$$, "LABEL_VALUE", $dataItem$$21_labelValue$$1_val$$75_yValue$$3$$), $arTooltip$$4$$.push($bundle$$3_labelValue2_labelZ$$)
         }
       }
@@ -3500,19 +3497,19 @@ D.$DvtChartTooltipUtils$$.$_addValueStrings$ = function $$DvtChartTooltipUtils$$
   }
 };
 D.$DvtChartTooltipUtils$$.$_convertLinesToString$ = function $$DvtChartTooltipUtils$$$$_convertLinesToString$$($arTooltip$$5$$) {
-  for(var $ret$$56$$ = "", $i$$516$$ = 0;$i$$516$$ < $arTooltip$$5$$.length;$i$$516$$++) {
-    0 < $ret$$56$$.length && ($ret$$56$$ += "\n"), $ret$$56$$ += $arTooltip$$5$$[$i$$516$$]
+  for(var $ret$$56$$ = "", $i$$512$$ = 0;$i$$512$$ < $arTooltip$$5$$.length;$i$$512$$++) {
+    0 < $ret$$56$$.length && ($ret$$56$$ += "\n"), $ret$$56$$ += $arTooltip$$5$$[$i$$512$$]
   }
   return $ret$$56$$
 };
 D.$DvtChartTooltipUtils$$.$_formatValue$ = function $$DvtChartTooltipUtils$$$$_formatValue$$($formatter_valueFormats$$2$$, $type$$178$$, $value$$88$$, $min$$9$$, $max$$9$$, $majorIncrement$$1$$) {
   var $scaling$$ = "auto", $autoPrecision$$ = "on", $converter$$1$$;
   if($formatter_valueFormats$$2$$) {
-    for(var $i$$517$$ = 0;$i$$517$$ < $formatter_valueFormats$$2$$.length;$i$$517$$++) {
-      if($formatter_valueFormats$$2$$[$i$$517$$].type == $type$$178$$) {
-        $formatter_valueFormats$$2$$[$i$$517$$].scaling && ($scaling$$ = $formatter_valueFormats$$2$$[$i$$517$$].scaling);
-        $formatter_valueFormats$$2$$[$i$$517$$].autoPrecision && ($autoPrecision$$ = $formatter_valueFormats$$2$$[$i$$517$$].autoPrecision);
-        $formatter_valueFormats$$2$$[$i$$517$$].converter && ($converter$$1$$ = $formatter_valueFormats$$2$$[$i$$517$$].converter);
+    for(var $i$$513$$ = 0;$i$$513$$ < $formatter_valueFormats$$2$$.length;$i$$513$$++) {
+      if($formatter_valueFormats$$2$$[$i$$513$$].type == $type$$178$$) {
+        $formatter_valueFormats$$2$$[$i$$513$$].scaling && ($scaling$$ = $formatter_valueFormats$$2$$[$i$$513$$].scaling);
+        $formatter_valueFormats$$2$$[$i$$513$$].autoPrecision && ($autoPrecision$$ = $formatter_valueFormats$$2$$[$i$$513$$].autoPrecision);
+        $formatter_valueFormats$$2$$[$i$$513$$].converter && ($converter$$1$$ = $formatter_valueFormats$$2$$[$i$$513$$].converter);
         break
       }
     }
@@ -3598,8 +3595,8 @@ D.$DvtChartTypeUtils$$.$hasY2DataOnly$ = function $$DvtChartTypeUtils$$$$hasY2Da
   if(0 == $seriesCount$$17$$) {
     return D.$JSCompiler_alias_FALSE$$
   }
-  for(var $i$$518$$ = 0;$i$$518$$ < $seriesCount$$17$$;$i$$518$$++) {
-    if(!D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$187$$, $i$$518$$)) {
+  for(var $i$$514$$ = 0;$i$$514$$ < $seriesCount$$17$$;$i$$514$$++) {
+    if(!D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$187$$, $i$$514$$)) {
       return D.$JSCompiler_alias_FALSE$$
     }
   }
@@ -3609,8 +3606,8 @@ D.$DvtChartTypeUtils$$.$hasY2Data$ = function $$DvtChartTypeUtils$$$$hasY2Data$$
   if(!D.$DvtChartTypeUtils$$.$isDualY$($chart$$188$$)) {
     return D.$JSCompiler_alias_FALSE$$
   }
-  for(var $seriesCount$$18$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$188$$), $i$$519$$ = 0;$i$$519$$ < $seriesCount$$18$$;$i$$519$$++) {
-    if(!($type$$181$$ && D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$188$$, $i$$519$$) != $type$$181$$) && D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$188$$, $i$$519$$)) {
+  for(var $seriesCount$$18$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$188$$), $i$$515$$ = 0;$i$$515$$ < $seriesCount$$18$$;$i$$515$$++) {
+    if(!($type$$181$$ && D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$188$$, $i$$515$$) != $type$$181$$) && D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$188$$, $i$$515$$)) {
       return D.$JSCompiler_alias_TRUE$$
     }
   }
@@ -3653,28 +3650,28 @@ D.$DvtObj$$.$createSubclass$(D.$DvtChartMarkerUtils$$, D.$DvtObj$$, "DvtChartMar
 D.$DvtChartMarkerUtils$$.$_MIN_RADIUS$ = 5;
 D.$DvtChartMarkerUtils$$.$_MAX_RADIUS_PERCENT$ = 0.125;
 D.$DvtChartMarkerUtils$$.$_DEFAULT_MARKER_SIZE_PERCENT$ = 0.2;
-D.$DvtChartMarkerUtils$$.$calcBubbleSizes$ = function $$DvtChartMarkerUtils$$$$calcBubbleSizes$$($chart$$195$$, $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$, $height$$88_seriesCount$$20$$) {
-  var $minMax_xAxisValueRange_xMinMax$$2$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($chart$$195$$, "z"), $minValue$$6$$ = $minMax_xAxisValueRange_xMinMax$$2$$.min, $maxValue$$7_valueRange$$ = $minMax_xAxisValueRange_xMinMax$$2$$.max, $axisHeight$$1_options$$123$$ = $chart$$195$$.$getOptions$(), $minMax_xAxisValueRange_xMinMax$$2$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($chart$$195$$, "x"), $xAxisMin_yAxisValueRange_yMinMax$$2$$ = $axisHeight$$1_options$$123$$.xAxis.min ? $axisHeight$$1_options$$123$$.xAxis.min : 
-  window.Math.min(0, $minMax_xAxisValueRange_xMinMax$$2$$.min), $minMax_xAxisValueRange_xMinMax$$2$$ = ($axisHeight$$1_options$$123$$.xAxis.max ? $axisHeight$$1_options$$123$$.xAxis.max : window.Math.max(0, $minMax_xAxisValueRange_xMinMax$$2$$.max)) - $xAxisMin_yAxisValueRange_yMinMax$$2$$, $xAxisMin_yAxisValueRange_yMinMax$$2$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($chart$$195$$, "y"), $axisWidth_yAxisMin$$ = $axisHeight$$1_options$$123$$.yAxis.min ? $axisHeight$$1_options$$123$$.yAxis.min : 
-  window.Math.min(0, $xAxisMin_yAxisValueRange_yMinMax$$2$$.min), $xAxisMin_yAxisValueRange_yMinMax$$2$$ = ($axisHeight$$1_options$$123$$.yAxis.max ? $axisHeight$$1_options$$123$$.yAxis.max : window.Math.max(0, $xAxisMin_yAxisValueRange_yMinMax$$2$$.max)) - $axisWidth_yAxisMin$$;
-  D.$DvtChartTypeUtils$$.$isPolar$($chart$$195$$) ? ($axisWidth_yAxisMin$$ = window.Infinity, $axisHeight$$1_options$$123$$ = $chart$$195$$.$getRadius$()) : ($axisWidth_yAxisMin$$ = (1 - $axisHeight$$1_options$$123$$.layout.axisMaxSize) * $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$, $axisHeight$$1_options$$123$$ = (1 - $axisHeight$$1_options$$123$$.layout.axisMaxSize) * $height$$88_seriesCount$$20$$);
+D.$DvtChartMarkerUtils$$.$calcBubbleSizes$ = function $$DvtChartMarkerUtils$$$$calcBubbleSizes$$($chart$$195$$, $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$, $height$$86_seriesCount$$20$$) {
+  var $minMax_xAxisValueRange_xMinMax$$2$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($chart$$195$$, "z"), $minValue$$6$$ = $minMax_xAxisValueRange_xMinMax$$2$$.min, $maxValue$$7_valueRange$$ = $minMax_xAxisValueRange_xMinMax$$2$$.max, $axisHeight$$1_options$$124$$ = $chart$$195$$.$getOptions$(), $minMax_xAxisValueRange_xMinMax$$2$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($chart$$195$$, "x"), $xAxisMin_yAxisValueRange_yMinMax$$2$$ = $axisHeight$$1_options$$124$$.xAxis.min ? $axisHeight$$1_options$$124$$.xAxis.min : 
+  window.Math.min(0, $minMax_xAxisValueRange_xMinMax$$2$$.min), $minMax_xAxisValueRange_xMinMax$$2$$ = ($axisHeight$$1_options$$124$$.xAxis.max ? $axisHeight$$1_options$$124$$.xAxis.max : window.Math.max(0, $minMax_xAxisValueRange_xMinMax$$2$$.max)) - $xAxisMin_yAxisValueRange_yMinMax$$2$$, $xAxisMin_yAxisValueRange_yMinMax$$2$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($chart$$195$$, "y"), $axisWidth_yAxisMin$$ = $axisHeight$$1_options$$124$$.yAxis.min ? $axisHeight$$1_options$$124$$.yAxis.min : 
+  window.Math.min(0, $xAxisMin_yAxisValueRange_yMinMax$$2$$.min), $xAxisMin_yAxisValueRange_yMinMax$$2$$ = ($axisHeight$$1_options$$124$$.yAxis.max ? $axisHeight$$1_options$$124$$.yAxis.max : window.Math.max(0, $xAxisMin_yAxisValueRange_yMinMax$$2$$.max)) - $axisWidth_yAxisMin$$;
+  D.$DvtChartTypeUtils$$.$isPolar$($chart$$195$$) ? ($axisWidth_yAxisMin$$ = window.Infinity, $axisHeight$$1_options$$124$$ = $chart$$195$$.$getRadius$()) : ($axisWidth_yAxisMin$$ = (1 - $axisHeight$$1_options$$124$$.layout.axisMaxSize) * $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$, $axisHeight$$1_options$$124$$ = (1 - $axisHeight$$1_options$$124$$.layout.axisMaxSize) * $height$$86_seriesCount$$20$$);
   var $minArea$$ = window.Math.PI * window.Math.pow(D.$DvtChartMarkerUtils$$.$_MIN_RADIUS$, 2);
-  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$ = D.$DvtChartMarkerUtils$$.$_MAX_RADIUS_PERCENT$ * window.Math.min($areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$, $height$$88_seriesCount$$20$$);
-  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$ = window.Math.PI * window.Math.pow($areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$, 2);
-  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$ = D.$DvtChartMarkerUtils$$.$_adjustBubbleSizeRangeForCount$($chart$$195$$, $minArea$$, $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$, $minValue$$6$$, $maxValue$$7_valueRange$$);
-  $minArea$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$.minArea;
-  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$.maxArea;
-  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$ = D.$DvtChartMarkerUtils$$.$_adjustBubbleSizeRangeForDataRange$($minArea$$, $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$, $minValue$$6$$, $maxValue$$7_valueRange$$);
-  $minArea$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$.minArea;
-  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$.maxArea;
+  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$ = D.$DvtChartMarkerUtils$$.$_MAX_RADIUS_PERCENT$ * window.Math.min($areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$, $height$$86_seriesCount$$20$$);
+  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$ = window.Math.PI * window.Math.pow($areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$, 2);
+  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$ = D.$DvtChartMarkerUtils$$.$_adjustBubbleSizeRangeForCount$($chart$$195$$, $minArea$$, $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$, $minValue$$6$$, $maxValue$$7_valueRange$$);
+  $minArea$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$.minArea;
+  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$.maxArea;
+  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$ = D.$DvtChartMarkerUtils$$.$_adjustBubbleSizeRangeForDataRange$($minArea$$, $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$, $minValue$$6$$, $maxValue$$7_valueRange$$);
+  $minArea$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$.minArea;
+  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$ = $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$.maxArea;
   $maxValue$$7_valueRange$$ -= $minValue$$6$$;
-  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$ -= $minArea$$;
-  $height$$88_seriesCount$$20$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$195$$);
-  for(var $seriesIndex$$57$$ = 0;$seriesIndex$$57$$ < $height$$88_seriesCount$$20$$;$seriesIndex$$57$$++) {
+  $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$ -= $minArea$$;
+  $height$$86_seriesCount$$20$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$195$$);
+  for(var $seriesIndex$$57$$ = 0;$seriesIndex$$57$$ < $height$$86_seriesCount$$20$$;$seriesIndex$$57$$++) {
     for(var $seriesItem$$16$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$195$$, $seriesIndex$$57$$), $numGroups$$1$$ = $seriesItem$$16$$.items ? $seriesItem$$16$$.items.length : 0, $j$$64$$ = 0;$j$$64$$ < $numGroups$$1$$;$j$$64$$++) {
       var $dataItem$$22$$ = $seriesItem$$16$$.items[$j$$64$$];
-      $dataItem$$22$$ && $dataItem$$22$$.z && (1 === $height$$88_seriesCount$$20$$ && 1 === $numGroups$$1$$ ? ($dataItem$$22$$.markerSize = D.$DvtChartMarkerUtils$$.$_DEFAULT_MARKER_SIZE_PERCENT$ * window.Math.min($axisWidth_yAxisMin$$, $axisHeight$$1_options$$123$$), $minMax_xAxisValueRange_xMinMax$$2$$ = 0 === $minMax_xAxisValueRange_xMinMax$$2$$ ? 100 : $minMax_xAxisValueRange_xMinMax$$2$$, $xAxisMin_yAxisValueRange_yMinMax$$2$$ = 0 === $xAxisMin_yAxisValueRange_yMinMax$$2$$ ? 100 : $xAxisMin_yAxisValueRange_yMinMax$$2$$) : 
-      $dataItem$$22$$.markerSize = 2 * window.Math.sqrt(($minArea$$ + ($dataItem$$22$$.z - $minValue$$6$$) / $maxValue$$7_valueRange$$ * $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$105$$) / window.Math.PI), $dataItem$$22$$._xAxisRadius = 0.5 * ($dataItem$$22$$.markerSize / $axisWidth_yAxisMin$$) * $minMax_xAxisValueRange_xMinMax$$2$$, $dataItem$$22$$._yAxisRadius = 0.5 * ($dataItem$$22$$.markerSize / $axisHeight$$1_options$$123$$) * $xAxisMin_yAxisValueRange_yMinMax$$2$$)
+      $dataItem$$22$$ && $dataItem$$22$$.z && (1 === $height$$86_seriesCount$$20$$ && 1 === $numGroups$$1$$ ? ($dataItem$$22$$.markerSize = D.$DvtChartMarkerUtils$$.$_DEFAULT_MARKER_SIZE_PERCENT$ * window.Math.min($axisWidth_yAxisMin$$, $axisHeight$$1_options$$124$$), $minMax_xAxisValueRange_xMinMax$$2$$ = 0 === $minMax_xAxisValueRange_xMinMax$$2$$ ? 100 : $minMax_xAxisValueRange_xMinMax$$2$$, $xAxisMin_yAxisValueRange_yMinMax$$2$$ = 0 === $xAxisMin_yAxisValueRange_yMinMax$$2$$ ? 100 : $xAxisMin_yAxisValueRange_yMinMax$$2$$) : 
+      $dataItem$$22$$.markerSize = 2 * window.Math.sqrt(($minArea$$ + ($dataItem$$22$$.z - $minValue$$6$$) / $maxValue$$7_valueRange$$ * $areaRange_maxArea_maxRadius$$1_minMaxArea_width$$104$$) / window.Math.PI), $dataItem$$22$$._xAxisRadius = 0.5 * ($dataItem$$22$$.markerSize / $axisWidth_yAxisMin$$) * $minMax_xAxisValueRange_xMinMax$$2$$, $dataItem$$22$$._yAxisRadius = 0.5 * ($dataItem$$22$$.markerSize / $axisHeight$$1_options$$124$$) * $xAxisMin_yAxisValueRange_yMinMax$$2$$)
     }
   }
 };
@@ -3729,35 +3726,35 @@ D.$DvtPieChartUtils$$.$hasOtherSeries$ = function $$DvtPieChartUtils$$$$hasOther
   return 0 < D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$90$$).$other$.length
 };
 D.$DvtPieChartUtils$$.$getOtherValue$ = function $$DvtPieChartUtils$$$$getOtherValue$$($chart$$91$$) {
-  for(var $otherSeries$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$91$$).$other$, $otherValue$$1$$ = 0, $i$$503$$ = 0;$i$$503$$ < $otherSeries$$.length;$i$$503$$++) {
-    var $seriesIndex$$29_value$$85$$ = $otherSeries$$[$i$$503$$];
+  for(var $otherSeries$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$91$$).$other$, $otherValue$$1$$ = 0, $i$$499$$ = 0;$i$$499$$ < $otherSeries$$.length;$i$$499$$++) {
+    var $seriesIndex$$29_value$$85$$ = $otherSeries$$[$i$$499$$];
     D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$91$$, $seriesIndex$$29_value$$85$$) && ($seriesIndex$$29_value$$85$$ = D.$DvtChartDataUtils$$.getValue($chart$$91$$, $seriesIndex$$29_value$$85$$, 0), 0 < $seriesIndex$$29_value$$85$$ && ($otherValue$$1$$ += $seriesIndex$$29_value$$85$$))
   }
   return $otherValue$$1$$
 };
 D.$DvtPieChartUtils$$.$getOtherSliceIds$ = function $$DvtPieChartUtils$$$$getOtherSliceIds$$($chart$$92$$) {
-  for(var $otherSeries$$1$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$92$$).$other$, $seriesIds$$ = [], $i$$504$$ = 0;$i$$504$$ < $otherSeries$$1$$.length;$i$$504$$++) {
-    $seriesIds$$.push(D.$DvtPieChartUtils$$.$getSliceId$($chart$$92$$, $otherSeries$$1$$[$i$$504$$]))
+  for(var $otherSeries$$1$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$92$$).$other$, $seriesIds$$ = [], $i$$500$$ = 0;$i$$500$$ < $otherSeries$$1$$.length;$i$$500$$++) {
+    $seriesIds$$.push(D.$DvtPieChartUtils$$.$getSliceId$($chart$$92$$, $otherSeries$$1$$[$i$$500$$]))
   }
   return $seriesIds$$
 };
 D.$DvtPieChartUtils$$.$getOtherSliceVisibility$ = function $$DvtPieChartUtils$$$$getOtherSliceVisibility$$($chart$$93$$) {
-  for(var $otherSeries$$2$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$93$$).$other$, $i$$505$$ = 0;$i$$505$$ < $otherSeries$$2$$.length;$i$$505$$++) {
-    if(D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$93$$, $otherSeries$$2$$[$i$$505$$])) {
+  for(var $otherSeries$$2$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$93$$).$other$, $i$$501$$ = 0;$i$$501$$ < $otherSeries$$2$$.length;$i$$501$$++) {
+    if(D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$93$$, $otherSeries$$2$$[$i$$501$$])) {
       return"visible"
     }
   }
   return"hidden"
 };
 D.$DvtPieChartUtils$$.$setOtherSliceVisibility$ = function $$DvtPieChartUtils$$$$setOtherSliceVisibility$$($chart$$94$$, $visibility$$2$$) {
-  for(var $otherSeries$$3$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$94$$).$other$, $i$$506$$ = 0;$i$$506$$ < $otherSeries$$3$$.length;$i$$506$$++) {
-    D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$94$$, $otherSeries$$3$$[$i$$506$$]).visibility = $visibility$$2$$
+  for(var $otherSeries$$3$$ = D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$($chart$$94$$).$other$, $i$$502$$ = 0;$i$$502$$ < $otherSeries$$3$$.length;$i$$502$$++) {
+    D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$94$$, $otherSeries$$3$$[$i$$502$$]).visibility = $visibility$$2$$
   }
 };
 D.$DvtPieChartUtils$$.$isOtherSliceSelected$ = function $$DvtPieChartUtils$$$$isOtherSliceSelected$$($chart$$95$$, $selected$$16$$) {
   for(var $otherIds$$ = D.$DvtPieChartUtils$$.$getOtherSliceIds$($chart$$95$$), $j$$60$$ = 0;$j$$60$$ < $otherIds$$.length;$j$$60$$++) {
-    for(var $sliceId$$1$$ = $otherIds$$[$j$$60$$], $sliceSelected$$ = D.$JSCompiler_alias_FALSE$$, $i$$507$$ = 0;$i$$507$$ < $selected$$16$$.length;$i$$507$$++) {
-      if($selected$$16$$[$i$$507$$].id && $sliceId$$1$$.getId() === $selected$$16$$[$i$$507$$].id || $sliceId$$1$$.$getSeries$() === $selected$$16$$[$i$$507$$].series && $sliceId$$1$$.$getGroup$() === $selected$$16$$[$i$$507$$].group) {
+    for(var $sliceId$$1$$ = $otherIds$$[$j$$60$$], $sliceSelected$$ = D.$JSCompiler_alias_FALSE$$, $i$$503$$ = 0;$i$$503$$ < $selected$$16$$.length;$i$$503$$++) {
+      if($selected$$16$$[$i$$503$$].id && $sliceId$$1$$.getId() === $selected$$16$$[$i$$503$$].id || $sliceId$$1$$.$getSeries$() === $selected$$16$$[$i$$503$$].series && $sliceId$$1$$.$getGroup$() === $selected$$16$$[$i$$503$$].group) {
         $sliceSelected$$ = D.$JSCompiler_alias_TRUE$$;
         break
       }
@@ -3769,11 +3766,11 @@ D.$DvtPieChartUtils$$.$isOtherSliceSelected$ = function $$DvtPieChartUtils$$$$is
   return D.$JSCompiler_alias_TRUE$$
 };
 D.$DvtPieChartUtils$$.$_getSeriesIndicesArrays$ = function $$DvtPieChartUtils$$$$_getSeriesIndicesArrays$$($chart$$96$$) {
-  for(var $renderedSeries$$ = [], $otherSeries$$4$$ = [], $seriesCount$$15$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$96$$), $options$$95$$ = $chart$$96$$.$getOptions$(), $otherThreshold$$ = $options$$95$$.otherThreshold * D.$DvtPieChartUtils$$.$getTotalValue$($chart$$96$$), $seriesIndex$$33$$ = 0;$seriesIndex$$33$$ < $seriesCount$$15$$;$seriesIndex$$33$$++) {
+  for(var $renderedSeries$$ = [], $otherSeries$$4$$ = [], $seriesCount$$15$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$96$$), $options$$96$$ = $chart$$96$$.$getOptions$(), $otherThreshold$$ = $options$$96$$.otherThreshold * D.$DvtPieChartUtils$$.$getTotalValue$($chart$$96$$), $seriesIndex$$33$$ = 0;$seriesIndex$$33$$ < $seriesCount$$15$$;$seriesIndex$$33$$++) {
     var $value$$86$$ = D.$DvtChartDataUtils$$.getValue($chart$$96$$, $seriesIndex$$33$$, 0);
     0 < $otherThreshold$$ && $value$$86$$ < $otherThreshold$$ ? $otherSeries$$4$$.push($seriesIndex$$33$$) : $renderedSeries$$.push($seriesIndex$$33$$)
   }
-  "on" == $options$$95$$.sorting && $renderedSeries$$.sort(function($renderedSeries$$, $otherSeries$$4$$) {
+  "on" == $options$$96$$.sorting && $renderedSeries$$.sort(function($renderedSeries$$, $otherSeries$$4$$) {
     return D.$DvtChartDataUtils$$.getValue($chart$$96$$, $otherSeries$$4$$, 0) - D.$DvtChartDataUtils$$.getValue($chart$$96$$, $renderedSeries$$, 0)
   });
   return{$rendered$:$renderedSeries$$, $other$:$otherSeries$$4$$}
@@ -3881,27 +3878,27 @@ D.$DvtPieRenderUtils$$.$getGradientRatios$ = function $$DvtPieRenderUtils$$$$get
   }
 };
 D.$DvtPieRenderUtils$$.$createTopSurface$ = function $$DvtPieRenderUtils$$$$createTopSurface$$($slice$$11$$, $fill$$48$$) {
-  var $edge_pieChart$$4$$ = $slice$$11$$.$_pieChart$, $context$$556_shapes$$10_wedge$$ = $edge_pieChart$$4$$.$_context$, $ariaLabel$$2_pieCenter$$ = $edge_pieChart$$4$$.$getCenter$(), $sliceClosureType$$ = "PIE";
+  var $edge_pieChart$$4$$ = $slice$$11$$.$_pieChart$, $context$$550_shapes$$10_wedge$$ = $edge_pieChart$$4$$.$_context$, $ariaLabel$$2_pieCenter$$ = $edge_pieChart$$4$$.$getCenter$(), $sliceClosureType$$ = "PIE";
   360 == $slice$$11$$.$getAngleExtent$() && ($sliceClosureType$$ = "OPEN");
-  $context$$556_shapes$$10_wedge$$ = new D.$DvtGraphSelectableArc$$($context$$556_shapes$$10_wedge$$, $ariaLabel$$2_pieCenter$$.x, $ariaLabel$$2_pieCenter$$.y, $slice$$11$$.$_radiusX$, $slice$$11$$.$_radiusY$, $slice$$11$$.$getAngleStart$(), $slice$$11$$.$getAngleExtent$(), $sliceClosureType$$);
-  $context$$556_shapes$$10_wedge$$.$setDataColor$($slice$$11$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($edge_pieChart$$4$$.$chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($edge_pieChart$$4$$.$chart$));
-  (0,D.$JSCompiler_StaticMethods_setTranslate$$)($context$$556_shapes$$10_wedge$$, $slice$$11$$.$_explodeOffsetX$, $slice$$11$$.$_explodeOffsetY$);
-  $context$$556_shapes$$10_wedge$$.$setFill$($fill$$48$$);
-  $slice$$11$$.$getStrokeColor$() && $context$$556_shapes$$10_wedge$$.$setSolidStroke$($slice$$11$$.$getStrokeColor$());
-  (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($context$$556_shapes$$10_wedge$$);
+  $context$$550_shapes$$10_wedge$$ = new D.$DvtGraphSelectableArc$$($context$$550_shapes$$10_wedge$$, $ariaLabel$$2_pieCenter$$.x, $ariaLabel$$2_pieCenter$$.y, $slice$$11$$.$_radiusX$, $slice$$11$$.$_radiusY$, $slice$$11$$.$getAngleStart$(), $slice$$11$$.$getAngleExtent$(), $sliceClosureType$$);
+  $context$$550_shapes$$10_wedge$$.$setDataColor$($slice$$11$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($edge_pieChart$$4$$.$chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($edge_pieChart$$4$$.$chart$));
+  (0,D.$JSCompiler_StaticMethods_setTranslate$$)($context$$550_shapes$$10_wedge$$, $slice$$11$$.$_explodeOffsetX$, $slice$$11$$.$_explodeOffsetY$);
+  $context$$550_shapes$$10_wedge$$.$setFill$($fill$$48$$);
+  $slice$$11$$.$getStrokeColor$() && $context$$550_shapes$$10_wedge$$.$setSolidStroke$($slice$$11$$.$getStrokeColor$());
+  (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($context$$550_shapes$$10_wedge$$, "img");
   $ariaLabel$$2_pieCenter$$ = $slice$$11$$.$getTooltip$();
-  (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($context$$556_shapes$$10_wedge$$, "label", $ariaLabel$$2_pieCenter$$);
-  $context$$556_shapes$$10_wedge$$ = [$context$$556_shapes$$10_wedge$$];
+  (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($context$$550_shapes$$10_wedge$$, "label", $ariaLabel$$2_pieCenter$$);
+  $context$$550_shapes$$10_wedge$$ = [$context$$550_shapes$$10_wedge$$];
   if(!$slice$$11$$.$getStrokeColor$() && "skyros" == $edge_pieChart$$4$$.$getSkin$() && (0,D.$JSCompiler_StaticMethods_is3D$$)($edge_pieChart$$4$$) && 0 < $edge_pieChart$$4$$.$getDepth$() && "gradient" == D.$DvtChartStyleUtils$$.$getSeriesEffect$($edge_pieChart$$4$$.$chart$) && (180 <= $slice$$11$$.$getAngleStart$() || 180 <= $slice$$11$$.$getAngleStart$() + $slice$$11$$.$getAngleExtent$() || 360 == $slice$$11$$.$getAngleExtent$())) {
-    $edge_pieChart$$4$$ = D.$DvtPieRenderUtils$$.$_createGradientPieBorder$($slice$$11$$, $fill$$48$$), (0,D.$JSCompiler_StaticMethods_setTranslate$$)($edge_pieChart$$4$$, $slice$$11$$.$_explodeOffsetX$, $slice$$11$$.$_explodeOffsetY$), $context$$556_shapes$$10_wedge$$.push($edge_pieChart$$4$$)
+    $edge_pieChart$$4$$ = D.$DvtPieRenderUtils$$.$_createGradientPieBorder$($slice$$11$$, $fill$$48$$), (0,D.$JSCompiler_StaticMethods_setTranslate$$)($edge_pieChart$$4$$, $slice$$11$$.$_explodeOffsetX$, $slice$$11$$.$_explodeOffsetY$), $context$$550_shapes$$10_wedge$$.push($edge_pieChart$$4$$)
   }
-  D.$DvtPieRenderUtils$$.$associate$($slice$$11$$, $context$$556_shapes$$10_wedge$$);
-  return $context$$556_shapes$$10_wedge$$
+  D.$DvtPieRenderUtils$$.$associate$($slice$$11$$, $context$$550_shapes$$10_wedge$$);
+  return $context$$550_shapes$$10_wedge$$
 };
 D.$DvtPieRenderUtils$$.$associate$ = function $$DvtPieRenderUtils$$$$associate$$($slice$$12$$, $displayables$$17$$) {
   if($displayables$$17$$) {
-    for(var $i$$509$$ = 0;$i$$509$$ < $displayables$$17$$.length;$i$$509$$++) {
-      $slice$$12$$.$_pieChart$.$chart$.$getEventManager$().$associate$($displayables$$17$$[$i$$509$$], $slice$$12$$)
+    for(var $i$$505$$ = 0;$i$$505$$ < $displayables$$17$$.length;$i$$505$$++) {
+      $slice$$12$$.$_pieChart$.$chart$.$getEventManager$().$associate$($displayables$$17$$[$i$$505$$], $slice$$12$$)
     }
   }
 };
@@ -3930,8 +3927,8 @@ D.$DvtPieRenderUtils$$.$createLateralSurface$ = function $$DvtPieRenderUtils$$$$
       $shapes$$11$$.push(D.$DvtPieRenderUtils$$.$_generateLateralShape$($slice$$14$$, $pathType$$, D.$JSCompiler_alias_NULL$$, $fill$$49$$))
     }else {
       if($pathType$$ == D.$DvtPieRenderUtils$$.$SURFACE_CRUST$) {
-        for(var $pathCommands$$1$$ = D.$DvtPieRenderUtils$$.$_createCrustPathCommands$($slice$$14$$), $len$$44$$ = $pathCommands$$1$$.length, $i$$510$$ = 0;$i$$510$$ < $len$$44$$;$i$$510$$++) {
-          $shapes$$11$$.push(D.$DvtPieRenderUtils$$.$_generateLateralShape$($slice$$14$$, $pathType$$, $pathCommands$$1$$[$i$$510$$], $fill$$49$$))
+        for(var $pathCommands$$1$$ = D.$DvtPieRenderUtils$$.$_createCrustPathCommands$($slice$$14$$), $len$$44$$ = $pathCommands$$1$$.length, $i$$506$$ = 0;$i$$506$$ < $len$$44$$;$i$$506$$++) {
+          $shapes$$11$$.push(D.$DvtPieRenderUtils$$.$_generateLateralShape$($slice$$14$$, $pathType$$, $pathCommands$$1$$[$i$$506$$], $fill$$49$$))
         }
       }
     }
@@ -3946,26 +3943,26 @@ D.$DvtPieRenderUtils$$.$generateLateralGradientFill$ = function $$DvtPieRenderUt
   return new D.$DvtLinearGradientFill$$($angle$$34$$, $arColors$$22$$, $arAlphas$$22$$, $arRatios$$4$$, $arBounds$$14$$)
 };
 D.$DvtPieRenderUtils$$.$_generateLateralShape$ = function $$DvtPieRenderUtils$$$$_generateLateralShape$$($slice$$16$$, $pathType$$1_pointArray_pt$$8$$, $pathCommand_points$$43_xCenter$$, $fill$$50$$) {
-  var $pie$$ = $slice$$16$$.$_pieChart$, $context$$557_path$$45_polygon$$3$$ = $pie$$.$_context$;
+  var $pie$$ = $slice$$16$$.$_pieChart$, $context$$551_path$$45_polygon$$3$$ = $pie$$.$_context$;
   if($pathType$$1_pointArray_pt$$8$$ == D.$DvtPieRenderUtils$$.$SURFACE_LEFT$ || $pathType$$1_pointArray_pt$$8$$ == D.$DvtPieRenderUtils$$.$SURFACE_RIGHT$) {
     var $angle$$35$$ = $slice$$16$$.$getAngleStart$(), $arc$$4$$ = $slice$$16$$.$getAngleExtent$();
     $pathCommand_points$$43_xCenter$$ = $pie$$.$getCenter$().x;
-    var $i$$511_yCenter$$ = $pie$$.$getCenter$().y, $xRadius$$ = $slice$$16$$.$_radiusX$, $yRadius$$ = $slice$$16$$.$_radiusY$, $depth$$9$$ = $pie$$.$getDepth$();
-    $pathType$$1_pointArray_pt$$8$$ = $pathType$$1_pointArray_pt$$8$$ == D.$DvtPieRenderUtils$$.$SURFACE_LEFT$ ? D.$DvtPieRenderUtils$$.$reflectAngleOverYAxis$($angle$$35$$ + $arc$$4$$, $pathCommand_points$$43_xCenter$$, $i$$511_yCenter$$, $xRadius$$, $yRadius$$) : D.$DvtPieRenderUtils$$.$reflectAngleOverYAxis$($angle$$35$$, $pathCommand_points$$43_xCenter$$, $i$$511_yCenter$$, $xRadius$$, $yRadius$$);
-    $pathType$$1_pointArray_pt$$8$$ = D.$DvtPieRenderUtils$$.$_generateInnerPoints$($pathCommand_points$$43_xCenter$$, $i$$511_yCenter$$, $pathType$$1_pointArray_pt$$8$$.x, $pathType$$1_pointArray_pt$$8$$.y, $depth$$9$$);
+    var $i$$507_yCenter$$ = $pie$$.$getCenter$().y, $xRadius$$ = $slice$$16$$.$_radiusX$, $yRadius$$ = $slice$$16$$.$_radiusY$, $depth$$9$$ = $pie$$.$getDepth$();
+    $pathType$$1_pointArray_pt$$8$$ = $pathType$$1_pointArray_pt$$8$$ == D.$DvtPieRenderUtils$$.$SURFACE_LEFT$ ? D.$DvtPieRenderUtils$$.$reflectAngleOverYAxis$($angle$$35$$ + $arc$$4$$, $pathCommand_points$$43_xCenter$$, $i$$507_yCenter$$, $xRadius$$, $yRadius$$) : D.$DvtPieRenderUtils$$.$reflectAngleOverYAxis$($angle$$35$$, $pathCommand_points$$43_xCenter$$, $i$$507_yCenter$$, $xRadius$$, $yRadius$$);
+    $pathType$$1_pointArray_pt$$8$$ = D.$DvtPieRenderUtils$$.$_generateInnerPoints$($pathCommand_points$$43_xCenter$$, $i$$507_yCenter$$, $pathType$$1_pointArray_pt$$8$$.x, $pathType$$1_pointArray_pt$$8$$.y, $depth$$9$$);
     $pathCommand_points$$43_xCenter$$ = [];
-    for($i$$511_yCenter$$ = 0;$i$$511_yCenter$$ < $pathType$$1_pointArray_pt$$8$$.length;$i$$511_yCenter$$++) {
-      $pathCommand_points$$43_xCenter$$.push($pathType$$1_pointArray_pt$$8$$[$i$$511_yCenter$$].x, $pathType$$1_pointArray_pt$$8$$[$i$$511_yCenter$$].y)
+    for($i$$507_yCenter$$ = 0;$i$$507_yCenter$$ < $pathType$$1_pointArray_pt$$8$$.length;$i$$507_yCenter$$++) {
+      $pathCommand_points$$43_xCenter$$.push($pathType$$1_pointArray_pt$$8$$[$i$$507_yCenter$$].x, $pathType$$1_pointArray_pt$$8$$[$i$$507_yCenter$$].y)
     }
-    $context$$557_path$$45_polygon$$3$$ = new D.$DvtGraphSelectablePolygon$$($context$$557_path$$45_polygon$$3$$, $pathCommand_points$$43_xCenter$$);
-    $context$$557_path$$45_polygon$$3$$.$setDataColor$($slice$$16$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($pie$$.$chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($pie$$.$chart$));
-    (0,D.$JSCompiler_StaticMethods_setTranslate$$)($context$$557_path$$45_polygon$$3$$, $slice$$16$$.$_explodeOffsetX$, $slice$$16$$.$_explodeOffsetY$);
-    $context$$557_path$$45_polygon$$3$$.$setFill$($fill$$50$$);
-    $slice$$16$$.$getStrokeColor$() && $context$$557_path$$45_polygon$$3$$.$setSolidStroke$($slice$$16$$.$getStrokeColor$());
-    return $context$$557_path$$45_polygon$$3$$
+    $context$$551_path$$45_polygon$$3$$ = new D.$DvtGraphSelectablePolygon$$($context$$551_path$$45_polygon$$3$$, $pathCommand_points$$43_xCenter$$);
+    $context$$551_path$$45_polygon$$3$$.$setDataColor$($slice$$16$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($pie$$.$chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($pie$$.$chart$));
+    (0,D.$JSCompiler_StaticMethods_setTranslate$$)($context$$551_path$$45_polygon$$3$$, $slice$$16$$.$_explodeOffsetX$, $slice$$16$$.$_explodeOffsetY$);
+    $context$$551_path$$45_polygon$$3$$.$setFill$($fill$$50$$);
+    $slice$$16$$.$getStrokeColor$() && $context$$551_path$$45_polygon$$3$$.$setSolidStroke$($slice$$16$$.$getStrokeColor$());
+    return $context$$551_path$$45_polygon$$3$$
   }
-  return $pathCommand_points$$43_xCenter$$ ? ($context$$557_path$$45_polygon$$3$$ = new D.$DvtGraphSelectablePath$$($context$$557_path$$45_polygon$$3$$, D.$JSCompiler_alias_NULL$$), $context$$557_path$$45_polygon$$3$$.$setDataColor$($slice$$16$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($pie$$.$chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($pie$$.$chart$)), $context$$557_path$$45_polygon$$3$$.$setCmds$($pathCommand_points$$43_xCenter$$), (0,D.$JSCompiler_StaticMethods_setTranslate$$)($context$$557_path$$45_polygon$$3$$, 
-  $slice$$16$$.$_explodeOffsetX$, $slice$$16$$.$_explodeOffsetY$), $context$$557_path$$45_polygon$$3$$.$setFill$($fill$$50$$), $slice$$16$$.$getStrokeColor$() && $context$$557_path$$45_polygon$$3$$.$setSolidStroke$($slice$$16$$.$getStrokeColor$()), $context$$557_path$$45_polygon$$3$$) : D.$JSCompiler_alias_NULL$$
+  return $pathCommand_points$$43_xCenter$$ ? ($context$$551_path$$45_polygon$$3$$ = new D.$DvtGraphSelectablePath$$($context$$551_path$$45_polygon$$3$$, D.$JSCompiler_alias_NULL$$), $context$$551_path$$45_polygon$$3$$.$setDataColor$($slice$$16$$.$getFillColor$(), D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($pie$$.$chart$), D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($pie$$.$chart$)), $context$$551_path$$45_polygon$$3$$.$setCmds$($pathCommand_points$$43_xCenter$$), (0,D.$JSCompiler_StaticMethods_setTranslate$$)($context$$551_path$$45_polygon$$3$$, 
+  $slice$$16$$.$_explodeOffsetX$, $slice$$16$$.$_explodeOffsetY$), $context$$551_path$$45_polygon$$3$$.$setFill$($fill$$50$$), $slice$$16$$.$getStrokeColor$() && $context$$551_path$$45_polygon$$3$$.$setSolidStroke$($slice$$16$$.$getStrokeColor$()), $context$$551_path$$45_polygon$$3$$) : D.$JSCompiler_alias_NULL$$
 };
 D.$DvtPieRenderUtils$$.$_createCrustPathCommands$ = function $$DvtPieRenderUtils$$$$_createCrustPathCommands$$($slice$$17_yRadius$$1$$) {
   var $angle$$36$$ = $slice$$17_yRadius$$1$$.$getAngleStart$(), $arc$$5$$ = $slice$$17_yRadius$$1$$.$getAngleExtent$(), $angleEnd$$ = $angle$$36$$ + $arc$$5$$, $depth$$10_pie$$1$$ = $slice$$17_yRadius$$1$$.$_pieChart$, $xCenter$$1$$ = $depth$$10_pie$$1$$.$getCenter$().x, $yCenter$$1$$ = $depth$$10_pie$$1$$.$getCenter$().y, $xRadius$$1$$ = $slice$$17_yRadius$$1$$.$_radiusX$;
@@ -4011,9 +4008,9 @@ D.$JSCompiler_prototypeAlias$$.getHeight = (0,D.$JSCompiler_get$$)("$_height$");
 D.$JSCompiler_prototypeAlias$$.$setHeight$ = (0,D.$JSCompiler_set$$)("$_height$");
 D.$JSCompiler_prototypeAlias$$.$getMaxY$ = (0,D.$JSCompiler_get$$)("$_maxY$");
 D.$JSCompiler_prototypeAlias$$.$getMinY$ = (0,D.$JSCompiler_get$$)("$_minY$");
-D.$JSCompiler_StaticMethods_boundY$$ = function $$JSCompiler_StaticMethods_boundY$$$($JSCompiler_StaticMethods_boundY$self$$, $y$$230$$) {
-  $y$$230$$ = window.Math.max($y$$230$$, $JSCompiler_StaticMethods_boundY$self$$.$_minY$);
-  return $y$$230$$ = window.Math.min($y$$230$$, $JSCompiler_StaticMethods_boundY$self$$.$_maxY$)
+D.$JSCompiler_StaticMethods_boundY$$ = function $$JSCompiler_StaticMethods_boundY$$$($JSCompiler_StaticMethods_boundY$self$$, $y$$228$$) {
+  $y$$228$$ = window.Math.max($y$$228$$, $JSCompiler_StaticMethods_boundY$self$$.$_minY$);
+  return $y$$228$$ = window.Math.min($y$$228$$, $JSCompiler_StaticMethods_boundY$self$$.$_maxY$)
 };
 D.$JSCompiler_prototypeAlias$$ = D.$DvtPieLabelInfo$$.prototype;
 D.$JSCompiler_prototypeAlias$$.$getPosition$ = (0,D.$JSCompiler_get$$)("$_position$");
@@ -4087,16 +4084,16 @@ D.$DvtPieLabelUtils$$.$_createLabel$ = function $$DvtPieLabelUtils$$$$_createLab
   if("none" == $backgroundColor$$25_labelStr$$1_pieChart$$7$$.$getLabelPosition$()) {
     return D.$JSCompiler_alias_NULL$$
   }
-  var $context$$558_sliceLabel$$2$$ = $backgroundColor$$25_labelStr$$1_pieChart$$7$$.$_context$, $context$$558_sliceLabel$$2$$ = $noWrap$$3$$ ? new D.$DvtOutputText$$($context$$558_sliceLabel$$2$$) : new D.$DvtMultilineText$$($context$$558_sliceLabel$$2$$), $defaultColor_sd$$ = $backgroundColor$$25_labelStr$$1_pieChart$$7$$.$getOptions$().styleDefaults, $style$$89$$ = $defaultColor_sd$$.sliceLabelStyle;
+  var $context$$552_sliceLabel$$2$$ = $backgroundColor$$25_labelStr$$1_pieChart$$7$$.$_context$, $context$$552_sliceLabel$$2$$ = $noWrap$$3$$ ? new D.$DvtOutputText$$($context$$552_sliceLabel$$2$$) : new D.$DvtMultilineText$$($context$$552_sliceLabel$$2$$), $defaultColor_sd$$ = $backgroundColor$$25_labelStr$$1_pieChart$$7$$.$getOptions$().styleDefaults, $style$$89$$ = $defaultColor_sd$$.sliceLabelStyle;
   if($style$$89$$) {
     var $styleStr$$ = $style$$89$$.toString();
     -1 == $styleStr$$.indexOf("color") && ($defaultColor_sd$$ = $defaultColor_sd$$._defaultSliceLabelColor, "inside" == $backgroundColor$$25_labelStr$$1_pieChart$$7$$.$getLabelPosition$() && ($backgroundColor$$25_labelStr$$1_pieChart$$7$$ = $slice$$19$$.$getFillColor$(), $defaultColor_sd$$ = D.$DvtColorUtils$$.$getContrastingTextColor$($backgroundColor$$25_labelStr$$1_pieChart$$7$$)), $style$$89$$ = new D.$DvtCSSStyle$$($styleStr$$ + ("color: " + $defaultColor_sd$$ + ";")))
   }
-  D.$DvtPieLabelUtils$$.$_setFontPropsOnLabel$($style$$89$$, $context$$558_sliceLabel$$2$$);
+  D.$DvtPieLabelUtils$$.$_setFontPropsOnLabel$($style$$89$$, $context$$552_sliceLabel$$2$$);
   $backgroundColor$$25_labelStr$$1_pieChart$$7$$ = D.$DvtPieLabelUtils$$.$_generateSliceLabelString$($slice$$19$$);
-  $context$$558_sliceLabel$$2$$.$setTextString$($backgroundColor$$25_labelStr$$1_pieChart$$7$$);
+  $context$$552_sliceLabel$$2$$.$setTextString$($backgroundColor$$25_labelStr$$1_pieChart$$7$$);
   $slice$$19$$.$_sliceLabelString$ = $backgroundColor$$25_labelStr$$1_pieChart$$7$$;
-  return $context$$558_sliceLabel$$2$$
+  return $context$$552_sliceLabel$$2$$
 };
 D.$DvtPieLabelUtils$$.$_generateSliceLabelString$ = function $$DvtPieLabelUtils$$$$_generateSliceLabelString$$($labelType$$5_slice$$20$$) {
   var $pieChart$$8$$ = $labelType$$5_slice$$20$$.$_pieChart$;
@@ -4107,25 +4104,25 @@ D.$DvtPieLabelUtils$$.$_generateSliceLabelString$ = function $$DvtPieLabelUtils$
   if($customLabel_svalue$$ != D.$JSCompiler_alias_NULL$$) {
     return $customLabel_svalue$$
   }
-  var $dataTotal$$1_percentage$$1_s$$105_spercent$$ = "", $stext_value$$89$$ = $customLabel_svalue$$ = "", $dataTotal$$1_percentage$$1_s$$105_spercent$$ = "", $stext_value$$89$$ = $labelType$$5_slice$$20$$.getValue(), $valueFormats$$3$$ = $labelType$$5_slice$$20$$.$_chart$.$getOptions$().valueFormats, $dataTotal$$1_percentage$$1_s$$105_spercent$$ = 0, $dataTotal$$1_percentage$$1_s$$105_spercent$$ = $pieChart$$8$$.$getTotalValue$(), $dataTotal$$1_percentage$$1_s$$105_spercent$$ = 0 == $dataTotal$$1_percentage$$1_s$$105_spercent$$ ? 
-  0 : 100 * (window.Math.abs($stext_value$$89$$) / $dataTotal$$1_percentage$$1_s$$105_spercent$$);
+  var $dataTotal$$1_percentage$$1_s$$86_spercent$$ = "", $stext_value$$89$$ = $customLabel_svalue$$ = "", $dataTotal$$1_percentage$$1_s$$86_spercent$$ = "", $stext_value$$89$$ = $labelType$$5_slice$$20$$.getValue(), $valueFormats$$3$$ = $labelType$$5_slice$$20$$.$_chart$.$getOptions$().valueFormats, $dataTotal$$1_percentage$$1_s$$86_spercent$$ = 0, $dataTotal$$1_percentage$$1_s$$86_spercent$$ = $pieChart$$8$$.$getTotalValue$(), $dataTotal$$1_percentage$$1_s$$86_spercent$$ = 0 == $dataTotal$$1_percentage$$1_s$$86_spercent$$ ? 
+  0 : 100 * (window.Math.abs($stext_value$$89$$) / $dataTotal$$1_percentage$$1_s$$86_spercent$$);
   if($valueFormats$$3$$) {
-    $dataTotal$$1_percentage$$1_s$$105_spercent$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($valueFormats$$3$$, D.$DvtChartDataUtils$$.$_TYPE_LABEL$, $labelType$$5_slice$$20$$.getValue() / 100)
+    $dataTotal$$1_percentage$$1_s$$86_spercent$$ = D.$DvtChartTooltipUtils$$.$_formatValue$($valueFormats$$3$$, D.$DvtChartDataUtils$$.$_TYPE_LABEL$, $labelType$$5_slice$$20$$.getValue() / 100)
   }else {
-    $dataTotal$$1_percentage$$1_s$$105_spercent$$ = $dataTotal$$1_percentage$$1_s$$105_spercent$$.toString();
-    if(5 < $dataTotal$$1_percentage$$1_s$$105_spercent$$.length) {
-      $dataTotal$$1_percentage$$1_s$$105_spercent$$ = $dataTotal$$1_percentage$$1_s$$105_spercent$$.slice(0, 5)
+    $dataTotal$$1_percentage$$1_s$$86_spercent$$ = $dataTotal$$1_percentage$$1_s$$86_spercent$$.toString();
+    if(5 < $dataTotal$$1_percentage$$1_s$$86_spercent$$.length) {
+      $dataTotal$$1_percentage$$1_s$$86_spercent$$ = $dataTotal$$1_percentage$$1_s$$86_spercent$$.slice(0, 5)
     }else {
-      for(0 > $dataTotal$$1_percentage$$1_s$$105_spercent$$.indexOf(".", 0) && 4 > $dataTotal$$1_percentage$$1_s$$105_spercent$$.length && ($dataTotal$$1_percentage$$1_s$$105_spercent$$ += ".");5 > $dataTotal$$1_percentage$$1_s$$105_spercent$$.length;) {
-        $dataTotal$$1_percentage$$1_s$$105_spercent$$ += "0"
+      for(0 > $dataTotal$$1_percentage$$1_s$$86_spercent$$.indexOf(".", 0) && 4 > $dataTotal$$1_percentage$$1_s$$86_spercent$$.length && ($dataTotal$$1_percentage$$1_s$$86_spercent$$ += ".");5 > $dataTotal$$1_percentage$$1_s$$86_spercent$$.length;) {
+        $dataTotal$$1_percentage$$1_s$$86_spercent$$ += "0"
       }
     }
-    $dataTotal$$1_percentage$$1_s$$105_spercent$$ += "%"
+    $dataTotal$$1_percentage$$1_s$$86_spercent$$ += "%"
   }
   (0,window.isNaN)($stext_value$$89$$) || ($customLabel_svalue$$ = $valueFormats$$3$$ ? D.$DvtChartTooltipUtils$$.$_formatValue$($valueFormats$$3$$, D.$DvtChartDataUtils$$.$_TYPE_LABEL$, $labelType$$5_slice$$20$$.getValue()) : $stext_value$$89$$.toString());
   $stext_value$$89$$ = $labelType$$5_slice$$20$$.$getSeriesLabel$();
   $labelType$$5_slice$$20$$ = $pieChart$$8$$.$getOptions$().styleDefaults.sliceLabelType;
-  return"percent" == $labelType$$5_slice$$20$$ ? $dataTotal$$1_percentage$$1_s$$105_spercent$$ : "number" == $labelType$$5_slice$$20$$ ? $customLabel_svalue$$ : "text" == $labelType$$5_slice$$20$$ ? $stext_value$$89$$ : "textAndPercent" == $labelType$$5_slice$$20$$ ? $stext_value$$89$$ + ", " + $dataTotal$$1_percentage$$1_s$$105_spercent$$ : D.$JSCompiler_alias_NULL$$
+  return"percent" == $labelType$$5_slice$$20$$ ? $dataTotal$$1_percentage$$1_s$$86_spercent$$ : "number" == $labelType$$5_slice$$20$$ ? $customLabel_svalue$$ : "text" == $labelType$$5_slice$$20$$ ? $stext_value$$89$$ : "textAndPercent" == $labelType$$5_slice$$20$$ ? $stext_value$$89$$ + ", " + $dataTotal$$1_percentage$$1_s$$86_spercent$$ : D.$JSCompiler_alias_NULL$$
 };
 D.$DvtPieLabelUtils$$.$_setFontPropsOnLabel$ = function $$DvtPieLabelUtils$$$$_setFontPropsOnLabel$$($style$$90$$, $sliceLabel$$3$$) {
   $sliceLabel$$3$$ == D.$JSCompiler_alias_NULL$$ || $style$$90$$ == D.$JSCompiler_alias_NULL$$ || $sliceLabel$$3$$.$setCSSStyle$($style$$90$$)
@@ -4135,22 +4132,22 @@ D.$DvtPieLabelUtils$$.$_refineInitialLayout$ = function $$DvtPieLabelUtils$$$$_r
     var $lastY$$1$$ = $pie$$5$$.$_frame$.y, $collisionTop$$ = D.$JSCompiler_alias_FALSE$$, $collisionCentral$$ = D.$JSCompiler_alias_FALSE$$, $collisionBottom$$ = D.$JSCompiler_alias_FALSE$$, $labelBottom$$ = 0, $collide_labelInfo$$4$$, $bottomQuarter$$ = D.$JSCompiler_alias_FALSE$$, $prevBottomQuarter$$ = $bottomQuarter$$;
     $collide_labelInfo$$4$$ = D.$JSCompiler_alias_FALSE$$;
     $isLeftSideLabels_side$$18$$ = $isLeftSideLabels_side$$18$$ == D.$DvtPieLabelUtils$$.$_LEFT_SIDE_LABELS$;
-    for(var $i$$520$$ = 0;$i$$520$$ < $labelInfoArray$$.length;$i$$520$$++) {
-      $collide_labelInfo$$4$$ = $labelInfoArray$$[$i$$520$$], $prevBottomQuarter$$ = $bottomQuarter$$, 90 < $collide_labelInfo$$4$$.$getPosition$() && ($bottomQuarter$$ = D.$JSCompiler_alias_TRUE$$), $labelBottom$$ = $collide_labelInfo$$4$$.$getY$() + $collide_labelInfo$$4$$.getHeight(), ($collide_labelInfo$$4$$ = $lastY$$1$$ - $collide_labelInfo$$4$$.$getY$() > D.$DvtPieLabelUtils$$.$_COLLISION_MARGIN$) && ($bottomQuarter$$ ? $bottomQuarter$$ && !$prevBottomQuarter$$ ? $collisionCentral$$ = D.$JSCompiler_alias_TRUE$$ : 
+    for(var $i$$516$$ = 0;$i$$516$$ < $labelInfoArray$$.length;$i$$516$$++) {
+      $collide_labelInfo$$4$$ = $labelInfoArray$$[$i$$516$$], $prevBottomQuarter$$ = $bottomQuarter$$, 90 < $collide_labelInfo$$4$$.$getPosition$() && ($bottomQuarter$$ = D.$JSCompiler_alias_TRUE$$), $labelBottom$$ = $collide_labelInfo$$4$$.$getY$() + $collide_labelInfo$$4$$.getHeight(), ($collide_labelInfo$$4$$ = $lastY$$1$$ - $collide_labelInfo$$4$$.$getY$() > D.$DvtPieLabelUtils$$.$_COLLISION_MARGIN$) && ($bottomQuarter$$ ? $bottomQuarter$$ && !$prevBottomQuarter$$ ? $collisionCentral$$ = D.$JSCompiler_alias_TRUE$$ : 
       $collisionBottom$$ = D.$JSCompiler_alias_TRUE$$ : $collisionTop$$ = D.$JSCompiler_alias_TRUE$$), $labelBottom$$ > $lastY$$1$$ && ($lastY$$1$$ = $labelBottom$$)
     }
     return $collisionTop$$ && $collisionBottom$$ || $collisionCentral$$ ? (D.$DvtPieLabelUtils$$.$_columnLabels$($pie$$5$$, $labelInfoArray$$, $isLeftSideLabels_side$$18$$, D.$JSCompiler_alias_TRUE$$, D.$JSCompiler_alias_TRUE$$), D.$DvtPieLabelUtils$$.$_ALL_COLLISION$) : $collisionTop$$ ? (D.$DvtPieLabelUtils$$.$_columnLabels$($pie$$5$$, $labelInfoArray$$, $isLeftSideLabels_side$$18$$, D.$JSCompiler_alias_TRUE$$, D.$JSCompiler_alias_FALSE$$), D.$DvtPieLabelUtils$$.$_HALF_COLLISION$) : $collisionBottom$$ ? 
     (D.$DvtPieLabelUtils$$.$_columnLabels$($pie$$5$$, $labelInfoArray$$, $isLeftSideLabels_side$$18$$, D.$JSCompiler_alias_FALSE$$, D.$JSCompiler_alias_TRUE$$), D.$DvtPieLabelUtils$$.$_HALF_COLLISION$) : D.$DvtPieLabelUtils$$.$_NO_COLLISION$
   }
 };
-D.$DvtPieLabelUtils$$.$_setLabelsAndFeelers$ = function $$DvtPieLabelUtils$$$$_setLabelsAndFeelers$$($pie$$6$$, $alabels$$1$$, $i$$521_side$$19$$) {
+D.$DvtPieLabelUtils$$.$_setLabelsAndFeelers$ = function $$DvtPieLabelUtils$$$$_setLabelsAndFeelers$$($pie$$6$$, $alabels$$1$$, $i$$517_side$$19$$) {
   if(!($alabels$$1$$ == D.$JSCompiler_alias_NULL$$ || 0 >= $alabels$$1$$.length)) {
-    var $excessLength_slice$$21$$, $sliceLabel$$4$$, $labelInfo$$5$$, $isLeftSide$$ = $i$$521_side$$19$$ == D.$DvtPieLabelUtils$$.$_LEFT_SIDE_LABELS$, $excessWidth$$1$$ = window.Infinity;
-    for($i$$521_side$$19$$ = 0;$i$$521_side$$19$$ < $alabels$$1$$.length;$i$$521_side$$19$$++) {
-      $labelInfo$$5$$ = $alabels$$1$$[$i$$521_side$$19$$], $excessLength_slice$$21$$ = $labelInfo$$5$$.$_slice$, $labelInfo$$5$$.$_hasFeeler$ ? ($excessLength_slice$$21$$ = D.$DvtPieLabelUtils$$.$_calculateFeeler$($labelInfo$$5$$, $excessLength_slice$$21$$, $isLeftSide$$), $excessWidth$$1$$ = window.Math.min($excessWidth$$1$$, $excessLength_slice$$21$$)) : (0,D.$JSCompiler_StaticMethods_setNoOutsideFeeler$$)($excessLength_slice$$21$$)
+    var $excessLength_slice$$21$$, $sliceLabel$$4$$, $labelInfo$$5$$, $isLeftSide$$ = $i$$517_side$$19$$ == D.$DvtPieLabelUtils$$.$_LEFT_SIDE_LABELS$, $excessWidth$$1$$ = window.Infinity;
+    for($i$$517_side$$19$$ = 0;$i$$517_side$$19$$ < $alabels$$1$$.length;$i$$517_side$$19$$++) {
+      $labelInfo$$5$$ = $alabels$$1$$[$i$$517_side$$19$$], $excessLength_slice$$21$$ = $labelInfo$$5$$.$_slice$, $labelInfo$$5$$.$_hasFeeler$ ? ($excessLength_slice$$21$$ = D.$DvtPieLabelUtils$$.$_calculateFeeler$($labelInfo$$5$$, $excessLength_slice$$21$$, $isLeftSide$$), $excessWidth$$1$$ = window.Math.min($excessWidth$$1$$, $excessLength_slice$$21$$)) : (0,D.$JSCompiler_StaticMethods_setNoOutsideFeeler$$)($excessLength_slice$$21$$)
     }
-    for($i$$521_side$$19$$ = 0;$i$$521_side$$19$$ < $alabels$$1$$.length;$i$$521_side$$19$$++) {
-      $labelInfo$$5$$ = $alabels$$1$$[$i$$521_side$$19$$];
+    for($i$$517_side$$19$$ = 0;$i$$517_side$$19$$ < $alabels$$1$$.length;$i$$517_side$$19$$++) {
+      $labelInfo$$5$$ = $alabels$$1$$[$i$$517_side$$19$$];
       $excessLength_slice$$21$$ = $labelInfo$$5$$.$_slice$;
       $sliceLabel$$4$$ = $labelInfo$$5$$.$_sliceLabel$;
       $labelInfo$$5$$.$_hasFeeler$ && ($isLeftSide$$ ? $labelInfo$$5$$.$setX$($labelInfo$$5$$.$getX$() + $excessWidth$$1$$) : $labelInfo$$5$$.$setX$($labelInfo$$5$$.$getX$() - $excessWidth$$1$$), D.$DvtPieLabelUtils$$.$_calculateFeeler$($labelInfo$$5$$, $excessLength_slice$$21$$, $isLeftSide$$), $sliceLabel$$4$$.$setMaxLines$(1));
@@ -4191,8 +4188,8 @@ D.$DvtPieLabelUtils$$.$_adjustForDepth$ = function $$DvtPieLabelUtils$$$$_adjust
   return $depth$$12$$
 };
 D.$DvtPieLabelUtils$$.$_getMiddleLabel$ = function $$DvtPieLabelUtils$$$$_getMiddleLabel$$($alabels$$2$$) {
-  for(var $bestAngle$$ = 91, $bestIndex$$ = -1, $i$$522$$ = 0;$i$$522$$ < $alabels$$2$$.length;$i$$522$$++) {
-    window.pa = $alabels$$2$$[$i$$522$$].$getPosition$(), window.Math.abs(window.pa - 90) < $bestAngle$$ && ($bestAngle$$ = window.Math.abs(window.pa - 90), $bestIndex$$ = $i$$522$$)
+  for(var $bestAngle$$ = 91, $bestIndex$$ = -1, $i$$518$$ = 0;$i$$518$$ < $alabels$$2$$.length;$i$$518$$++) {
+    window.pa = $alabels$$2$$[$i$$518$$].$getPosition$(), window.Math.abs(window.pa - 90) < $bestAngle$$ && ($bestAngle$$ = window.Math.abs(window.pa - 90), $bestIndex$$ = $i$$518$$)
   }
   return $bestIndex$$
 };
@@ -4203,38 +4200,38 @@ D.$DvtPieLabelUtils$$.$_setOptimalLabelPosition$ = function $$DvtPieLabelUtils$$
   $optimalY_pie$$7$$ = $optimalY_pie$$7$$.$getCenter$().y - $heightFromCenter_vertX$$ - $labelInfo$$7$$.getHeight() * D.$DvtPieLabelUtils$$.$_LABEL_TO_FEELER_OFFSET$ + $tilt$$3$$;
   $labelInfo$$7$$.$setY$((0,D.$JSCompiler_StaticMethods_boundY$$)($labelInfo$$7$$, $optimalY_pie$$7$$))
 };
-D.$DvtPieLabelUtils$$.$_columnLabels$ = function $$DvtPieLabelUtils$$$$_columnLabels$$($pie$$8$$, $alabels$$3$$, $i$$523_isLeft$$2_startLabel$$, $isTop_labelInfo$$8$$, $isBottom$$) {
-  var $frame$$2_vertX$$1$$ = $pie$$8$$.$_frame$, $minY$$9_startIndex$$1$$ = $frame$$2_vertX$$1$$.y, $highestY_isStartAtTop_maxY$$6$$ = $frame$$2_vertX$$1$$.y + $frame$$2_vertX$$1$$.$h$, $frame$$2_vertX$$1$$ = $pie$$8$$.$getCenter$().x, $lowestY_minFeelerDist$$ = $pie$$8$$.$_radiusX$ * (1 + D.$DvtPieLabelUtils$$.$_FEELER_RAD_MINSIZE$ + D.$DvtPieLabelUtils$$.$_FEELER_HORIZ_MINSIZE$), $frame$$2_vertX$$1$$ = $i$$523_isLeft$$2_startLabel$$ ? $frame$$2_vertX$$1$$ - $lowestY_minFeelerDist$$ : $frame$$2_vertX$$1$$ + 
+D.$DvtPieLabelUtils$$.$_columnLabels$ = function $$DvtPieLabelUtils$$$$_columnLabels$$($pie$$8$$, $alabels$$3$$, $i$$519_isLeft$$2_startLabel$$, $isTop_labelInfo$$8$$, $isBottom$$) {
+  var $frame$$2_vertX$$1$$ = $pie$$8$$.$_frame$, $minY$$9_startIndex$$1$$ = $frame$$2_vertX$$1$$.y, $highestY_isStartAtTop_maxY$$6$$ = $frame$$2_vertX$$1$$.y + $frame$$2_vertX$$1$$.$h$, $frame$$2_vertX$$1$$ = $pie$$8$$.$getCenter$().x, $lowestY_minFeelerDist$$ = $pie$$8$$.$_radiusX$ * (1 + D.$DvtPieLabelUtils$$.$_FEELER_RAD_MINSIZE$ + D.$DvtPieLabelUtils$$.$_FEELER_HORIZ_MINSIZE$), $frame$$2_vertX$$1$$ = $i$$519_isLeft$$2_startLabel$$ ? $frame$$2_vertX$$1$$ - $lowestY_minFeelerDist$$ : $frame$$2_vertX$$1$$ + 
   $lowestY_minFeelerDist$$;
-  for($i$$523_isLeft$$2_startLabel$$ = 0;$i$$523_isLeft$$2_startLabel$$ < $alabels$$3$$.length;$i$$523_isLeft$$2_startLabel$$++) {
-    $alabels$$3$$[$i$$523_isLeft$$2_startLabel$$].$_minY$ = $minY$$9_startIndex$$1$$, $minY$$9_startIndex$$1$$ += $alabels$$3$$[$i$$523_isLeft$$2_startLabel$$].getHeight()
+  for($i$$519_isLeft$$2_startLabel$$ = 0;$i$$519_isLeft$$2_startLabel$$ < $alabels$$3$$.length;$i$$519_isLeft$$2_startLabel$$++) {
+    $alabels$$3$$[$i$$519_isLeft$$2_startLabel$$].$_minY$ = $minY$$9_startIndex$$1$$, $minY$$9_startIndex$$1$$ += $alabels$$3$$[$i$$519_isLeft$$2_startLabel$$].getHeight()
   }
-  for($i$$523_isLeft$$2_startLabel$$ = $alabels$$3$$.length - 1;0 <= $i$$523_isLeft$$2_startLabel$$;$i$$523_isLeft$$2_startLabel$$--) {
-    $highestY_isStartAtTop_maxY$$6$$ -= $alabels$$3$$[$i$$523_isLeft$$2_startLabel$$].getHeight(), $alabels$$3$$[$i$$523_isLeft$$2_startLabel$$].$_maxY$ = $highestY_isStartAtTop_maxY$$6$$
+  for($i$$519_isLeft$$2_startLabel$$ = $alabels$$3$$.length - 1;0 <= $i$$519_isLeft$$2_startLabel$$;$i$$519_isLeft$$2_startLabel$$--) {
+    $highestY_isStartAtTop_maxY$$6$$ -= $alabels$$3$$[$i$$519_isLeft$$2_startLabel$$].getHeight(), $alabels$$3$$[$i$$519_isLeft$$2_startLabel$$].$_maxY$ = $highestY_isStartAtTop_maxY$$6$$
   }
   if($alabels$$3$$[0].$_minY$ >= $alabels$$3$$[0].$_maxY$) {
-    for($i$$523_isLeft$$2_startLabel$$ = 0;$i$$523_isLeft$$2_startLabel$$ < $alabels$$3$$.length;$i$$523_isLeft$$2_startLabel$$++) {
-      $isTop_labelInfo$$8$$ = $alabels$$3$$[$i$$523_isLeft$$2_startLabel$$], $isTop_labelInfo$$8$$.$setX$($frame$$2_vertX$$1$$), $isTop_labelInfo$$8$$.$setY$(($isTop_labelInfo$$8$$.$_minY$ + $isTop_labelInfo$$8$$.$_maxY$) / 2), $isTop_labelInfo$$8$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$
+    for($i$$519_isLeft$$2_startLabel$$ = 0;$i$$519_isLeft$$2_startLabel$$ < $alabels$$3$$.length;$i$$519_isLeft$$2_startLabel$$++) {
+      $isTop_labelInfo$$8$$ = $alabels$$3$$[$i$$519_isLeft$$2_startLabel$$], $isTop_labelInfo$$8$$.$setX$($frame$$2_vertX$$1$$), $isTop_labelInfo$$8$$.$setY$(($isTop_labelInfo$$8$$.$_minY$ + $isTop_labelInfo$$8$$.$_maxY$) / 2), $isTop_labelInfo$$8$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$
     }
   }else {
     $minY$$9_startIndex$$1$$ = D.$DvtPieLabelUtils$$.$_getMiddleLabel$($alabels$$3$$);
-    $i$$523_isLeft$$2_startLabel$$ = $alabels$$3$$[$minY$$9_startIndex$$1$$];
-    $highestY_isStartAtTop_maxY$$6$$ = 90 >= $i$$523_isLeft$$2_startLabel$$.$getPosition$();
-    $isTop_labelInfo$$8$$ && !$isBottom$$ && $i$$523_isLeft$$2_startLabel$$.$_minY$ + $i$$523_isLeft$$2_startLabel$$.getHeight() > $pie$$8$$.$getCenter$().y && ($isBottom$$ = D.$JSCompiler_alias_TRUE$$);
-    $isBottom$$ && !$isTop_labelInfo$$8$$ && $i$$523_isLeft$$2_startLabel$$.$_maxY$ < $pie$$8$$.$getCenter$().y && ($isTop_labelInfo$$8$$ = D.$JSCompiler_alias_TRUE$$);
+    $i$$519_isLeft$$2_startLabel$$ = $alabels$$3$$[$minY$$9_startIndex$$1$$];
+    $highestY_isStartAtTop_maxY$$6$$ = 90 >= $i$$519_isLeft$$2_startLabel$$.$getPosition$();
+    $isTop_labelInfo$$8$$ && !$isBottom$$ && $i$$519_isLeft$$2_startLabel$$.$_minY$ + $i$$519_isLeft$$2_startLabel$$.getHeight() > $pie$$8$$.$getCenter$().y && ($isBottom$$ = D.$JSCompiler_alias_TRUE$$);
+    $isBottom$$ && !$isTop_labelInfo$$8$$ && $i$$519_isLeft$$2_startLabel$$.$_maxY$ < $pie$$8$$.$getCenter$().y && ($isTop_labelInfo$$8$$ = D.$JSCompiler_alias_TRUE$$);
     if($isTop_labelInfo$$8$$ && $highestY_isStartAtTop_maxY$$6$$ || $isBottom$$ && !$highestY_isStartAtTop_maxY$$6$$) {
-      D.$DvtPieLabelUtils$$.$_setOptimalLabelPosition$($pie$$8$$, $i$$523_isLeft$$2_startLabel$$, $frame$$2_vertX$$1$$), $i$$523_isLeft$$2_startLabel$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$
+      D.$DvtPieLabelUtils$$.$_setOptimalLabelPosition$($pie$$8$$, $i$$519_isLeft$$2_startLabel$$, $frame$$2_vertX$$1$$), $i$$519_isLeft$$2_startLabel$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$
     }
-    var $highestY_isStartAtTop_maxY$$6$$ = $i$$523_isLeft$$2_startLabel$$.$getY$(), $lowestY_minFeelerDist$$ = $i$$523_isLeft$$2_startLabel$$.$getY$() + $i$$523_isLeft$$2_startLabel$$.getHeight(), $optimalY$$1$$, $labelHeight$$;
+    var $highestY_isStartAtTop_maxY$$6$$ = $i$$519_isLeft$$2_startLabel$$.$getY$(), $lowestY_minFeelerDist$$ = $i$$519_isLeft$$2_startLabel$$.$getY$() + $i$$519_isLeft$$2_startLabel$$.getHeight(), $optimalY$$1$$, $labelHeight$$;
     if($isTop_labelInfo$$8$$) {
-      for($i$$523_isLeft$$2_startLabel$$ = $minY$$9_startIndex$$1$$ - 1;0 <= $i$$523_isLeft$$2_startLabel$$;$i$$523_isLeft$$2_startLabel$$--) {
-        $isTop_labelInfo$$8$$ = $alabels$$3$$[$i$$523_isLeft$$2_startLabel$$], $labelHeight$$ = $isTop_labelInfo$$8$$.getHeight(), D.$DvtPieLabelUtils$$.$_setOptimalLabelPosition$($pie$$8$$, $isTop_labelInfo$$8$$, $frame$$2_vertX$$1$$), $isTop_labelInfo$$8$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$, $optimalY$$1$$ = $isTop_labelInfo$$8$$.$getY$(), $highestY_isStartAtTop_maxY$$6$$ = $optimalY$$1$$ + $labelHeight$$ < $highestY_isStartAtTop_maxY$$6$$ ? $optimalY$$1$$ : $highestY_isStartAtTop_maxY$$6$$ - 
+      for($i$$519_isLeft$$2_startLabel$$ = $minY$$9_startIndex$$1$$ - 1;0 <= $i$$519_isLeft$$2_startLabel$$;$i$$519_isLeft$$2_startLabel$$--) {
+        $isTop_labelInfo$$8$$ = $alabels$$3$$[$i$$519_isLeft$$2_startLabel$$], $labelHeight$$ = $isTop_labelInfo$$8$$.getHeight(), D.$DvtPieLabelUtils$$.$_setOptimalLabelPosition$($pie$$8$$, $isTop_labelInfo$$8$$, $frame$$2_vertX$$1$$), $isTop_labelInfo$$8$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$, $optimalY$$1$$ = $isTop_labelInfo$$8$$.$getY$(), $highestY_isStartAtTop_maxY$$6$$ = $optimalY$$1$$ + $labelHeight$$ < $highestY_isStartAtTop_maxY$$6$$ ? $optimalY$$1$$ : $highestY_isStartAtTop_maxY$$6$$ - 
         $labelHeight$$, $isTop_labelInfo$$8$$.$setY$($highestY_isStartAtTop_maxY$$6$$)
       }
     }
     if($isBottom$$) {
-      for($i$$523_isLeft$$2_startLabel$$ = $minY$$9_startIndex$$1$$ + 1;$i$$523_isLeft$$2_startLabel$$ < $alabels$$3$$.length;$i$$523_isLeft$$2_startLabel$$++) {
-        $isTop_labelInfo$$8$$ = $alabels$$3$$[$i$$523_isLeft$$2_startLabel$$], $labelHeight$$ = $isTop_labelInfo$$8$$.getHeight(), D.$DvtPieLabelUtils$$.$_setOptimalLabelPosition$($pie$$8$$, $isTop_labelInfo$$8$$, $frame$$2_vertX$$1$$), $isTop_labelInfo$$8$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$, $optimalY$$1$$ = $isTop_labelInfo$$8$$.$getY$(), $lowestY_minFeelerDist$$ = $optimalY$$1$$ > $lowestY_minFeelerDist$$ ? $optimalY$$1$$ + $labelHeight$$ : $lowestY_minFeelerDist$$ + $labelHeight$$, $isTop_labelInfo$$8$$.$setY$($lowestY_minFeelerDist$$ - 
+      for($i$$519_isLeft$$2_startLabel$$ = $minY$$9_startIndex$$1$$ + 1;$i$$519_isLeft$$2_startLabel$$ < $alabels$$3$$.length;$i$$519_isLeft$$2_startLabel$$++) {
+        $isTop_labelInfo$$8$$ = $alabels$$3$$[$i$$519_isLeft$$2_startLabel$$], $labelHeight$$ = $isTop_labelInfo$$8$$.getHeight(), D.$DvtPieLabelUtils$$.$_setOptimalLabelPosition$($pie$$8$$, $isTop_labelInfo$$8$$, $frame$$2_vertX$$1$$), $isTop_labelInfo$$8$$.$_hasFeeler$ = D.$JSCompiler_alias_TRUE$$, $optimalY$$1$$ = $isTop_labelInfo$$8$$.$getY$(), $lowestY_minFeelerDist$$ = $optimalY$$1$$ > $lowestY_minFeelerDist$$ ? $optimalY$$1$$ + $labelHeight$$ : $lowestY_minFeelerDist$$ + $labelHeight$$, $isTop_labelInfo$$8$$.$setY$($lowestY_minFeelerDist$$ - 
         $labelHeight$$)
       }
     }
@@ -4253,10 +4250,10 @@ D.$DvtPieLabelUtils$$.$_truncateSliceLabel$ = function $$DvtPieLabelUtils$$$$_tr
   $labelInfo$$9$$.getHeight() != $pie$$9_tmDimPt$$.y && $labelInfo$$9$$.$setHeight$($pie$$9_tmDimPt$$.y)
 };
 D.$DvtPieLabelUtils$$.$_generateInitialLayout$ = function $$DvtPieLabelUtils$$$$_generateInitialLayout$$($pie$$10$$) {
-  var $arArrays$$ = (0,window.Array)(2), $leftLabels$$1$$ = [], $rightLabels$$1$$ = [], $dist$$1_labelPt$$, $maxLabelWidth$$2_tmDimPt$$1$$, $ma$$2$$ = 0, $pa$$2_tilt$$4$$ = 0, $i$$524$$, $s_label$$, $slices$$6$$ = $pie$$10$$.$_slices$, $n$$29$$ = $slices$$6$$.length, $frame$$4$$ = $pie$$10$$.$_frame$;
+  var $arArrays$$ = (0,window.Array)(2), $leftLabels$$1$$ = [], $rightLabels$$1$$ = [], $dist$$1_labelPt$$, $maxLabelWidth$$2_tmDimPt$$1$$, $ma$$2$$ = 0, $pa$$2_tilt$$4$$ = 0, $i$$520$$, $s_label$$, $slices$$6$$ = $pie$$10$$.$_slices$, $n$$29$$ = $slices$$6$$.length, $frame$$4$$ = $pie$$10$$.$_frame$;
   if(0 < $n$$29$$) {
-    for($i$$524$$ = 0;$i$$524$$ < $n$$29$$;$i$$524$$++) {
-      window.slice = $slices$$6$$[$i$$524$$], $s_label$$ = D.$DvtPieLabelUtils$$.$_createLabel$(window.slice), $ma$$2$$ = window.slice.$getAngleStart$() + window.slice.$getAngleExtent$() / 2, 360 < $ma$$2$$ && ($ma$$2$$ -= 360), 0 > $ma$$2$$ && ($ma$$2$$ += 360), $dist$$1_labelPt$$ = 1 + D.$DvtPieLabelUtils$$.$_OUTSIDE_LABEL_DISTANCE$, $dist$$1_labelPt$$ = D.$DvtPieRenderUtils$$.$reflectAngleOverYAxis$($ma$$2$$, $pie$$10$$.$getCenter$().x, $pie$$10$$.$getCenter$().y, $pie$$10$$.$_radiusX$ * $dist$$1_labelPt$$, 
+    for($i$$520$$ = 0;$i$$520$$ < $n$$29$$;$i$$520$$++) {
+      window.slice = $slices$$6$$[$i$$520$$], $s_label$$ = D.$DvtPieLabelUtils$$.$_createLabel$(window.slice), $ma$$2$$ = window.slice.$getAngleStart$() + window.slice.$getAngleExtent$() / 2, 360 < $ma$$2$$ && ($ma$$2$$ -= 360), 0 > $ma$$2$$ && ($ma$$2$$ += 360), $dist$$1_labelPt$$ = 1 + D.$DvtPieLabelUtils$$.$_OUTSIDE_LABEL_DISTANCE$, $dist$$1_labelPt$$ = D.$DvtPieRenderUtils$$.$reflectAngleOverYAxis$($ma$$2$$, $pie$$10$$.$getCenter$().x, $pie$$10$$.$getCenter$().y, $pie$$10$$.$_radiusX$ * $dist$$1_labelPt$$, 
       $pie$$10$$.$_radiusY$ * $dist$$1_labelPt$$), $maxLabelWidth$$2_tmDimPt$$1$$ = 90 <= $ma$$2$$ && 270 > $ma$$2$$ ? $dist$$1_labelPt$$.x - $frame$$4$$.x : $frame$$4$$.x + $frame$$4$$.$w$ - $dist$$1_labelPt$$.x, $maxLabelWidth$$2_tmDimPt$$1$$ = D.$DvtPieLabelUtils$$.$_getTextDimension$($pie$$10$$, $s_label$$, $maxLabelWidth$$2_tmDimPt$$1$$, D.$DvtPieLabelUtils$$.$_MAX_LINES_PER_LABEL$), 165 > $ma$$2$$ && 15 < $ma$$2$$ ? $dist$$1_labelPt$$.y -= 1 * $maxLabelWidth$$2_tmDimPt$$1$$.y : 15 > $ma$$2$$ || 
       345 < $ma$$2$$ ? ($dist$$1_labelPt$$.y -= 0.5 * $maxLabelWidth$$2_tmDimPt$$1$$.y, $dist$$1_labelPt$$.x += 0.2 * $maxLabelWidth$$2_tmDimPt$$1$$.y) : 165 < $ma$$2$$ && 195 > $ma$$2$$ && ($dist$$1_labelPt$$.y -= 0.5 * $maxLabelWidth$$2_tmDimPt$$1$$.y, $dist$$1_labelPt$$.x -= 0.2 * $maxLabelWidth$$2_tmDimPt$$1$$.y), $pa$$2_tilt$$4$$ = D.$DvtPieLabelUtils$$.$_adjustForDepth$($ma$$2$$, $pie$$10$$.$getDepth$()), $dist$$1_labelPt$$.y += $pa$$2_tilt$$4$$, 1 == $n$$29$$ && ($dist$$1_labelPt$$.x -= $maxLabelWidth$$2_tmDimPt$$1$$.x / 
       2), $dist$$1_labelPt$$.y < $frame$$4$$.y && ($dist$$1_labelPt$$.y = $frame$$4$$.y), $dist$$1_labelPt$$.y + $maxLabelWidth$$2_tmDimPt$$1$$.y > $frame$$4$$.y + $frame$$4$$.$h$ && ($dist$$1_labelPt$$.y = $frame$$4$$.y + $frame$$4$$.$h$ - $maxLabelWidth$$2_tmDimPt$$1$$.y), 90 <= $ma$$2$$ && 270 > $ma$$2$$ ? ($s_label$$.$alignRight$(), $pa$$2_tilt$$4$$ = $ma$$2$$ - 90, D.$DvtPieLabelUtils$$.$_createLabelInfo$($s_label$$, $ma$$2$$, $pa$$2_tilt$$4$$, $maxLabelWidth$$2_tmDimPt$$1$$, $dist$$1_labelPt$$, 
@@ -4314,13 +4311,13 @@ D.$DvtChartRenderer$$.$render$ = function $$DvtChartRenderer$$$$render$$($chart$
     D.$DvtChartRenderer$$.$_adjustAvailSpace$($availSpace$$40$$);
     var $horizSbDim$$ = D.$DvtChartRenderer$$.$_prerenderHorizScrollbar$($chart$$7$$, $container$$54$$, $availSpace$$40$$), $vertSbDim$$ = D.$DvtChartRenderer$$.$_prerenderVertScrollbar$($chart$$7$$, $container$$54$$, $availSpace$$40$$);
     D.$DvtChartRenderer$$.$_adjustAvailSpace$($availSpace$$40$$);
-    var $space$$inline_5160_space$$inline_5163$$ = $availSpace$$40$$.clone();
-    $chart$$7$$.$_axisSpace$ = $space$$inline_5160_space$$inline_5163$$;
-    $chart$$7$$.$_radius$ = window.Math.min(0.9 * $space$$inline_5160_space$$inline_5163$$.$h$, 0.8 * $space$$inline_5160_space$$inline_5163$$.$w$) / 2;
+    var $space$$inline_5102_space$$inline_5105$$ = $availSpace$$40$$.clone();
+    $chart$$7$$.$_axisSpace$ = $space$$inline_5102_space$$inline_5105$$;
+    $chart$$7$$.$_radius$ = window.Math.min(0.9 * $space$$inline_5102_space$$inline_5105$$.$h$, 0.8 * $space$$inline_5102_space$$inline_5105$$.$w$) / 2;
     D.$DvtChartAxisRenderer$$.$render$($chart$$7$$, $container$$54$$, $availSpace$$40$$);
     D.$DvtChartRenderer$$.$_adjustAvailSpace$($availSpace$$40$$);
-    $space$$inline_5160_space$$inline_5163$$ = $availSpace$$40$$.clone();
-    $chart$$7$$.$_plotAreaSpace$ = $space$$inline_5160_space$$inline_5163$$;
+    $space$$inline_5102_space$$inline_5105$$ = $availSpace$$40$$.clone();
+    $chart$$7$$.$_plotAreaSpace$ = $space$$inline_5102_space$$inline_5105$$;
     D.$DvtChartRenderer$$.$_setEventHandlers$($chart$$7$$);
     D.$DvtChartRenderer$$.$_renderScrollbars$($chart$$7$$, $horizSbDim$$, $vertSbDim$$);
     D.$DvtChartRenderer$$.$_renderPlotArea$($chart$$7$$, $container$$54$$, $availSpace$$40$$);
@@ -4331,20 +4328,20 @@ D.$DvtChartRenderer$$.$render$ = function $$DvtChartRenderer$$$$render$$($chart$
   }
 };
 D.$DvtChartRenderer$$.$_setEventHandlers$ = function $$DvtChartRenderer$$$$_setEventHandlers$$($chart$$8$$) {
-  var $options$$67$$ = $chart$$8$$.$getOptions$(), $em$$ = $chart$$8$$.$getEventManager$();
-  if(D.$DvtChartTypeUtils$$.$hasAxes$($chart$$8$$) && !$options$$67$$._isOverview) {
+  var $options$$68$$ = $chart$$8$$.$getOptions$(), $em$$ = $chart$$8$$.$getEventManager$();
+  if(D.$DvtChartTypeUtils$$.$hasAxes$($chart$$8$$) && !$options$$68$$._isOverview) {
     var $chartBounds$$ = new D.$DvtRectangle$$(0, 0, $chart$$8$$.getWidth(), $chart$$8$$.getHeight()), $plotAreaBounds$$ = $chart$$8$$.$_plotAreaSpace$, $axisBounds_vertAxisBounds$$ = $chart$$8$$.$_axisSpace$, $horizAxisBounds$$ = new D.$DvtRectangle$$($plotAreaBounds$$.x, $axisBounds_vertAxisBounds$$.y, $plotAreaBounds$$.$w$, $axisBounds_vertAxisBounds$$.$h$), $axisBounds_vertAxisBounds$$ = new D.$DvtRectangle$$($axisBounds_vertAxisBounds$$.x, $plotAreaBounds$$.y, $axisBounds_vertAxisBounds$$.$w$, 
-    $plotAreaBounds$$.$h$), $marqueeFill$$ = new D.$DvtSolidFill$$($options$$67$$.styleDefaults.marqueeColor), $marqueeStroke$$ = new D.$DvtSolidStroke$$($options$$67$$.styleDefaults.marqueeBorderColor), $marqueeHandler_panZoomHandler_zoomRate$$2$$;
+    $plotAreaBounds$$.$h$), $marqueeFill$$ = new D.$DvtSolidFill$$($options$$68$$.styleDefaults.marqueeColor), $marqueeStroke$$ = new D.$DvtSolidStroke$$($options$$68$$.styleDefaults.marqueeBorderColor), $marqueeHandler_panZoomHandler_zoomRate$$2$$;
     if(D.$DvtChartTypeUtils$$.$isScrollSupported$($chart$$8$$) && D.$DvtChartEventUtils$$.$isScrollable$($chart$$8$$)) {
       $marqueeHandler_panZoomHandler_zoomRate$$2$$ = D.$DvtChartEventUtils$$.$isDelayedScroll$($chart$$8$$) ? D.$DvtChartRenderer$$.$_MOUSE_WHEEL_ZOOM_RATE_FAST$ : D.$DvtChartRenderer$$.$_MOUSE_WHEEL_ZOOM_RATE_SLOW$;
       $marqueeHandler_panZoomHandler_zoomRate$$2$$ = new D.$DvtPanZoomHandler$$($chart$$8$$, $plotAreaBounds$$, $chartBounds$$, $marqueeHandler_panZoomHandler_zoomRate$$2$$);
-      var $panUpCursor$$inline_5166$$ = $options$$67$$._resources.panCursorUp, $panDownCursor$$inline_5167$$ = $options$$67$$._resources.panCursorDown;
-      D.$DvtAgent$$.$isPlatformIE$() || ($panUpCursor$$inline_5166$$ && ($marqueeHandler_panZoomHandler_zoomRate$$2$$.$_panUpCursor$ = "url(" + $panUpCursor$$inline_5166$$ + ") 8 8, auto"), $panDownCursor$$inline_5167$$ && ($marqueeHandler_panZoomHandler_zoomRate$$2$$.$_panDownCursor$ = "url(" + $panDownCursor$$inline_5167$$ + ") 8 8, auto"));
+      var $panUpCursor$$inline_5108$$ = $options$$68$$._resources.panCursorUp, $panDownCursor$$inline_5109$$ = $options$$68$$._resources.panCursorDown;
+      D.$DvtAgent$$.$isPlatformIE$() || ($panUpCursor$$inline_5108$$ && ($marqueeHandler_panZoomHandler_zoomRate$$2$$.$_panUpCursor$ = "url(" + $panUpCursor$$inline_5108$$ + ") 8 8, auto"), $panDownCursor$$inline_5109$$ && ($marqueeHandler_panZoomHandler_zoomRate$$2$$.$_panDownCursor$ = "url(" + $panDownCursor$$inline_5109$$ + ") 8 8, auto"));
       $em$$.$_panZoomHandler$ = $marqueeHandler_panZoomHandler_zoomRate$$2$$;
       D.$DvtChartEventUtils$$.$isZoomable$($chart$$8$$) && ($marqueeHandler_panZoomHandler_zoomRate$$2$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$8$$) ? new D.$DvtMarqueeHandler$$($chart$$8$$, $plotAreaBounds$$, $chartBounds$$, $marqueeFill$$, $marqueeStroke$$, D.$JSCompiler_alias_FALSE$$, D.$JSCompiler_alias_TRUE$$, D.$JSCompiler_alias_NULL$$, $axisBounds_vertAxisBounds$$) : D.$DvtChartTypeUtils$$.$isBLAC$($chart$$8$$) ? new D.$DvtMarqueeHandler$$($chart$$8$$, $plotAreaBounds$$, $chartBounds$$, 
       $marqueeFill$$, $marqueeStroke$$, D.$JSCompiler_alias_TRUE$$, D.$JSCompiler_alias_FALSE$$, $horizAxisBounds$$, D.$JSCompiler_alias_NULL$$) : new D.$DvtMarqueeHandler$$($chart$$8$$, $plotAreaBounds$$, $chartBounds$$, $marqueeFill$$, $marqueeStroke$$, D.$JSCompiler_alias_TRUE$$, D.$JSCompiler_alias_TRUE$$, $horizAxisBounds$$, $axisBounds_vertAxisBounds$$), $em$$.$_marqueeZoomHandler$ = $marqueeHandler_panZoomHandler_zoomRate$$2$$)
     }
-    "multiple" == $options$$67$$.selection && ($marqueeHandler_panZoomHandler_zoomRate$$2$$ = new D.$DvtMarqueeHandler$$($chart$$8$$, $plotAreaBounds$$, $chartBounds$$, $marqueeFill$$, $marqueeStroke$$, D.$JSCompiler_alias_TRUE$$, D.$JSCompiler_alias_TRUE$$, $horizAxisBounds$$, $axisBounds_vertAxisBounds$$), $em$$.$_marqueeSelectHandler$ = $marqueeHandler_panZoomHandler_zoomRate$$2$$)
+    "multiple" == $options$$68$$.selection && ($marqueeHandler_panZoomHandler_zoomRate$$2$$ = new D.$DvtMarqueeHandler$$($chart$$8$$, $plotAreaBounds$$, $chartBounds$$, $marqueeFill$$, $marqueeStroke$$, D.$JSCompiler_alias_TRUE$$, D.$JSCompiler_alias_TRUE$$, $horizAxisBounds$$, $axisBounds_vertAxisBounds$$), $em$$.$_marqueeSelectHandler$ = $marqueeHandler_panZoomHandler_zoomRate$$2$$)
   }
 };
 D.$DvtChartRenderer$$.$rerenderAxisAndPlotArea$ = function $$DvtChartRenderer$$$$rerenderAxisAndPlotArea$$($chart$$9$$, $container$$55$$) {
@@ -4356,8 +4353,8 @@ D.$DvtChartRenderer$$.$rerenderAxisAndPlotArea$ = function $$DvtChartRenderer$$$
     $chart$$9$$.$__cleanUpAxisAndPlotArea$();
     D.$DvtChartAxisRenderer$$.$render$($chart$$9$$, $container$$55$$, $availSpace$$41$$);
     D.$DvtChartRenderer$$.$_adjustAvailSpace$($availSpace$$41$$);
-    var $space$$inline_5179$$ = $availSpace$$41$$.clone();
-    $chart$$9$$.$_plotAreaSpace$ = $space$$inline_5179$$;
+    var $space$$inline_5121$$ = $availSpace$$41$$.clone();
+    $chart$$9$$.$_plotAreaSpace$ = $space$$inline_5121$$;
     D.$DvtChartRenderer$$.$_renderPlotArea$($chart$$9$$, $container$$55$$, $availSpace$$41$$);
     $selectionHandler$$11$$ && (0,D.$JSCompiler_StaticMethods_processInitialSelections$$)($selectionHandler$$11$$, $selectedIds$$5$$, $chart$$9$$.$getObjects$());
     (0,D.$JSCompiler_StaticMethods_autoToggleZoomButton$$)($chart$$9$$.$getEventManager$());
@@ -4365,53 +4362,53 @@ D.$DvtChartRenderer$$.$rerenderAxisAndPlotArea$ = function $$DvtChartRenderer$$$
   }
 };
 D.$DvtChartRenderer$$.$_renderBackground$ = function $$DvtChartRenderer$$$$_renderBackground$$($chart$$10$$, $container$$56$$, $availSpace$$42_rect$$30$$) {
-  var $options$$68$$ = $chart$$10$$.$getOptions$();
+  var $options$$69$$ = $chart$$10$$.$getOptions$();
   $availSpace$$42_rect$$30$$ = new D.$DvtRect$$($chart$$10$$.$_context$, $availSpace$$42_rect$$30$$.x, $availSpace$$42_rect$$30$$.y, $availSpace$$42_rect$$30$$.$w$, $availSpace$$42_rect$$30$$.$h$);
   (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($availSpace$$42_rect$$30$$);
   $container$$56$$.$addChild$($availSpace$$42_rect$$30$$);
   $chart$$10$$.$getEventManager$().$associate$($availSpace$$42_rect$$30$$, new D.$DvtSimpleObjPeer$$(D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, (0,D.$DvtChartEventManager$getUIEventParams$$)(D.$DvtChartConstants$$.$BACKGROUND$)));
-  (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($availSpace$$42_rect$$30$$);
-  (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($availSpace$$42_rect$$30$$, "label", $options$$68$$.shortDesc)
+  (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($availSpace$$42_rect$$30$$, "img");
+  (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($availSpace$$42_rect$$30$$, "label", $options$$69$$.shortDesc)
 };
 D.$DvtChartRenderer$$.$_addOuterGaps$ = function $$DvtChartRenderer$$$$_addOuterGaps$$($chart$$11$$, $availSpace$$43$$) {
-  var $gapHeight$$1_options$$69$$ = $chart$$11$$.$getOptions$(), $gapWidth$$1$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$11$$, $gapHeight$$1_options$$69$$.layout.outerGapWidth), $gapHeight$$1_options$$69$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$11$$, $gapHeight$$1_options$$69$$.layout.outerGapHeight);
+  var $gapHeight$$1_options$$70$$ = $chart$$11$$.$getOptions$(), $gapWidth$$1$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$11$$, $gapHeight$$1_options$$70$$.layout.outerGapWidth), $gapHeight$$1_options$$70$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$11$$, $gapHeight$$1_options$$70$$.layout.outerGapHeight);
   if(D.$DvtChartTypeUtils$$.$isStandalonePlotArea$($chart$$11$$) || D.$DvtChartTypeUtils$$.$isStandaloneXAxis$($chart$$11$$) || D.$DvtChartTypeUtils$$.$isStandaloneYAxis$($chart$$11$$) || D.$DvtChartTypeUtils$$.$isStandaloneY2Axis$($chart$$11$$)) {
-    $gapWidth$$1$$ = window.Math.min($gapWidth$$1$$, 1), $gapHeight$$1_options$$69$$ = window.Math.min($gapHeight$$1_options$$69$$, 1)
+    $gapWidth$$1$$ = window.Math.min($gapWidth$$1$$, 1), $gapHeight$$1_options$$70$$ = window.Math.min($gapHeight$$1_options$$70$$, 1)
   }
   $availSpace$$43$$.x += $gapWidth$$1$$;
   $availSpace$$43$$.$w$ -= 2 * $gapWidth$$1$$;
-  $availSpace$$43$$.y += $gapHeight$$1_options$$69$$;
-  $availSpace$$43$$.$h$ -= 2 * $gapHeight$$1_options$$69$$
+  $availSpace$$43$$.y += $gapHeight$$1_options$$70$$;
+  $availSpace$$43$$.$h$ -= 2 * $gapHeight$$1_options$$70$$
 };
 D.$DvtChartRenderer$$.$_renderTitles$ = function $$DvtChartRenderer$$$$_renderTitles$$($chart$$12$$, $container$$57_footnoteObj$$, $availSpace$$44$$) {
-  var $options$$70$$ = $chart$$12$$.$getOptions$();
-  if($options$$70$$.title.text) {
-    var $lowerSepObj_titleGapBelow_titleObj$$ = D.$DvtChartTextUtils$$.$createText$($chart$$12$$.$getEventManager$(), $container$$57_footnoteObj$$, $options$$70$$.title.text, $options$$70$$.title.style, $availSpace$$44$$.x, $availSpace$$44$$.y, $availSpace$$44$$.$w$, $availSpace$$44$$.$h$, (0,D.$DvtChartEventManager$getUIEventParams$$)(D.$DvtChartConstants$$.$TITLE$)), $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$, $titleDims$$1$$;
+  var $options$$71$$ = $chart$$12$$.$getOptions$();
+  if($options$$71$$.title.text) {
+    var $lowerSepObj_titleGapBelow_titleObj$$ = D.$DvtChartTextUtils$$.$createText$($chart$$12$$.$getEventManager$(), $container$$57_footnoteObj$$, $options$$71$$.title.text, $options$$71$$.title.style, $availSpace$$44$$.x, $availSpace$$44$$.y, $availSpace$$44$$.$w$, $availSpace$$44$$.$h$, (0,D.$DvtChartEventManager$getUIEventParams$$)(D.$DvtChartConstants$$.$TITLE$)), $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$, $titleDims$$1$$;
     $lowerSepObj_titleGapBelow_titleObj$$ ? ($titleDims$$1$$ = $lowerSepObj_titleGapBelow_titleObj$$.$getDimensions$(), $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = $titleDims$$1$$.$h$) : ($footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = 0, $titleDims$$1$$ = new D.$DvtRectangle$$(0, 0, 0, 0));
-    if($options$$70$$.subtitle.text) {
-      var $subtitleObj$$ = new D.$DvtOutputText$$($chart$$12$$.$_context$, $options$$70$$.subtitle.text, $availSpace$$44$$.x, $availSpace$$44$$.y);
-      $subtitleObj$$.$setCSSStyle$($options$$70$$.subtitle.style);
+    if($options$$71$$.subtitle.text) {
+      var $subtitleObj$$ = new D.$DvtOutputText$$($chart$$12$$.$_context$, $options$$71$$.subtitle.text, $availSpace$$44$$.x, $availSpace$$44$$.y);
+      $subtitleObj$$.$setCSSStyle$($options$$71$$.subtitle.style);
       $container$$57_footnoteObj$$.$addChild$($subtitleObj$$);
-      var $subtitleDims$$ = $subtitleObj$$.$measureDimensions$(), $titleSubtitleGap$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$70$$.layout.titleSubtitleGapWidth), $titleSpace$$ = $titleDims$$1$$.$w$ + $titleSubtitleGap$$ + $subtitleDims$$.$w$;
-      $titleSpace$$ > $availSpace$$44$$.$w$ ? ($titleSubtitleGap$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$70$$.layout.titleSubtitleGapHeight), $subtitleObj$$.$setY$($availSpace$$44$$.y + $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ + $titleSubtitleGap$$), $container$$57_footnoteObj$$.removeChild($subtitleObj$$), D.$DvtTextUtils$$.$fitText$($subtitleObj$$, $availSpace$$44$$.$w$, $availSpace$$44$$.$h$, $chart$$12$$) && ($subtitleDims$$ = $subtitleObj$$.$measureDimensions$(), 
+      var $subtitleDims$$ = $subtitleObj$$.$measureDimensions$(), $titleSubtitleGap$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$71$$.layout.titleSubtitleGapWidth), $titleSpace$$ = $titleDims$$1$$.$w$ + $titleSubtitleGap$$ + $subtitleDims$$.$w$;
+      $titleSpace$$ > $availSpace$$44$$.$w$ ? ($titleSubtitleGap$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$71$$.layout.titleSubtitleGapHeight), $subtitleObj$$.$setY$($availSpace$$44$$.y + $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ + $titleSubtitleGap$$), $container$$57_footnoteObj$$.removeChild($subtitleObj$$), D.$DvtTextUtils$$.$fitText$($subtitleObj$$, $availSpace$$44$$.$w$, $availSpace$$44$$.$h$, $chart$$12$$) && ($subtitleDims$$ = $subtitleObj$$.$measureDimensions$(), 
       $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ += $subtitleDims$$.$h$ + $titleSubtitleGap$$, D.$DvtAgent$$.$isRightToLeft$($chart$$12$$.$_context$) && ($subtitleObj$$ && $subtitleObj$$.$setX$($availSpace$$44$$.$w$ - $subtitleDims$$.$w$), $lowerSepObj_titleGapBelow_titleObj$$ && $lowerSepObj_titleGapBelow_titleObj$$.$setX$($availSpace$$44$$.$w$ - $titleDims$$1$$.$w$)))) : ($subtitleObj$$.$setY$($titleDims$$1$$.$h$ - $subtitleDims$$.$h$ + $availSpace$$44$$.y), (0,D.$DvtLayoutUtils$align$$)($availSpace$$44$$, 
-      $options$$70$$.title.hAlign, $lowerSepObj_titleGapBelow_titleObj$$, $titleSpace$$), D.$DvtAgent$$.$isRightToLeft$($chart$$12$$.$_context$) ? ($subtitleObj$$.$setX$($lowerSepObj_titleGapBelow_titleObj$$.$getX$()), $lowerSepObj_titleGapBelow_titleObj$$ && $lowerSepObj_titleGapBelow_titleObj$$.$setX$($lowerSepObj_titleGapBelow_titleObj$$.$getX$() + $subtitleDims$$.$w$ + $titleSubtitleGap$$)) : $subtitleObj$$.$setX$($lowerSepObj_titleGapBelow_titleObj$$.$getX$() + $titleSpace$$ - $subtitleDims$$.$w$));
+      $options$$71$$.title.hAlign, $lowerSepObj_titleGapBelow_titleObj$$, $titleSpace$$), D.$DvtAgent$$.$isRightToLeft$($chart$$12$$.$_context$) ? ($subtitleObj$$.$setX$($lowerSepObj_titleGapBelow_titleObj$$.$getX$()), $lowerSepObj_titleGapBelow_titleObj$$ && $lowerSepObj_titleGapBelow_titleObj$$.$setX$($lowerSepObj_titleGapBelow_titleObj$$.$getX$() + $subtitleDims$$.$w$ + $titleSubtitleGap$$)) : $subtitleObj$$.$setX$($lowerSepObj_titleGapBelow_titleObj$$.$getX$() + $titleSpace$$ - $subtitleDims$$.$w$));
       (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($subtitleObj$$, "hidden", D.$JSCompiler_alias_NULL$$);
       $chart$$12$$.$getEventManager$().$associate$($subtitleObj$$, new D.$DvtSimpleObjPeer$$($subtitleObj$$.$_untruncatedTextString$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, (0,D.$DvtChartEventManager$getUIEventParams$$)(D.$DvtChartConstants$$.$SUBTITLE$)))
     }else {
-      (0,D.$DvtLayoutUtils$align$$)($availSpace$$44$$, $options$$70$$.title.hAlign, $lowerSepObj_titleGapBelow_titleObj$$, $titleDims$$1$$.$w$)
+      (0,D.$DvtLayoutUtils$align$$)($availSpace$$44$$, $options$$71$$.title.hAlign, $lowerSepObj_titleGapBelow_titleObj$$, $titleDims$$1$$.$w$)
     }
     (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($lowerSepObj_titleGapBelow_titleObj$$, "hidden", D.$JSCompiler_alias_NULL$$);
-    $lowerSepObj_titleGapBelow_titleObj$$ = "on" == $options$$70$$.titleSeparator.rendered ? $options$$70$$.layout.titleSeparatorGap : $options$$70$$.layout.titlePlotAreaGap;
+    $lowerSepObj_titleGapBelow_titleObj$$ = "on" == $options$$71$$.titleSeparator.rendered ? $options$$71$$.layout.titleSeparatorGap : $options$$71$$.layout.titlePlotAreaGap;
     $availSpace$$44$$.y += $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ + (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $lowerSepObj_titleGapBelow_titleObj$$);
     $availSpace$$44$$.$h$ -= $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ + (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $lowerSepObj_titleGapBelow_titleObj$$);
-    "on" == $options$$70$$.titleSeparator.rendered && ($footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = new D.$DvtLine$$($chart$$12$$.$_context$, $availSpace$$44$$.x, $availSpace$$44$$.y, $availSpace$$44$$.x + $availSpace$$44$$.$w$, $availSpace$$44$$.y), $lowerSepObj_titleGapBelow_titleObj$$ = new D.$DvtLine$$($chart$$12$$.$_context$, $availSpace$$44$$.x, $availSpace$$44$$.y + 1, $availSpace$$44$$.x + $availSpace$$44$$.$w$, $availSpace$$44$$.y + 1), $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$.$setSolidStroke$($options$$70$$.titleSeparator.upperColor), 
-    $lowerSepObj_titleGapBelow_titleObj$$.$setSolidStroke$($options$$70$$.titleSeparator.lowerColor), $container$$57_footnoteObj$$.$addChild$($footnoteDims_titleHeight_titleSepHeight_upperSepObj$$), $container$$57_footnoteObj$$.$addChild$($lowerSepObj_titleGapBelow_titleObj$$), $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = 2 + (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$70$$.layout.titlePlotAreaGap), $availSpace$$44$$.y += $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$, 
+    "on" == $options$$71$$.titleSeparator.rendered && ($footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = new D.$DvtLine$$($chart$$12$$.$_context$, $availSpace$$44$$.x, $availSpace$$44$$.y, $availSpace$$44$$.x + $availSpace$$44$$.$w$, $availSpace$$44$$.y), $lowerSepObj_titleGapBelow_titleObj$$ = new D.$DvtLine$$($chart$$12$$.$_context$, $availSpace$$44$$.x, $availSpace$$44$$.y + 1, $availSpace$$44$$.x + $availSpace$$44$$.$w$, $availSpace$$44$$.y + 1), $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$.$setSolidStroke$($options$$71$$.titleSeparator.upperColor), 
+    $lowerSepObj_titleGapBelow_titleObj$$.$setSolidStroke$($options$$71$$.titleSeparator.lowerColor), $container$$57_footnoteObj$$.$addChild$($footnoteDims_titleHeight_titleSepHeight_upperSepObj$$), $container$$57_footnoteObj$$.$addChild$($lowerSepObj_titleGapBelow_titleObj$$), $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = 2 + (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$71$$.layout.titlePlotAreaGap), $availSpace$$44$$.y += $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$, 
     $availSpace$$44$$.$h$ -= $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$)
   }
-  if($options$$70$$.footnote.text) {
-    if($container$$57_footnoteObj$$ = D.$DvtChartTextUtils$$.$createText$($chart$$12$$.$getEventManager$(), $container$$57_footnoteObj$$, $options$$70$$.footnote.text, $options$$70$$.footnote.style, $availSpace$$44$$.x, 0, $availSpace$$44$$.$w$, $availSpace$$44$$.$h$, (0,D.$DvtChartEventManager$getUIEventParams$$)(D.$DvtChartConstants$$.$FOOTNOTE$))) {
-      $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = $container$$57_footnoteObj$$.$getDimensions$(), $container$$57_footnoteObj$$.$setY$($availSpace$$44$$.y + $availSpace$$44$$.$h$ - $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$.$h$), $availSpace$$44$$.$h$ -= $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$.$h$ + (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$70$$.layout.footnoteGap), (0,D.$DvtLayoutUtils$align$$)($availSpace$$44$$, $options$$70$$.footnote.hAlign, 
+  if($options$$71$$.footnote.text) {
+    if($container$$57_footnoteObj$$ = D.$DvtChartTextUtils$$.$createText$($chart$$12$$.$getEventManager$(), $container$$57_footnoteObj$$, $options$$71$$.footnote.text, $options$$71$$.footnote.style, $availSpace$$44$$.x, 0, $availSpace$$44$$.$w$, $availSpace$$44$$.$h$, (0,D.$DvtChartEventManager$getUIEventParams$$)(D.$DvtChartConstants$$.$FOOTNOTE$))) {
+      $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$ = $container$$57_footnoteObj$$.$getDimensions$(), $container$$57_footnoteObj$$.$setY$($availSpace$$44$$.y + $availSpace$$44$$.$h$ - $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$.$h$), $availSpace$$44$$.$h$ -= $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$.$h$ + (0,D.$DvtChartDefaults$getGapSize$$)($chart$$12$$, $options$$71$$.layout.footnoteGap), (0,D.$DvtLayoutUtils$align$$)($availSpace$$44$$, $options$$71$$.footnote.hAlign, 
       $container$$57_footnoteObj$$, $footnoteDims_titleHeight_titleSepHeight_upperSepObj$$.$w$)
     }
     (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($container$$57_footnoteObj$$, "hidden", D.$JSCompiler_alias_NULL$$)
@@ -4431,40 +4428,40 @@ D.$DvtChartRenderer$$.$_renderPlotArea$ = function $$DvtChartRenderer$$$$_render
   $availSpace$$45$$.$h$ = 0
 };
 D.$DvtChartRenderer$$.$renderEmptyText$ = function $$DvtChartRenderer$$$$renderEmptyText$$($chart$$14$$, $container$$59$$, $availSpace$$46$$) {
-  var $options$$71$$ = $chart$$14$$.$getOptions$(), $emptyTextStr_text$$71$$ = $options$$71$$.emptyText;
+  var $options$$72$$ = $chart$$14$$.$getOptions$(), $emptyTextStr_text$$71$$ = $options$$72$$.emptyText;
   $emptyTextStr_text$$71$$ || ($emptyTextStr_text$$71$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$14$$.$Bundle$, "EMPTY_TEXT", D.$JSCompiler_alias_NULL$$));
   $emptyTextStr_text$$71$$ = new D.$DvtOutputText$$($chart$$14$$.$_context$, $emptyTextStr_text$$71$$, $availSpace$$46$$.x + $availSpace$$46$$.$w$ / 2, $availSpace$$46$$.y + $availSpace$$46$$.$h$ / 2);
-  $emptyTextStr_text$$71$$.$setCSSStyle$($options$$71$$.title.style);
+  $emptyTextStr_text$$71$$.$setCSSStyle$($options$$72$$.title.style);
   $emptyTextStr_text$$71$$.$alignCenter$();
   $emptyTextStr_text$$71$$.$alignMiddle$();
   D.$DvtTextUtils$$.$fitText$($emptyTextStr_text$$71$$, $availSpace$$46$$.$w$ - 2 * D.$DvtChartRenderer$$.$_EMPTY_TEXT_GAP_WIDTH$, window.Infinity, $container$$59$$, 0) && ($emptyTextStr_text$$71$$.$isTruncated$() && $chart$$14$$.$getEventManager$().$associate$($emptyTextStr_text$$71$$, new D.$DvtSimpleObjPeer$$($emptyTextStr_text$$71$$.$_untruncatedTextString$)), (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($emptyTextStr_text$$71$$, "hidden", D.$JSCompiler_alias_NULL$$))
 };
 D.$DvtChartRenderer$$.$_prerenderHorizScrollbar$ = function $$DvtChartRenderer$$$$_prerenderHorizScrollbar$$($chart$$15$$, $container$$60$$, $availSpace$$47$$) {
-  var $width$$99$$ = $availSpace$$47$$.$w$, $height$$81$$ = 0;
+  var $width$$98$$ = $availSpace$$47$$.$w$, $height$$79$$ = 0;
   if(D.$DvtChartEventUtils$$.$isScrollable$($chart$$15$$) && D.$DvtChartTypeUtils$$.$isHorizScrollbarSupported$($chart$$15$$)) {
     if(D.$DvtChartStyleUtils$$.$isOverviewRendered$($chart$$15$$)) {
-      var $height$$81$$ = D.$DvtChartStyleUtils$$.$getOverviewHeight$($chart$$15$$), $oldOverviewChart$$ = $chart$$15$$.$overview$ ? $chart$$15$$.$overview$.$_chart$ : D.$JSCompiler_alias_NULL$$;
+      var $height$$79$$ = D.$DvtChartStyleUtils$$.$getOverviewHeight$($chart$$15$$), $oldOverviewChart$$ = $chart$$15$$.$overview$ ? $chart$$15$$.$overview$.$_chart$ : D.$JSCompiler_alias_NULL$$;
       $chart$$15$$.$overview$ = new D.$DvtChartOverview$$($chart$$15$$.$_context$, $chart$$15$$.$processEvent$, $chart$$15$$, $chart$$15$$.getId(), $oldOverviewChart$$);
       $container$$60$$.$addChild$($chart$$15$$.$overview$);
-      (0,D.$DvtLayoutUtils$position$$)($availSpace$$47$$, "bottom", $chart$$15$$.$overview$, $width$$99$$, $height$$81$$, 10)
+      (0,D.$DvtLayoutUtils$position$$)($availSpace$$47$$, "bottom", $chart$$15$$.$overview$, $width$$98$$, $height$$79$$, 10)
     }else {
-      $height$$81$$ = $chart$$15$$.$getOptions$().styleDefaults._scrollbarHeight, $chart$$15$$.$xScrollbar$ = new D.$DvtSimpleScrollbar$$($chart$$15$$.$_context$, $chart$$15$$.$processEvent$, $chart$$15$$), $container$$60$$.$addChild$($chart$$15$$.$xScrollbar$), (0,D.$DvtLayoutUtils$position$$)($availSpace$$47$$, "bottom", $chart$$15$$.$xScrollbar$, $width$$99$$, $height$$81$$, 8)
+      $height$$79$$ = $chart$$15$$.$getOptions$().styleDefaults._scrollbarHeight, $chart$$15$$.$xScrollbar$ = new D.$DvtSimpleScrollbar$$($chart$$15$$.$_context$, $chart$$15$$.$processEvent$, $chart$$15$$), $container$$60$$.$addChild$($chart$$15$$.$xScrollbar$), (0,D.$DvtLayoutUtils$position$$)($availSpace$$47$$, "bottom", $chart$$15$$.$xScrollbar$, $width$$98$$, $height$$79$$, 8)
     }
   }
-  return new D.$DvtDimension$$($width$$99$$, $height$$81$$)
+  return new D.$DvtDimension$$($width$$98$$, $height$$79$$)
 };
 D.$DvtChartRenderer$$.$_prerenderVertScrollbar$ = function $$DvtChartRenderer$$$$_prerenderVertScrollbar$$($chart$$16$$, $container$$61$$, $availSpace$$48$$) {
-  var $width$$100$$ = 0, $height$$82$$ = $availSpace$$48$$.$h$;
+  var $width$$99$$ = 0, $height$$80$$ = $availSpace$$48$$.$h$;
   if(D.$DvtChartEventUtils$$.$isScrollable$($chart$$16$$) && D.$DvtChartTypeUtils$$.$isVertScrollbarSupported$($chart$$16$$)) {
-    var $width$$100$$ = $chart$$16$$.$getOptions$().styleDefaults._scrollbarHeight, $scrollbar$$2$$ = new D.$DvtSimpleScrollbar$$($chart$$16$$.$_context$, $chart$$16$$.$processEvent$, $chart$$16$$);
+    var $width$$99$$ = $chart$$16$$.$getOptions$().styleDefaults._scrollbarHeight, $scrollbar$$2$$ = new D.$DvtSimpleScrollbar$$($chart$$16$$.$_context$, $chart$$16$$.$processEvent$, $chart$$16$$);
     $container$$61$$.$addChild$($scrollbar$$2$$);
-    (0,D.$DvtLayoutUtils$position$$)($availSpace$$48$$, D.$DvtAgent$$.$isRightToLeft$($chart$$16$$.$_context$) ? "right" : "left", $scrollbar$$2$$, $width$$100$$, $height$$82$$, 8);
+    (0,D.$DvtLayoutUtils$position$$)($availSpace$$48$$, D.$DvtAgent$$.$isRightToLeft$($chart$$16$$.$_context$) ? "right" : "left", $scrollbar$$2$$, $width$$99$$, $height$$80$$, 8);
     D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$16$$) ? $chart$$16$$.$xScrollbar$ = $scrollbar$$2$$ : $chart$$16$$.$yScrollbar$ = $scrollbar$$2$$
   }
-  return new D.$DvtDimension$$($width$$100$$, $height$$82$$)
+  return new D.$DvtDimension$$($width$$99$$, $height$$80$$)
 };
 D.$DvtChartRenderer$$.$_renderScrollbars$ = function $$DvtChartRenderer$$$$_renderScrollbars$$($chart$$17$$, $horizScrollbarDim$$, $ovOptions_vertScrollbarDim$$) {
-  var $options$$72$$ = $chart$$17$$.$getOptions$(), $sbOptions$$ = {color:$options$$72$$.styleDefaults._scrollbarHandleColor, backgroundColor:$options$$72$$.styleDefaults._scrollbarTrackColor}, $plotAreaDim$$ = $chart$$17$$.$_plotAreaSpace$, $hitAreaSize$$ = D.$DvtAgent$$.$isTouchDevice$() ? 8 : 4;
+  var $options$$73$$ = $chart$$17$$.$getOptions$(), $sbOptions$$ = {color:$options$$73$$.styleDefaults._scrollbarHandleColor, backgroundColor:$options$$73$$.styleDefaults._scrollbarTrackColor}, $plotAreaDim$$ = $chart$$17$$.$_plotAreaSpace$, $hitAreaSize$$ = D.$DvtAgent$$.$isTouchDevice$() ? 8 : 4;
   if($chart$$17$$.$xScrollbar$) {
     $sbOptions$$.min = $chart$$17$$.$xAxis$.$getGlobalMin$();
     $sbOptions$$.max = $chart$$17$$.$xAxis$.$getGlobalMax$();
@@ -4483,31 +4480,31 @@ D.$DvtChartRenderer$$.$_renderScrollbars$ = function $$DvtChartRenderer$$$$_rend
   }
   $chart$$17$$.$yScrollbar$ && ($sbOptions$$.min = $chart$$17$$.$yAxis$.$getGlobalMin$(), $sbOptions$$.max = $chart$$17$$.$yAxis$.$getGlobalMax$(), $sbOptions$$.isHorizontal = D.$JSCompiler_alias_FALSE$$, $sbOptions$$.isReversed = D.$JSCompiler_alias_TRUE$$, $chart$$17$$.$yScrollbar$.$setTranslateY$($plotAreaDim$$.y), $chart$$17$$.$yScrollbar$.$render$($sbOptions$$, $ovOptions_vertScrollbarDim$$.$w$, $plotAreaDim$$.$h$), $chart$$17$$.$yScrollbar$.$setViewportRange$($chart$$17$$.$yAxis$.$getViewportMin$(), 
   $chart$$17$$.$yAxis$.$getViewportMax$()), $hitArea$$ = new D.$DvtRect$$($chart$$17$$.$_context$, -$hitAreaSize$$, 0, $ovOptions_vertScrollbarDim$$.$w$ + 2 * $hitAreaSize$$, $plotAreaDim$$.$h$), (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($hitArea$$), $chart$$17$$.$yScrollbar$.$addChild$($hitArea$$));
-  $chart$$17$$.$overview$ && ($ovOptions_vertScrollbarDim$$ = {startTime:$chart$$17$$.$xAxis$.$getGlobalMin$(), endTime:$chart$$17$$.$xAxis$.$getGlobalMax$(), viewportStartTime:$chart$$17$$.$xAxis$.$getViewportMin$(), viewportEndTime:$chart$$17$$.$xAxis$.$getViewportMax$(), minimumWindowSize:$chart$$17$$.$xAxis$.$getMinimumExtent$(), chart:D.$DvtJSONUtils$$.clone($options$$72$$)}, D.$DvtChartEventUtils$$.$isZoomable$($chart$$17$$) || ($ovOptions_vertScrollbarDim$$.featuresOff = "zoom"), $chart$$17$$.$overview$.$setTranslateX$($plotAreaDim$$.x), 
+  $chart$$17$$.$overview$ && ($ovOptions_vertScrollbarDim$$ = {startTime:$chart$$17$$.$xAxis$.$getGlobalMin$(), endTime:$chart$$17$$.$xAxis$.$getGlobalMax$(), viewportStartTime:$chart$$17$$.$xAxis$.$getViewportMin$(), viewportEndTime:$chart$$17$$.$xAxis$.$getViewportMax$(), minimumWindowSize:$chart$$17$$.$xAxis$.$getMinimumExtent$(), chart:D.$DvtJSONUtils$$.clone($options$$73$$)}, D.$DvtChartEventUtils$$.$isZoomable$($chart$$17$$) || ($ovOptions_vertScrollbarDim$$.featuresOff = "zoom"), $chart$$17$$.$overview$.$setTranslateX$($plotAreaDim$$.x), 
   $chart$$17$$.$overview$.$render$($ovOptions_vertScrollbarDim$$, $plotAreaDim$$.$w$, $horizScrollbarDim$$.$h$), $chart$$17$$.$overview$.$setViewportRange$($chart$$17$$.$xAxis$.$getViewportMin$(), $chart$$17$$.$xAxis$.$getViewportMax$()))
 };
 D.$DvtChartRenderer$$.$_renderDragButtons$ = function $$DvtChartRenderer$$$$_renderDragButtons$$($chart$$18$$) {
-  var $options$$73_position$$28_tooltip$$35$$ = $chart$$18$$.$getOptions$();
-  if(D.$DvtChartTypeUtils$$.$hasAxes$($chart$$18$$) && !$options$$73_position$$28_tooltip$$35$$._isOverview) {
+  var $options$$74_position$$28_tooltip$$34$$ = $chart$$18$$.$getOptions$();
+  if(D.$DvtChartTypeUtils$$.$hasAxes$($chart$$18$$) && !$options$$74_position$$28_tooltip$$34$$._isOverview) {
     var $isTouch$$1$$ = D.$DvtAgent$$.$isTouchDevice$(), $isScrollable$$ = D.$DvtChartTypeUtils$$.$isScrollSupported$($chart$$18$$) && D.$DvtChartEventUtils$$.$isScrollable$($chart$$18$$), $em$$1$$ = $chart$$18$$.$getEventManager$();
     $chart$$18$$.$dragButtons$ = new D.$DvtContainer$$($chart$$18$$.$_context$);
-    var $resources$$31$$ = $options$$73_position$$28_tooltip$$35$$._resources;
-    if("multiple" == $options$$73_position$$28_tooltip$$35$$.selection && ($isTouch$$1$$ || $isScrollable$$)) {
-      $options$$73_position$$28_tooltip$$35$$ = $isScrollable$$ && ($isTouch$$1$$ || D.$DvtChartEventUtils$$.$isZoomable$($chart$$18$$)) ? "end" : "solo", $em$$1$$.$selectButton$ = D.$DvtChartRenderer$$.$_createDragButton$($chart$$18$$, $chart$$18$$.$dragButtons$, $resources$$31$$.selectUp, $resources$$31$$.selectDown, $em$$1$$.$onSelectButtonClick$, $em$$1$$, $options$$73_position$$28_tooltip$$35$$), $options$$73_position$$28_tooltip$$35$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$18$$.$Bundle$, 
-      "MARQUEE_SELECT"), $em$$1$$.$associate$($em$$1$$.$selectButton$, new D.$DvtSimpleObjPeer$$($options$$73_position$$28_tooltip$$35$$))
+    var $resources$$23$$ = $options$$74_position$$28_tooltip$$34$$._resources;
+    if("multiple" == $options$$74_position$$28_tooltip$$34$$.selection && ($isTouch$$1$$ || $isScrollable$$)) {
+      $options$$74_position$$28_tooltip$$34$$ = $isScrollable$$ && ($isTouch$$1$$ || D.$DvtChartEventUtils$$.$isZoomable$($chart$$18$$)) ? "end" : "solo", $em$$1$$.$selectButton$ = D.$DvtChartRenderer$$.$_createDragButton$($chart$$18$$, $chart$$18$$.$dragButtons$, $resources$$23$$.selectUp, $resources$$23$$.selectDown, $em$$1$$.$onSelectButtonClick$, $em$$1$$, $options$$74_position$$28_tooltip$$34$$), $options$$74_position$$28_tooltip$$34$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$18$$.$Bundle$, 
+      "MARQUEE_SELECT"), $em$$1$$.$associate$($em$$1$$.$selectButton$, new D.$DvtSimpleObjPeer$$($options$$74_position$$28_tooltip$$34$$))
     }
-    $isScrollable$$ && ($options$$73_position$$28_tooltip$$35$$ = $em$$1$$.$selectButton$ == D.$JSCompiler_alias_NULL$$ ? "solo" : "start", $isTouch$$1$$ ? ($em$$1$$.$panButton$ = D.$DvtChartRenderer$$.$_createDragButton$($chart$$18$$, $chart$$18$$.$dragButtons$, $resources$$31$$.panUp, $resources$$31$$.panDown, $em$$1$$.$onPanButtonClick$, $em$$1$$, $options$$73_position$$28_tooltip$$35$$), $options$$73_position$$28_tooltip$$35$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$18$$.$Bundle$, 
-    "PAN"), $em$$1$$.$associate$($em$$1$$.$panButton$, new D.$DvtSimpleObjPeer$$($options$$73_position$$28_tooltip$$35$$))) : D.$DvtChartEventUtils$$.$isZoomable$($chart$$18$$) && ($em$$1$$.$zoomButton$ = D.$DvtChartRenderer$$.$_createDragButton$($chart$$18$$, $chart$$18$$.$dragButtons$, $resources$$31$$.zoomUp, $resources$$31$$.zoomDown, $em$$1$$.$onZoomButtonClick$, $em$$1$$, $options$$73_position$$28_tooltip$$35$$), $options$$73_position$$28_tooltip$$35$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$18$$.$Bundle$, 
-    "MARQUEE_ZOOM"), $em$$1$$.$associate$($em$$1$$.$zoomButton$, new D.$DvtSimpleObjPeer$$($options$$73_position$$28_tooltip$$35$$))));
+    $isScrollable$$ && ($options$$74_position$$28_tooltip$$34$$ = $em$$1$$.$selectButton$ == D.$JSCompiler_alias_NULL$$ ? "solo" : "start", $isTouch$$1$$ ? ($em$$1$$.$panButton$ = D.$DvtChartRenderer$$.$_createDragButton$($chart$$18$$, $chart$$18$$.$dragButtons$, $resources$$23$$.panUp, $resources$$23$$.panDown, $em$$1$$.$onPanButtonClick$, $em$$1$$, $options$$74_position$$28_tooltip$$34$$), $options$$74_position$$28_tooltip$$34$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$18$$.$Bundle$, 
+    "PAN"), $em$$1$$.$associate$($em$$1$$.$panButton$, new D.$DvtSimpleObjPeer$$($options$$74_position$$28_tooltip$$34$$))) : D.$DvtChartEventUtils$$.$isZoomable$($chart$$18$$) && ($em$$1$$.$zoomButton$ = D.$DvtChartRenderer$$.$_createDragButton$($chart$$18$$, $chart$$18$$.$dragButtons$, $resources$$23$$.zoomUp, $resources$$23$$.zoomDown, $em$$1$$.$onZoomButtonClick$, $em$$1$$, $options$$74_position$$28_tooltip$$34$$), $options$$74_position$$28_tooltip$$34$$ = (0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$18$$.$Bundle$, 
+    "MARQUEE_ZOOM"), $em$$1$$.$associate$($em$$1$$.$zoomButton$, new D.$DvtSimpleObjPeer$$($options$$74_position$$28_tooltip$$34$$))));
     D.$DvtChartRenderer$$.$positionDragButtons$($chart$$18$$);
     (0,D.$JSCompiler_StaticMethods_setDragMode$$)($em$$1$$, D.$JSCompiler_alias_NULL$$);
     0 < $chart$$18$$.$dragButtons$.$getNumChildren$() && ($chart$$18$$.$addChild$($chart$$18$$.$dragButtons$), $isTouch$$1$$ ? $isScrollable$$ && ((0,D.$JSCompiler_StaticMethods_setToggled$$)($em$$1$$.$panButton$, D.$JSCompiler_alias_TRUE$$), $em$$1$$.$onPanButtonClick$()) : (0,D.$JSCompiler_StaticMethods_hideDragButtons$$)($chart$$18$$), $chart$$18$$.$dragButtons$.setCursor("default"))
   }
 };
-D.$DvtChartRenderer$$.$_positionDragButton$ = function $$DvtChartRenderer$$$$_positionDragButton$$($chart$$19_transX$$4$$, $button$$58$$, $availSpace$$49$$) {
+D.$DvtChartRenderer$$.$_positionDragButton$ = function $$DvtChartRenderer$$$$_positionDragButton$$($chart$$19_transX$$4$$, $button$$56$$, $availSpace$$49$$) {
   D.$DvtAgent$$.$isRightToLeft$($chart$$19_transX$$4$$.$_context$) ? ($chart$$19_transX$$4$$ = $availSpace$$49$$.x + D.$DvtChartRenderer$$.$_BUTTON_PADDING$, $availSpace$$49$$.x += D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * D.$DvtChartRenderer$$.$_BUTTON_PADDING$) : $chart$$19_transX$$4$$ = $availSpace$$49$$.x + $availSpace$$49$$.$w$ - D.$DvtChartRenderer$$.$_BUTTON_SIZE$ - D.$DvtChartRenderer$$.$_BUTTON_PADDING$;
   $availSpace$$49$$.$w$ -= D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * D.$DvtChartRenderer$$.$_BUTTON_PADDING$;
-  (0,D.$JSCompiler_StaticMethods_setTranslate$$)($button$$58$$, $chart$$19_transX$$4$$, $availSpace$$49$$.y + D.$DvtChartRenderer$$.$_BUTTON_PADDING$)
+  (0,D.$JSCompiler_StaticMethods_setTranslate$$)($button$$56$$, $chart$$19_transX$$4$$, $availSpace$$49$$.y + D.$DvtChartRenderer$$.$_BUTTON_PADDING$)
 };
 D.$DvtChartRenderer$$.$positionDragButtons$ = function $$DvtChartRenderer$$$$positionDragButtons$$($chart$$20$$) {
   var $availSpace$$50$$ = $chart$$20$$.$_plotAreaSpace$.clone();
@@ -4519,41 +4516,41 @@ D.$DvtChartRenderer$$.$positionDragButtons$ = function $$DvtChartRenderer$$$$pos
   $em$$2$$.$panButton$ && D.$DvtChartRenderer$$.$_positionDragButton$($chart$$20$$, $em$$2$$.$panButton$, $availSpace$$50$$);
   $em$$2$$.$zoomButton$ && D.$DvtChartRenderer$$.$_positionDragButton$($chart$$20$$, $em$$2$$.$zoomButton$, $availSpace$$50$$)
 };
-D.$DvtChartRenderer$$.$_createDragButtonBackground$ = function $$DvtChartRenderer$$$$_createDragButtonBackground$$($context$$534$$, $position$$29$$) {
-  var $background$$8_blcr$$1_cmd$$8$$ = 2, $trcr$$1$$ = 2, $isR2L_pos$$35$$ = D.$DvtAgent$$.$isRightToLeft$($context$$534$$);
+D.$DvtChartRenderer$$.$_createDragButtonBackground$ = function $$DvtChartRenderer$$$$_createDragButtonBackground$$($context$$528$$, $position$$29$$) {
+  var $background$$8_blcr$$1_cmd$$8$$ = 2, $trcr$$1$$ = 2, $isR2L_pos$$35$$ = D.$DvtAgent$$.$isRightToLeft$($context$$528$$);
   "start" == $position$$29$$ ? $isR2L_pos$$35$$ ? $background$$8_blcr$$1_cmd$$8$$ = 0 : $trcr$$1$$ = 0 : "end" == $position$$29$$ && ($isR2L_pos$$35$$ ? $trcr$$1$$ = 0 : $background$$8_blcr$$1_cmd$$8$$ = 0);
-  var $isR2L_pos$$35$$ = -D.$DvtChartRenderer$$.$_BUTTON_PADDING$, $size$$26$$ = D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * D.$DvtChartRenderer$$.$_BUTTON_PADDING$, $background$$8_blcr$$1_cmd$$8$$ = window.DvtPathUtils.$roundedRectangle$($isR2L_pos$$35$$, $isR2L_pos$$35$$, $size$$26$$, $size$$26$$, $background$$8_blcr$$1_cmd$$8$$, $trcr$$1$$, $trcr$$1$$, $background$$8_blcr$$1_cmd$$8$$), $background$$8_blcr$$1_cmd$$8$$ = new D.$DvtPath$$($context$$534$$, $background$$8_blcr$$1_cmd$$8$$);
+  var $isR2L_pos$$35$$ = -D.$DvtChartRenderer$$.$_BUTTON_PADDING$, $size$$26$$ = D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * D.$DvtChartRenderer$$.$_BUTTON_PADDING$, $background$$8_blcr$$1_cmd$$8$$ = window.DvtPathUtils.$roundedRectangle$($isR2L_pos$$35$$, $isR2L_pos$$35$$, $size$$26$$, $size$$26$$, $background$$8_blcr$$1_cmd$$8$$, $trcr$$1$$, $trcr$$1$$, $background$$8_blcr$$1_cmd$$8$$), $background$$8_blcr$$1_cmd$$8$$ = new D.$DvtPath$$($context$$528$$, $background$$8_blcr$$1_cmd$$8$$);
   1 < D.$DvtAgent$$.$getDevicePixelRatio$() ? ($background$$8_blcr$$1_cmd$$8$$.$setSolidStroke$("#D8DEE3", 1, 1), (0,D.$JSCompiler_StaticMethods_setPixelHinting$$)($background$$8_blcr$$1_cmd$$8$$)) : $background$$8_blcr$$1_cmd$$8$$.$setSolidStroke$("#B8BDC1", 1, 1);
   return $background$$8_blcr$$1_cmd$$8$$
 };
-D.$DvtChartRenderer$$.$_createDragButton$ = function $$DvtChartRenderer$$$$_createDragButton$$($chart$$21_context$$535$$, $container$$63_isR2L$$1$$, $overDownState$$1_upSrc$$, $button$$59_downSrc$$, $callback$$107_enabled$$inline_5186_hitPadding$$, $callbackObj$$81$$, $hitArea$$1_position$$30$$) {
-  $chart$$21_context$$535$$ = $chart$$21_context$$535$$.$_context$;
-  var $upState$$12$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$535$$, $hitArea$$1_position$$30$$);
+D.$DvtChartRenderer$$.$_createDragButton$ = function $$DvtChartRenderer$$$$_createDragButton$$($chart$$21_context$$529$$, $container$$63_isR2L$$1$$, $overDownState$$1_upSrc$$, $button$$57_downSrc$$, $callback$$107_enabled$$inline_5128_hitPadding$$, $callbackObj$$81$$, $hitArea$$1_position$$30$$) {
+  $chart$$21_context$$529$$ = $chart$$21_context$$529$$.$_context$;
+  var $upState$$12$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$529$$, $hitArea$$1_position$$30$$);
   $upState$$12$$.$setSolidFill$("#FFFFFF", D.$DvtChartRenderer$$.$_BUTTON_OPACITY$);
-  $upState$$12$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$535$$, $overDownState$$1_upSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
-  var $overState$$9$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$535$$, $hitArea$$1_position$$30$$);
+  $upState$$12$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$529$$, $overDownState$$1_upSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
+  var $overState$$9$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$529$$, $hitArea$$1_position$$30$$);
   $overState$$9$$.$setSolidFill$("#E2E3E4", D.$DvtChartRenderer$$.$_BUTTON_OPACITY$);
-  $overState$$9$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$535$$, $overDownState$$1_upSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
-  var $downState$$9$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$535$$, $hitArea$$1_position$$30$$);
+  $overState$$9$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$529$$, $overDownState$$1_upSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
+  var $downState$$9$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$529$$, $hitArea$$1_position$$30$$);
   $downState$$9$$.$setFill$(new D.$DvtLinearGradientFill$$(90, ["#0527CE", "#0586F0"], [D.$DvtChartRenderer$$.$_BUTTON_OPACITY$, D.$DvtChartRenderer$$.$_BUTTON_OPACITY$]));
-  $downState$$9$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$535$$, $button$$59_downSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
-  $overDownState$$1_upSrc$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$535$$, $hitArea$$1_position$$30$$);
+  $downState$$9$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$529$$, $button$$57_downSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
+  $overDownState$$1_upSrc$$ = D.$DvtChartRenderer$$.$_createDragButtonBackground$($chart$$21_context$$529$$, $hitArea$$1_position$$30$$);
   $overDownState$$1_upSrc$$.$setSolidFill$("#0586F0", D.$DvtChartRenderer$$.$_BUTTON_OPACITY$);
-  $overDownState$$1_upSrc$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$535$$, $button$$59_downSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
-  $button$$59_downSrc$$ = new D.$DvtButton$$($chart$$21_context$$535$$, $upState$$12$$, $overState$$9$$, $downState$$9$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $callback$$107_enabled$$inline_5186_hitPadding$$, $callbackObj$$81$$);
-  if(!$button$$59_downSrc$$.$overDownState$ || $button$$59_downSrc$$.$overDownState$ == $overDownState$$1_upSrc$$) {
-    $callback$$107_enabled$$inline_5186_hitPadding$$ = D.$JSCompiler_alias_FALSE$$, $button$$59_downSrc$$.$overDownState$ && ($callback$$107_enabled$$inline_5186_hitPadding$$ = (0,D.$JSCompiler_StaticMethods__isButtonEnabled$$)($button$$59_downSrc$$.$overDownState$), $button$$59_downSrc$$.removeChild($button$$59_downSrc$$.$overDownState$)), $overDownState$$1_upSrc$$ && $button$$59_downSrc$$.$addChild$($overDownState$$1_upSrc$$), $button$$59_downSrc$$.$overDownState$ = $overDownState$$1_upSrc$$, (0,D.$JSCompiler_StaticMethods__enableButton$$)($button$$59_downSrc$$.$overDownState$, 
-    $callback$$107_enabled$$inline_5186_hitPadding$$)
+  $overDownState$$1_upSrc$$.$addChild$(new D.$DvtImage$$($chart$$21_context$$529$$, $button$$57_downSrc$$, 0, 0, D.$DvtChartRenderer$$.$_BUTTON_SIZE$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$));
+  $button$$57_downSrc$$ = new D.$DvtButton$$($chart$$21_context$$529$$, $upState$$12$$, $overState$$9$$, $downState$$9$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, $callback$$107_enabled$$inline_5128_hitPadding$$, $callbackObj$$81$$);
+  if(!$button$$57_downSrc$$.$overDownState$ || $button$$57_downSrc$$.$overDownState$ == $overDownState$$1_upSrc$$) {
+    $callback$$107_enabled$$inline_5128_hitPadding$$ = D.$JSCompiler_alias_FALSE$$, $button$$57_downSrc$$.$overDownState$ && ($callback$$107_enabled$$inline_5128_hitPadding$$ = (0,D.$JSCompiler_StaticMethods__isButtonEnabled$$)($button$$57_downSrc$$.$overDownState$), $button$$57_downSrc$$.removeChild($button$$57_downSrc$$.$overDownState$)), $overDownState$$1_upSrc$$ && $button$$57_downSrc$$.$addChild$($overDownState$$1_upSrc$$), $button$$57_downSrc$$.$overDownState$ = $overDownState$$1_upSrc$$, (0,D.$JSCompiler_StaticMethods__enableButton$$)($button$$57_downSrc$$.$overDownState$, 
+    $callback$$107_enabled$$inline_5128_hitPadding$$)
   }
-  $button$$59_downSrc$$.$_bToggleEnabled$ = D.$JSCompiler_alias_TRUE$$;
-  $container$$63_isR2L$$1$$.$addChild$($button$$59_downSrc$$);
-  $button$$59_downSrc$$.$addEvtListener$(D.$DvtMouseEvent$MOUSEDOWN$$, function($chart$$21_context$$535$$) {
-    $chart$$21_context$$535$$.stopPropagation()
+  $button$$57_downSrc$$.$_bToggleEnabled$ = D.$JSCompiler_alias_TRUE$$;
+  $container$$63_isR2L$$1$$.$addChild$($button$$57_downSrc$$);
+  $button$$57_downSrc$$.$addEvtListener$(D.$DvtMouseEvent$MOUSEDOWN$$, function($chart$$21_context$$529$$) {
+    $chart$$21_context$$529$$.stopPropagation()
   });
-  D.$DvtAgent$$.$isTouchDevice$() && ($container$$63_isR2L$$1$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$21_context$$535$$), $callback$$107_enabled$$inline_5186_hitPadding$$ = 2 * D.$DvtChartRenderer$$.$_BUTTON_PADDING$, $hitArea$$1_position$$30$$ = "solo" == $hitArea$$1_position$$30$$ ? new D.$DvtRect$$($chart$$21_context$$535$$, -$callback$$107_enabled$$inline_5186_hitPadding$$, -$callback$$107_enabled$$inline_5186_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * $callback$$107_enabled$$inline_5186_hitPadding$$, 
-  D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * $callback$$107_enabled$$inline_5186_hitPadding$$) : "start" == $hitArea$$1_position$$30$$ && !$container$$63_isR2L$$1$$ || "end" == $hitArea$$1_position$$30$$ && $container$$63_isR2L$$1$$ ? new D.$DvtRect$$($chart$$21_context$$535$$, -$callback$$107_enabled$$inline_5186_hitPadding$$, -$callback$$107_enabled$$inline_5186_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 1.5 * $callback$$107_enabled$$inline_5186_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 
-  2 * $callback$$107_enabled$$inline_5186_hitPadding$$) : new D.$DvtRect$$($chart$$21_context$$535$$, -0.5 * $callback$$107_enabled$$inline_5186_hitPadding$$, -$callback$$107_enabled$$inline_5186_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 1.5 * $callback$$107_enabled$$inline_5186_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * $callback$$107_enabled$$inline_5186_hitPadding$$), (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($hitArea$$1_position$$30$$), $button$$59_downSrc$$.$addChild$($hitArea$$1_position$$30$$));
-  return $button$$59_downSrc$$
+  D.$DvtAgent$$.$isTouchDevice$() && ($container$$63_isR2L$$1$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$21_context$$529$$), $callback$$107_enabled$$inline_5128_hitPadding$$ = 2 * D.$DvtChartRenderer$$.$_BUTTON_PADDING$, $hitArea$$1_position$$30$$ = "solo" == $hitArea$$1_position$$30$$ ? new D.$DvtRect$$($chart$$21_context$$529$$, -$callback$$107_enabled$$inline_5128_hitPadding$$, -$callback$$107_enabled$$inline_5128_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * $callback$$107_enabled$$inline_5128_hitPadding$$, 
+  D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * $callback$$107_enabled$$inline_5128_hitPadding$$) : "start" == $hitArea$$1_position$$30$$ && !$container$$63_isR2L$$1$$ || "end" == $hitArea$$1_position$$30$$ && $container$$63_isR2L$$1$$ ? new D.$DvtRect$$($chart$$21_context$$529$$, -$callback$$107_enabled$$inline_5128_hitPadding$$, -$callback$$107_enabled$$inline_5128_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 1.5 * $callback$$107_enabled$$inline_5128_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 
+  2 * $callback$$107_enabled$$inline_5128_hitPadding$$) : new D.$DvtRect$$($chart$$21_context$$529$$, -0.5 * $callback$$107_enabled$$inline_5128_hitPadding$$, -$callback$$107_enabled$$inline_5128_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 1.5 * $callback$$107_enabled$$inline_5128_hitPadding$$, D.$DvtChartRenderer$$.$_BUTTON_SIZE$ + 2 * $callback$$107_enabled$$inline_5128_hitPadding$$), (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($hitArea$$1_position$$30$$), $button$$57_downSrc$$.$addChild$($hitArea$$1_position$$30$$));
+  return $button$$57_downSrc$$
 };
 D.$DvtChartRenderer$$.$_adjustAvailSpace$ = function $$DvtChartRenderer$$$$_adjustAvailSpace$$($availSpace$$51$$) {
   $availSpace$$51$$.x = window.Math.round($availSpace$$51$$.x);
@@ -4565,8 +4562,8 @@ D.$DvtChartAxisRenderer$$ = {};
 D.$DvtObj$$.$createSubclass$(D.$DvtChartAxisRenderer$$, D.$DvtObj$$, "DvtChartAxisRenderer");
 D.$DvtChartAxisRenderer$$.$render$ = function $$DvtChartAxisRenderer$$$$render$$($chart$$22$$, $container$$64_xAxisInfo$$, $availSpace$$52$$) {
   if(D.$DvtChartTypeUtils$$.$hasAxes$($chart$$22$$)) {
-    var $options$$74$$ = $chart$$22$$.$getOptions$(), $isHorizGraph_leftOverflow$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$22$$), $isVertGraph_yAxisInfo$$ = D.$DvtChartTypeUtils$$.$isVertical$($chart$$22$$), $isPolarGraph_rightOverflow$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$22$$), $isR2L$$2$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$22$$.$_context$), $newWidth_numGroups$$ = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$22$$), $totalAvailSpace$$ = $availSpace$$52$$.clone(), $axisGap_y2AxisInfo$$ = 
-    $options$$74$$.layout.verticalAxisGap;
+    var $options$$75$$ = $chart$$22$$.$getOptions$(), $isHorizGraph_leftOverflow$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$22$$), $isVertGraph_yAxisInfo$$ = D.$DvtChartTypeUtils$$.$isVertical$($chart$$22$$), $isPolarGraph_rightOverflow$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$22$$), $isR2L$$2$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$22$$.$_context$), $newWidth_numGroups$$ = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$22$$), $totalAvailSpace$$ = $availSpace$$52$$.clone(), $axisGap_y2AxisInfo$$ = 
+    $options$$75$$.layout.verticalAxisGap;
     if(D.$DvtChartTypeUtils$$.$isStandaloneXAxis$($chart$$22$$)) {
       $isHorizGraph_leftOverflow$$ && ($axisGap_y2AxisInfo$$ *= D.$DvtChartAxisRenderer$$.$_getGapScalingFactor$($chart$$22$$, "x"), $availSpace$$52$$.y += $axisGap_y2AxisInfo$$, $availSpace$$52$$.$h$ -= 2 * $axisGap_y2AxisInfo$$)
     }else {
@@ -4589,10 +4586,10 @@ D.$DvtChartAxisRenderer$$.$render$ = function $$DvtChartAxisRenderer$$$$render$$
     $isPolarGraph_rightOverflow$$ ? ($container$$64_xAxisInfo$$.axis.$setTranslateX$($availSpace$$52$$.x), $container$$64_xAxisInfo$$.axis.$setTranslateY$($availSpace$$52$$.y), $container$$64_xAxisInfo$$.axis.$render$($container$$64_xAxisInfo$$.options, $availSpace$$52$$.$w$, $availSpace$$52$$.$h$)) : ($container$$64_xAxisInfo$$.axis.$render$($container$$64_xAxisInfo$$.options, $container$$64_xAxisInfo$$.$dim$.$w$, $container$$64_xAxisInfo$$.$dim$.$h$), D.$DvtChartAxisRenderer$$.$_positionAxis$($availSpace$$52$$, 
     $container$$64_xAxisInfo$$, D.$DvtChartAxisRenderer$$.$_getTickLabelGap$($chart$$22$$, "x")));
     $isPolarGraph_rightOverflow$$ && $isVertGraph_yAxisInfo$$ ? ($isVertGraph_yAxisInfo$$.axis.$setTranslateX$($availSpace$$52$$.x), $isVertGraph_yAxisInfo$$.axis.$setTranslateY$($availSpace$$52$$.y), $isVertGraph_yAxisInfo$$.axis.$render$($isVertGraph_yAxisInfo$$.options, $availSpace$$52$$.$w$, $availSpace$$52$$.$h$)) : $isHorizGraph_leftOverflow$$ ? ($isVertGraph_yAxisInfo$$ && ($isVertGraph_yAxisInfo$$.axis.$setTranslateX$($availSpace$$52$$.x), $isVertGraph_yAxisInfo$$.axis.$render$($isVertGraph_yAxisInfo$$.options, 
-    $availSpace$$52$$.$w$, $isVertGraph_yAxisInfo$$.$dim$.$h$)), $axisGap_y2AxisInfo$$ && ($isVertGraph_yAxisInfo$$ && this.$_alignYAxes$($isVertGraph_yAxisInfo$$.axis, $axisGap_y2AxisInfo$$.axis, $options$$74$$, $axisGap_y2AxisInfo$$.options), $axisGap_y2AxisInfo$$.axis.$setTranslateX$($availSpace$$52$$.x), $axisGap_y2AxisInfo$$.axis.$render$($axisGap_y2AxisInfo$$.options, $availSpace$$52$$.$w$, $axisGap_y2AxisInfo$$.$dim$.$h$)), $isHorizGraph_leftOverflow$$ = (0,D.$JSCompiler_StaticMethods_getLeftOverflow$$)($isVertGraph_yAxisInfo$$.axis), 
+    $availSpace$$52$$.$w$, $isVertGraph_yAxisInfo$$.$dim$.$h$)), $axisGap_y2AxisInfo$$ && ($isVertGraph_yAxisInfo$$ && this.$_alignYAxes$($isVertGraph_yAxisInfo$$.axis, $axisGap_y2AxisInfo$$.axis, $options$$75$$, $axisGap_y2AxisInfo$$.options), $axisGap_y2AxisInfo$$.axis.$setTranslateX$($availSpace$$52$$.x), $axisGap_y2AxisInfo$$.axis.$render$($axisGap_y2AxisInfo$$.options, $availSpace$$52$$.$w$, $axisGap_y2AxisInfo$$.$dim$.$h$)), $isHorizGraph_leftOverflow$$ = (0,D.$JSCompiler_StaticMethods_getLeftOverflow$$)($isVertGraph_yAxisInfo$$.axis), 
     $isPolarGraph_rightOverflow$$ = (0,D.$JSCompiler_StaticMethods_getRightOverflow$$)($isVertGraph_yAxisInfo$$.axis), $availSpace$$52$$.x += $isHorizGraph_leftOverflow$$, $availSpace$$52$$.$w$ -= $isHorizGraph_leftOverflow$$ + $isPolarGraph_rightOverflow$$) : ($isHorizGraph_leftOverflow$$ = (0,D.$JSCompiler_StaticMethods_getLeftOverflow$$)($container$$64_xAxisInfo$$.axis), $isPolarGraph_rightOverflow$$ = (0,D.$JSCompiler_StaticMethods_getRightOverflow$$)($container$$64_xAxisInfo$$.axis), $availSpace$$52$$.x += 
     $isHorizGraph_leftOverflow$$, $availSpace$$52$$.$w$ -= $isHorizGraph_leftOverflow$$ + $isPolarGraph_rightOverflow$$, $isVertGraph_yAxisInfo$$ && ($isVertGraph_yAxisInfo$$.axis.$setTranslateX$($isVertGraph_yAxisInfo$$.axis.$getTranslateX$() + ($isR2L$$2$$ ? -$isPolarGraph_rightOverflow$$ : $isHorizGraph_leftOverflow$$)), $isVertGraph_yAxisInfo$$.axis.$render$($isVertGraph_yAxisInfo$$.options, $isVertGraph_yAxisInfo$$.$dim$.$w$, $availSpace$$52$$.$h$)), $axisGap_y2AxisInfo$$ && ($isVertGraph_yAxisInfo$$ && 
-    this.$_alignYAxes$($isVertGraph_yAxisInfo$$.axis, $axisGap_y2AxisInfo$$.axis, $options$$74$$, $axisGap_y2AxisInfo$$.options), $axisGap_y2AxisInfo$$.axis.$setTranslateX$($axisGap_y2AxisInfo$$.axis.$getTranslateX$() + ($isR2L$$2$$ ? $isHorizGraph_leftOverflow$$ : -$isPolarGraph_rightOverflow$$)), $axisGap_y2AxisInfo$$.axis.$render$($axisGap_y2AxisInfo$$.options, $axisGap_y2AxisInfo$$.$dim$.$w$, $availSpace$$52$$.$h$)));
+    this.$_alignYAxes$($isVertGraph_yAxisInfo$$.axis, $axisGap_y2AxisInfo$$.axis, $options$$75$$, $axisGap_y2AxisInfo$$.options), $axisGap_y2AxisInfo$$.axis.$setTranslateX$($axisGap_y2AxisInfo$$.axis.$getTranslateX$() + ($isR2L$$2$$ ? $isHorizGraph_leftOverflow$$ : -$isPolarGraph_rightOverflow$$)), $axisGap_y2AxisInfo$$.axis.$render$($axisGap_y2AxisInfo$$.options, $axisGap_y2AxisInfo$$.$dim$.$w$, $availSpace$$52$$.$h$)));
     $chart$$22$$.$xAxis$ && ($chart$$22$$.$xAxis$.$destroy$(), $chart$$22$$.removeChild($chart$$22$$.$xAxis$));
     $chart$$22$$.$yAxis$ && ($chart$$22$$.$yAxis$.$destroy$(), $chart$$22$$.removeChild($chart$$22$$.$yAxis$));
     $chart$$22$$.$y2Axis$ && ($chart$$22$$.$y2Axis$.$destroy$(), $chart$$22$$.removeChild($chart$$22$$.$y2Axis$));
@@ -4602,18 +4599,18 @@ D.$DvtChartAxisRenderer$$.$render$ = function $$DvtChartAxisRenderer$$$$render$$
   }
 };
 D.$DvtChartAxisRenderer$$.$_createXAxis$ = function $$DvtChartAxisRenderer$$$$_createXAxis$$($chart$$23$$, $container$$65_maxWidth$$20$$, $availSpace$$53_isR2L$$3_maxHeight$$15$$, $axis$$20_totalAvailSpace$$1$$) {
-  var $actualSize$$1_options$$75$$ = $chart$$23$$.$getOptions$(), $position$$31$$ = D.$DvtChartAxisUtils$$.$getXAxisPosition$($chart$$23$$), $isStandalone$$ = D.$DvtChartTypeUtils$$.$isStandaloneXAxis$($chart$$23$$), $axisOptions$$ = D.$DvtJSONUtils$$.clone($actualSize$$1_options$$75$$.xAxis);
-  $axisOptions$$.skin = $actualSize$$1_options$$75$$.skin;
+  var $actualSize$$1_options$$76$$ = $chart$$23$$.$getOptions$(), $position$$31$$ = D.$DvtChartAxisUtils$$.$getXAxisPosition$($chart$$23$$), $isStandalone$$ = D.$DvtChartTypeUtils$$.$isStandaloneXAxis$($chart$$23$$), $axisOptions$$ = D.$DvtJSONUtils$$.clone($actualSize$$1_options$$76$$.xAxis);
+  $axisOptions$$.skin = $actualSize$$1_options$$76$$.skin;
   $axisOptions$$.layout.gapRatio = $chart$$23$$.$getGapRatio$();
   $axisOptions$$.position = $position$$31$$;
   $axisOptions$$.isStandalone = $isStandalone$$;
-  $axisOptions$$.baselineScaling = $actualSize$$1_options$$75$$.xAxis.baselineScaling;
-  $axisOptions$$.title = $actualSize$$1_options$$75$$.xAxis ? $actualSize$$1_options$$75$$.xAxis.title : D.$JSCompiler_alias_NULL$$;
-  $axisOptions$$.groups = $actualSize$$1_options$$75$$.groups;
-  $axisOptions$$.timeAxisType = $actualSize$$1_options$$75$$.timeAxisType && D.$DvtChartTypeUtils$$.$isTimeAxisSupported$($chart$$23$$) ? $actualSize$$1_options$$75$$.timeAxisType : "disabled";
-  $axisOptions$$.zoomAndScroll = $actualSize$$1_options$$75$$.zoomAndScroll;
-  $axisOptions$$._isOverview = $actualSize$$1_options$$75$$._isOverview;
-  D.$DvtChartTypeUtils$$.$isPolar$($chart$$23$$) && ($axisOptions$$.polarGridShape = D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$23$$) ? "polygon" : "circle", $axisOptions$$._radius = $chart$$23$$.$getRadius$(), $axisOptions$$._numGroups = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$23$$), $axisOptions$$.axisLine = D.$DvtJSONUtils$$.clone($actualSize$$1_options$$75$$.yAxis.axisLine));
+  $axisOptions$$.baselineScaling = $actualSize$$1_options$$76$$.xAxis.baselineScaling;
+  $axisOptions$$.title = $actualSize$$1_options$$76$$.xAxis ? $actualSize$$1_options$$76$$.xAxis.title : D.$JSCompiler_alias_NULL$$;
+  $axisOptions$$.groups = $actualSize$$1_options$$76$$.groups;
+  $axisOptions$$.timeAxisType = $actualSize$$1_options$$76$$.timeAxisType && D.$DvtChartTypeUtils$$.$isTimeAxisSupported$($chart$$23$$) ? $actualSize$$1_options$$76$$.timeAxisType : "disabled";
+  $axisOptions$$.zoomAndScroll = $actualSize$$1_options$$76$$.zoomAndScroll;
+  $axisOptions$$._isOverview = $actualSize$$1_options$$76$$._isOverview;
+  D.$DvtChartTypeUtils$$.$isPolar$($chart$$23$$) && ($axisOptions$$.polarGridShape = D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$23$$) ? "polygon" : "circle", $axisOptions$$._radius = $chart$$23$$.$getRadius$(), $axisOptions$$._numGroups = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$23$$), $axisOptions$$.axisLine = D.$DvtJSONUtils$$.clone($actualSize$$1_options$$76$$.yAxis.axisLine));
   if(!D.$DvtChartAxisUtils$$.$hasGroupAxis$($chart$$23$$)) {
     var $axisOffset_dataValues_isHoriz$$5$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($chart$$23$$, "x");
     $axisOptions$$.dataMin = $axisOptions$$.dataMin != D.$JSCompiler_alias_NULL$$ ? $axisOptions$$.dataMin : $axisOffset_dataValues_isHoriz$$5$$.min;
@@ -4627,31 +4624,31 @@ D.$DvtChartAxisRenderer$$.$_createXAxis$ = function $$DvtChartAxisRenderer$$$$_c
   $axis$$20_totalAvailSpace$$1$$ = new D.$DvtChartAxis$$($chart$$23$$.$_context$, $chart$$23$$.$processEvent$, $chart$$23$$);
   $container$$65_maxWidth$$20$$.$addChild$($axis$$20_totalAvailSpace$$1$$);
   var $tickLabelGap$$ = D.$DvtChartAxisRenderer$$.$_getTickLabelGap$($chart$$23$$, "x");
-  $container$$65_maxWidth$$20$$ = $axisOffset_dataValues_isHoriz$$5$$ ? $availSpace$$53_isR2L$$3_maxHeight$$15$$.$w$ : $isStandalone$$ ? $availSpace$$53_isR2L$$3_maxHeight$$15$$.$w$ - $tickLabelGap$$ : $actualSize$$1_options$$75$$.layout.axisMaxSize * $availSpace$$53_isR2L$$3_maxHeight$$15$$.$w$;
-  $availSpace$$53_isR2L$$3_maxHeight$$15$$ = $axisOffset_dataValues_isHoriz$$5$$ ? $isStandalone$$ ? $availSpace$$53_isR2L$$3_maxHeight$$15$$.$h$ - $tickLabelGap$$ : $actualSize$$1_options$$75$$.layout.axisMaxSize * $availSpace$$53_isR2L$$3_maxHeight$$15$$.$h$ : $availSpace$$53_isR2L$$3_maxHeight$$15$$.$h$;
-  "tangential" == $position$$31$$ ? $actualSize$$1_options$$75$$ = new D.$DvtDimension$$(0, 0) : $actualSize$$1_options$$75$$._duringAnimation ? $axisOffset_dataValues_isHoriz$$5$$ ? ($actualSize$$1_options$$75$$ = new D.$DvtDimension$$($container$$65_maxWidth$$20$$, $chart$$23$$.$xAxis$.getHeight()), $availSpace$$53_isR2L$$3_maxHeight$$15$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$23$$.$_context$), $axisOptions$$._startOverflow = $availSpace$$53_isR2L$$3_maxHeight$$15$$ ? (0,D.$JSCompiler_StaticMethods_getRightOverflow$$)($chart$$23$$.$xAxis$) : 
-  (0,D.$JSCompiler_StaticMethods_getLeftOverflow$$)($chart$$23$$.$xAxis$), $axisOptions$$._endOverflow = $availSpace$$53_isR2L$$3_maxHeight$$15$$ ? (0,D.$JSCompiler_StaticMethods_getLeftOverflow$$)($chart$$23$$.$xAxis$) : (0,D.$JSCompiler_StaticMethods_getRightOverflow$$)($chart$$23$$.$xAxis$)) : $actualSize$$1_options$$75$$ = new D.$DvtDimension$$($chart$$23$$.$xAxis$.getWidth(), $availSpace$$53_isR2L$$3_maxHeight$$15$$) : $actualSize$$1_options$$75$$ = $axis$$20_totalAvailSpace$$1$$.$getPreferredSize$($axisOptions$$, 
+  $container$$65_maxWidth$$20$$ = $axisOffset_dataValues_isHoriz$$5$$ ? $availSpace$$53_isR2L$$3_maxHeight$$15$$.$w$ : $isStandalone$$ ? $availSpace$$53_isR2L$$3_maxHeight$$15$$.$w$ - $tickLabelGap$$ : $actualSize$$1_options$$76$$.layout.axisMaxSize * $availSpace$$53_isR2L$$3_maxHeight$$15$$.$w$;
+  $availSpace$$53_isR2L$$3_maxHeight$$15$$ = $axisOffset_dataValues_isHoriz$$5$$ ? $isStandalone$$ ? $availSpace$$53_isR2L$$3_maxHeight$$15$$.$h$ - $tickLabelGap$$ : $actualSize$$1_options$$76$$.layout.axisMaxSize * $availSpace$$53_isR2L$$3_maxHeight$$15$$.$h$ : $availSpace$$53_isR2L$$3_maxHeight$$15$$.$h$;
+  "tangential" == $position$$31$$ ? $actualSize$$1_options$$76$$ = new D.$DvtDimension$$(0, 0) : $actualSize$$1_options$$76$$._duringAnimation ? $axisOffset_dataValues_isHoriz$$5$$ ? ($actualSize$$1_options$$76$$ = new D.$DvtDimension$$($container$$65_maxWidth$$20$$, $chart$$23$$.$xAxis$.getHeight()), $availSpace$$53_isR2L$$3_maxHeight$$15$$ = D.$DvtAgent$$.$isRightToLeft$($chart$$23$$.$_context$), $axisOptions$$._startOverflow = $availSpace$$53_isR2L$$3_maxHeight$$15$$ ? (0,D.$JSCompiler_StaticMethods_getRightOverflow$$)($chart$$23$$.$xAxis$) : 
+  (0,D.$JSCompiler_StaticMethods_getLeftOverflow$$)($chart$$23$$.$xAxis$), $axisOptions$$._endOverflow = $availSpace$$53_isR2L$$3_maxHeight$$15$$ ? (0,D.$JSCompiler_StaticMethods_getLeftOverflow$$)($chart$$23$$.$xAxis$) : (0,D.$JSCompiler_StaticMethods_getRightOverflow$$)($chart$$23$$.$xAxis$)) : $actualSize$$1_options$$76$$ = new D.$DvtDimension$$($chart$$23$$.$xAxis$.getWidth(), $availSpace$$53_isR2L$$3_maxHeight$$15$$) : $actualSize$$1_options$$76$$ = $axis$$20_totalAvailSpace$$1$$.$getPreferredSize$($axisOptions$$, 
   $container$$65_maxWidth$$20$$, $availSpace$$53_isR2L$$3_maxHeight$$15$$);
-  return{axis:$axis$$20_totalAvailSpace$$1$$, options:$axisOptions$$, position:$position$$31$$, $dim$:$actualSize$$1_options$$75$$}
+  return{axis:$axis$$20_totalAvailSpace$$1$$, options:$axisOptions$$, position:$position$$31$$, $dim$:$actualSize$$1_options$$76$$}
 };
 D.$DvtChartAxisRenderer$$.$_createYAxis$ = function $$DvtChartAxisRenderer$$$$_createYAxis$$($actualSize$$2_chart$$24$$, $container$$66_maxWidth$$21$$, $availSpace$$54_maxHeight$$16$$) {
-  var $options$$76$$ = $actualSize$$2_chart$$24$$.$getOptions$();
+  var $options$$77$$ = $actualSize$$2_chart$$24$$.$getOptions$();
   if(D.$DvtChartTypeUtils$$.$hasY2DataOnly$($actualSize$$2_chart$$24$$)) {
     return D.$JSCompiler_alias_NULL$$
   }
-  var $position$$32$$ = D.$DvtChartAxisUtils$$.$getYAxisPosition$($actualSize$$2_chart$$24$$), $isHoriz$$6$$ = "top" == $position$$32$$ || "bottom" == $position$$32$$, $isStandalone$$1$$ = D.$DvtChartTypeUtils$$.$isStandaloneYAxis$($actualSize$$2_chart$$24$$), $axisOptions$$1$$ = D.$DvtJSONUtils$$.clone($options$$76$$.yAxis);
-  $axisOptions$$1$$.skin = $options$$76$$.skin;
+  var $position$$32$$ = D.$DvtChartAxisUtils$$.$getYAxisPosition$($actualSize$$2_chart$$24$$), $isHoriz$$6$$ = "top" == $position$$32$$ || "bottom" == $position$$32$$, $isStandalone$$1$$ = D.$DvtChartTypeUtils$$.$isStandaloneYAxis$($actualSize$$2_chart$$24$$), $axisOptions$$1$$ = D.$DvtJSONUtils$$.clone($options$$77$$.yAxis);
+  $axisOptions$$1$$.skin = $options$$77$$.skin;
   $axisOptions$$1$$.layout.gapRatio = $actualSize$$2_chart$$24$$.$getGapRatio$();
   $axisOptions$$1$$.position = $position$$32$$;
   $axisOptions$$1$$.isStandalone = $isStandalone$$1$$;
-  $axisOptions$$1$$.baselineScaling = $options$$76$$.yAxis.baselineScaling;
+  $axisOptions$$1$$.baselineScaling = $options$$77$$.yAxis.baselineScaling;
   var $axis$$21_dataValues$$1_isR2L$$4$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($actualSize$$2_chart$$24$$, "y", D.$DvtChartTypeUtils$$.$isBLAC$($actualSize$$2_chart$$24$$));
   $axisOptions$$1$$.dataMin = $axisOptions$$1$$.dataMin != D.$JSCompiler_alias_NULL$$ ? $axisOptions$$1$$.dataMin : $axis$$21_dataValues$$1_isR2L$$4$$.min;
   $axisOptions$$1$$.dataMax = $axisOptions$$1$$.dataMax != D.$JSCompiler_alias_NULL$$ ? $axisOptions$$1$$.dataMax : $axis$$21_dataValues$$1_isR2L$$4$$.max;
-  $axisOptions$$1$$.title = $options$$76$$.yAxis ? $options$$76$$.yAxis.title : D.$JSCompiler_alias_NULL$$;
+  $axisOptions$$1$$.title = $options$$77$$.yAxis ? $options$$77$$.yAxis.title : D.$JSCompiler_alias_NULL$$;
   $axisOptions$$1$$.timeAxisType = "disabled";
-  $axisOptions$$1$$.zoomAndScroll = $options$$76$$.zoomAndScroll;
-  D.$DvtChartTypeUtils$$.$isPolar$($actualSize$$2_chart$$24$$) && ($axisOptions$$1$$.polarGridShape = D.$DvtChartAxisUtils$$.$isGridPolygonal$($actualSize$$2_chart$$24$$) ? "polygon" : "circle", $axisOptions$$1$$._radius = $actualSize$$2_chart$$24$$.$getRadius$(), $axisOptions$$1$$._numGroups = D.$DvtChartDataUtils$$.$getGroupCount$($actualSize$$2_chart$$24$$), $axisOptions$$1$$.axisLine = D.$DvtJSONUtils$$.clone($options$$76$$.xAxis.axisLine));
+  $axisOptions$$1$$.zoomAndScroll = $options$$77$$.zoomAndScroll;
+  D.$DvtChartTypeUtils$$.$isPolar$($actualSize$$2_chart$$24$$) && ($axisOptions$$1$$.polarGridShape = D.$DvtChartAxisUtils$$.$isGridPolygonal$($actualSize$$2_chart$$24$$) ? "polygon" : "circle", $axisOptions$$1$$._radius = $actualSize$$2_chart$$24$$.$getRadius$(), $axisOptions$$1$$._numGroups = D.$DvtChartDataUtils$$.$getGroupCount$($actualSize$$2_chart$$24$$), $axisOptions$$1$$.axisLine = D.$DvtJSONUtils$$.clone($options$$77$$.xAxis.axisLine));
   $axisOptions$$1$$._useBaselineColor = D.$DvtChartTypeUtils$$.$isBLAC$($actualSize$$2_chart$$24$$);
   D.$DvtChartEventUtils$$.$isLiveScroll$($actualSize$$2_chart$$24$$) && (D.$DvtChartTypeUtils$$.$isBLAC$($actualSize$$2_chart$$24$$) && !D.$DvtChartTypeUtils$$.$isPolar$($actualSize$$2_chart$$24$$)) && ($axisOptions$$1$$._continuousExtent = "on");
   $isStandalone$$1$$ ? ($axisOptions$$1$$.leftBuffer = 0, $axisOptions$$1$$.rightBuffer = 0) : ($axis$$21_dataValues$$1_isR2L$$4$$ = D.$DvtAgent$$.$isRightToLeft$($actualSize$$2_chart$$24$$.$_context$), $axisOptions$$1$$.leftBuffer = $axis$$21_dataValues$$1_isR2L$$4$$ ? 0 : 10, $axisOptions$$1$$.rightBuffer = $axis$$21_dataValues$$1_isR2L$$4$$ ? 10 : 0);
@@ -4659,77 +4656,77 @@ D.$DvtChartAxisRenderer$$.$_createYAxis$ = function $$DvtChartAxisRenderer$$$$_c
   $axis$$21_dataValues$$1_isR2L$$4$$ = new D.$DvtChartAxis$$($actualSize$$2_chart$$24$$.$_context$, $actualSize$$2_chart$$24$$.$processEvent$, $actualSize$$2_chart$$24$$);
   $container$$66_maxWidth$$21$$.$addChild$($axis$$21_dataValues$$1_isR2L$$4$$);
   var $tickLabelGap$$1$$ = D.$DvtChartAxisRenderer$$.$_getTickLabelGap$($actualSize$$2_chart$$24$$, "x");
-  $container$$66_maxWidth$$21$$ = $isHoriz$$6$$ ? $availSpace$$54_maxHeight$$16$$.$w$ : $isStandalone$$1$$ ? $availSpace$$54_maxHeight$$16$$.$w$ - $tickLabelGap$$1$$ : $options$$76$$.layout.axisMaxSize * $availSpace$$54_maxHeight$$16$$.$w$;
-  $availSpace$$54_maxHeight$$16$$ = $isHoriz$$6$$ ? $isStandalone$$1$$ ? $availSpace$$54_maxHeight$$16$$.$h$ - $tickLabelGap$$1$$ : $options$$76$$.layout.axisMaxSize * $availSpace$$54_maxHeight$$16$$.$h$ : $availSpace$$54_maxHeight$$16$$.$h$;
-  $actualSize$$2_chart$$24$$ = "radial" == $position$$32$$ ? new D.$DvtDimension$$(0, 0) : $options$$76$$._duringAnimation ? $isHoriz$$6$$ ? new D.$DvtDimension$$($container$$66_maxWidth$$21$$, $actualSize$$2_chart$$24$$.$yAxis$.getHeight()) : new D.$DvtDimension$$($actualSize$$2_chart$$24$$.$yAxis$.getWidth(), $availSpace$$54_maxHeight$$16$$) : $axis$$21_dataValues$$1_isR2L$$4$$.$getPreferredSize$($axisOptions$$1$$, $container$$66_maxWidth$$21$$, $availSpace$$54_maxHeight$$16$$);
-  $options$$76$$.yAxis.min = $axisOptions$$1$$.min;
-  $options$$76$$.yAxis.max = $axisOptions$$1$$.max;
+  $container$$66_maxWidth$$21$$ = $isHoriz$$6$$ ? $availSpace$$54_maxHeight$$16$$.$w$ : $isStandalone$$1$$ ? $availSpace$$54_maxHeight$$16$$.$w$ - $tickLabelGap$$1$$ : $options$$77$$.layout.axisMaxSize * $availSpace$$54_maxHeight$$16$$.$w$;
+  $availSpace$$54_maxHeight$$16$$ = $isHoriz$$6$$ ? $isStandalone$$1$$ ? $availSpace$$54_maxHeight$$16$$.$h$ - $tickLabelGap$$1$$ : $options$$77$$.layout.axisMaxSize * $availSpace$$54_maxHeight$$16$$.$h$ : $availSpace$$54_maxHeight$$16$$.$h$;
+  $actualSize$$2_chart$$24$$ = "radial" == $position$$32$$ ? new D.$DvtDimension$$(0, 0) : $options$$77$$._duringAnimation ? $isHoriz$$6$$ ? new D.$DvtDimension$$($container$$66_maxWidth$$21$$, $actualSize$$2_chart$$24$$.$yAxis$.getHeight()) : new D.$DvtDimension$$($actualSize$$2_chart$$24$$.$yAxis$.getWidth(), $availSpace$$54_maxHeight$$16$$) : $axis$$21_dataValues$$1_isR2L$$4$$.$getPreferredSize$($axisOptions$$1$$, $container$$66_maxWidth$$21$$, $availSpace$$54_maxHeight$$16$$);
+  $options$$77$$.yAxis.min = $axisOptions$$1$$.min;
+  $options$$77$$.yAxis.max = $axisOptions$$1$$.max;
   return{axis:$axis$$21_dataValues$$1_isR2L$$4$$, options:$axisOptions$$1$$, position:$position$$32$$, $dim$:$actualSize$$2_chart$$24$$}
 };
 D.$DvtChartAxisRenderer$$.$_createY2Axis$ = function $$DvtChartAxisRenderer$$$$_createY2Axis$$($actualSize$$3_chart$$25$$, $container$$67_maxWidth$$22$$, $availSpace$$55_maxHeight$$17$$) {
-  var $options$$77$$ = $actualSize$$3_chart$$25$$.$getOptions$();
+  var $options$$78$$ = $actualSize$$3_chart$$25$$.$getOptions$();
   if(D.$DvtChartTypeUtils$$.$hasY2Data$($actualSize$$3_chart$$25$$)) {
-    var $position$$33$$ = D.$DvtChartAxisUtils$$.$getY2AxisPosition$($actualSize$$3_chart$$25$$), $isHoriz$$7$$ = "top" == $position$$33$$ || "bottom" == $position$$33$$, $isStandalone$$2$$ = D.$DvtChartTypeUtils$$.$isStandaloneY2Axis$($actualSize$$3_chart$$25$$), $axisOptions$$2$$ = D.$DvtJSONUtils$$.clone($options$$77$$.y2Axis);
-    $axisOptions$$2$$.skin = $options$$77$$.skin;
+    var $position$$33$$ = D.$DvtChartAxisUtils$$.$getY2AxisPosition$($actualSize$$3_chart$$25$$), $isHoriz$$7$$ = "top" == $position$$33$$ || "bottom" == $position$$33$$, $isStandalone$$2$$ = D.$DvtChartTypeUtils$$.$isStandaloneY2Axis$($actualSize$$3_chart$$25$$), $axisOptions$$2$$ = D.$DvtJSONUtils$$.clone($options$$78$$.y2Axis);
+    $axisOptions$$2$$.skin = $options$$78$$.skin;
     $axisOptions$$2$$.layout.gapRatio = $actualSize$$3_chart$$25$$.$getGapRatio$();
     $axisOptions$$2$$.position = $position$$33$$;
     $axisOptions$$2$$.isStandalone = $isStandalone$$2$$;
-    $axisOptions$$2$$.baselineScaling = $options$$77$$.y2Axis.baselineScaling;
+    $axisOptions$$2$$.baselineScaling = $options$$78$$.y2Axis.baselineScaling;
     var $axis$$22_dataValues$$2_isR2L$$5$$ = D.$DvtChartDataUtils$$.$getMinMaxValue$($actualSize$$3_chart$$25$$, "y2", D.$DvtChartTypeUtils$$.$isBLAC$($actualSize$$3_chart$$25$$));
     $axisOptions$$2$$.dataMin = $axisOptions$$2$$.dataMin != D.$JSCompiler_alias_NULL$$ ? $axisOptions$$2$$.dataMin : $axis$$22_dataValues$$2_isR2L$$5$$.min;
     $axisOptions$$2$$.dataMax = $axisOptions$$2$$.dataMax != D.$JSCompiler_alias_NULL$$ ? $axisOptions$$2$$.dataMax : $axis$$22_dataValues$$2_isR2L$$5$$.max;
-    $axisOptions$$2$$.title = $options$$77$$.y2Axis ? $options$$77$$.y2Axis.title : D.$JSCompiler_alias_NULL$$;
+    $axisOptions$$2$$.title = $options$$78$$.y2Axis ? $options$$78$$.y2Axis.title : D.$JSCompiler_alias_NULL$$;
     $axisOptions$$2$$.timeAxisType = "disabled";
-    $axisOptions$$2$$.zoomAndScroll = $options$$77$$.zoomAndScroll;
+    $axisOptions$$2$$.zoomAndScroll = $options$$78$$.zoomAndScroll;
     D.$DvtChartEventUtils$$.$isLiveScroll$($actualSize$$3_chart$$25$$) && (D.$DvtChartTypeUtils$$.$isBLAC$($actualSize$$3_chart$$25$$) && !D.$DvtChartTypeUtils$$.$isPolar$($actualSize$$3_chart$$25$$)) && ($axisOptions$$2$$._continuousExtent = "on");
     $isStandalone$$2$$ ? ($axisOptions$$2$$.leftBuffer = 0, $axisOptions$$2$$.rightBuffer = 0) : ($axis$$22_dataValues$$2_isR2L$$5$$ = D.$DvtAgent$$.$isRightToLeft$($actualSize$$3_chart$$25$$.$_context$), $axisOptions$$2$$.leftBuffer = $axis$$22_dataValues$$2_isR2L$$5$$ ? 0 : 10, $axisOptions$$2$$.rightBuffer = $axis$$22_dataValues$$2_isR2L$$5$$ ? 10 : 0);
     $axisOptions$$2$$._alwaysAlignRight = D.$JSCompiler_alias_TRUE$$;
     $axis$$22_dataValues$$2_isR2L$$5$$ = new D.$DvtChartAxis$$($actualSize$$3_chart$$25$$.$_context$, $actualSize$$3_chart$$25$$.$processEvent$, $actualSize$$3_chart$$25$$);
     $container$$67_maxWidth$$22$$.$addChild$($axis$$22_dataValues$$2_isR2L$$5$$);
     var $tickLabelGap$$2$$ = D.$DvtChartAxisRenderer$$.$_getTickLabelGap$($actualSize$$3_chart$$25$$, "x");
-    $container$$67_maxWidth$$22$$ = $isHoriz$$7$$ ? $availSpace$$55_maxHeight$$17$$.$w$ : $isStandalone$$2$$ ? $availSpace$$55_maxHeight$$17$$.$w$ - $tickLabelGap$$2$$ : $options$$77$$.layout.axisMaxSize * $availSpace$$55_maxHeight$$17$$.$w$;
-    $availSpace$$55_maxHeight$$17$$ = $isHoriz$$7$$ ? $isStandalone$$2$$ ? $availSpace$$55_maxHeight$$17$$.$h$ - $tickLabelGap$$2$$ : $options$$77$$.layout.axisMaxSize * $availSpace$$55_maxHeight$$17$$.$h$ : $availSpace$$55_maxHeight$$17$$.$h$;
-    $actualSize$$3_chart$$25$$ = $options$$77$$._duringAnimation ? $isHoriz$$7$$ ? new D.$DvtDimension$$($container$$67_maxWidth$$22$$, $actualSize$$3_chart$$25$$.$y2Axis$.getHeight()) : new D.$DvtDimension$$($actualSize$$3_chart$$25$$.$y2Axis$.getWidth(), $availSpace$$55_maxHeight$$17$$) : $axis$$22_dataValues$$2_isR2L$$5$$.$getPreferredSize$($axisOptions$$2$$, $container$$67_maxWidth$$22$$, $availSpace$$55_maxHeight$$17$$);
-    $options$$77$$.y2Axis.min = $axisOptions$$2$$.min;
-    $options$$77$$.y2Axis.max = $axisOptions$$2$$.max;
+    $container$$67_maxWidth$$22$$ = $isHoriz$$7$$ ? $availSpace$$55_maxHeight$$17$$.$w$ : $isStandalone$$2$$ ? $availSpace$$55_maxHeight$$17$$.$w$ - $tickLabelGap$$2$$ : $options$$78$$.layout.axisMaxSize * $availSpace$$55_maxHeight$$17$$.$w$;
+    $availSpace$$55_maxHeight$$17$$ = $isHoriz$$7$$ ? $isStandalone$$2$$ ? $availSpace$$55_maxHeight$$17$$.$h$ - $tickLabelGap$$2$$ : $options$$78$$.layout.axisMaxSize * $availSpace$$55_maxHeight$$17$$.$h$ : $availSpace$$55_maxHeight$$17$$.$h$;
+    $actualSize$$3_chart$$25$$ = $options$$78$$._duringAnimation ? $isHoriz$$7$$ ? new D.$DvtDimension$$($container$$67_maxWidth$$22$$, $actualSize$$3_chart$$25$$.$y2Axis$.getHeight()) : new D.$DvtDimension$$($actualSize$$3_chart$$25$$.$y2Axis$.getWidth(), $availSpace$$55_maxHeight$$17$$) : $axis$$22_dataValues$$2_isR2L$$5$$.$getPreferredSize$($axisOptions$$2$$, $container$$67_maxWidth$$22$$, $availSpace$$55_maxHeight$$17$$);
+    $options$$78$$.y2Axis.min = $axisOptions$$2$$.min;
+    $options$$78$$.y2Axis.max = $axisOptions$$2$$.max;
     return{axis:$axis$$22_dataValues$$2_isR2L$$5$$, options:$axisOptions$$2$$, position:$position$$33$$, $dim$:$actualSize$$3_chart$$25$$}
   }
 };
-D.$DvtChartAxisRenderer$$.$_alignYAxes$ = function $$DvtChartAxisRenderer$$$$_alignYAxes$$($minorTickCount_yAxis$$, $y2Axis$$, $options$$78$$, $y2AxisOptions$$) {
+D.$DvtChartAxisRenderer$$.$_alignYAxes$ = function $$DvtChartAxisRenderer$$$$_alignYAxes$$($minorTickCount_yAxis$$, $y2Axis$$, $options$$79$$, $y2AxisOptions$$) {
   var $majorTickCount$$ = $minorTickCount_yAxis$$.$getMajorTickCount$();
   $minorTickCount_yAxis$$ = $minorTickCount_yAxis$$.$getMinorTickCount$();
-  "on" == $options$$78$$.y2Axis.alignTickMarks && $options$$78$$.y2Axis.step == D.$JSCompiler_alias_NULL$$ && ($y2Axis$$.$setMajorTickCount$($majorTickCount$$), $y2Axis$$.$setMinorTickCount$($minorTickCount_yAxis$$), $y2AxisOptions$$.step = $y2Axis$$.$getMajorIncrement$(), $y2AxisOptions$$.minorStep = $y2Axis$$.$getMinorIncrement$())
+  "on" == $options$$79$$.y2Axis.alignTickMarks && $options$$79$$.y2Axis.step == D.$JSCompiler_alias_NULL$$ && ($y2Axis$$.$setMajorTickCount$($majorTickCount$$), $y2Axis$$.$setMinorTickCount$($minorTickCount_yAxis$$), $y2AxisOptions$$.step = $y2Axis$$.$getMajorIncrement$(), $y2AxisOptions$$.minorStep = $y2Axis$$.$getMinorIncrement$())
 };
-D.$DvtChartAxisRenderer$$.$_positionAxis$ = function $$DvtChartAxisRenderer$$$$_positionAxis$$($availSpace$$56_bounds$$79$$, $axisInfo$$1_shiftedPos$$, $gap$$10$$) {
+D.$DvtChartAxisRenderer$$.$_positionAxis$ = function $$DvtChartAxisRenderer$$$$_positionAxis$$($availSpace$$56_bounds$$79$$, $axisInfo$$1_shiftedPos$$, $gap$$9$$) {
   if($axisInfo$$1_shiftedPos$$) {
     if($axisInfo$$1_shiftedPos$$.options.isStandalone) {
-      var $excessHeight$$ = $availSpace$$56_bounds$$79$$.$h$ - $axisInfo$$1_shiftedPos$$.$dim$.$h$ - $gap$$10$$, $excessWidth$$ = $availSpace$$56_bounds$$79$$.$w$ - $axisInfo$$1_shiftedPos$$.$dim$.$w$ - $gap$$10$$;
+      var $excessHeight$$ = $availSpace$$56_bounds$$79$$.$h$ - $axisInfo$$1_shiftedPos$$.$dim$.$h$ - $gap$$9$$, $excessWidth$$ = $availSpace$$56_bounds$$79$$.$w$ - $axisInfo$$1_shiftedPos$$.$dim$.$w$ - $gap$$9$$;
       "top" == $axisInfo$$1_shiftedPos$$.position ? ($availSpace$$56_bounds$$79$$.y += $excessHeight$$, $availSpace$$56_bounds$$79$$.$h$ -= $excessHeight$$) : "bottom" == $axisInfo$$1_shiftedPos$$.position ? $availSpace$$56_bounds$$79$$.$h$ -= $excessHeight$$ : "left" == $axisInfo$$1_shiftedPos$$.position ? ($availSpace$$56_bounds$$79$$.x += $excessWidth$$, $availSpace$$56_bounds$$79$$.$w$ -= $excessWidth$$) : "right" == $axisInfo$$1_shiftedPos$$.position && ($availSpace$$56_bounds$$79$$.$w$ -= $excessWidth$$)
     }
-    (0,D.$DvtLayoutUtils$position$$)($availSpace$$56_bounds$$79$$, $axisInfo$$1_shiftedPos$$.position, $axisInfo$$1_shiftedPos$$.axis, $axisInfo$$1_shiftedPos$$.$dim$.$w$, $axisInfo$$1_shiftedPos$$.$dim$.$h$, $gap$$10$$);
+    (0,D.$DvtLayoutUtils$position$$)($availSpace$$56_bounds$$79$$, $axisInfo$$1_shiftedPos$$.position, $axisInfo$$1_shiftedPos$$.axis, $axisInfo$$1_shiftedPos$$.$dim$.$w$, $axisInfo$$1_shiftedPos$$.$dim$.$h$, $gap$$9$$);
     if($availSpace$$56_bounds$$79$$ = $axisInfo$$1_shiftedPos$$.axis.$_bounds$) {
       $axisInfo$$1_shiftedPos$$ = (0,D.$JSCompiler_StaticMethods_localToStage$$)($axisInfo$$1_shiftedPos$$.axis, new D.$DvtPoint$$($availSpace$$56_bounds$$79$$.x, $availSpace$$56_bounds$$79$$.y)), $availSpace$$56_bounds$$79$$.x = $axisInfo$$1_shiftedPos$$.x, $availSpace$$56_bounds$$79$$.y = $axisInfo$$1_shiftedPos$$.y
     }
   }
 };
 D.$DvtChartAxisRenderer$$.$_getTickLabelGap$ = function $$DvtChartAxisRenderer$$$$_getTickLabelGap$$($chart$$26$$, $type$$166$$) {
-  var $gapHeight$$2_options$$79$$ = $chart$$26$$.$getOptions$(), $isHorizGraph$$1$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$26$$), $scalingFactor$$ = D.$DvtChartAxisRenderer$$.$_getGapScalingFactor$($chart$$26$$, $type$$166$$), $gapWidth$$2$$ = $gapHeight$$2_options$$79$$.layout.tickLabelGapWidth * $scalingFactor$$, $gapHeight$$2_options$$79$$ = $gapHeight$$2_options$$79$$.layout.tickLabelGapHeight * $scalingFactor$$;
-  return"x" == $type$$166$$ ? D.$DvtChartAxisUtils$$.$isAxisRendered$($chart$$26$$, "x") ? $isHorizGraph$$1$$ ? $gapWidth$$2$$ : $gapHeight$$2_options$$79$$ : 0 : "y" == $type$$166$$ ? D.$DvtChartAxisUtils$$.$isAxisRendered$($chart$$26$$, "y") ? $isHorizGraph$$1$$ ? $gapHeight$$2_options$$79$$ : $gapWidth$$2$$ : 0 : D.$DvtChartAxisUtils$$.$isAxisRendered$($chart$$26$$, "y2") ? $isHorizGraph$$1$$ ? $gapHeight$$2_options$$79$$ : $gapWidth$$2$$ : 0
+  var $gapHeight$$2_options$$80$$ = $chart$$26$$.$getOptions$(), $isHorizGraph$$1$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$26$$), $scalingFactor$$ = D.$DvtChartAxisRenderer$$.$_getGapScalingFactor$($chart$$26$$, $type$$166$$), $gapWidth$$2$$ = $gapHeight$$2_options$$80$$.layout.tickLabelGapWidth * $scalingFactor$$, $gapHeight$$2_options$$80$$ = $gapHeight$$2_options$$80$$.layout.tickLabelGapHeight * $scalingFactor$$;
+  return"x" == $type$$166$$ ? D.$DvtChartAxisUtils$$.$isAxisRendered$($chart$$26$$, "x") ? $isHorizGraph$$1$$ ? $gapWidth$$2$$ : $gapHeight$$2_options$$80$$ : 0 : "y" == $type$$166$$ ? D.$DvtChartAxisUtils$$.$isAxisRendered$($chart$$26$$, "y") ? $isHorizGraph$$1$$ ? $gapHeight$$2_options$$80$$ : $gapWidth$$2$$ : 0 : D.$DvtChartAxisUtils$$.$isAxisRendered$($chart$$26$$, "y2") ? $isHorizGraph$$1$$ ? $gapHeight$$2_options$$80$$ : $gapWidth$$2$$ : 0
 };
 D.$DvtChartAxisRenderer$$.$_getGapScalingFactor$ = function $$DvtChartAxisRenderer$$$$_getGapScalingFactor$$($chart$$27$$, $type$$167$$) {
-  var $options$$80$$ = $chart$$27$$.$getOptions$(), $tickLabelStyle$$ = ("x" == $type$$167$$ ? $options$$80$$.xAxis : "y" == $type$$167$$ ? $options$$80$$.yAxis : $options$$80$$.y2Axis).tickLabel.style;
+  var $options$$81$$ = $chart$$27$$.$getOptions$(), $tickLabelStyle$$ = ("x" == $type$$167$$ ? $options$$81$$.xAxis : "y" == $type$$167$$ ? $options$$81$$.yAxis : $options$$81$$.y2Axis).tickLabel.style;
   $tickLabelStyle$$ instanceof D.$DvtCSSStyle$$ || ($tickLabelStyle$$ = new D.$DvtCSSStyle$$($tickLabelStyle$$));
-  (0,D.$JSCompiler_StaticMethods_mergeUnder$$)($tickLabelStyle$$, (0,D.$DvtAxis$getDefaults$$)($options$$80$$.skin).tickLabel.style);
+  (0,D.$JSCompiler_StaticMethods_mergeUnder$$)($tickLabelStyle$$, (0,D.$DvtAxis$getDefaults$$)($options$$81$$.skin).tickLabel.style);
   return(0,window.parseInt)($tickLabelStyle$$.$getStyle$("font-size")) / 11
 };
 D.$DvtChartLegendRenderer$$ = {};
 D.$DvtObj$$.$createSubclass$(D.$DvtChartLegendRenderer$$, D.$DvtObj$$, "DvtChartLegendRenderer");
 D.$DvtChartLegendRenderer$$.$render$ = function $$DvtChartLegendRenderer$$$$render$$($chart$$57$$, $container$$89$$, $availSpace$$79_bounds$$80$$) {
-  var $gap$$11_options$$88$$ = $chart$$57$$.$getOptions$(), $position$$40_shiftedPos$$1$$ = $gap$$11_options$$88$$.legend.position, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ = $gap$$11_options$$88$$.legend.scrolling;
-  if("on" == $gap$$11_options$$88$$.legend.rendered) {
-    var $legendOptions$$6$$ = D.$DvtJSONUtils$$.clone($gap$$11_options$$88$$.legend);
+  var $gap$$10_options$$89$$ = $chart$$57$$.$getOptions$(), $position$$40_shiftedPos$$1$$ = $gap$$10_options$$89$$.legend.position, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ = $gap$$10_options$$89$$.legend.scrolling;
+  if("on" == $gap$$10_options$$89$$.legend.rendered) {
+    var $legendOptions$$6$$ = D.$DvtJSONUtils$$.clone($gap$$10_options$$89$$.legend);
     delete $legendOptions$$6$$.position;
-    $legendOptions$$6$$.skin = $gap$$11_options$$88$$.skin;
+    $legendOptions$$6$$.skin = $gap$$10_options$$89$$.skin;
     $legendOptions$$6$$.layout.gapRatio = $chart$$57$$.$getGapRatio$();
     $legendOptions$$6$$.hideAndShowBehavior = D.$DvtChartEventUtils$$.$getHideAndShowBehavior$($chart$$57$$);
     $legendOptions$$6$$.hoverBehavior = D.$DvtChartEventUtils$$.$getHoverBehavior$($chart$$57$$);
@@ -4743,10 +4740,10 @@ D.$DvtChartLegendRenderer$$.$render$ = function $$DvtChartLegendRenderer$$$$rend
       "start" == $position$$40_shiftedPos$$1$$ ? $position$$40_shiftedPos$$1$$ = $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ ? "right" : "left" : "end" == $position$$40_shiftedPos$$1$$ && ($position$$40_shiftedPos$$1$$ = $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ ? "left" : "right");
       $legendOptions$$6$$.orientation = "left" == $position$$40_shiftedPos$$1$$ || "right" == $position$$40_shiftedPos$$1$$ ? "vertical" : "horizontal";
       $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ = "top" == $position$$40_shiftedPos$$1$$ || "bottom" == $position$$40_shiftedPos$$1$$;
-      $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ = $legend$$29$$.$getPreferredSize$($legendOptions$$6$$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ ? $availSpace$$79_bounds$$80$$.$w$ : $gap$$11_options$$88$$.layout.legendMaxSize * $availSpace$$79_bounds$$80$$.$w$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ ? $gap$$11_options$$88$$.layout.legendMaxSize * $availSpace$$79_bounds$$80$$.$h$ : $availSpace$$79_bounds$$80$$.$h$);
+      $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ = $legend$$29$$.$getPreferredSize$($legendOptions$$6$$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ ? $availSpace$$79_bounds$$80$$.$w$ : $gap$$10_options$$89$$.layout.legendMaxSize * $availSpace$$79_bounds$$80$$.$w$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$ ? $gap$$10_options$$89$$.layout.legendMaxSize * $availSpace$$79_bounds$$80$$.$h$ : $availSpace$$79_bounds$$80$$.$h$);
       $legend$$29$$.$render$($legendOptions$$6$$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$.$w$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$.$h$);
-      $gap$$11_options$$88$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$57$$, $gap$$11_options$$88$$.layout.legendGap);
-      (0,D.$DvtLayoutUtils$position$$)($availSpace$$79_bounds$$80$$, $position$$40_shiftedPos$$1$$, $legend$$29$$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$.$w$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$.$h$, $gap$$11_options$$88$$);
+      $gap$$10_options$$89$$ = (0,D.$DvtChartDefaults$getGapSize$$)($chart$$57$$, $gap$$10_options$$89$$.layout.legendGap);
+      (0,D.$DvtLayoutUtils$position$$)($availSpace$$79_bounds$$80$$, $position$$40_shiftedPos$$1$$, $legend$$29$$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$.$w$, $actualSize$$4_isHoriz$$8_isRTL$$7_scrolling$$1$$.$h$, $gap$$10_options$$89$$);
       $availSpace$$79_bounds$$80$$ = $legend$$29$$.$_bounds$;
       $position$$40_shiftedPos$$1$$ = (0,D.$JSCompiler_StaticMethods_localToStage$$)($legend$$29$$, new D.$DvtPoint$$($availSpace$$79_bounds$$80$$.x, $availSpace$$79_bounds$$80$$.y));
       $availSpace$$79_bounds$$80$$.x = $position$$40_shiftedPos$$1$$.x;
@@ -4770,8 +4767,8 @@ D.$DvtChartLegendRenderer$$.$_addLegendData$ = function $$DvtChartLegendRenderer
 D.$DvtChartLegendRenderer$$.$_getSeriesItems$ = function $$DvtChartLegendRenderer$$$$_getSeriesItems$$($chart$$59$$) {
   var $ret$$51$$ = [], $legendItem$$1$$;
   if("pie" == $chart$$59$$.$getType$()) {
-    for(var $seriesCount$$11_seriesIndices$$1$$ = D.$DvtPieChartUtils$$.$getRenderedSeriesIndices$($chart$$59$$), $seriesIndex$$15$$, $i$$482$$ = 0;$i$$482$$ < $seriesCount$$11_seriesIndices$$1$$.length;$i$$482$$++) {
-      $seriesIndex$$15$$ = $seriesCount$$11_seriesIndices$$1$$[$i$$482$$], ($legendItem$$1$$ = D.$DvtChartLegendRenderer$$.$_createLegendItem$($chart$$59$$, $seriesIndex$$15$$)) && $ret$$51$$.push($legendItem$$1$$)
+    for(var $seriesCount$$11_seriesIndices$$1$$ = D.$DvtPieChartUtils$$.$getRenderedSeriesIndices$($chart$$59$$), $seriesIndex$$15$$, $i$$478$$ = 0;$i$$478$$ < $seriesCount$$11_seriesIndices$$1$$.length;$i$$478$$++) {
+      $seriesIndex$$15$$ = $seriesCount$$11_seriesIndices$$1$$[$i$$478$$], ($legendItem$$1$$ = D.$DvtChartLegendRenderer$$.$_createLegendItem$($chart$$59$$, $seriesIndex$$15$$)) && $ret$$51$$.push($legendItem$$1$$)
     }
     D.$DvtPieChartUtils$$.$hasOtherSeries$($chart$$59$$) && ($legendItem$$1$$ = {id:D.$DvtPieChartUtils$$.$OTHER_SLICE_SERIES_ID$, text:(0,D.$JSCompiler_StaticMethods_getTranslatedString$$)($chart$$59$$.$Bundle$, "LABEL_OTHER", D.$JSCompiler_alias_NULL$$), categoryVisibility:D.$DvtPieChartUtils$$.$getOtherSliceVisibility$($chart$$59$$), type:"marker", color:$chart$$59$$.$getOptions$().styleDefaults.otherColor, borderColor:$chart$$59$$.$getOptions$().styleDefaults.borderColor}, $ret$$51$$.push($legendItem$$1$$))
   }else {
@@ -4804,10 +4801,10 @@ D.$DvtChartLegendRenderer$$.$_createLegendItem$ = function $$DvtChartLegendRende
   return $legendItem$$2_seriesLabel$$1$$
 };
 D.$DvtChartLegendRenderer$$.$_addLegendSections$ = function $$DvtChartLegendRenderer$$$$_addLegendSections$$($chart$$61$$, $sections$$3$$) {
-  var $options$$89$$ = $chart$$61$$.$getOptions$();
-  if($options$$89$$ && $options$$89$$.legend && $options$$89$$.legend.sections) {
-    for(var $i$$483$$ = 0;$i$$483$$ < $options$$89$$.legend.sections.length;$i$$483$$++) {
-      var $dataSection$$1$$ = $options$$89$$.legend.sections[$i$$483$$];
+  var $options$$90$$ = $chart$$61$$.$getOptions$();
+  if($options$$90$$ && $options$$90$$.legend && $options$$90$$.legend.sections) {
+    for(var $i$$479$$ = 0;$i$$479$$ < $options$$90$$.legend.sections.length;$i$$479$$++) {
+      var $dataSection$$1$$ = $options$$90$$.legend.sections[$i$$479$$];
       $dataSection$$1$$ && $dataSection$$1$$.items && $sections$$3$$.push({title:$dataSection$$1$$.title, items:$dataSection$$1$$.items})
     }
   }
@@ -4817,8 +4814,8 @@ D.$DvtChartLegendRenderer$$.$_getRefObjItems$ = function $$DvtChartLegendRendere
   if(0 >= $chart$$62_refObjs$$.length) {
     return[]
   }
-  for(var $items$$6$$ = [], $i$$484$$ = 0;$i$$484$$ < $chart$$62_refObjs$$.length;$i$$484$$++) {
-    var $refObj$$3$$ = $chart$$62_refObjs$$[$i$$484$$];
+  for(var $items$$6$$ = [], $i$$480$$ = 0;$i$$480$$ < $chart$$62_refObjs$$.length;$i$$480$$++) {
+    var $refObj$$3$$ = $chart$$62_refObjs$$[$i$$480$$];
     if($refObj$$3$$ && "on" == $refObj$$3$$.displayInLegend && $refObj$$3$$.text) {
       var $type$$169$$ = D.$DvtChartRefObjUtils$$.$getType$($refObj$$3$$);
       $items$$6$$.push({type:"area" == $type$$169$$ ? "square" : "line", text:$refObj$$3$$.text, color:D.$DvtChartRefObjUtils$$.$getColor$($refObj$$3$$), lineStyle:$refObj$$3$$.lineStyle, lineWidth:D.$DvtChartRefObjUtils$$.$getLineWidth$($refObj$$3$$)})
@@ -4836,43 +4833,43 @@ D.$DvtPlotAreaRenderer$$.$render$ = function $$DvtPlotAreaRenderer$$$$render$$($
   $availSpace$$60$$), D.$DvtPlotAreaRenderer$$.$_renderForegroundObjects$($chart$$38$$, $container$$74$$, $availSpace$$60$$))
 };
 D.$DvtPlotAreaRenderer$$.$_renderBackgroundObjects$ = function $$DvtPlotAreaRenderer$$$$_renderBackgroundObjects$$($chart$$39$$, $container$$75$$, $availSpace$$61$$) {
-  var $areaContainer_options$$82$$ = $chart$$39$$.$getOptions$(), $background$$9_cx$$33_points$$38$$, $context$$539$$ = $chart$$39$$.$_context$;
+  var $areaContainer_options$$83$$ = $chart$$39$$.$getOptions$(), $background$$9_cx$$33_points$$38$$, $context$$533$$ = $chart$$39$$.$_context$;
   if(D.$DvtChartTypeUtils$$.$isPolar$($chart$$39$$)) {
     $background$$9_cx$$33_points$$38$$ = $availSpace$$61$$.x + $availSpace$$61$$.$w$ / 2;
     var $cy$$34$$ = $availSpace$$61$$.y + $availSpace$$61$$.$h$ / 2;
-    D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$39$$) ? ($background$$9_cx$$33_points$$38$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($background$$9_cx$$33_points$$38$$, $cy$$34$$, D.$DvtChartDataUtils$$.$getGroupCount$($chart$$39$$), $chart$$39$$.$getRadius$()), $background$$9_cx$$33_points$$38$$ = new D.$DvtPolygon$$($context$$539$$, $background$$9_cx$$33_points$$38$$)) : $background$$9_cx$$33_points$$38$$ = new D.$DvtCircle$$($context$$539$$, $background$$9_cx$$33_points$$38$$, $cy$$34$$, 
+    D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$39$$) ? ($background$$9_cx$$33_points$$38$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($background$$9_cx$$33_points$$38$$, $cy$$34$$, D.$DvtChartDataUtils$$.$getGroupCount$($chart$$39$$), $chart$$39$$.$getRadius$()), $background$$9_cx$$33_points$$38$$ = new D.$DvtPolygon$$($context$$533$$, $background$$9_cx$$33_points$$38$$)) : $background$$9_cx$$33_points$$38$$ = new D.$DvtCircle$$($context$$533$$, $background$$9_cx$$33_points$$38$$, $cy$$34$$, 
     $chart$$39$$.$getRadius$())
   }else {
-    $background$$9_cx$$33_points$$38$$ = new D.$DvtRect$$($context$$539$$, $availSpace$$61$$.x, $availSpace$$61$$.y, $availSpace$$61$$.$w$, $availSpace$$61$$.$h$)
+    $background$$9_cx$$33_points$$38$$ = new D.$DvtRect$$($context$$533$$, $availSpace$$61$$.x, $availSpace$$61$$.y, $availSpace$$61$$.$w$, $availSpace$$61$$.$h$)
   }
-  $areaContainer_options$$82$$.plotArea.backgroundColor ? $background$$9_cx$$33_points$$38$$.$setSolidFill$($areaContainer_options$$82$$.plotArea.backgroundColor) : (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($background$$9_cx$$33_points$$38$$);
+  $areaContainer_options$$83$$.plotArea.backgroundColor ? $background$$9_cx$$33_points$$38$$.$setSolidFill$($areaContainer_options$$83$$.plotArea.backgroundColor) : (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($background$$9_cx$$33_points$$38$$);
   $container$$75$$.$addChild$($background$$9_cx$$33_points$$38$$);
   $chart$$39$$.$getEventManager$().$associate$($background$$9_cx$$33_points$$38$$, new D.$DvtSimpleObjPeer$$(D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, D.$JSCompiler_alias_NULL$$, (0,D.$DvtChartEventManager$getUIEventParams$$)(D.$DvtChartConstants$$.$PLOT_AREA$)));
-  if($areaContainer_options$$82$$.xAxis.referenceObjects || $areaContainer_options$$82$$.yAxis.referenceObjects || $areaContainer_options$$82$$.y2Axis.referenceObjects) {
+  if($areaContainer_options$$83$$.xAxis.referenceObjects || $areaContainer_options$$83$$.yAxis.referenceObjects || $areaContainer_options$$83$$.y2Axis.referenceObjects) {
     window.clipGroup = D.$DvtPlotAreaRenderer$$.$createClippedGroup$($chart$$39$$, $container$$75$$, $availSpace$$61$$), D.$DvtRefObjRenderer$$.$renderBackgroundObjects$($chart$$39$$, $availSpace$$61$$)
   }
   if(D.$DvtChartTypeUtils$$.$isArea$($chart$$39$$) || D.$DvtChartTypeUtils$$.$isCombo$($chart$$39$$)) {
-    $areaContainer_options$$82$$ = new D.$DvtContainer$$($context$$539$$), $container$$75$$.$addChild$($areaContainer_options$$82$$), D.$DvtPlotAreaRenderer$$.$_renderAreas$($chart$$39$$, $areaContainer_options$$82$$, $availSpace$$61$$), $chart$$39$$.$_areaContainer$ = $areaContainer_options$$82$$
+    $areaContainer_options$$83$$ = new D.$DvtContainer$$($context$$533$$), $container$$75$$.$addChild$($areaContainer_options$$83$$), D.$DvtPlotAreaRenderer$$.$_renderAreas$($chart$$39$$, $areaContainer_options$$83$$, $availSpace$$61$$), $chart$$39$$.$_areaContainer$ = $areaContainer_options$$83$$
   }
 };
 D.$DvtPlotAreaRenderer$$.$_renderGridLines$ = function $$DvtPlotAreaRenderer$$$$_renderGridLines$$($chart$$40$$, $container$$76$$, $availSpace$$62$$) {
-  var $context$$540$$ = $container$$76$$.$_context$, $options$$83_renderY2Axis$$ = $chart$$40$$.$getOptions$(), $renderXAxis$$ = $chart$$40$$.$xAxis$ && "off" != $options$$83_renderY2Axis$$.xAxis.rendered, $renderYAxis$$ = $chart$$40$$.$yAxis$ && "off" != $options$$83_renderY2Axis$$.yAxis.rendered, $options$$83_renderY2Axis$$ = $chart$$40$$.$y2Axis$ && "off" != $options$$83_renderY2Axis$$.y2Axis.rendered;
-  $renderXAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$xAxis$, $chart$$40$$.$xAxis$.$getMinorGridLines$($context$$540$$));
-  $renderYAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$yAxis$, $chart$$40$$.$yAxis$.$getMinorGridLines$($context$$540$$));
-  $options$$83_renderY2Axis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$y2Axis$, $chart$$40$$.$y2Axis$.$getMinorGridLines$($context$$540$$));
-  $renderXAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$xAxis$, $chart$$40$$.$xAxis$.$getMajorGridLines$($context$$540$$));
-  $renderYAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$yAxis$, $chart$$40$$.$yAxis$.$getMajorGridLines$($context$$540$$));
-  $options$$83_renderY2Axis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$y2Axis$, $chart$$40$$.$y2Axis$.$getMajorGridLines$($context$$540$$))
+  var $context$$534$$ = $container$$76$$.$_context$, $options$$84_renderY2Axis$$ = $chart$$40$$.$getOptions$(), $renderXAxis$$ = $chart$$40$$.$xAxis$ && "off" != $options$$84_renderY2Axis$$.xAxis.rendered, $renderYAxis$$ = $chart$$40$$.$yAxis$ && "off" != $options$$84_renderY2Axis$$.yAxis.rendered, $options$$84_renderY2Axis$$ = $chart$$40$$.$y2Axis$ && "off" != $options$$84_renderY2Axis$$.y2Axis.rendered;
+  $renderXAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$xAxis$, $chart$$40$$.$xAxis$.$getMinorGridLines$($context$$534$$));
+  $renderYAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$yAxis$, $chart$$40$$.$yAxis$.$getMinorGridLines$($context$$534$$));
+  $options$$84_renderY2Axis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$y2Axis$, $chart$$40$$.$y2Axis$.$getMinorGridLines$($context$$534$$));
+  $renderXAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$xAxis$, $chart$$40$$.$xAxis$.$getMajorGridLines$($context$$534$$));
+  $renderYAxis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$yAxis$, $chart$$40$$.$yAxis$.$getMajorGridLines$($context$$534$$));
+  $options$$84_renderY2Axis$$ && D.$DvtPlotAreaRenderer$$.$_positionGridLines$($container$$76$$, $availSpace$$62$$, $chart$$40$$.$y2Axis$, $chart$$40$$.$y2Axis$.$getMajorGridLines$($context$$534$$))
 };
 D.$DvtPlotAreaRenderer$$.$_renderAxisLines$ = function $$DvtPlotAreaRenderer$$$$_renderAxisLines$$($chart$$41$$, $container$$77$$, $availSpace$$63$$) {
-  var $options$$84_renderY2Axis$$1$$ = $chart$$41$$.$getOptions$(), $renderXAxis$$1$$ = $chart$$41$$.$xAxis$ && "off" != $options$$84_renderY2Axis$$1$$.xAxis.rendered, $renderYAxis$$1$$ = $chart$$41$$.$yAxis$ && "off" != $options$$84_renderY2Axis$$1$$.yAxis.rendered, $options$$84_renderY2Axis$$1$$ = $chart$$41$$.$y2Axis$ && "off" != $options$$84_renderY2Axis$$1$$.y2Axis.rendered, $isPolar$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$41$$);
+  var $options$$85_renderY2Axis$$1$$ = $chart$$41$$.$getOptions$(), $renderXAxis$$1$$ = $chart$$41$$.$xAxis$ && "off" != $options$$85_renderY2Axis$$1$$.xAxis.rendered, $renderYAxis$$1$$ = $chart$$41$$.$yAxis$ && "off" != $options$$85_renderY2Axis$$1$$.yAxis.rendered, $options$$85_renderY2Axis$$1$$ = $chart$$41$$.$y2Axis$ && "off" != $options$$85_renderY2Axis$$1$$.y2Axis.rendered, $isPolar$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$41$$);
   $renderXAxis$$1$$ && D.$DvtPlotAreaRenderer$$.$_positionAxisLine$($container$$77$$, $availSpace$$63$$, $isPolar$$ ? $chart$$41$$.$yAxis$ : $chart$$41$$.$xAxis$);
   $renderYAxis$$1$$ && D.$DvtPlotAreaRenderer$$.$_positionAxisLine$($container$$77$$, $availSpace$$63$$, $isPolar$$ ? $chart$$41$$.$xAxis$ : $chart$$41$$.$yAxis$);
-  $options$$84_renderY2Axis$$1$$ && D.$DvtPlotAreaRenderer$$.$_positionAxisLine$($container$$77$$, $availSpace$$63$$, $chart$$41$$.$y2Axis$)
+  $options$$85_renderY2Axis$$1$$ && D.$DvtPlotAreaRenderer$$.$_positionAxisLine$($container$$77$$, $availSpace$$63$$, $chart$$41$$.$y2Axis$)
 };
 D.$DvtPlotAreaRenderer$$.$_positionGridLines$ = function $$DvtPlotAreaRenderer$$$$_positionGridLines$$($container$$78$$, $availSpace$$64$$, $axis$$27$$, $gridlines$$) {
-  for(var $position$$36$$ = $axis$$27$$.$getPosition$(), $i$$473$$ = 0;$i$$473$$ < $gridlines$$.length;$i$$473$$++) {
-    var $gridline$$ = $gridlines$$[$i$$473$$];
+  for(var $position$$36$$ = $axis$$27$$.$getPosition$(), $i$$469$$ = 0;$i$$469$$ < $gridlines$$.length;$i$$469$$++) {
+    var $gridline$$ = $gridlines$$[$i$$469$$];
     $container$$78$$.$addChild$($gridline$$);
     "radial" == $position$$36$$ || "tangential" == $position$$36$$ ? ($gridline$$.$setTranslateX$($availSpace$$64$$.x + $availSpace$$64$$.$w$ / 2), $gridline$$.$setTranslateY$($availSpace$$64$$.y + $availSpace$$64$$.$h$ / 2)) : "top" == $position$$36$$ || "bottom" == $position$$36$$ ? ($gridline$$.$setY1$($availSpace$$64$$.y), $gridline$$.$setY2$($availSpace$$64$$.y + $availSpace$$64$$.$h$), $gridline$$.$setX1$((0,D.$JSCompiler_StaticMethods_axisToPlotArea$$)($axis$$27$$, $gridline$$.$getX1$())), 
     $gridline$$.$setX2$((0,D.$JSCompiler_StaticMethods_axisToPlotArea$$)($axis$$27$$, $gridline$$.$getX2$()))) : ($gridline$$.$setX1$($availSpace$$64$$.x), $gridline$$.$setX2$($availSpace$$64$$.x + $availSpace$$64$$.$w$), $gridline$$.$setY1$((0,D.$JSCompiler_StaticMethods_axisToPlotArea$$)($axis$$27$$, $gridline$$.$getY1$())), $gridline$$.$setY2$((0,D.$JSCompiler_StaticMethods_axisToPlotArea$$)($axis$$27$$, $gridline$$.$getY2$())))
@@ -4888,8 +4885,8 @@ D.$DvtPlotAreaRenderer$$.$_renderForegroundObjects$ = function $$DvtPlotAreaRend
   window.clipGroup = D.$DvtPlotAreaRenderer$$.$createClippedGroup$($chart$$42$$, $container$$80_selected$$15$$, $availSpace$$66$$);
   D.$DvtChartTypeUtils$$.$isBar$($chart$$42$$) ? D.$DvtPlotAreaRenderer$$.$_renderBars$($chart$$42$$, $availSpace$$66$$) : D.$DvtChartTypeUtils$$.$isLine$($chart$$42$$) ? D.$DvtPlotAreaRenderer$$.$_renderLines$($chart$$42$$, $container$$80_selected$$15$$, $availSpace$$66$$) : D.$DvtChartTypeUtils$$.$isCombo$($chart$$42$$) ? (D.$DvtPlotAreaRenderer$$.$_renderBars$($chart$$42$$, $availSpace$$66$$), D.$DvtPlotAreaRenderer$$.$_renderLines$($chart$$42$$, $container$$80_selected$$15$$, $availSpace$$66$$)) : 
   D.$DvtChartTypeUtils$$.$isScatter$($chart$$42$$) ? D.$DvtPlotAreaRenderer$$.$_renderDataMarkers$($chart$$42$$, $container$$80_selected$$15$$, $availSpace$$66$$) : D.$DvtChartTypeUtils$$.$isBubble$($chart$$42$$) && D.$DvtPlotAreaRenderer$$.$_renderDataMarkers$($chart$$42$$, window.clipGroup, $availSpace$$66$$);
-  var $options$$85$$ = $chart$$42$$.$getOptions$();
-  if($options$$85$$.xAxis.referenceObjects || $options$$85$$.yAxis.referenceObjects || $options$$85$$.y2Axis.referenceObjects) {
+  var $options$$86$$ = $chart$$42$$.$getOptions$();
+  if($options$$86$$.xAxis.referenceObjects || $options$$86$$.yAxis.referenceObjects || $options$$86$$.y2Axis.referenceObjects) {
     window.clipGroup = D.$DvtPlotAreaRenderer$$.$createClippedGroup$($chart$$42$$, $container$$80_selected$$15$$, $availSpace$$66$$), D.$DvtRefObjRenderer$$.$renderForegroundObjects$($chart$$42$$, $availSpace$$66$$)
   }
   $container$$80_selected$$15$$ = D.$DvtChartDataUtils$$.$getInitialSelection$($chart$$42$$);
@@ -4934,21 +4931,21 @@ D.$DvtPlotAreaRenderer$$.$_renderLabelForDataMarker$ = function $$DvtPlotAreaRen
   D.$DvtPlotAreaRenderer$$.$_renderDataLabel$($chart$$44$$, $container$$82$$, $markerBounds$$, $logicalObject$$8$$.$getSeriesIndex$(), $logicalObject$$8$$.$getGroupIndex$(), $marker$$24$$.$_dataColor$)
 };
 D.$DvtPlotAreaRenderer$$.$_renderDataMarkers$ = function $$DvtPlotAreaRenderer$$$$_renderDataMarkers$$($chart$$45$$, $container$$83$$, $availSpace$$67_numMarkers$$) {
-  for(var $markers$$5$$ = [], $i$$474_seriesCount$$7$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$45$$), $seriesIndex$$7$$ = 0;$seriesIndex$$7$$ < $i$$474_seriesCount$$7$$;$seriesIndex$$7$$++) {
+  for(var $markers$$5$$ = [], $i$$470_seriesCount$$7$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$45$$), $seriesIndex$$7$$ = 0;$seriesIndex$$7$$ < $i$$470_seriesCount$$7$$;$seriesIndex$$7$$++) {
     var $seriesMarkers$$ = D.$DvtPlotAreaRenderer$$.$_getMarkersForSeries$($chart$$45$$, $seriesIndex$$7$$, $availSpace$$67_numMarkers$$), $markers$$5$$ = $markers$$5$$.concat($seriesMarkers$$)
   }
   D.$DvtChartMarkerUtils$$.$sortMarkers$($markers$$5$$);
   $availSpace$$67_numMarkers$$ = $markers$$5$$.length;
-  for($i$$474_seriesCount$$7$$ = 0;$i$$474_seriesCount$$7$$ < $availSpace$$67_numMarkers$$;$i$$474_seriesCount$$7$$++) {
-    $container$$83$$.$addChild$($markers$$5$$[$i$$474_seriesCount$$7$$]), D.$DvtPlotAreaRenderer$$.$_renderLabelForDataMarker$($chart$$45$$, $container$$83$$, $markers$$5$$[$i$$474_seriesCount$$7$$])
+  for($i$$470_seriesCount$$7$$ = 0;$i$$470_seriesCount$$7$$ < $availSpace$$67_numMarkers$$;$i$$470_seriesCount$$7$$++) {
+    $container$$83$$.$addChild$($markers$$5$$[$i$$470_seriesCount$$7$$]), D.$DvtPlotAreaRenderer$$.$_renderLabelForDataMarker$($chart$$45$$, $container$$83$$, $markers$$5$$[$i$$470_seriesCount$$7$$])
   }
   $chart$$45$$.$_currentMarkers$.push($markers$$5$$)
 };
 D.$DvtPlotAreaRenderer$$.$_renderDataMarkersForSeries$ = function $$DvtPlotAreaRenderer$$$$_renderDataMarkersForSeries$$($chart$$46$$, $container$$84$$, $markers$$6_seriesIndex$$8$$, $availSpace$$68_numMarkers$$1$$) {
   $markers$$6_seriesIndex$$8$$ = D.$DvtPlotAreaRenderer$$.$_getMarkersForSeries$($chart$$46$$, $markers$$6_seriesIndex$$8$$, $availSpace$$68_numMarkers$$1$$);
   $availSpace$$68_numMarkers$$1$$ = $markers$$6_seriesIndex$$8$$.length;
-  for(var $i$$475$$ = 0;$i$$475$$ < $availSpace$$68_numMarkers$$1$$;$i$$475$$++) {
-    $container$$84$$.$addChild$($markers$$6_seriesIndex$$8$$[$i$$475$$]), D.$DvtPlotAreaRenderer$$.$_renderLabelForDataMarker$($chart$$46$$, $container$$84$$, $markers$$6_seriesIndex$$8$$[$i$$475$$])
+  for(var $i$$471$$ = 0;$i$$471$$ < $availSpace$$68_numMarkers$$1$$;$i$$471$$++) {
+    $container$$84$$.$addChild$($markers$$6_seriesIndex$$8$$[$i$$471$$]), D.$DvtPlotAreaRenderer$$.$_renderLabelForDataMarker$($chart$$46$$, $container$$84$$, $markers$$6_seriesIndex$$8$$[$i$$471$$])
   }
   $chart$$46$$.$_currentMarkers$.push($markers$$6_seriesIndex$$8$$)
 };
@@ -4956,11 +4953,11 @@ D.$DvtPlotAreaRenderer$$.$_getMarkersForSeries$ = function $$DvtPlotAreaRenderer
   if(!D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$47$$, $seriesIndex$$9$$)) {
     return[]
   }
-  var $isTouchDevice$$ = D.$DvtAgent$$.$isTouchDevice$(), $context$$541$$ = $chart$$47$$.$_context$, $xAxis$$ = $chart$$47$$.$xAxis$, $yAxis$$1$$ = $chart$$47$$.$yAxis$;
+  var $isTouchDevice$$ = D.$DvtAgent$$.$isTouchDevice$(), $context$$535$$ = $chart$$47$$.$_context$, $xAxis$$ = $chart$$47$$.$xAxis$, $yAxis$$1$$ = $chart$$47$$.$yAxis$;
   D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$47$$, $seriesIndex$$9$$) && ($yAxis$$1$$ = $chart$$47$$.$y2Axis$);
-  for(var $options$$86$$ = $chart$$47$$.$getOptions$(), $bHasDatatips$$ = D.$DvtChartTooltipUtils$$.$hasDatatips$($chart$$47$$), $bBubbleChart$$ = D.$DvtChartTypeUtils$$.$isBubble$($chart$$47$$), $isPolar$$1$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$47$$), $markers$$7$$ = [], $groupIndex$$1$$ = 0;$groupIndex$$1$$ < D.$DvtChartDataUtils$$.$getGroupCount$($chart$$47$$);$groupIndex$$1$$++) {
+  for(var $options$$87$$ = $chart$$47$$.$getOptions$(), $bHasDatatips$$ = D.$DvtChartTooltipUtils$$.$hasDatatips$($chart$$47$$), $bBubbleChart$$ = D.$DvtChartTypeUtils$$.$isBubble$($chart$$47$$), $isPolar$$1$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$47$$), $markers$$7$$ = [], $groupIndex$$1$$ = 0;$groupIndex$$1$$ < D.$DvtChartDataUtils$$.$getGroupCount$($chart$$47$$);$groupIndex$$1$$++) {
     var $dataValue_hitArea$$2_xCoord$$3_xValue$$ = D.$DvtChartDataUtils$$.getValue($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$);
-    if(!($dataValue_hitArea$$2_xCoord$$3_xValue$$ == D.$JSCompiler_alias_NULL$$ || (0,window.isNaN)($dataValue_hitArea$$2_xCoord$$3_xValue$$)) && !("multiple" != $options$$86$$.selection && D.$DvtChartDataUtils$$.$getDataItem$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)._filtered) && D.$DvtChartStyleUtils$$.$isDataItemRendered$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)) {
+    if(!($dataValue_hitArea$$2_xCoord$$3_xValue$$ == D.$JSCompiler_alias_NULL$$ || (0,window.isNaN)($dataValue_hitArea$$2_xCoord$$3_xValue$$)) && !("multiple" != $options$$87$$.selection && D.$DvtChartDataUtils$$.$getDataItem$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)._filtered) && D.$DvtChartStyleUtils$$.$isDataItemRendered$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)) {
       var $dataValue_hitArea$$2_xCoord$$3_xValue$$ = D.$DvtChartDataUtils$$.$getXValue$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$), $cartesian$$1_yCoord$$2_yValue$$ = D.$DvtChartDataUtils$$.$getCumulativeValue$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$);
       if($bBubbleChart$$) {
         if($isPolar$$1$$ && $cartesian$$1_yCoord$$2_yValue$$ < $yAxis$$1$$.$getViewportMin$()) {
@@ -4987,19 +4984,19 @@ D.$DvtPlotAreaRenderer$$.$_getMarkersForSeries$ = function $$DvtPlotAreaRenderer
             $bMarkerDisplayed_temp$$1$$ = D.$JSCompiler_alias_TRUE$$
           }
         }
-        if(!$options$$86$$._duringAnimation || $bMarkerDisplayed_temp$$1$$ || D.$DvtChartDataUtils$$.$isDataSelected$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)) {
+        if(!$options$$87$$._duringAnimation || $bMarkerDisplayed_temp$$1$$ || D.$DvtChartDataUtils$$.$isDataSelected$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)) {
           var $dataPos_nextIndex_nextValue$$ = new D.$DvtPoint$$($dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$), $lastIndex$$2_prevValue_shape$$77$$ = D.$DvtChartStyleUtils$$.$getMarkerShape$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$), $borderColor$$41$$ = D.$DvtChartStyleUtils$$.$getBorderColor$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$), $borderWidth$$4$$ = $bBubbleChart$$ ? 0.5 : 1, $markerSize$$3$$ = D.$DvtChartStyleUtils$$.$getMarkerSize$($chart$$47$$, 
           $seriesIndex$$9$$, $groupIndex$$1$$), $halfMarkerSize_marker$$25$$ = $markerSize$$3$$ / 2;
           window.xCoordMinHalf = $dataValue_hitArea$$2_xCoord$$3_xValue$$ - D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$ / 2;
           window.yCoordMinHalf = $cartesian$$1_yCoord$$2_yValue$$ - D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$ / 2;
           var $dataValue_hitArea$$2_xCoord$$3_xValue$$ = $dataValue_hitArea$$2_xCoord$$3_xValue$$ - $halfMarkerSize_marker$$25$$, $cartesian$$1_yCoord$$2_yValue$$ = $cartesian$$1_yCoord$$2_yValue$$ - $halfMarkerSize_marker$$25$$, $halfMarkerSize_marker$$25$$ = D.$JSCompiler_alias_NULL$$, $dataColor$$6$$ = $bMarkerDisplayed_temp$$1$$ ? D.$DvtChartStyleUtils$$.$getMarkerColor$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$) : D.$DvtChartStyleUtils$$.$getColor$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$), 
           $hoverColor$$2$$ = D.$DvtSelectionEffectUtils$$.$getHoverBorderColor$($dataColor$$6$$), $innerColor$$5$$ = D.$DvtChartStyleUtils$$.$getSelectedInnerColor$($chart$$47$$), $outerColor$$5$$ = D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($chart$$47$$) ? D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($chart$$47$$) : $dataColor$$6$$;
-          $bMarkerDisplayed_temp$$1$$ ? ($halfMarkerSize_marker$$25$$ = new D.$DvtMarker$$($context$$541$$, $lastIndex$$2_prevValue_shape$$77$$, "alta", $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, $markerSize$$3$$, $markerSize$$3$$), $chart$$47$$.$isSelectionSupported$() && $halfMarkerSize_marker$$25$$.setCursor("pointer"), $halfMarkerSize_marker$$25$$.$setFill$(D.$DvtChartSeriesEffectUtils$$.$getMarkerFill$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)), $borderColor$$41$$ && 
+          $bMarkerDisplayed_temp$$1$$ ? ($halfMarkerSize_marker$$25$$ = new D.$DvtMarker$$($context$$535$$, $lastIndex$$2_prevValue_shape$$77$$, "alta", $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, $markerSize$$3$$, $markerSize$$3$$), $chart$$47$$.$isSelectionSupported$() && $halfMarkerSize_marker$$25$$.setCursor("pointer"), $halfMarkerSize_marker$$25$$.$setFill$(D.$DvtChartSeriesEffectUtils$$.$getMarkerFill$($chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$)), $borderColor$$41$$ && 
           $halfMarkerSize_marker$$25$$.$setSolidStroke$($borderColor$$41$$, D.$JSCompiler_alias_NULL$$, $borderWidth$$4$$), $halfMarkerSize_marker$$25$$.$setDataColor$($dataColor$$6$$), $halfMarkerSize_marker$$25$$.$setHoverStroke$(new D.$DvtSolidStroke$$($hoverColor$$2$$, 1, 2)), $halfMarkerSize_marker$$25$$.$setSelectedStroke$(new D.$DvtSolidStroke$$($innerColor$$5$$, 1, 1.5), new D.$DvtSolidStroke$$($outerColor$$5$$, 1, 4.5)), $halfMarkerSize_marker$$25$$.$setSelectedHoverStroke$(new D.$DvtSolidStroke$$($innerColor$$5$$, 
-          1, 1.5), new D.$DvtSolidStroke$$($hoverColor$$2$$, 1, 4.5)), $isTouchDevice$$ && $markerSize$$3$$ < D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$ && ($dataValue_hitArea$$2_xCoord$$3_xValue$$ = new D.$DvtRect$$($context$$541$$, $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$, D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$), (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($dataValue_hitArea$$2_xCoord$$3_xValue$$), 
-          $halfMarkerSize_marker$$25$$.$addChild$($dataValue_hitArea$$2_xCoord$$3_xValue$$))) : ($chart$$47$$.$isSelectionSupported$() ? ($halfMarkerSize_marker$$25$$ = new D.$DvtChartLineMarker$$($context$$541$$, $lastIndex$$2_prevValue_shape$$77$$, $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, $markerSize$$3$$), $halfMarkerSize_marker$$25$$.setCursor("pointer"), $isTouchDevice$$ && ($dataValue_hitArea$$2_xCoord$$3_xValue$$ = new D.$DvtRect$$($context$$541$$, window.xCoordMinHalf, 
+          1, 1.5), new D.$DvtSolidStroke$$($hoverColor$$2$$, 1, 4.5)), $isTouchDevice$$ && $markerSize$$3$$ < D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$ && ($dataValue_hitArea$$2_xCoord$$3_xValue$$ = new D.$DvtRect$$($context$$535$$, $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$, D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$), (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($dataValue_hitArea$$2_xCoord$$3_xValue$$), 
+          $halfMarkerSize_marker$$25$$.$addChild$($dataValue_hitArea$$2_xCoord$$3_xValue$$))) : ($chart$$47$$.$isSelectionSupported$() ? ($halfMarkerSize_marker$$25$$ = new D.$DvtChartLineMarker$$($context$$535$$, $lastIndex$$2_prevValue_shape$$77$$, $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, $markerSize$$3$$), $halfMarkerSize_marker$$25$$.setCursor("pointer"), $isTouchDevice$$ && ($dataValue_hitArea$$2_xCoord$$3_xValue$$ = new D.$DvtRect$$($context$$535$$, window.xCoordMinHalf, 
           window.yCoordMinHalf, D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$, D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$), (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($dataValue_hitArea$$2_xCoord$$3_xValue$$), $halfMarkerSize_marker$$25$$.$addChild$($dataValue_hitArea$$2_xCoord$$3_xValue$$))) : ($isTouchDevice$$ && ($dataValue_hitArea$$2_xCoord$$3_xValue$$ = window.xCoordMinHalf, $cartesian$$1_yCoord$$2_yValue$$ = window.yCoordMinHalf, $markerSize$$3$$ = D.$DvtPlotAreaRenderer$$.$_MIN_TOUCH_MARKER_SIZE$), 
-          $bHasDatatips$$ && ($halfMarkerSize_marker$$25$$ = new D.$DvtMarker$$($context$$541$$, "square", D.$JSCompiler_alias_NULL$$, $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, $markerSize$$3$$, $markerSize$$3$$))), $halfMarkerSize_marker$$25$$ != D.$JSCompiler_alias_NULL$$ && ((0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($halfMarkerSize_marker$$25$$), $halfMarkerSize_marker$$25$$.$setDataColor$($dataColor$$6$$, $innerColor$$5$$, $outerColor$$5$$)));
+          $bHasDatatips$$ && ($halfMarkerSize_marker$$25$$ = new D.$DvtMarker$$($context$$535$$, "square", D.$JSCompiler_alias_NULL$$, $dataValue_hitArea$$2_xCoord$$3_xValue$$, $cartesian$$1_yCoord$$2_yValue$$, $markerSize$$3$$, $markerSize$$3$$))), $halfMarkerSize_marker$$25$$ != D.$JSCompiler_alias_NULL$$ && ((0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)($halfMarkerSize_marker$$25$$), $halfMarkerSize_marker$$25$$.$setDataColor$($dataColor$$6$$, $innerColor$$5$$, $outerColor$$5$$)));
           $halfMarkerSize_marker$$25$$ != D.$JSCompiler_alias_NULL$$ && ($markers$$7$$.push($halfMarkerSize_marker$$25$$), (0,D.$DvtChartObjPeer$associate$$)($halfMarkerSize_marker$$25$$, $chart$$47$$, $seriesIndex$$9$$, $groupIndex$$1$$, $dataPos_nextIndex_nextValue$$))
         }
       }
@@ -5008,12 +5005,12 @@ D.$DvtPlotAreaRenderer$$.$_getMarkersForSeries$ = function $$DvtPlotAreaRenderer
   return $markers$$7$$
 };
 D.$DvtPlotAreaRenderer$$.$_renderBars$ = function $$DvtPlotAreaRenderer$$$$_renderBars$$($chart$$48$$, $availSpace$$70$$) {
-  for(var $container$$85$$ = window.clipGroup, $context$$542$$ = $chart$$48$$.$_context$, $options$$87$$ = $chart$$48$$.$getOptions$(), $xAxis$$1$$ = $chart$$48$$.$xAxis$, $bHoriz$$3$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$48$$), $bPolar$$2$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$48$$), $bStacked$$1$$ = D.$DvtChartTypeUtils$$.$isStacked$($chart$$48$$), $bPixelSpacing$$ = "pixel" == D.$DvtChartStyleUtils$$.$getBarSpacing$($chart$$48$$), $barSeries$$ = [], $groupCount_seriesCount$$8$$ = 
+  for(var $container$$85$$ = window.clipGroup, $context$$536$$ = $chart$$48$$.$_context$, $options$$88$$ = $chart$$48$$.$getOptions$(), $xAxis$$1$$ = $chart$$48$$.$xAxis$, $bHoriz$$3$$ = D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$48$$), $bPolar$$2$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$48$$), $bStacked$$1$$ = D.$DvtChartTypeUtils$$.$isStacked$($chart$$48$$), $bPixelSpacing$$ = "pixel" == D.$DvtChartStyleUtils$$.$getBarSpacing$($chart$$48$$), $barSeries$$ = [], $groupCount_seriesCount$$8$$ = 
   D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$48$$), $seriesIndex$$10$$ = 0;$seriesIndex$$10$$ < $groupCount_seriesCount$$8$$;$seriesIndex$$10$$++) {
     D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$48$$, $seriesIndex$$10$$) && "bar" == D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$48$$, $seriesIndex$$10$$) && $barSeries$$.push($seriesIndex$$10$$)
   }
-  D.$DvtAgent$$.$isRightToLeft$($context$$542$$) && (!$bStacked$$1$$ && !$bHoriz$$3$$) && $barSeries$$.reverse();
-  for(var $groupCount_seriesCount$$8$$ = $options$$87$$.groups ? $options$$87$$.groups.length : 0, $barSeriesCount$$ = $barSeries$$.length, $barWidth$$1$$ = D.$DvtChartStyleUtils$$.$getBarWidth$($chart$$48$$, $barSeriesCount$$, $xAxis$$1$$), $offset$$26$$ = D.$DvtChartStyleUtils$$.$getBarOffset$($chart$$48$$, $barWidth$$1$$, $barSeriesCount$$), $y2Offset$$ = D.$DvtChartStyleUtils$$.$getY2BarOffset$($chart$$48$$, $barWidth$$1$$), $barSeriesIndex$$ = 0;$barSeriesIndex$$ < $barSeriesCount$$;$barSeriesIndex$$++) {
+  D.$DvtAgent$$.$isRightToLeft$($context$$536$$) && (!$bStacked$$1$$ && !$bHoriz$$3$$) && $barSeries$$.reverse();
+  for(var $groupCount_seriesCount$$8$$ = $options$$88$$.groups ? $options$$88$$.groups.length : 0, $barSeriesCount$$ = $barSeries$$.length, $barWidth$$1$$ = D.$DvtChartStyleUtils$$.$getBarWidth$($chart$$48$$, $barSeriesCount$$, $xAxis$$1$$), $offset$$26$$ = D.$DvtChartStyleUtils$$.$getBarOffset$($chart$$48$$, $barWidth$$1$$, $barSeriesCount$$), $y2Offset$$ = D.$DvtChartStyleUtils$$.$getY2BarOffset$($chart$$48$$, $barWidth$$1$$), $barSeriesIndex$$ = 0;$barSeriesIndex$$ < $barSeriesCount$$;$barSeriesIndex$$++) {
     for(var $seriesIndex$$10$$ = $barSeries$$[$barSeriesIndex$$], $bY2Series$$ = D.$DvtChartDataUtils$$.$isAssignedToY2$($chart$$48$$, $seriesIndex$$10$$), $yAxis$$2$$ = $bY2Series$$ ? $chart$$48$$.$y2Axis$ : $chart$$48$$.$yAxis$, $groupIndex$$2$$ = 0;$groupIndex$$2$$ < $groupCount_seriesCount$$8$$;$groupIndex$$2$$++) {
       var $dataItem$$5_markers$$8_parentContainer$$2$$ = D.$DvtChartDataUtils$$.$getDataItem$($chart$$48$$, $seriesIndex$$10$$, $groupIndex$$2$$), $shape$$78_xValue$$1_yCoord$$3$$ = D.$DvtChartDataUtils$$.$getXValue$($chart$$48$$, $seriesIndex$$10$$, $groupIndex$$2$$), $bInvisible_fill$$44_yValue$$1$$ = D.$DvtChartDataUtils$$.getValue($chart$$48$$, $seriesIndex$$10$$, $groupIndex$$2$$), $dataPos$$1_totalYValue$$ = D.$DvtChartDataUtils$$.$getCumulativeValue$($chart$$48$$, $seriesIndex$$10$$, $groupIndex$$2$$);
       if(!($bInvisible_fill$$44_yValue$$1$$ == D.$JSCompiler_alias_NULL$$ || (0,window.isNaN)($bInvisible_fill$$44_yValue$$1$$))) {
@@ -5022,7 +5019,7 @@ D.$DvtPlotAreaRenderer$$.$_renderBars$ = function $$DvtPlotAreaRenderer$$$$_rend
           $bInvisible_fill$$44_yValue$$1$$ = D.$JSCompiler_alias_FALSE$$;
           1 > window.Math.abs($shape$$78_xValue$$1_yCoord$$3$$ - $baseCoord_borderColor$$42_dataColor$$7$$) && ($bInvisible_fill$$44_yValue$$1$$ = D.$JSCompiler_alias_TRUE$$, $shape$$78_xValue$$1_yCoord$$3$$ > $baseCoord_borderColor$$42_dataColor$$7$$ ? $shape$$78_xValue$$1_yCoord$$3$$ = $baseCoord_borderColor$$42_dataColor$$7$$ + 3 : $shape$$78_xValue$$1_yCoord$$3$$ <= $baseCoord_borderColor$$42_dataColor$$7$$ && ($shape$$78_xValue$$1_yCoord$$3$$ = $baseCoord_borderColor$$42_dataColor$$7$$ - 3));
           var $innerColor$$6_x1$$31_xCoord$$4$$ = $bY2Series$$ ? $innerColor$$6_x1$$31_xCoord$$4$$ + $offset$$26$$ + $y2Offset$$ : $innerColor$$6_x1$$31_xCoord$$4$$ + $offset$$26$$, $outerColor$$6_x2$$28$$ = $innerColor$$6_x1$$31_xCoord$$4$$ + $barWidth$$1$$, $dataPos$$1_totalYValue$$ = $bPolar$$2$$ ? D.$DvtPlotAreaRenderer$$.$polarToCartesian$($shape$$78_xValue$$1_yCoord$$3$$, ($innerColor$$6_x1$$31_xCoord$$4$$ + $outerColor$$6_x2$$28$$) / 2, $availSpace$$70$$) : $bHoriz$$3$$ ? new D.$DvtPoint$$($shape$$78_xValue$$1_yCoord$$3$$, 
-          ($innerColor$$6_x1$$31_xCoord$$4$$ + $outerColor$$6_x2$$28$$) / 2) : new D.$DvtPoint$$(($innerColor$$6_x1$$31_xCoord$$4$$ + $outerColor$$6_x2$$28$$) / 2, $shape$$78_xValue$$1_yCoord$$3$$), $shape$$78_xValue$$1_yCoord$$3$$ = $bPolar$$2$$ ? new D.$DvtChartPolarBar$$($context$$542$$, $axisCoord$$2_stroke$$74$$, $baseCoord_borderColor$$42_dataColor$$7$$, $shape$$78_xValue$$1_yCoord$$3$$, $innerColor$$6_x1$$31_xCoord$$4$$, $outerColor$$6_x2$$28$$, $availSpace$$70$$) : new D.$DvtChartBar$$($context$$542$$, 
+          ($innerColor$$6_x1$$31_xCoord$$4$$ + $outerColor$$6_x2$$28$$) / 2) : new D.$DvtPoint$$(($innerColor$$6_x1$$31_xCoord$$4$$ + $outerColor$$6_x2$$28$$) / 2, $shape$$78_xValue$$1_yCoord$$3$$), $shape$$78_xValue$$1_yCoord$$3$$ = $bPolar$$2$$ ? new D.$DvtChartPolarBar$$($context$$536$$, $axisCoord$$2_stroke$$74$$, $baseCoord_borderColor$$42_dataColor$$7$$, $shape$$78_xValue$$1_yCoord$$3$$, $innerColor$$6_x1$$31_xCoord$$4$$, $outerColor$$6_x2$$28$$, $availSpace$$70$$) : new D.$DvtChartBar$$($context$$536$$, 
           $bHoriz$$3$$, $bStacked$$1$$, $axisCoord$$2_stroke$$74$$, $baseCoord_borderColor$$42_dataColor$$7$$, $shape$$78_xValue$$1_yCoord$$3$$, $innerColor$$6_x1$$31_xCoord$$4$$, $outerColor$$6_x2$$28$$);
           $container$$85$$.$addChild$($shape$$78_xValue$$1_yCoord$$3$$);
           $chart$$48$$.$isSelectionSupported$() && $shape$$78_xValue$$1_yCoord$$3$$.setCursor("pointer");
@@ -5033,7 +5030,7 @@ D.$DvtPlotAreaRenderer$$.$_renderBars$ = function $$DvtPlotAreaRenderer$$$$_rend
           $outerColor$$6_x2$$28$$ = D.$DvtChartStyleUtils$$.$getSelectedOuterColor$($chart$$48$$);
           $shape$$78_xValue$$1_yCoord$$3$$.$setStyleProperties$($bInvisible_fill$$44_yValue$$1$$, $axisCoord$$2_stroke$$74$$, $baseCoord_borderColor$$42_dataColor$$7$$, $innerColor$$6_x1$$31_xCoord$$4$$, $outerColor$$6_x2$$28$$);
           $bPixelSpacing$$ && (0,D.$JSCompiler_StaticMethods_setPixelHinting$$)($shape$$78_xValue$$1_yCoord$$3$$);
-          $dataItem$$5_markers$$8_parentContainer$$2$$ = "outsideBarEdge" == ($dataItem$$5_markers$$8_parentContainer$$2$$.labelPosition ? $dataItem$$5_markers$$8_parentContainer$$2$$.labelPosition : $options$$87$$.styleDefaults.dataLabelPosition) && !D.$DvtChartTypeUtils$$.$isStacked$($chart$$48$$) ? $container$$85$$ : $shape$$78_xValue$$1_yCoord$$3$$;
+          $dataItem$$5_markers$$8_parentContainer$$2$$ = "outsideBarEdge" == ($dataItem$$5_markers$$8_parentContainer$$2$$.labelPosition ? $dataItem$$5_markers$$8_parentContainer$$2$$.labelPosition : $options$$88$$.styleDefaults.dataLabelPosition) && !D.$DvtChartTypeUtils$$.$isStacked$($chart$$48$$) ? $container$$85$$ : $shape$$78_xValue$$1_yCoord$$3$$;
           D.$DvtPlotAreaRenderer$$.$_renderDataLabel$($chart$$48$$, $dataItem$$5_markers$$8_parentContainer$$2$$, $shape$$78_xValue$$1_yCoord$$3$$.$getBoundingBox$(), $seriesIndex$$10$$, $groupIndex$$2$$, D.$DvtChartStyleUtils$$.$getColor$($chart$$48$$, $seriesIndex$$10$$, $groupIndex$$2$$));
           (0,D.$DvtChartObjPeer$associate$$)($shape$$78_xValue$$1_yCoord$$3$$, $chart$$48$$, $seriesIndex$$10$$, $groupIndex$$2$$, $dataPos$$1_totalYValue$$);
           $dataItem$$5_markers$$8_parentContainer$$2$$ = [];
@@ -5050,14 +5047,14 @@ D.$DvtPlotAreaRenderer$$.$_renderLines$ = function $$DvtPlotAreaRenderer$$$$_ren
     D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$49$$, $seriesIndex$$11$$) && "line" == D.$DvtChartStyleUtils$$.$getSeriesType$($chart$$49$$, $seriesIndex$$11$$) && $lineSeries$$.push($seriesIndex$$11$$)
   }
   for($lineIndex$$1_seriesCount$$9$$ = 0;$lineIndex$$1_seriesCount$$9$$ < $lineSeries$$.length;$lineIndex$$1_seriesCount$$9$$++) {
-    var $seriesIndex$$11$$ = $lineSeries$$[$lineIndex$$1_seriesCount$$9$$], $color$$51_i$$476_stroke$$75$$ = D.$DvtChartStyleUtils$$.$getColor$($chart$$49$$, $seriesIndex$$11$$), $lineWidth$$3$$ = D.$DvtChartStyleUtils$$.$getLineWidth$($chart$$49$$, $seriesIndex$$11$$), $coords$$2_lineStyle$$6_lines$$3$$ = (0,D.$DvtStroke$convertTypeString$$)(D.$DvtChartStyleUtils$$.$getLineStyle$($chart$$49$$, $seriesIndex$$11$$)), $color$$51_i$$476_stroke$$75$$ = new D.$DvtSolidStroke$$($color$$51_i$$476_stroke$$75$$, 
+    var $seriesIndex$$11$$ = $lineSeries$$[$lineIndex$$1_seriesCount$$9$$], $color$$51_i$$472_stroke$$75$$ = D.$DvtChartStyleUtils$$.$getColor$($chart$$49$$, $seriesIndex$$11$$), $lineWidth$$3$$ = D.$DvtChartStyleUtils$$.$getLineWidth$($chart$$49$$, $seriesIndex$$11$$), $coords$$2_lineStyle$$5_lines$$3$$ = (0,D.$DvtStroke$convertTypeString$$)(D.$DvtChartStyleUtils$$.$getLineStyle$($chart$$49$$, $seriesIndex$$11$$)), $color$$51_i$$472_stroke$$75$$ = new D.$DvtSolidStroke$$($color$$51_i$$472_stroke$$75$$, 
     1, $lineWidth$$3$$);
-    $color$$51_i$$476_stroke$$75$$.$setStyle$($coords$$2_lineStyle$$6_lines$$3$$);
+    $color$$51_i$$472_stroke$$75$$.$setStyle$($coords$$2_lineStyle$$5_lines$$3$$);
     D.$DvtChartTypeUtils$$.$isPolar$($chart$$49$$) || D.$DvtPlotAreaRenderer$$.$_filterPointsForSeries$($chart$$49$$, $seriesIndex$$11$$);
-    $coords$$2_lineStyle$$6_lines$$3$$ = D.$DvtPlotAreaRenderer$$.$_getCoordsForSeries$($chart$$49$$, $seriesIndex$$11$$);
-    $coords$$2_lineStyle$$6_lines$$3$$ = D.$DvtPlotAreaRenderer$$.$getLinesFromCoords$($chart$$49$$, $coords$$2_lineStyle$$6_lines$$3$$, $color$$51_i$$476_stroke$$75$$, $availSpace$$71$$);
-    for($color$$51_i$$476_stroke$$75$$ = 0;$color$$51_i$$476_stroke$$75$$ < $coords$$2_lineStyle$$6_lines$$3$$.length;$color$$51_i$$476_stroke$$75$$++) {
-      $clipGroup$$1$$.$addChild$($coords$$2_lineStyle$$6_lines$$3$$[$color$$51_i$$476_stroke$$75$$]), (0,D.$DvtChartObjPeer$associate$$)($coords$$2_lineStyle$$6_lines$$3$$[$color$$51_i$$476_stroke$$75$$], $chart$$49$$, $seriesIndex$$11$$)
+    $coords$$2_lineStyle$$5_lines$$3$$ = D.$DvtPlotAreaRenderer$$.$_getCoordsForSeries$($chart$$49$$, $seriesIndex$$11$$);
+    $coords$$2_lineStyle$$5_lines$$3$$ = D.$DvtPlotAreaRenderer$$.$getLinesFromCoords$($chart$$49$$, $coords$$2_lineStyle$$5_lines$$3$$, $color$$51_i$$472_stroke$$75$$, $availSpace$$71$$);
+    for($color$$51_i$$472_stroke$$75$$ = 0;$color$$51_i$$472_stroke$$75$$ < $coords$$2_lineStyle$$5_lines$$3$$.length;$color$$51_i$$472_stroke$$75$$++) {
+      $clipGroup$$1$$.$addChild$($coords$$2_lineStyle$$5_lines$$3$$[$color$$51_i$$472_stroke$$75$$]), (0,D.$DvtChartObjPeer$associate$$)($coords$$2_lineStyle$$5_lines$$3$$[$color$$51_i$$472_stroke$$75$$], $chart$$49$$, $seriesIndex$$11$$)
     }
   }
   for($lineIndex$$1_seriesCount$$9$$ = 0;$lineIndex$$1_seriesCount$$9$$ < $lineSeries$$.length;$lineIndex$$1_seriesCount$$9$$++) {
@@ -5072,9 +5069,9 @@ D.$DvtPlotAreaRenderer$$.$_renderAreas$ = function $$DvtPlotAreaRenderer$$$$_ren
   for(var $group$$6_seriesCount$$10$$ = D.$DvtPlotAreaRenderer$$.$createClippedGroup$($chart$$50$$, $container$$87$$, $availSpace$$72$$), $areaIndex$$1$$ = 0;$areaIndex$$1$$ < $areaSeries$$.length;$areaIndex$$1$$++) {
     $seriesIndex$$12$$ = $areaSeries$$[$areaIndex$$1$$];
     D.$DvtPlotAreaRenderer$$.$_filterPointsForSeries$($chart$$50$$, $seriesIndex$$12$$);
-    for(var $areas$$10_baselineCoord$$5$$ = $chart$$50$$.$yAxis$ ? $chart$$50$$.$yAxis$.$getBaselineCoord$() : $chart$$50$$.$y2Axis$.$getBaselineCoord$(), $coords$$3_i$$477$$ = D.$DvtPlotAreaRenderer$$.$_getCoordsForSeries$($chart$$50$$, $seriesIndex$$12$$), $fill$$45$$ = D.$DvtChartSeriesEffectUtils$$.$getAreaFill$($chart$$50$$, $seriesIndex$$12$$), $borderColor$$43_stroke$$76$$ = D.$DvtChartStyleUtils$$.$getBorderColor$($chart$$50$$, $seriesIndex$$12$$), $borderColor$$43_stroke$$76$$ = $borderColor$$43_stroke$$76$$ ? 
-    new D.$DvtSolidStroke$$($borderColor$$43_stroke$$76$$) : D.$JSCompiler_alias_NULL$$, $areas$$10_baselineCoord$$5$$ = D.$DvtPlotAreaRenderer$$.$getAreasFromCoords$($chart$$50$$, $coords$$3_i$$477$$, $fill$$45$$, $borderColor$$43_stroke$$76$$, $areas$$10_baselineCoord$$5$$, $availSpace$$72$$), $coords$$3_i$$477$$ = 0;$coords$$3_i$$477$$ < $areas$$10_baselineCoord$$5$$.length;$coords$$3_i$$477$$++) {
-      $group$$6_seriesCount$$10$$.$addChild$($areas$$10_baselineCoord$$5$$[$coords$$3_i$$477$$]), $chart$$50$$.$_currentAreas$.push($areas$$10_baselineCoord$$5$$[$coords$$3_i$$477$$]), (0,D.$DvtChartObjPeer$associate$$)($areas$$10_baselineCoord$$5$$[$coords$$3_i$$477$$], $chart$$50$$, $seriesIndex$$12$$)
+    for(var $areas$$10_baselineCoord$$5$$ = $chart$$50$$.$yAxis$ ? $chart$$50$$.$yAxis$.$getBaselineCoord$() : $chart$$50$$.$y2Axis$.$getBaselineCoord$(), $coords$$3_i$$473$$ = D.$DvtPlotAreaRenderer$$.$_getCoordsForSeries$($chart$$50$$, $seriesIndex$$12$$), $fill$$45$$ = D.$DvtChartSeriesEffectUtils$$.$getAreaFill$($chart$$50$$, $seriesIndex$$12$$), $borderColor$$43_stroke$$76$$ = D.$DvtChartStyleUtils$$.$getBorderColor$($chart$$50$$, $seriesIndex$$12$$), $borderColor$$43_stroke$$76$$ = $borderColor$$43_stroke$$76$$ ? 
+    new D.$DvtSolidStroke$$($borderColor$$43_stroke$$76$$) : D.$JSCompiler_alias_NULL$$, $areas$$10_baselineCoord$$5$$ = D.$DvtPlotAreaRenderer$$.$getAreasFromCoords$($chart$$50$$, $coords$$3_i$$473$$, $fill$$45$$, $borderColor$$43_stroke$$76$$, $areas$$10_baselineCoord$$5$$, $availSpace$$72$$), $coords$$3_i$$473$$ = 0;$coords$$3_i$$473$$ < $areas$$10_baselineCoord$$5$$.length;$coords$$3_i$$473$$++) {
+      $group$$6_seriesCount$$10$$.$addChild$($areas$$10_baselineCoord$$5$$[$coords$$3_i$$473$$]), $chart$$50$$.$_currentAreas$.push($areas$$10_baselineCoord$$5$$[$coords$$3_i$$473$$]), (0,D.$DvtChartObjPeer$associate$$)($areas$$10_baselineCoord$$5$$[$coords$$3_i$$473$$], $chart$$50$$, $seriesIndex$$12$$)
     }
     $bStacked$$2$$ || (D.$DvtPlotAreaRenderer$$.$_renderDataMarkersForSeries$($chart$$50$$, $container$$87$$, $seriesIndex$$12$$, $availSpace$$72$$), $areaIndex$$1$$ + 1 < $areaSeries$$.length && ($group$$6_seriesCount$$10$$ = D.$DvtPlotAreaRenderer$$.$createClippedGroup$($chart$$50$$, $container$$87$$, $availSpace$$72$$)))
   }
@@ -5087,19 +5084,19 @@ D.$DvtPlotAreaRenderer$$.$_renderAreas$ = function $$DvtPlotAreaRenderer$$$$_ren
 D.$DvtPlotAreaRenderer$$.$_filterPointsForSeries$ = function $$DvtPlotAreaRenderer$$$$_filterPointsForSeries$$($chart$$51$$, $seriesIndex$$13$$) {
   var $maxNumPts_setSize$$ = $chart$$51$$.$_plotAreaSpace$.$w$, $seriesItems$$1$$ = D.$DvtChartDataUtils$$.$getSeriesItem$($chart$$51$$, $seriesIndex$$13$$).items, $maxNumPts_setSize$$ = window.Math.round(2 * ($seriesItems$$1$$.length / (($chart$$51$$.$xAxis$.$getDataMax$() - $chart$$51$$.$xAxis$.$getDataMin$()) / ($chart$$51$$.$xAxis$.$getViewportMax$() - $chart$$51$$.$xAxis$.$getViewportMin$()))) / $maxNumPts_setSize$$);
   if(2 >= $maxNumPts_setSize$$) {
-    for(var $i$$478$$ = 0;$i$$478$$ < $seriesItems$$1$$.length;$i$$478$$++) {
-      ($dataItem$$6$$ = $seriesItems$$1$$[$i$$478$$]) && ($dataItem$$6$$._filtered = D.$JSCompiler_alias_FALSE$$)
+    for(var $i$$474$$ = 0;$i$$474$$ < $seriesItems$$1$$.length;$i$$474$$++) {
+      ($dataItem$$6$$ = $seriesItems$$1$$[$i$$474$$]) && ($dataItem$$6$$._filtered = D.$JSCompiler_alias_FALSE$$)
     }
   }else {
-    for(var $maxIndex$$, $maxValue$$6$$, $minIndex$$, $minValue$$5$$, $dataItem$$6$$, $dataValue$$1$$, $i$$478$$ = 0;$i$$478$$ < $seriesItems$$1$$.length;$i$$478$$ += $maxNumPts_setSize$$) {
+    for(var $maxIndex$$, $maxValue$$6$$, $minIndex$$, $minValue$$5$$, $dataItem$$6$$, $dataValue$$1$$, $i$$474$$ = 0;$i$$474$$ < $seriesItems$$1$$.length;$i$$474$$ += $maxNumPts_setSize$$) {
       $maxIndex$$ = -1;
       $maxValue$$6$$ = -window.Infinity;
       $minIndex$$ = -1;
       $minValue$$5$$ = window.Infinity;
-      for(var $j$$56$$ = $i$$478$$;$j$$56$$ < window.Math.min($i$$478$$ + $maxNumPts_setSize$$, $seriesItems$$1$$.length);$j$$56$$++) {
+      for(var $j$$56$$ = $i$$474$$;$j$$56$$ < window.Math.min($i$$474$$ + $maxNumPts_setSize$$, $seriesItems$$1$$.length);$j$$56$$++) {
         $dataValue$$1$$ = D.$DvtChartDataUtils$$.getValue($chart$$51$$, $seriesIndex$$13$$, $j$$56$$), $dataItem$$6$$ = $seriesItems$$1$$[$j$$56$$], $dataValue$$1$$ == D.$JSCompiler_alias_NULL$$ || $dataItem$$6$$ == D.$JSCompiler_alias_NULL$$ || ($dataValue$$1$$ > $maxValue$$6$$ && ($maxIndex$$ = $j$$56$$, $maxValue$$6$$ = $dataValue$$1$$), $dataValue$$1$$ < $minValue$$5$$ && ($minIndex$$ = $j$$56$$, $minValue$$5$$ = $dataValue$$1$$), $dataItem$$6$$._filtered = D.$JSCompiler_alias_TRUE$$)
       }
-      for($j$$56$$ = $i$$478$$;$j$$56$$ < window.Math.min($i$$478$$ + $maxNumPts_setSize$$, $seriesItems$$1$$.length);$j$$56$$++) {
+      for($j$$56$$ = $i$$474$$;$j$$56$$ < window.Math.min($i$$474$$ + $maxNumPts_setSize$$, $seriesItems$$1$$.length);$j$$56$$++) {
         if($dataItem$$6$$ = $seriesItems$$1$$[$j$$56$$], $dataItem$$6$$ != D.$JSCompiler_alias_NULL$$ && ($j$$56$$ == $maxIndex$$ || $j$$56$$ == $minIndex$$)) {
           $dataItem$$6$$._filtered = D.$JSCompiler_alias_FALSE$$
         }
@@ -5129,50 +5126,50 @@ D.$DvtPlotAreaRenderer$$.$_getCoordsForSeries$ = function $$DvtPlotAreaRenderer$
 D.$DvtPlotAreaRenderer$$.$getPointsFromCoords$ = function $$DvtPlotAreaRenderer$$$$getPointsFromCoords$$($chart$$53_lastPoints$$, $coords$$5$$, $availSpace$$74$$) {
   var $isPolar$$2$$ = D.$DvtChartTypeUtils$$.$isPolar$($chart$$53_lastPoints$$), $pointsArrays$$1$$ = [], $points$$39$$ = [];
   $pointsArrays$$1$$.push($points$$39$$);
-  for(var $cartesian$$2_xCoord$$6$$, $yCoord$$5$$, $i$$479$$ = 0;$i$$479$$ < $coords$$5$$.length;$i$$479$$++) {
-    $coords$$5$$[$i$$479$$] == D.$JSCompiler_alias_NULL$$ ? D.$DvtChartDataUtils$$.$hasMixedFrequency$($chart$$53_lastPoints$$) || ($points$$39$$ = [], $pointsArrays$$1$$.push($points$$39$$)) : ($cartesian$$2_xCoord$$6$$ = $coords$$5$$[$i$$479$$].x, $yCoord$$5$$ = $coords$$5$$[$i$$479$$].y, $isPolar$$2$$ ? ($cartesian$$2_xCoord$$6$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($yCoord$$5$$, $cartesian$$2_xCoord$$6$$, $availSpace$$74$$), $points$$39$$.push($cartesian$$2_xCoord$$6$$.x, $cartesian$$2_xCoord$$6$$.y)) : 
+  for(var $cartesian$$2_xCoord$$6$$, $yCoord$$5$$, $i$$475$$ = 0;$i$$475$$ < $coords$$5$$.length;$i$$475$$++) {
+    $coords$$5$$[$i$$475$$] == D.$JSCompiler_alias_NULL$$ ? D.$DvtChartDataUtils$$.$hasMixedFrequency$($chart$$53_lastPoints$$) || ($points$$39$$ = [], $pointsArrays$$1$$.push($points$$39$$)) : ($cartesian$$2_xCoord$$6$$ = $coords$$5$$[$i$$475$$].x, $yCoord$$5$$ = $coords$$5$$[$i$$475$$].y, $isPolar$$2$$ ? ($cartesian$$2_xCoord$$6$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($yCoord$$5$$, $cartesian$$2_xCoord$$6$$, $availSpace$$74$$), $points$$39$$.push($cartesian$$2_xCoord$$6$$.x, $cartesian$$2_xCoord$$6$$.y)) : 
     D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$53_lastPoints$$) ? $points$$39$$.push($yCoord$$5$$, $cartesian$$2_xCoord$$6$$) : $points$$39$$.push($cartesian$$2_xCoord$$6$$, $yCoord$$5$$))
   }
   $isPolar$$2$$ && 1 < $pointsArrays$$1$$.length && ($chart$$53_lastPoints$$ = $pointsArrays$$1$$.pop(), $pointsArrays$$1$$[0] = $chart$$53_lastPoints$$.concat($pointsArrays$$1$$[0]));
   return $pointsArrays$$1$$
 };
 D.$DvtPlotAreaRenderer$$.$getLinesFromCoords$ = function $$DvtPlotAreaRenderer$$$$getLinesFromCoords$$($chart$$54$$, $coords$$6_pointsArrays$$2$$, $stroke$$77$$, $availSpace$$75_lines$$4$$) {
-  var $context$$543$$ = $chart$$54$$.$_context$;
+  var $context$$537$$ = $chart$$54$$.$_context$;
   $coords$$6_pointsArrays$$2$$ = D.$DvtPlotAreaRenderer$$.$getPointsFromCoords$($chart$$54$$, $coords$$6_pointsArrays$$2$$, $availSpace$$75_lines$$4$$);
   $availSpace$$75_lines$$4$$ = [];
-  for(var $i$$480$$ = 0;$i$$480$$ < $coords$$6_pointsArrays$$2$$.length;$i$$480$$++) {
-    var $line$$8_points$$40$$ = $coords$$6_pointsArrays$$2$$[$i$$480$$];
-    $line$$8_points$$40$$ && 1 < $line$$8_points$$40$$.length && (D.$DvtChartTypeUtils$$.$isPolar$($chart$$54$$) && D.$DvtChartAxisUtils$$.$hasGroupAxis$($chart$$54$$) && $line$$8_points$$40$$.length == 2 * D.$DvtChartDataUtils$$.$getGroupCount$($chart$$54$$) ? ($line$$8_points$$40$$ = new D.$DvtPolygon$$($context$$543$$, $line$$8_points$$40$$), $line$$8_points$$40$$.$setFill$(D.$JSCompiler_alias_NULL$$)) : $line$$8_points$$40$$ = new D.$DvtPolyline$$($context$$543$$, $line$$8_points$$40$$), $line$$8_points$$40$$.$setStroke$($stroke$$77$$), 
+  for(var $i$$476$$ = 0;$i$$476$$ < $coords$$6_pointsArrays$$2$$.length;$i$$476$$++) {
+    var $line$$8_points$$40$$ = $coords$$6_pointsArrays$$2$$[$i$$476$$];
+    $line$$8_points$$40$$ && 1 < $line$$8_points$$40$$.length && (D.$DvtChartTypeUtils$$.$isPolar$($chart$$54$$) && D.$DvtChartAxisUtils$$.$hasGroupAxis$($chart$$54$$) && $line$$8_points$$40$$.length == 2 * D.$DvtChartDataUtils$$.$getGroupCount$($chart$$54$$) ? ($line$$8_points$$40$$ = new D.$DvtPolygon$$($context$$537$$, $line$$8_points$$40$$), $line$$8_points$$40$$.$setFill$(D.$JSCompiler_alias_NULL$$)) : $line$$8_points$$40$$ = new D.$DvtPolyline$$($context$$537$$, $line$$8_points$$40$$), $line$$8_points$$40$$.$setStroke$($stroke$$77$$), 
     $availSpace$$75_lines$$4$$.push($line$$8_points$$40$$))
   }
   return $availSpace$$75_lines$$4$$
 };
 D.$DvtPlotAreaRenderer$$.$getAreasFromCoords$ = function $$DvtPlotAreaRenderer$$$$getAreasFromCoords$$($chart$$55$$, $coords$$7_pointsArrays$$3$$, $fill$$46$$, $stroke$$78$$, $baselineCoord$$6$$, $availSpace$$76$$) {
-  var $context$$544$$ = $chart$$55$$.$_context$;
+  var $context$$538$$ = $chart$$55$$.$_context$;
   $coords$$7_pointsArrays$$3$$ = D.$DvtPlotAreaRenderer$$.$getPointsFromCoords$($chart$$55$$, $coords$$7_pointsArrays$$3$$, $availSpace$$76$$);
-  for(var $areas$$11$$ = [], $i$$481$$ = 0;$i$$481$$ < $coords$$7_pointsArrays$$3$$.length;$i$$481$$++) {
-    var $points$$41_polygon$$2$$ = $coords$$7_pointsArrays$$3$$[$i$$481$$];
+  for(var $areas$$11$$ = [], $i$$477$$ = 0;$i$$477$$ < $coords$$7_pointsArrays$$3$$.length;$i$$477$$++) {
+    var $points$$41_polygon$$2$$ = $coords$$7_pointsArrays$$3$$[$i$$477$$];
     $points$$41_polygon$$2$$ && 2 < $points$$41_polygon$$2$$.length && (D.$DvtChartTypeUtils$$.$isPolar$($chart$$55$$) ? $points$$41_polygon$$2$$.length < 2 * D.$DvtChartDataUtils$$.$getGroupCount$($chart$$55$$) && $points$$41_polygon$$2$$.push($availSpace$$76$$.x + $availSpace$$76$$.$w$ / 2, $availSpace$$76$$.y + $availSpace$$76$$.$h$ / 2) : D.$DvtChartTypeUtils$$.$isHorizontal$($chart$$55$$) ? ($points$$41_polygon$$2$$.push($baselineCoord$$6$$, $points$$41_polygon$$2$$[$points$$41_polygon$$2$$.length - 
-    1]), $points$$41_polygon$$2$$.push($baselineCoord$$6$$, $points$$41_polygon$$2$$[1])) : ($points$$41_polygon$$2$$.push($points$$41_polygon$$2$$[$points$$41_polygon$$2$$.length - 2], $baselineCoord$$6$$), $points$$41_polygon$$2$$.push($points$$41_polygon$$2$$[0], $baselineCoord$$6$$)), $points$$41_polygon$$2$$ = new D.$DvtPolygon$$($context$$544$$, $points$$41_polygon$$2$$), $points$$41_polygon$$2$$.$setFill$($fill$$46$$), $stroke$$78$$ && $points$$41_polygon$$2$$.$setStroke$($stroke$$78$$), $areas$$11$$.push($points$$41_polygon$$2$$))
+    1]), $points$$41_polygon$$2$$.push($baselineCoord$$6$$, $points$$41_polygon$$2$$[1])) : ($points$$41_polygon$$2$$.push($points$$41_polygon$$2$$[$points$$41_polygon$$2$$.length - 2], $baselineCoord$$6$$), $points$$41_polygon$$2$$.push($points$$41_polygon$$2$$[0], $baselineCoord$$6$$)), $points$$41_polygon$$2$$ = new D.$DvtPolygon$$($context$$538$$, $points$$41_polygon$$2$$), $points$$41_polygon$$2$$.$setFill$($fill$$46$$), $stroke$$78$$ && $points$$41_polygon$$2$$.$setStroke$($stroke$$78$$), $areas$$11$$.push($points$$41_polygon$$2$$))
   }
   return $areas$$11$$
 };
-D.$DvtPlotAreaRenderer$$.$createClippedGroup$ = function $$DvtPlotAreaRenderer$$$$createClippedGroup$$($chart$$56_obj$$inline_5196_r$$inline_5201$$, $clip$$2_container$$88$$, $availSpace$$77_cy$$35$$) {
+D.$DvtPlotAreaRenderer$$.$createClippedGroup$ = function $$DvtPlotAreaRenderer$$$$createClippedGroup$$($chart$$56_obj$$inline_5138_r$$inline_5143$$, $clip$$2_container$$88$$, $availSpace$$77_cy$$35$$) {
   var $clipGroup$$2$$ = new D.$DvtContainer$$($clip$$2_container$$88$$.$_context$);
   $clip$$2_container$$88$$.$addChild$($clipGroup$$2$$);
-  $clip$$2_container$$88$$ = new D.$DvtClipPath$$($chart$$56_obj$$inline_5196_r$$inline_5201$$.getId());
-  if(D.$DvtChartTypeUtils$$.$isPolar$($chart$$56_obj$$inline_5196_r$$inline_5201$$)) {
+  $clip$$2_container$$88$$ = new D.$DvtClipPath$$($chart$$56_obj$$inline_5138_r$$inline_5143$$.getId());
+  if(D.$DvtChartTypeUtils$$.$isPolar$($chart$$56_obj$$inline_5138_r$$inline_5143$$)) {
     var $cx$$34_points$$42$$ = $availSpace$$77_cy$$35$$.x + $availSpace$$77_cy$$35$$.$w$ / 2;
     $availSpace$$77_cy$$35$$ = $availSpace$$77_cy$$35$$.y + $availSpace$$77_cy$$35$$.$h$ / 2;
-    if(D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$56_obj$$inline_5196_r$$inline_5201$$)) {
-      $cx$$34_points$$42$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($cx$$34_points$$42$$, $availSpace$$77_cy$$35$$, D.$DvtChartDataUtils$$.$getGroupCount$($chart$$56_obj$$inline_5196_r$$inline_5201$$), $chart$$56_obj$$inline_5196_r$$inline_5201$$.$getRadius$()), $chart$$56_obj$$inline_5196_r$$inline_5201$$ = {type:3}, $chart$$56_obj$$inline_5196_r$$inline_5201$$.$points$ = $cx$$34_points$$42$$, $chart$$56_obj$$inline_5196_r$$inline_5201$$ && $clip$$2_container$$88$$.$_regions$.push($chart$$56_obj$$inline_5196_r$$inline_5201$$)
+    if(D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$56_obj$$inline_5138_r$$inline_5143$$)) {
+      $cx$$34_points$$42$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($cx$$34_points$$42$$, $availSpace$$77_cy$$35$$, D.$DvtChartDataUtils$$.$getGroupCount$($chart$$56_obj$$inline_5138_r$$inline_5143$$), $chart$$56_obj$$inline_5138_r$$inline_5143$$.$getRadius$()), $chart$$56_obj$$inline_5138_r$$inline_5143$$ = {type:3}, $chart$$56_obj$$inline_5138_r$$inline_5143$$.$points$ = $cx$$34_points$$42$$, $chart$$56_obj$$inline_5138_r$$inline_5143$$ && $clip$$2_container$$88$$.$_regions$.push($chart$$56_obj$$inline_5138_r$$inline_5143$$)
     }else {
-      $chart$$56_obj$$inline_5196_r$$inline_5201$$ = $chart$$56_obj$$inline_5196_r$$inline_5201$$.$getRadius$();
-      var $obj$$inline_5202$$ = {type:5};
-      $obj$$inline_5202$$.$cx$ = $cx$$34_points$$42$$;
-      $obj$$inline_5202$$.$cy$ = $availSpace$$77_cy$$35$$;
-      $obj$$inline_5202$$.$r$ = $chart$$56_obj$$inline_5196_r$$inline_5201$$;
-      $obj$$inline_5202$$ && $clip$$2_container$$88$$.$_regions$.push($obj$$inline_5202$$)
+      $chart$$56_obj$$inline_5138_r$$inline_5143$$ = $chart$$56_obj$$inline_5138_r$$inline_5143$$.$getRadius$();
+      var $obj$$inline_5144$$ = {type:5};
+      $obj$$inline_5144$$.$cx$ = $cx$$34_points$$42$$;
+      $obj$$inline_5144$$.$cy$ = $availSpace$$77_cy$$35$$;
+      $obj$$inline_5144$$.$r$ = $chart$$56_obj$$inline_5138_r$$inline_5143$$;
+      $obj$$inline_5144$$ && $clip$$2_container$$88$$.$_regions$.push($obj$$inline_5144$$)
     }
   }else {
     (0,D.$JSCompiler_StaticMethods_addRect$$)($clip$$2_container$$88$$, $availSpace$$77_cy$$35$$.x, $availSpace$$77_cy$$35$$.y, $availSpace$$77_cy$$35$$.$w$, $availSpace$$77_cy$$35$$.$h$)
@@ -5212,21 +5209,21 @@ D.$DvtFunnelRenderer$$.$render$ = function $$DvtFunnelRenderer$$$$render$$($char
   D.$DvtChartEventUtils$$.$setInitialSelection$($chart$$28$$, $container$$68_selected$$14$$)
 };
 D.$DvtFunnelRenderer$$.$_renderFunnelSlices$ = function $$DvtFunnelRenderer$$$$_renderFunnelSlices$$($chart$$29$$, $container$$69$$, $availSpace$$58$$) {
-  for(var $options$$81_totalValue$$ = $chart$$29$$.$getOptions$(), $seriesCount$$6_slice$$9_targetValue$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$29$$), $gapSize$$ = "on" == $options$$81_totalValue$$.styleDefaults.threeDEffect ? D.$DvtFunnelRenderer$$.$_DEFAULT_3D_GAP_RATIO$ * $availSpace$$58$$.$w$ : D.$DvtFunnelRenderer$$.$_DEFAULT_2D_GAP_RATIO$ * $availSpace$$58$$.$w$, $gapSize$$ = "on" == $options$$81_totalValue$$.styleDefaults.funnelSliceGaps ? window.Math.min(D.$DvtFunnelRenderer$$.$_MAX_WIDTH_FOR_GAPS$ * 
-  $availSpace$$58$$.$w$ / ($seriesCount$$6_slice$$9_targetValue$$ - 1), $gapSize$$) : D.$DvtFunnelRenderer$$.$_DEFAULT_NO_GAP_RATIO$ * $availSpace$$58$$.$w$, $numDrawnSeries$$2$$ = $options$$81_totalValue$$ = 0, $cumulativeValue$$ = 0, $seriesIndex$$5$$ = 0;$seriesIndex$$5$$ < $seriesCount$$6_slice$$9_targetValue$$;$seriesIndex$$5$$++) {
+  for(var $options$$82_totalValue$$ = $chart$$29$$.$getOptions$(), $seriesCount$$6_slice$$9_targetValue$$ = D.$DvtChartDataUtils$$.$getSeriesCount$($chart$$29$$), $gapSize$$ = "on" == $options$$82_totalValue$$.styleDefaults.threeDEffect ? D.$DvtFunnelRenderer$$.$_DEFAULT_3D_GAP_RATIO$ * $availSpace$$58$$.$w$ : D.$DvtFunnelRenderer$$.$_DEFAULT_2D_GAP_RATIO$ * $availSpace$$58$$.$w$, $gapSize$$ = "on" == $options$$82_totalValue$$.styleDefaults.funnelSliceGaps ? window.Math.min(D.$DvtFunnelRenderer$$.$_MAX_WIDTH_FOR_GAPS$ * 
+  $availSpace$$58$$.$w$ / ($seriesCount$$6_slice$$9_targetValue$$ - 1), $gapSize$$) : D.$DvtFunnelRenderer$$.$_DEFAULT_NO_GAP_RATIO$ * $availSpace$$58$$.$w$, $numDrawnSeries$$2$$ = $options$$82_totalValue$$ = 0, $cumulativeValue$$ = 0, $seriesIndex$$5$$ = 0;$seriesIndex$$5$$ < $seriesCount$$6_slice$$9_targetValue$$;$seriesIndex$$5$$++) {
     if(D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$29$$, $seriesIndex$$5$$)) {
       var $value$$79$$ = D.$DvtChartDataUtils$$.$getTargetValue$($chart$$29$$, $seriesIndex$$5$$);
       $value$$79$$ == D.$JSCompiler_alias_NULL$$ && ($value$$79$$ = D.$DvtChartDataUtils$$.getValue($chart$$29$$, $seriesIndex$$5$$, D.$DvtFunnelRenderer$$.$_GROUP_INDEX$));
-      0 >= $value$$79$$ || ($options$$81_totalValue$$ += $value$$79$$)
+      0 >= $value$$79$$ || ($options$$82_totalValue$$ += $value$$79$$)
     }
   }
-  if(0 == $options$$81_totalValue$$) {
+  if(0 == $options$$82_totalValue$$) {
     return D.$JSCompiler_alias_FALSE$$
   }
   for($seriesIndex$$5$$ = $seriesCount$$6_slice$$9_targetValue$$ - 1;0 <= $seriesIndex$$5$$;$seriesIndex$$5$$--) {
     D.$DvtChartStyleUtils$$.$isSeriesRendered$($chart$$29$$, $seriesIndex$$5$$) && ($value$$79$$ = D.$DvtChartDataUtils$$.getValue($chart$$29$$, $seriesIndex$$5$$, D.$DvtFunnelRenderer$$.$_GROUP_INDEX$), $seriesCount$$6_slice$$9_targetValue$$ = D.$DvtChartDataUtils$$.$getTargetValue$($chart$$29$$, $seriesIndex$$5$$), 0 >= $value$$79$$ && $seriesCount$$6_slice$$9_targetValue$$ == D.$JSCompiler_alias_NULL$$ || $seriesCount$$6_slice$$9_targetValue$$ != D.$JSCompiler_alias_NULL$$ && 0 >= $seriesCount$$6_slice$$9_targetValue$$ || 
-    ($seriesCount$$6_slice$$9_targetValue$$ != D.$JSCompiler_alias_NULL$$ ? ($cumulativeValue$$ += $seriesCount$$6_slice$$9_targetValue$$ / $options$$81_totalValue$$, $seriesCount$$6_slice$$9_targetValue$$ = new D.$DvtFunnelSlice$$($chart$$29$$, $seriesIndex$$5$$, $numDrawnSeries$$2$$, $availSpace$$58$$.$w$, $availSpace$$58$$.$h$, 1 - $cumulativeValue$$, $seriesCount$$6_slice$$9_targetValue$$ / $options$$81_totalValue$$, $value$$79$$ / $seriesCount$$6_slice$$9_targetValue$$, $gapSize$$)) : ($cumulativeValue$$ += 
-    $value$$79$$ / $options$$81_totalValue$$, $seriesCount$$6_slice$$9_targetValue$$ = new D.$DvtFunnelSlice$$($chart$$29$$, $seriesIndex$$5$$, $numDrawnSeries$$2$$, $availSpace$$58$$.$w$, $availSpace$$58$$.$h$, 1 - $cumulativeValue$$, $value$$79$$ / $options$$81_totalValue$$, D.$JSCompiler_alias_NULL$$, $gapSize$$)), $numDrawnSeries$$2$$++, $container$$69$$.$addChild$($seriesCount$$6_slice$$9_targetValue$$), (0,D.$DvtChartObjPeer$associate$$)($seriesCount$$6_slice$$9_targetValue$$, $chart$$29$$, 
+    ($seriesCount$$6_slice$$9_targetValue$$ != D.$JSCompiler_alias_NULL$$ ? ($cumulativeValue$$ += $seriesCount$$6_slice$$9_targetValue$$ / $options$$82_totalValue$$, $seriesCount$$6_slice$$9_targetValue$$ = new D.$DvtFunnelSlice$$($chart$$29$$, $seriesIndex$$5$$, $numDrawnSeries$$2$$, $availSpace$$58$$.$w$, $availSpace$$58$$.$h$, 1 - $cumulativeValue$$, $seriesCount$$6_slice$$9_targetValue$$ / $options$$82_totalValue$$, $value$$79$$ / $seriesCount$$6_slice$$9_targetValue$$, $gapSize$$)) : ($cumulativeValue$$ += 
+    $value$$79$$ / $options$$82_totalValue$$, $seriesCount$$6_slice$$9_targetValue$$ = new D.$DvtFunnelSlice$$($chart$$29$$, $seriesIndex$$5$$, $numDrawnSeries$$2$$, $availSpace$$58$$.$w$, $availSpace$$58$$.$h$, 1 - $cumulativeValue$$, $value$$79$$ / $options$$82_totalValue$$, D.$JSCompiler_alias_NULL$$, $gapSize$$)), $numDrawnSeries$$2$$++, $container$$69$$.$addChild$($seriesCount$$6_slice$$9_targetValue$$), (0,D.$DvtChartObjPeer$associate$$)($seriesCount$$6_slice$$9_targetValue$$, $chart$$29$$, 
     $seriesIndex$$5$$, D.$DvtFunnelRenderer$$.$_GROUP_INDEX$)))
   }
   return D.$JSCompiler_alias_TRUE$$
@@ -5247,18 +5244,18 @@ D.$DvtRefObjRenderer$$.$_renderObjects$ = function $$DvtRefObjRenderer$$$$_rende
 };
 D.$DvtRefObjRenderer$$.$_renderObjectsForAxis$ = function $$DvtRefObjRenderer$$$$_renderObjectsForAxis$$($chart$$33$$, $container$$73$$, $plotAreaBounds$$5$$, $location$$22$$, $axis$$23$$, $objects$$1$$) {
   if($objects$$1$$ && $axis$$23$$) {
-    for(var $i$$471$$ = 0;$i$$471$$ < $objects$$1$$.length;$i$$471$$++) {
-      var $refObj_tooltip$$36$$ = $objects$$1$$[$i$$471$$];
-      if($refObj_tooltip$$36$$ && D.$DvtChartRefObjUtils$$.$getLocation$($refObj_tooltip$$36$$) == $location$$22$$) {
-        var $shape$$74$$, $type$$168$$ = D.$DvtChartRefObjUtils$$.$getType$($refObj_tooltip$$36$$);
-        "area" == $type$$168$$ ? $shape$$74$$ = D.$DvtRefObjRenderer$$.$_createReferenceArea$($refObj_tooltip$$36$$, $chart$$33$$, $plotAreaBounds$$5$$, $axis$$23$$) : "line" == $type$$168$$ && ($shape$$74$$ = D.$DvtRefObjRenderer$$.$_createReferenceLine$($refObj_tooltip$$36$$, $chart$$33$$, $plotAreaBounds$$5$$, $axis$$23$$));
-        $shape$$74$$ != D.$JSCompiler_alias_NULL$$ && ($refObj_tooltip$$36$$ = D.$DvtChartTooltipUtils$$.$getRefObjTooltip$($refObj_tooltip$$36$$), $chart$$33$$.$getEventManager$().$associate$($shape$$74$$, new D.$DvtSimpleObjPeer$$($refObj_tooltip$$36$$)), $container$$73$$.$addChild$($shape$$74$$), (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($shape$$74$$), (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($shape$$74$$, "label", $refObj_tooltip$$36$$))
+    for(var $i$$467$$ = 0;$i$$467$$ < $objects$$1$$.length;$i$$467$$++) {
+      var $refObj_tooltip$$35$$ = $objects$$1$$[$i$$467$$];
+      if($refObj_tooltip$$35$$ && D.$DvtChartRefObjUtils$$.$getLocation$($refObj_tooltip$$35$$) == $location$$22$$) {
+        var $shape$$74$$, $type$$168$$ = D.$DvtChartRefObjUtils$$.$getType$($refObj_tooltip$$35$$);
+        "area" == $type$$168$$ ? $shape$$74$$ = D.$DvtRefObjRenderer$$.$_createReferenceArea$($refObj_tooltip$$35$$, $chart$$33$$, $plotAreaBounds$$5$$, $axis$$23$$) : "line" == $type$$168$$ && ($shape$$74$$ = D.$DvtRefObjRenderer$$.$_createReferenceLine$($refObj_tooltip$$35$$, $chart$$33$$, $plotAreaBounds$$5$$, $axis$$23$$));
+        $shape$$74$$ != D.$JSCompiler_alias_NULL$$ && ($refObj_tooltip$$35$$ = D.$DvtChartTooltipUtils$$.$getRefObjTooltip$($refObj_tooltip$$35$$), $chart$$33$$.$getEventManager$().$associate$($shape$$74$$, new D.$DvtSimpleObjPeer$$($refObj_tooltip$$35$$)), $container$$73$$.$addChild$($shape$$74$$), (0,D.$JSCompiler_StaticMethods_setAriaRole$$)($shape$$74$$, "img"), (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)($shape$$74$$, "label", $refObj_tooltip$$35$$))
       }
     }
   }
 };
-D.$DvtRefObjRenderer$$.$_createReferenceArea$ = function $$DvtRefObjRenderer$$$$_createReferenceArea$$($cy$$32_lowCoords_refObj$$1$$, $chart$$34_outerPoints_radius$$8$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$, $axis$$24_highCoord$$) {
-  var $context$$536_shape$$75$$ = $chart$$34_outerPoints_radius$$8$$.$_context$, $areas$$8_color$$49_position$$34$$ = $axis$$24_highCoord$$.$getPosition$(), $bHoriz$$1_cx$$31_highCoords$$ = "top" == $areas$$8_color$$49_position$$34$$ || "bottom" == $areas$$8_color$$49_position$$34$$, $bRadial_pLow_pointIndex$$ = "radial" == $areas$$8_color$$49_position$$34$$, $areas$$8_color$$49_position$$34$$ = D.$DvtChartRefObjUtils$$.$getColor$($cy$$32_lowCoords_refObj$$1$$);
+D.$DvtRefObjRenderer$$.$_createReferenceArea$ = function $$DvtRefObjRenderer$$$$_createReferenceArea$$($cy$$32_lowCoords_refObj$$1$$, $chart$$34_outerPoints_radius$$8$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$, $axis$$24_highCoord$$) {
+  var $context$$530_shape$$75$$ = $chart$$34_outerPoints_radius$$8$$.$_context$, $areas$$8_color$$49_position$$34$$ = $axis$$24_highCoord$$.$getPosition$(), $bHoriz$$1_cx$$31_highCoords$$ = "top" == $areas$$8_color$$49_position$$34$$ || "bottom" == $areas$$8_color$$49_position$$34$$, $bRadial_pLow_pointIndex$$ = "radial" == $areas$$8_color$$49_position$$34$$, $areas$$8_color$$49_position$$34$$ = D.$DvtChartRefObjUtils$$.$getColor$($cy$$32_lowCoords_refObj$$1$$);
   if($cy$$32_lowCoords_refObj$$1$$.items != D.$JSCompiler_alias_NULL$$ && $axis$$24_highCoord$$ == $chart$$34_outerPoints_radius$$8$$.$yAxis$) {
     var $items$$3_lowCoord$$ = $cy$$32_lowCoords_refObj$$1$$.items, $bHoriz$$1_cx$$31_highCoords$$ = [];
     $cy$$32_lowCoords_refObj$$1$$ = [];
@@ -5277,10 +5274,10 @@ D.$DvtRefObjRenderer$$.$_createReferenceArea$ = function $$DvtRefObjRenderer$$$$
         $cy$$32_lowCoords_refObj$$1$$.push(new D.$DvtPoint$$($xCoord$$1$$, $lCoord$$))
       }
     }
-    $areas$$8_color$$49_position$$34$$ = D.$DvtRefObjRenderer$$.$getRangeAreasFromCoords$($chart$$34_outerPoints_radius$$8$$, $bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$, new D.$DvtSolidFill$$($areas$$8_color$$49_position$$34$$), $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$);
-    $context$$536_shape$$75$$ = new D.$DvtContainer$$($context$$536_shape$$75$$);
-    for($cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = 0;$cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ < $areas$$8_color$$49_position$$34$$.length;$cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$++) {
-      $context$$536_shape$$75$$.$addChild$($areas$$8_color$$49_position$$34$$[$cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$])
+    $areas$$8_color$$49_position$$34$$ = D.$DvtRefObjRenderer$$.$getRangeAreasFromCoords$($chart$$34_outerPoints_radius$$8$$, $bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$, new D.$DvtSolidFill$$($areas$$8_color$$49_position$$34$$), $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$);
+    $context$$530_shape$$75$$ = new D.$DvtContainer$$($context$$530_shape$$75$$);
+    for($cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = 0;$cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ < $areas$$8_color$$49_position$$34$$.length;$cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$++) {
+      $context$$530_shape$$75$$.$addChild$($areas$$8_color$$49_position$$34$$[$cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$])
     }
   }else {
     if($cy$$32_lowCoords_refObj$$1$$.min == D.$JSCompiler_alias_NULL$$ || -window.Infinity == $cy$$32_lowCoords_refObj$$1$$.min) {
@@ -5291,24 +5288,24 @@ D.$DvtRefObjRenderer$$.$_createReferenceArea$ = function $$DvtRefObjRenderer$$$$
     }
     $items$$3_lowCoord$$ = D.$DvtRefObjRenderer$$.$_getAxisCoord$($chart$$34_outerPoints_radius$$8$$, $axis$$24_highCoord$$, $cy$$32_lowCoords_refObj$$1$$.min);
     $axis$$24_highCoord$$ = D.$DvtRefObjRenderer$$.$_getAxisCoord$($chart$$34_outerPoints_radius$$8$$, $axis$$24_highCoord$$, $cy$$32_lowCoords_refObj$$1$$.max);
-    D.$DvtChartTypeUtils$$.$isPolar$($chart$$34_outerPoints_radius$$8$$) ? ($bHoriz$$1_cx$$31_highCoords$$ = $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.x + $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$w$ / 2, $cy$$32_lowCoords_refObj$$1$$ = $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.y + $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$h$ / 2, $bRadial_pLow_pointIndex$$ ? D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$34_outerPoints_radius$$8$$) ? 
-    ($cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$34_outerPoints_radius$$8$$), $chart$$34_outerPoints_radius$$8$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$, $axis$$24_highCoord$$, 1), $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($bHoriz$$1_cx$$31_highCoords$$, 
-    $cy$$32_lowCoords_refObj$$1$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$, $items$$3_lowCoord$$, 0), $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = window.DvtPathUtils.$polyline$($chart$$34_outerPoints_radius$$8$$) + window.DvtPathUtils.$polyline$($cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$) + window.DvtPathUtils.closePath()) : $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = window.DvtPathUtils.moveTo($bHoriz$$1_cx$$31_highCoords$$, 
+    D.$DvtChartTypeUtils$$.$isPolar$($chart$$34_outerPoints_radius$$8$$) ? ($bHoriz$$1_cx$$31_highCoords$$ = $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.x + $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$w$ / 2, $cy$$32_lowCoords_refObj$$1$$ = $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.y + $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$h$ / 2, $bRadial_pLow_pointIndex$$ ? D.$DvtChartAxisUtils$$.$isGridPolygonal$($chart$$34_outerPoints_radius$$8$$) ? 
+    ($cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = D.$DvtChartDataUtils$$.$getGroupCount$($chart$$34_outerPoints_radius$$8$$), $chart$$34_outerPoints_radius$$8$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$, $axis$$24_highCoord$$, 1), $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($bHoriz$$1_cx$$31_highCoords$$, 
+    $cy$$32_lowCoords_refObj$$1$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$, $items$$3_lowCoord$$, 0), $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = window.DvtPathUtils.$polyline$($chart$$34_outerPoints_radius$$8$$) + window.DvtPathUtils.$polyline$($cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$) + window.DvtPathUtils.closePath()) : $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = window.DvtPathUtils.moveTo($bHoriz$$1_cx$$31_highCoords$$, 
     $cy$$32_lowCoords_refObj$$1$$ - $axis$$24_highCoord$$) + window.DvtPathUtils.arcTo($axis$$24_highCoord$$, $axis$$24_highCoord$$, window.Math.PI, 1, $bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$ + $axis$$24_highCoord$$) + window.DvtPathUtils.arcTo($axis$$24_highCoord$$, $axis$$24_highCoord$$, window.Math.PI, 1, $bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$ - $axis$$24_highCoord$$) + window.DvtPathUtils.moveTo($bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$ - 
     $items$$3_lowCoord$$) + window.DvtPathUtils.arcTo($items$$3_lowCoord$$, $items$$3_lowCoord$$, window.Math.PI, 0, $bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$ + $items$$3_lowCoord$$) + window.DvtPathUtils.arcTo($items$$3_lowCoord$$, $items$$3_lowCoord$$, window.Math.PI, 0, $bHoriz$$1_cx$$31_highCoords$$, $cy$$32_lowCoords_refObj$$1$$ - $items$$3_lowCoord$$) + window.DvtPathUtils.closePath() : ($chart$$34_outerPoints_radius$$8$$ = $chart$$34_outerPoints_radius$$8$$.$getRadius$(), 
-    $bRadial_pLow_pointIndex$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($chart$$34_outerPoints_radius$$8$$, $items$$3_lowCoord$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$), $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($chart$$34_outerPoints_radius$$8$$, $axis$$24_highCoord$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$), $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = window.DvtPathUtils.moveTo($bHoriz$$1_cx$$31_highCoords$$, 
-    $cy$$32_lowCoords_refObj$$1$$) + window.DvtPathUtils.lineTo($bRadial_pLow_pointIndex$$.x, $bRadial_pLow_pointIndex$$.y) + window.DvtPathUtils.arcTo($chart$$34_outerPoints_radius$$8$$, $chart$$34_outerPoints_radius$$8$$, $axis$$24_highCoord$$ - $items$$3_lowCoord$$, 1, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.x, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.y) + window.DvtPathUtils.lineTo($cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.x, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.y) + 
-    window.DvtPathUtils.closePath()), $context$$536_shape$$75$$ = new D.$DvtPath$$($context$$536_shape$$75$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$)) : $context$$536_shape$$75$$ = new D.$DvtPolygon$$($context$$536_shape$$75$$, $bHoriz$$1_cx$$31_highCoords$$ ? [$items$$3_lowCoord$$, 0, $axis$$24_highCoord$$, 0, $axis$$24_highCoord$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$h$, $items$$3_lowCoord$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$h$] : 
-    [0, $items$$3_lowCoord$$, 0, $axis$$24_highCoord$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$w$, $axis$$24_highCoord$$, $cmds$$22_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$w$, $items$$3_lowCoord$$]);
-    $context$$536_shape$$75$$.$setSolidFill$($areas$$8_color$$49_position$$34$$)
+    $bRadial_pLow_pointIndex$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($chart$$34_outerPoints_radius$$8$$, $items$$3_lowCoord$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$), $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($chart$$34_outerPoints_radius$$8$$, $axis$$24_highCoord$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$), $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$ = window.DvtPathUtils.moveTo($bHoriz$$1_cx$$31_highCoords$$, 
+    $cy$$32_lowCoords_refObj$$1$$) + window.DvtPathUtils.lineTo($bRadial_pLow_pointIndex$$.x, $bRadial_pLow_pointIndex$$.y) + window.DvtPathUtils.arcTo($chart$$34_outerPoints_radius$$8$$, $chart$$34_outerPoints_radius$$8$$, $axis$$24_highCoord$$ - $items$$3_lowCoord$$, 1, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.x, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.y) + window.DvtPathUtils.lineTo($cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.x, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.y) + 
+    window.DvtPathUtils.closePath()), $context$$530_shape$$75$$ = new D.$DvtPath$$($context$$530_shape$$75$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$)) : $context$$530_shape$$75$$ = new D.$DvtPolygon$$($context$$530_shape$$75$$, $bHoriz$$1_cx$$31_highCoords$$ ? [$items$$3_lowCoord$$, 0, $axis$$24_highCoord$$, 0, $axis$$24_highCoord$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$h$, $items$$3_lowCoord$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$h$] : 
+    [0, $items$$3_lowCoord$$, 0, $axis$$24_highCoord$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$w$, $axis$$24_highCoord$$, $cmds$$20_innerPoints_j$$53_nSides_pHigh_plotAreaBounds$$6$$.$w$, $items$$3_lowCoord$$]);
+    $context$$530_shape$$75$$.$setSolidFill$($areas$$8_color$$49_position$$34$$)
   }
-  return $context$$536_shape$$75$$
+  return $context$$530_shape$$75$$
 };
 D.$DvtRefObjRenderer$$.$_createReferenceLine$ = function $$DvtRefObjRenderer$$$$_createReferenceLine$$($cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$, $cartesian_chart$$35_shape$$76$$, $lines$$2_plotAreaBounds$$7$$, $axis$$25_cx$$32$$) {
   var $j$$54_lineWidth$$2_position$$35_stroke$$72$$ = $axis$$25_cx$$32$$.$getPosition$(), $bHoriz$$2_items$$4$$ = "top" == $j$$54_lineWidth$$2_position$$35_stroke$$72$$ || "bottom" == $j$$54_lineWidth$$2_position$$35_stroke$$72$$, $bRadial$$1_coords$$1_points$$36$$ = "radial" == $j$$54_lineWidth$$2_position$$35_stroke$$72$$, $bTangential_pointIndex$$1$$ = "tangential" == $j$$54_lineWidth$$2_position$$35_stroke$$72$$, $j$$54_lineWidth$$2_position$$35_stroke$$72$$ = D.$DvtChartRefObjUtils$$.$getLineWidth$($cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$), 
-  $color$$50_context$$537$$ = D.$DvtChartRefObjUtils$$.$getColor$($cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$), $j$$54_lineWidth$$2_position$$35_stroke$$72$$ = new D.$DvtSolidStroke$$($color$$50_context$$537$$, 1, $j$$54_lineWidth$$2_position$$35_stroke$$72$$);
+  $color$$50_context$$531$$ = D.$DvtChartRefObjUtils$$.$getColor$($cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$), $j$$54_lineWidth$$2_position$$35_stroke$$72$$ = new D.$DvtSolidStroke$$($color$$50_context$$531$$, 1, $j$$54_lineWidth$$2_position$$35_stroke$$72$$);
   $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$.lineStyle && $j$$54_lineWidth$$2_position$$35_stroke$$72$$.$setStyle$((0,D.$DvtStroke$convertTypeString$$)($cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$.lineStyle));
-  $color$$50_context$$537$$ = $cartesian_chart$$35_shape$$76$$.$_context$;
+  $color$$50_context$$531$$ = $cartesian_chart$$35_shape$$76$$.$_context$;
   if($cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$.items != D.$JSCompiler_alias_NULL$$ && $axis$$25_cx$$32$$ == $cartesian_chart$$35_shape$$76$$.$yAxis$) {
     $bHoriz$$2_items$$4$$ = $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$.items;
     $bRadial$$1_coords$$1_points$$36$$ = [];
@@ -5326,7 +5323,7 @@ D.$DvtRefObjRenderer$$.$_createReferenceLine$ = function $$DvtRefObjRenderer$$$$
       $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$)))
     }
     $lines$$2_plotAreaBounds$$7$$ = D.$DvtPlotAreaRenderer$$.$getLinesFromCoords$($cartesian_chart$$35_shape$$76$$, $bRadial$$1_coords$$1_points$$36$$, $j$$54_lineWidth$$2_position$$35_stroke$$72$$, $lines$$2_plotAreaBounds$$7$$);
-    $cartesian_chart$$35_shape$$76$$ = new D.$DvtContainer$$($color$$50_context$$537$$);
+    $cartesian_chart$$35_shape$$76$$ = new D.$DvtContainer$$($color$$50_context$$531$$);
     for($j$$54_lineWidth$$2_position$$35_stroke$$72$$ = 0;$j$$54_lineWidth$$2_position$$35_stroke$$72$$ < $lines$$2_plotAreaBounds$$7$$.length;$j$$54_lineWidth$$2_position$$35_stroke$$72$$++) {
       $cartesian_chart$$35_shape$$76$$.$addChild$($lines$$2_plotAreaBounds$$7$$[$j$$54_lineWidth$$2_position$$35_stroke$$72$$])
     }
@@ -5338,9 +5335,9 @@ D.$DvtRefObjRenderer$$.$_createReferenceLine$ = function $$DvtRefObjRenderer$$$$
       }
       $axis$$25_cx$$32$$ = $lines$$2_plotAreaBounds$$7$$.x + $lines$$2_plotAreaBounds$$7$$.$w$ / 2;
       $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$ = $lines$$2_plotAreaBounds$$7$$.y + $lines$$2_plotAreaBounds$$7$$.$h$ / 2;
-      $bRadial$$1_coords$$1_points$$36$$ ? (D.$DvtChartAxisUtils$$.$isGridPolygonal$($cartesian_chart$$35_shape$$76$$) ? ($bRadial$$1_coords$$1_points$$36$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($axis$$25_cx$$32$$, $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$, D.$DvtChartDataUtils$$.$getGroupCount$($cartesian_chart$$35_shape$$76$$), $lineCoord_value$$80_xCoord$$2$$), $cartesian_chart$$35_shape$$76$$ = new D.$DvtPolygon$$($color$$50_context$$537$$, $bRadial$$1_coords$$1_points$$36$$)) : $cartesian_chart$$35_shape$$76$$ = 
-      new D.$DvtCircle$$($color$$50_context$$537$$, $axis$$25_cx$$32$$, $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$, $lineCoord_value$$80_xCoord$$2$$), $cartesian_chart$$35_shape$$76$$.$setFill$(D.$JSCompiler_alias_NULL$$)) : $bTangential_pointIndex$$1$$ ? ($cartesian_chart$$35_shape$$76$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($cartesian_chart$$35_shape$$76$$.$getRadius$(), $lineCoord_value$$80_xCoord$$2$$, $lines$$2_plotAreaBounds$$7$$), $cartesian_chart$$35_shape$$76$$ = new D.$DvtLine$$($color$$50_context$$537$$, 
-      $axis$$25_cx$$32$$, $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$, $cartesian_chart$$35_shape$$76$$.x, $cartesian_chart$$35_shape$$76$$.y)) : ($cartesian_chart$$35_shape$$76$$ = $bHoriz$$2_items$$4$$ ? new D.$DvtLine$$($color$$50_context$$537$$, $lineCoord_value$$80_xCoord$$2$$, 0, $lineCoord_value$$80_xCoord$$2$$, $lines$$2_plotAreaBounds$$7$$.$h$) : new D.$DvtLine$$($color$$50_context$$537$$, 0, $lineCoord_value$$80_xCoord$$2$$, $lines$$2_plotAreaBounds$$7$$.$w$, $lineCoord_value$$80_xCoord$$2$$), 
+      $bRadial$$1_coords$$1_points$$36$$ ? (D.$DvtChartAxisUtils$$.$isGridPolygonal$($cartesian_chart$$35_shape$$76$$) ? ($bRadial$$1_coords$$1_points$$36$$ = D.$DvtPolygonUtils$$.$getRegularPolygonPoints$($axis$$25_cx$$32$$, $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$, D.$DvtChartDataUtils$$.$getGroupCount$($cartesian_chart$$35_shape$$76$$), $lineCoord_value$$80_xCoord$$2$$), $cartesian_chart$$35_shape$$76$$ = new D.$DvtPolygon$$($color$$50_context$$531$$, $bRadial$$1_coords$$1_points$$36$$)) : $cartesian_chart$$35_shape$$76$$ = 
+      new D.$DvtCircle$$($color$$50_context$$531$$, $axis$$25_cx$$32$$, $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$, $lineCoord_value$$80_xCoord$$2$$), $cartesian_chart$$35_shape$$76$$.$setFill$(D.$JSCompiler_alias_NULL$$)) : $bTangential_pointIndex$$1$$ ? ($cartesian_chart$$35_shape$$76$$ = D.$DvtPlotAreaRenderer$$.$polarToCartesian$($cartesian_chart$$35_shape$$76$$.$getRadius$(), $lineCoord_value$$80_xCoord$$2$$, $lines$$2_plotAreaBounds$$7$$), $cartesian_chart$$35_shape$$76$$ = new D.$DvtLine$$($color$$50_context$$531$$, 
+      $axis$$25_cx$$32$$, $cy$$33_dataItem$$3_refObj$$2_yCoord$$1$$, $cartesian_chart$$35_shape$$76$$.x, $cartesian_chart$$35_shape$$76$$.y)) : ($cartesian_chart$$35_shape$$76$$ = $bHoriz$$2_items$$4$$ ? new D.$DvtLine$$($color$$50_context$$531$$, $lineCoord_value$$80_xCoord$$2$$, 0, $lineCoord_value$$80_xCoord$$2$$, $lines$$2_plotAreaBounds$$7$$.$h$) : new D.$DvtLine$$($color$$50_context$$531$$, 0, $lineCoord_value$$80_xCoord$$2$$, $lines$$2_plotAreaBounds$$7$$.$w$, $lineCoord_value$$80_xCoord$$2$$), 
       (0,D.$JSCompiler_StaticMethods_setPixelHinting$$)($cartesian_chart$$35_shape$$76$$));
       $cartesian_chart$$35_shape$$76$$.$setStroke$($j$$54_lineWidth$$2_position$$35_stroke$$72$$)
     }else {
@@ -5350,20 +5347,20 @@ D.$DvtRefObjRenderer$$.$_createReferenceLine$ = function $$DvtRefObjRenderer$$$$
   return $cartesian_chart$$35_shape$$76$$
 };
 D.$DvtRefObjRenderer$$.$getRangeAreasFromCoords$ = function $$DvtRefObjRenderer$$$$getRangeAreasFromCoords$$($chart$$36$$, $highArrays_highCoords$$1$$, $lowArrays_lowCoords$$1$$, $fill$$43$$, $areas$$9_availSpace$$59$$) {
-  var $context$$538$$ = $chart$$36$$.$_context$;
+  var $context$$532$$ = $chart$$36$$.$_context$;
   $highArrays_highCoords$$1$$ = D.$DvtPlotAreaRenderer$$.$getPointsFromCoords$($chart$$36$$, $highArrays_highCoords$$1$$, $areas$$9_availSpace$$59$$);
   $lowArrays_lowCoords$$1$$ = D.$DvtPlotAreaRenderer$$.$getPointsFromCoords$($chart$$36$$, $lowArrays_lowCoords$$1$$, $areas$$9_availSpace$$59$$);
   if($highArrays_highCoords$$1$$.length == $lowArrays_lowCoords$$1$$.length) {
     $areas$$9_availSpace$$59$$ = [];
-    for(var $i$$472$$ = 0;$i$$472$$ < $highArrays_highCoords$$1$$.length;$i$$472$$++) {
-      var $highArray_points$$37_polygon$$1$$ = $highArrays_highCoords$$1$$[$i$$472$$], $j$$55_lowArray$$ = $lowArrays_lowCoords$$1$$[$i$$472$$];
+    for(var $i$$468$$ = 0;$i$$468$$ < $highArrays_highCoords$$1$$.length;$i$$468$$++) {
+      var $highArray_points$$37_polygon$$1$$ = $highArrays_highCoords$$1$$[$i$$468$$], $j$$55_lowArray$$ = $lowArrays_lowCoords$$1$$[$i$$468$$];
       if(!(2 > $highArray_points$$37_polygon$$1$$.length)) {
         D.$DvtChartTypeUtils$$.$isPolar$($chart$$36$$) && (D.$DvtChartAxisUtils$$.$hasGroupAxis$($chart$$36$$) && $highArray_points$$37_polygon$$1$$.length == 2 * D.$DvtChartDataUtils$$.$getGroupCount$($chart$$36$$)) && ($highArray_points$$37_polygon$$1$$.push($highArray_points$$37_polygon$$1$$[0], $highArray_points$$37_polygon$$1$$[1]), $j$$55_lowArray$$.push($j$$55_lowArray$$[0], $j$$55_lowArray$$[1]));
         $highArray_points$$37_polygon$$1$$ = $highArray_points$$37_polygon$$1$$.slice(0);
-        for($j$$55_lowArray$$ = 0;$j$$55_lowArray$$ < $lowArrays_lowCoords$$1$$[$i$$472$$].length;$j$$55_lowArray$$ += 2) {
-          $highArray_points$$37_polygon$$1$$.unshift($lowArrays_lowCoords$$1$$[$i$$472$$][$j$$55_lowArray$$], $lowArrays_lowCoords$$1$$[$i$$472$$][$j$$55_lowArray$$ + 1])
+        for($j$$55_lowArray$$ = 0;$j$$55_lowArray$$ < $lowArrays_lowCoords$$1$$[$i$$468$$].length;$j$$55_lowArray$$ += 2) {
+          $highArray_points$$37_polygon$$1$$.unshift($lowArrays_lowCoords$$1$$[$i$$468$$][$j$$55_lowArray$$], $lowArrays_lowCoords$$1$$[$i$$468$$][$j$$55_lowArray$$ + 1])
         }
-        $highArray_points$$37_polygon$$1$$ = new D.$DvtPolygon$$($context$$538$$, $highArray_points$$37_polygon$$1$$);
+        $highArray_points$$37_polygon$$1$$ = new D.$DvtPolygon$$($context$$532$$, $highArray_points$$37_polygon$$1$$);
         $highArray_points$$37_polygon$$1$$.$setFill$($fill$$43$$);
         $areas$$9_availSpace$$59$$.push($highArray_points$$37_polygon$$1$$)
       }
@@ -5378,12 +5375,12 @@ D.$DvtRefObjRenderer$$.$_getXValue$ = function $$DvtRefObjRenderer$$$$_getXValue
 D.$DvtRefObjRenderer$$.$_getAxisCoord$ = function $$DvtRefObjRenderer$$$$_getAxisCoord$$($chart$$37_index$$101$$, $axis$$26$$, $value$$81$$) {
   return(0,D.$JSCompiler_StaticMethods_isGroupAxis$$)($axis$$26$$) && ($chart$$37_index$$101$$ = D.$DvtChartDataUtils$$.$getGroupIndex$($chart$$37_index$$101$$, $value$$81$$), 0 <= $chart$$37_index$$101$$) ? $axis$$26$$.$getUnboundedCoordAt$($chart$$37_index$$101$$) : !(0,window.isNaN)($value$$81$$) ? $axis$$26$$.$getUnboundedCoordAt$($value$$81$$) : D.$JSCompiler_alias_NULL$$
 };
-D.$DvtDataCursor$$ = function $$DvtDataCursor$$$($context$$665$$, $bHoriz$$6$$) {
-  this.Init($context$$665$$, $bHoriz$$6$$)
+D.$DvtDataCursor$$ = function $$DvtDataCursor$$$($context$$659$$, $bHoriz$$6$$) {
+  this.Init($context$$659$$, $bHoriz$$6$$)
 };
 D.$DvtObj$$.$createSubclass$(D.$DvtDataCursor$$, D.$DvtContainer$$, "DvtDataCursor");
-D.$DvtDataCursor$$.prototype.Init = function $$DvtDataCursor$$$$Init$($context$$666$$, $bHoriz$$7$$) {
-  D.$DvtDataCursor$$.$superclass$.Init.call(this, $context$$666$$);
+D.$DvtDataCursor$$.prototype.Init = function $$DvtDataCursor$$$$Init$($context$$660$$, $bHoriz$$7$$) {
+  D.$DvtDataCursor$$.$superclass$.Init.call(this, $context$$660$$);
   this.$_bHoriz$ = $bHoriz$$7$$;
   this.$setMouseEnabled$(D.$JSCompiler_alias_FALSE$$);
   this.$setVisible$(D.$JSCompiler_alias_FALSE$$);
@@ -5429,68 +5426,68 @@ D.$DvtDataCursor$$.prototype.$render$ = function $$DvtDataCursor$$$$$render$$($p
 D.$DvtDataCursor$$.prototype.$isHorizontal$ = (0,D.$JSCompiler_get$$)("$_bHoriz$");
 D.$DvtDCEH$$ = (0,D.$JSCompiler_emptyFn$$)();
 D.$DvtObj$$.$createSubclass$(D.$DvtDCEH$$, D.$DvtObj$$, "DvtDCEH");
-D.$DvtDCEH$$.prototype.$_Init$ = function $$DvtDCEH$$$$$_Init$$($context$$668$$, $dataCursor$$1$$) {
-  this.$_context$ = $context$$668$$;
+D.$DvtDCEH$$.prototype.$_Init$ = function $$DvtDCEH$$$$$_Init$$($context$$662$$, $dataCursor$$1$$) {
+  this.$_context$ = $context$$662$$;
   this.$_isNumericMainAxis$ = this.$_useAllInGroup$ = this.$_horizontal$ = this.$_dataCursorShown$ = D.$JSCompiler_alias_FALSE$$;
   this.$_dataCursor$ = $dataCursor$$1$$;
   this.$_threeDHorizontalOffset$ = 0
 };
-D.$JSCompiler_StaticMethods_processMove$$ = function $$JSCompiler_StaticMethods_processMove$$$($JSCompiler_StaticMethods_processMove$self$$, $dataCursor$$inline_7925_pageX$$17_pos$$72$$, $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$, $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$, $blockEventsRect_logicalObj$$16$$) {
-  if($closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$) {
-    $dataCursor$$inline_7925_pageX$$17_pos$$72$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)($JSCompiler_StaticMethods_processMove$self$$.$_context$, $dataCursor$$inline_7925_pageX$$17_pos$$72$$, $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$);
-    $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$ = $dataCursor$$inline_7925_pageX$$17_pos$$72$$.x;
-    var $dcY$$inline_7929_y$$270$$ = $dataCursor$$inline_7925_pageX$$17_pos$$72$$.y;
-    if($blockEventsRect_logicalObj$$16$$ = $JSCompiler_StaticMethods_processMove$self$$.$getActionablePlotRect$($dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$, $dcY$$inline_7929_y$$270$$, $blockEventsRect_logicalObj$$16$$)) {
-      $dataCursor$$inline_7925_pageX$$17_pos$$72$$ = $JSCompiler_StaticMethods_processMove$self$$.$_dataCursor$;
-      var $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$;
-      var $centerPoint$$inline_7927_horizontal$$inline_10585$$ = $JSCompiler_StaticMethods_processMove$self$$.$_horizontal$;
-      $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$ = $JSCompiler_StaticMethods_processMove$self$$.$_useAllInGroup$;
-      var $closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$ = $JSCompiler_StaticMethods_processMove$self$$.$_isNumericMainAxis$, $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ = [];
-      if($closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$ = $JSCompiler_StaticMethods_processMove$self$$.$findMatches$($dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$, $dcY$$inline_7929_y$$270$$, $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$, $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$, $blockEventsRect_logicalObj$$16$$)) {
-        $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$ = $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$
+D.$JSCompiler_StaticMethods_processMove$$ = function $$JSCompiler_StaticMethods_processMove$$$($JSCompiler_StaticMethods_processMove$self$$, $dataCursor$$inline_7857_pageX$$17_pos$$72$$, $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$, $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$, $blockEventsRect_logicalObj$$16$$) {
+  if($closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$) {
+    $dataCursor$$inline_7857_pageX$$17_pos$$72$$ = (0,D.$JSCompiler_StaticMethods_pageToStageCoords$$)($JSCompiler_StaticMethods_processMove$self$$.$_context$, $dataCursor$$inline_7857_pageX$$17_pos$$72$$, $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$);
+    $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$ = $dataCursor$$inline_7857_pageX$$17_pos$$72$$.x;
+    var $dcY$$inline_7861_y$$268$$ = $dataCursor$$inline_7857_pageX$$17_pos$$72$$.y;
+    if($blockEventsRect_logicalObj$$16$$ = $JSCompiler_StaticMethods_processMove$self$$.$getActionablePlotRect$($dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$, $dcY$$inline_7861_y$$268$$, $blockEventsRect_logicalObj$$16$$)) {
+      $dataCursor$$inline_7857_pageX$$17_pos$$72$$ = $JSCompiler_StaticMethods_processMove$self$$.$_dataCursor$;
+      var $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$;
+      var $centerPoint$$inline_7859_horizontal$$inline_10529$$ = $JSCompiler_StaticMethods_processMove$self$$.$_horizontal$;
+      $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$ = $JSCompiler_StaticMethods_processMove$self$$.$_useAllInGroup$;
+      var $closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$ = $JSCompiler_StaticMethods_processMove$self$$.$_isNumericMainAxis$, $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ = [];
+      if($closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$ = $JSCompiler_StaticMethods_processMove$self$$.$findMatches$($dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$, $dcY$$inline_7861_y$$268$$, $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$, $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$, $blockEventsRect_logicalObj$$16$$)) {
+        $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$ = $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$
       }else {
-        $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$ = 1E7;
-        for(var $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$ = [], $diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ = 0;$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ < $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$.length;$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$++) {
-          var $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$ = $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$[$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$], $diffValue$$inline_11068_match$$inline_10596$$ = window.Math.abs((($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.y : $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.x) + 
-          ($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.y + $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.$h$ : $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.x + $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.$w$)) / 
-          2 - ($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? $dcY$$inline_7929_y$$270$$ : $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$));
-          $diffValue$$inline_11068_match$$inline_10596$$ <= $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$ && ($diffValue$$inline_11068_match$$inline_10596$$ < $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$ && ($closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$ = []), $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$.push($closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$), 
-          $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$ = $diffValue$$inline_11068_match$$inline_10596$$)
+        $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$ = 1E7;
+        for(var $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$ = [], $diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ = 0;$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ < $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$.length;$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$++) {
+          var $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$ = $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$[$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$], $diffValue$$inline_10977_match$$inline_10540$$ = window.Math.abs((($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.y : $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.x) + 
+          ($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.y + $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.$h$ : $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.x + $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.$w$)) / 
+          2 - ($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? $dcY$$inline_7861_y$$268$$ : $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$));
+          $diffValue$$inline_10977_match$$inline_10540$$ <= $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$ && ($diffValue$$inline_10977_match$$inline_10540$$ < $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$ && ($closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$ = []), $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$.push($closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$), 
+          $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$ = $diffValue$$inline_10977_match$$inline_10540$$)
         }
-        $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$ = $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$;
-        if(!$closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$) {
-          $closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$ = 1E6;
-          $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$ = -1E6;
-          $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$ = D.$JSCompiler_alias_NULL$$;
-          for($diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ = 0;$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ < $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$.length;$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$++) {
-            $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$ = $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$[$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$], $closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$ = window.Math.min($closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$, $centerPoint$$inline_7927_horizontal$$inline_10585$$ ? 
-            $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.y : $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.x), $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$ = window.Math.max($closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$, $centerPoint$$inline_7927_horizontal$$inline_10585$$ ? 
-            $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.y + $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.$h$ : $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.x + $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$matchRegion$.$w$), $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$ = 
-            $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$.$gidx$
+        $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$ = $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$;
+        if(!$closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$) {
+          $closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$ = 1E6;
+          $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$ = -1E6;
+          $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$ = D.$JSCompiler_alias_NULL$$;
+          for($diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ = 0;$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ < $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$.length;$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$++) {
+            $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$ = $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$[$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$], $closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$ = window.Math.min($closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$, $centerPoint$$inline_7859_horizontal$$inline_10529$$ ? 
+            $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.y : $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.x), $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$ = window.Math.max($closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$, $centerPoint$$inline_7859_horizontal$$inline_10529$$ ? 
+            $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.y + $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.$h$ : $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.x + $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$matchRegion$.$w$), $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$ = 
+            $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$.$gidx$
           }
-          for($diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ = 0;$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ < $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$.length;$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$++) {
-            var $diffValue$$inline_11068_match$$inline_10596$$ = $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$[$diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$], $itemGroup$$inline_10597_midPoint$$inline_10598$$ = $diffValue$$inline_11068_match$$inline_10596$$.$gidx$;
-            $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$ ? $closestFirstDirectionMatch$$inline_10595_closestGroup$$inline_10593_matchObj$$inline_11067$$ == $itemGroup$$inline_10597_midPoint$$inline_10598$$ && $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$.push($diffValue$$inline_11068_match$$inline_10596$$) : ($itemGroup$$inline_10597_midPoint$$inline_10598$$ = (($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? 
-            $diffValue$$inline_11068_match$$inline_10596$$.$matchRegion$.y : $diffValue$$inline_11068_match$$inline_10596$$.$matchRegion$.x) + ($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? $diffValue$$inline_11068_match$$inline_10596$$.$matchRegion$.y + $diffValue$$inline_11068_match$$inline_10596$$.$matchRegion$.$h$ : $diffValue$$inline_11068_match$$inline_10596$$.$matchRegion$.x + $diffValue$$inline_11068_match$$inline_10596$$.$matchRegion$.$w$)) / 2, $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$ >= 
-            $itemGroup$$inline_10597_midPoint$$inline_10598$$ && $closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$ <= $itemGroup$$inline_10597_midPoint$$inline_10598$$ && $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$.push($diffValue$$inline_11068_match$$inline_10596$$))
+          for($diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ = 0;$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ < $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$.length;$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$++) {
+            var $diffValue$$inline_10977_match$$inline_10540$$ = $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$[$diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$], $itemGroup$$inline_10541_midPoint$$inline_10542$$ = $diffValue$$inline_10977_match$$inline_10540$$.$gidx$;
+            $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$ ? $closestFirstDirectionMatch$$inline_10539_closestGroup$$inline_10537_matchObj$$inline_10976$$ == $itemGroup$$inline_10541_midPoint$$inline_10542$$ && $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$.push($diffValue$$inline_10977_match$$inline_10540$$) : ($itemGroup$$inline_10541_midPoint$$inline_10542$$ = (($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? 
+            $diffValue$$inline_10977_match$$inline_10540$$.$matchRegion$.y : $diffValue$$inline_10977_match$$inline_10540$$.$matchRegion$.x) + ($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? $diffValue$$inline_10977_match$$inline_10540$$.$matchRegion$.y + $diffValue$$inline_10977_match$$inline_10540$$.$matchRegion$.$h$ : $diffValue$$inline_10977_match$$inline_10540$$.$matchRegion$.x + $diffValue$$inline_10977_match$$inline_10540$$.$matchRegion$.$w$)) / 2, $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$ >= 
+            $itemGroup$$inline_10541_midPoint$$inline_10542$$ && $closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$ <= $itemGroup$$inline_10541_midPoint$$inline_10542$$ && $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$.push($diffValue$$inline_10977_match$$inline_10540$$))
           }
         }
-        $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$ = D.$JSCompiler_alias_NULL$$;
-        $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ = 1E8;
-        for($closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$ = 0;$closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$ < $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$.length;$closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$++) {
-          $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$ = $closestFirstDirectionMatches$$inline_10590_immediateMatch$$inline_10589_minDiff$$inline_11064_targetObj$$31$$[$closestLowerBound$$inline_10591_i$$inline_11076_isNumericMainAxis$$inline_10587$$], $diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ = window.Math.abs((($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$.$matchRegion$.x : 
-          $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$.$matchRegion$.y) + ($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$.$matchRegion$.x + $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$.$matchRegion$.$w$ : $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$.$matchRegion$.y + 
-          $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$.$matchRegion$.$h$)) / 2 - ($centerPoint$$inline_7927_horizontal$$inline_10585$$ ? $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$ : $dcY$$inline_7929_y$$270$$)), $diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$ < $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ && ($matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ = 
-          $diffValue$$inline_11078_i$$inline_10594_i$$inline_11066$$, $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$ = $closestFirstDirectionMatches$$inline_11065_closestHigherBound$$inline_10592_match$$inline_11077$$)
+        $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$ = D.$JSCompiler_alias_NULL$$;
+        $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ = 1E8;
+        for($closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$ = 0;$closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$ < $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$.length;$closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$++) {
+          $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$ = $closestFirstDirectionMatches$$inline_10534_immediateMatch$$inline_10533_minDiff$$inline_10973_targetObj$$31$$[$closestLowerBound$$inline_10535_i$$inline_10985_isNumericMainAxis$$inline_10531$$], $diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ = window.Math.abs((($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$.$matchRegion$.x : 
+          $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$.$matchRegion$.y) + ($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$.$matchRegion$.x + $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$.$matchRegion$.$w$ : $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$.$matchRegion$.y + 
+          $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$.$matchRegion$.$h$)) / 2 - ($centerPoint$$inline_7859_horizontal$$inline_10529$$ ? $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$ : $dcY$$inline_7861_y$$268$$)), $diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$ < $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ && ($matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ = 
+          $diffValue$$inline_10987_i$$inline_10538_i$$inline_10975$$, $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$ = $closestFirstDirectionMatches$$inline_10974_closestHigherBound$$inline_10536_match$$inline_10986$$)
         }
       }
-      $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$ == D.$JSCompiler_alias_NULL$$ ? (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_processMove$self$$) : ($centerPoint$$inline_7927_horizontal$$inline_10585$$ = D.$DvtGeomUtils$$.$getCenterPoint$($closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$.$matchRegion$), "SNAP" == ($dataCursor$$inline_7925_pageX$$17_pos$$72$$.$_behavior$ ? 
-      $dataCursor$$inline_7925_pageX$$17_pos$$72$$.$_behavior$ : "AUTO") && ($dataCursor$$inline_7925_pageX$$17_pos$$72$$.$isHorizontal$() ? $dcY$$inline_7929_y$$270$$ = window.Math.min(window.Math.max($centerPoint$$inline_7927_horizontal$$inline_10585$$.y, $blockEventsRect_logicalObj$$16$$.y), $blockEventsRect_logicalObj$$16$$.y + $blockEventsRect_logicalObj$$16$$.$h$) : $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$ = window.Math.min(window.Math.max($centerPoint$$inline_7927_horizontal$$inline_10585$$.x, 
-      $blockEventsRect_logicalObj$$16$$.x), $blockEventsRect_logicalObj$$16$$.x + $blockEventsRect_logicalObj$$16$$.$w$)), $JSCompiler_StaticMethods_processMove$self$$.$_threeDHorizontalOffset$ && ($matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ = $blockEventsRect_logicalObj$$16$$.x + $blockEventsRect_logicalObj$$16$$.$w$ - $JSCompiler_StaticMethods_processMove$self$$.$_threeDHorizontalOffset$, $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$ > 
-      $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ && ($dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$ = $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$)), $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ = $JSCompiler_StaticMethods_processMove$self$$.$getTooltipText$($closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$), 
-      !$matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ || "" == $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$ ? $dataCursor$$inline_7925_pageX$$17_pos$$72$$.$setVisible$(D.$JSCompiler_alias_FALSE$$) : ($dataCursor$$inline_7925_pageX$$17_pos$$72$$.$setVisible$(D.$JSCompiler_alias_TRUE$$), $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$ = $JSCompiler_StaticMethods_processMove$self$$.$getSeriesColor$($closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$.$sidx$, 
-      $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$.$gidx$), $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$ = $dataCursor$$inline_7925_pageX$$17_pos$$72$$.$isHorizontal$() ? $dcY$$inline_7929_y$$270$$ : $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$, $dataCursor$$inline_7925_pageX$$17_pos$$72$$.$render$($blockEventsRect_logicalObj$$16$$, $centerPoint$$inline_7927_horizontal$$inline_10585$$.x, $centerPoint$$inline_7927_horizontal$$inline_10585$$.y, 
-      $dcX$$inline_7928_lineCoord$$inline_7933_pageY$$17_x$$301$$, $matches$$inline_10588_minDiff$$inline_11075_tooltipText$$inline_7931_xExtent$$inline_7930$$, $closestMatch$$inline_11074_closestMatch$$inline_7926_seriesColor$$inline_7932_useAllInGroup$$inline_10586$$), $JSCompiler_StaticMethods_processMove$self$$.$_dataCursorShown$ = D.$JSCompiler_alias_TRUE$$))
+      $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$ == D.$JSCompiler_alias_NULL$$ ? (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_processMove$self$$) : ($centerPoint$$inline_7859_horizontal$$inline_10529$$ = D.$DvtGeomUtils$$.$getCenterPoint$($closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$.$matchRegion$), "SNAP" == ($dataCursor$$inline_7857_pageX$$17_pos$$72$$.$_behavior$ ? 
+      $dataCursor$$inline_7857_pageX$$17_pos$$72$$.$_behavior$ : "AUTO") && ($dataCursor$$inline_7857_pageX$$17_pos$$72$$.$isHorizontal$() ? $dcY$$inline_7861_y$$268$$ = window.Math.min(window.Math.max($centerPoint$$inline_7859_horizontal$$inline_10529$$.y, $blockEventsRect_logicalObj$$16$$.y), $blockEventsRect_logicalObj$$16$$.y + $blockEventsRect_logicalObj$$16$$.$h$) : $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$ = window.Math.min(window.Math.max($centerPoint$$inline_7859_horizontal$$inline_10529$$.x, 
+      $blockEventsRect_logicalObj$$16$$.x), $blockEventsRect_logicalObj$$16$$.x + $blockEventsRect_logicalObj$$16$$.$w$)), $JSCompiler_StaticMethods_processMove$self$$.$_threeDHorizontalOffset$ && ($matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ = $blockEventsRect_logicalObj$$16$$.x + $blockEventsRect_logicalObj$$16$$.$w$ - $JSCompiler_StaticMethods_processMove$self$$.$_threeDHorizontalOffset$, $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$ > 
+      $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ && ($dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$ = $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$)), $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ = $JSCompiler_StaticMethods_processMove$self$$.$getTooltipText$($closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$), 
+      !$matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ || "" == $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$ ? $dataCursor$$inline_7857_pageX$$17_pos$$72$$.$setVisible$(D.$JSCompiler_alias_FALSE$$) : ($dataCursor$$inline_7857_pageX$$17_pos$$72$$.$setVisible$(D.$JSCompiler_alias_TRUE$$), $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$ = $JSCompiler_StaticMethods_processMove$self$$.$getSeriesColor$($closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$.$sidx$, 
+      $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$.$gidx$), $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$ = $dataCursor$$inline_7857_pageX$$17_pos$$72$$.$isHorizontal$() ? $dcY$$inline_7861_y$$268$$ : $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$, $dataCursor$$inline_7857_pageX$$17_pos$$72$$.$render$($blockEventsRect_logicalObj$$16$$, $centerPoint$$inline_7859_horizontal$$inline_10529$$.x, $centerPoint$$inline_7859_horizontal$$inline_10529$$.y, 
+      $dcX$$inline_7860_lineCoord$$inline_7865_pageY$$17_x$$299$$, $matches$$inline_10532_minDiff$$inline_10984_tooltipText$$inline_7863_xExtent$$inline_7862$$, $closestMatch$$inline_10983_closestMatch$$inline_7858_seriesColor$$inline_7864_useAllInGroup$$inline_10530$$), $JSCompiler_StaticMethods_processMove$self$$.$_dataCursorShown$ = D.$JSCompiler_alias_TRUE$$))
     }else {
       (0,D.$JSCompiler_StaticMethods__removeDataCursor$$)($JSCompiler_StaticMethods_processMove$self$$)
     }
@@ -5526,20 +5523,20 @@ D.$JSCompiler_prototypeAlias$$.$_Init$ = function $$JSCompiler_prototypeAlias$$$
 D.$JSCompiler_prototypeAlias$$.$getPlotRect$ = function $$JSCompiler_prototypeAlias$$$$getPlotRect$$() {
   return this.$_Chart$.$_plotAreaSpace$
 };
-D.$JSCompiler_prototypeAlias$$.$getActionablePlotRect$ = function $$JSCompiler_prototypeAlias$$$$getActionablePlotRect$$($x$$261$$, $y$$232$$) {
+D.$JSCompiler_prototypeAlias$$.$getActionablePlotRect$ = function $$JSCompiler_prototypeAlias$$$$getActionablePlotRect$$($x$$259$$, $y$$230$$) {
   var $plotRect$$ = this.$getPlotRect$();
-  return(0,D.$JSCompiler_StaticMethods_containsPoint$$)($plotRect$$, $x$$261$$, $y$$232$$) ? $plotRect$$ : D.$JSCompiler_alias_NULL$$
+  return(0,D.$JSCompiler_StaticMethods_containsPoint$$)($plotRect$$, $x$$259$$, $y$$230$$) ? $plotRect$$ : D.$JSCompiler_alias_NULL$$
 };
-D.$JSCompiler_prototypeAlias$$.$findMatches$ = function $$JSCompiler_prototypeAlias$$$$findMatches$$($chart$$234_x$$262$$, $stage$$19_y$$233$$, $eventManager$$27_targetObj$$27$$, $matches$$9$$) {
-  $chart$$234_x$$262$$ = this.$_Chart$;
-  $stage$$19_y$$233$$ = $chart$$234_x$$262$$.$_context$.$_stage$;
-  $eventManager$$27_targetObj$$27$$ = $chart$$234_x$$262$$.$getEventManager$();
-  if(!$chart$$234_x$$262$$.$_currentMarkers$) {
+D.$JSCompiler_prototypeAlias$$.$findMatches$ = function $$JSCompiler_prototypeAlias$$$$findMatches$$($chart$$234_x$$260$$, $stage$$19_y$$231$$, $eventManager$$27_targetObj$$27$$, $matches$$9$$) {
+  $chart$$234_x$$260$$ = this.$_Chart$;
+  $stage$$19_y$$231$$ = $chart$$234_x$$260$$.$_context$.$_stage$;
+  $eventManager$$27_targetObj$$27$$ = $chart$$234_x$$260$$.$getEventManager$();
+  if(!$chart$$234_x$$260$$.$_currentMarkers$) {
     return D.$JSCompiler_alias_NULL$$
   }
-  for(var $i$$533$$ = 0;$i$$533$$ < $chart$$234_x$$262$$.$_currentMarkers$.length;$i$$533$$++) {
-    for(var $markers$$10$$ = $chart$$234_x$$262$$.$_currentMarkers$[$i$$533$$], $numMarkers$$2$$ = $markers$$10$$.length, $idx$$28$$ = 0;$idx$$28$$ < $numMarkers$$2$$;$idx$$28$$++) {
-      var $item$$33_match$$1$$ = $markers$$10$$[$idx$$28$$], $logicalObject$$9$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)($eventManager$$27_targetObj$$27$$, $item$$33_match$$1$$), $dims$$30$$ = $item$$33_match$$1$$.$getDimensionsSelf$ ? $item$$33_match$$1$$.$getDimensionsSelf$($stage$$19_y$$233$$) : $item$$33_match$$1$$.$getDimensions$($stage$$19_y$$233$$), $item$$33_match$$1$$ = {$obj$:$item$$33_match$$1$$, $matchRegion$:$dims$$30$$, $gidx$:$logicalObject$$9$$.$getGroupIndex$(), $sidx$:$logicalObject$$9$$.$getSeriesIndex$(), 
+  for(var $i$$529$$ = 0;$i$$529$$ < $chart$$234_x$$260$$.$_currentMarkers$.length;$i$$529$$++) {
+    for(var $markers$$10$$ = $chart$$234_x$$260$$.$_currentMarkers$[$i$$529$$], $numMarkers$$2$$ = $markers$$10$$.length, $idx$$28$$ = 0;$idx$$28$$ < $numMarkers$$2$$;$idx$$28$$++) {
+      var $item$$33_match$$1$$ = $markers$$10$$[$idx$$28$$], $logicalObject$$9$$ = (0,D.$JSCompiler_StaticMethods_GetLogicalObject$$)($eventManager$$27_targetObj$$27$$, $item$$33_match$$1$$), $dims$$30$$ = $item$$33_match$$1$$.$getDimensionsSelf$ ? $item$$33_match$$1$$.$getDimensionsSelf$($stage$$19_y$$231$$) : $item$$33_match$$1$$.$getDimensions$($stage$$19_y$$231$$), $item$$33_match$$1$$ = {$obj$:$item$$33_match$$1$$, $matchRegion$:$dims$$30$$, $gidx$:$logicalObject$$9$$.$getGroupIndex$(), $sidx$:$logicalObject$$9$$.$getSeriesIndex$(), 
       $marker$:D.$JSCompiler_alias_NULL$$};
       $matches$$9$$.push($item$$33_match$$1$$)
     }
@@ -5555,22 +5552,22 @@ D.$JSCompiler_prototypeAlias$$.$getTooltipText$ = function $$JSCompiler_prototyp
 D.$DvtSparkChart$$ = (0,D.$JSCompiler_emptyFn$$)();
 (0,D.$goog$exportSymbol$$)("DvtSparkChart", D.$DvtSparkChart$$);
 D.$DvtObj$$.$createSubclass$(D.$DvtSparkChart$$, D.$DvtBaseComponent$$, "DvtSparkChart");
-D.$DvtSparkChart$$.newInstance = function $$DvtSparkChart$$$newInstance$($context$$297$$, $callback$$48$$, $callbackObj$$24$$) {
+D.$DvtSparkChart$$.newInstance = function $$DvtSparkChart$$$newInstance$($context$$291$$, $callback$$48$$, $callbackObj$$24$$) {
   var $sparkChart$$ = new D.$DvtSparkChart$$;
-  $sparkChart$$.Init($context$$297$$, $callback$$48$$, $callbackObj$$24$$);
+  $sparkChart$$.Init($context$$291$$, $callback$$48$$, $callbackObj$$24$$);
   return $sparkChart$$
 };
 D.$DvtSparkChart$$.getDefaults = function $$DvtSparkChart$$$getDefaults$($skin$$7$$) {
   return(0,D.$JSCompiler_StaticMethods_getDefaults$$)(new D.$DvtSparkChartDefaults$$, $skin$$7$$)
 };
-D.$DvtSparkChart$$.prototype.Init = function $$DvtSparkChart$$$$Init$($context$$298$$, $callback$$49$$, $callbackObj$$25$$) {
-  D.$DvtSparkChart$$.$superclass$.Init.call(this, $context$$298$$, $callback$$49$$, $callbackObj$$25$$);
+D.$DvtSparkChart$$.prototype.Init = function $$DvtSparkChart$$$$Init$($context$$292$$, $callback$$49$$, $callbackObj$$25$$) {
+  D.$DvtSparkChart$$.$superclass$.Init.call(this, $context$$292$$, $callback$$49$$, $callbackObj$$25$$);
   this.$Defaults$ = new D.$DvtSparkChartDefaults$$;
-  this.$_eventHandler$ = new D.$DvtEventManager$$($context$$298$$);
+  this.$_eventHandler$ = new D.$DvtEventManager$$($context$$292$$);
   this.$_eventHandler$.$addListeners$(this);
-  this.$_chart$ = (0,D.$DvtChart$newInstance$$)($context$$298$$);
+  this.$_chart$ = (0,D.$DvtChart$newInstance$$)($context$$292$$);
   this.$addChild$(this.$_chart$);
-  this.$_tooltipMask$ = new D.$DvtRect$$($context$$298$$);
+  this.$_tooltipMask$ = new D.$DvtRect$$($context$$292$$);
   this.$addChild$(this.$_tooltipMask$);
   this.setId("sparkChart1000" + window.Math.floor(1E9 * window.Math.random()))
 };
@@ -5581,17 +5578,17 @@ D.$DvtSparkChart$$.prototype.setId = function $$DvtSparkChart$$$$setId$($id$$100
   D.$DvtSparkChart$$.$superclass$.setId.call(this, $id$$100$$);
   this.$_chart$ && this.$_chart$.setId($id$$100$$ + "chart")
 };
-D.$DvtSparkChart$$.prototype.$render$ = function $$DvtSparkChart$$$$$render$$($options$$16_tooltip$$13$$, $width$$38$$, $height$$32$$) {
-  this.$SetOptions$($options$$16_tooltip$$13$$);
-  !(0,window.isNaN)($width$$38$$) && !(0,window.isNaN)($height$$32$$) && (this.$Width$ = $width$$38$$, this.$Height$ = $height$$32$$);
+D.$DvtSparkChart$$.prototype.$render$ = function $$DvtSparkChart$$$$$render$$($options$$16_tooltip$$12$$, $width$$37$$, $height$$30$$) {
+  this.$SetOptions$($options$$16_tooltip$$12$$);
+  !(0,window.isNaN)($width$$37$$) && !(0,window.isNaN)($height$$30$$) && (this.$Width$ = $width$$37$$, this.$Height$ = $height$$30$$);
   D.$DvtSparkChartRenderer$$.$render$(this, this.$Width$, this.$Height$);
-  $options$$16_tooltip$$13$$ = this.$Options$.shortDesc;
+  $options$$16_tooltip$$12$$ = this.$Options$.shortDesc;
   this.$_tooltipMask$.$setWidth$(this.$Width$);
   this.$_tooltipMask$.$setHeight$(this.$Height$);
   (0,D.$JSCompiler_StaticMethods_setInvisibleFill$$)(this.$_tooltipMask$);
-  $options$$16_tooltip$$13$$ && this.$_eventHandler$.$associate$(this.$_tooltipMask$, new D.$DvtSimpleObjPeer$$(D.$JSCompiler_alias_NULL$$, $options$$16_tooltip$$13$$, this.$Options$.color));
-  (0,D.$JSCompiler_StaticMethods_setAriaRole$$)(this);
-  (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)(this, "label", $options$$16_tooltip$$13$$)
+  $options$$16_tooltip$$12$$ && this.$_eventHandler$.$associate$(this.$_tooltipMask$, new D.$DvtSimpleObjPeer$$(D.$JSCompiler_alias_NULL$$, $options$$16_tooltip$$12$$, this.$Options$.color));
+  (0,D.$JSCompiler_StaticMethods_setAriaRole$$)(this, "img");
+  (0,D.$JSCompiler_StaticMethods_setAriaProperty$$)(this, "label", $options$$16_tooltip$$12$$)
 };
 D.$DvtSparkChart$$.prototype.render = D.$DvtSparkChart$$.prototype.$render$;
 D.$DvtSparkChart$$.prototype.$__getOptions$ = (0,D.$JSCompiler_get$$)("$Options$");
@@ -5603,70 +5600,70 @@ D.$DvtSparkChartDefaults$SKIN_ALTA$$ = {skin:"alta", color:"#267db3"};
 D.$DvtSparkChartDefaults$VERSION_1$$ = {skin:"skyros", type:"line", animationOnDisplay:"none", animationOnDataChange:"none", emptyText:D.$JSCompiler_alias_NULL$$, color:"#666699", firstColor:D.$JSCompiler_alias_NULL$$, lastColor:D.$JSCompiler_alias_NULL$$, highColor:D.$JSCompiler_alias_NULL$$, lowColor:D.$JSCompiler_alias_NULL$$, visualEffects:"auto", baselineScaling:"min", barSpacing:"auto", lineWidth:1, lineStyle:"solid", markerSize:5, markerShape:"auto", barGapRatio:0.25};
 D.$DvtSparkChartRenderer$$ = {};
 D.$DvtObj$$.$createSubclass$(D.$DvtSparkChartRenderer$$, D.$DvtObj$$, "DvtSparkChartRenderer");
-D.$DvtSparkChartRenderer$$.$render$ = function $$DvtSparkChartRenderer$$$$render$$($items$$1_spark$$, $width$$67$$, $height$$61$$) {
-  var $chart$$ = $items$$1_spark$$.$_chart$, $chartOptions$$ = D.$DvtSparkChartRenderer$$.$_convertOptionsObj$($items$$1_spark$$), $markerGap$$2_options$$51$$ = $items$$1_spark$$.$__getOptions$();
-  if("area" == $markerGap$$2_options$$51$$.type || "line" == $markerGap$$2_options$$51$$.type) {
+D.$DvtSparkChartRenderer$$.$render$ = function $$DvtSparkChartRenderer$$$$render$$($items$$1_spark$$, $width$$66$$, $height$$59$$) {
+  var $chart$$ = $items$$1_spark$$.$_chart$, $chartOptions$$ = D.$DvtSparkChartRenderer$$.$_convertOptionsObj$($items$$1_spark$$), $markerGap$$2_options$$52$$ = $items$$1_spark$$.$__getOptions$();
+  if("area" == $markerGap$$2_options$$52$$.type || "line" == $markerGap$$2_options$$52$$.type) {
     $items$$1_spark$$ = D.$DvtSparkChartRenderer$$.$_getDataItems$($items$$1_spark$$);
     var $hasMarkers$$ = D.$JSCompiler_alias_FALSE$$;
-    if($markerGap$$2_options$$51$$.firstColor || $markerGap$$2_options$$51$$.lastColor || $markerGap$$2_options$$51$$.highColor || $markerGap$$2_options$$51$$.lowColor) {
+    if($markerGap$$2_options$$52$$.firstColor || $markerGap$$2_options$$52$$.lastColor || $markerGap$$2_options$$52$$.highColor || $markerGap$$2_options$$52$$.lowColor) {
       $hasMarkers$$ = D.$JSCompiler_alias_TRUE$$
     }else {
-      for(var $i$$358$$ = 0;$i$$358$$ < $items$$1_spark$$.length;$i$$358$$++) {
-        if($items$$1_spark$$[$i$$358$$] && "on" == $items$$1_spark$$[$i$$358$$].markerDisplayed) {
+      for(var $i$$354$$ = 0;$i$$354$$ < $items$$1_spark$$.length;$i$$354$$++) {
+        if($items$$1_spark$$[$i$$354$$] && "on" == $items$$1_spark$$[$i$$354$$].markerDisplayed) {
           $hasMarkers$$ = D.$JSCompiler_alias_TRUE$$;
           break
         }
       }
     }
-    $hasMarkers$$ && 0 < $items$$1_spark$$.length && ($markerGap$$2_options$$51$$ = $markerGap$$2_options$$51$$.markerSize / 2, $width$$67$$ -= 2 * $markerGap$$2_options$$51$$, $height$$61$$ -= 2 * $markerGap$$2_options$$51$$, (0,D.$JSCompiler_StaticMethods_setTranslate$$)($chart$$, $markerGap$$2_options$$51$$, $markerGap$$2_options$$51$$))
+    $hasMarkers$$ && 0 < $items$$1_spark$$.length && ($markerGap$$2_options$$52$$ = $markerGap$$2_options$$52$$.markerSize / 2, $width$$66$$ -= 2 * $markerGap$$2_options$$52$$, $height$$59$$ -= 2 * $markerGap$$2_options$$52$$, (0,D.$JSCompiler_StaticMethods_setTranslate$$)($chart$$, $markerGap$$2_options$$52$$, $markerGap$$2_options$$52$$))
   }
-  $chart$$.$render$($chartOptions$$, $width$$67$$, $height$$61$$)
+  $chart$$.$render$($chartOptions$$, $width$$66$$, $height$$59$$)
 };
-D.$DvtSparkChartRenderer$$.$_getDataItems$ = function $$DvtSparkChartRenderer$$$$_getDataItems$$($options$$52_spark$$1$$) {
-  return($options$$52_spark$$1$$ = $options$$52_spark$$1$$.$__getOptions$()) && $options$$52_spark$$1$$.items ? $options$$52_spark$$1$$.items : []
+D.$DvtSparkChartRenderer$$.$_getDataItems$ = function $$DvtSparkChartRenderer$$$$_getDataItems$$($options$$53_spark$$1$$) {
+  return($options$$53_spark$$1$$ = $options$$53_spark$$1$$.$__getOptions$()) && $options$$53_spark$$1$$.items ? $options$$53_spark$$1$$.items : []
 };
 D.$DvtSparkChartRenderer$$.$_convertOptionsObj$ = function $$DvtSparkChartRenderer$$$$_convertOptionsObj$$($items$$2_spark$$2$$) {
-  var $options$$53$$ = $items$$2_spark$$2$$.$__getOptions$(), $chartOptions$$1$$ = {styleDefaults:{}, xAxis:{}, yAxis:{}}, $bFloatingBar$$ = "floatingBar" == $options$$53$$.type, $barSpacing_chartItems$$ = [], $floatItems$$ = [], $highIndex$$ = -1, $lowIndex$$ = -1, $highValue$$ = -window.Infinity, $lowValue$$ = window.Infinity;
+  var $options$$54$$ = $items$$2_spark$$2$$.$__getOptions$(), $chartOptions$$1$$ = {styleDefaults:{}, xAxis:{}, yAxis:{}}, $bFloatingBar$$ = "floatingBar" == $options$$54$$.type, $barSpacing_chartItems$$ = [], $floatItems$$ = [], $highIndex$$ = -1, $lowIndex$$ = -1, $highValue$$ = -window.Infinity, $lowValue$$ = window.Infinity;
   $items$$2_spark$$2$$ = D.$DvtSparkChartRenderer$$.$_getDataItems$($items$$2_spark$$2$$);
-  for(var $i$$359$$ = 0;$i$$359$$ < $items$$2_spark$$2$$.length;$i$$359$$++) {
-    var $floatValue$$1_item$$20$$ = $items$$2_spark$$2$$[$i$$359$$], $chartItem$$ = {};
+  for(var $i$$355$$ = 0;$i$$355$$ < $items$$2_spark$$2$$.length;$i$$355$$++) {
+    var $floatValue$$1_item$$20$$ = $items$$2_spark$$2$$[$i$$355$$], $chartItem$$ = {};
     $floatValue$$1_item$$20$$ instanceof window.Object ? ($chartItem$$.y = $floatValue$$1_item$$20$$.value, $floatValue$$1_item$$20$$.date && ($chartItem$$.x = $floatValue$$1_item$$20$$.date, $chartOptions$$1$$.timeAxisType = "enabled"), "on" == $floatValue$$1_item$$20$$.markerDisplayed && ($chartItem$$.markerDisplayed = "on"), $floatValue$$1_item$$20$$.color && ($chartItem$$.color = $floatValue$$1_item$$20$$.color), $floatValue$$1_item$$20$$.borderColor && ($chartItem$$.borderColor = $floatValue$$1_item$$20$$.borderColor), 
     $floatValue$$1_item$$20$$.markerShape && ($chartItem$$.markerShape = $floatValue$$1_item$$20$$.markerShape), $floatValue$$1_item$$20$$.markerSize && ($chartItem$$.markerSize = $floatValue$$1_item$$20$$.markerSize), $bFloatingBar$$ && ($floatValue$$1_item$$20$$ = $floatValue$$1_item$$20$$.floatValue, (0,window.isNaN)($floatValue$$1_item$$20$$) && ($floatValue$$1_item$$20$$ = 0), $floatItems$$.push($floatValue$$1_item$$20$$))) : ($chartItem$$.y = $floatValue$$1_item$$20$$, $bFloatingBar$$ && $floatItems$$.push(0));
     $barSpacing_chartItems$$.push($chartItem$$);
-    $highValue$$ < $chartItem$$.y && ($highValue$$ = $chartItem$$.y, $highIndex$$ = $i$$359$$);
-    $lowValue$$ > $chartItem$$.y && ($lowValue$$ = $chartItem$$.y, $lowIndex$$ = $i$$359$$)
+    $highValue$$ < $chartItem$$.y && ($highValue$$ = $chartItem$$.y, $highIndex$$ = $i$$355$$);
+    $lowValue$$ > $chartItem$$.y && ($lowValue$$ = $chartItem$$.y, $lowIndex$$ = $i$$355$$)
   }
-  $options$$53$$.highColor && 0 <= $highIndex$$ && ($barSpacing_chartItems$$[$highIndex$$].markerDisplayed = "on", $barSpacing_chartItems$$[$highIndex$$].color || ($barSpacing_chartItems$$[$highIndex$$].color = $options$$53$$.highColor));
-  $options$$53$$.lowColor && 0 <= $lowIndex$$ && ($barSpacing_chartItems$$[$lowIndex$$].markerDisplayed = "on", $barSpacing_chartItems$$[$lowIndex$$].color || ($barSpacing_chartItems$$[$lowIndex$$].color = $options$$53$$.lowColor));
-  $options$$53$$.firstColor && 0 < $barSpacing_chartItems$$.length && ($barSpacing_chartItems$$[0].markerDisplayed = "on", $barSpacing_chartItems$$[0].color || ($barSpacing_chartItems$$[0].color = $options$$53$$.firstColor));
-  $options$$53$$.lastColor && 0 < $barSpacing_chartItems$$.length && ($barSpacing_chartItems$$[$barSpacing_chartItems$$.length - 1].markerDisplayed = "on", $barSpacing_chartItems$$[$barSpacing_chartItems$$.length - 1].color || ($barSpacing_chartItems$$[$barSpacing_chartItems$$.length - 1].color = $options$$53$$.lastColor));
+  $options$$54$$.highColor && 0 <= $highIndex$$ && ($barSpacing_chartItems$$[$highIndex$$].markerDisplayed = "on", $barSpacing_chartItems$$[$highIndex$$].color || ($barSpacing_chartItems$$[$highIndex$$].color = $options$$54$$.highColor));
+  $options$$54$$.lowColor && 0 <= $lowIndex$$ && ($barSpacing_chartItems$$[$lowIndex$$].markerDisplayed = "on", $barSpacing_chartItems$$[$lowIndex$$].color || ($barSpacing_chartItems$$[$lowIndex$$].color = $options$$54$$.lowColor));
+  $options$$54$$.firstColor && 0 < $barSpacing_chartItems$$.length && ($barSpacing_chartItems$$[0].markerDisplayed = "on", $barSpacing_chartItems$$[0].color || ($barSpacing_chartItems$$[0].color = $options$$54$$.firstColor));
+  $options$$54$$.lastColor && 0 < $barSpacing_chartItems$$.length && ($barSpacing_chartItems$$[$barSpacing_chartItems$$.length - 1].markerDisplayed = "on", $barSpacing_chartItems$$[$barSpacing_chartItems$$.length - 1].color || ($barSpacing_chartItems$$[$barSpacing_chartItems$$.length - 1].color = $options$$54$$.lastColor));
   $chartOptions$$1$$.series = [{items:$barSpacing_chartItems$$}];
   $bFloatingBar$$ && $chartOptions$$1$$.series.splice(0, 0, {items:$floatItems$$, color:"rgba(0, 0, 0, 0)"});
-  $options$$53$$.referenceObjects && ($chartOptions$$1$$.yAxis.referenceObjects = $options$$53$$.referenceObjects);
+  $options$$54$$.referenceObjects && ($chartOptions$$1$$.yAxis.referenceObjects = $options$$54$$.referenceObjects);
   $chartOptions$$1$$.__spark = D.$JSCompiler_alias_TRUE$$;
-  $barSpacing_chartItems$$ = $options$$53$$.barSpacing;
+  $barSpacing_chartItems$$ = $options$$54$$.barSpacing;
   "auto" == $barSpacing_chartItems$$ && ($barSpacing_chartItems$$ = 1 < D.$DvtAgent$$.$getDevicePixelRatio$() ? "subpixel" : "pixel");
   $chartOptions$$1$$.__sparkBarSpacing = $barSpacing_chartItems$$;
-  $chartOptions$$1$$.type = $options$$53$$.type;
-  $chartOptions$$1$$.animationOnDataChange = $options$$53$$.animationOnDataChange;
-  $chartOptions$$1$$.animationOnDisplay = $options$$53$$.animationOnDisplay;
-  $chartOptions$$1$$.emptyText = $options$$53$$.emptyText;
-  $chartOptions$$1$$.styleDefaults.colors = [$options$$53$$.color];
-  $chartOptions$$1$$.styleDefaults.animationDuration = $options$$53$$.animationDuration;
+  $chartOptions$$1$$.type = $options$$54$$.type;
+  $chartOptions$$1$$.animationOnDataChange = $options$$54$$.animationOnDataChange;
+  $chartOptions$$1$$.animationOnDisplay = $options$$54$$.animationOnDisplay;
+  $chartOptions$$1$$.emptyText = $options$$54$$.emptyText;
+  $chartOptions$$1$$.styleDefaults.colors = [$options$$54$$.color];
+  $chartOptions$$1$$.styleDefaults.animationDuration = $options$$54$$.animationDuration;
   $chartOptions$$1$$.styleDefaults.animationIndicators = "none";
-  $chartOptions$$1$$.styleDefaults.lineWidth = $options$$53$$.lineWidth;
-  $chartOptions$$1$$.styleDefaults.lineStyle = $options$$53$$.lineStyle;
-  $chartOptions$$1$$.styleDefaults.markerSize = $options$$53$$.markerSize;
-  $chartOptions$$1$$.styleDefaults.markerShape = $options$$53$$.markerShape;
-  $chartOptions$$1$$.styleDefaults.barGapRatio = $options$$53$$.barGapRatio;
+  $chartOptions$$1$$.styleDefaults.lineWidth = $options$$54$$.lineWidth;
+  $chartOptions$$1$$.styleDefaults.lineStyle = $options$$54$$.lineStyle;
+  $chartOptions$$1$$.styleDefaults.markerSize = $options$$54$$.markerSize;
+  $chartOptions$$1$$.styleDefaults.markerShape = $options$$54$$.markerShape;
+  $chartOptions$$1$$.styleDefaults.barGapRatio = $options$$54$$.barGapRatio;
   $chartOptions$$1$$.styleDefaults.seriesTooltipType = "none";
   $chartOptions$$1$$.styleDefaults.groupTooltipType = "none";
   $chartOptions$$1$$.styleDefaults.valueTooltipType = "none";
   $chartOptions$$1$$.xAxis.rendered = "off";
-  $chartOptions$$1$$.yAxis.baselineScaling = $options$$53$$.baselineScaling;
+  $chartOptions$$1$$.yAxis.baselineScaling = $options$$54$$.baselineScaling;
   $chartOptions$$1$$.yAxis.rendered = "off";
   $bFloatingBar$$ && ($chartOptions$$1$$.type = "bar", $chartOptions$$1$$.stack = "on");
-  $chartOptions$$1$$.styleDefaults.seriesEffect = "none" == $options$$53$$.visualEffects || "area" != $options$$53$$.type ? "color" : "gradient";
+  $chartOptions$$1$$.styleDefaults.seriesEffect = "none" == $options$$54$$.visualEffects || "area" != $options$$54$$.type ? "color" : "gradient";
   $chartOptions$$1$$.layout = {gapRatio:0};
   $chartOptions$$1$$.legend = {rendered:"off"};
   $chartOptions$$1$$.title = $chartOptions$$1$$.title ? $chartOptions$$1$$.title : {};

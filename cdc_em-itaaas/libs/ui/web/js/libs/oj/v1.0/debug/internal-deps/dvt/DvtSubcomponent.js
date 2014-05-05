@@ -440,48 +440,9 @@ DvtBreadcrumbs.prototype.__getOptions = function() {
  * Returns the DvtEventManager for this component.
  * @return {DvtEventManager}
  */
-DvtBreadcrumbs.prototype.__getEventManager = function() {
+DvtBreadcrumbs.prototype.getEventManager = function() {
   return this._eventHandler;
 };
-
-
-/**
- * @override
- */
-DvtBreadcrumbs.prototype.handleKeyboardEvent = function(event) 
-{
-  var eventConsumed = true;
-  var keyCode = event.keyCode;
-
-  if (keyCode == DvtKeyboardEvent.TAB)
-  {
-    var prevCrumbIdx = this._curCrumbIdx;
-    this._curCrumbIdx = this._updateCrumbIndex(this._curCrumbIdx, !event.shiftKey);
-    this._updateKeyboardFocusEffect(prevCrumbIdx, this._curCrumbIdx);
-
-    if (this._curCrumbIdx < 0 || this._curCrumbIdx == this._data.items.length - 1)
-    {
-      // tabbing out of the breadcrumbs, make sure tab event get propagated
-      // beyond the breadcrumbs
-      eventConsumed = false;
-    }
-  }
-  else if (keyCode == DvtKeyboardEvent.ENTER)
-  {
-    // simulate a click on the current breadcrumb
-    var mouseEvent = this._eventHandler.GenerateMouseEventFromKeyboardEvent(
-        event, this.getCtx().getStage(), 0, 0);
-    mouseEvent.target = this.getCrumb(this._curCrumbIdx);
-    this._eventHandler.OnClick(mouseEvent);
-  }
-
-  // keystrokes are consumed by default, unless we tab out of the breadcrumbs
-  if (eventConsumed)
-    event.preventDefault();
-
-  return eventConsumed;
-};
-
 
 /**
  * @override
@@ -493,35 +454,65 @@ DvtBreadcrumbs.prototype.hideKeyboardFocusEffect = function()
   this._updateKeyboardFocusEffect(prevCrumbIdx, this._curCrumbIdx);
 };
 
+/**
+ * Returns the current crumb index
+ * @return {Number}
+ */
+DvtBreadcrumbs.prototype.getCurrentCrumbIndex = function()  
+{
+  return this._curCrumbIdx;
+};
 
 /**
- * Updates which breadcrumb has keyboard focus.
- * @param {Number} curIndex The index in the _data object's item array indicating
- *        the current breadcrumb
- * @param {boolean} bForward True if we are tabbing forward, false if we are
- *        shift-tabbing backwards
- * @return {Number} The index in the _data object's item array indicating
- *        which item has keyboard focus
+ * Returns the number of crumbs
+ * @return {Number}
+ */
+DvtBreadcrumbs.prototype.getNumCrumbs = function()  
+{
+  return this._data.items.length;
+};
+
+/**
+ * Updates the crumb in focus
+ * @param {boolean} bShiftKey True if the shift key was pressed
+ * @return {Number} The currently focused crumb index or -1 if none
+ */
+DvtBreadcrumbs.prototype.updateCrumbFocus = function(bShiftKey)  
+{
+  var prevCrumbIdx = this._curCrumbIdx;
+  this._curCrumbIdx = this._getUpdatedCrumbIndex(prevCrumbIdx, !bShiftKey);
+  this._updateKeyboardFocusEffect(prevCrumbIdx, this._curCrumbIdx);
+  return this._curCrumbIdx;
+};
+
+/**
+ * Returns the updated crumb index which has focus or -1 if tabbed out of the breadcrumbs. Used only for keyboarding.
+ * @param {Number} prevIndex The previously focused crumb index
+ * @param {boolean} bForward True if we are tabbing forward, false if we are shift-tabbing backwards
+ * @return {Number} The currently focused crumb index in the _data object's item array or -1 if none
  * @private
  */
-DvtBreadcrumbs.prototype._updateCrumbIndex = function(curIndex, bForward) 
+DvtBreadcrumbs.prototype._getUpdatedCrumbIndex = function(prevIndex, bForward) 
 {
-  if (bForward)
-  {
-    if (curIndex < 0 || curIndex >= this._data.items.length - 1)
-      // will always have at least two breadcrumbs since last crumb is not
-      // drillable
+  // Handle initial keyboarding into breadcrumbs
+  if (prevIndex == -1) {
+    if (bForward)
       return 0;
     else
-      return ++curIndex;
-  }
-  else
-  {
-    if (curIndex < 0 || curIndex >= this._data.items.length - 1)
-      // will always have at least two breadcrumbs since last crumb is not
-      // drillable
       return this._data.items.length - 2;
-    return --curIndex;
+  }
+
+  // Handle subsequent tab and shift-tab traversal of breadcrumbs
+  if (bForward) {
+    if (prevIndex == this._data.items.length - 2)
+      return -1; // The last breadcrumb is not actionable so we are actually tabbing out of the breadcrumbs
+    else
+      return ++prevIndex;
+  } else {
+    if (prevIndex == 0)
+      return -1;
+    else
+      return --prevIndex;
   }
 };
 
@@ -695,8 +686,7 @@ DvtObj.createSubclass(DvtBreadcrumbsEventManager, DvtEventManager, 'DvtBreadcrum
  */
 DvtBreadcrumbsEventManager.prototype.OnClick = function(event) {
   DvtBreadcrumbsEventManager.superclass.OnClick.call(this, event);
-  var obj = this.GetLogicalObject(event.target);
-  this._processBreadcrumbs(obj);
+  this._processBreadcrumbs(this.GetLogicalObject(event.target));
 };
 
 
@@ -704,9 +694,7 @@ DvtBreadcrumbsEventManager.prototype.OnClick = function(event) {
  * @override
  */
 DvtBreadcrumbsEventManager.prototype.HandleTouchClickInternal = function(event) {
-  var targetObj = event.target;
-  var obj = this.GetLogicalObject(targetObj);
-  this._processBreadcrumbs(obj);
+  this._processBreadcrumbs(this.GetLogicalObject(event.target));
 };
 
 
@@ -722,18 +710,48 @@ DvtBreadcrumbsEventManager.prototype._processBreadcrumbs = function(obj) {
     this.FireEvent(event, this._breadcrumbs);
   }
 };
+
+/**
+ * @override
+ */
+DvtBreadcrumbsEventManager.prototype.handleKeyboardEvent = function(event) {
+  var eventConsumed = true;
+  var keyCode = event.keyCode;
+
+  if (keyCode == DvtKeyboardEvent.TAB) {
+    var curCrumbIdx = this._breadcrumbs.updateCrumbFocus(event.shiftKey);
+
+    // If tabbing out of interactive breadcrumbs, propagate event. Last crumb is not interactive.
+    if (curCrumbIdx == -1) {
+      eventConsumed = false;
+    } else {
+      // Accessibility Support
+      this.UpdateActiveElement(this._breadcrumbs.getCrumb(curCrumbIdx));
+    }
+  }
+  else if (keyCode == DvtKeyboardEvent.ENTER) {
+    this._processBreadcrumbs(this._breadcrumbs.getCrumb(this._breadcrumbs.getCurrentCrumbIndex()));
+  }
+
+  // keystrokes are consumed by default, unless we tab out of the breadcrumbs
+  if (eventConsumed)
+    event.preventDefault();
+
+  return eventConsumed;
+};
 /**
  * Simple logical object for drilling and tooltip support.
  * @param {string} id The id of the associated breadcrumb.
- * @param {string} tooltip The tooltip to display.
+ * @param {DvtDisplayable} displayable The displayable associated with this logical object
  * @class
  * @constructor
  * @implements {DvtTooltipSource}
  */
-var DvtBreadcrumbsPeer = function(id, tooltip) {
-  this.Init(tooltip);
+var DvtBreadcrumbsPeer = function(id, displayable) {
+  this.Init();
   this._id = id;
   this._bDrillable = false;
+  this._displayable = displayable;
 };
 
 DvtObj.createSubclass(DvtBreadcrumbsPeer, DvtSimpleObjPeer, 'DvtBreadcrumbsPeer');
@@ -764,6 +782,13 @@ DvtBreadcrumbsPeer.prototype.isDrillable = function() {
 DvtBreadcrumbsPeer.prototype.setDrillable = function(drillable) {
   this._bDrillable = drillable;
 };
+
+/**
+ * @override
+ */
+DvtBreadcrumbsPeer.prototype.getDisplayable = function() {
+  return this._displayable;
+};
 /**
  * Renderer for DvtBreadcrumbs.
  * @class
@@ -789,7 +814,7 @@ DvtBreadcrumbsRenderer.render = function(breadcrumbs, container, width) {
   var context = breadcrumbs.getCtx();
   var dataItems = breadcrumbs.__getData().items ? breadcrumbs.__getData().items : [];
   var options = breadcrumbs.__getOptions();
-  var eventManager = breadcrumbs.__getEventManager();
+  var eventManager = breadcrumbs.getEventManager();
 
   // Create all of the labels
   var labels = [];
@@ -805,7 +830,7 @@ DvtBreadcrumbsRenderer.render = function(breadcrumbs, container, width) {
       labels.push(label);
 
       // Create peer for interactivity support
-      var peer = new DvtBreadcrumbsPeer(dataItem.id);
+      var peer = new DvtBreadcrumbsPeer(dataItem.id, label);
       eventManager.associate(label, peer);
       peers.push(peer);
 
@@ -824,7 +849,6 @@ DvtBreadcrumbsRenderer.render = function(breadcrumbs, container, width) {
   else
     DvtBreadcrumbsRenderer._positionLabels(breadcrumbs, container, width, labels, peers);
 };
-
 
 /**
  * Create a state for a label button.
@@ -876,6 +900,8 @@ DvtBreadcrumbsRenderer._createLabel = function(context, textStr, options, bEnabl
     var dwn = DvtBreadcrumbsRenderer._createButtonState(context, textStr, dwnCss);
 
     label = new DvtButton(context, ena, ovr, dwn);
+    label.setAriaRole('link');
+    label.setAriaProperty('label', textStr);
   }
   else {
     var labelStyle = bEnabled ? options.labelStyle : options.disabledLabelStyle;
@@ -953,7 +979,7 @@ DvtBreadcrumbsRenderer._truncateLabels = function(label, maxWidth) {
  */
 DvtBreadcrumbsRenderer._positionLabels = function(breadcrumbs, container, availWidth, labels, peers) {
   var options = breadcrumbs.__getOptions();
-  var eventManager = breadcrumbs.__getEventManager();
+  var eventManager = breadcrumbs.getEventManager();
 
   var arDims = [];
   var maxHeight = 0;
@@ -1030,7 +1056,7 @@ DvtBreadcrumbsRenderer._positionLabels = function(breadcrumbs, container, availW
  */
 DvtBreadcrumbsRenderer._positionLabelsBidi = function(breadcrumbs, container, availWidth, labels, peers) {
   var options = breadcrumbs.__getOptions();
-  var eventManager = breadcrumbs.__getEventManager();
+  var eventManager = breadcrumbs.getEventManager();
 
   var x = availWidth;
   for (var i = 0; i < labels.length; i++) {
@@ -1379,7 +1405,6 @@ DvtPanelDrawer.PANEL_OVERVIEW_TIP = 'overviewTip';
 DvtPanelDrawer.BG_ALPHA = 'backgroundAlpha';
 
 
-// DvtPanZoomControlPanel.BG_ALPHA
 /**
  * @const
  */
@@ -4109,5 +4134,61 @@ DvtOverviewWindow.prototype.getDimensions = function(targetCoordinateSpace) {
   else { // Calculate the bounds relative to the target space
     return this.ConvertCoordSpaceRect(bounds, targetCoordinateSpace);
   }
+};
+/**
+ * Subcomponent resource bundle.
+ * @class
+ * @constructor
+ * @extends {DvtUtilBundle}
+ */
+var DvtSubcomponentBundle = function() {};
+
+DvtObj.createSubclass(DvtSubcomponentBundle, DvtUtilBundle, 'DvtSubcomponentBundle');
+
+DvtSubcomponentBundle['_defaults'] = {
+  'CONTROL_PANEL' : 'Control Panel',
+  'CONTROL_PANEL_ZOOMANDCENTER' : 'Zoom and Center',
+  'CONTROL_PANEL_PAN' : 'Pan',
+  'CONTROL_PANEL_LAYOUT' : 'Layout',
+  'CONTROL_PANEL_LAYOUT_VERT_TOP' : 'Vertical, Top Down',
+  'CONTROL_PANEL_LAYOUT_VERT_BOTTOM' : 'Vertical, Bottom Up',
+  'CONTROL_PANEL_LAYOUT_HORIZ_LEFT' : 'Horizontal, Left-to-Right',
+  'CONTROL_PANEL_LAYOUT_HORIZ_RIGHT' : 'Horizontal, Right-to-Left',
+  'CONTROL_PANEL_LAYOUT_RADIAL' : 'Radial',
+  'CONTROL_PANEL_LAYOUT_TREE' : 'Tree',
+  'CONTROL_PANEL_LAYOUT_CIRCLE' : 'Circle',
+  'CONTROL_PANEL_SYNC' : 'View',
+  'CONTROL_PANEL_ZOOMTOFIT' : 'Zoom to Fit',
+  'CONTROL_PANEL_ZOOMIN' : 'Zoom In',
+  'CONTROL_PANEL_ZOOMOUT' : 'Zoom Out',
+  'CONTROL_PANEL_RESET' : 'Reset Map',
+  'CONTROL_PANEL_DRILLUP' : 'Drill Up',
+  'CONTROL_PANEL_DRILLDOWN' : 'Drill Down',
+  'LEGEND' : 'Legend',
+  'OVERVIEW' : 'Overview',
+  'PALETTE' : 'Palette',
+  'SEARCH' : 'Search',
+  'SEARCH_TEXT' : 'Search',
+  'SEARCH_TEXT_ALTA' : 'Find',
+  'SEARCH_RESULTS' : 'Search Results [{0}]',
+  'SEARCH_RESULTS_ALTA' : '{0} Results',
+  'SEARCH_RESULTS_CLOSE' : 'Close',
+  'SEARCH_RESULTS_NO_DATA' : 'No results to display'
+};
+
+/**
+ * @override
+ */
+DvtSubcomponentBundle.prototype.GetDefaultStringForKey = function(key) {
+  var defaultStr = DvtSubcomponentBundle.superclass.GetDefaultStringForKey.call(this, key);
+  return (defaultStr ? defaultStr : DvtSubcomponentBundle['_defaults'][key]);
+};
+
+
+/**
+ * @override
+ */
+DvtSubcomponentBundle.prototype.GetBundlePrefix = function() {
+  return 'DvtSubcomponentBundle';
 };
 });

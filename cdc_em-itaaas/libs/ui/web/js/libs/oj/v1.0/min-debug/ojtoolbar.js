@@ -13,21 +13,21 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$41$$, $$$$
       this._super()
     }, $_showContextMenu$:function($menu$$19$$, $event$$351$$) {
       $menu$$19$$.show($event$$351$$, {launcher:this.element.find(":oj-button[tabindex\x3d0]"), focus:"menu"})
-    }, _setOption:function($key$$117$$, $value$$207$$) {
-      "disabled" === $key$$117$$ && this.$$buttons$.ojButton("option", $key$$117$$, $value$$207$$);
-      this._super($key$$117$$, $value$$207$$)
+    }, _setOption:function($key$$117$$, $value$$209$$) {
+      "disabled" === $key$$117$$ && this.$$buttons$.ojButton("option", $key$$117$$, $value$$209$$);
+      this._super($key$$117$$, $value$$209$$)
     }, refresh:function() {
       this._super();
       this.$_setup$(!1)
     }, $_setup$:function($isCreate$$2$$) {
-      var $self$$106$$ = this;
+      var $self$$109$$ = this;
       this.$isRtl$ = "rtl" === this.$_GetReadingDirection$();
       this.$$buttons$ = this.element.find(this.$_items$).unbind("keydown" + this.eventNamespace).bind("keydown" + this.eventNamespace, function($event$$352$$) {
-        $self$$106$$.$_handleKeyDown$($event$$352$$, $$$$39$$(this))
+        $self$$109$$.$_handleKeyDown$($event$$352$$, $$$$39$$(this))
       }).unbind("click" + this.eventNamespace).bind("click" + this.eventNamespace, function() {
-        $$$$39$$(this).ojButton("option", "disabled") || $self$$106$$.$_setTabStop$($$$$39$$(this))
+        $$$$39$$(this).ojButton("option", "disabled") || $self$$109$$.$_setTabStop$($$$$39$$(this))
       }).unbind("focus" + this.eventNamespace).bind("focus" + this.eventNamespace, function() {
-        $self$$106$$.$_setTabStop$($$$$39$$(this))
+        $self$$109$$.$_setTabStop$($$$$39$$(this))
       });
       this.$$enabledButtons$ = this.$$buttons$.filter(function() {
         return!$$$$39$$(this).ojButton("option", "disabled")
@@ -41,12 +41,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$41$$, $$$$
       this.$_setTabStop$($$newTabStop$$1_isCreate$$3$$)
     }, $_mapToTabbable$:function($$button$$3$$) {
       var $$enabledButtons$$2$$ = this.$$enabledButtons$;
-      return $$button$$3$$.map(function($index$$187$$, $elem$$45$$) {
-        if("radio" != $elem$$45$$.type || $elem$$45$$.checked || "" == $elem$$45$$.name) {
-          return $elem$$45$$
+      return $$button$$3$$.map(function($index$$190$$, $elem$$46$$) {
+        if("radio" != $elem$$46$$.type || $elem$$46$$.checked || "" == $elem$$46$$.name) {
+          return $elem$$46$$
         }
-        var $$checkedRadio$$1$$ = $_radioGroup$$1$$($elem$$45$$, $$enabledButtons$$2$$).filter(":checked");
-        return $$checkedRadio$$1$$.length ? $$checkedRadio$$1$$[0] : $elem$$45$$
+        var $$checkedRadio$$1$$ = $_radioGroup$$1$$($elem$$46$$, $$enabledButtons$$2$$).filter(":checked");
+        return $$checkedRadio$$1$$.length ? $$checkedRadio$$1$$[0] : $elem$$46$$
       })
     }, $_setTabStop$:function($$button$$4$$) {
       $$button$$4$$ = this.$_mapToTabbable$($$button$$4$$);

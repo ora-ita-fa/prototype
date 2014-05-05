@@ -247,7 +247,7 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
           $model$$.attributes = {}
         }else {
           for($prop$$15$$ in $attrCopy$$) {
-            $attrCopy$$.hasOwnProperty($prop$$15$$) && $model$$.$_setProp$($prop$$15$$, $attrCopy$$[$prop$$15$$], $options$$11$$)
+            $attrCopy$$.hasOwnProperty($prop$$15$$) && $model$$.$_setProp$($prop$$15$$, $attrCopy$$[$prop$$15$$], !1, !1, $options$$11$$)
           }
         }
       }
@@ -337,8 +337,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   $oj$$1$$.$Model$.prototype.$SetupId$ = function $$oj$$1$$$$Model$$$$SetupId$$() {
     this.id = this.attributes[this.$_getIdAttr$()]
   };
-  $oj$$1$$.$Model$.prototype.$_setPropInternal$ = function $$oj$$1$$$$Model$$$$_setPropInternal$$($prop$$21$$, $value$$56$$) {
-    return $oj$$1$$.$Object$.$innerEquals$(this.attributes[$prop$$21$$], $value$$56$$) ? !1 : (this.attributes[$prop$$21$$] = $value$$56$$, this.$SetupId$(), !0)
+  $oj$$1$$.$Model$.prototype.$_setPropInternal$ = function $$oj$$1$$$$Model$$$$_setPropInternal$$($prop$$21$$, $value$$56$$, $copyRegardless$$) {
+    var $equality$$ = $oj$$1$$.$Object$.$innerEquals$(this.attributes[$prop$$21$$], $value$$56$$);
+    return $copyRegardless$$ || !$equality$$ ? (this.attributes[$prop$$21$$] = $value$$56$$, this.$SetupId$(), !$equality$$) : !1
   };
   $oj$$1$$.$Model$.prototype.$_clearChanged$ = function $$oj$$1$$$$Model$$$$_clearChanged$$() {
     this.changed = {}
@@ -346,41 +347,39 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   $oj$$1$$.$Model$.prototype.$_addChange$ = function $$oj$$1$$$$Model$$$$_addChange$$($property$$3$$, $value$$57$$) {
     this.changed[$property$$3$$] = $value$$57$$
   };
-  $oj$$1$$.$Model$.prototype.$_setProp$ = function $$oj$$1$$$$Model$$$$_setProp$$($prop$$22$$, $value$$58$$, $options$$16$$) {
-    if(null == $prop$$22$$) {
+  $oj$$1$$.$Model$.prototype.$_setProp$ = function $$oj$$1$$$$Model$$$$_setProp$$($prop$$22_silent$$4$$, $value$$58$$, $copyRegardless$$1$$, $propertyBag$$, $options$$16_opts$$) {
+    if(null == $prop$$22_silent$$4$$) {
       return!0
     }
-    var $attrs$$2$$ = {}, $p$$, $isNested$$ = this.$nestedSet$, $changes$$, $opts$$;
-    $opts$$ = $oj$$1$$.$Model$.$_copyOptions$($options$$16$$);
-    if(2 < arguments.length) {
-      $attrs$$2$$[$prop$$22$$] = $value$$58$$
-    }else {
-      for($p$$ in $prop$$22$$) {
-        $prop$$22$$.hasOwnProperty($p$$) && ($attrs$$2$$[$p$$] = $prop$$22$$[$p$$])
+    var $attrs$$2$$ = {}, $p$$, $isNested$$ = this.$nestedSet$;
+    $options$$16_opts$$ = $oj$$1$$.$Model$.$_copyOptions$($options$$16_opts$$);
+    if($propertyBag$$) {
+      for($p$$ in $prop$$22_silent$$4$$) {
+        $prop$$22_silent$$4$$.hasOwnProperty($p$$) && ($attrs$$2$$[$p$$] = $prop$$22_silent$$4$$[$p$$])
       }
-      $opts$$ = $value$$58$$
+    }else {
+      $attrs$$2$$[$prop$$22_silent$$4$$] = $value$$58$$
     }
-    $opts$$ = $opts$$ || {};
-    $changes$$ = [];
-    if(!this.$_checkValid$($attrs$$2$$, {validate:$opts$$.validate}, !1)) {
+    $options$$16_opts$$ = $options$$16_opts$$ || {};
+    if(!this.$_checkValid$($attrs$$2$$, {validate:$options$$16_opts$$.validate}, !1)) {
       return!1
     }
-    $isNested$$ || this.$_clearChanged$();
+    $isNested$$ || (this.$_clearChanged$(), this.$changes$ = []);
     this.$nestedSet$ || (this.$previousAttrs$ = $oj$$1$$.$Model$.$_cloneAttributes$(this.attributes, null));
     this.$nestedSet$ = !0;
     for($p$$ in $attrs$$2$$) {
-      $attrs$$2$$.hasOwnProperty($p$$) && (this.$_setPropInternal$($p$$, $attrs$$2$$[$p$$]) ? (this.$_addChange$($p$$, $attrs$$2$$[$p$$]), $changes$$.push($p$$)) : delete $attrs$$2$$[$p$$])
+      $attrs$$2$$.hasOwnProperty($p$$) && (this.$_setPropInternal$($p$$, $attrs$$2$$[$p$$], $copyRegardless$$1$$) ? (this.$_addChange$($p$$, $attrs$$2$$[$p$$]), this.$changes$.push($p$$)) : delete $attrs$$2$$[$p$$])
     }
-    var $silent$$4$$ = $opts$$.silent;
+    $prop$$22_silent$$4$$ = $options$$16_opts$$.silent;
     for($p$$ in $attrs$$2$$) {
-      $attrs$$2$$.hasOwnProperty($p$$) && ($changes$$.length && !$silent$$4$$ && (this.$pendingChanges$ = !0), this.$_fireAttrChange$($p$$, $attrs$$2$$[$p$$], $opts$$, $silent$$4$$))
+      $attrs$$2$$.hasOwnProperty($p$$) && (!$prop$$22_silent$$4$$ && (0 < this.$changes$.length || $isNested$$ && -1 === this.$changes$.indexOf($p$$)) && (this.$pendingChanges$ = !0), this.$_fireAttrChange$($p$$, $attrs$$2$$[$p$$], $options$$16_opts$$, $prop$$22_silent$$4$$))
     }
     if($isNested$$) {
       return!0
     }
-    if(!$silent$$4$$) {
+    if(!$prop$$22_silent$$4$$ && !$isNested$$) {
       for(;this.$pendingChanges$;) {
-        this.$pendingChanges$ = !1, this.$_fireChange$($opts$$, $silent$$4$$)
+        this.$pendingChanges$ = !1, this.$_fireChange$($options$$16_opts$$, $prop$$22_silent$$4$$)
       }
     }
     this.$nestedSet$ = !1;
@@ -409,9 +408,32 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Model.prototype.clear", {clear:$oj$$1$$.$Model$.prototype.clear});
   $oj$$1$$.$Model$.$_cloneAttributes$ = function $$oj$$1$$$$Model$$$_cloneAttributes$$($oldData$$, $newData$$) {
     var $prop$$24$$;
+    if(null === $oldData$$) {
+      return null
+    }
     $newData$$ = $newData$$ || {};
     for($prop$$24$$ in $oldData$$) {
-      $oldData$$.hasOwnProperty($prop$$24$$) && ("object" !== typeof $oldData$$[$prop$$24$$] ? $newData$$.hasOwnProperty($prop$$24$$) ? void 0 !== $oldData$$[$prop$$24$$] && ($newData$$[$prop$$24$$] = $oldData$$[$prop$$24$$]) : $newData$$[$prop$$24$$] = $oldData$$[$prop$$24$$] : $newData$$[$prop$$24$$] = $oj$$1$$.$Model$.$_cloneAttributes$($oldData$$[$prop$$24$$], null))
+      if($oldData$$.hasOwnProperty($prop$$24$$)) {
+        if("object" !== typeof $oldData$$[$prop$$24$$]) {
+          $newData$$.hasOwnProperty($prop$$24$$) ? void 0 !== $oldData$$[$prop$$24$$] && ($newData$$[$prop$$24$$] = $oldData$$[$prop$$24$$]) : $newData$$[$prop$$24$$] = $oldData$$[$prop$$24$$]
+        }else {
+          if($oj$$1$$.$Model$.$IsArray$($oldData$$[$prop$$24$$])) {
+            if(null === $oldData$$[$prop$$24$$]) {
+              $newData$$[$prop$$24$$] = null
+            }else {
+              if($newData$$[$prop$$24$$] = [], 0 === $oldData$$[$prop$$24$$].length) {
+                $newData$$[$prop$$24$$] = $oldData$$[$prop$$24$$]
+              }else {
+                for(var $i$$18$$ = 0;$i$$18$$ < $oldData$$[$prop$$24$$].length;$i$$18$$++) {
+                  $newData$$[$prop$$24$$].push($oj$$1$$.$Model$.$_cloneAttributes$($oldData$$[$prop$$24$$][$i$$18$$], null))
+                }
+              }
+            }
+          }else {
+            $newData$$[$prop$$24$$] = $oj$$1$$.$Model$.$_cloneAttributes$($oldData$$[$prop$$24$$], null)
+          }
+        }
+      }
     }
     return $newData$$
   };
@@ -436,20 +458,20 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return void 0 !== $modCid_modId$$ && $modCid_modId$$ == $cid$$ ? !0 : !1
   };
   $oj$$1$$.$Model$.prototype.set = function $$oj$$1$$$$Model$$$set$($property$$4$$, $value$$59$$, $options$$18$$) {
-    var $opts$$1$$ = {}, $ignoreLastArg$$ = !1, $i$$18_prop$$26$$, $valid$$ = !0;
+    var $opts$$1$$ = {}, $ignoreLastArg$$ = !1, $i$$19_prop$$26$$, $valid$$ = !0;
     if(arguments && 0 < arguments.length) {
       if(1 < arguments.length && arguments[arguments.length - 1] && ($ignoreLastArg$$ = !0, $opts$$1$$ = arguments[arguments.length - 1] || {}), $oj$$1$$.$Model$.$_hasProperties$($property$$4$$)) {
         if($opts$$1$$.unset) {
-          for($i$$18_prop$$26$$ in $property$$4$$) {
-            $property$$4$$.hasOwnProperty($i$$18_prop$$26$$) && this.$_unsetInternal$($i$$18_prop$$26$$, null, !1)
+          for($i$$19_prop$$26$$ in $property$$4$$) {
+            $property$$4$$.hasOwnProperty($i$$19_prop$$26$$) && this.$_unsetInternal$($i$$19_prop$$26$$, null, !1)
           }
         }else {
-          this.$_setProp$($property$$4$$, $opts$$1$$) || ($valid$$ = !1)
+          this.$_setProp$($property$$4$$, null, !0, !0, $opts$$1$$) || ($valid$$ = !1)
         }
       }else {
-        for($i$$18_prop$$26$$ = 0;$i$$18_prop$$26$$ < arguments.length;$i$$18_prop$$26$$ += 2) {
-          if(void 0 !== arguments[$i$$18_prop$$26$$] || $i$$18_prop$$26$$ < arguments.length - 1 || !$ignoreLastArg$$ && $i$$18_prop$$26$$ === arguments.length - 1) {
-            $opts$$1$$.unset ? this.$_unsetInternal$(arguments[$i$$18_prop$$26$$], null, !1) : this.$_setProp$(arguments[$i$$18_prop$$26$$], arguments[$i$$18_prop$$26$$ + 1], $opts$$1$$) || ($valid$$ = !1)
+        for($i$$19_prop$$26$$ = 0;$i$$19_prop$$26$$ < arguments.length;$i$$19_prop$$26$$ += 2) {
+          if(void 0 !== arguments[$i$$19_prop$$26$$] || $i$$19_prop$$26$$ < arguments.length - 1 || !$ignoreLastArg$$ && $i$$19_prop$$26$$ === arguments.length - 1) {
+            $opts$$1$$.unset ? this.$_unsetInternal$(arguments[$i$$19_prop$$26$$], null, !1) : this.$_setProp$(arguments[$i$$19_prop$$26$$], arguments[$i$$19_prop$$26$$ + 1], !1, !1, $opts$$1$$) || ($valid$$ = !1)
           }
         }
       }
@@ -542,13 +564,13 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Model.prototype.pairs", {$pairs$:$oj$$1$$.$Model$.prototype.$pairs$});
   $oj$$1$$.$Model$.prototype.$omit$ = function $$oj$$1$$$$Model$$$$omit$$($keys$$1$$) {
-    var $keyArr$$ = [], $i$$19$$, $prop$$30$$, $retObj$$1$$ = {};
+    var $keyArr$$ = [], $i$$20$$, $prop$$30$$, $retObj$$1$$ = {};
     if($keys$$1$$ instanceof Array) {
       $keyArr$$ = $keys$$1$$
     }else {
       if(arguments) {
-        for($i$$19$$ = 0;$i$$19$$ < arguments.length;$i$$19$$++) {
-          $keyArr$$.push(arguments[$i$$19$$])
+        for($i$$20$$ = 0;$i$$20$$ < arguments.length;$i$$20$$++) {
+          $keyArr$$.push(arguments[$i$$20$$])
         }
       }else {
         return this.$pairs$()
@@ -561,20 +583,20 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Model.prototype.omit", {$omit$:$oj$$1$$.$Model$.prototype.$omit$});
   $oj$$1$$.$Model$.prototype.$pick$ = function $$oj$$1$$$$Model$$$$pick$$($keys$$2$$) {
-    var $keyArr$$1$$ = [], $i$$20$$, $retObj$$2$$ = {};
+    var $keyArr$$1$$ = [], $i$$21$$, $retObj$$2$$ = {};
     if($keys$$2$$ instanceof Array) {
       $keyArr$$1$$ = $keys$$2$$
     }else {
       if(arguments) {
-        for($i$$20$$ = 0;$i$$20$$ < arguments.length;$i$$20$$++) {
-          $keyArr$$1$$.push(arguments[$i$$20$$])
+        for($i$$21$$ = 0;$i$$21$$ < arguments.length;$i$$21$$++) {
+          $keyArr$$1$$.push(arguments[$i$$21$$])
         }
       }else {
         return this.$pairs$()
       }
     }
-    for($i$$20$$ = 0;$i$$20$$ < $keyArr$$1$$.length;$i$$20$$++) {
-      this.attributes.hasOwnProperty($keyArr$$1$$[$i$$20$$]) && ($retObj$$2$$[$keyArr$$1$$[$i$$20$$]] = this.get($keyArr$$1$$[$i$$20$$]))
+    for($i$$21$$ = 0;$i$$21$$ < $keyArr$$1$$.length;$i$$21$$++) {
+      this.attributes.hasOwnProperty($keyArr$$1$$[$i$$21$$]) && ($retObj$$2$$[$keyArr$$1$$[$i$$21$$]] = this.get($keyArr$$1$$[$i$$21$$]))
     }
     return $retObj$$2$$
   };
@@ -615,20 +637,20 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return $validate$$ && $oj$$1$$.$Model$.$_isValidateSet$($options$$24$$, $save$$1$$) && (this.validationError = $validate$$.call(this, $attributes$$3$$, $options$$24$$)) ? (this.$TriggerInternal$(!1, $oj$$1$$.$Events$.$EventType$.INVALID, this, this.validationError, $options$$24$$), !1) : !0
   };
   $oj$$1$$.$Model$.$_processArgs$ = function $$oj$$1$$$$Model$$$_processArgs$$($args$$9$$) {
-    var $ignoreLastArg$$1$$ = !1, $options$$25$$ = {}, $i$$21_prop$$32$$, $attributes$$4$$ = {};
+    var $ignoreLastArg$$1$$ = !1, $options$$25$$ = {}, $i$$22_prop$$32$$, $attributes$$4$$ = {};
     if($args$$9$$ && 0 < $args$$9$$.length) {
       1 < $args$$9$$.length && ($args$$9$$[$args$$9$$.length - 1] && $oj$$1$$.$Model$.$_hasProperties$($args$$9$$[$args$$9$$.length - 1])) && ($ignoreLastArg$$1$$ = !0, $options$$25$$ = $args$$9$$[$args$$9$$.length - 1] || {});
       if(null == $args$$9$$[0]) {
         return{attributes:null, options:$options$$25$$}
       }
       if($oj$$1$$.$Model$.$_hasProperties$($args$$9$$[0])) {
-        for($i$$21_prop$$32$$ in $args$$9$$[0]) {
-          $args$$9$$[0].hasOwnProperty($i$$21_prop$$32$$) && ($attributes$$4$$[$i$$21_prop$$32$$] = $args$$9$$[0][$i$$21_prop$$32$$])
+        for($i$$22_prop$$32$$ in $args$$9$$[0]) {
+          $args$$9$$[0].hasOwnProperty($i$$22_prop$$32$$) && ($attributes$$4$$[$i$$22_prop$$32$$] = $args$$9$$[0][$i$$22_prop$$32$$])
         }
       }else {
-        for($i$$21_prop$$32$$ = 0;$i$$21_prop$$32$$ < $args$$9$$.length;$i$$21_prop$$32$$ += 2) {
-          if(void 0 !== $args$$9$$[$i$$21_prop$$32$$] || $i$$21_prop$$32$$ < $args$$9$$.length - 1 || !$ignoreLastArg$$1$$ && $i$$21_prop$$32$$ === $args$$9$$.length - 1) {
-            $attributes$$4$$[$args$$9$$[$i$$21_prop$$32$$]] = $args$$9$$[$i$$21_prop$$32$$ + 1]
+        for($i$$22_prop$$32$$ = 0;$i$$22_prop$$32$$ < $args$$9$$.length;$i$$22_prop$$32$$ += 2) {
+          if(void 0 !== $args$$9$$[$i$$22_prop$$32$$] || $i$$22_prop$$32$$ < $args$$9$$.length - 1 || !$ignoreLastArg$$1$$ && $i$$22_prop$$32$$ === $args$$9$$.length - 1) {
+            $attributes$$4$$[$args$$9$$[$i$$22_prop$$32$$]] = $args$$9$$[$i$$22_prop$$32$$ + 1]
           }
         }
       }
@@ -707,7 +729,7 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return $attrReturn$$
   };
   $oj$$1$$.$Model$.$IsArray$ = function $$oj$$1$$$$Model$$$IsArray$$($obj$$48$$) {
-    return $obj$$48$$.constructor === Array
+    return null != $obj$$48$$ && $obj$$48$$.constructor === Array
   };
   $oj$$1$$.$Model$.$IsFunction$ = function $$oj$$1$$$$Model$$$IsFunction$$($obj$$49$$) {
     return $obj$$49$$ instanceof Function
@@ -721,9 +743,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
         if(!this.attributes.hasOwnProperty($prop$$35$$)) {
           return!1
         }
-        for(var $val$$16$$ = $oj$$1$$.$Model$.$IsArray$($attrs$$7$$[$prop$$35$$]) ? $attrs$$7$$[$prop$$35$$] : [$attrs$$7$$[$prop$$35$$]], $i$$22$$ = 0;$i$$22$$ < $val$$16$$.length;$i$$22$$++) {
-          if($oj$$1$$.$Model$.$IsComplexValue$($val$$16$$[$i$$22$$])) {
-            var $comparator$$1$$ = $val$$16$$[$i$$22$$].comparator, $value$$60$$ = $val$$16$$[$i$$22$$].value;
+        for(var $val$$16$$ = $oj$$1$$.$Model$.$IsArray$($attrs$$7$$[$prop$$35$$]) ? $attrs$$7$$[$prop$$35$$] : [$attrs$$7$$[$prop$$35$$]], $i$$23$$ = 0;$i$$23$$ < $val$$16$$.length;$i$$23$$++) {
+          if($oj$$1$$.$Model$.$IsComplexValue$($val$$16$$[$i$$23$$])) {
+            var $comparator$$1$$ = $val$$16$$[$i$$23$$].comparator, $value$$60$$ = $val$$16$$[$i$$23$$].value;
             if($oj$$1$$.$StringUtils$.$isString$($comparator$$1$$)) {
               throw Error("String comparator invalid for local where/findWhere");
             }
@@ -742,9 +764,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Model$.prototype.$Contains$ = function $$oj$$1$$$$Model$$$$Contains$$($attrList_attrs$$8$$) {
     $attrList_attrs$$8$$ = $attrList_attrs$$8$$.constructor === Array ? $attrList_attrs$$8$$ : [$attrList_attrs$$8$$];
-    var $i$$23$$;
-    for($i$$23$$ = 0;$i$$23$$ < $attrList_attrs$$8$$.length;$i$$23$$++) {
-      if(this.$_hasAttrs$($attrList_attrs$$8$$[$i$$23$$])) {
+    var $i$$24$$;
+    for($i$$24$$ = 0;$i$$24$$ < $attrList_attrs$$8$$.length;$i$$24$$++) {
+      if(this.$_hasAttrs$($attrList_attrs$$8$$[$i$$24$$])) {
         return!0
       }
     }
@@ -919,18 +941,18 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $goog$exportPath_$$("Collection.extend", $oj$$1$$.$Collection$.extend, $oj$$1$$);
   $oj$$1$$.$Collection$._init = function $$oj$$1$$$$Collection$$_init$($collection$$3$$, $models$$2$$, $options$$38$$, $properties$$6$$) {
-    var $i$$24_prop$$39$$, $modelList_optionlist$$;
+    var $i$$25_prop$$39$$, $modelList_optionlist$$;
     $collection$$3$$.Init();
     $oj$$1$$.$Events$.$Mixin$($collection$$3$$);
     if($properties$$6$$) {
-      for($i$$24_prop$$39$$ in $properties$$6$$) {
-        $properties$$6$$.hasOwnProperty($i$$24_prop$$39$$) && ($collection$$3$$[$i$$24_prop$$39$$] = $properties$$6$$[$i$$24_prop$$39$$])
+      for($i$$25_prop$$39$$ in $properties$$6$$) {
+        $properties$$6$$.hasOwnProperty($i$$25_prop$$39$$) && ($collection$$3$$[$i$$25_prop$$39$$] = $properties$$6$$[$i$$25_prop$$39$$])
       }
     }
     $options$$38$$ = $options$$38$$ || {};
     $modelList_optionlist$$ = ["url", "comparator", "model", $oj$$1$$.$Collection$.$_FETCH_SIZE_PROP$, "modelLimit", "customURL"];
-    for($i$$24_prop$$39$$ = 0;$i$$24_prop$$39$$ < $modelList_optionlist$$.length;$i$$24_prop$$39$$++) {
-      $options$$38$$.hasOwnProperty($modelList_optionlist$$[$i$$24_prop$$39$$]) && void 0 !== $options$$38$$[$modelList_optionlist$$[$i$$24_prop$$39$$]] && ($collection$$3$$[$modelList_optionlist$$[$i$$24_prop$$39$$]] = $options$$38$$[$modelList_optionlist$$[$i$$24_prop$$39$$]])
+    for($i$$25_prop$$39$$ = 0;$i$$25_prop$$39$$ < $modelList_optionlist$$.length;$i$$25_prop$$39$$++) {
+      $options$$38$$.hasOwnProperty($modelList_optionlist$$[$i$$25_prop$$39$$]) && void 0 !== $options$$38$$[$modelList_optionlist$$[$i$$25_prop$$39$$]] && ($collection$$3$$[$modelList_optionlist$$[$i$$25_prop$$39$$]] = $options$$38$$[$modelList_optionlist$$[$i$$25_prop$$39$$]])
     }
     void 0 === $collection$$3$$.$_getFetchSize$(null) && $collection$$3$$.$setFetchSize$(-1);
     void 0 === $collection$$3$$.modelLimit && $collection$$3$$.$setModelLimit$(-1);
@@ -939,8 +961,8 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     $collection$$3$$.$_setModels$([]);
     $options$$38$$.parse && ($models$$2$$ = $collection$$3$$.parse($models$$2$$));
     if(null != $models$$2$$ && void 0 !== $models$$2$$) {
-      for($modelList_optionlist$$ = $models$$2$$ instanceof Array ? $models$$2$$ : [$models$$2$$], $i$$24_prop$$39$$ = 0;$i$$24_prop$$39$$ < $modelList_optionlist$$.length;$i$$24_prop$$39$$ += 1) {
-        $collection$$3$$.add($modelList_optionlist$$[$i$$24_prop$$39$$], $options$$38$$)
+      for($modelList_optionlist$$ = $models$$2$$ instanceof Array ? $models$$2$$ : [$models$$2$$], $i$$25_prop$$39$$ = 0;$i$$25_prop$$39$$ < $modelList_optionlist$$.length;$i$$25_prop$$39$$ += 1) {
+        $collection$$3$$.add($modelList_optionlist$$[$i$$25_prop$$39$$], $options$$38$$)
       }
     }
     $collection$$3$$.$_setLength$();
@@ -968,14 +990,14 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Collection$.prototype.$_reduceLRU$ = function $$oj$$1$$$$Collection$$$$_reduceLRU$$($removed$$) {
     if($removed$$) {
-      for(var $i$$25$$ = 0;$i$$25$$ < $removed$$.length;$i$$25$$++) {
-        $removed$$[$i$$25$$] && this.$lruCount$--
+      for(var $i$$26$$ = 0;$i$$26$$ < $removed$$.length;$i$$26$$++) {
+        $removed$$[$i$$26$$] && this.$lruCount$--
       }
     }
   };
   $oj$$1$$.$Collection$.prototype.$_spliceModels$ = function $$oj$$1$$$$Collection$$$$_spliceModels$$($start$$6$$, $count$$6$$, $model$$10$$) {
-    for(var $i$$26$$ = $start$$6$$;$i$$26$$ < $start$$6$$ + $count$$6$$;$i$$26$$++) {
-      this.$_removePrevNext$(this.$_getModels$()[$i$$26$$])
+    for(var $i$$27$$ = $start$$6$$;$i$$27$$ < $start$$6$$ + $count$$6$$;$i$$27$$++) {
+      this.$_removePrevNext$(this.$_getModels$()[$i$$27$$])
     }
     void 0 === $model$$10$$ ? this.$_reduceLRU$(this.$_getModels$().splice($start$$6$$, $count$$6$$)) : (this.$_reduceLRU$(this.$_getModels$().splice($start$$6$$, $count$$6$$, $model$$10$$)), this.$_makeModelHead$($model$$10$$));
     0 > this.$lruCount$ && (this.$lruCount$ = 0);
@@ -985,8 +1007,8 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return this.$_getModels$()[$index$$50$$]
   };
   $oj$$1$$.$Collection$.prototype.$_realignModelIndices$ = function $$oj$$1$$$$Collection$$$$_realignModelIndices$$($model$$11_start$$7$$) {
-    for(var $i$$27$$ = $model$$11_start$$7$$;$i$$27$$ < this.$_getModelsLength$();$i$$27$$++) {
-      ($model$$11_start$$7$$ = this.$_getModel$($i$$27$$)) && $model$$11_start$$7$$.$SetIndex$($i$$27$$)
+    for(var $i$$28$$ = $model$$11_start$$7$$;$i$$28$$ < this.$_getModelsLength$();$i$$28$$++) {
+      ($model$$11_start$$7$$ = this.$_getModel$($i$$28$$)) && $model$$11_start$$7$$.$SetIndex$($i$$28$$)
     }
   };
   $oj$$1$$.$Collection$.prototype.$_removePrevNext$ = function $$oj$$1$$$$Collection$$$$_removePrevNext$$($model$$12_oldNext$$) {
@@ -1012,9 +1034,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     this.$_makeModelHead$($model$$14$$)
   };
   $oj$$1$$.$Collection$.prototype.$_clearOutModels$ = function $$oj$$1$$$$Collection$$$$_clearOutModels$$($n$$1$$) {
-    var $current$$ = this.tail, $index$$52$$, $model$$15$$, $i$$28$$ = 0;
-    for(this.tail = null;$current$$ && $i$$28$$ < $n$$1$$;) {
-      $index$$52$$ = $current$$.index, ($model$$15$$ = this.$_getModels$()[$index$$52$$]) && $model$$15$$.$hasChanged$() ? (this.tail || (this.tail = $current$$), $current$$ = $current$$.$GetPrevious$()) : (this.$lruCount$--, -1 < $index$$52$$ && (this.$_getModels$()[$index$$52$$] = void 0), $current$$.$SetNext$(null), $current$$ = $current$$.$SetPrevious$(null), $i$$28$$++)
+    var $current$$ = this.tail, $index$$52$$, $model$$15$$, $i$$29$$ = 0;
+    for(this.tail = null;$current$$ && $i$$29$$ < $n$$1$$;) {
+      $index$$52$$ = $current$$.index, ($model$$15$$ = this.$_getModels$()[$index$$52$$]) && $model$$15$$.$hasChanged$() ? (this.tail || (this.tail = $current$$), $current$$ = $current$$.$GetPrevious$()) : (this.$lruCount$--, -1 < $index$$52$$ && (this.$_getModels$()[$index$$52$$] = void 0), $current$$.$SetNext$(null), $current$$ = $current$$.$SetPrevious$(null), $i$$29$$++)
     }
     this.tail || (this.tail = $current$$);
     0 > this.$lruCount$ && (this.$lruCount$ = 0);
@@ -1034,20 +1056,20 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return this.$_cloneInternal$(!0)
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.clone", {clone:$oj$$1$$.$Collection$.prototype.clone});
-  $oj$$1$$.$Collection$.prototype.$_cloneInternal$ = function $$oj$$1$$$$Collection$$$$_cloneInternal$$($i$$29_withProperties$$) {
+  $oj$$1$$.$Collection$.prototype.$_cloneInternal$ = function $$oj$$1$$$$Collection$$$$_cloneInternal$$($i$$30_withProperties$$) {
     var $c$$14$$ = new this.constructor, $model$$16$$;
     this.$_isVirtual$() && ($c$$14$$ = this.$_copyProperties$($c$$14$$), $c$$14$$.$_resetModelsToFullLength$());
-    if($i$$29_withProperties$$) {
-      for($i$$29_withProperties$$ = 0;$i$$29_withProperties$$ < this.$_getLength$();$i$$29_withProperties$$ += 1) {
-        ($model$$16$$ = this.$_atInternal$($i$$29_withProperties$$, null, !0, !1)) && $c$$14$$.$_addInternal$($model$$16$$.clone(), {at:$i$$29_withProperties$$}, !0, !1)
+    if($i$$30_withProperties$$) {
+      for($i$$30_withProperties$$ = 0;$i$$30_withProperties$$ < this.$_getLength$();$i$$30_withProperties$$ += 1) {
+        ($model$$16$$ = this.$_atInternal$($i$$30_withProperties$$, null, !0, !1)) && $c$$14$$.$_addInternal$($model$$16$$.clone(), {at:$i$$30_withProperties$$}, !0, !1)
       }
     }
     return $c$$14$$
   };
   $oj$$1$$.$Collection$.prototype.$_copyProperties$ = function $$oj$$1$$$$Collection$$$$_copyProperties$$($collection$$4$$) {
-    var $props$$1$$ = ["totalResults", "hasMore", $oj$$1$$.$Collection$.$_FETCH_SIZE_PROP$], $prop$$40$$, $i$$30$$;
-    for($i$$30$$ = 0;$i$$30$$ < $props$$1$$.length;$i$$30$$++) {
-      $prop$$40$$ = $props$$1$$[$i$$30$$], $collection$$4$$[$prop$$40$$] = this[$prop$$40$$]
+    var $props$$1$$ = ["totalResults", "hasMore", $oj$$1$$.$Collection$.$_FETCH_SIZE_PROP$], $prop$$40$$, $i$$31$$;
+    for($i$$31$$ = 0;$i$$31$$ < $props$$1$$.length;$i$$31$$++) {
+      $prop$$40$$ = $props$$1$$[$i$$31$$], $collection$$4$$[$prop$$40$$] = this[$prop$$40$$]
     }
     return $collection$$4$$
   };
@@ -1067,11 +1089,11 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return this.$_addInternal$($m$$1$$, $options$$41$$, !1, ($options$$41$$ || {}).deferred)
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.add", {add:$oj$$1$$.$Collection$.prototype.add});
-  $oj$$1$$.$Collection$.prototype.$_addInternal$ = function $$oj$$1$$$$Collection$$$$_addInternal$$($i$$31_m$$2$$, $options$$42$$, $fillIn$$, $currentStep_deferred$$2$$) {
+  $oj$$1$$.$Collection$.prototype.$_addInternal$ = function $$oj$$1$$$$Collection$$$$_addInternal$$($i$$32_m$$2$$, $options$$42$$, $fillIn$$, $currentStep_deferred$$2$$) {
     function $mergeAttrs$$($collection$$7$$, $modelToTryAndMerge_sortOpt$$inline_306$$, $modelFoundInCollection$$1$$, $newModel$$3$$, $deferred$$4$$) {
       var $existingModel$$2$$;
-      $merge$$ && $modelFoundInCollection$$1$$ ? $needSort$$1$$ = $modelFoundInCollection$$1$$.$Merge$($modelToTryAndMerge_sortOpt$$inline_306$$, $collection$$7$$.comparator) : ($existingModel$$2$$ = $collection$$7$$.$_getLocal$($newModel$$3$$), void 0 === $existingModel$$2$$ && (void 0 === $at$$ ? ($collection$$7$$.$_pushModels$($newModel$$3$$), $index$$53$$ = $collection$$7$$.$_getModelsLength$() - 1, $collection$$7$$.$_getModel$($index$$53$$).$SetCid$()) : ($index$$53$$ = $at$$, $collection$$7$$.$_isVirtual$() && 
-      $fillIn$$ ? $collection$$7$$.$_setModel$($index$$53$$, $newModel$$3$$) : $collection$$7$$.$_spliceModels$($index$$53$$, 0, $newModel$$3$$), $collection$$7$$.$_getModel$($index$$53$$).$SetCid$(), $at$$ += 1), void 0 === $newModel$$3$$.$GetCollection$() && $newModel$$3$$.$SetCollection$($collection$$7$$), $collection$$7$$.$_setLength$(), $collection$$7$$.$_listenToModel$($newModel$$3$$), $added$$ = !0));
+      !$force$$ && $merge$$ && $modelFoundInCollection$$1$$ ? $needSort$$1$$ = $modelFoundInCollection$$1$$.$Merge$($modelToTryAndMerge_sortOpt$$inline_306$$, $collection$$7$$.comparator) : ($force$$ || ($existingModel$$2$$ = $collection$$7$$.$_getLocal$($newModel$$3$$)), void 0 === $existingModel$$2$$ && (void 0 === $at$$ ? ($collection$$7$$.$_pushModels$($newModel$$3$$), $index$$53$$ = $collection$$7$$.$_getModelsLength$() - 1, $collection$$7$$.$_getModel$($index$$53$$).$SetCid$()) : ($index$$53$$ = 
+      $at$$, $collection$$7$$.$_isVirtual$() && $fillIn$$ ? $collection$$7$$.$_setModel$($index$$53$$, $newModel$$3$$) : $collection$$7$$.$_spliceModels$($index$$53$$, 0, $newModel$$3$$), $collection$$7$$.$_getModel$($index$$53$$).$SetCid$(), $at$$ += 1), void 0 === $newModel$$3$$.$GetCollection$() && $newModel$$3$$.$SetCollection$($collection$$7$$), $collection$$7$$.$_setLength$(), $collection$$7$$.$_listenToModel$($newModel$$3$$), $added$$ = !0));
       $fillIn$$ && ($options$$42$$ = $options$$42$$ || {}, $options$$42$$.fillIn = !0);
       $needSort$$1$$ && (void 0 === $existingModel$$2$$ && !$sort$$ && void 0 === $at$$ && 1 < $collection$$7$$.$_getLength$()) && (-1 < $index$$53$$ && ($cid$$1$$ = $collection$$7$$.$_getModel$($index$$53$$).cid), $modelToTryAndMerge_sortOpt$$inline_306$$ = {}, $oj$$1$$.$CollectionUtils$.$copyInto$($modelToTryAndMerge_sortOpt$$inline_306$$, $options$$42$$), $modelToTryAndMerge_sortOpt$$inline_306$$.add = !0, $collection$$7$$.sort($modelToTryAndMerge_sortOpt$$inline_306$$), -1 < $index$$53$$ && ($index$$53$$ = 
       $collection$$7$$.indexOf($collection$$7$$.$getByCid$($cid$$1$$), $deferred$$4$$)));
@@ -1084,7 +1106,7 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
         $newModel$$4$$.$SetupId$();
         $modelToTryAndMerge$$1$$ = $model$$17$$ instanceof $oj$$1$$.$Model$ ? $model$$17$$ : $newModel$$4$$;
         if($deferred$$5$$) {
-          return $collection$$8$$.$_getInternal$($modelToTryAndMerge$$1$$, null, $deferred$$5$$, !0).done(function($modInfo$$) {
+          return $force$$ ? ($mergeAttrs$$($collection$$8$$, $modelToTryAndMerge$$1$$, void 0, $newModel$$4$$, $deferred$$5$$), $$$$1$$.Deferred().resolve()) : $collection$$8$$.$_getInternal$($modelToTryAndMerge$$1$$, null, $deferred$$5$$, !0).done(function($modInfo$$) {
             $modelFoundInCollection$$2$$ = $modInfo$$.m;
             return $mergeAttrs$$($collection$$8$$, $modelToTryAndMerge$$1$$, $modelFoundInCollection$$2$$, $newModel$$4$$, $deferred$$5$$)
           })
@@ -1094,8 +1116,8 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
       }
     }
     $options$$42$$ = $options$$42$$ || {};
-    var $modelArray$$ = [], $at$$ = $options$$42$$.at, $silent$$10$$ = $options$$42$$.silent, $index$$53$$, $cid$$1$$, $merge$$ = $options$$42$$.merge || !1, $sort$$ = $options$$42$$.sort, $needSort$$1$$ = !0, $added$$ = !1;
-    $i$$31_m$$2$$ instanceof Array ? $modelArray$$ = $i$$31_m$$2$$ : $modelArray$$.push($i$$31_m$$2$$);
+    var $modelArray$$ = [], $at$$ = $options$$42$$.at, $silent$$10$$ = $options$$42$$.silent, $force$$ = $options$$42$$.force, $index$$53$$, $cid$$1$$, $merge$$ = $options$$42$$.merge || !1, $sort$$ = $options$$42$$.sort, $needSort$$1$$ = !0, $added$$ = !1;
+    $i$$32_m$$2$$ instanceof Array ? $modelArray$$ = $i$$32_m$$2$$ : $modelArray$$.push($i$$32_m$$2$$);
     if(!$fillIn$$ && (this.$_isVirtual$() || $currentStep_deferred$$2$$)) {
       var $self$$4$$ = this, $doTask$$ = function $$doTask$$$($index$$54$$) {
         var $defer$$ = $$$$1$$.Deferred();
@@ -1108,13 +1130,13 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
       var $nextTask$$ = function $$nextTask$$$($j$$2$$) {
         return $doTask$$($j$$2$$ + 1)
       };
-      for($i$$31_m$$2$$ = 1;$i$$31_m$$2$$ < $modelArray$$.length;$i$$31_m$$2$$++) {
+      for($i$$32_m$$2$$ = 1;$i$$32_m$$2$$ < $modelArray$$.length;$i$$32_m$$2$$++) {
         $currentStep_deferred$$2$$ = $currentStep_deferred$$2$$.then($nextTask$$)
       }
       return $$$$1$$.when($currentStep_deferred$$2$$).promise()
     }
-    for($i$$31_m$$2$$ = 0;$i$$31_m$$2$$ < $modelArray$$.length;$i$$31_m$$2$$++) {
-      $doAdd$$(this, $modelArray$$[$i$$31_m$$2$$], !1)
+    for($i$$32_m$$2$$ = 0;$i$$32_m$$2$$ < $modelArray$$.length;$i$$32_m$$2$$++) {
+      $doAdd$$(this, $modelArray$$[$i$$32_m$$2$$], !1)
     }
   };
   $oj$$1$$.$Collection$.prototype.$_hasComparator$ = function $$oj$$1$$$$Collection$$$$_hasComparator$$() {
@@ -1124,33 +1146,33 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   $oj$$1$$.$Collection$.prototype.sort = function $$oj$$1$$$$Collection$$$sort$($options$$43_totalResults$$) {
     $options$$43_totalResults$$ = $options$$43_totalResults$$ || {};
     var $silent$$11$$ = $options$$43_totalResults$$.silent, $comparator$$3$$ = this.comparator, $self$$5$$;
-    this.$_hasComparator$() && (this.$_isVirtual$() && this.$_hasMore$() ? ($options$$43_totalResults$$ = this.totalResults, void 0 !== $options$$43_totalResults$$ ? this.$_setModels$(Array($options$$43_totalResults$$)) : (this.$_setModels$([]), this.$_resetLRU$(), this.$_setLength$())) : ($self$$5$$ = this, this.$_getModels$().sort(function($a$$42$$, $b$$23$$) {
-      return $oj$$1$$.$Collection$.$SortFunc$($a$$42$$, $b$$23$$, $comparator$$3$$, $self$$5$$, $self$$5$$)
+    this.$_hasComparator$() && (this.$_isVirtual$() && this.$_hasMore$() ? ($options$$43_totalResults$$ = this.totalResults, void 0 !== $options$$43_totalResults$$ ? this.$_setModels$(Array($options$$43_totalResults$$)) : (this.$_setModels$([]), this.$_resetLRU$(), this.$_setLength$())) : ($self$$5$$ = this, this.$_getModels$().sort(function($a$$48$$, $b$$24$$) {
+      return $oj$$1$$.$Collection$.$SortFunc$($a$$48$$, $b$$24$$, $comparator$$3$$, $self$$5$$, $self$$5$$)
     }), this.$_realignModelIndices$(0), this.$TriggerInternal$($silent$$11$$, $oj$$1$$.$Events$.$EventType$.SORT, this, $options$$43_totalResults$$.add ? {add:!0} : null, null)))
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.sort", {sort:$oj$$1$$.$Collection$.prototype.sort});
   $oj$$1$$.$Collection$.$_getKey$ = function $$oj$$1$$$$Collection$$$_getKey$$($val$$17$$, $attr$$8$$) {
     return $val$$17$$ instanceof $oj$$1$$.$Model$ ? $val$$17$$.get($attr$$8$$) : $oj$$1$$.$Model$.$IsFunction$($val$$17$$[$attr$$8$$]) ? $val$$17$$[$attr$$8$$]() : $val$$17$$[$attr$$8$$]
   };
-  $oj$$1$$.$Collection$.$SortFunc$ = function $$oj$$1$$$$Collection$$$SortFunc$$($a$$43$$, $b$$24$$, $attrs$$9_comparator$$4$$, $collection$$9$$, $self$$6$$) {
-    var $attrs1_keyA$$, $keyB_retVal$$2$$, $i$$32$$;
+  $oj$$1$$.$Collection$.$SortFunc$ = function $$oj$$1$$$$Collection$$$SortFunc$$($a$$49$$, $b$$25$$, $attrs$$9_comparator$$4$$, $collection$$9$$, $self$$6$$) {
+    var $attrs1_keyA$$, $keyB_retVal$$2$$, $i$$33$$;
     if($oj$$1$$.$Model$.$IsFunction$($attrs$$9_comparator$$4$$)) {
       if(1 === $attrs$$9_comparator$$4$$.length) {
-        $attrs1_keyA$$ = $attrs$$9_comparator$$4$$.call($self$$6$$, $a$$43$$);
-        $keyB_retVal$$2$$ = $attrs$$9_comparator$$4$$.call($self$$6$$, $b$$24$$);
+        $attrs1_keyA$$ = $attrs$$9_comparator$$4$$.call($self$$6$$, $a$$49$$);
+        $keyB_retVal$$2$$ = $attrs$$9_comparator$$4$$.call($self$$6$$, $b$$25$$);
         $attrs1_keyA$$ = $oj$$1$$.$StringUtils$.$isString$($attrs1_keyA$$) ? $attrs1_keyA$$.split(",") : [$attrs1_keyA$$];
         var $attrs2$$ = $oj$$1$$.$StringUtils$.$isString$($keyB_retVal$$2$$) ? $keyB_retVal$$2$$.split(",") : [$keyB_retVal$$2$$];
-        for($i$$32$$ = 0;$i$$32$$ < $attrs1_keyA$$.length;$i$$32$$++) {
-          if($keyB_retVal$$2$$ = $oj$$1$$.$Collection$.$_compareKeys$($attrs1_keyA$$[$i$$32$$], $attrs2$$[$i$$32$$], $collection$$9$$.sortDirection), 0 !== $keyB_retVal$$2$$) {
+        for($i$$33$$ = 0;$i$$33$$ < $attrs1_keyA$$.length;$i$$33$$++) {
+          if($keyB_retVal$$2$$ = $oj$$1$$.$Collection$.$_compareKeys$($attrs1_keyA$$[$i$$33$$], $attrs2$$[$i$$33$$], $collection$$9$$.sortDirection), 0 !== $keyB_retVal$$2$$) {
             return $keyB_retVal$$2$$
           }
         }
       }
-      return $attrs$$9_comparator$$4$$.call($self$$6$$, $a$$43$$, $b$$24$$)
+      return $attrs$$9_comparator$$4$$.call($self$$6$$, $a$$49$$, $b$$25$$)
     }
     if($oj$$1$$.$StringUtils$.$isString$($attrs$$9_comparator$$4$$)) {
-      for($attrs$$9_comparator$$4$$ = $attrs$$9_comparator$$4$$.split(","), $i$$32$$ = 0;$i$$32$$ < $attrs$$9_comparator$$4$$.length;$i$$32$$++) {
-        if($attrs1_keyA$$ = $oj$$1$$.$Collection$.$_getKey$($a$$43$$, $attrs$$9_comparator$$4$$[$i$$32$$]), $keyB_retVal$$2$$ = $oj$$1$$.$Collection$.$_getKey$($b$$24$$, $attrs$$9_comparator$$4$$[$i$$32$$]), $keyB_retVal$$2$$ = $oj$$1$$.$Collection$.$_compareKeys$($attrs1_keyA$$, $keyB_retVal$$2$$, $collection$$9$$.sortDirection), 0 !== $keyB_retVal$$2$$) {
+      for($attrs$$9_comparator$$4$$ = $attrs$$9_comparator$$4$$.split(","), $i$$33$$ = 0;$i$$33$$ < $attrs$$9_comparator$$4$$.length;$i$$33$$++) {
+        if($attrs1_keyA$$ = $oj$$1$$.$Collection$.$_getKey$($a$$49$$, $attrs$$9_comparator$$4$$[$i$$33$$]), $keyB_retVal$$2$$ = $oj$$1$$.$Collection$.$_getKey$($b$$25$$, $attrs$$9_comparator$$4$$[$i$$33$$]), $keyB_retVal$$2$$ = $oj$$1$$.$Collection$.$_compareKeys$($attrs1_keyA$$, $keyB_retVal$$2$$, $collection$$9$$.sortDirection), 0 !== $keyB_retVal$$2$$) {
           return $keyB_retVal$$2$$
         }
       }
@@ -1224,9 +1246,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.shift", {shift:$oj$$1$$.$Collection$.prototype.shift});
   $oj$$1$$.$Collection$.prototype.$initial$ = function $$oj$$1$$$$Collection$$$$initial$$($n$$2$$) {
     void 0 === $n$$2$$ && ($n$$2$$ = 1);
-    var $array$$9$$ = [], $i$$34$$;
-    for($i$$34$$ = 0;$i$$34$$ < this.$_getLength$() - $n$$2$$;$i$$34$$ += 1) {
-      $array$$9$$.push(this.at($i$$34$$))
+    var $array$$9$$ = [], $i$$35$$;
+    for($i$$35$$ = 0;$i$$35$$ < this.$_getLength$() - $n$$2$$;$i$$35$$ += 1) {
+      $array$$9$$.push(this.at($i$$35$$))
     }
     return $array$$9$$
   };
@@ -1235,19 +1257,19 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return($options$$46$$ || {}).deferred
   };
   $oj$$1$$.$Collection$.prototype.last = function $$oj$$1$$$$Collection$$$last$($n$$3$$, $options$$47$$) {
-    var $deferred$$7_i$$35$$ = this.$_getDeferred$($options$$47$$);
+    var $deferred$$7_i$$36$$ = this.$_getDeferred$($options$$47$$);
     void 0 === $n$$3$$ && ($n$$3$$ = 1);
     if(1 === $n$$3$$) {
       var $len$$1$$ = this.$_getModelsLength$();
       0 === $len$$1$$ && ($len$$1$$ = $n$$3$$);
-      return 0 < $len$$1$$ ? this.at($len$$1$$ - 1, $deferred$$7_i$$35$$) : null
+      return 0 < $len$$1$$ ? this.at($len$$1$$ - 1, $deferred$$7_i$$36$$) : null
     }
     var $array$$10_start$$8$$ = [], $len$$1$$ = this.$_getLength$();
-    if($deferred$$7_i$$35$$ || this.$_isVirtual$()) {
+    if($deferred$$7_i$$36$$ || this.$_isVirtual$()) {
       return $array$$10_start$$8$$ = $len$$1$$ - $n$$3$$, 0 > $array$$10_start$$8$$ && ($array$$10_start$$8$$ = 0), 0 === $len$$1$$ && ($len$$1$$ = $n$$3$$), this.$_iterativeAt$($array$$10_start$$8$$, $len$$1$$)
     }
-    for($deferred$$7_i$$35$$ = $len$$1$$ - $n$$3$$;$deferred$$7_i$$35$$ < $len$$1$$;$deferred$$7_i$$35$$ += 1) {
-      $array$$10_start$$8$$.push(this.at($deferred$$7_i$$35$$))
+    for($deferred$$7_i$$36$$ = $len$$1$$ - $n$$3$$;$deferred$$7_i$$36$$ < $len$$1$$;$deferred$$7_i$$36$$ += 1) {
+      $array$$10_start$$8$$.push(this.at($deferred$$7_i$$36$$))
     }
     return $array$$10_start$$8$$
   };
@@ -1264,8 +1286,8 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
       });
       return $defer$$1$$.promise()
     }
-    var $array$$11$$ = [], $i$$36$$, $self$$9$$ = this, $currentStep$$1$$ = $doTask$$1$$($start$$9$$);
-    for($i$$36$$ = $start$$9$$ + 1;$i$$36$$ < $end$$3$$;$i$$36$$++) {
+    var $array$$11$$ = [], $i$$37$$, $self$$9$$ = this, $currentStep$$1$$ = $doTask$$1$$($start$$9$$);
+    for($i$$37$$ = $start$$9$$ + 1;$i$$37$$ < $end$$3$$;$i$$37$$++) {
       $currentStep$$1$$ = $currentStep$$1$$.then($nextTask$$1$$)
     }
     return $$$$1$$.when($currentStep$$1$$).then(function() {
@@ -1323,14 +1345,14 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.setFetchSize", {$setFetchSize$:$oj$$1$$.$Collection$.prototype.$setFetchSize$});
   $oj$$1$$.$Collection$.prototype.$rest$ = function $$oj$$1$$$$Collection$$$$rest$$($n$$10$$, $options$$50$$) {
-    var $deferred$$8_i$$37$$ = this.$_getDeferred$($options$$50$$);
+    var $deferred$$8_i$$38$$ = this.$_getDeferred$($options$$50$$);
     void 0 === $n$$10$$ && ($n$$10$$ = 1);
     var $array$$12$$ = [];
-    if(this.$_isVirtual$() || $deferred$$8_i$$37$$) {
+    if(this.$_isVirtual$() || $deferred$$8_i$$38$$) {
       return this.$_iterativeAt$($n$$10$$, this.$_getLength$())
     }
-    for($deferred$$8_i$$37$$ = $n$$10$$;$deferred$$8_i$$37$$ < this.$_getLength$();$deferred$$8_i$$37$$ += 1) {
-      $array$$12$$.push(this.at($deferred$$8_i$$37$$))
+    for($deferred$$8_i$$38$$ = $n$$10$$;$deferred$$8_i$$38$$ < this.$_getLength$();$deferred$$8_i$$38$$ += 1) {
+      $array$$12$$.push(this.at($deferred$$8_i$$38$$))
     }
     return $array$$12$$
   };
@@ -1390,19 +1412,19 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.refresh", {refresh:$oj$$1$$.$Collection$.prototype.refresh});
   $oj$$1$$.$Collection$.prototype.reset = function $$oj$$1$$$$Collection$$$reset$($data$$32$$, $options$$55$$) {
-    var $i$$38$$;
+    var $i$$39$$;
     $options$$55$$ = $options$$55$$ || {};
     $options$$55$$.previousModels = this.$_getModels$();
     if(void 0 === $data$$32$$ || null == $data$$32$$ || $data$$32$$ instanceof Array && 0 == $data$$32$$.length) {
-      for($i$$38$$ = 0;$i$$38$$ < this.$_getModelsLength$();$i$$38$$ += 1) {
-        this.$_getModel$($i$$38$$) && this.$_getModel$($i$$38$$).$SetCollection$(null)
+      for($i$$39$$ = 0;$i$$39$$ < this.$_getModelsLength$();$i$$39$$ += 1) {
+        this.$_getModel$($i$$39$$) && this.$_getModel$($i$$39$$).$SetCollection$(null)
       }
       this.$_setModels$([]);
       this.$_resetLRU$()
     }else {
       if(this.$_setModels$([]), this.$_resetLRU$(), $options$$55$$.parse && ($data$$32$$ = this.parse($data$$32$$)), $data$$32$$ instanceof Array) {
-        for(this.$_manageLRU$($data$$32$$.length), $i$$38$$ = 0;$i$$38$$ < $data$$32$$.length;$i$$38$$ += 1) {
-          this.$_addInternal$($data$$32$$[$i$$38$$], $options$$55$$, !0, !1)
+        for(this.$_manageLRU$($data$$32$$.length), $i$$39$$ = 0;$i$$39$$ < $data$$32$$.length;$i$$39$$ += 1) {
+          this.$_addInternal$($data$$32$$[$i$$39$$], $options$$55$$, !0, !1)
         }
       }else {
         this.$_manageLRU$(1), this.$_addInternal$($data$$32$$, $options$$55$$, !0, !1)
@@ -1427,9 +1449,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return void 0 === $model$$24_opts$$5$$ ? ($model$$24_opts$$5$$ = {}, $oj$$1$$.$CollectionUtils$.$copyInto$($model$$24_opts$$5$$, $options$$58$$ || {}), $model$$24_opts$$5$$.context = this, $model$$24_opts$$5$$.startIndex = $index$$59$$, this.$_fetchInternal$($model$$24_opts$$5$$, !1).then($resp$$3$$), $dfd$$1$$) : $$$$1$$.Deferred().resolve($model$$24_opts$$5$$)
   };
   $oj$$1$$.$Collection$.prototype.$getByCid$ = function $$oj$$1$$$$Collection$$$$getByCid$$($clientId$$) {
-    var $i$$39$$, $model$$25$$;
-    for($i$$39$$ = 0;$i$$39$$ < this.$_getModelsLength$();$i$$39$$ += 1) {
-      if($model$$25$$ = this.$_getModel$($i$$39$$), void 0 !== $model$$25$$ && $clientId$$ === $model$$25$$.cid) {
+    var $i$$40$$, $model$$25$$;
+    for($i$$40$$ = 0;$i$$40$$ < this.$_getModelsLength$();$i$$40$$ += 1) {
+      if($model$$25$$ = this.$_getModel$($i$$40$$), void 0 !== $model$$25$$ && $clientId$$ === $model$$25$$.cid) {
         return $model$$25$$
       }
     }
@@ -1447,6 +1469,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
           return $modInfo$$2$$.m
         })
       }
+      if(this.$_isVirtual$()) {
+        return $$$$1$$.Deferred().resolve($internalGet$$.m)
+      }
       if($internalGet$$.hasOwnProperty("m")) {
         return $internalGet$$.m
       }
@@ -1458,44 +1483,51 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return($id$$5_internalGet$$1$$ = this.$_getLocalInternal$($id$$5_internalGet$$1$$)) ? $id$$5_internalGet$$1$$.m : null
   };
   $oj$$1$$.$Collection$.prototype.$_getLocalInternal$ = function $$oj$$1$$$$Collection$$$$_getLocalInternal$$($id$$6$$) {
-    var $i$$40$$, $cid$$3$$ = $id$$6$$, $len$$2$$ = this.$_getModelsLength$(), $model$$26$$;
+    var $i$$41$$, $cid$$3$$ = $id$$6$$, $len$$2$$ = this.$_getModelsLength$(), $model$$26$$;
     $id$$6$$ instanceof $oj$$1$$.$Model$ ? ($cid$$3$$ = $id$$6$$.$GetCid$(), $id$$6$$ = $id$$6$$.$GetId$()) : void 0 !== $id$$6$$ && (null != $id$$6$$ && void 0 !== $id$$6$$.id) && ($id$$6$$ = $id$$6$$.id);
-    for($i$$40$$ = 0;$i$$40$$ < $len$$2$$;$i$$40$$ += 1) {
-      if($model$$26$$ = this.$_getModel$($i$$40$$), void 0 !== $model$$26$$ && $model$$26$$.$Match$($id$$6$$, $cid$$3$$)) {
-        return $oj$$1$$.$Collection$.$_getModinfo$($i$$40$$, $model$$26$$)
+    for($i$$41$$ = 0;$i$$41$$ < $len$$2$$;$i$$41$$ += 1) {
+      if($model$$26$$ = this.$_getModel$($i$$41$$), void 0 !== $model$$26$$ && $model$$26$$.$Match$($id$$6$$, $cid$$3$$)) {
+        return $oj$$1$$.$Collection$.$_getModinfo$($i$$41$$, $model$$26$$)
       }
     }
     return $oj$$1$$.$Collection$.$_getModinfo$(-1, void 0)
   };
-  $oj$$1$$.$Collection$.prototype.$_getInternal$ = function $$oj$$1$$$$Collection$$$$_getInternal$$($id$$7_retObj$$5_undefinedModInfo$$, $options$$60$$, $deferred$$12_opts$$6$$, $fillIn$$1$$) {
-    var $i$$41$$, $cid$$4$$ = $id$$7_retObj$$5_undefinedModInfo$$;
+  $oj$$1$$.$Collection$.prototype.$_getInternal$ = function $$oj$$1$$$$Collection$$$$_getInternal$$($id$$7$$, $options$$60_retObj$$5_undefinedModInfo$$, $deferred$$12_opts$$6$$, $fillIn$$1$$) {
+    var $i$$42$$, $cid$$4$$ = $id$$7$$;
     void 0 === $fillIn$$1$$ && ($fillIn$$1$$ = !1);
-    $id$$7_retObj$$5_undefinedModInfo$$ instanceof $oj$$1$$.$Model$ ? ($cid$$4$$ = $id$$7_retObj$$5_undefinedModInfo$$.$GetCid$(), $id$$7_retObj$$5_undefinedModInfo$$ = $id$$7_retObj$$5_undefinedModInfo$$.$GetId$()) : void 0 !== $id$$7_retObj$$5_undefinedModInfo$$ && (null != $id$$7_retObj$$5_undefinedModInfo$$ && void 0 !== $id$$7_retObj$$5_undefinedModInfo$$.id) && ($id$$7_retObj$$5_undefinedModInfo$$ = $id$$7_retObj$$5_undefinedModInfo$$.id);
+    $id$$7$$ instanceof $oj$$1$$.$Model$ ? ($cid$$4$$ = $id$$7$$.$GetCid$(), $id$$7$$ = $id$$7$$.$GetId$()) : void 0 !== $id$$7$$ && (null != $id$$7$$ && void 0 !== $id$$7$$.id) && ($id$$7$$ = $id$$7$$.id);
     var $model$$27$$;
-    for($i$$41$$ = 0;$i$$41$$ < this.$_getModelsLength$();$i$$41$$ += 1) {
-      if($model$$27$$ = this.$_getModel$($i$$41$$), void 0 !== $model$$27$$ && $model$$27$$.$Match$($id$$7_retObj$$5_undefinedModInfo$$, $cid$$4$$)) {
-        return $id$$7_retObj$$5_undefinedModInfo$$ = $oj$$1$$.$Collection$.$_getModinfo$($i$$41$$, $model$$27$$), $deferred$$12_opts$$6$$ ? $$$$1$$.Deferred().resolve($id$$7_retObj$$5_undefinedModInfo$$) : $id$$7_retObj$$5_undefinedModInfo$$
+    for($i$$42$$ = 0;$i$$42$$ < this.$_getModelsLength$();$i$$42$$ += 1) {
+      if($model$$27$$ = this.$_getModel$($i$$42$$), void 0 !== $model$$27$$ && $model$$27$$.$Match$($id$$7$$, $cid$$4$$)) {
+        return $options$$60_retObj$$5_undefinedModInfo$$ = $oj$$1$$.$Collection$.$_getModinfo$($i$$42$$, $model$$27$$), $deferred$$12_opts$$6$$ ? $$$$1$$.Deferred().resolve($options$$60_retObj$$5_undefinedModInfo$$) : $options$$60_retObj$$5_undefinedModInfo$$
       }
     }
     if(this.$_isVirtual$()) {
-      if(void 0 === $id$$7_retObj$$5_undefinedModInfo$$ && void 0 !== $cid$$4$$) {
-        throw Error("cid not supported on virtual get by ID: only id supported");
+      if(void 0 === $id$$7$$ && void 0 !== $cid$$4$$) {
+        var $dfd$$2$$ = $$$$1$$.Deferred();
+        return $dfd$$2$$.resolve($oj$$1$$.$Collection$.$_getModinfo$(-1, void 0))
       }
       var $dfd$$2$$ = $$$$1$$.Deferred(), $self$$13$$ = this;
       $deferred$$12_opts$$6$$ = {};
-      $oj$$1$$.$CollectionUtils$.$copyInto$($deferred$$12_opts$$6$$, $options$$60$$ || {});
+      $oj$$1$$.$CollectionUtils$.$copyInto$($deferred$$12_opts$$6$$, $options$$60_retObj$$5_undefinedModInfo$$ || {});
       $deferred$$12_opts$$6$$.context = this;
-      $deferred$$12_opts$$6$$.startID = $id$$7_retObj$$5_undefinedModInfo$$;
+      $deferred$$12_opts$$6$$.startID = $id$$7$$;
       this.$_fetchInternal$($deferred$$12_opts$$6$$, $fillIn$$1$$).then(function($index$$60_resp$$5$$) {
-        null != $index$$60_resp$$5$$ ? ($index$$60_resp$$5$$ = $self$$13$$.$_getOffset$(), $dfd$$2$$.resolve($oj$$1$$.$Collection$.$_getModinfo$($index$$60_resp$$5$$, $self$$13$$.$_getModel$($index$$60_resp$$5$$)))) : $dfd$$2$$.resolve($oj$$1$$.$Collection$.$_getModinfo$(-1, void 0))
+        if(null != $index$$60_resp$$5$$) {
+          $index$$60_resp$$5$$ = $self$$13$$.$_getOffset$();
+          var $model$$28$$ = $self$$13$$.$_getModel$($index$$60_resp$$5$$);
+          void 0 !== $model$$28$$ && $model$$28$$.$Match$($id$$7$$, $cid$$4$$) ? $dfd$$2$$.resolve($oj$$1$$.$Collection$.$_getModinfo$($index$$60_resp$$5$$, $model$$28$$)) : $dfd$$2$$.resolve($oj$$1$$.$Collection$.$_getModinfo$(-1, void 0))
+        }else {
+          $dfd$$2$$.resolve($oj$$1$$.$Collection$.$_getModinfo$(-1, void 0))
+        }
       });
       return $dfd$$2$$
     }
-    $id$$7_retObj$$5_undefinedModInfo$$ = $oj$$1$$.$Collection$.$_getModinfo$(-1, void 0);
-    return $deferred$$12_opts$$6$$ ? $$$$1$$.Deferred().resolve($id$$7_retObj$$5_undefinedModInfo$$) : $id$$7_retObj$$5_undefinedModInfo$$
+    $options$$60_retObj$$5_undefinedModInfo$$ = $oj$$1$$.$Collection$.$_getModinfo$(-1, void 0);
+    return $deferred$$12_opts$$6$$ ? $$$$1$$.Deferred().resolve($options$$60_retObj$$5_undefinedModInfo$$) : $options$$60_retObj$$5_undefinedModInfo$$
   };
-  $oj$$1$$.$Collection$.$_getModinfo$ = function $$oj$$1$$$$Collection$$$_getModinfo$$($index$$61$$, $model$$28$$) {
-    return{index:$index$$61$$, m:$model$$28$$}
+  $oj$$1$$.$Collection$.$_getModinfo$ = function $$oj$$1$$$$Collection$$$_getModinfo$$($index$$61$$, $model$$29$$) {
+    return{index:$index$$61$$, m:$model$$29$$}
   };
   $oj$$1$$.$Collection$.prototype.parse = function $$oj$$1$$$$Collection$$$parse$($response$$2$$) {
     var $prop$$41$$;
@@ -1535,8 +1567,8 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     if(!this.$_hasTotalResults$() && $limit$$2$$ < $start$$14$$ + $count$$9$$ || 0 === $limit$$2$$) {
       return!1
     }
-    for(var $i$$42$$ = $start$$14$$;$i$$42$$ < $limit$$2$$;$i$$42$$++) {
-      if(void 0 === this.$_getModel$($i$$42$$)) {
+    for(var $i$$43$$ = $start$$14$$;$i$$43$$ < $limit$$2$$;$i$$43$$++) {
+      if(void 0 === this.$_getModel$($i$$43$$)) {
         return!1
       }
     }
@@ -1555,28 +1587,28 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     void 0 === $opt$$5$$.parse && ($opt$$5$$.parse = !0);
     $self$$15$$ = this;
     $opt$$5$$.success = function $$opt$$5$$$success$($response$$3$$) {
-      var $data$$33_i$$43$$, $modelInstance$$;
+      var $data$$33_i$$44$$, $modelInstance$$;
       $self$$15$$.$_setPagingReturnValues$($response$$3$$, $options$$62$$);
-      $data$$33_i$$43$$ = $self$$15$$.parse($response$$3$$, $options$$62$$);
+      $data$$33_i$$44$$ = $self$$15$$.parse($response$$3$$, $options$$62$$);
       var $dataList$$ = null;
       if($opt$$5$$.add || $self$$15$$.model) {
-        if($doReset$$($self$$15$$, $opt$$5$$, $fillIn$$2$$), $modelInstance$$ = $oj$$1$$.$Collection$.$_createParsingModel$($self$$15$$), $data$$33_i$$43$$) {
-          for($dataList$$ = $data$$33_i$$43$$ instanceof Array ? $data$$33_i$$43$$ : [$data$$33_i$$43$$], $addOpt$$ = {}, $offset$$14$$ = $self$$15$$.$_getOffset$(), $self$$15$$.$_manageLRU$($dataList$$.length), $data$$33_i$$43$$ = 0;$data$$33_i$$43$$ < $dataList$$.length;$data$$33_i$$43$$ += 1) {
-            $parsedModel$$ = $modelInstance$$ && $opt$$5$$.parse ? $modelInstance$$.parse($dataList$$[$data$$33_i$$43$$]) : $dataList$$[$data$$33_i$$43$$], $self$$15$$.$_isVirtual$() && ($addOpt$$ = {at:$offset$$14$$ + $data$$33_i$$43$$}), $addOpt$$.silent = !0, $self$$15$$.$_addInternal$($parsedModel$$, $addOpt$$, !0, !1)
+        if($doReset$$($self$$15$$, $opt$$5$$, $fillIn$$2$$), $modelInstance$$ = $oj$$1$$.$Collection$.$_createParsingModel$($self$$15$$), $data$$33_i$$44$$) {
+          for($dataList$$ = $data$$33_i$$44$$ instanceof Array ? $data$$33_i$$44$$ : [$data$$33_i$$44$$], $addOpt$$ = {}, $offset$$14$$ = $self$$15$$.$_getOffset$(), $self$$15$$.$_manageLRU$($dataList$$.length), $data$$33_i$$44$$ = 0;$data$$33_i$$44$$ < $dataList$$.length;$data$$33_i$$44$$ += 1) {
+            $parsedModel$$ = $modelInstance$$ && $opt$$5$$.parse ? $modelInstance$$.parse($dataList$$[$data$$33_i$$44$$]) : $dataList$$[$data$$33_i$$44$$], $self$$15$$.$_isVirtual$() && ($addOpt$$ = {at:$offset$$14$$ + $data$$33_i$$44$$}), $addOpt$$.silent = !0, $self$$15$$.$_addInternal$($parsedModel$$, $addOpt$$, !0, !1)
           }
         }
       }else {
-        if($dataList$$ = $data$$33_i$$43$$ instanceof Array ? $data$$33_i$$43$$ : [$data$$33_i$$43$$], !$fillIn$$2$$) {
+        if($dataList$$ = $data$$33_i$$44$$ instanceof Array ? $data$$33_i$$44$$ : [$data$$33_i$$44$$], !$fillIn$$2$$) {
           if($self$$15$$.$_isVirtual$()) {
-            if($doReset$$($self$$15$$, $opt$$5$$, $fillIn$$2$$), $data$$33_i$$43$$) {
+            if($doReset$$($self$$15$$, $opt$$5$$, $fillIn$$2$$), $data$$33_i$$44$$) {
               var $addOpt$$ = {}, $offset$$14$$ = $self$$15$$.$_getOffset$();
               $self$$15$$.$_manageLRU$($dataList$$.length);
-              for($data$$33_i$$43$$ = 0;$data$$33_i$$43$$ < $dataList$$.length;$data$$33_i$$43$$ += 1) {
-                $self$$15$$.$_isVirtual$() && ($addOpt$$ = {at:$offset$$14$$ + $data$$33_i$$43$$}), $addOpt$$.silent = !0, $self$$15$$.$_addInternal$($dataList$$[$data$$33_i$$43$$], $addOpt$$, !0, !1)
+              for($data$$33_i$$44$$ = 0;$data$$33_i$$44$$ < $dataList$$.length;$data$$33_i$$44$$ += 1) {
+                $self$$15$$.$_isVirtual$() && ($addOpt$$ = {at:$offset$$14$$ + $data$$33_i$$44$$}), $addOpt$$.silent = !0, $self$$15$$.$_addInternal$($dataList$$[$data$$33_i$$44$$], $addOpt$$, !0, !1)
               }
             }
           }else {
-            $self$$15$$.reset($data$$33_i$$43$$)
+            $self$$15$$.reset($data$$33_i$$44$$)
           }
         }
       }
@@ -1591,13 +1623,13 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     void 0 === $opt$$7$$.parse && ($opt$$7$$.parse = !0);
     $self$$16$$ = this;
     $opt$$7$$.success = function $$opt$$7$$$success$($response$$4$$) {
-      var $data$$34_i$$44$$, $modelInstance$$1$$;
-      $data$$34_i$$44$$ = $self$$16$$.parse($response$$4$$, $options$$63$$);
+      var $data$$34_i$$45$$, $modelInstance$$1$$;
+      $data$$34_i$$45$$ = $self$$16$$.parse($response$$4$$, $options$$63$$);
       var $dataList$$1$$ = null, $fetchedModels$$ = [];
       if($opt$$7$$.add || $self$$16$$.model) {
-        if($modelInstance$$1$$ = $oj$$1$$.$Collection$.$_createParsingModel$($self$$16$$), $data$$34_i$$44$$) {
-          for($dataList$$1$$ = $data$$34_i$$44$$ instanceof Array ? $data$$34_i$$44$$ : [$data$$34_i$$44$$], $data$$34_i$$44$$ = 0;$data$$34_i$$44$$ < $dataList$$1$$.length;$data$$34_i$$44$$ += 1) {
-            $parsedModel$$1$$ = $modelInstance$$1$$ && $opt$$7$$.parse ? $modelInstance$$1$$.parse($dataList$$1$$[$data$$34_i$$44$$]) : $dataList$$1$$[$data$$34_i$$44$$], $fetchedModels$$.push($self$$16$$.$_newModel$($parsedModel$$1$$))
+        if($modelInstance$$1$$ = $oj$$1$$.$Collection$.$_createParsingModel$($self$$16$$), $data$$34_i$$45$$) {
+          for($dataList$$1$$ = $data$$34_i$$45$$ instanceof Array ? $data$$34_i$$45$$ : [$data$$34_i$$45$$], $data$$34_i$$45$$ = 0;$data$$34_i$$45$$ < $dataList$$1$$.length;$data$$34_i$$45$$ += 1) {
+            $parsedModel$$1$$ = $modelInstance$$1$$ && $opt$$7$$.parse ? $modelInstance$$1$$.parse($dataList$$1$$[$data$$34_i$$45$$]) : $dataList$$1$$[$data$$34_i$$45$$], $fetchedModels$$.push($self$$16$$.$_newModel$($parsedModel$$1$$))
           }
         }
       }
@@ -1664,8 +1696,8 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     $options$$66$$ = $options$$66$$ || {};
     var $newModel$$5$$ = this.$_newModel$($attributes$$7$$, $options$$66$$), $callback$$74$$ = $options$$66$$.success, $context$$15$$ = $options$$66$$.context, $validate$$1$$ = $options$$66$$.validate;
     $options$$66$$.context = this;
-    $options$$66$$.success = function $$options$$66$$$success$($model$$29$$, $resp$$7$$, $options$$67$$) {
-      $callback$$74$$ && $callback$$74$$.call(null != $context$$15$$ ? $context$$15$$ : this, $model$$29$$, $resp$$7$$, $options$$67$$)
+    $options$$66$$.success = function $$options$$66$$$success$($model$$30$$, $resp$$7$$, $options$$67$$) {
+      $callback$$74$$ && $callback$$74$$.call(null != $context$$15$$ ? $context$$15$$ : this, $model$$30$$, $resp$$7$$, $options$$67$$)
     };
     if(null == $newModel$$5$$) {
       return!1
@@ -1676,12 +1708,12 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     if($deferred$$13$$ || this.$_isVirtual$()) {
       var $defer$$2$$ = $$$$1$$.Deferred();
       this.add($newModel$$5$$, {merge:!0, deferred:!0}).done(function() {
-        $options$$66$$.success = function $$options$$66$$$success$($model$$31$$, $resp$$8$$, $options$$68$$) {
-          $callback$$74$$ && $callback$$74$$.call(null != $context$$15$$ ? $context$$15$$ : this, $model$$31$$, $resp$$8$$, $options$$68$$);
-          $defer$$2$$.resolve($model$$31$$)
+        $options$$66$$.success = function $$options$$66$$$success$($model$$32$$, $resp$$8$$, $options$$68$$) {
+          $callback$$74$$ && $callback$$74$$.call(null != $context$$15$$ ? $context$$15$$ : this, $model$$32$$, $resp$$8$$, $options$$68$$);
+          $defer$$2$$.resolve($model$$32$$)
         };
-        var $model$$30$$ = $doSave$$($self$$17$$, $newModel$$5$$, $validate$$1$$, $options$$66$$);
-        $model$$30$$ || $defer$$2$$.resolve($model$$30$$)
+        var $model$$31$$ = $doSave$$($self$$17$$, $newModel$$5$$, $validate$$1$$, $options$$66$$);
+        $model$$31$$ || $defer$$2$$.resolve($model$$31$$)
       });
       return $defer$$2$$.promise()
     }
@@ -1690,10 +1722,10 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.create", {create:$oj$$1$$.$Collection$.prototype.create});
   $oj$$1$$.$Collection$.prototype.$pluck$ = function $$oj$$1$$$$Collection$$$$pluck$$($attr$$9$$) {
-    var $arr$$17$$ = [], $i$$45$$;
+    var $arr$$17$$ = [], $i$$46$$;
     this.$_throwErrIfVirtual$("pluck");
-    for($i$$45$$ = 0;$i$$45$$ < this.$_getLength$();$i$$45$$ += 1) {
-      $arr$$17$$.push(this.at($i$$45$$).get($attr$$9$$))
+    for($i$$46$$ = 0;$i$$46$$ < this.$_getLength$();$i$$46$$ += 1) {
+      $arr$$17$$.push(this.at($i$$46$$).get($attr$$9$$))
     }
     return $arr$$17$$
   };
@@ -1708,9 +1740,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
       }});
       return $defer$$3$$.promise()
     }
-    var $arr$$18$$ = [], $i$$46$$, $m$$7$$;
-    for($i$$46$$ = 0;$i$$46$$ < this.$_getLength$();$i$$46$$ += 1) {
-      $m$$7$$ = this.at($i$$46$$), $m$$7$$.$Contains$($attrs$$10$$) && $arr$$18$$.push($m$$7$$)
+    var $arr$$18$$ = [], $i$$47$$, $m$$7$$;
+    for($i$$47$$ = 0;$i$$47$$ < this.$_getLength$();$i$$47$$ += 1) {
+      $m$$7$$ = this.at($i$$47$$), $m$$7$$.$Contains$($attrs$$10$$) && $arr$$18$$.push($m$$7$$)
     }
     return $deferred$$14$$ ? $$$$1$$.Deferred().resolve($arr$$18$$) : $arr$$18$$
   };
@@ -1746,10 +1778,10 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     }
   };
   $oj$$1$$.$Collection$.prototype.map = function $$oj$$1$$$$Collection$$$map$($iterator$$, $context$$16$$) {
-    var $retArr$$ = [], $value$$62$$, $i$$47$$;
+    var $retArr$$ = [], $value$$62$$, $i$$48$$;
     this.$_throwErrIfVirtual$("map");
-    for($i$$47$$ = 0;$i$$47$$ < this.$_getModelsLength$();$i$$47$$ += 1) {
-      $value$$62$$ = $iterator$$.call($context$$16$$ || this, this.$_getModel$($i$$47$$)), $retArr$$.push($value$$62$$)
+    for($i$$48$$ = 0;$i$$48$$ < this.$_getModelsLength$();$i$$48$$ += 1) {
+      $value$$62$$ = $iterator$$.call($context$$16$$ || this, this.$_getModel$($i$$48$$)), $retArr$$.push($value$$62$$)
     }
     return $retArr$$
   };
@@ -1764,83 +1796,83 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.size", {size:$oj$$1$$.$Collection$.prototype.size});
   $oj$$1$$.$Collection$.prototype.$sortBy$ = function $$oj$$1$$$$Collection$$$$sortBy$$($iterator$$2$$, $context$$18$$) {
-    var $i$$48$$, $retArr$$1$$ = [], $self$$19$$;
+    var $i$$49$$, $retArr$$1$$ = [], $self$$19$$;
     this.$_throwErrIfVirtual$("sortBy");
-    for($i$$48$$ = 0;$i$$48$$ < this.$_getModelsLength$();$i$$48$$ += 1) {
-      $retArr$$1$$.push(this.$_getModel$($i$$48$$))
+    for($i$$49$$ = 0;$i$$49$$ < this.$_getModelsLength$();$i$$49$$ += 1) {
+      $retArr$$1$$.push(this.$_getModel$($i$$49$$))
     }
     $self$$19$$ = this;
-    $retArr$$1$$.sort(function($a$$45$$, $b$$26$$) {
+    $retArr$$1$$.sort(function($a$$51$$, $b$$27$$) {
       var $keyA$$3$$, $keyB$$3$$;
       if($oj$$1$$.$Model$.$IsFunction$($iterator$$2$$)) {
-        return $keyA$$3$$ = $iterator$$2$$.call($context$$18$$ || $self$$19$$, $a$$45$$), $keyB$$3$$ = $iterator$$2$$.call($context$$18$$ || $self$$19$$, $b$$26$$), $oj$$1$$.$Collection$.$_compareKeys$($keyA$$3$$, $keyB$$3$$, $self$$19$$.sortDirection)
+        return $keyA$$3$$ = $iterator$$2$$.call($context$$18$$ || $self$$19$$, $a$$51$$), $keyB$$3$$ = $iterator$$2$$.call($context$$18$$ || $self$$19$$, $b$$27$$), $oj$$1$$.$Collection$.$_compareKeys$($keyA$$3$$, $keyB$$3$$, $self$$19$$.sortDirection)
       }
-      $keyA$$3$$ = $a$$45$$.get($iterator$$2$$);
-      $keyB$$3$$ = $b$$26$$.get($iterator$$2$$);
+      $keyA$$3$$ = $a$$51$$.get($iterator$$2$$);
+      $keyB$$3$$ = $b$$27$$.get($iterator$$2$$);
       return $oj$$1$$.$Collection$.$_compareKeys$($keyA$$3$$, $keyB$$3$$, $self$$19$$.sortDirection)
     });
     return $retArr$$1$$
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.sortBy", {$sortBy$:$oj$$1$$.$Collection$.prototype.$sortBy$});
   $oj$$1$$.$Collection$.prototype.$groupBy$ = function $$oj$$1$$$$Collection$$$$groupBy$$($iterator$$3$$, $context$$19$$) {
-    var $i$$49$$, $retObj$$6$$ = {}, $groupVal$$;
+    var $i$$50$$, $retObj$$6$$ = {}, $groupVal$$;
     this.$_throwErrIfVirtual$("groupBy");
-    for($i$$49$$ = 0;$i$$49$$ < this.$_getModelsLength$();$i$$49$$ += 1) {
-      $groupVal$$ = $oj$$1$$.$Model$.$IsFunction$($iterator$$3$$) ? $iterator$$3$$.call($context$$19$$ || this, this.$_getModel$($i$$49$$)) : this.$_getModel$($i$$49$$).get($iterator$$3$$), void 0 === $retObj$$6$$[$groupVal$$] && ($retObj$$6$$[$groupVal$$] = []), $retObj$$6$$[$groupVal$$].push(this.$_getModel$($i$$49$$))
+    for($i$$50$$ = 0;$i$$50$$ < this.$_getModelsLength$();$i$$50$$ += 1) {
+      $groupVal$$ = $oj$$1$$.$Model$.$IsFunction$($iterator$$3$$) ? $iterator$$3$$.call($context$$19$$ || this, this.$_getModel$($i$$50$$)) : this.$_getModel$($i$$50$$).get($iterator$$3$$), void 0 === $retObj$$6$$[$groupVal$$] && ($retObj$$6$$[$groupVal$$] = []), $retObj$$6$$[$groupVal$$].push(this.$_getModel$($i$$50$$))
     }
     return $retObj$$6$$
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.groupBy", {$groupBy$:$oj$$1$$.$Collection$.prototype.$groupBy$});
   $oj$$1$$.$Collection$.prototype.min = function $$oj$$1$$$$Collection$$$min$($iterator$$4$$, $context$$20$$) {
-    var $i$$50$$, $minModel$$ = {}, $minModelValue$$, $currValue$$;
+    var $i$$51$$, $minModel$$ = {}, $minModelValue$$, $currValue$$;
     this.$_throwErrIfVirtual$("min");
     if(0 == this.$_getModelsLength$()) {
       return null
     }
     $minModel$$ = this.$_getModel$(0);
     $minModelValue$$ = $iterator$$4$$.call($context$$20$$ || this, this.$_getModel$(0));
-    for($i$$50$$ = 1;$i$$50$$ < this.$_getModelsLength$();$i$$50$$ += 1) {
-      $currValue$$ = $iterator$$4$$.call($context$$20$$ || this, this.$_getModel$($i$$50$$)), $currValue$$ < $minModelValue$$ && ($minModel$$ = this.$_getModel$($i$$50$$), $minModelValue$$ = $currValue$$)
+    for($i$$51$$ = 1;$i$$51$$ < this.$_getModelsLength$();$i$$51$$ += 1) {
+      $currValue$$ = $iterator$$4$$.call($context$$20$$ || this, this.$_getModel$($i$$51$$)), $currValue$$ < $minModelValue$$ && ($minModel$$ = this.$_getModel$($i$$51$$), $minModelValue$$ = $currValue$$)
     }
     return $minModel$$
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.min", {min:$oj$$1$$.$Collection$.prototype.min});
   $oj$$1$$.$Collection$.prototype.max = function $$oj$$1$$$$Collection$$$max$($iterator$$5$$, $context$$21$$) {
-    var $i$$51$$, $maxModel$$ = {}, $maxModelValue$$, $currValue$$1$$;
+    var $i$$52$$, $maxModel$$ = {}, $maxModelValue$$, $currValue$$1$$;
     this.$_throwErrIfVirtual$("max");
     if(0 == this.$_getModelsLength$()) {
       return null
     }
     $maxModel$$ = this.$_getModel$(0);
     $maxModelValue$$ = $iterator$$5$$.call($context$$21$$, this.$_getModel$(0));
-    for($i$$51$$ = 1;$i$$51$$ < this.$_getModelsLength$();$i$$51$$ += 1) {
-      $currValue$$1$$ = $iterator$$5$$.call($context$$21$$ || this, this.$_getModel$($i$$51$$)), $currValue$$1$$ > $maxModelValue$$ && ($maxModel$$ = this.$_getModel$($i$$51$$), $maxModelValue$$ = $currValue$$1$$)
+    for($i$$52$$ = 1;$i$$52$$ < this.$_getModelsLength$();$i$$52$$ += 1) {
+      $currValue$$1$$ = $iterator$$5$$.call($context$$21$$ || this, this.$_getModel$($i$$52$$)), $currValue$$1$$ > $maxModelValue$$ && ($maxModel$$ = this.$_getModel$($i$$52$$), $maxModelValue$$ = $currValue$$1$$)
     }
     return $maxModel$$
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.max", {max:$oj$$1$$.$Collection$.prototype.max});
   $oj$$1$$.$Collection$.prototype.filter = function $$oj$$1$$$$Collection$$$filter$($iterator$$6$$, $context$$22$$) {
-    var $i$$52$$, $retArr$$2$$ = [];
+    var $i$$53$$, $retArr$$2$$ = [];
     this.$_throwErrIfVirtual$("filter");
-    for($i$$52$$ = 0;$i$$52$$ < this.$_getModelsLength$();$i$$52$$ += 1) {
-      $iterator$$6$$.call($context$$22$$ || this, this.$_getModel$($i$$52$$)) && $retArr$$2$$.push(this.$_getModel$($i$$52$$))
+    for($i$$53$$ = 0;$i$$53$$ < this.$_getModelsLength$();$i$$53$$ += 1) {
+      $iterator$$6$$.call($context$$22$$ || this, this.$_getModel$($i$$53$$)) && $retArr$$2$$.push(this.$_getModel$($i$$53$$))
     }
     return $retArr$$2$$
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.filter", {filter:$oj$$1$$.$Collection$.prototype.filter});
   $oj$$1$$.$Collection$.prototype.$without$ = function $$oj$$1$$$$Collection$$$$without$$($var_args$$43$$) {
-    var $retArr$$3$$ = [], $i$$53$$, $j$$4$$, $add$$;
+    var $retArr$$3$$ = [], $i$$54$$, $j$$4$$, $add$$;
     this.$_throwErrIfVirtual$("without");
     if(arguments) {
-      for($i$$53$$ = 0;$i$$53$$ < this.$_getModelsLength$();$i$$53$$ += 1) {
+      for($i$$54$$ = 0;$i$$54$$ < this.$_getModelsLength$();$i$$54$$ += 1) {
         $add$$ = !0;
         for($j$$4$$ = 0;$j$$4$$ < arguments.length;$j$$4$$ += 1) {
-          if(this.$_getModel$($i$$53$$).$Match$(arguments[$j$$4$$].$GetId$(), arguments[$j$$4$$].$GetCid$())) {
+          if(this.$_getModel$($i$$54$$).$Match$(arguments[$j$$4$$].$GetId$(), arguments[$j$$4$$].$GetCid$())) {
             $add$$ = !1;
             break
           }
         }
-        $add$$ && $retArr$$3$$.push(this.$_getModel$($i$$53$$))
+        $add$$ && $retArr$$3$$.push(this.$_getModel$($i$$54$$))
       }
       return $retArr$$3$$
     }
@@ -1852,10 +1884,10 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.isEmpty", {isEmpty:$oj$$1$$.$Collection$.prototype.isEmpty});
   $oj$$1$$.$Collection$.prototype.$any$ = function $$oj$$1$$$$Collection$$$$any$$($iterator$$7$$, $context$$23$$) {
-    var $i$$54$$;
+    var $i$$55$$;
     this.$_throwErrIfVirtual$("any");
-    for($i$$54$$ = 0;$i$$54$$ < this.$_getModelsLength$();$i$$54$$ += 1) {
-      if($iterator$$7$$.call($context$$23$$ || this, this.$_getModel$($i$$54$$))) {
+    for($i$$55$$ = 0;$i$$55$$ < this.$_getModelsLength$();$i$$55$$ += 1) {
+      if($iterator$$7$$.call($context$$23$$ || this, this.$_getModel$($i$$55$$))) {
         return!0
       }
     }
@@ -1876,7 +1908,7 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return 0 < $arr$$19_deferred$$16$$.length ? $arr$$19_deferred$$16$$[0] : null
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.findWhere", {$findWhere$:$oj$$1$$.$Collection$.prototype.$findWhere$});
-  $oj$$1$$.$Collection$.prototype.slice = function $$oj$$1$$$$Collection$$$slice$($i$$55_start$$15$$, $end$$4$$, $options$$73_ret$$1$$) {
+  $oj$$1$$.$Collection$.prototype.slice = function $$oj$$1$$$$Collection$$$slice$($i$$56_start$$15$$, $end$$4$$, $options$$73_ret$$1$$) {
     var $deferred$$17$$ = this.$_getDeferred$($options$$73_ret$$1$$);
     $options$$73_ret$$1$$ = [];
     if(void 0 === $end$$4$$) {
@@ -1886,10 +1918,10 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
       $end$$4$$ = this.$_getModelsLength$()
     }
     if($deferred$$17$$ || this.$_isVirtual$()) {
-      return this.$_iterativeAt$($i$$55_start$$15$$, $end$$4$$)
+      return this.$_iterativeAt$($i$$56_start$$15$$, $end$$4$$)
     }
-    for(;$i$$55_start$$15$$ < $end$$4$$;$i$$55_start$$15$$ += 1) {
-      $options$$73_ret$$1$$.push(this.$_getModel$($i$$55_start$$15$$))
+    for(;$i$$56_start$$15$$ < $end$$4$$;$i$$56_start$$15$$ += 1) {
+      $options$$73_ret$$1$$.push(this.$_getModel$($i$$56_start$$15$$))
     }
     return $options$$73_ret$$1$$
   };
@@ -1898,23 +1930,23 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return this.$_setInternal$($models$$7$$, $options$$74$$, this.$_getDeferred$($options$$74$$))
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.set", {set:$oj$$1$$.$Collection$.prototype.set});
-  $oj$$1$$.$Collection$.$_removeAfterSet$ = function $$oj$$1$$$$Collection$$$_removeAfterSet$$($collection$$17$$, $i$$56_remove$$, $foundModels$$, $options$$75$$) {
-    if($i$$56_remove$$) {
-      for($i$$56_remove$$ = $collection$$17$$.$_getModelsLength$() - 1;0 <= $i$$56_remove$$;$i$$56_remove$$ -= 1) {
-        -1 == $foundModels$$.indexOf($i$$56_remove$$) && $collection$$17$$.$_removeInternal$($collection$$17$$.$_getModel$($i$$56_remove$$), $i$$56_remove$$, $options$$75$$)
+  $oj$$1$$.$Collection$.$_removeAfterSet$ = function $$oj$$1$$$$Collection$$$_removeAfterSet$$($collection$$17$$, $i$$57_remove$$, $foundModels$$, $options$$75$$) {
+    if($i$$57_remove$$) {
+      for($i$$57_remove$$ = $collection$$17$$.$_getModelsLength$() - 1;0 <= $i$$57_remove$$;$i$$57_remove$$ -= 1) {
+        -1 == $foundModels$$.indexOf($i$$57_remove$$) && $collection$$17$$.$_removeInternal$($collection$$17$$.$_getModel$($i$$57_remove$$), $i$$57_remove$$, $options$$75$$)
       }
     }
   };
-  $oj$$1$$.$Collection$.prototype.$_setInternal$ = function $$oj$$1$$$$Collection$$$$_setInternal$$($i$$57_models$$8$$, $options$$76$$, $deferred$$19$$) {
+  $oj$$1$$.$Collection$.prototype.$_setInternal$ = function $$oj$$1$$$$Collection$$$$_setInternal$$($i$$58_models$$8$$, $options$$76$$, $deferred$$19$$) {
     $options$$76$$ = $options$$76$$ || {};
     var $add$$1$$ = void 0 === $options$$76$$.add ? !0 : $options$$76$$.add, $remove$$1$$ = void 0 === $options$$76$$.remove ? !0 : $options$$76$$.remove, $merge$$1$$ = void 0 === $options$$76$$.merge ? !0 : $options$$76$$.merge, $foundModels$$1$$ = [], $currModel$$ = null, $modelList$$2$$;
-    $options$$76$$.parse && ($i$$57_models$$8$$ = this.parse($i$$57_models$$8$$));
-    $modelList$$2$$ = $oj$$1$$.$Model$.$IsArray$($i$$57_models$$8$$) ? $i$$57_models$$8$$ : [$i$$57_models$$8$$];
+    $options$$76$$.parse && ($i$$58_models$$8$$ = this.parse($i$$58_models$$8$$));
+    $modelList$$2$$ = $oj$$1$$.$Model$.$IsArray$($i$$58_models$$8$$) ? $i$$58_models$$8$$ : [$i$$58_models$$8$$];
     if(this.$_isVirtual$() || $deferred$$19$$) {
       return this.$_deferredSet$($modelList$$2$$, $options$$76$$, $remove$$1$$, $add$$1$$, $merge$$1$$)
     }
-    for($i$$57_models$$8$$ = 0;$i$$57_models$$8$$ < $modelList$$2$$.length;$i$$57_models$$8$$ += 1) {
-      $currModel$$ = this.$_updateModel$(this.$_newModel$($modelList$$2$$[$i$$57_models$$8$$], $options$$76$$), $add$$1$$, $merge$$1$$, $deferred$$19$$), -1 !== $currModel$$ && $foundModels$$1$$.push($currModel$$)
+    for($i$$58_models$$8$$ = 0;$i$$58_models$$8$$ < $modelList$$2$$.length;$i$$58_models$$8$$ += 1) {
+      $currModel$$ = this.$_updateModel$(this.$_newModel$($modelList$$2$$[$i$$58_models$$8$$], $options$$76$$), $add$$1$$, $merge$$1$$, $deferred$$19$$), -1 !== $currModel$$ && $foundModels$$1$$.push($currModel$$)
     }
     $oj$$1$$.$Collection$.$_removeAfterSet$(this, $remove$$1$$, $foundModels$$1$$, $options$$76$$)
   };
@@ -1930,15 +1962,15 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
       });
       return $defer$$6$$.promise()
     }
-    var $foundModels$$2$$ = [], $i$$58$$, $self$$20$$ = this, $currentStep$$2$$ = $doTask$$2$$(0);
-    for($i$$58$$ = 1;$i$$58$$ < $modelList$$3$$.length;$i$$58$$ += 1) {
+    var $foundModels$$2$$ = [], $i$$59$$, $self$$20$$ = this, $currentStep$$2$$ = $doTask$$2$$(0);
+    for($i$$59$$ = 1;$i$$59$$ < $modelList$$3$$.length;$i$$59$$ += 1) {
       $currentStep$$2$$ = $currentStep$$2$$.then($nextTask$$2$$)
     }
     return $$$$1$$.when($currentStep$$2$$).then(function() {
       $oj$$1$$.$Collection$.$_removeAfterSet$($self$$20$$, $remove$$2$$, $foundModels$$2$$, $options$$77$$)
     })
   };
-  $oj$$1$$.$Collection$.prototype.$_updateModel$ = function $$oj$$1$$$$Collection$$$$_updateModel$$($model$$32$$, $add$$3$$, $merge$$3$$, $deferred$$20_found$$) {
+  $oj$$1$$.$Collection$.prototype.$_updateModel$ = function $$oj$$1$$$$Collection$$$$_updateModel$$($model$$33$$, $add$$3$$, $merge$$3$$, $deferred$$20_found$$) {
     function $update$$($collection$$18$$, $found$$1_opt$$11$$, $deferred$$21$$) {
       var $index$$63$$ = $found$$1_opt$$11$$ ? $found$$1_opt$$11$$.index : -1;
       if($found$$1_opt$$11$$ && $found$$1_opt$$11$$.m) {
@@ -1946,21 +1978,21 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
           $found$$1_opt$$11$$ = {merge:$merge$$3$$};
           if($deferred$$21$$) {
             var $defer$$8$$ = $$$$1$$.Deferred();
-            $collection$$18$$.$_addInternal$($model$$32$$, $found$$1_opt$$11$$, !1, !0).done(function() {
+            $collection$$18$$.$_addInternal$($model$$33$$, $found$$1_opt$$11$$, !1, !0).done(function() {
               $defer$$8$$.resolve($index$$63$$)
             });
             return $defer$$8$$.promise()
           }
-          $collection$$18$$.add($model$$32$$, $found$$1_opt$$11$$)
+          $collection$$18$$.add($model$$33$$, $found$$1_opt$$11$$)
         }
       }else {
         if($add$$3$$) {
           if($deferred$$21$$) {
-            return $defer$$8$$ = $$$$1$$.Deferred(), $collection$$18$$.add($model$$32$$, {deferred:!0}).done(function() {
+            return $defer$$8$$ = $$$$1$$.Deferred(), $collection$$18$$.add($model$$33$$, {deferred:!0}).done(function() {
               $defer$$8$$.resolve($collection$$18$$.$_getLength$() - 1)
             }), $defer$$8$$.promise()
           }
-          $collection$$18$$.add($model$$32$$);
+          $collection$$18$$.add($model$$33$$);
           $index$$63$$ = $collection$$18$$.$_getLength$() - 1
         }
       }
@@ -1968,60 +2000,60 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     }
     if($deferred$$20_found$$ || this.$_isVirtual$()) {
       var $self$$21$$ = this, $defer$$7$$ = $$$$1$$.Deferred();
-      this.$_getInternal$($model$$32$$, null, $deferred$$20_found$$).done(function($found$$2$$) {
+      this.$_getInternal$($model$$33$$, null, $deferred$$20_found$$).done(function($found$$2$$) {
         $update$$($self$$21$$, $found$$2$$, !0).done(function($index$$64$$) {
           $defer$$7$$.resolve($index$$64$$)
         })
       });
       return $defer$$7$$.promise()
     }
-    $deferred$$20_found$$ = this.$_getInternal$($model$$32$$);
+    $deferred$$20_found$$ = this.$_getInternal$($model$$33$$);
     return $update$$(this, $deferred$$20_found$$, !1)
   };
   $oj$$1$$.$Collection$.prototype.toJSON = function $$oj$$1$$$$Collection$$$toJSON$() {
-    var $retArr$$4$$ = [], $i$$59$$;
+    var $retArr$$4$$ = [], $i$$60$$;
     this.$_throwErrIfVirtual$("toJSON");
-    for($i$$59$$ = 0;$i$$59$$ < this.$_getModelsLength$();$i$$59$$ += 1) {
-      $retArr$$4$$.push(this.$_getModel$($i$$59$$).toJSON())
+    for($i$$60$$ = 0;$i$$60$$ < this.$_getModelsLength$();$i$$60$$ += 1) {
+      $retArr$$4$$.push(this.$_getModel$($i$$60$$).toJSON())
     }
     return $retArr$$4$$
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.toJSON", {toJSON:$oj$$1$$.$Collection$.prototype.toJSON});
   $oj$$1$$.$Collection$.prototype.first = function $$oj$$1$$$$Collection$$$first$($n$$11$$, $options$$78$$) {
-    var $deferred$$22_i$$60_virtual$$ = this.$_getDeferred$($options$$78$$), $elementCount$$ = this.$_getLength$(), $retArray$$2$$ = [];
+    var $deferred$$22_i$$61_virtual$$ = this.$_getDeferred$($options$$78$$), $elementCount$$ = this.$_getLength$(), $retArray$$2$$ = [];
     $n$$11$$ ? $elementCount$$ = $n$$11$$ : $n$$11$$ = 1;
-    $deferred$$22_i$$60_virtual$$ = this.$_isVirtual$() || $deferred$$22_i$$60_virtual$$;
+    $deferred$$22_i$$61_virtual$$ = this.$_isVirtual$() || $deferred$$22_i$$61_virtual$$;
     if(1 === $n$$11$$) {
-      return $deferred$$22_i$$60_virtual$$ ? this.$_deferredAt$(0, null).promise() : 0 < this.$_getModelsLength$() ? this.$_getModel$(0) : null
+      return $deferred$$22_i$$61_virtual$$ ? this.$_deferredAt$(0, null).promise() : 0 < this.$_getModelsLength$() ? this.$_getModel$(0) : null
     }
     $elementCount$$ > this.$_getModelsLength$() && (!this.$_isVirtual$() || this.$_hasTotalResults$()) && ($elementCount$$ = this.$_getModelsLength$());
-    if($deferred$$22_i$$60_virtual$$) {
+    if($deferred$$22_i$$61_virtual$$) {
       return this.$_iterativeAt$(0, $elementCount$$)
     }
-    for($deferred$$22_i$$60_virtual$$ = 0;$deferred$$22_i$$60_virtual$$ < $elementCount$$;$deferred$$22_i$$60_virtual$$ += 1) {
-      $retArray$$2$$.push(this.$_getModel$($deferred$$22_i$$60_virtual$$))
+    for($deferred$$22_i$$61_virtual$$ = 0;$deferred$$22_i$$61_virtual$$ < $elementCount$$;$deferred$$22_i$$61_virtual$$ += 1) {
+      $retArray$$2$$.push(this.$_getModel$($deferred$$22_i$$61_virtual$$))
     }
     return $retArray$$2$$
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.first", {first:$oj$$1$$.$Collection$.prototype.first});
-  $oj$$1$$.$Collection$.prototype.indexOf = function $$oj$$1$$$$Collection$$$indexOf$($model$$33$$, $options$$79$$) {
+  $oj$$1$$.$Collection$.prototype.indexOf = function $$oj$$1$$$$Collection$$$indexOf$($model$$34$$, $options$$79$$) {
     var $deferred$$23$$ = this.$_getDeferred$($options$$79$$);
-    return this.$_isVirtual$() || $deferred$$23$$ ? this.$_getInternal$($model$$33$$, null, !0).then(function($loc$$1$$) {
+    return this.$_isVirtual$() || $deferred$$23$$ ? this.$_getInternal$($model$$34$$, null, !0).then(function($loc$$1$$) {
       return $loc$$1$$.index
-    }) : this.$_getInternal$($model$$33$$).index
+    }) : this.$_getInternal$($model$$34$$).index
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.indexOf", {indexOf:$oj$$1$$.$Collection$.prototype.indexOf});
-  $oj$$1$$.$Collection$.prototype.$_localIndexOf$ = function $$oj$$1$$$$Collection$$$$_localIndexOf$$($location$$22_model$$34$$) {
-    $location$$22_model$$34$$ = this.$_getLocalInternal$($location$$22_model$$34$$);
-    return void 0 !== $location$$22_model$$34$$ ? $location$$22_model$$34$$.index : -1
+  $oj$$1$$.$Collection$.prototype.$_localIndexOf$ = function $$oj$$1$$$$Collection$$$$_localIndexOf$$($location$$22_model$$35$$) {
+    $location$$22_model$$35$$ = this.$_getLocalInternal$($location$$22_model$$35$$);
+    return void 0 !== $location$$22_model$$35$$ ? $location$$22_model$$35$$.index : -1
   };
   $oj$$1$$.$Collection$.prototype.pop = function $$oj$$1$$$$Collection$$$pop$($options$$80$$) {
     var $deferred$$24_m$$8$$ = this.$_getDeferred$($options$$80$$);
     if(this.$_isVirtual$() || $deferred$$24_m$$8$$) {
       var $self$$22$$ = this;
-      return this.at(this.$_getLength$() - 1, {deferred:$deferred$$24_m$$8$$}).then(function($model$$35$$) {
-        $self$$22$$.remove($model$$35$$, $options$$80$$);
-        return $model$$35$$
+      return this.at(this.$_getLength$() - 1, {deferred:$deferred$$24_m$$8$$}).then(function($model$$36$$) {
+        $self$$22$$.remove($model$$36$$, $options$$80$$);
+        return $model$$36$$
       })
     }
     $deferred$$24_m$$8$$ = this.at(this.$_getLength$() - 1);
@@ -2035,13 +2067,13 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return this.$_addInternal$($m$$9$$, $options$$81$$, !1, $deferred$$25$$)
   };
   $oj$$1$$.$Object$.$exportPrototypeSymbol$("Collection.prototype.push", {push:$oj$$1$$.$Collection$.prototype.push});
-  $oj$$1$$.$Collection$.prototype.lastIndexOf = function $$oj$$1$$$$Collection$$$lastIndexOf$($model$$36$$, $fromIndex$$2$$) {
-    var $i$$61$$;
+  $oj$$1$$.$Collection$.prototype.lastIndexOf = function $$oj$$1$$$$Collection$$$lastIndexOf$($model$$37$$, $fromIndex$$2$$) {
+    var $i$$62$$;
     this.$_throwErrIfVirtual$("lastIndexOf");
     void 0 === $fromIndex$$2$$ && ($fromIndex$$2$$ = 0);
-    for($i$$61$$ = this.$_getLength$() - 1;$i$$61$$ >= $fromIndex$$2$$;$i$$61$$ -= 1) {
-      if($oj$$1$$.$Object$.$innerEquals$($model$$36$$, this.at($i$$61$$))) {
-        return $i$$61$$
+    for($i$$62$$ = this.$_getLength$() - 1;$i$$62$$ >= $fromIndex$$2$$;$i$$62$$ -= 1) {
+      if($oj$$1$$.$Object$.$innerEquals$($model$$37$$, this.at($i$$62$$))) {
+        return $i$$62$$
       }
     }
     return-1
@@ -2052,9 +2084,9 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   };
   $oj$$1$$.$Collection$.$_getQueryString$ = function $$oj$$1$$$$Collection$$$_getQueryString$$($q_queries$$) {
     $q_queries$$ = $oj$$1$$.$Model$.$IsArray$($q_queries$$) ? $q_queries$$ : [$q_queries$$];
-    var $str$$12$$ = "", $query$$2$$, $exp_value$$63$$, $i$$62$$, $prop$$43$$;
-    for($i$$62$$ = 0;$i$$62$$ < $q_queries$$.length;$i$$62$$++) {
-      $query$$2$$ = $q_queries$$[$i$$62$$];
+    var $str$$12$$ = "", $query$$2$$, $exp_value$$63$$, $i$$63$$, $prop$$43$$;
+    for($i$$63$$ = 0;$i$$63$$ < $q_queries$$.length;$i$$63$$++) {
+      $query$$2$$ = $q_queries$$[$i$$63$$];
       for($prop$$43$$ in $query$$2$$) {
         if($query$$2$$.hasOwnProperty($prop$$43$$)) {
           for(var $val$$18$$ = $oj$$1$$.$Model$.$IsArray$($query$$2$$[$prop$$43$$]) ? $query$$2$$[$prop$$43$$] : [$query$$2$$[$prop$$43$$]], $j$$6$$ = 0;$j$$6$$ < $val$$18$$.length;$j$$6$$++) {
@@ -2074,14 +2106,14 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
     return"," === $str$$12$$.substring($str$$12$$.length - 1) ? $str$$12$$.substring(0, $str$$12$$.length - 1) : $str$$12$$
   };
   $oj$$1$$.$Collection$.prototype.$ModifyOptionsForCustomURL$ = function $$oj$$1$$$$Collection$$$$ModifyOptionsForCustomURL$$($attrs$$13_comparator$$8_options$$82$$) {
-    var $opt$$12$$ = {}, $i$$63_prop$$44$$;
-    for($i$$63_prop$$44$$ in $attrs$$13_comparator$$8_options$$82$$) {
-      $attrs$$13_comparator$$8_options$$82$$.hasOwnProperty($i$$63_prop$$44$$) && ($opt$$12$$[$i$$63_prop$$44$$] = $attrs$$13_comparator$$8_options$$82$$[$i$$63_prop$$44$$])
+    var $opt$$12$$ = {}, $i$$64_prop$$44$$;
+    for($i$$64_prop$$44$$ in $attrs$$13_comparator$$8_options$$82$$) {
+      $attrs$$13_comparator$$8_options$$82$$.hasOwnProperty($i$$64_prop$$44$$) && ($opt$$12$$[$i$$64_prop$$44$$] = $attrs$$13_comparator$$8_options$$82$$[$i$$64_prop$$44$$])
     }
     if($attrs$$13_comparator$$8_options$$82$$ = this.comparator) {
       $attrs$$13_comparator$$8_options$$82$$ = this.$_getSortAttrs$($attrs$$13_comparator$$8_options$$82$$);
-      for($i$$63_prop$$44$$ = 0;$i$$63_prop$$44$$ < $attrs$$13_comparator$$8_options$$82$$.length;$i$$63_prop$$44$$++) {
-        $opt$$12$$.sort = 0 === $i$$63_prop$$44$$ ? $attrs$$13_comparator$$8_options$$82$$[$i$$63_prop$$44$$] : $opt$$12$$.sort + ("," + $attrs$$13_comparator$$8_options$$82$$[$i$$63_prop$$44$$])
+      for($i$$64_prop$$44$$ = 0;$i$$64_prop$$44$$ < $attrs$$13_comparator$$8_options$$82$$.length;$i$$64_prop$$44$$++) {
+        $opt$$12$$.sort = 0 === $i$$64_prop$$44$$ ? $attrs$$13_comparator$$8_options$$82$$[$i$$64_prop$$44$$] : $opt$$12$$.sort + ("," + $attrs$$13_comparator$$8_options$$82$$[$i$$64_prop$$44$$])
       }
       $opt$$12$$.sortDir = this.$_getSortDirStr$()
     }
@@ -2091,15 +2123,15 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
   $oj$$1$$.$Collection$.prototype.$GetCollectionFetchUrl$ = function $$oj$$1$$$$Collection$$$$GetCollectionFetchUrl$$($attrs$$14_comparator$$9_options$$83_queryString$$) {
     var $url$$29$$ = $oj$$1$$.$Model$.$IsFunction$(this.url) ? this.url() : this.url;
     if(this.$_isVirtual$()) {
-      var $all_sortDirStr$$ = $attrs$$14_comparator$$9_options$$83_queryString$$.all, $i$$64_limit$$3_totalResults$$4$$ = null;
-      $i$$64_limit$$3_totalResults$$4$$ = $all_sortDirStr$$ ? ($i$$64_limit$$3_totalResults$$4$$ = this.totalResults) ? $i$$64_limit$$3_totalResults$$4$$ : this.$_getFetchSize$($attrs$$14_comparator$$9_options$$83_queryString$$) : this.$_getFetchSize$($attrs$$14_comparator$$9_options$$83_queryString$$);
-      $url$$29$$ += "?limit\x3d" + $i$$64_limit$$3_totalResults$$4$$;
+      var $all_sortDirStr$$ = $attrs$$14_comparator$$9_options$$83_queryString$$.all, $i$$65_limit$$3_totalResults$$4$$ = null;
+      $i$$65_limit$$3_totalResults$$4$$ = $all_sortDirStr$$ ? ($i$$65_limit$$3_totalResults$$4$$ = this.totalResults) ? $i$$65_limit$$3_totalResults$$4$$ : this.$_getFetchSize$($attrs$$14_comparator$$9_options$$83_queryString$$) : this.$_getFetchSize$($attrs$$14_comparator$$9_options$$83_queryString$$);
+      $url$$29$$ += "?limit\x3d" + $i$$65_limit$$3_totalResults$$4$$;
       $all_sortDirStr$$ || ($attrs$$14_comparator$$9_options$$83_queryString$$.startIndex && ($url$$29$$ += "\x26offset\x3d" + $attrs$$14_comparator$$9_options$$83_queryString$$.startIndex), $attrs$$14_comparator$$9_options$$83_queryString$$.startID && ($url$$29$$ += "\x26fromID\x3d" + $attrs$$14_comparator$$9_options$$83_queryString$$.startID), $attrs$$14_comparator$$9_options$$83_queryString$$.since && ($url$$29$$ += "\x26since\x3d" + $attrs$$14_comparator$$9_options$$83_queryString$$.since), $attrs$$14_comparator$$9_options$$83_queryString$$.until && 
       ($url$$29$$ += "\x26until\x3d" + $attrs$$14_comparator$$9_options$$83_queryString$$.until));
       $attrs$$14_comparator$$9_options$$83_queryString$$.query && ($attrs$$14_comparator$$9_options$$83_queryString$$ = $oj$$1$$.$Collection$.$_getQueryString$($attrs$$14_comparator$$9_options$$83_queryString$$.query)) && 0 < $attrs$$14_comparator$$9_options$$83_queryString$$.length && ($url$$29$$ += "\x26q\x3d" + $attrs$$14_comparator$$9_options$$83_queryString$$);
       if($attrs$$14_comparator$$9_options$$83_queryString$$ = this.comparator) {
-        for($attrs$$14_comparator$$9_options$$83_queryString$$ = this.$_getSortAttrs$($attrs$$14_comparator$$9_options$$83_queryString$$), $all_sortDirStr$$ = this.$_getSortDirStr$(), $i$$64_limit$$3_totalResults$$4$$ = 0;$i$$64_limit$$3_totalResults$$4$$ < $attrs$$14_comparator$$9_options$$83_queryString$$.length;$i$$64_limit$$3_totalResults$$4$$++) {
-          $url$$29$$ = 0 === $i$$64_limit$$3_totalResults$$4$$ ? $url$$29$$ + ("\x26orderBy\x3d" + $attrs$$14_comparator$$9_options$$83_queryString$$[$i$$64_limit$$3_totalResults$$4$$] + ":" + $all_sortDirStr$$) : $url$$29$$ + ("," + $attrs$$14_comparator$$9_options$$83_queryString$$[$i$$64_limit$$3_totalResults$$4$$] + ":" + $all_sortDirStr$$)
+        for($attrs$$14_comparator$$9_options$$83_queryString$$ = this.$_getSortAttrs$($attrs$$14_comparator$$9_options$$83_queryString$$), $all_sortDirStr$$ = this.$_getSortDirStr$(), $i$$65_limit$$3_totalResults$$4$$ = 0;$i$$65_limit$$3_totalResults$$4$$ < $attrs$$14_comparator$$9_options$$83_queryString$$.length;$i$$65_limit$$3_totalResults$$4$$++) {
+          $url$$29$$ = 0 === $i$$65_limit$$3_totalResults$$4$$ ? $url$$29$$ + ("\x26orderBy\x3d" + $attrs$$14_comparator$$9_options$$83_queryString$$[$i$$65_limit$$3_totalResults$$4$$] + ":" + $all_sortDirStr$$) : $url$$29$$ + ("," + $attrs$$14_comparator$$9_options$$83_queryString$$[$i$$65_limit$$3_totalResults$$4$$] + ":" + $all_sortDirStr$$)
         }
       }
       $url$$29$$ += "\x26totalResults\x3dtrue"
@@ -2279,14 +2311,14 @@ define(["ojs/ojcore", "jquery"], function($oj$$1$$, $$$$1$$) {
       $oauthObj$$1$$.hasOwnProperty($key$$25$$) && "auth_header" !== $key$$25$$ && ($oauthObj$$1$$[$key$$25$$] = null, delete $oauthObj$$1$$[$key$$25$$])
     }
   };
-  $oj$$1$$.$OAuth$.$_base64_encode$ = function $$oj$$1$$$$OAuth$$$_base64_encode$$($a$$46$$) {
-    var $d$$, $e$$22$$, $f$$, $b$$27$$, $g$$ = 0, $h$$4$$ = 0, $c$$15$$ = [];
+  $oj$$1$$.$OAuth$.$_base64_encode$ = function $$oj$$1$$$$OAuth$$$_base64_encode$$($a$$52$$) {
+    var $d$$, $e$$22$$, $f$$, $b$$28$$, $g$$ = 0, $h$$4$$ = 0, $c$$15$$ = [];
     do {
-      $d$$ = $a$$46$$.charCodeAt($g$$++), $e$$22$$ = $a$$46$$.charCodeAt($g$$++), $f$$ = $a$$46$$.charCodeAt($g$$++), $b$$27$$ = $d$$ << 16 | $e$$22$$ << 8 | $f$$, $d$$ = $b$$27$$ >> 18 & 63, $e$$22$$ = $b$$27$$ >> 12 & 63, $f$$ = $b$$27$$ >> 6 & 63, $b$$27$$ &= 63, $c$$15$$[$h$$4$$++] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($d$$) + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($e$$22$$) + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($f$$) + 
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($b$$27$$)
-    }while($g$$ < $a$$46$$.length);
+      $d$$ = $a$$52$$.charCodeAt($g$$++), $e$$22$$ = $a$$52$$.charCodeAt($g$$++), $f$$ = $a$$52$$.charCodeAt($g$$++), $b$$28$$ = $d$$ << 16 | $e$$22$$ << 8 | $f$$, $d$$ = $b$$28$$ >> 18 & 63, $e$$22$$ = $b$$28$$ >> 12 & 63, $f$$ = $b$$28$$ >> 6 & 63, $b$$28$$ &= 63, $c$$15$$[$h$$4$$++] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($d$$) + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($e$$22$$) + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($f$$) + 
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d".charAt($b$$28$$)
+    }while($g$$ < $a$$52$$.length);
     $c$$15$$ = $c$$15$$.join("");
-    $d$$ = $a$$46$$.length % 3;
+    $d$$ = $a$$52$$.length % 3;
     return($d$$ ? $c$$15$$.slice(0, $d$$ - 3) : $c$$15$$) + "\x3d\x3d\x3d".slice($d$$ || 3)
   }
 });

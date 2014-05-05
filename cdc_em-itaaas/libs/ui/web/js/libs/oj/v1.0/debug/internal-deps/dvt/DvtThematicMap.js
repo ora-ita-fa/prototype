@@ -260,9 +260,10 @@ DvtThematicMap.prototype.Init = function(context, callback, callbackObj) {
   this._isMarkerZoomBehaviorFixed = true;
   this._selectedAreas = {};
 
-  this.setDisplayedControls(DvtPanZoomControlPanel.CONTROLS_ALL);
+  this.setDisplayedControls(DvtControlPanel.CONTROLS_ALL);
 
   this.Defaults = new DvtThematicMapDefaults();
+  this.Bundle = new DvtSubcomponentBundle();
 };
 
 
@@ -280,9 +281,7 @@ DvtThematicMap.newInstance = function(context, callback, callbackObj) {
 
 
 /**
- * Specifies the non-data options for this component. Currently only called by json supported platforms.
- * @param {object} options The object containing options specifications for this component.
- * @protected
+ * @override
  */
 DvtThematicMap.prototype.SetOptions = function(options) {
   this.Options = this.Defaults.calcOptions(options);
@@ -456,17 +455,17 @@ DvtThematicMap.prototype.setFeaturesOff = function(attr) {
   var controls = this.getDisplayedControls();
   if (this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN || this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN_ZOOM ||
       this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN_ZOOMTOFIT || this._featuresOff == DvtThematicMap._FEATURES_OFF_ALL) {
-    controls = controls & ~DvtPanZoomControlPanel.CONTROLS_CENTER_BUTTON;
+    controls = controls & ~DvtControlPanel.CONTROLS_CENTER_BUTTON;
     this.setPanning(false);
   }
   if (this._featuresOff == DvtThematicMap._FEATURES_OFF_ZOOM || this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN_ZOOM ||
       this._featuresOff == DvtThematicMap._FEATURES_OFF_ZOOM_ZOOMTOFIT || this._featuresOff == DvtThematicMap._FEATURES_OFF_ALL) {
-    controls = controls & ~DvtPanZoomControlPanel.CONTROLS_ZOOM;
+    controls = controls & ~DvtControlPanel.CONTROLS_ZOOM;
     this.setZooming(false);
   }
   if (this._featuresOff == DvtThematicMap._FEATURES_OFF_ZOOMTOFIT || this._featuresOff == DvtThematicMap._FEATURES_OFF_PAN_ZOOMTOFIT ||
       this._featuresOff == DvtThematicMap._FEATURES_OFF_ZOOM_ZOOMTOFIT || this._featuresOff == DvtThematicMap._FEATURES_OFF_ALL) {
-    controls = controls & ~DvtPanZoomControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON;
+    controls = controls & ~DvtControlPanel.CONTROLS_ZOOM_TO_FIT_BUTTON;
   }
 
   this.setDisplayedControls(controls);
@@ -548,7 +547,7 @@ DvtThematicMap.prototype.LoadXmlInitial = function(eventType, rootXmlNode, param
     this._legendXml = null;
     this._legendButtonImages = null;
     this.setFeaturesOff(0);
-    this.setDisplayedControls(DvtPanZoomControlPanel.CONTROLS_ALL);
+    this.setDisplayedControls(DvtControlPanel.CONTROLS_ALL);
     this._zooming = true;
     this._panning = true;
 
@@ -639,7 +638,7 @@ DvtThematicMap.prototype._renderLegend = function() {
       }
     } else {
       this._legendPanel = new DvtCollapsiblePanel(this.getCtx(), maxWidth, maxHeight, legendCollapseDir,
-          this._getLegendButtonImages(), this.getControlPanelStyleMap(), disclosed, isFixed);
+          this.getResourcesMap(), this.getControlPanelStyleMap(), disclosed, isFixed);
       this._legendPanel.addEvtListener(DvtCollapsiblePanelEvent.TYPE, this.HandleLegendEvent, false, this);
       this._legendPanel.addEvtListener(DvtResizeEvent.RESIZE_EVENT, this.HandleLegendResize, false, this);
       var expandTooltip = this._legendXml.getAttr('expandTooltip');
@@ -650,7 +649,7 @@ DvtThematicMap.prototype._renderLegend = function() {
 
     // create and render the legend
     this._legend = new DvtCommonLegend(this.getCtx(), this._legendPanel.getMaxContentWidth(),
-        this._legendPanel.getMaxContentHeight(), this._getLegendButtonImages(), this.getLegendStyleMap());
+        this._legendPanel.getMaxContentHeight(), this.getResourcesMap(), this.getLegendStyleMap());
     this._legend.setXML(this._legendXml);
     this.addChild(this._legendPanel);
     this.addChild(this._legend); // temp add for rendering
@@ -663,10 +662,10 @@ DvtThematicMap.prototype._renderLegend = function() {
       this._legendPanel.setMaxContainerHeight(dim.h);
       this.removeChild(this._legend);
 
-      var upState = new DvtImage(this.getCtx(), this._getPanelDrawerImages()[DvtPanelDrawer.PANEL_LEGEND_ICON_ENA], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
-      var overState = new DvtImage(this.getCtx(), this._getPanelDrawerImages()[DvtPanelDrawer.PANEL_LEGEND_ICON_OVR], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
-      var downState = new DvtImage(this.getCtx(), this._getPanelDrawerImages()[DvtPanelDrawer.PANEL_LEGEND_ICON_DWN], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
-      var tip = this._getPanelDrawerTranslations()[DvtPanelDrawer.PANEL_LEGEND_TIP];
+      var upState = new DvtImage(this.getCtx(), this.getResourcesMap()[DvtPanelDrawer.PANEL_LEGEND_ICON_ENA], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
+      var overState = new DvtImage(this.getCtx(), this.getResourcesMap()[DvtPanelDrawer.PANEL_LEGEND_ICON_OVR], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
+      var downState = new DvtImage(this.getCtx(), this.getResourcesMap()[DvtPanelDrawer.PANEL_LEGEND_ICON_DWN], 0, 0, DvtPanelDrawer.IMAGE_SIZE, DvtPanelDrawer.IMAGE_SIZE);
+      var tip = this.Bundle.getTranslatedString('LEGEND');
       this._legendPanel.addPanel(this._legend, upState, overState, downState, tip, DvtPanelDrawer.PANEL_LEGEND);
       this._legendPanel.renderComponent();
       if (disclosed)
@@ -935,42 +934,6 @@ DvtThematicMap.prototype.getDrillMode = function() {
   return this._drillMode;
 };
 
-
-/**
- * @private
- */
-DvtThematicMap.prototype._getPanelDrawerImages = function() {
-  return this.Options[DvtThematicMap._ELEM_RESOURCES]['images'][DvtThematicMap._ELEM_RESOURCES_PANEL_DRAWER];
-};
-
-/**
- * @private
- */
-DvtThematicMap.prototype._getPanelDrawerTranslations = function() {
-  return this.Options[DvtThematicMap._ELEM_RESOURCES]['translations'][DvtThematicMap._ELEM_RESOURCES_PANEL_DRAWER];
-};
-
-/**
- * @private
- */
-DvtThematicMap.prototype._getLegendButtonImages = function() {
-  return this.Options[DvtThematicMap._ELEM_RESOURCES]['images'][DvtThematicMap._ELEM_RESOURCES_LEGEND];
-};
-
-/**
- * @override
- */
-DvtThematicMap.prototype.getButtonImages = function() {
-  return this.Options[DvtThematicMap._ELEM_RESOURCES]['images'][DvtThematicMap._ELEM_RESOURCES_CONTROLPANEL];
-};
-
-/**
- * @override
- */
-DvtThematicMap.prototype.getPanZoomResources = function() {
-  return this.Options[DvtThematicMap._ELEM_RESOURCES]['translations'][DvtThematicMap._ELEM_RESOURCES_CONTROLPANEL];
-};
-
 DvtThematicMap.prototype.setLegendXml = function(legendXml) {
   this._legendXml = legendXml;
 };
@@ -1018,14 +981,14 @@ DvtThematicMap.prototype._transformContainers = function(pzcMatrix) {
 
 /**
  * Creates and sends a DvtSetPropertyEvent to the peer for control panel state saving
- * @param {DvtPanZoomControlPanelEvent) event The event fired by the control panel on collapse/expand}
+ * @param {DvtControlPanelEvent) event The event fired by the control panel on collapse/expand}
  * @protected
  */
 DvtThematicMap.prototype.HandleControlPanelEvent = function(event) {
   DvtThematicMap.superclass.HandleControlPanelEvent.call(this, event);
   var spEvent = new DvtSetPropertyEvent();
-  spEvent.addParam(DvtPanZoomControlPanel.CONTROL_PANEL_BEHAVIOR_KEY,
-      event.getSubType() == DvtPanZoomControlPanelEvent.SUBTYPE_SHOW ?
+  spEvent.addParam(DvtControlPanel.CONTROL_PANEL_BEHAVIOR_KEY,
+      event.getSubType() == DvtControlPanelEvent.SUBTYPE_SHOW ?
       DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_INIT_EXPANDED :
       DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_INIT_COLLAPSED);
   this.__dispatchEvent(spEvent);
@@ -1212,19 +1175,19 @@ DvtThematicMap.prototype.HandlePanEvent = function(event) {
       var stroke = this._legendPanel._background.getStroke().clone();
       // Handle DvtCollapsiblePanel fade
       if (subType === DvtPanEvent.SUBTYPE_DRAG_PAN_BEGIN) {
-        this._legend.setAlpha(styleMap[DvtPanZoomControlPanel.BG_DRAG_ALPHA]);
-        stroke.setAlpha(styleMap[DvtPanZoomControlPanel.FRAME_DRAG_ALPHA]);
+        this._legend.setAlpha(styleMap[DvtControlPanel.BG_DRAG_ALPHA]);
+        stroke.setAlpha(styleMap[DvtControlPanel.FRAME_DRAG_ALPHA]);
         this._legendPanel._background.setStroke(stroke);
         if (this._legendPanel._buttonFrame)
-          this._legendPanel._buttonFrame.setAlpha(styleMap[DvtPanZoomControlPanel.FRAME_DRAG_ALPHA]);
+          this._legendPanel._buttonFrame.setAlpha(styleMap[DvtControlPanel.FRAME_DRAG_ALPHA]);
         this._legendPanel.setMouseEnabled(false);
       }
       else if (subType === DvtPanEvent.SUBTYPE_DRAG_PAN_END) {
         this._legend.setAlpha(1);
-        stroke.setAlpha(styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+        stroke.setAlpha(styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
         this._legendPanel._background.setStroke(stroke);
         if (this._legendPanel._buttonFrame)
-          this._legendPanel._buttonFrame.setAlpha(styleMap[DvtPanZoomControlPanel.FRAME_ROLLOUT_ALPHA]);
+          this._legendPanel._buttonFrame.setAlpha(styleMap[DvtControlPanel.FRAME_ROLLOUT_ALPHA]);
         this._legendPanel.setMouseEnabled(true);
       }
     }
@@ -1240,8 +1203,8 @@ DvtThematicMap.prototype.CreatePanZoomCanvas = function(ww, hh) {
   // Create control panel with drilling buttons if drilling is on
   if (this.getControlPanelBehavior() != DvtAbstractPanZoomComponent.CONTROL_PANEL_BEHAVIOR_HIDDEN && this._drillMode != 'none') {
     var callbacks = [DvtObj.createCallback(this, this.drillUp), DvtObj.createCallback(this, this.drillDown), DvtObj.createCallback(this, this.resetMap)];
-    var controlPanel = new DvtThematicMapControlPanel(this.getCtx(), this._drillMode, this.getButtonImages(),
-        callbacks, this._pzc, this.getPanZoomResources(),
+    var controlPanel = new DvtThematicMapControlPanel(this.getCtx(), this._drillMode, this.getResourcesMap(),
+        callbacks, this._pzc, this.getBundle(),
         this.getDisplayedControls(), this);
     this._pzc.setControlPanel(controlPanel);
   }
@@ -1839,6 +1802,14 @@ DvtThematicMap.prototype.getAutomation = function() {
   if (!this.Automation)
     this.Automation = new DvtThematicMapAutomation(this);
   return this.Automation;
+};
+
+/**
+ * Returns the resource bundle for this thematic map.
+ * @return {DvtThematicMapBundle}
+ */
+DvtThematicMap.prototype.getBundle = function() {
+  return this.Bundle;
 };
 /**
  * Default values and utility functions for thematic map component versioning.
@@ -3370,6 +3341,7 @@ DvtMapDataObject.prototype.Init = function(context, dataLayer, rowKey, clientId,
   this.Zoom = 1;
   this._hasAction = false;
   this._dataLayer = dataLayer;
+  this.Bundle = dataLayer.getMap().getBundle();
 };
 
 DvtMapDataObject.prototype.getId = function() {
@@ -3497,8 +3469,12 @@ DvtMapDataObject.prototype.setDatatip = function(datatip) {
   this._datatip = datatip;
 
   // WAI-ARIA
-  if (this.Shape)
-    this.Shape.setAriaProperty('label', datatip);
+  if (this.Shape) {
+    if (datatip && this.isSelectable())
+      this.Shape.setAriaProperty('label', datatip + '. ' + this.Bundle.getTranslatedString(this.isSelected() ? 'STATE_SELECTED' : 'STATE_UNSELECTED'));
+    else
+      this.Shape.setAriaProperty('label', datatip);
+  }
 };
 
 
@@ -3742,6 +3718,8 @@ DvtMapDataArea.prototype.setSelected = function(selected) {
   if (selected && !this._isHoverEffectShowing)
     this._dataAreaLayer.addChild(this.Shape);
   this.Shape.setSelected(selected);
+  if (this.getDatatip())
+    this.Shape.setAriaProperty('label', this.getDatatip() + '. ' + this.Bundle.getTranslatedString(selected ? 'STATE_SELECTED' : 'STATE_UNSELECTED'));
 };
 
 
@@ -3840,6 +3818,8 @@ DvtMapDataMarker.prototype.Init = function(context, dataLayer, rowKey, clientId,
  */
 DvtMapDataMarker.prototype.setSelected = function(selected) {
   this.Shape.setSelected(selected);
+  if (this.getDatatip())
+    this.Shape.setAriaProperty('label', this.getDatatip() + '. ' + this.Bundle.getTranslatedString(selected ? 'STATE_SELECTED' : 'STATE_UNSELECTED'));
 };
 
 
@@ -4179,10 +4159,6 @@ DvtMapArea.prototype.getTooltip = function() {
  */
 DvtMapArea.prototype.setTooltip = function(tooltip) {
   this._tooltip = tooltip;
-
-  // WAI-ARIA
-  if (this._shape)
-    this._shape.setAriaProperty('label', tooltip);
 };
 
 DvtMapArea.prototype.getStroke = function() {
@@ -5885,14 +5861,23 @@ DvtThematicMapEventManager.prototype.OnClick = function(event) {
 DvtThematicMapEventManager.prototype._handleClick = function(obj) {
   if (obj instanceof DvtMapDataObject) {
     if (obj.hasAction()) {
-      var actionEvent = new DvtMapActionEvent(obj.getClientId(), obj.getId(), obj.getAction());
-      actionEvent.addParam('clientId', obj.getDataLayer().getClientId());
-      this.hideTooltip();
-      this._callback.call(this._callbackObj, actionEvent);
+      this.HandleAction(obj);
     } else if (obj.getShowPopupBehaviors()) {
       this._tmap.setEventClientId(obj.getDataLayer().getClientId());
     }
   }
+};
+
+/**
+ * Initiates a DvtMapActionEvent
+ * @param {DvtDisplayable} obj The displayable that was clicked
+ * @protected
+ */
+DvtThematicMapEventManager.prototype.HandleAction = function(obj) {
+  var actionEvent = new DvtMapActionEvent(obj.getClientId(), obj.getId(), obj.getAction());
+  actionEvent.addParam('clientId', obj.getDataLayer().getClientId());
+  this.hideTooltip();
+  this._callback.call(this._callbackObj, actionEvent);
 };
 
 DvtThematicMapEventManager.prototype.SetClickInfo = function(obj) {
@@ -5953,13 +5938,18 @@ DvtThematicMapEventManager.prototype.ProcessKeyboardEvent = function(event)
     }
     event.preventDefault();
   }
-  // Drilling
+  // Drilling or Action
   else if (keyCode == DvtKeyboardEvent.ENTER) {
-    if (event.shiftKey)
-      this._tmap.drillUp();
-    else
-      this._tmap.drillDown();
-    event.preventDefault();
+    var logicalObj = this.getFocus();
+    if (logicalObj instanceof DvtMapDataObject && logicalObj.hasAction()) {
+      this.HandleAction(logicalObj);
+    } else {
+      if (event.shiftKey)
+        this._tmap.drillUp();
+      else
+        this._tmap.drillDown();
+      event.preventDefault();
+    }
   }
   // Selection
   else if (keyCode == DvtKeyboardEvent.SPACE && event.ctrlKey) {
@@ -6194,9 +6184,7 @@ DvtThematicMapParser.prototype.ParseMapProperties = function(xmlNode) {
   for (var i = 0; i < childNodes.length; i++) {
     node = childNodes[i];
     nodeName = node.getName();
-    if (nodeName == DvtThematicMapParser._ELEM_RESOURCES)
-      this.ParseResources(node);
-    else if (nodeName == DvtThematicMapParser._ELEM_MAP_HIERARCHY)
+    if (nodeName == DvtThematicMapParser._ELEM_MAP_HIERARCHY)
       this.ParseMapHierarchy(node);
     else if (nodeName == DvtThematicMapParser._ELEM_REGION_LAYER) {
       var attr = node.getAttr(DvtThematicMapParser._ATTR_INLINE_STYLE);
@@ -6337,11 +6325,6 @@ DvtThematicMapParser.prototype.ParseDataLayers = function(xmlNode, pzcMatrix, to
 DvtThematicMapParser.prototype.ParseLegend = function(xmlNode) {
   this._tmap.setLegendXml(xmlNode);
 };
-
-DvtThematicMapParser.prototype.ParseResources = function(xmlNode) {
-  this._tmap.setResources(xmlNode);
-};
-
 
 /**
  * Parses and creates the map layers
@@ -8318,10 +8301,7 @@ var DvtMapControlButton = function(context, button, mapCallback, panZoomCanvas, 
   this.Init(context, button, mapCallback, panZoomCanvas, btype, resources, eventManager);
 };
 
-/*
- * make DvtMapControlButton a subclass of DvtBasePanZoomControl
- */
-DvtObj.createSubclass(DvtMapControlButton, DvtBasePanZoomControl, 'DvtMapControlButton');
+DvtObj.createSubclass(DvtMapControlButton, DvtBaseControl, 'DvtMapControlButton');
 
 DvtMapControlButton.BUTTON_TYPE_DRILLUP = 0;
 DvtMapControlButton.BUTTON_TYPE_DRILLDOWN = 1;
@@ -8346,7 +8326,7 @@ DvtMapControlButton.prototype.Init = function(context, button, mapCallback, panZ
   this._eventManager = eventManager;
   this._button.setCallback(this.HandleOnClick, this);
   this._button.setCursor(DvtSelectionEffectUtils.getSelectingCursor());
-  var proxy = new DvtPanZoomControlPanelEventHandlerProxy(this, null, null,
+  var proxy = new DvtControlPanelEventHandlerProxy(this, null, null,
       null, null, null,
       this._getTooltipText());
   this._eventManager.associate(this._button, proxy);
@@ -8384,13 +8364,12 @@ DvtMapControlButton.prototype.HandleOnClick = function(event)
  * @return tooltip text for current buton type.
  */
 DvtMapControlButton.prototype._getTooltipText = function() {
-
   if (this._btype == DvtMapControlButton.BUTTON_TYPE_DRILLUP) {
-    return this.getResources().getControlPanelDrillUpTooltip();
+    return this.Bundle.getTranslatedString('CONTROL_PANEL_DRILLUP');
   }else if (this._btype == DvtMapControlButton.BUTTON_TYPE_DRILLDOWN) {
-    return this.getResources().getControlPanelDrillDownTooltip();
+    return this.Bundle.getTranslatedString('CONTROL_PANEL_DRILLDOWN');
   }else if (this._btype == DvtMapControlButton.BUTTON_TYPE_RESET) {
-    return this.getResources().getControlPanelResetTooltip();
+    return this.Bundle.getTranslatedString('CONTROL_PANEL_RESET');
   }else {
     return null;
   }
@@ -8398,7 +8377,7 @@ DvtMapControlButton.prototype._getTooltipText = function() {
 
 /**
  * @constructor
- * DvtPanZoomControlPanel for use with PanZoomCanvas.
+ * DvtControlPanel for use with PanZoomCanvas.
  * This panel contains tools for zooming and panning.
  * By default, the panel is initially collapsed.
  */
@@ -8407,13 +8386,12 @@ var DvtThematicMapControlPanel = function(context, drillMode, buttonImages, call
 };
 
 /*
- * make DvtPanZoomControlPanel a subclass of DvtContainer
+ * make DvtControlPanel a subclass of DvtContainer
  */
-DvtObj.createSubclass(DvtThematicMapControlPanel, DvtPanZoomControlPanel, 'DvtThematicMapControlPanel');
+DvtObj.createSubclass(DvtThematicMapControlPanel, DvtControlPanel, 'DvtThematicMapControlPanel');
 
 DvtThematicMapControlPanel.prototype.Init = function(context, drillMode, buttonImages, callbacks, canvas, resources, controls, view) {
   DvtThematicMapControlPanel.superclass.Init.call(this, context, canvas, buttonImages, resources, controls, view);
-  this.setResources(new DvtThematicMapControlPanelResources(resources));
   this._drillMode = drillMode;
   this._buttonImages = buttonImages;
   this._drillUpCallback = callbacks[0];
@@ -8438,19 +8416,6 @@ DvtThematicMapControlPanel.prototype.setEnabledDrillUpButton = function(enable) 
   if (this._drillUpButton)
     this._drillUpButton.setEnabled(enable);
 };
-DvtThematicMapControlPanel.prototype.setResources = function(resources) {
-  DvtThematicMapControlPanel.superclass.setResources.call(this, resources);
-  if (this._drillDownButton) {
-    this._drillDownButton.setResources(resources);
-  }
-  if (this._drillUpButton) {
-    this._drillUpButton.setResources(resources);
-  }
-  if (this._resetButton) {
-    this._resetButton.setResources(resources);
-  }
-};
-
 
 /**
   *  Populate the horizontal part of the control panel
@@ -8458,15 +8423,15 @@ DvtThematicMapControlPanel.prototype.setResources = function(resources) {
   */
 DvtThematicMapControlPanel.prototype.PopulateHorzContentBar = function(contentSprite) {
   if (this._drillMode && this._drillMode != 'none') {
-    var buttonOffset = DvtStyleUtils.getStyle(this._styleMap, DvtPanZoomControlPanel.CP_BUTTON_WIDTH, 0);
+    var buttonOffset = DvtStyleUtils.getStyle(this._styleMap, DvtControlPanel.CP_BUTTON_WIDTH, 0);
     this._resetButton = DvtButtonLAFUtils.createResetButton(this.getCtx(), this._resetCallback, this._panZoomCanvas,
-                                                            DvtMapControlButton.BUTTON_TYPE_RESET, this.getResources(),
+                                                            DvtMapControlButton.BUTTON_TYPE_RESET, this.Bundle,
                                                             this._buttonImages, this._eventManager, this._styleMap);
     contentSprite.addChild(this._resetButton);
     this._drillDownButton = DvtButtonLAFUtils.createDrillDownButton(this.getCtx(), this._drillDownCallback,
                                                                     this._panZoomCanvas,
                                                                     DvtMapControlButton.BUTTON_TYPE_DRILLDOWN,
-                                                                    this.getResources(), this._buttonImages,
+                                                                    this.Bundle, this._buttonImages,
                                                                     this._eventManager, this._styleMap);
     this._drillDownButton.setTranslateX(buttonOffset);
     this._drillDownButton.setEnabled(this._drillDownButtonEnabled);
@@ -8474,7 +8439,7 @@ DvtThematicMapControlPanel.prototype.PopulateHorzContentBar = function(contentSp
     this._drillUpButton = DvtButtonLAFUtils.createDrillUpButton(this.getCtx(), this._drillUpCallback,
                                                                 this._panZoomCanvas,
                                                                 DvtMapControlButton.BUTTON_TYPE_DRILLUP,
-                                                                this.getResources(), this._buttonImages,
+                                                                this.Bundle, this._buttonImages,
                                                                 this._eventManager, this._styleMap);
 
     this._drillUpButton.setTranslateX(buttonOffset * 2);
@@ -8482,93 +8447,5 @@ DvtThematicMapControlPanel.prototype.PopulateHorzContentBar = function(contentSp
     contentSprite.addChild(this._drillUpButton);
 
   }
-};
-/**
- * @constructor
- * Class used to maintain translated resources used by the ThematicMapControlPanel.
- */
-var DvtThematicMapControlPanelResources = function(parent) {
-  this.Init(parent);
-};
-
-
-/*
- * make DvtThematicMapControlPanelResources a subclass of DvtPanZoomControlPanelResources
- */
-DvtObj.createSubclass(DvtThematicMapControlPanelResources, DvtPanZoomControlPanelResources, 'DvtThematicMapControlPanelResources');
-
-
-DvtThematicMapControlPanelResources.prototype.Init = function(parent) {
-  DvtThematicMapControlPanelResources.superclass.Init.call(this, parent);
-
-  if (!parent) {
-    this._controlPanelDrillUpTooltip = 'Show Control Panel (/)';
-    this._controlPanelDrillDownTooltip = 'Hide (/)';
-    this._controlPanelResetTooltip = 'Zoom and Center (Ctrl+Alt+0)';
-  } else {
-    this._controlPanelDrillUpTooltip = parent['pdu'];
-    this._controlPanelDrillDownTooltip = parent['pdd'];
-    this._controlPanelResetTooltip = parent['res'];
-  }
-};
-
-
-/**
- * Get the ControlPanelDrillUpTooltip to use.
- *
- * @return controlPanelDrillUpToolTip being used
- */
-DvtThematicMapControlPanelResources.prototype.getControlPanelDrillUpTooltip = function() {
-  return this._controlPanelDrillUpTooltip;
-};
-
-
-/**
- * Set the PanControlDrillUpTooltip to use.
- *
- * @param panControlDrillUpToolTip to use
- */
-DvtThematicMapControlPanelResources.prototype.setPanControlDrillUpTooltip = function(s) {
-  this._controlPanelDrillUpTooltip = s;
-};
-
-
-/**
- * Get the ControlPanelDrillDownTooltip to use.
- *
- * @return controlPanelDrillDownToolTip being used
- */
-DvtThematicMapControlPanelResources.prototype.getControlPanelDrillDownTooltip = function() {
-  return this._controlPanelDrillDownTooltip;
-};
-
-
-/**
- * Set the PanControlDrillDownTooltip to use.
- *
- * @param panControlDrillDownToolTip to use
- */
-DvtThematicMapControlPanelResources.prototype.setPanControlDrillDownTooltip = function(s) {
-  this._controlPanelDrillDownTooltip = s;
-};
-
-
-/**
- * Get the ControlPanelResetTooltip to use.
- *
- * @return controlPanelResetToolTip being used
- */
-DvtThematicMapControlPanelResources.prototype.getControlPanelResetTooltip = function() {
-  return this._controlPanelResetTooltip;
-};
-
-
-/**
- * Set the PanControlResetTooltip to use.
- *
- * @param panControlResetToolTip to use
- */
-DvtThematicMapControlPanelResources.prototype.setPanControlResetTooltip = function(s) {
-  this._controlPanelResetTooltip = s;
 };
 });

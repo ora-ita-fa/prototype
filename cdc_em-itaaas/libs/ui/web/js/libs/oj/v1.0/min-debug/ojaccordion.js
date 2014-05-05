@@ -10,12 +10,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojcollapsible"], fun
       this.element.removeClass("oj-accordion oj-component").removeAttr("role");
       this.element.children().removeClass("oj-accordion-collapsible");
       this.element.children(".oj-accordion-created").removeClass("oj-accordion-created").ojCollapsible("destroy")
-    }, _setOption:function($key$$92$$, $value$$184$$) {
-      "multiple" === $key$$92$$ && !1 == $value$$184$$ && !0 == this.options.multiple && this.$colllapsibles$.not(".oj-collapsible-collapsed").first().siblings(".oj-collapsible").trigger("ojcollapse");
-      this._super($key$$92$$, $value$$184$$);
-      "disabled" === $key$$92$$ && (($value$$184$$ = !!$value$$184$$) && this.$colllapsibles$.each(function() {
-        null == $$$$25$$(this).ojCollapsible("option", $key$$92$$) && $$$$25$$(this).ojCollapsible("option", $key$$92$$, $value$$184$$)
-      }), this.element.toggleClass("oj-disabled", $value$$184$$))
+    }, _setOption:function($key$$92$$, $value$$185$$) {
+      "multiple" === $key$$92$$ && !1 == $value$$185$$ && !0 == this.options.multiple && this.$colllapsibles$.not(".oj-collapsible-collapsed").first().siblings(".oj-collapsible").trigger("ojcollapse");
+      this._super($key$$92$$, $value$$185$$);
+      "disabled" === $key$$92$$ && (($value$$185$$ = !!$value$$185$$) && this.$colllapsibles$.each(function() {
+        null == $$$$25$$(this).ojCollapsible("option", $key$$92$$) && $$$$25$$(this).ojCollapsible("option", $key$$92$$, $value$$185$$)
+      }), this.element.toggleClass("oj-disabled", $value$$185$$))
     }, refresh:function() {
       this._super();
       this.$_refresh$()
@@ -61,21 +61,21 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojcollapsible"], fun
         return $$$$25$$(this).data("oj-ojCollapsible")
       }) : $$$$25$$()
     }, $_beforeExpandHandler$:function($event$$283$$) {
-      var $result$$19$$, $self$$79$$ = this, $newData$$4$$;
+      var $result$$19$$, $self$$82$$ = this, $newData$$4$$;
       this.$_findTargetSiblings$($event$$283$$).each(function() {
-        $newData$$4$$ = $self$$79$$.$_initEventData$($event$$283$$, this.element);
+        $newData$$4$$ = $self$$82$$.$_initEventData$($event$$283$$, this.element);
         return $result$$19$$ = this._trigger("beforeCollapse", $event$$283$$, {newCollapsible:$newData$$4$$.oldCollapsible, oldCollapsible:$newData$$4$$.newCollapsible})
       });
-      $newData$$4$$ || ($newData$$4$$ = $self$$79$$.$_initEventData$($event$$283$$, null));
+      $newData$$4$$ || ($newData$$4$$ = $self$$82$$.$_initEventData$($event$$283$$, null));
       this._trigger("beforeExpand", $event$$283$$, $newData$$4$$);
       return $result$$19$$
     }, $_expandHandler$:function($event$$284$$, $eventData$$4$$) {
-      var $newData$$5$$, $self$$80$$ = this;
+      var $newData$$5$$, $self$$83$$ = this;
       this.$_findTargetSiblings$($event$$284$$).each(function() {
         this.collapse(!1, $event$$284$$, $eventData$$4$$);
-        $newData$$5$$ = $self$$80$$.$_initEventData$($event$$284$$, this.element)
+        $newData$$5$$ = $self$$83$$.$_initEventData$($event$$284$$, this.element)
       });
-      $newData$$5$$ || ($newData$$5$$ = $self$$80$$.$_initEventData$($event$$284$$, null));
+      $newData$$5$$ || ($newData$$5$$ = $self$$83$$.$_initEventData$($event$$284$$, null));
       this._trigger("afterExpand", $event$$284$$, $newData$$5$$)
     }, $_beforeCollapseHandler$:function($event$$285$$, $eventData$$5$$) {
       var $newData$$6$$;
@@ -95,12 +95,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojcollapsible"], fun
       this._trigger("afterCollapse", $event$$286$$, $newData$$7$$)
     }, $_initEventData$:function($event$$287$$, $oCollapsible$$) {
       return{oldCollapsible:$oCollapsible$$, newCollapsible:$$$$25$$($event$$287$$.target)}
-    }, getNodeBySubId:function($collapsible$$1_locator$$17$$) {
-      if(null == $collapsible$$1_locator$$17$$) {
+    }, getNodeBySubId:function($collapsible$$1_locator$$18$$) {
+      if(null == $collapsible$$1_locator$$18$$) {
         return this.element ? this.element[0] : null
       }
-      var $subId$$11$$ = $collapsible$$1_locator$$17$$.subId;
-      $collapsible$$1_locator$$17$$ = this.$colllapsibles$[$collapsible$$1_locator$$17$$.index];
+      var $subId$$11$$ = $collapsible$$1_locator$$18$$.subId;
+      $collapsible$$1_locator$$18$$ = this.$colllapsibles$[$collapsible$$1_locator$$18$$.index];
       switch($subId$$11$$) {
         case "oj-accordion-content":
           $subId$$11$$ = "oj-collapsible-content";
@@ -112,11 +112,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojcollapsible"], fun
           $subId$$11$$ = "oj-collapsible-header-icon";
           break;
         case "oj-accordion-collapsible":
-          return $collapsible$$1_locator$$17$$;
+          return $collapsible$$1_locator$$18$$;
         default:
           return null
       }
-      return $$$$25$$($collapsible$$1_locator$$17$$).ojCollapsible("getNodeBySubId", {$subId$:$subId$$11$$})
+      return $$$$25$$($collapsible$$1_locator$$18$$).ojCollapsible("getNodeBySubId", {$subId$:$subId$$11$$})
     }})
   })()
 });

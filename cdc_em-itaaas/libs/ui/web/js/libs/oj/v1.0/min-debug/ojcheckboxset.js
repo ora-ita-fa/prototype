@@ -50,14 +50,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue", "ojs/ojradiocheckbox"], f
     }), $checkboxes$$1_result$$18_selectedCheckbox$$1$$ = $checkedValues$$1$$), this.options.value = $checkboxes$$1_result$$18_selectedCheckbox$$1$$)
   }, _GetDefaultStyleClass:$JSCompiler_returnArg$$("oj-checkboxset"), $_GetContentElement$:function() {
     return this.$_findCheckboxesWithMatchingName$()
-  }, $_RefreshAriaRequired$:function($ariaValue$$2_value$$181$$) {
+  }, $_RefreshAriaRequired$:function($ariaValue$$2_value$$182$$) {
     var $rootNode$$ = this.$uiCheckboxset$;
-    ($ariaValue$$2_value$$181$$ = "required" == $ariaValue$$2_value$$181$$ ? !0 : !1) && $rootNode$$ ? $rootNode$$.attr("aria-required", $ariaValue$$2_value$$181$$) : $rootNode$$.removeAttr("aria-required")
-  }, _setOption:function($key$$90$$, $value$$182$$) {
-    this._super($key$$90$$, $value$$182$$);
-    "disabled" === $key$$90$$ && this.$$checkboxes$._ojRadioCheckbox("option", $key$$90$$, $value$$182$$)
-  }, getNodeBySubId:function($locator$$16$$) {
-    return null == $locator$$16$$ ? this.element ? this.element[0] : null : "oj-checkboxset-inputs" === $locator$$16$$.subId ? this.$$checkboxes$ : null
+    ($ariaValue$$2_value$$182$$ = "required" == $ariaValue$$2_value$$182$$ ? !0 : !1) && $rootNode$$ ? $rootNode$$.attr("aria-required", $ariaValue$$2_value$$182$$) : $rootNode$$.removeAttr("aria-required")
+  }, _setOption:function($key$$90$$, $value$$183$$) {
+    this._super($key$$90$$, $value$$183$$);
+    "disabled" === $key$$90$$ && this.$$checkboxes$._ojRadioCheckbox("option", $key$$90$$, $value$$183$$)
+  }, getNodeBySubId:function($locator$$17$$) {
+    return null == $locator$$17$$ ? this.element ? this.element[0] : null : "oj-checkboxset-inputs" === $locator$$17$$.subId ? this.$$checkboxes$ : null
   }, _destroy:function() {
     this._super();
     this.element.removeClass("oj-checkboxset oj-enabled oj-component").removeAttr("role");

@@ -3,7 +3,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
     this._super();
     this.element.addClass(this.$classNames$.root)
   }, _init:function() {
-    var $self$$105$$ = this, $context$$51$$;
+    var $self$$108$$ = this, $context$$51$$;
     this._super();
     this.$_addIcon$();
     $context$$51$$ = this.options.context;
@@ -17,9 +17,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmodel", "ojs/ojdat
     this.$_setIconStateClass$();
     if("expanded" === this.$iconState$ || "collapsed" === this.$iconState$) {
       $$$$38$$(this.$icon$).on("click", function() {
-        $self$$105$$.$_fireExpandCollapse$()
+        $self$$108$$.$_fireExpandCollapse$()
       }), $$$$38$$(this.element).on("keypress", function($event$$346$$) {
-        (($event$$346$$.keyCode || $event$$346$$.which) === $$$$38$$.ui.keyCode.ENTER || $$$$38$$.ui.keyCode.SPACE) && $self$$105$$.$_fireExpandCollapse$()
+        (($event$$346$$.keyCode || $event$$346$$.which) === $$$$38$$.ui.keyCode.ENTER || $$$$38$$.ui.keyCode.SPACE) && $self$$108$$.$_fireExpandCollapse$()
       }), null != this.$component$ && (this.$handleKeyDownCallback$ = this.$_handleKeyDownEvent$.bind(this), $$$$38$$(this.$component$.element).on("ojkeydown", this.$handleKeyDownCallback$)), null != this.$datasource$ && (this.$handleExpandCallback$ = this.$_handleExpandEvent$.bind(this), this.$handleCollapseCallback$ = this.$_handleCollapseEvent$.bind(this), this.$datasource$.on("expand", this.$handleExpandCallback$, this), this.$datasource$.on("collapse", this.$handleCollapseCallback$, this))
     }
     null != this.$component$ && (this.$handleActiveKeyChangeCallback$ = this.$_handleActiveKeyChangeEvent$.bind(this), $$$$38$$(this.$component$.element).on("ojactive", this.$handleActiveKeyChangeCallback$))

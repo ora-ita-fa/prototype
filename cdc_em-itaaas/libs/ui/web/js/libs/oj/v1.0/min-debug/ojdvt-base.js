@@ -32,9 +32,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
   };
   $oj$$13$$.$Object$.$exportPrototypeSymbol$("AttributeGroupHandler.prototype.getValue", {$getValue$:$oj$$13$$.$AttributeGroupHandler$.prototype.$getValue$});
   $oj$$13$$.$AttributeGroupHandler$.prototype.$geCategoryAssignments$ = function $$oj$$13$$$$AttributeGroupHandler$$$$geCategoryAssignments$$() {
-    var $assignments$$ = [], $i$$198$$;
-    for($i$$198$$ in this.$_assignments$) {
-      $assignments$$.push({category:$i$$198$$, value:this.$_assignments$[$i$$198$$]})
+    var $assignments$$ = [], $i$$200$$;
+    for($i$$200$$ in this.$_assignments$) {
+      $assignments$$.push({category:$i$$200$$, value:this.$_assignments$[$i$$200$$]})
     }
     return $assignments$$
   };
@@ -43,14 +43,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
     this.$_matchRules$[$category$$1$$] = $attributeValue$$
   };
   $oj$$13$$.$Object$.$exportPrototypeSymbol$("AttributeGroupHandler.prototype.addMatchRule", {$addMatchRule$:$oj$$13$$.$AttributeGroupHandler$.prototype.$addMatchRule$});
-  var $DvtStyleProcessor$$ = {CSS_TEXT_PROPERTIES:function($node$$17$$, $styleString$$) {
+  var $DvtStyleProcessor$$ = {CSS_TEXT_PROPERTIES:function($node$$18$$, $styleString$$) {
     var $ignoreProperties$$ = {};
-    $node$$17$$ && ($node$$17$$.hasClass("oj-gaugeMetricLabel") && $node$$17$$.hasClass($node$$17$$.parentNode, "oj-ledGauge") && ($ignoreProperties$$["font-size"] = !0, $ignoreProperties$$.color = !0), $node$$17$$.hasClass($node$$17$$, "oj-chartSliceLabel") && ($ignoreProperties$$.color = !0));
-    return $DvtStyleProcessor$$.$_mergeOptionsAndDivStyle$($node$$17$$, $styleString$$, !1, $ignoreProperties$$)
-  }, CSS_BACKGROUND_PROPERTIES:function($node$$18$$, $styleString$$1$$) {
-    return $DvtStyleProcessor$$.$_mergeOptionsAndDivStyle$($node$$18$$, $styleString$$1$$, !0, {})
-  }, CSS_URL:function($node$$19$$) {
-    return $DvtStyleProcessor$$.$_parseUrl$($node$$19$$)
+    $node$$18$$ && ($node$$18$$.hasClass("oj-gaugeMetricLabel") && $node$$18$$.hasClass($node$$18$$.parentNode, "oj-ledGauge") && ($ignoreProperties$$["font-size"] = !0, $ignoreProperties$$.color = !0), $node$$18$$.hasClass($node$$18$$, "oj-chartSliceLabel") && ($ignoreProperties$$.color = !0));
+    return $DvtStyleProcessor$$.$_mergeOptionsAndDivStyle$($node$$18$$, $styleString$$, !1, $ignoreProperties$$)
+  }, CSS_BACKGROUND_PROPERTIES:function($node$$19$$, $styleString$$1$$) {
+    return $DvtStyleProcessor$$.$_mergeOptionsAndDivStyle$($node$$19$$, $styleString$$1$$, !0, {})
+  }, CSS_URL:function($node$$20$$) {
+    return $DvtStyleProcessor$$.$_parseUrl$($node$$20$$)
   }, $_INHERITED_FONT_COLOR$:"rgb(254, 0, 254)", $_INHERITED_FONT_FAMILY$:"Times", $_INHERITED_FONT_SIZE$:"1px", $_INHERITED_FONT_WEIGHT$:"1", $_INHERITED_FONT_STYLE$:"normal", $defaultStyleProcessor$:function($cssDiv$$, $property$$22$$) {
     return $cssDiv$$.css($property$$22$$)
   }, $_parseUrl$:function($cssDiv$$1_url$$30$$) {
@@ -62,12 +62,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
     $cssDiv$$2$$.css("background-color") && ($styleString$$3$$ += "background-color: " + $cssDiv$$2$$.css("background-color") + ";");
     return $styleString$$3$$
   }, $_buildTextCssPropertiesString$:function($cssDiv$$3$$, $ignoreProperties$$1$$) {
-    var $styleString$$4$$ = "", $value$$165$$ = $cssDiv$$3$$.css("font-family");
-    $value$$165$$ && $value$$165$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_FAMILY$ && ($styleString$$4$$ += "font-family: " + $value$$165$$.replace(/"/g, "'") + ";");
-    ($value$$165$$ = $cssDiv$$3$$.css("font-size")) && ($value$$165$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_SIZE$ && !$ignoreProperties$$1$$["font-size"]) && ($styleString$$4$$ += "font-size: " + $value$$165$$ + ";");
-    ($value$$165$$ = $cssDiv$$3$$.css("font-weight")) && $value$$165$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_WEIGHT$ && ($styleString$$4$$ += "font-weight: " + $value$$165$$ + ";");
-    ($value$$165$$ = $cssDiv$$3$$.css("color")) && ($value$$165$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_COLOR$ && !$ignoreProperties$$1$$.color) && ($styleString$$4$$ += "color: " + $value$$165$$ + ";");
-    ($value$$165$$ = $cssDiv$$3$$.css("font-style")) && $value$$165$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_STYLE$ && ($styleString$$4$$ += "font-style: " + $value$$165$$ + ";");
+    var $styleString$$4$$ = "", $value$$166$$ = $cssDiv$$3$$.css("font-family");
+    $value$$166$$ && $value$$166$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_FAMILY$ && ($styleString$$4$$ += "font-family: " + $value$$166$$.replace(/"/g, "'") + ";");
+    ($value$$166$$ = $cssDiv$$3$$.css("font-size")) && ($value$$166$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_SIZE$ && !$ignoreProperties$$1$$["font-size"]) && ($styleString$$4$$ += "font-size: " + $value$$166$$ + ";");
+    ($value$$166$$ = $cssDiv$$3$$.css("font-weight")) && $value$$166$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_WEIGHT$ && ($styleString$$4$$ += "font-weight: " + $value$$166$$ + ";");
+    ($value$$166$$ = $cssDiv$$3$$.css("color")) && ($value$$166$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_COLOR$ && !$ignoreProperties$$1$$.color) && ($styleString$$4$$ += "color: " + $value$$166$$ + ";");
+    ($value$$166$$ = $cssDiv$$3$$.css("font-style")) && $value$$166$$ !== $DvtStyleProcessor$$.$_INHERITED_FONT_STYLE$ && ($styleString$$4$$ += "font-style: " + $value$$166$$ + ";");
     return $styleString$$4$$
   }, $_mergeOptionsAndDivStyle$:function($cssDiv$$4$$, $optionsStyle_styleString$$5$$, $bIncludeBackgroundProps$$, $ignoreProperties$$2$$) {
     $ignoreProperties$$2$$ || ($ignoreProperties$$2$$ = {});
@@ -75,21 +75,51 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
       return $optionsStyle_styleString$$5$$
     }
     var $oldStyle$$;
-    $optionsStyle_styleString$$5$$ && ($oldStyle$$ = $cssDiv$$4$$.attr("style"), $cssDiv$$4$$.attr("style", $oldStyle$$ + $optionsStyle_styleString$$5$$));
+    $optionsStyle_styleString$$5$$ && (($oldStyle$$ = $cssDiv$$4$$.attr("style")) ? $cssDiv$$4$$.attr("style", $oldStyle$$ + $optionsStyle_styleString$$5$$) : $cssDiv$$4$$.attr("style", $optionsStyle_styleString$$5$$));
     $optionsStyle_styleString$$5$$ = "";
     !0 !== $bIncludeBackgroundProps$$ && ($optionsStyle_styleString$$5$$ += this.$_buildTextCssPropertiesString$($cssDiv$$4$$, $ignoreProperties$$2$$));
     !1 !== $bIncludeBackgroundProps$$ && ($optionsStyle_styleString$$5$$ += this.$_buildCssBackgroundPropertiesString$($cssDiv$$4$$));
     $oldStyle$$ && $cssDiv$$4$$.attr("style", $oldStyle$$);
     return $optionsStyle_styleString$$5$$
+  }, $processStyles$:function($dummyDiv_element$$58$$, $options$$261$$, $componentClasses_outerDummyDiv$$, $childClasses$$) {
+    for(var $oldClasses$$ = $dummyDiv_element$$58$$.attr("class"), $newClasses$$ = "", $i$$201$$ = 0;$i$$201$$ < $componentClasses_outerDummyDiv$$.length;$i$$201$$++) {
+      $newClasses$$ = $newClasses$$ + $componentClasses_outerDummyDiv$$[$i$$201$$] + " "
+    }
+    $oldClasses$$ && ($newClasses$$ += $oldClasses$$);
+    $dummyDiv_element$$58$$.attr("class", $newClasses$$);
+    $componentClasses_outerDummyDiv$$ = $$$$13$$(document.createElement("div"));
+    $componentClasses_outerDummyDiv$$.attr("style", "display:none;");
+    $dummyDiv_element$$58$$.append($componentClasses_outerDummyDiv$$);
+    $componentClasses_outerDummyDiv$$.css("font-family", $DvtStyleProcessor$$.$_INHERITED_FONT_FAMILY$);
+    $componentClasses_outerDummyDiv$$.css("font-size", $DvtStyleProcessor$$.$_INHERITED_FONT_SIZE$);
+    $componentClasses_outerDummyDiv$$.css("color", $DvtStyleProcessor$$.$_INHERITED_FONT_COLOR$);
+    $componentClasses_outerDummyDiv$$.css("font-weight", $DvtStyleProcessor$$.$_INHERITED_FONT_WEIGHT$);
+    $componentClasses_outerDummyDiv$$.css("font-style", $DvtStyleProcessor$$.$_INHERITED_FONT_STYLE$);
+    for(var $styleClass$$2$$ in $childClasses$$) {
+      $dummyDiv_element$$58$$ = $$$$13$$(document.createElement("div")), $dummyDiv_element$$58$$.addClass($styleClass$$2$$), $componentClasses_outerDummyDiv$$.append($dummyDiv_element$$58$$), $DvtStyleProcessor$$.$_processStyle$($options$$261$$, $dummyDiv_element$$58$$, $childClasses$$[$styleClass$$2$$])
+    }
+  }, $_processStyle$:function($options$$262$$, $cssDiv$$5$$, $definition$$) {
+    if($definition$$ instanceof Array) {
+      for(var $i$$202$$ = 0;$i$$202$$ < $definition$$.length;$i$$202$$++) {
+        $DvtStyleProcessor$$.$_resolveStyle$($options$$262$$, $cssDiv$$5$$, $definition$$[$i$$202$$])
+      }
+    }else {
+      $DvtStyleProcessor$$.$_resolveStyle$($options$$262$$, $cssDiv$$5$$, $definition$$)
+    }
+  }, $_resolveStyle$:function($options$$263_path$$6$$, $cssDiv$$6$$, $definition$$1$$) {
+    $options$$263_path$$6$$ = new $DvtJsonPath$$($options$$263_path$$6$$, $definition$$1$$.path);
+    var $handler$$47_value$$167$$;
+    $definition$$1$$.property && ($handler$$47_value$$167$$ = ($handler$$47_value$$167$$ = $DvtStyleProcessor$$[$definition$$1$$.property]) ? $handler$$47_value$$167$$($cssDiv$$6$$, $options$$263_path$$6$$.$getValue$()) : $DvtStyleProcessor$$.$defaultStyleProcessor$($cssDiv$$6$$, $definition$$1$$.property));
+    null == $handler$$47_value$$167$$ || "string" == typeof $handler$$47_value$$167$$ && "" == $handler$$47_value$$167$$.replace(/^\s+/g, "") || $options$$263_path$$6$$.$setValue$($handler$$47_value$$167$$)
   }};
-  $oj$$13$$.$__registerWidget$("oj.dvtBaseComponent", $$$$13$$.oj.baseComponent, {$_loadedResources$:[], $_checkResources$:[], $_supportedLocales$:"ar cs da de el es fi fr hu it iw ja ko nl no pl pt pt_BR ro ru sk sv th tr zh_CN zh_TW".split(" "), _create:function() {
+  $oj$$13$$.$__registerWidget$("oj.dvtBaseComponent", $$$$13$$.oj.baseComponent, {_create:function() {
     this._super();
     this.$_context$ = new DvtContext(this.element[0]);
     this.$_context$.setReadingDirection(this.$_GetReadingDirection$());
     this.element.attr("tabIndex", 0);
     this.$_component$ = this.$_CreateComponent$(this.$_context$, this.$_HandleEvent$, this);
     this.$_context$.getStage().addChild(this.$_component$);
-    this.$_processStyles$(this.$_GetChildStyleClasses$());
+    $DvtStyleProcessor$$.$processStyles$(this.element, this.options, this.$_GetComponentStyleClasses$(), this.$_GetChildStyleClasses$());
     this.$_processTranslations$();
     this.$_LoadResources$();
     this.$_addOptionsDiv$();
@@ -103,7 +133,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
   }, getNodeBySubId:function($locator$$10$$) {
     var $automation$$;
     this.$_component$ && this.$_component$.getAutomation && ($automation$$ = this.$_component$.getAutomation());
-    return $automation$$ ? $automation$$.$getDomElementForSubId$($locator$$10$$) : null
+    return $automation$$ ? $automation$$.getDomElementForSubId($locator$$10$$.subId) : null
+  }, getSubIdByNode:function($node$$21$$) {
+    var $automation$$1$$;
+    this.$_component$ && this.$_component$.getAutomation && ($automation$$1$$ = this.$_component$.getAutomation());
+    return $automation$$1$$ ? $automation$$1$$.getSubIdForDomElement($node$$21$$) : null
   }, $_addOptionsDiv$:function() {
     var $optionsDiv$$ = $$$$13$$(document.createElement("div"));
     $optionsDiv$$.attr("style", "display:none;");
@@ -113,50 +147,21 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
     return["oj-dvtbase"]
   }, $_GetChildStyleClasses$:function() {
     return{}
-  }, $_processStyles$:function($styleClasses$$) {
-    for(var $componentClasses_outerDummyDiv$$ = this.$_GetComponentStyleClasses$(), $dummyDiv_oldClasses$$ = this.element.attr("class"), $newClasses$$ = "", $i$$199$$ = 0;$i$$199$$ < $componentClasses_outerDummyDiv$$.length;$i$$199$$++) {
-      $newClasses$$ = $newClasses$$ + $componentClasses_outerDummyDiv$$[$i$$199$$] + " "
-    }
-    $dummyDiv_oldClasses$$ && ($newClasses$$ += $dummyDiv_oldClasses$$);
-    this.element.attr("class", $newClasses$$);
-    $componentClasses_outerDummyDiv$$ = $$$$13$$(document.createElement("div"));
-    $componentClasses_outerDummyDiv$$.attr("style", "display:none;");
-    this.element.append($componentClasses_outerDummyDiv$$);
-    $componentClasses_outerDummyDiv$$.css("font-family", $DvtStyleProcessor$$.$_INHERITED_FONT_FAMILY$);
-    $componentClasses_outerDummyDiv$$.css("font-size", $DvtStyleProcessor$$.$_INHERITED_FONT_SIZE$);
-    $componentClasses_outerDummyDiv$$.css("color", $DvtStyleProcessor$$.$_INHERITED_FONT_COLOR$);
-    $componentClasses_outerDummyDiv$$.css("font-weight", $DvtStyleProcessor$$.$_INHERITED_FONT_WEIGHT$);
-    $componentClasses_outerDummyDiv$$.css("font-style", $DvtStyleProcessor$$.$_INHERITED_FONT_STYLE$);
-    for(var $styleClass$$2$$ in $styleClasses$$) {
-      $dummyDiv_oldClasses$$ = $$$$13$$(document.createElement("div")), $dummyDiv_oldClasses$$.addClass($styleClass$$2$$), $componentClasses_outerDummyDiv$$.append($dummyDiv_oldClasses$$), this.$_processStyle$($dummyDiv_oldClasses$$, $styleClasses$$[$styleClass$$2$$])
-    }
-  }, $_processStyle$:function($cssDiv$$5$$, $definition$$) {
-    if($definition$$ instanceof Array) {
-      for(var $i$$200$$ = 0;$i$$200$$ < $definition$$.length;$i$$200$$++) {
-        this.$_resolveStyle$($cssDiv$$5$$, $definition$$[$i$$200$$])
-      }
-    }else {
-      this.$_resolveStyle$($cssDiv$$5$$, $definition$$)
-    }
-  }, $_resolveStyle$:function($cssDiv$$6$$, $definition$$1$$) {
-    var $path$$6$$ = new $DvtJsonPath$$(this.options, $definition$$1$$.path), $handler$$47_value$$166$$;
-    $definition$$1$$.property && ($handler$$47_value$$166$$ = ($handler$$47_value$$166$$ = $DvtStyleProcessor$$[$definition$$1$$.property]) ? $handler$$47_value$$166$$($cssDiv$$6$$, $path$$6$$.$getValue$()) : $DvtStyleProcessor$$.$defaultStyleProcessor$($cssDiv$$6$$, $definition$$1$$.property));
-    null == $handler$$47_value$$166$$ || "string" == typeof $handler$$47_value$$166$$ && "" == $handler$$47_value$$166$$.replace(/^\s+/g, "") || $path$$6$$.$setValue$($handler$$47_value$$166$$)
   }, $_GetTranslationMap$:function() {
     var $map$$1$$ = {"oj-ojDvtCommon.labelClearSelection":"DvtUtilBundle.CLEAR_SELECTION", "oj-dvtBaseComponent.labelMonthShortJanuary":"DvtUtilBundle.MONTH_SHORT_JANUARY", "oj-dvtBaseComponent.labelMonthShortFebruary":"DvtUtilBundle.MONTH_SHORT_FEBRUARY", "oj-dvtBaseComponent.labelMonthShortMarch":"DvtUtilBundle.MONTH_SHORT_MARCH", "oj-dvtBaseComponent.labelMonthShortApril":"DvtUtilBundle.MONTH_SHORT_APRIL", "oj-dvtBaseComponent.labelMonthShortMay":"DvtUtilBundle.MONTH_SHORT_MAY", "oj-dvtBaseComponent.labelMonthShortJune":"DvtUtilBundle.MONTH_SHORT_JUNE", 
     "oj-dvtBaseComponent.labelMonthShortJuly":"DvtUtilBundle.MONTH_SHORT_JULY", "oj-dvtBaseComponent.labelMonthShortAugust":"DvtUtilBundle.MONTH_SHORT_AUGUST", "oj-dvtBaseComponent.labelMonthShortSeptember":"DvtUtilBundle.MONTH_SHORT_SEPTEMBER", "oj-dvtBaseComponent.labelMonthShortOctober":"DvtUtilBundle.MONTH_SHORT_OCTOBER", "oj-dvtBaseComponent.labelMonthShortNovember":"DvtUtilBundle.MONTH_SHORT_NOVEMBER", "oj-dvtBaseComponent.labelMonthShortDecember":"DvtUtilBundle.MONTH_SHORT_DECEMBER", "oj-dvtBaseComponent.labelScalingSuffixThousand":"DvtUtilBundle.SCALING_SUFFIX_THOUSAND", 
     "oj-dvtBaseComponent.labelScalingSuffixMillion":"DvtUtilBundle.SCALING_SUFFIX_MILLION", "oj-dvtBaseComponent.labelScalingSuffixBillion":"DvtUtilBundle.SCALING_SUFFIX_BILLION", "oj-dvtBaseComponent.labelScalingSuffixTrillion":"DvtUtilBundle.SCALING_SUFFIX_TRILLION", "oj-dvtBaseComponent.labelScalingSuffixQuadrillion":"DvtUtilBundle.SCALING_SUFFIX_QUADRILLION", "oj-dvtBaseComponent.stateSelected":"DvtUtilBundle.STATE_SELECTED", "oj-dvtBaseComponent.stateUnselected":"DvtUtilBundle.STATE_UNSELECTED", 
-    "oj-dvtBaseComponent.stateMaximized":"DvtUtilBundle.STATE_MAXIMIZED", "oj-dvtBaseComponent.stateMinimized":"DvtUtilBundle.STATE_MINIMIZED", "oj-dvtBaseComponent.stateExpanded":"DvtUtilBundle.STATE_EXPANDED", "oj-dvtBaseComponent.stateCollapsed":"DvtUtilBundle.STATE_COLLAPSED", "oj-dvtBaseComponent.stateIsolated":"DvtUtilBundle.STATE_ISOLATED", "oj-dvtBaseComponent.stateHidden":"DvtUtilBundle.STATE_HIDDEN", "oj-dvtBaseComponent.stateVisible":"DvtUtilBundle.STATE_VISIBLE"}, $ret$$29$$ = {}, $key$$73$$;
+    "oj-dvtBaseComponent.stateMaximized":"DvtUtilBundle.STATE_MAXIMIZED", "oj-dvtBaseComponent.stateMinimized":"DvtUtilBundle.STATE_MINIMIZED", "oj-dvtBaseComponent.stateExpanded":"DvtUtilBundle.STATE_EXPANDED", "oj-dvtBaseComponent.stateCollapsed":"DvtUtilBundle.STATE_COLLAPSED", "oj-dvtBaseComponent.stateIsolated":"DvtUtilBundle.STATE_ISOLATED", "oj-dvtBaseComponent.stateHidden":"DvtUtilBundle.STATE_HIDDEN", "oj-dvtBaseComponent.stateVisible":"DvtUtilBundle.STATE_VISIBLE"}, $ret$$26$$ = {}, $key$$73$$;
     for($key$$73$$ in $map$$1$$) {
       var $bundleKey$$ = $map$$1$$[$key$$73$$], $resource$$ = $oj$$13$$.$Translations$.$getResource$($key$$73$$);
-      $ret$$29$$[$bundleKey$$] = $resource$$
+      $ret$$26$$[$bundleKey$$] = $resource$$
     }
-    return $ret$$29$$
+    return $ret$$26$$
   }, $_GetTranslatedResource$:function($key$$74$$, $params$$14$$) {
     var $translatedResource$$ = this.options[$key$$74$$];
     if($params$$14$$) {
-      for(var $paramMap$$ = {}, $i$$201$$ = 0;$i$$201$$ < $params$$14$$.length;$i$$201$$++) {
-        $paramMap$$[$params$$14$$[$i$$201$$]] = "{" + $i$$201$$ + "}"
+      for(var $paramMap$$ = {}, $i$$203$$ = 0;$i$$203$$ < $params$$14$$.length;$i$$203$$++) {
+        $paramMap$$[$params$$14$$[$i$$203$$]] = "{" + $i$$203$$ + "}"
       }
       $translatedResource$$ = $oj$$13$$.$Translations$.$applyParameters$($translatedResource$$, $paramMap$$)
     }
@@ -167,41 +172,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
   }, _destroy:function() {
     this.element.children().remove();
     this._super()
-  }, _setOptions:function($options$$261$$) {
+  }, _setOptions:function($options$$264$$) {
     this._superApply(arguments);
     this.$_Render$()
   }, $_CreateComponent$:$JSCompiler_returnArg$$(null), $_HandleEvent$:$JSCompiler_emptyFn$$(), $_handleResize$:function() {
     var $newWidth$$1$$ = this.element.width(), $newHeight$$1$$ = this.element.height();
     5 <= Math.abs($newWidth$$1$$ - this.$_width$) + Math.abs($newHeight$$1$$ - this.$_height$) && (this.$_component$.render(null, $newWidth$$1$$, $newHeight$$1$$), this.$_width$ = $newWidth$$1$$, this.$_height$ = $newHeight$$1$$)
-  }, $_LoadResources$:$JSCompiler_emptyFn$$(), $_LoadResourceBundle$:function($url$$31$$) {
-    var $locale$$22_localeList$$ = $oj$$13$$.$Config$.$getLocale$();
-    if(0 === $locale$$22_localeList$$.indexOf("en")) {
-      this.$_loadResourceBundleByUrl$($url$$31$$ + ".js")
-    }else {
-      for(var $i$$202_splitLocale$$ = $locale$$22_localeList$$.split("_"), $locale$$22_localeList$$ = [], $j$$29$$ = 0;$j$$29$$ < $i$$202_splitLocale$$.length;$j$$29$$++) {
-        for(var $tempLocale$$ = "", $k$$6$$ = 0;$k$$6$$ < $j$$29$$ + 1;$k$$6$$++) {
-          0 != $k$$6$$ && ($tempLocale$$ += "_"), $tempLocale$$ += $i$$202_splitLocale$$[$k$$6$$]
-        }
-        $locale$$22_localeList$$.push($tempLocale$$)
-      }
-      for($i$$202_splitLocale$$ = $locale$$22_localeList$$.length - 1;0 <= $i$$202_splitLocale$$;$i$$202_splitLocale$$++) {
-        -1 !== this.$_supportedLocales$.indexOf($locale$$22_localeList$$[$i$$202_splitLocale$$]) && this.$_loadResourceBundleByUrl$($url$$31$$ + "_" + $locale$$22_localeList$$[$i$$202_splitLocale$$] + ".js")
-      }
-    }
-  }, $_loadResourceBundleByUrl$:function($url$$32$$) {
-    if(!this.$_loadedResources$[$url$$32$$]) {
-      var $resolvedUrl$$ = $oj$$13$$.$Config$.$getResourceUrl$($url$$32$$), $thisRef$$ = this, $loadedBundles$$ = this.$_loadedResources$;
-      $$$$13$$.getScript($resolvedUrl$$, function() {
-        $loadedBundles$$[$url$$32$$] = !0;
-        $thisRef$$.$_Render$()
-      })
-    }
-  }, $_Render$:function() {
-    for(var $i$$203$$ = 0;$i$$203$$ < this.$_checkResources$.length;$i$$203$$++) {
-      if(!this.$_loadedResources$[this.$_checkResources$[$i$$203$$]]) {
-        return
-      }
-    }
+  }, $_LoadResources$:$JSCompiler_emptyFn$$(), $_Render$:function() {
     this.$_context$.isReadyToRender() ? (this.$_width$ = this.element.width(), this.$_height$ = this.element.height(), this.$_component$.render(this.options, this.$_width$, this.$_height$)) : $oj$$13$$.$Logger$.error($oj$$13$$.$Translations$.$getResource$("oj-dvtBaseComponent.notReadyToRender").summary)
   }});
   $oj$$13$$.$ShapeAttributeGroupHandler$ = function $$oj$$13$$$$ShapeAttributeGroupHandler$$($matchRules$$2$$) {
@@ -251,8 +228,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$13$$, $$$$
     this.$_resolvePath$(!1);
     return void 0 === this.$_leaf$ ? void 0 : this.$_leaf$[this.$_param$]
   };
-  $DvtJsonPath$$.prototype.$setValue$ = function $$DvtJsonPath$$$$$setValue$$($value$$167$$) {
+  $DvtJsonPath$$.prototype.$setValue$ = function $$DvtJsonPath$$$$$setValue$$($value$$168$$) {
     this.$_resolvePath$(!0);
-    this.$_leaf$[this.$_param$] !== $value$$167$$ && (this.$_leaf$[this.$_param$] = $value$$167$$)
+    this.$_leaf$[this.$_param$] !== $value$$168$$ && (this.$_leaf$[this.$_param$] = $value$$168$$)
   }
 });

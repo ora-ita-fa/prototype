@@ -152,7 +152,7 @@ oj.ModelRow.prototype.values = function()
  * @export
  * Return an array of attributes/value pairs found in the Row 
  * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
+ * @returns {Object} returns the Row's attribute/value pairs as an object property bag
  */
 oj.ModelRow.prototype.pairs = function()
 {

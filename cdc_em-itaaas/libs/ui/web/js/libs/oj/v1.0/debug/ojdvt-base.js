@@ -208,7 +208,10 @@ DvtStyleProcessor._mergeOptionsAndDivStyle = function(cssDiv, optionsStyle, bInc
   if (optionsStyle)
   {
     oldStyle = cssDiv.attr("style");
-    cssDiv.attr("style", oldStyle + optionsStyle);
+    if (oldStyle)
+      cssDiv.attr("style", oldStyle + optionsStyle);
+    else
+      cssDiv.attr("style", optionsStyle);
   }
 
   var styleString = '';
@@ -228,11 +231,85 @@ DvtStyleProcessor._mergeOptionsAndDivStyle = function(cssDiv, optionsStyle, bInc
   }
   return styleString;
 }
+
+/**
+ * Creates dummy divs for each component style class and merges their values with the component options object.
+ * @param {Object} element DOM node to add CSS styles to for processing
+ * @param {Object} options The options object to merge CSS properties with
+ * @param {Array} componentClasses The style classes associated with the component
+ * @param {Object} childClasses Style classes associated with a component's children
+ * @private
+ */ 
+DvtStyleProcessor.processStyles = function(element, options, componentClasses, childClasses)
+{
+  // Add the common css properties
+  var oldClasses = element.attr("class");
+  var newClasses = '';
+  for (var i=0; i<componentClasses.length; i++)
+    newClasses = newClasses + componentClasses[i] + " ";
+  if (oldClasses)
+    newClasses += oldClasses;
+  element.attr("class", newClasses);
+
+  var outerDummyDiv = $(document.createElement("div"));
+  outerDummyDiv.attr("style", "display:none;");
+  element.append(outerDummyDiv);
+  // overwrite inherited values to prevent populating options object with them
+  outerDummyDiv.css("font-family", DvtStyleProcessor._INHERITED_FONT_FAMILY);
+  outerDummyDiv.css("font-size", DvtStyleProcessor._INHERITED_FONT_SIZE);
+  outerDummyDiv.css("color", DvtStyleProcessor._INHERITED_FONT_COLOR);
+  outerDummyDiv.css("font-weight", DvtStyleProcessor._INHERITED_FONT_WEIGHT);
+  outerDummyDiv.css("font-style", DvtStyleProcessor._INHERITED_FONT_STYLE);
+  for (var styleClass in childClasses) {
+    var dummyDiv = $(document.createElement("div"));
+    dummyDiv.addClass(styleClass);
+    outerDummyDiv.append(dummyDiv);
+    DvtStyleProcessor._processStyle(options, dummyDiv, childClasses[styleClass]);
+  }
+}
+
+/**
+ * Resolves the css properties within a dummy div
+ * @param {Object} options The options object to merge CSS properties with
+ * @param {Object} cssDiv The div to use for processing CSS style
+ * @param {Object} definition Map of CSS style attribute and values to process
+ * @private
+ */ 
+DvtStyleProcessor._processStyle = function(options, cssDiv, definition)
+{
+  if (definition instanceof Array) {
+    for (var i=0;i<definition.length; i++) 
+      DvtStyleProcessor._resolveStyle(options, cssDiv, definition[i]);
+  } else {
+    DvtStyleProcessor._resolveStyle(options, cssDiv, definition);
+  }
+}
+      
+/**
+ * Helper function to resolve the css properties within a dummy div.
+ * @param {Object} options The options object to merge CSS properties with
+ * @param {Object} cssDiv The div to use for processing CSS style
+ * @param {Object} definition Map of CSS style attribute and values to process
+ * @private
+ */ 
+DvtStyleProcessor._resolveStyle = function(options, cssDiv, definition)
+{
+  var path = new DvtJsonPath(options, definition['path']);
+  var value;
+  if(definition['property']) {
+    var handler = DvtStyleProcessor[definition['property']];
+    if (!handler)
+      value = DvtStyleProcessor.defaultStyleProcessor(cssDiv, definition['property']);
+    else
+      value = handler(cssDiv, path.getValue());
+  }
+  if(value != null
+     && !(typeof value == 'string' && value.replace(/^\s+/g, '') == '')) {
+    path.setValue(value);
+  }
+}
 oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
-  _loadedResources : [],
-  _checkResources : [],
-  _supportedLocales : ['ar','cs','da','de','el','es','fi','fr','hu','it','iw','ja','ko','nl','no','pl','pt','pt_BR','ro','ru','sk','sv','th','tr','zh_CN','zh_TW'],
-  
+ 
   /** 
    * @override
    * @protected
@@ -256,7 +333,9 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     this._context.getStage().addChild(this._component);  
     
     // Create dummy divs for style classes and merge style class values with json options object
-    this._processStyles(this._GetChildStyleClasses());
+    DvtStyleProcessor.processStyles(this.element, this.options, 
+                                    this._GetComponentStyleClasses(), 
+                                    this._GetChildStyleClasses());
     
     // Retrieve and apply the translated strings onto the component bundle
     this._processTranslations();
@@ -299,7 +378,20 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     if (this._component && this._component.getAutomation)
       automation = this._component.getAutomation();
     if (automation)
-      return automation.getDomElementForSubId(locator);
+      return automation.getDomElementForSubId(locator['subId']);
+    return null;
+  },
+  
+  /** 
+   * @override
+   */
+  getSubIdByNode : function(node) {
+    // subcomponents should override for jsDoc to list subId values
+    var automation;
+    if (this._component && this._component.getAutomation)
+      automation = this._component.getAutomation();
+    if (automation)
+      return automation.getSubIdForDomElement(node);
     return null;
   },
   
@@ -330,79 +422,6 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
    */
   _GetChildStyleClasses : function() {
     return {};
-  },
-  
-  /**
-   * Creates dummy divs for each component style class and merges their values with the component options object.
-   * @param {Array} styleClasses
-   * @private
-   */ 
-  _processStyles : function(styleClasses) {
-    // TODO AMDAI Consider refactoring to DvtStyleProcessor
-    // Add the common css properties
-    var componentClasses = this._GetComponentStyleClasses();
-    var oldClasses = this.element.attr("class");
-		var newClasses = '';
-    for (var i=0; i<componentClasses.length; i++)
-			newClasses = newClasses + componentClasses[i] + " ";
-    if (oldClasses)
-      newClasses += oldClasses;
-    this.element.attr("class", newClasses);
-    
-    var outerDummyDiv = $(document.createElement("div"));
-    outerDummyDiv.attr("style", "display:none;");
-    this.element.append(outerDummyDiv);
-    // overwrite inherited values to prevent populating options object with them
-    outerDummyDiv.css("font-family", DvtStyleProcessor._INHERITED_FONT_FAMILY);
-    outerDummyDiv.css("font-size", DvtStyleProcessor._INHERITED_FONT_SIZE);
-    outerDummyDiv.css("color", DvtStyleProcessor._INHERITED_FONT_COLOR);
-    outerDummyDiv.css("font-weight", DvtStyleProcessor._INHERITED_FONT_WEIGHT);
-    outerDummyDiv.css("font-style", DvtStyleProcessor._INHERITED_FONT_STYLE);
-    for (var styleClass in styleClasses) {
-      var dummyDiv = $(document.createElement("div"));
-      dummyDiv.addClass(styleClass);
-      outerDummyDiv.append(dummyDiv);
-      this._processStyle(dummyDiv, styleClasses[styleClass]);
-    }
-  },
-
-  /**
-   * Resolves the css properties within a dummy div
-   * @param {Object} cssDiv
-   * @param {Object} definition
-   * @private
-   */ 
-  _processStyle : function(cssDiv, definition) {
-    // TODO AMDAI Consider refactoring to DvtStyleProcessor
-    if (definition instanceof Array) {
-      for (var i=0;i<definition.length; i++) 
-        this._resolveStyle(cssDiv, definition[i]);
-    } else {
-      this._resolveStyle(cssDiv, definition);
-    }
-  },
-  
-  /**
-   * Helper function to resolve the css properties within a dummy div.
-   * @param {Object} cssDiv
-   * @param {Object} definition
-   * @private
-   */ 
-  _resolveStyle : function(cssDiv, definition) { 
-    // TODO AMDAI Consider refactoring to DvtStyleProcessor
-    var path = new DvtJsonPath(this.options, definition['path']);
-    var value;
-    if(definition['property']) {
-      var handler = DvtStyleProcessor[definition['property']];
-      if (!handler)
-      	value = DvtStyleProcessor.defaultStyleProcessor(cssDiv, definition['property']);
-      else
-      	value = handler(cssDiv, path.getValue());
-    }
-    if(value != null
-       && !(typeof value == 'string' && value.replace(/^\s+/g, '') == '')) {
-      path.setValue(value);
-    }
   },
   
   /**
@@ -561,68 +580,12 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
   _LoadResources : function() {
     // subcomponents should override
   }, 
-  
-  /**
-   * Utility function for loading resource bundles.
-   * @protected
-   */
-  _LoadResourceBundle : function(url) {
-    // TODO AMDAI Move this to thematic map since the other DVTs are not likely to use.
-    var locale = oj.Config.getLocale();
-    if (locale.indexOf("en") === 0) {
-      this._loadResourceBundleByUrl(url + ".js");
-    } else {
-      // split locale by subtags and try to load resource bundle that satisfies
-      var splitLocale = locale.split('_');
-      var localeList = [];
-      for (var j = 0; j < splitLocale.length; j++) {
-        var tempLocale = '';
-        for (var k = 0; k < (j + 1); k++) {
-          if (k != 0)
-            tempLocale += '_';
-          tempLocale += splitLocale[k];
-        }
-        localeList.push(tempLocale)
-      }
-      
-      // Go thru list of supported DVT languages
-      for (var i = localeList.length - 1; i >= 0; i++) {
-        if (this._supportedLocales.indexOf(localeList[i]) !== -1)
-          this._loadResourceBundleByUrl(url + "_" + localeList[i] + ".js");
-      }
-    }
-  },
-  
-  /**
-   * Utility function for loading resource bundles by url.
-   * @private
-   */
-  _loadResourceBundleByUrl : function(url) {
-    // TODO AMDAI Move this to thematic map since the other DVTs are not likely to use.
-    // resource is already loaded or function tried to load this resource but failed
-    if(this._loadedResources[url])
-      return;
-    
-    var resolvedUrl = oj.Config.getResourceUrl(url);
-    var thisRef = this;
-    var loadedBundles = this._loadedResources;
-    $.getScript(resolvedUrl, function( data, textStatus, jqxhr ) {
-      loadedBundles[url] = true;
-      thisRef._Render();
-    });
-  },
           
   /**
    * Called to render the component at the current size.
    * @protected
    */
   _Render : function() {
-    // do not render until all resources are loaded
-    for (var i=0; i<this._checkResources.length; i++) {
-      if (!this._loadedResources[this._checkResources[i]])
-        return;
-    }
-    
     // Fix 18498656: If the component is not attached to a visible subtree of the DOM, rendering will fail because 
     // getBBox calls will not return the correct values.  Log an error message in this case and avoid rendering.
     if(!this._context.isReadyToRender())

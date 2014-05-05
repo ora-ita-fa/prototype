@@ -5160,10 +5160,6 @@ DvtChart.prototype.render = function(options, width, height)
     this.Height = height;
   }
 
-  if (DvtAgent.isTouchDevice()) {
-    this.EventManager.setTouchRegionBounds(new DvtRectangle(0, 0, parseInt(width), parseInt(height)));
-  }
-
   // Create a new container and render the component into it
   var container = new DvtContainer(this.getCtx());
   this.addChild(container);
@@ -5172,7 +5168,6 @@ DvtChart.prototype.render = function(options, width, height)
   // Animation Support
   // Stop any animation in progress
   if (this._animation) {
-    this._animationStopped = true;  // TODO Rename
     this._animation.stop();
   }
 
@@ -5290,6 +5285,7 @@ DvtChart.prototype.__cleanUp = function() {
 
 /**
  * Returns whether or not the data cursor is enabled
+ * @return {boolean}
  */
 DvtChart.prototype.__isDataCursorEnabled = function() {
 
@@ -5328,8 +5324,7 @@ DvtChart.prototype._onAnimationEnd = function() {
   }
   this._delContainer = null;
 
-  // Reset the animation flag and reference
-  this._animationStopped = false;
+  // Reset the animation and reference
   this._animation = null;
 };
 
@@ -6636,7 +6631,7 @@ DvtChartImpl.prototype.hideDragButtons = function() {
 var DvtChartAutomation = function(dvtComponent) {
   this._chart = dvtComponent;
   this._options = this._chart.getOptions();
-  this._legend = this._chart.legend;
+  this._legend = this._chart['legend'];
   this._axis = this._chart.xAxis; //  Because we only support categorical axis for record/playback APIs.
 
   this._legendAutomation = this._legend ? this._legend.getAutomation() : null;
@@ -16074,10 +16069,10 @@ DvtChartAxisRenderer._positionAxis = function(availSpace, axisInfo, gap) {
   }
 
   DvtLayoutUtils.position(availSpace, axisInfo.position, axisInfo.axis, axisInfo.dim.w, axisInfo.dim.h, gap);
-  
+
   // Update the x & y coordinates of the axis after it's been positioned
-  var bounds =  axisInfo.axis.__getBounds();
-  if(bounds){
+  var bounds = axisInfo.axis.__getBounds();
+  if (bounds) {
     var shiftedPos = axisInfo.axis.localToStage(new DvtPoint(bounds.x, bounds.y));
     bounds.x = shiftedPos.x;
     bounds.y = shiftedPos.y;
@@ -16209,13 +16204,13 @@ DvtChartLegendRenderer.render = function(chart, container, availSpace) {
   legend.render(legendOptions, actualSize.w, actualSize.h);
   var gap = DvtChartDefaults.getGapSize(chart, options['layout']['legendGap']);
   DvtLayoutUtils.position(availSpace, position, legend, actualSize.w, actualSize.h, gap);
-  
+
   // Update the x & y coordinates of the legend after it's been positioned
   var bounds = legend.__getBounds();
   var shiftedPos = legend.localToStage(new DvtPoint(bounds.x, bounds.y));
   bounds.x = shiftedPos.x;
   bounds.y = shiftedPos.y;
-  
+
   // Destroy the legend and remove event listeners to fix memory leak issue
   if (chart['legend']) {
     chart['legend'].destroy();
@@ -16232,6 +16227,7 @@ DvtChartLegendRenderer.render = function(chart, container, availSpace) {
  * @param {DvtChartImpl} chart The chart whose data will be passed to the legend.
  * @param {object} legendOptions The legend options object into which data will be added.
  * @return {object} The data object for the chart's legend.
+ * @private
  */
 DvtChartLegendRenderer._addLegendData = function(chart, legendOptions) {
   var chartOptions = chart.getOptions();
@@ -16378,6 +16374,7 @@ DvtChartLegendRenderer._createLegendItem = function(chart, seriesIndex) {
  * Processes and adds the explicitly defined legend sections.
  * @param {DvtChartImpl} chart
  * @param {array} sections
+ * @private
  */
 DvtChartLegendRenderer._addLegendSections = function(chart, sections) {
   var options = chart.getOptions();
@@ -16396,6 +16393,7 @@ DvtChartLegendRenderer._addLegendSections = function(chart, sections) {
  * Returns the array of reference object items to pass to the legend.
  * @param {DvtChartImpl} chart The chart whose data will be passed to the legend.
  * @return {array} The reference object items.
+ * @private
  */
 DvtChartLegendRenderer._getRefObjItems = function(chart) {
   var refObjs = DvtChartRefObjUtils.getObjects(chart);

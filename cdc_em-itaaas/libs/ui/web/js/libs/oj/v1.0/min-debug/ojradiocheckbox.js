@@ -23,28 +23,28 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$36$$, $$$$
   }, $_events$:{}, $_drawOnCreate$:function() {
     var $type$$80$$ = this.options.type;
     "checkbox" == $type$$80$$ ? (this.$uiRadioCheckbox$ = this.element.addClass("oj-checkbox oj-component"), this.$$label$ = this.$_getLabelsForElement$(), this.$$label$.addClass("oj-checkbox-label")) : "radio" == $type$$80$$ && (this.$uiRadioCheckbox$ = this.element.addClass("oj-radio oj-component"), this.$$label$ = this.$_getLabelsForElement$(), this.$$label$.addClass("oj-radio-label"));
-    var $self$$103$$ = this;
+    var $self$$106$$ = this;
     this._hoverable(this.element);
     this._focusable(this.element);
     this.$_activeable$(this.element);
-    $$$$34$$.each($self$$103$$.$$label$, function() {
-      $self$$103$$._hoverable(this);
-      $self$$103$$._focusable(this);
-      $self$$103$$.$_activeable$(this)
+    $$$$34$$.each($self$$106$$.$$label$, function() {
+      $self$$106$$._hoverable(this);
+      $self$$106$$._focusable(this);
+      $self$$106$$.$_activeable$(this)
     })
-  }, _setOption:function($key$$114$$, $value$$204$$) {
-    this._super($key$$114$$, $value$$204$$);
-    "disabled" === $key$$114$$ && (($value$$204$$ = !!$value$$204$$) ? (this.element.prop("disabled", !0).removeAttr("aria-disabled").removeClass("oj-enabled").addClass("oj-disabled"), this.$$label$.removeClass("oj-enabled").addClass("oj-disabled")) : (this.element.prop("disabled", !1).removeAttr("aria-disabled").removeClass("oj-disabled").addClass("oj-enabled"), this.$$label$.addClass("oj-enabled").removeClass("oj-disabled")));
-    "checked" === $key$$114$$ && ($value$$204$$ ? this.element.prop("checked", !0) : this.element.prop("checked", !1), this.element.toggleClass("oj-selected", $value$$204$$))
+  }, _setOption:function($key$$114$$, $value$$206$$) {
+    this._super($key$$114$$, $value$$206$$);
+    "disabled" === $key$$114$$ && (($value$$206$$ = !!$value$$206$$) ? (this.element.prop("disabled", !0).removeAttr("aria-disabled").removeClass("oj-enabled").addClass("oj-disabled"), this.$$label$.removeClass("oj-enabled").addClass("oj-disabled")) : (this.element.prop("disabled", !1).removeAttr("aria-disabled").removeClass("oj-disabled").addClass("oj-enabled"), this.$$label$.addClass("oj-enabled").removeClass("oj-disabled")));
+    "checked" === $key$$114$$ && ($value$$206$$ ? this.element.prop("checked", !0) : this.element.prop("checked", !1), this.element.toggleClass("oj-selected", $value$$206$$))
   }, $_getLabelsForElement$:function() {
     var $labelClosestParent$$ = this.element.closest("label"), $labelForQuery$$ = "label[for\x3d'" + this.element.prop("id") + "']";
     return $labelClosestParent$$.add($$$$34$$($labelForQuery$$))
-  }, getNodeBySubId:function($locator$$22_subId$$16$$) {
-    if(null == $locator$$22_subId$$16$$) {
+  }, getNodeBySubId:function($locator$$24_subId$$16$$) {
+    if(null == $locator$$24_subId$$16$$) {
       return this.element ? this.element[0] : null
     }
-    $locator$$22_subId$$16$$ = $locator$$22_subId$$16$$.subId;
-    return"oj-radiocheckbox-input" === $locator$$22_subId$$16$$ ? this.element[0] : "oj-radiocheckbox-label" === $locator$$22_subId$$16$$ ? this.label()[0] : null
+    $locator$$24_subId$$16$$ = $locator$$24_subId$$16$$.subId;
+    return"oj-radiocheckbox-input" === $locator$$24_subId$$16$$ ? this.element[0] : "oj-radiocheckbox-label" === $locator$$24_subId$$16$$ ? this.label()[0] : null
   }, _destroy:function() {
     this._super();
     var $type$$81$$ = this.options.type;

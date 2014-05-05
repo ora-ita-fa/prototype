@@ -44,6 +44,10 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojeditablevalue', 'ojs/ojradiocheckbox'],
  *  You can enable and disable a radio set, 
  *  which will enable and disable all contained radios. 
  * </p>
+ * <p>
+ *  Radioset does not have a readOnly option since HTML does not support
+ *  readonly on radios and checkboxes.
+ * </p>
  * 
  * <h3 id="keyboard-section">
  *   Keyboard interaction

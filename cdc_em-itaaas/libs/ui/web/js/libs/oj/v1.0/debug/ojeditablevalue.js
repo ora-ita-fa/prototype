@@ -31,13 +31,29 @@ oj.ComponentMessaging.registerMessagingStrategy(oj.ComponentMessaging._DISPLAY_T
 oj.Object.createSubclass(oj.PopupMessagingStrategy, oj.MessagingStrategy, "oj.PopupMessagingStrategy");
 
 /**
- * Some defaults to setup on handlers for events that open and close popups by component type
+ * Messaging popup defaults for components, by component type. A special 'default' type defines the 
+ * defaults for most editableValue components. 
+ * The following properties are available - 
+ * 'events' - these specify the on handlers for events that are setup to open and close popups
+ * 'position' - specifies the type of element the popup is positioned against.
  * @private
  */
-oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME = {
-  "ojRadioset": {open: "focusin mouseover", close: "mouseout"},
-  "ojCheckboxset": {open: "focusin mouseover", close: "mouseout"},
-  "default": {open: "focusin"}
+oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT = 
+{
+  "ojRadioset": 
+  {
+    position: 'launcher', 
+    events: {open: "focusin mouseover", close: "mouseout"}
+  },
+  "ojCheckboxset": 
+  {
+    position: 'launcher', 
+    events: {open: "focusin mouseover", close: "mouseout"}
+  },
+  "default": 
+  {
+    events: {open: "focusin"}
+  }
 };
 
 /**
@@ -92,11 +108,10 @@ oj.PopupMessagingStrategy.prototype.update = function (content)
  */
 oj.PopupMessagingStrategy.prototype.deactivate = function (content)
 {
-  var self = this, 
-      events = 
-        oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME[this.GetComponent().widgetName] ||
-        oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME["default"];
-  //var jRoot = this.GetComponent().widget();
+  var self = this, compDefaults = 
+    oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT[this.GetComponent().widgetName],
+      events = compDefaults ? compDefaults.events : 
+                  oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT["default"].events;
   
   // Remove event handlers setup on launcher
   if (events['open'])
@@ -160,20 +175,19 @@ oj.PopupMessagingStrategy.prototype._handleMouseLeave = function (e)
 oj.PopupMessagingStrategy.prototype._initMessagingPopup = function ()
 {
   var self = this; 
-  // TODO: Message tooltip setup needs to be delegated to a MessagingService?
-  // Setup default tooltip options on this, as we are a validating element and will likely 
-  // display hints, errors
   if (!this._isPopupInitialized())
   {
-    var jqLauncher = this.GetLauncher(), popupOptions,
-        events = 
-          oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME[this.GetComponent().widgetName] ||
-          oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME["default"];
+    var jqLauncher = this.GetLauncher(), popupOptions, jPositionOf = this._getPopupPosition(),
+        compDefaults = 
+        oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT[this.GetComponent().widgetName],
+        events = compDefaults ? compDefaults.events : 
+                  oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT["default"].events;
     
-    // 1. associate the ojPopup component to wrapper <div> for popup content, not the launcher.
-    // 2. create just wrapper div and track it on component 
-    // 3. call open(launcher) on certain events. E.g., focusin.
-    // 4. autoDismissal happens automatically when focus leaves component
+    // 1. associate the ojPopup component to wrapper <div> for popup content
+    // 2. remember the popup content root
+    // 3. wire up on() event handlers for registered events that open and close popup. E.g., focusin.
+    // 4. autoDismissal happens automatically when focus leaves component. For other events like 
+    // mouseover it's required to call off() 
     
     this.$messagingContentRoot = $(this._getPopupContentHtml());
     // append to body instead of component root as styles set on it can bleed through
@@ -181,10 +195,10 @@ oj.PopupMessagingStrategy.prototype._initMessagingPopup = function ()
     popupOptions = {initialFocus: 'none', 
                          tail: 'simple', 
                          autoDismiss: 'focusLoss', 
-                         position: {my: 'start bottom', at: 'end top', collision: 'flipfit'}};
+                         position: {my: 'start bottom', at: 'end top', collision: 'flipfit', 
+                                    of: jPositionOf}};
                
     this.$messagingContentRoot.ojPopup(popupOptions);
-    // this._ojPopupContentNode = this.$messagingContentRoot.parent();
       
     if (events['open'])
     {
@@ -194,55 +208,29 @@ oj.PopupMessagingStrategy.prototype._initMessagingPopup = function ()
     {
       jqLauncher.on(events['close'], {'strategy': self}, self._closePopup);
     }
-    
-    /*
-    this._tooltip = jqLauncher.tooltip({
-                    position: {
-                      'my': 'left+14 bottom', 
-                      'at': 'right top', 
-                      'of': jqLauncher, 
-                      //jqLauncher.find('input[type=radio]:first'), // the element the tooltip will be positioned relative to
-                      'using': function(position, feedback) {
-                          $(this).css(position);
-                          $("<div>")
-                          .addClass("arrow")
-                          .addClass(feedback['vertical'])
-                          .addClass(feedback['horizontal'])
-                          .appendTo(this);
-                      }
-                    },
-                    'open': function (event, ui)
-                    {
-                      //window.console.log("tooltip opened: " + ui.tooltip.attr("id"));
-                    },
-                    'close' : function (event, ui)
-                    {
-                      //window.console.log("tooltip closed: ");
-                    },
-                    'content' : function ()
-                    {
-                      // called every time tooltip is enabled or open
-                      //window.console.log("tooltip content fetch: ");
-                      return self._buildNoteWindowHtml();
-                    },
-                    'items' : jqLauncher
-                  }).off("mouseover mouseout")
-                    .on("mouseleave", {target: $(this)}, self._handleMouseLeave)
-                    .on("focusout", {target: $(this)}, self._hideTooltip)
-                    .on("focusin", {target: $(this)}, self._showTooltip);
-    */
-            /*
-            for checkboxes and radio
-             
-                  }).on("mouseover", {}, self._showTooltip)
-                    .on("mouseout", {}, self._hideTooltip)
-                    .on("mouseleave", {}, self._handleMouseLeave)
-                    .on("focusin", {}, self._showTooltip)
-                    .on("focusout", {}, self._hideTooltip)
-                    .on("ojoptionchange", {}, self._handleValidityChange);
-            */  
-           
   }
+};
+
+/**
+ * Returns the jquery element popup should be position on. We always position on tip of component 
+ * root unless specifically overridden. Components like radion and checkboxset use the launcher, 
+ * which in the inputs
+ * @private
+ */
+oj.PopupMessagingStrategy.prototype._getPopupPosition = function()
+{
+  var compDefaults = 
+    oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT[this.GetComponent().widgetName];
+  
+  if (compDefaults)
+  {
+    if (compDefaults.position && compDefaults.position === "launcher")
+    {
+      return this.GetLauncher();
+    }
+  }
+  
+  return this.GetComponent().widget();
 };
 
 oj.PopupMessagingStrategy.prototype._getPopupContentHtml = function ()
@@ -1997,8 +1985,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    */
   _OPTION_TO_CSS_MAPPING: {
     "disabled": "oj-disabled",
-    "required": "oj-required",
-    "readOnly": "oj-read-only"
+    "required": "oj-required"
   },
   
   /**
@@ -2068,7 +2055,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _InitOptions : function()
   {
     var node = this.element, savedAttributes = this._GetSavedAttributes(node), 
-            attrsToRemove = ["required", "title"], domValue; 
+            attrsToRemove = ["required", "title"], domValue, attrVal, propVal; 
     this._super();
     
     // TODO: Blake says no options should be initialized by base. Code needs to be removed when the 
@@ -2105,9 +2092,17 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     // if options.required is not set (undefined), use required attribute on the element.
     if (this.options['required'] === undefined)
     {
-      // In the absence of attribute set default value to null
-      domValue = (this.element.attr("required") !== undefined) ? 
-        !!this.element.prop("required") : null;
+      attrVal = this.element.attr("required");
+      propVal = this.element.prop("required");
+      
+      // In the absence of attribute set default value to null. 
+      // If attribute is present and not undefined
+      //   - In IE9, required attribute is not supported at all, so prop() returns undefined. In 
+      //     such cases set default to !!attrVal
+      //   - Otherwise set to !!propVal
+      // TODO: review needed 
+      domValue = (attrVal !== undefined) ? 
+        ((propVal !== undefined) ? !!propVal : !!attrVal) : null;
       this.options['required'] = domValue ? "required" : "optional";
     }
     
@@ -2182,6 +2177,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     this._Refresh("value", this.options['value'], fullRefresh);
     this._refreshAria("required", this.options.required);
     this._refreshTheming("required", this.options.required);
+    this._refreshTheming("disabled", this.options.disabled);
   },
 
   /**

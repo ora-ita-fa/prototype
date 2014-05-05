@@ -742,6 +742,326 @@ oj.DataGridResources.prototype.getMappedAttribute = function(key)
  * @class 
  * @name oj.ojDataGrid
  * @augments oj.baseComponent
+ *
+ * @classdesc
+ * <h3 id="datagridOverview-section">
+ *   JET DataGrid Component
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#datagridOverview-section"></a>
+ * </h3>
+ * <p>Description:</p>
+ * <p>A JET DataGrid is a themable, WAI-ARIA compliant component that displays data in a cell oriented grid.  Data inside the DataGrid can be associated with row and column headers.  Page authors can customize the content rendered inside cells and headers.</p>
+ *
+ * <h3 id="data-section">
+ *   Data
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#data-section"></a>
+ * </h3>
+ * <p>The JET DataGrid gets its data from a DataGridDataSource.  There are several types of DataGridDataSource that are provided out of the box:</p>
+ * <ul>
+ * <li>oj.ArrayDataGridDataSource</li>
+ * <li>oj.CollectionDataGridDataSource</li>
+ * <li>oj.PagingDataGridDataSource</li>
+ * <li>oj.FlattenedTreeDataGridDataSource</li>
+ * </ul>
+ *
+ * <p>oj.ArrayDataGridDataSource - Use this when the undering data is a static array.  The ArrayDataGridDataSource supports both single array (in which case each item in the array represents a row of data in the DataGrid) and two dimensional array (in which case each item in the array represents a cell in the DataGrid).  See the documentation for oj.ArrayDataGridDataSource for more details on the available options.</p>
+ *
+ * <p>oj.CollectionDataGridDataSource - Use this when oj.Collection is the model for the underlying data.  Note that the DataGrid will automatically react to model event from the underlying oj.Collection.  See the documentation for oj.CollectionDataGridDataSource for more details on the available options.</p>
+ *
+ * <p>oj.PagingDataGridDataSource - Use this when the DataGrid is driven by an associating ojPagingControl.  See the documentation for oj.PagingDataGridDataSource for more details on the available options.</p>
+ *
+ * <p>oj.FlattenedTreeDataGridDataSource - Use this when hierarchical data is displayed in the DataGrid.  The FlattenedDataGridDataSource takes an oj.TreeDataSource and adapts that to the DataGridDataSource.  The ojRowExpander works with the FlattenedTreeDataGridDataSource to enable expanding/collapsing of rows.</p>
+ *
+ * <p>Developer can also create their own DataSource by extending the oj.DataGridDataSource class.  See the cookbook for an example of a custom DataGridDataSource.</p>
+ *
+ * <h3 id="keyboard-section">
+ *   Keyboard interaction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
+ * </h3>
+ *
+ * <p>When a data cell has focus:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Tab</kbd></td>
+ *       <td>The first Tab into the DataGrid moves focus to the first cell of the first row.  The second Tab moves focus to the next focusable element outside of the DataGrid.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Left Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the previous column within the current row.  There is no wrapping at the beginning or end of the columns.  If a row header is present, then the row header next to the first column of the current row will gain focus.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Right Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the next column within the current row.  There is no wrapping at the beginning or end of the columns.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Up Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the previous row within the current column.  There is no wrapping at the beginning or end of the rows.  If a column header is present, then the column header above the first row of the current column will gain focus.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Down Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the next row within the current column.  There is no wrapping at the beginning or end of the rows.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Home</kbd></td>
+ *       <td>Moves focus to the first (available) cell of the current row.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>End</kbd></td>
+ *       <td>Moves focus to the last (available) cell of the current row.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Page Up</kbd></td>
+ *       <td>Moves focus to the first (available) cell in the current column.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Page Down</kbd></td>
+ *       <td>Moves focus to the last (available) cell in the current column.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Contrl+Space</kbd></td>
+ *       <td>Selects all the cells of the current column.  This is only available if multiple cell selection mode is enabled.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+Space</kbd></td>
+ *       <td>Selects all the cells of the current row.  This is only available if multiple cell selection mode is enabled.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+Arrow</kbd></td>
+ *       <td>Extends the current selection.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+F8</kbd></td>
+ *       <td>Freezes the current selection, therefore allowing user to move focus to another location to add additional cells to the current selection.  This is used to accomplish non-contiguous selection.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+F10</kbd></td>
+ *       <td>Brings up the context menu.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Ctrl+X</kbd></td>
+ *       <td>Marks the current row to move if dnd is enabled and the datasource supports move operation.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Ctrl+V</kbd></td>
+ *       <td>Move the row that is marked to directly under the current row.  If the row with the focused cell is the last row, then it will be move to the row above the current row.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>When a column header cell has focus:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Left Arrow</kbd></td>
+ *       <td>Moves focus to the previous column header.  There is no wrapping at the beginning or end of the column headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Right Arrow</kbd></td>
+ *       <td>Moves focus to the next column header.  There is no wrapping at the beginning or end of the column headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Down Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the first row directly below the column header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Enter</kbd></td>
+ *       <td>Toggle the sort order of the column if the column is sortable.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+F10</kbd></td>
+ *       <td>Brings up the context menu.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>When a row header cell has focus:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Up Arrow</kbd></td>
+ *       <td>Moves focus to the previous row header.  There is no wrapping at the beginning or end of the row headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Down Arrow</kbd></td>
+ *       <td>Moves focus to the next row header.  There is no wrapping at the beginning or end of the row headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Right Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the first column directly next to the row header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Left Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the first column directly next to the row header in RTL direction.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Enter</kbd></td>
+ *       <td>Toggle the sort order of the row if the row is sortable.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <h3 id="context-section">
+ *   Header Context And Cell Context
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#context-section"></a>
+ * </h3>
+ *
+ * <p>For all header and cell options, developers can specify a function as the return value.  The function takes a single argument, which is an object that contains contextual information about the particular header or cell.  This gives developers the flexibility to return different value depending on the context.</p>
+ *
+ * <p>For header options, the context paramter contains the following keys:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Description</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>axis</kbd></td>
+ *       <td>The axis of the header.  Possible values are 'row' and 'column'.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>component</kbd></td>
+ *       <td>A reference to the DataGrid component.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>index</kbd></td>
+ *       <td>The index of the header, where 0 is the index of the first header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>key</kbd></td>
+ *       <td>The key of the header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>data</kbd></td>
+ *       <td>The data object for the header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>parentElement</kbd></td>
+ *       <td>The header cell element.  The renderer can use this to directly append content to the header cell element.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>For cell options, the context paramter contains the following keys:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Description</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>component</kbd></td>
+ *       <td>A reference to the DataGrid component.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>datasource</kbd></td>
+ *       <td>A reference to the data source object.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>indexes</kbd></td>
+ *       <td>The object that contains both the zero based row index and column index in which the cell is bound to.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>keys</kbd></td>
+ *       <td>The object that contains both the row key and column key which identifies the cell.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>data</kbd></td>
+ *       <td>The data object for the cell.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>parentElement</kbd></td>
+ *       <td>The data cell element.  The renderer can use this to directly append content to the data cell element.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>If a FlattenedTreeDataGridDataSource is used, the following additional contextual information are available:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Description</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>depth</kbd></td>
+ *       <td>The depth of the row.  The depth of root row is 0.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>index</kbd></td>
+ *       <td>The index of the row relative to its parent.  The index of the first child is 0.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>state</kbd></td>
+ *       <td>The state of the row.  Possible values are "expanded", "collapsed", "leaf".</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>parentKey</kbd></td>
+ *       <td>The key of the parent row.  For root row the parent key is null.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>Note that a custom DataGridDataSource can return additional header and cell context information.  Consult the documentation of the DataGridDataSource API for details.</p>
+ *
+ * <h3 id="context-section">
+ *   Selection
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#selection-section"></a>
+ * </h3>
+ *
+ * <p>The DataGrid supports both cell based and row based selection mode, which developers can specify using the selectionMode option.  For each mode developers can also specify whether single or multiple cells/rows can be selected.</p>
+ * <p>Developers can specify or retrieve selection from the DataGrid using the selection option.  A selection in DataGrid consists of an array of ranges.  Each range contains the following keys: startIndex, endIndex, startKey, endKey.  Each of the keys contains value for 'row' and 'column'.  If endIndex and endKey are not specified, that means the range is unbounded, i.e. the cells of the entire row/column are selected.</p>
+ *
+ * <h3 id="menu-section">
+ *   Context menu
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#menu-section"></a>
+ * </h3>
+ *
+ * <p>The DataGrid has a default context menu for operations such as header resize and sort.  Developers can also specify their own context menu by using the contextMenu option.  See the option for details.</p>
+ * 
+ * <h3 id="geometry-section">
+ *   Geometry Management
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#geometry-section"></a>
+ * </h3>
+ *
+ * <p>If the DataGrid is not styled with a fixed size, then it will responds to a change to the size of its container.  Note that unlike Table the content of the cell does not affect the height of the row.  The height of the rows must be pre-determined and specified by the developer or a default size will be used.</p>
+ *
+ * <h3 id="rtl-section">
+ *   Reading direction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rtl-section"></a>
+ * </h3>
+ * 
+ * <p>The order of the column headers will be rendered in reverse order in RTL reading direction.  The location of the row header will also be different between RTL and LTR direction.  It is up to the developers to ensure that the content of the header and data cell are rendered correctly according to the reading direction.</p>
+ * <p>As with any JET component, in the unusual case that the directionality (LTR or RTL) changes post-init, the datagrid must be <code class="prettyprint">refresh()</code>ed.  
+
  */
 oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
 {
@@ -963,18 +1283,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                          *                                               return "background-color: green";
                          *                                            return;}}}});           
                          */
-                        style: null,
-                        /**
-                         * The template to use to render the row headers
-                         * 
-                         * @expose 
-                         * @memberof! oj.ojDataGrid
-                         * @instance
-                         * @type {string|null}
-                         * @default <code class="prettyprint">null</code>
-                         * 
-                         */
-                        template:null                        
+                        style: null
                     },
                     /** @expose */
                     column: {
@@ -1057,18 +1366,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                          *                                               return "background-color: green";
                          *                                            return;}}}});           
                          */
-                        style: null,
-                       /**
-                         * The template to use to render the column headers
-                         * 
-                         * @expose 
-                         * @memberof! oj.ojDataGrid
-                         * @instance
-                         * @type {string|null}
-                         * @default <code class="prettyprint">null</code>
-                         * 
-                         */                        
-                        template:null
+                        style: null
                     }
                 },
                 /** @expose */
@@ -1123,18 +1421,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                      *                                               return "background-color: green";
                      *                                            return;}}});           
                      */
-                    style: null,
-                    /**
-                    * The template to use to render the cells
-                    * 
-                    * @expose 
-                    * @memberof! oj.ojDataGrid
-                    * @instance
-                    * @type {string|null}
-                    * @default <code class="prettyprint">null</code>
-                    * 
-                    */    
-                    template:null
+                    style: null
                 },
 
                 /**

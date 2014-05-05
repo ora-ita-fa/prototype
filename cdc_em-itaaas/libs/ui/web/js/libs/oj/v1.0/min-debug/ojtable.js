@@ -13,16 +13,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     $rowSet$$3$$.$_startIndex$ = 0;
     $rowSet$$3$$.Init();
     $rowSet$$3$$.$_data$ = $data$$80$$;
-    $rowSet$$3$$.$_data$.$insertRows$ = function $$rowSet$$3$$$$_data$$$insertRows$$($insertAtIndex$$2$$, $i$$161_insertAtKey$$1$$, $nodeSet$$28$$) {
+    $rowSet$$3$$.$_data$.$insertRows$ = function $$rowSet$$3$$$$_data$$$insertRows$$($insertAtIndex$$2$$, $i$$163_insertAtKey$$1$$, $nodeSet$$28$$) {
       var $row$$22$$, $rowIdx$$;
-      for($i$$161_insertAtKey$$1$$ = 0;$i$$161_insertAtKey$$1$$ < $nodeSet$$28$$.$getCount$();$i$$161_insertAtKey$$1$$++) {
-        $rowIdx$$ = $insertAtIndex$$2$$ + $i$$161_insertAtKey$$1$$, $row$$22$$ = new $oj$$11$$.$ArrayRow$($nodeSet$$28$$.getData($i$$161_insertAtKey$$1$$), {context:$nodeSet$$28$$.getMetadata($i$$161_insertAtKey$$1$$)}), $oj$$11$$.$FlattenedTreeRowSet$.$superclass$.$_handleEvent$.call($rowSet$$3$$, $oj$$11$$.$RowSet$.$EventType$.ADD, {rowIdx:$rowIdx$$, row:$row$$22$$})
+      for($i$$163_insertAtKey$$1$$ = 0;$i$$163_insertAtKey$$1$$ < $nodeSet$$28$$.$getCount$();$i$$163_insertAtKey$$1$$++) {
+        $rowIdx$$ = $insertAtIndex$$2$$ + $i$$163_insertAtKey$$1$$, $row$$22$$ = new $oj$$11$$.$ArrayRow$($nodeSet$$28$$.getData($i$$163_insertAtKey$$1$$), {context:$nodeSet$$28$$.getMetadata($i$$163_insertAtKey$$1$$)}), $oj$$11$$.$FlattenedTreeRowSet$.$superclass$.$_handleEvent$.call($rowSet$$3$$, $oj$$11$$.$RowSet$.$EventType$.ADD, {rowIdx:$rowIdx$$, row:$row$$22$$})
       }
     };
     $rowSet$$3$$.$_data$.$removeRows$ = function $$rowSet$$3$$$$_data$$$removeRows$$($rowKeys$$2$$) {
-      var $i$$162$$, $rowIdx$$1$$;
-      for($i$$162$$ = 0;$i$$162$$ < $rowKeys$$2$$.length;$i$$162$$++) {
-        $rowIdx$$1$$ = $rowKeys$$2$$[$i$$162$$].index - $i$$162$$, $oj$$11$$.$FlattenedTreeRowSet$.$superclass$.$_handleEvent$.call($rowSet$$3$$, $oj$$11$$.$RowSet$.$EventType$.REMOVE, {rowIdx:$rowIdx$$1$$, row:null})
+      var $i$$164$$, $rowIdx$$1$$;
+      for($i$$164$$ = 0;$i$$164$$ < $rowKeys$$2$$.length;$i$$164$$++) {
+        $rowIdx$$1$$ = $rowKeys$$2$$[$i$$164$$].index - $i$$164$$, $oj$$11$$.$FlattenedTreeRowSet$.$superclass$.$_handleEvent$.call($rowSet$$3$$, $oj$$11$$.$RowSet$.$EventType$.REMOVE, {rowIdx:$rowIdx$$1$$, row:null})
       }
     }
   };
@@ -31,10 +31,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     return null
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("FlattenedTreeRowSet.prototype.add", {add:$oj$$11$$.$FlattenedTreeRowSet$.prototype.add});
-  $oj$$11$$.$FlattenedTreeRowSet$.prototype.at = function $$oj$$11$$$$FlattenedTreeRowSet$$$at$($index$$130$$) {
+  $oj$$11$$.$FlattenedTreeRowSet$.prototype.at = function $$oj$$11$$$$FlattenedTreeRowSet$$$at$($index$$131$$) {
     var $nodeSet$$29$$ = this.$_currentNodeSet$;
-    $index$$130$$ = $nodeSet$$29$$.$getStart$() + $index$$130$$;
-    return new $oj$$11$$.$ArrayRow$($nodeSet$$29$$.getData($index$$130$$), {context:$nodeSet$$29$$.getMetadata($index$$130$$)})
+    $index$$131$$ = $nodeSet$$29$$.$getStart$() + $index$$131$$;
+    return new $oj$$11$$.$ArrayRow$($nodeSet$$29$$.getData($index$$131$$), {context:$nodeSet$$29$$.getMetadata($index$$131$$)})
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("FlattenedTreeRowSet.prototype.at", {at:$oj$$11$$.$FlattenedTreeRowSet$.prototype.at});
   $oj$$11$$.$FlattenedTreeRowSet$.prototype.clone = function $$oj$$11$$$$FlattenedTreeRowSet$$$clone$() {
@@ -211,8 +211,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("PagingTableDataSource.prototype.setPageSize", {setPageSize:$oj$$11$$.$PagingTableDataSource$.prototype.setPageSize});
   $oj$$11$$.$PagingTableDataSource$.prototype.startIndex = $JSCompiler_get$$("$_startIndex$");
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("PagingTableDataSource.prototype.startIndex", {startIndex:$oj$$11$$.$PagingTableDataSource$.prototype.startIndex});
-  $oj$$11$$.$PagingTableDataSource$.prototype.at = function $$oj$$11$$$$PagingTableDataSource$$$at$($index$$132$$) {
-    return this.$dataSource$.at($index$$132$$)
+  $oj$$11$$.$PagingTableDataSource$.prototype.at = function $$oj$$11$$$$PagingTableDataSource$$$at$($index$$133$$) {
+    return this.$dataSource$.at($index$$133$$)
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("PagingTableDataSource.prototype.at", {at:$oj$$11$$.$PagingTableDataSource$.prototype.at});
   $oj$$11$$.$PagingTableDataSource$.prototype.get = function $$oj$$11$$$$PagingTableDataSource$$$get$($id$$21$$) {
@@ -227,8 +227,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     return this.$dataSource$.hasMore()
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("PagingTableDataSource.prototype.hasMore", {hasMore:$oj$$11$$.$PagingTableDataSource$.prototype.hasMore});
-  $oj$$11$$.$PagingTableDataSource$.prototype.indexOf = function $$oj$$11$$$$PagingTableDataSource$$$indexOf$($model$$37$$) {
-    return this.$dataSource$.indexOf($model$$37$$)
+  $oj$$11$$.$PagingTableDataSource$.prototype.indexOf = function $$oj$$11$$$$PagingTableDataSource$$$indexOf$($model$$38$$) {
+    return this.$dataSource$.indexOf($model$$38$$)
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("PagingTableDataSource.prototype.indexOf", {indexOf:$oj$$11$$.$PagingTableDataSource$.prototype.indexOf});
   $oj$$11$$.$PagingTableDataSource$.prototype.on = function $$oj$$11$$$$PagingTableDataSource$$$on$($eventType$$32$$, $eventHandler$$10$$) {
@@ -260,9 +260,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     this.$_rowSet$ = new $oj$$11$$.$ArrayRowSet$($data$$83$$, this.options);
     this.$_addRowSetEventListeners$();
     if(null != $options$$233$$ && ("enabled" == $options$$233$$.startFetch || null == $options$$233$$.startFetch) || null == $options$$233$$) {
-      var $self$$55$$ = this;
+      var $self$$58$$ = this;
       setTimeout(function() {
-        $self$$55$$.fetch({startFetch:"enabled"})
+        $self$$58$$.fetch({startFetch:"enabled"})
       }, 0)
     }
   };
@@ -276,8 +276,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     this.$_rowSet$.add($m$$20$$, $options$$234$$)
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("ArrayTableDataSource.prototype.add", {add:$oj$$11$$.$ArrayTableDataSource$.prototype.add});
-  $oj$$11$$.$ArrayTableDataSource$.prototype.at = function $$oj$$11$$$$ArrayTableDataSource$$$at$($index$$133$$) {
-    return this.$_rowSet$.at($index$$133$$)
+  $oj$$11$$.$ArrayTableDataSource$.prototype.at = function $$oj$$11$$$$ArrayTableDataSource$$$at$($index$$134$$) {
+    return this.$_rowSet$.at($index$$134$$)
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("ArrayTableDataSource.prototype.at", {at:$oj$$11$$.$ArrayTableDataSource$.prototype.at});
   $oj$$11$$.$ArrayTableDataSource$.prototype.fetch = function $$oj$$11$$$$ArrayTableDataSource$$$fetch$($options$$235$$) {
@@ -319,9 +319,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     "ascending" == $criteria$$9_direction$$7$$ ? $comparator$$13$$ = function $$comparator$$13$$$($row$$28$$) {
       return $$$$11$$.isFunction($row$$28$$.get) ? $row$$28$$.get($key$$69$$) : $row$$28$$[$key$$69$$]()
     } : "descending" == $criteria$$9_direction$$7$$ && ($comparator$$13$$ = function $$comparator$$13$$$($rowA$$, $rowB$$) {
-      var $a$$56$$, $b$$40$$;
-      $$$$11$$.isFunction($rowA$$.get) ? ($a$$56$$ = $rowA$$.get($key$$69$$), $b$$40$$ = $rowB$$.get($key$$69$$)) : ($a$$56$$ = $rowA$$[$key$$69$$](), $b$$40$$ = $rowB$$[$key$$69$$]());
-      return $a$$56$$ === $b$$40$$ ? 0 : $a$$56$$ > $b$$40$$ ? -1 : 1
+      var $a$$62$$, $b$$41$$;
+      $$$$11$$.isFunction($rowA$$.get) ? ($a$$62$$ = $rowA$$.get($key$$69$$), $b$$41$$ = $rowB$$.get($key$$69$$)) : ($a$$62$$ = $rowA$$[$key$$69$$](), $b$$41$$ = $rowB$$[$key$$69$$]());
+      return $a$$62$$ === $b$$41$$ ? 0 : $a$$62$$ > $b$$41$$ ? -1 : 1
     });
     this.$_rowSet$.comparator = $comparator$$13$$;
     this.$_rowSet$.sort()
@@ -332,42 +332,42 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("ArrayTableDataSource.prototype.totalSize", {totalSize:$oj$$11$$.$ArrayTableDataSource$.prototype.totalSize});
   $oj$$11$$.$ArrayTableDataSource$.prototype.$_addRowSetEventListeners$ = function $$oj$$11$$$$ArrayTableDataSource$$$$_addRowSetEventListeners$$() {
-    var $self$$56$$ = this;
+    var $self$$59$$ = this;
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.ADD, function($event$$76$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.ADD, $event$$76$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.ADD, $event$$76$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.REMOVE, function($event$$77$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.REMOVE, $event$$77$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.REMOVE, $event$$77$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.REQUEST, function($event$$78$$) {
-      $self$$56$$.$isFetching$ = !0;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.REQUEST, $event$$78$$)
+      $self$$59$$.$isFetching$ = !0;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.REQUEST, $event$$78$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.RESET, function($event$$79$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.RESET, $event$$79$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.RESET, $event$$79$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.SORT, function($event$$80$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.SORT, $event$$80$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.SORT, $event$$80$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.CHANGE, function($event$$81$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.CHANGE, $event$$81$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.CHANGE, $event$$81$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.DESTROY, function($event$$82$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.DESTROY, $event$$82$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.DESTROY, $event$$82$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.SYNC, function($event$$83$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.SYNC, $event$$83$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.SYNC, $event$$83$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.ERROR, function($event$$84$$) {
-      $self$$56$$.$isFetching$ = !1;
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$56$$, $oj$$11$$.$RowSet$.$EventType$.ERROR, $event$$84$$)
+      $self$$59$$.$isFetching$ = !1;
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$59$$, $oj$$11$$.$RowSet$.$EventType$.ERROR, $event$$84$$)
     })
   };
   (function() {
@@ -376,23 +376,23 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     $_ERR_COLUMN_RENDERER_COLUMN_NOT_FOUND_SUMMARY$:"columnRendererColumnNotFound.summary", $_ERR_COLUMN_RENDERER_COLUMN_NOT_FOUND_DETAIL$:"columnRendererColumnNotFound.detail", $_ERR_COLUMN_RENDERER_OPTION_REQUIRED_SUMMARY$:"columnRendererOptionRequired.summary", $_ERR_COLUMN_RENDERER_OPTION_REQUIRED_DETAIL$:"columnRendererOptionRequired.detail", $_ERR_PREACTIVEROW_ERROR_SUMMARY$:"preActiveRowError.summary", $_ERR_PREACTIVEROW_ERROR_DETAIL$:"preActiveRowError.detail", $_ERR_ACTIVEROW_UNAVAILABLE_INDEX_SUMMARY$:"activeRowUnavailableIndex.summary", 
     $_ERR_ACTIVEROW_UNAVAILABLE_INDEX_DETAIL$:"activeRowUnavailableIndex.detail", $_ERR_REFRESHROW_INVALID_INDEX_SUMMARY$:"refreshRowInvalidRowIndex.summary", $_ERR_REFRESHROW_INVALID_INDEX_DETAIL$:"refreshRowInvalidRowIndex.detail", $_ERR_DATA_INVALID_TYPE_SUMMARY$:"dataInvalidType.summary", $_ERR_DATA_INVALID_TYPE_DETAIL$:"dataInvalidType.detail"}, $_COLUMN_HEADER_ID$:"_headerColumn", $_COLUMN_HEADER_TEXT_ID$:"_headerColumnText", $_COLUMN_HEADER_ASC_ID$:"_headerColumnAsc", $_COLUMN_HEADER_DSC_ID$:"_headerColumnDsc", 
     $_COLUMN_HEADER_ID_PREFIX$:"_hdrCol", $_OPTION_AUTO$:"auto", $_OPTION_ENABLED$:"enabled", $_OPTION_DISABLED$:"disabled", $_OPTION_NONE$:"none", $_OPTION_SELECTION_MODES$:{$_SINGLE$:"single", $_MULTIPLE$:"multiple"}, $_COLUMN_SORT_ORDER$:{$_ASCENDING$:"ascending", $_DESCENDING$:"descending"}, $_KEYBOARD_CODES$:{$_KEYBOARD_CODE_CTRL$:17, $_KEYBOARD_CODE_SHIFT$:16, $_KEYBOARD_CODE_SPACEBAR$:32, $_KEYBOARD_CODE_ENTER$:13, $_KEYBOARD_CODE_UP$:38, $_KEYBOARD_CODE_DOWN$:40, $_KEYBOARD_CODE_LEFT$:37, 
-    $_KEYBOARD_CODE_RIGHT$:39, $_KEYBOARD_CODE_HOME$:36, $_KEYBOARD_CODE_END$:35, $_KEYBOARD_CODE_TAB$:9, $_KEYBOARD_CODE_ESC$:27, $_KEYBOARD_MODIFIER_SHIFT$:"shiftKey"}, activeRow:function($errSummary$$3_index$$134$$) {
+    $_KEYBOARD_CODE_RIGHT$:39, $_KEYBOARD_CODE_HOME$:36, $_KEYBOARD_CODE_END$:35, $_KEYBOARD_CODE_TAB$:9, $_KEYBOARD_CODE_ESC$:27, $_KEYBOARD_MODIFIER_SHIFT$:"shiftKey"}, activeRow:function($errSummary$$3_index$$135$$) {
       if(!this.$_getData$()) {
         return-1
       }
-      if(null != $errSummary$$3_index$$134$$) {
-        if(this.$_activeRowIndex$ != $errSummary$$3_index$$134$$) {
+      if(null != $errSummary$$3_index$$135$$) {
+        if(this.$_activeRowIndex$ != $errSummary$$3_index$$135$$) {
           var $errDetail$$3_oldIndex$$ = this.$_activeRowIndex$;
           try {
-            this._trigger("preactiverow", null, {newRowIndex:$errSummary$$3_index$$134$$, oldRowIndex:$errDetail$$3_oldIndex$$})
+            this._trigger("preactiverow", null, {newRowIndex:$errSummary$$3_index$$135$$, oldRowIndex:$errDetail$$3_oldIndex$$})
           }catch($err$$3$$) {
-            throw $errSummary$$3_index$$134$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_PREACTIVEROW_ERROR_SUMMARY$), $errDetail$$3_oldIndex$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_PREACTIVEROW_ERROR_DETAIL$, {error:$err$$3$$.toString()}), new $oj$$11$$.$Message$($errSummary$$3_index$$134$$, $errDetail$$3_oldIndex$$, $oj$$11$$.$Message$.$SEVERITY_LEVEL$.ERROR);
+            throw $errSummary$$3_index$$135$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_PREACTIVEROW_ERROR_SUMMARY$), $errDetail$$3_oldIndex$$ = this.$getTranslatedString$(this.$_BUNDLE_KEY$.$_ERR_PREACTIVEROW_ERROR_DETAIL$, {error:$err$$3$$.toString()}), new $oj$$11$$.$Message$($errSummary$$3_index$$135$$, $errDetail$$3_oldIndex$$, $oj$$11$$.$Message$.$SEVERITY_LEVEL$.ERROR);
           }
-          this.$_activeRowIndex$ = $errSummary$$3_index$$134$$;
-          this._trigger("activerow", null, {newRowIndex:$errSummary$$3_index$$134$$, oldRowIndex:$errDetail$$3_oldIndex$$});
-          this.$_setRowFocus$($errSummary$$3_index$$134$$, !0, null)
+          this.$_activeRowIndex$ = $errSummary$$3_index$$135$$;
+          this._trigger("activerow", null, {newRowIndex:$errSummary$$3_index$$135$$, oldRowIndex:$errDetail$$3_oldIndex$$});
+          this.$_setRowFocus$($errSummary$$3_index$$135$$, !0, null)
         }
-        return $errSummary$$3_index$$134$$
+        return $errSummary$$3_index$$135$$
       }
       return null != this.$_activeRowIndex$ ? this.$_activeRowIndex$ : -1
     }, columnMetaData:function($columnIdx$$) {
@@ -416,56 +416,56 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       }
       try {
         this.$_refreshTableBodyRow$($errDetail$$4_rowIdx$$2$$, $data$$87_errSummary$$4_row$$29$$)
-      }catch($e$$66$$) {
-        throw $e$$66$$;
+      }catch($e$$67$$) {
+        throw $e$$67$$;
       }
       return!0
     }, selection:function($selection$$2_selectionIdxs$$) {
       if(null != $selection$$2_selectionIdxs$$) {
         this.$_clearSelectedRows$();
-        var $i$$163_selectedRowIdxs$$, $j$$22_rangeArray_startRowIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$, $endRowIdx_rowSelection$$, $rangeCount_startColumnIdx$$;
-        for($i$$163_selectedRowIdxs$$ = 0;$i$$163_selectedRowIdxs$$ < $selection$$2_selectionIdxs$$.length;$i$$163_selectedRowIdxs$$++) {
-          $endColumnIdx_rangeObj_selectedColumnIdxs$$ = $selection$$2_selectionIdxs$$[$i$$163_selectedRowIdxs$$];
+        var $i$$165_selectedRowIdxs$$, $j$$23_rangeArray_startRowIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$, $endRowIdx_rowSelection$$, $rangeCount_startColumnIdx$$;
+        for($i$$165_selectedRowIdxs$$ = 0;$i$$165_selectedRowIdxs$$ < $selection$$2_selectionIdxs$$.length;$i$$165_selectedRowIdxs$$++) {
+          $endColumnIdx_rangeObj_selectedColumnIdxs$$ = $selection$$2_selectionIdxs$$[$i$$165_selectedRowIdxs$$];
           if(null == $endColumnIdx_rangeObj_selectedColumnIdxs$$.start || null == $endColumnIdx_rangeObj_selectedColumnIdxs$$.end) {
             return console.log("Error: Invalid range object in selection. Both start and end objects must be specified"), null
           }
-          $j$$22_rangeArray_startRowIdx$$ = $endColumnIdx_rangeObj_selectedColumnIdxs$$.start.row;
+          $j$$23_rangeArray_startRowIdx$$ = $endColumnIdx_rangeObj_selectedColumnIdxs$$.start.row;
           $endRowIdx_rowSelection$$ = $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.row;
           $rangeCount_startColumnIdx$$ = $endColumnIdx_rangeObj_selectedColumnIdxs$$.start.column;
           $endColumnIdx_rangeObj_selectedColumnIdxs$$ = $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column;
-          if(null != $j$$22_rangeArray_startRowIdx$$ && null != $endRowIdx_rowSelection$$ && null != $rangeCount_startColumnIdx$$ && null != $endColumnIdx_rangeObj_selectedColumnIdxs$$) {
+          if(null != $j$$23_rangeArray_startRowIdx$$ && null != $endRowIdx_rowSelection$$ && null != $rangeCount_startColumnIdx$$ && null != $endColumnIdx_rangeObj_selectedColumnIdxs$$) {
             return console.log("Error: Invalid range object in selection - Can only support row or column selection. Not both"), null
           }
-          if(null != $j$$22_rangeArray_startRowIdx$$ && null != $endRowIdx_rowSelection$$) {
-            for(;$j$$22_rangeArray_startRowIdx$$ <= $endRowIdx_rowSelection$$;$j$$22_rangeArray_startRowIdx$$++) {
+          if(null != $j$$23_rangeArray_startRowIdx$$ && null != $endRowIdx_rowSelection$$) {
+            for(;$j$$23_rangeArray_startRowIdx$$ <= $endRowIdx_rowSelection$$;$j$$23_rangeArray_startRowIdx$$++) {
               try {
-                this.$_setRowSelection$($j$$22_rangeArray_startRowIdx$$, !0, null)
-              }catch($e$$67$$) {
-                console.log("Error: " + $e$$67$$)
+                this.$_setRowSelection$($j$$23_rangeArray_startRowIdx$$, !0, null)
+              }catch($e$$68$$) {
+                console.log("Error: " + $e$$68$$)
               }
             }
           }else {
             if(null != $rangeCount_startColumnIdx$$ && null != $endColumnIdx_rangeObj_selectedColumnIdxs$$) {
-              for($j$$22_rangeArray_startRowIdx$$ = $rangeCount_startColumnIdx$$;$j$$22_rangeArray_startRowIdx$$ <= $endColumnIdx_rangeObj_selectedColumnIdxs$$;$j$$22_rangeArray_startRowIdx$$++) {
+              for($j$$23_rangeArray_startRowIdx$$ = $rangeCount_startColumnIdx$$;$j$$23_rangeArray_startRowIdx$$ <= $endColumnIdx_rangeObj_selectedColumnIdxs$$;$j$$23_rangeArray_startRowIdx$$++) {
                 try {
-                  this.$_setHeaderColumnSelection$($j$$22_rangeArray_startRowIdx$$, !0, null)
-                }catch($e$$68$$) {
-                  console.log("Error: " + $e$$68$$)
+                  this.$_setHeaderColumnSelection$($j$$23_rangeArray_startRowIdx$$, !0, null)
+                }catch($e$$69$$) {
+                  console.log("Error: " + $e$$69$$)
                 }
               }
             }else {
-              return console.log("Error: Invalid range object in selection - \n                                  start row: " + $j$$22_rangeArray_startRowIdx$$ + "\n                                  end row: " + $endRowIdx_rowSelection$$ + "\n                                  start column: " + $rangeCount_startColumnIdx$$ + "\n                                  end column: " + $endColumnIdx_rangeObj_selectedColumnIdxs$$), null
+              return console.log("Error: Invalid range object in selection - \n                                  start row: " + $j$$23_rangeArray_startRowIdx$$ + "\n                                  end row: " + $endRowIdx_rowSelection$$ + "\n                                  start column: " + $rangeCount_startColumnIdx$$ + "\n                                  end column: " + $endColumnIdx_rangeObj_selectedColumnIdxs$$), null
             }
           }
         }
         return this.selection()
       }
-      $i$$163_selectedRowIdxs$$ = this.$_getSelectedRowIdxs$();
+      $i$$165_selectedRowIdxs$$ = this.$_getSelectedRowIdxs$();
       $endColumnIdx_rangeObj_selectedColumnIdxs$$ = this.$_getSelectedHeaderColumnIdxs$();
       $selection$$2_selectionIdxs$$ = null;
       $endRowIdx_rowSelection$$ = !0;
-      if(null != $i$$163_selectedRowIdxs$$ && 0 < $i$$163_selectedRowIdxs$$.length) {
-        $selection$$2_selectionIdxs$$ = $i$$163_selectedRowIdxs$$
+      if(null != $i$$165_selectedRowIdxs$$ && 0 < $i$$165_selectedRowIdxs$$.length) {
+        $selection$$2_selectionIdxs$$ = $i$$165_selectedRowIdxs$$
       }else {
         if(null != $endColumnIdx_rangeObj_selectedColumnIdxs$$ && 0 < $endColumnIdx_rangeObj_selectedColumnIdxs$$.length) {
           $selection$$2_selectionIdxs$$ = $endColumnIdx_rangeObj_selectedColumnIdxs$$, $endRowIdx_rowSelection$$ = !1
@@ -473,30 +473,30 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
           return null
         }
       }
-      $j$$22_rangeArray_startRowIdx$$ = [];
+      $j$$23_rangeArray_startRowIdx$$ = [];
       $rangeCount_startColumnIdx$$ = 0;
       var $previousIdx$$ = null, $selectionIdx$$;
-      for($i$$163_selectedRowIdxs$$ = 0;$i$$163_selectedRowIdxs$$ < $selection$$2_selectionIdxs$$.length;$i$$163_selectedRowIdxs$$++) {
-        $selectionIdx$$ = $selection$$2_selectionIdxs$$[$i$$163_selectedRowIdxs$$], 0 == $i$$163_selectedRowIdxs$$ ? ($endColumnIdx_rangeObj_selectedColumnIdxs$$ = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.end = [], $endRowIdx_rowSelection$$ ? ($endColumnIdx_rangeObj_selectedColumnIdxs$$.start.row = $selectionIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.row = $selectionIdx$$) : ($endColumnIdx_rangeObj_selectedColumnIdxs$$.start.column = 
-        $selectionIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column = $selectionIdx$$), $j$$22_rangeArray_startRowIdx$$[0] = $endColumnIdx_rangeObj_selectedColumnIdxs$$) : ($endColumnIdx_rangeObj_selectedColumnIdxs$$ = $j$$22_rangeArray_startRowIdx$$[$rangeCount_startColumnIdx$$], $endRowIdx_rowSelection$$ ? $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.row = $selectionIdx$$ : $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column = $selectionIdx$$, $selectionIdx$$ != $previousIdx$$ + 
+      for($i$$165_selectedRowIdxs$$ = 0;$i$$165_selectedRowIdxs$$ < $selection$$2_selectionIdxs$$.length;$i$$165_selectedRowIdxs$$++) {
+        $selectionIdx$$ = $selection$$2_selectionIdxs$$[$i$$165_selectedRowIdxs$$], 0 == $i$$165_selectedRowIdxs$$ ? ($endColumnIdx_rangeObj_selectedColumnIdxs$$ = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.end = [], $endRowIdx_rowSelection$$ ? ($endColumnIdx_rangeObj_selectedColumnIdxs$$.start.row = $selectionIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.row = $selectionIdx$$) : ($endColumnIdx_rangeObj_selectedColumnIdxs$$.start.column = 
+        $selectionIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column = $selectionIdx$$), $j$$23_rangeArray_startRowIdx$$[0] = $endColumnIdx_rangeObj_selectedColumnIdxs$$) : ($endColumnIdx_rangeObj_selectedColumnIdxs$$ = $j$$23_rangeArray_startRowIdx$$[$rangeCount_startColumnIdx$$], $endRowIdx_rowSelection$$ ? $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.row = $selectionIdx$$ : $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column = $selectionIdx$$, $selectionIdx$$ != $previousIdx$$ + 
         1 && ($endRowIdx_rowSelection$$ ? ($endColumnIdx_rangeObj_selectedColumnIdxs$$.end.row = $previousIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$ = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.end = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start.row = $selectionIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.row = $selectionIdx$$) : ($endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column = $previousIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$ = 
-        [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.end = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start.column = $selectionIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column = $selectionIdx$$), $rangeCount_startColumnIdx$$++, $j$$22_rangeArray_startRowIdx$$[$rangeCount_startColumnIdx$$] = $endColumnIdx_rangeObj_selectedColumnIdxs$$)), $previousIdx$$ = $selectionIdx$$
+        [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.end = [], $endColumnIdx_rangeObj_selectedColumnIdxs$$.start.column = $selectionIdx$$, $endColumnIdx_rangeObj_selectedColumnIdxs$$.end.column = $selectionIdx$$), $rangeCount_startColumnIdx$$++, $j$$23_rangeArray_startRowIdx$$[$rangeCount_startColumnIdx$$] = $endColumnIdx_rangeObj_selectedColumnIdxs$$)), $previousIdx$$ = $selectionIdx$$
       }
-      return $j$$22_rangeArray_startRowIdx$$
-    }, scrollLeft:function($value$$159$$) {
-      if(null != $value$$159$$) {
-        if(isNaN($value$$159$$) || 0 > $value$$159$$) {
-          return console.log("Error: Invalid scrollLeft value: " + $value$$159$$), null
-        }
-        this.$_getTableDomUtils$().$getScroller$().scrollLeft($value$$159$$)
-      }
-      return this.$_getTableDomUtils$().$getScroller$().scrollLeft()
-    }, scrollTop:function($value$$160$$) {
+      return $j$$23_rangeArray_startRowIdx$$
+    }, scrollLeft:function($value$$160$$) {
       if(null != $value$$160$$) {
         if(isNaN($value$$160$$) || 0 > $value$$160$$) {
-          return console.log("Error: Invalid scrollTop value: " + $value$$160$$), null
+          return console.log("Error: Invalid scrollLeft value: " + $value$$160$$), null
         }
-        this.$_getTableDomUtils$().$getScroller$().scrollTop($value$$160$$)
+        this.$_getTableDomUtils$().$getScroller$().scrollLeft($value$$160$$)
+      }
+      return this.$_getTableDomUtils$().$getScroller$().scrollLeft()
+    }, scrollTop:function($value$$161$$) {
+      if(null != $value$$161$$) {
+        if(isNaN($value$$161$$) || 0 > $value$$161$$) {
+          return console.log("Error: Invalid scrollTop value: " + $value$$161$$), null
+        }
+        this.$_getTableDomUtils$().$getScroller$().scrollTop($value$$161$$)
       }
       return this.$_getTableDomUtils$().$getScroller$().scrollTop()
     }, $_ComponentCreate$:function() {
@@ -509,9 +509,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     }, _destroy:function() {
       var $data$$88_tableContainer$$ = this.$_getData$();
       if(null != this.$_dataSourceEventHandlers$ && null != $data$$88_tableContainer$$) {
-        var $i$$164$$;
-        for($i$$164$$ = 0;$i$$164$$ < this.$_dataSourceEventHandlers$.length;$i$$164$$++) {
-          $data$$88_tableContainer$$.off(this.$_dataSourceEventHandlers$[$i$$164$$].$eventType$, this.$_dataSourceEventHandlers$[$i$$164$$].$eventHandler$)
+        var $i$$166$$;
+        for($i$$166$$ = 0;$i$$166$$ < this.$_dataSourceEventHandlers$.length;$i$$166$$++) {
+          $data$$88_tableContainer$$.off(this.$_dataSourceEventHandlers$[$i$$166$$].$eventType$, this.$_dataSourceEventHandlers$[$i$$166$$].$eventHandler$)
         }
       }
       this.$_getTableDomUtils$().$getTableBody$().removeAttr($oj$$11$$.Components.$_OJ_CONTAINER_ATTR$);
@@ -608,13 +608,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
           var $lastSelectedRowIdx$$ = this.$_getLastRowSelection$();
           if(null != $lastSelectedRowIdx$$) {
             if($rowIdx$$6$$ < $lastSelectedRowIdx$$) {
-              var $i$$165$$;
-              for($i$$165$$ = $rowIdx$$6$$;$i$$165$$ <= $lastSelectedRowIdx$$;$i$$165$$++) {
-                this.$_setRowSelection$($i$$165$$, !0, $event$$98$$.currentTarget, $event$$98$$)
+              var $i$$167$$;
+              for($i$$167$$ = $rowIdx$$6$$;$i$$167$$ <= $lastSelectedRowIdx$$;$i$$167$$++) {
+                this.$_setRowSelection$($i$$167$$, !0, $event$$98$$.currentTarget, $event$$98$$)
               }
             }else {
-              for($i$$165$$ = $lastSelectedRowIdx$$;$i$$165$$ <= $rowIdx$$6$$;$i$$165$$++) {
-                this.$_setRowSelection$($i$$165$$, !0, $event$$98$$.currentTarget, $event$$98$$)
+              for($i$$167$$ = $lastSelectedRowIdx$$;$i$$167$$ <= $rowIdx$$6$$;$i$$167$$++) {
+                this.$_setRowSelection$($i$$167$$, !0, $event$$98$$.currentTarget, $event$$98$$)
               }
             }
           }
@@ -633,13 +633,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
           var $lastSelectedColumnIdx$$ = this.$_getLastHeaderColumnSelection$();
           if(null != $lastSelectedColumnIdx$$) {
             if($columnIdx$$8$$ < $lastSelectedColumnIdx$$) {
-              var $i$$166$$;
-              for($i$$166$$ = $columnIdx$$8$$;$i$$166$$ <= $lastSelectedColumnIdx$$;$i$$166$$++) {
-                this.$_setHeaderColumnSelection$($i$$166$$, !0, $event$$99$$.currentTarget, $event$$99$$)
+              var $i$$168$$;
+              for($i$$168$$ = $columnIdx$$8$$;$i$$168$$ <= $lastSelectedColumnIdx$$;$i$$168$$++) {
+                this.$_setHeaderColumnSelection$($i$$168$$, !0, $event$$99$$.currentTarget, $event$$99$$)
               }
             }else {
-              for($i$$166$$ = $lastSelectedColumnIdx$$;$i$$166$$ <= $columnIdx$$8$$;$i$$166$$++) {
-                this.$_setHeaderColumnSelection$($i$$166$$, !0, $event$$99$$.currentTarget, $event$$99$$)
+              for($i$$168$$ = $lastSelectedColumnIdx$$;$i$$168$$ <= $columnIdx$$8$$;$i$$168$$++) {
+                this.$_setHeaderColumnSelection$($i$$168$$, !0, $event$$99$$.currentTarget, $event$$99$$)
               }
             }
           }
@@ -653,12 +653,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     }}, $_refresh$:function() {
       this.$_clearCachedMetadata$();
       this.$_clearCachedDataMetadata$();
-      var $self$$57$$ = this;
+      var $self$$60$$ = this;
       setTimeout(function() {
-        $self$$57$$.$_refreshAll$()
+        $self$$60$$.$_refreshAll$()
       }, 0)
-    }, _setOption:function($key$$70$$, $value$$161$$) {
-      this._super($key$$70$$, $value$$161$$);
+    }, _setOption:function($key$$70$$, $value$$162$$) {
+      this._super($key$$70$$, $value$$162$$);
       this.$_refresh$()
     }, $_addKeyboardKey$:function($keyCode$$) {
       var $foundCode_keyboardKeys$$ = !1, $found$$3_prop$$72$$;
@@ -668,9 +668,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       if($foundCode_keyboardKeys$$) {
         $foundCode_keyboardKeys$$ = this.$_getKeyboardKeys$();
         $found$$3_prop$$72$$ = !1;
-        var $i$$167$$;
-        for($i$$167$$ = 0;$i$$167$$ < $foundCode_keyboardKeys$$.length;$i$$167$$++) {
-          if($foundCode_keyboardKeys$$[$i$$167$$] == $keyCode$$) {
+        var $i$$169$$;
+        for($i$$169$$ = 0;$i$$169$$ < $foundCode_keyboardKeys$$.length;$i$$169$$++) {
+          if($foundCode_keyboardKeys$$[$i$$169$$] == $keyCode$$) {
             $found$$3_prop$$72$$ = !0;
             break
           }
@@ -695,14 +695,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       var $focusedRowIdx$$ = this.$_getFocusedRowIdx$();
       null != $focusedRowIdx$$ && this.$_setRowFocus$($focusedRowIdx$$, !1, null)
     }, $_clearSelectedHeaderColumns$:function() {
-      var $selectedHeaderColumnIdxs$$ = this.$_getSelectedHeaderColumnIdxs$(), $i$$168$$;
-      for($i$$168$$ = 0;$i$$168$$ < $selectedHeaderColumnIdxs$$.length;$i$$168$$++) {
-        this.$_setHeaderColumnSelection$($selectedHeaderColumnIdxs$$[$i$$168$$], !1, null)
+      var $selectedHeaderColumnIdxs$$ = this.$_getSelectedHeaderColumnIdxs$(), $i$$170$$;
+      for($i$$170$$ = 0;$i$$170$$ < $selectedHeaderColumnIdxs$$.length;$i$$170$$++) {
+        this.$_setHeaderColumnSelection$($selectedHeaderColumnIdxs$$[$i$$170$$], !1, null)
       }
     }, $_clearSelectedRows$:function() {
-      var $selectedRowIdxs$$1$$ = this.$_getSelectedRowIdxs$(), $i$$169$$;
-      for($i$$169$$ = 0;$i$$169$$ < $selectedRowIdxs$$1$$.length;$i$$169$$++) {
-        this.$_setRowSelection$($selectedRowIdxs$$1$$[$i$$169$$], !1, null)
+      var $selectedRowIdxs$$1$$ = this.$_getSelectedRowIdxs$(), $i$$171$$;
+      for($i$$171$$ = 0;$i$$171$$ < $selectedRowIdxs$$1$$.length;$i$$171$$++) {
+        this.$_setRowSelection$($selectedRowIdxs$$1$$[$i$$171$$], !1, null)
       }
     }, $_clearSortedHeaderColumn$:function($columnIdx$$9$$) {
       var $sortedTableHeaderColumnIdx$$ = this.$_getSortedTableHeaderColumnIdx$();
@@ -719,31 +719,31 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       if((0 == $columns$$3_columnsSortedArray$$.length || 1 == $columns$$3_columnsSortedArray$$.length && null == $columns$$3_columnsSortedArray$$[0].id && null == $columns$$3_columnsSortedArray$$[0].headerText && null == $columns$$3_columnsSortedArray$$[0].field) && null == $columnsDefault_sortSupportedData$$.headerText && null == $columnsDefault_sortSupportedData$$.field) {
         return[]
       }
-      var $defaultedColumns$$ = [], $data$$89_i$$170$$;
-      for($data$$89_i$$170$$ = 0;$data$$89_i$$170$$ < $columns$$3_columnsSortedArray$$.length;$data$$89_i$$170$$++) {
-        $defaultedColumns$$[$data$$89_i$$170$$] = $$$$11$$.extend({}, $columnsDefault_sortSupportedData$$, $columns$$3_columnsSortedArray$$[$data$$89_i$$170$$])
+      var $defaultedColumns$$ = [], $data$$89_i$$172$$;
+      for($data$$89_i$$172$$ = 0;$data$$89_i$$172$$ < $columns$$3_columnsSortedArray$$.length;$data$$89_i$$172$$++) {
+        $defaultedColumns$$[$data$$89_i$$172$$] = $$$$11$$.extend({}, $columnsDefault_sortSupportedData$$, $columns$$3_columnsSortedArray$$[$data$$89_i$$172$$])
       }
       $columns$$3_columnsSortedArray$$ = [];
-      for($data$$89_i$$170$$ = 0;$data$$89_i$$170$$ < $defaultedColumns$$.length;$data$$89_i$$170$$++) {
-        $columns$$3_columnsSortedArray$$.push($defaultedColumns$$[$data$$89_i$$170$$])
+      for($data$$89_i$$172$$ = 0;$data$$89_i$$172$$ < $defaultedColumns$$.length;$data$$89_i$$172$$++) {
+        $columns$$3_columnsSortedArray$$.push($defaultedColumns$$[$data$$89_i$$172$$])
       }
-      $data$$89_i$$170$$ = this.$_getData$();
+      $data$$89_i$$172$$ = this.$_getData$();
       $columnsDefault_sortSupportedData$$ = !1;
-      null != $data$$89_i$$170$$ && "full" == $data$$89_i$$170$$.getCapability("sort") && ($columnsDefault_sortSupportedData$$ = !0);
-      for($data$$89_i$$170$$ = 0;$data$$89_i$$170$$ < $defaultedColumns$$.length;$data$$89_i$$170$$++) {
-        null == $columns$$3_columnsSortedArray$$[$data$$89_i$$170$$].id && ($columns$$3_columnsSortedArray$$[$data$$89_i$$170$$].id = this.$_COLUMN_HEADER_ID_PREFIX$ + $data$$89_i$$170$$), null != $columns$$3_columnsSortedArray$$[$data$$89_i$$170$$].sortable && $columns$$3_columnsSortedArray$$[$data$$89_i$$170$$].sortable != this.$_OPTION_AUTO$ || !$columnsDefault_sortSupportedData$$ || ($columns$$3_columnsSortedArray$$[$data$$89_i$$170$$].sortable = this.$_OPTION_ENABLED$)
+      null != $data$$89_i$$172$$ && "full" == $data$$89_i$$172$$.getCapability("sort") && ($columnsDefault_sortSupportedData$$ = !0);
+      for($data$$89_i$$172$$ = 0;$data$$89_i$$172$$ < $defaultedColumns$$.length;$data$$89_i$$172$$++) {
+        null == $columns$$3_columnsSortedArray$$[$data$$89_i$$172$$].id && ($columns$$3_columnsSortedArray$$[$data$$89_i$$172$$].id = this.$_COLUMN_HEADER_ID_PREFIX$ + $data$$89_i$$172$$), null != $columns$$3_columnsSortedArray$$[$data$$89_i$$172$$].sortable && $columns$$3_columnsSortedArray$$[$data$$89_i$$172$$].sortable != this.$_OPTION_AUTO$ || !$columnsDefault_sortSupportedData$$ || ($columns$$3_columnsSortedArray$$[$data$$89_i$$172$$].sortable = this.$_OPTION_ENABLED$)
       }
       return $columns$$3_columnsSortedArray$$
     }, $_getColumnIdxsForElementsWithStyleClass$:function($elements$$1_styleClass$$) {
       $elements$$1_styleClass$$ = this.$_getTableDomUtils$().$getTable$().find($elements$$1_styleClass$$);
       var $columnIdxs$$ = [];
       if($elements$$1_styleClass$$ && 0 < $elements$$1_styleClass$$.length) {
-        var $i$$171$$, $j$$23$$, $alreadyAdded$$, $columnIdx$$10$$;
-        for($i$$171$$ = 0;$i$$171$$ < $elements$$1_styleClass$$.length;$i$$171$$++) {
-          $columnIdx$$10$$ = this.$_getTableDomUtils$().$getElementColumnIdx$($$$$11$$($elements$$1_styleClass$$.get($i$$171$$)));
+        var $i$$173$$, $j$$24$$, $alreadyAdded$$, $columnIdx$$10$$;
+        for($i$$173$$ = 0;$i$$173$$ < $elements$$1_styleClass$$.length;$i$$173$$++) {
+          $columnIdx$$10$$ = this.$_getTableDomUtils$().$getElementColumnIdx$($$$$11$$($elements$$1_styleClass$$.get($i$$173$$)));
           $alreadyAdded$$ = !1;
-          for($j$$23$$ = 0;$j$$23$$ < $columnIdxs$$.length;$j$$23$$++) {
-            $columnIdxs$$[$j$$23$$] == $columnIdx$$10$$ && ($alreadyAdded$$ = !0)
+          for($j$$24$$ = 0;$j$$24$$ < $columnIdxs$$.length;$j$$24$$++) {
+            $columnIdxs$$[$j$$24$$] == $columnIdx$$10$$ && ($alreadyAdded$$ = !0)
           }
           $alreadyAdded$$ || $columnIdxs$$.push($columnIdx$$10$$)
         }
@@ -786,10 +786,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     }, $_getLastRowSelection$:function() {
       return null != this.$_lastSelectedRowIdxArray$ && 0 < this.$_lastSelectedRowIdxArray$.length ? this.$_lastSelectedRowIdxArray$[0] : null
     }, $_getJQueryElement$:function($elements$$2$$, $type$$71$$) {
-      var $i$$172$$;
-      for($i$$172$$ = 0;$i$$172$$ < $$$$11$$($elements$$2$$).length;$i$$172$$++) {
-        if($$$$11$$($$$$11$$($elements$$2$$)[$i$$172$$]).is($type$$71$$)) {
-          return $$$$11$$($elements$$2$$)[$i$$172$$]
+      var $i$$174$$;
+      for($i$$174$$ = 0;$i$$174$$ < $$$$11$$($elements$$2$$).length;$i$$174$$++) {
+        if($$$$11$$($$$$11$$($elements$$2$$)[$i$$174$$]).is($type$$71$$)) {
+          return $$$$11$$($elements$$2$$)[$i$$174$$]
         }
       }
       return null
@@ -801,12 +801,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       $elements$$3_styleClass$$1$$ = this.$_getTableDomUtils$().$getTable$().find($elements$$3_styleClass$$1$$);
       var $rowIdxs$$ = [];
       if($elements$$3_styleClass$$1$$ && 0 < $elements$$3_styleClass$$1$$.length) {
-        var $i$$173$$, $j$$24$$, $rowIdx$$9$$, $alreadyAdded$$1$$;
-        for($i$$173$$ = 0;$i$$173$$ < $elements$$3_styleClass$$1$$.length;$i$$173$$++) {
-          $rowIdx$$9$$ = this.$_getTableDomUtils$().$getElementRowIdx$($$$$11$$($elements$$3_styleClass$$1$$.get($i$$173$$)));
+        var $i$$175$$, $j$$25$$, $rowIdx$$9$$, $alreadyAdded$$1$$;
+        for($i$$175$$ = 0;$i$$175$$ < $elements$$3_styleClass$$1$$.length;$i$$175$$++) {
+          $rowIdx$$9$$ = this.$_getTableDomUtils$().$getElementRowIdx$($$$$11$$($elements$$3_styleClass$$1$$.get($i$$175$$)));
           $alreadyAdded$$1$$ = !1;
-          for($j$$24$$ = 0;$j$$24$$ < $rowIdxs$$.length;$j$$24$$++) {
-            $rowIdxs$$[$j$$24$$] == $rowIdx$$9$$ && ($alreadyAdded$$1$$ = !0)
+          for($j$$25$$ = 0;$j$$25$$ < $rowIdxs$$.length;$j$$25$$++) {
+            $rowIdxs$$[$j$$25$$] == $rowIdx$$9$$ && ($alreadyAdded$$1$$ = !0)
           }
           $alreadyAdded$$1$$ || $rowIdxs$$.push($rowIdx$$9$$)
         }
@@ -823,10 +823,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     }, $_getSelectedRowIdxs$:function() {
       return this.$_getRowIdxsForElementsWithStyleClass$("." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_TABLE_DATA_ROW_CLASS$ + "." + $oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$)
     }, $_getSortedTableHeaderColumnIdx$:function() {
-      var $tableHeaderColumns$$ = this.$_getTableDomUtils$().$getTableHeaderColumns$(), $i$$174$$, $sorted$$1$$;
-      for($i$$174$$ = 0;$i$$174$$ < $tableHeaderColumns$$.length;$i$$174$$++) {
-        if($sorted$$1$$ = $$$$11$$($tableHeaderColumns$$[$i$$174$$]).data("sorted"), null != $sorted$$1$$) {
-          return $i$$174$$
+      var $tableHeaderColumns$$ = this.$_getTableDomUtils$().$getTableHeaderColumns$(), $i$$176$$, $sorted$$1$$;
+      for($i$$176$$ = 0;$i$$176$$ < $tableHeaderColumns$$.length;$i$$176$$++) {
+        if($sorted$$1$$ = $$$$11$$($tableHeaderColumns$$[$i$$176$$]).data("sorted"), null != $sorted$$1$$) {
+          return $i$$176$$
         }
       }
       return null
@@ -895,9 +895,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       }
       this.$_hideStatusMessage$();
       if($event$$106_row$$32_tableBodyRows$$ = this.$_getTableDomUtils$().$getTableBodyRows$()) {
-        var $i$$175$$, $tableBodyRow$$1$$, $deletedRow$$;
-        for($i$$175$$ = 0;$i$$175$$ < $event$$106_row$$32_tableBodyRows$$.length;$i$$175$$++) {
-          if($tableBodyRow$$1$$ = $$$$11$$($event$$106_row$$32_tableBodyRows$$[$i$$175$$]), $deletedRow$$ = null, this.$_getTableDomUtils$().$getElementRowIdx$($tableBodyRow$$1$$) == $rowIdx$$13$$ && ($deletedRow$$ = $tableBodyRow$$1$$), null != $deletedRow$$) {
+        var $i$$177$$, $tableBodyRow$$1$$, $deletedRow$$;
+        for($i$$177$$ = 0;$i$$177$$ < $event$$106_row$$32_tableBodyRows$$.length;$i$$177$$++) {
+          if($tableBodyRow$$1$$ = $$$$11$$($event$$106_row$$32_tableBodyRows$$[$i$$177$$]), $deletedRow$$ = null, this.$_getTableDomUtils$().$getElementRowIdx$($tableBodyRow$$1$$) == $rowIdx$$13$$ && ($deletedRow$$ = $tableBodyRow$$1$$), null != $deletedRow$$) {
             $deletedRow$$[0].parentNode.removeChild($deletedRow$$[0]);
             break
           }
@@ -924,9 +924,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       if(null != $focusedRowIdx$$1_tabbableElementsInRow_tabbableElementsInTable_table$$1_tableBodyRow$$2$$ && this.$_tableNavMode$) {
         var $tabbableElementsInBody_tabbableElementsInDocument_tableBody$$ = this.$_getTableDomUtils$().$getTableBody$(), $tabbableElementsInBody_tabbableElementsInDocument_tableBody$$ = this.$_getTabbableElements$($tabbableElementsInBody_tabbableElementsInDocument_tableBody$$);
         if(null != $tabbableElementsInBody_tabbableElementsInDocument_tableBody$$) {
-          var $currentFocusElement_tableTabIndex$$ = document.activeElement, $isCurrentlyFocused$$ = !1, $i$$176$$;
-          for($i$$176$$ = 0;$i$$176$$ < $tabbableElementsInBody_tabbableElementsInDocument_tableBody$$.length;$i$$176$$++) {
-            if($currentFocusElement_tableTabIndex$$ == $tabbableElementsInBody_tabbableElementsInDocument_tableBody$$[$i$$176$$]) {
+          var $currentFocusElement_tableTabIndex$$ = document.activeElement, $isCurrentlyFocused$$ = !1, $i$$178$$;
+          for($i$$178$$ = 0;$i$$178$$ < $tabbableElementsInBody_tabbableElementsInDocument_tableBody$$.length;$i$$178$$++) {
+            if($currentFocusElement_tableTabIndex$$ == $tabbableElementsInBody_tabbableElementsInDocument_tableBody$$[$i$$178$$]) {
               $isCurrentlyFocused$$ = !0;
               break
             }
@@ -1006,10 +1006,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
         if(this.$_columnDefArray$.length != $columnsMetadata$$.length) {
           return!0
         }
-        var $i$$177$$, $prop$$73$$;
-        for($i$$177$$ = 0;$i$$177$$ < $columnsMetadata$$.length;$i$$177$$++) {
-          for($prop$$73$$ in $columnsMetadata$$[$i$$177$$]) {
-            if($columnsMetadata$$[$i$$177$$].hasOwnProperty($prop$$73$$) && $columnsMetadata$$[$i$$177$$][$prop$$73$$] != this.$_columnDefArray$[$i$$177$$][$prop$$73$$]) {
+        var $i$$179$$, $prop$$73$$;
+        for($i$$179$$ = 0;$i$$179$$ < $columnsMetadata$$.length;$i$$179$$++) {
+          for($prop$$73$$ in $columnsMetadata$$[$i$$179$$]) {
+            if($columnsMetadata$$[$i$$179$$].hasOwnProperty($prop$$73$$) && $columnsMetadata$$[$i$$179$$][$prop$$73$$] != this.$_columnDefArray$[$i$$179$$][$prop$$73$$]) {
               return!0
             }
           }
@@ -1021,25 +1021,25 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       var $currentFocusElement$$1$$ = $$$$11$$(document.activeElement), $table$$2$$ = this.$_getTableDomUtils$().$getTable$();
       return $table$$2$$[0] != $currentFocusElement$$1$$[0] && 0 == $table$$2$$.has($currentFocusElement$$1$$).length ? !1 : !0
     }, $_isKeyboardKeyPressed$:function($keyCode$$1$$) {
-      var $keyboardKeys$$1$$ = this.$_getKeyboardKeys$(), $i$$178$$;
-      for($i$$178$$ = 0;$i$$178$$ < $keyboardKeys$$1$$.length;$i$$178$$++) {
-        if($keyboardKeys$$1$$[$i$$178$$] == $keyCode$$1$$) {
+      var $keyboardKeys$$1$$ = this.$_getKeyboardKeys$(), $i$$180$$;
+      for($i$$180$$ = 0;$i$$180$$ < $keyboardKeys$$1$$.length;$i$$180$$++) {
+        if($keyboardKeys$$1$$[$i$$180$$] == $keyCode$$1$$) {
           return!0
         }
       }
       return!1
     }, $_isTableFooterless$:function() {
-      var $columns$$6$$ = this.$_getColumnDefs$(), $i$$179$$, $footerRenderer$$;
-      for($i$$179$$ = 0;$i$$179$$ < $columns$$6$$.length;$i$$179$$++) {
-        if($footerRenderer$$ = this.$_getColumnRenderer$($i$$179$$, "footer"), null != $footerRenderer$$) {
+      var $columns$$6$$ = this.$_getColumnDefs$(), $i$$181$$, $footerRenderer$$;
+      for($i$$181$$ = 0;$i$$181$$ < $columns$$6$$.length;$i$$181$$++) {
+        if($footerRenderer$$ = this.$_getColumnRenderer$($i$$181$$, "footer"), null != $footerRenderer$$) {
           return!1
         }
       }
       return!0
     }, $_isTableHeaderless$:function() {
-      var $columns$$7$$ = this.$_getColumnDefs$(), $i$$180$$;
-      for($i$$180$$ = 0;$i$$180$$ < $columns$$7$$.length;$i$$180$$++) {
-        if(null != $columns$$7$$[$i$$180$$].headerText || null != $columns$$7$$[$i$$180$$].headerStyle || null != $columns$$7$$[$i$$180$$].sortable && $columns$$7$$[$i$$180$$].sortable != this.$_OPTION_NONE$ || null != $columns$$7$$[$i$$180$$].sortProperty || null != $columns$$7$$[$i$$180$$].headerRenderer) {
+      var $columns$$7$$ = this.$_getColumnDefs$(), $i$$182$$;
+      for($i$$182$$ = 0;$i$$182$$ < $columns$$7$$.length;$i$$182$$++) {
+        if(null != $columns$$7$$[$i$$182$$].headerText || null != $columns$$7$$[$i$$182$$].headerStyle || null != $columns$$7$$[$i$$182$$].sortable && $columns$$7$$[$i$$182$$].sortable != this.$_OPTION_NONE$ || null != $columns$$7$$[$i$$182$$].sortProperty || null != $columns$$7$$[$i$$182$$].headerRenderer) {
           return!1
         }
       }
@@ -1055,22 +1055,22 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       null != this.$_getData$() && this.$_getData$().$isFetching$ && this.$_showStatusMessage$();
       this.$_getTableDomUtils$().$refreshTableDimensions$()
     }, $_refreshTableBody$:function() {
-      var $self$$58$$ = this, $tableBody$$1$$ = this.$_getTableDomUtils$().$getTableBody$(), $data$$93$$ = this.$_getData$();
+      var $self$$61$$ = this, $tableBody$$1$$ = this.$_getTableDomUtils$().$getTableBody$(), $data$$93$$ = this.$_getData$();
       $tableBody$$1$$.empty();
       this.$_getTableDomUtils$().$clearCachedDomRowData$();
       if($data$$93$$ && 0 != $data$$93$$.size() && 0 != this.$_getColumnDefs$().length) {
         this.$_hideNoDataMessage$();
-        var $tableBodyDocFrag$$ = $$$$11$$(document.createDocumentFragment()), $row$$33_startIndex$$4$$ = $data$$93$$.startIndex(), $endIndex$$1$$ = $row$$33_startIndex$$4$$ + $data$$93$$.size(), $i$$181$$;
-        for($i$$181$$ = $row$$33_startIndex$$4$$;$i$$181$$ < $endIndex$$1$$;$i$$181$$++) {
-          $row$$33_startIndex$$4$$ = $data$$93$$.at($i$$181$$), null != $row$$33_startIndex$$4$$ && ($row$$33_startIndex$$4$$ instanceof $oj$$11$$.$Row$ ? this.$_refreshTableBodyRow$($i$$181$$, $row$$33_startIndex$$4$$, $tableBodyDocFrag$$) : $$$$11$$.when($row$$33_startIndex$$4$$).done(function($resolvedModel$$) {
-            $self$$58$$.$_refreshTableBodyRow$($i$$181$$, $resolvedModel$$, null)
+        var $tableBodyDocFrag$$ = $$$$11$$(document.createDocumentFragment()), $row$$33_startIndex$$4$$ = $data$$93$$.startIndex(), $endIndex$$1$$ = $row$$33_startIndex$$4$$ + $data$$93$$.size(), $i$$183$$;
+        for($i$$183$$ = $row$$33_startIndex$$4$$;$i$$183$$ < $endIndex$$1$$;$i$$183$$++) {
+          $row$$33_startIndex$$4$$ = $data$$93$$.at($i$$183$$), null != $row$$33_startIndex$$4$$ && ($row$$33_startIndex$$4$$ instanceof $oj$$11$$.$Row$ ? this.$_refreshTableBodyRow$($i$$183$$, $row$$33_startIndex$$4$$, $tableBodyDocFrag$$) : $$$$11$$.when($row$$33_startIndex$$4$$).done(function($resolvedModel$$) {
+            $self$$61$$.$_refreshTableBodyRow$($i$$183$$, $resolvedModel$$, null)
           }))
         }
         $tableBody$$1$$.append($tableBodyDocFrag$$)
       }else {
         this.$_showNoDataMessage$()
       }
-    }, $_refreshTableBodyRow$:function($rowIdx$$14$$, $i$$182_row$$34_rowContent$$, $docFrag_j$$27_tableBodyCell$$2$$) {
+    }, $_refreshTableBodyRow$:function($rowIdx$$14$$, $i$$184_row$$34_rowContent$$, $docFrag_j$$28_tableBodyCell$$2$$) {
       var $cellRenderer_rowRenderer$$ = this.$_getRowRenderer$(), $columns$$8_tableBody$$2$$ = this.$_getColumnDefs$();
       if(isNaN($rowIdx$$14$$) || 0 > $rowIdx$$14$$) {
         throw"Error: Invalid rowIdx value: " + $rowIdx$$14$$;
@@ -1078,19 +1078,19 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       this.$_hideNoDataMessage$();
       if($cellRenderer_rowRenderer$$) {
         var $tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$getTableBodyRow$($rowIdx$$14$$);
-        $tableBodyCells_tableBodyRow$$3$$ ? $tableBodyCells_tableBodyRow$$3$$.empty() : ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$createTableBodyRow$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$, this.$_getRowSelectionMode$()), this.$_getTableDomUtils$().$insertTableBodyRow$($rowIdx$$14$$, $tableBodyCells_tableBodyRow$$3$$, $docFrag_j$$27_tableBodyCell$$2$$));
+        $tableBodyCells_tableBodyRow$$3$$ ? $tableBodyCells_tableBodyRow$$3$$.empty() : ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$createTableBodyRow$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$, this.$_getRowSelectionMode$()), this.$_getTableDomUtils$().$insertTableBodyRow$($rowIdx$$14$$, $tableBodyCells_tableBodyRow$$3$$, $docFrag_j$$28_tableBodyCell$$2$$));
         $columns$$8_tableBody$$2$$ = $tableBodyCells_tableBodyRow$$3$$.parent();
-        $i$$182_row$$34_rowContent$$ = $cellRenderer_rowRenderer$$({rowContext:this.$_getTableDomUtils$().$getRendererContextObject$($i$$182_row$$34_rowContent$$, $tableBodyCells_tableBodyRow$$3$$[0]), row:$i$$182_row$$34_rowContent$$.$pairs$()});
-        null != $i$$182_row$$34_rowContent$$ ? $tableBodyCells_tableBodyRow$$3$$.append($i$$182_row$$34_rowContent$$) : ($tableBodyCells_tableBodyRow$$3$$ = null == $docFrag_j$$27_tableBodyCell$$2$$ ? $$$$11$$($columns$$8_tableBody$$2$$.children()[$rowIdx$$14$$]) : $$$$11$$($docFrag_j$$27_tableBodyCell$$2$$.children()[$rowIdx$$14$$]), this.$_getTableDomUtils$().$clearCachedDomRowData$(), this.$_getTableDomUtils$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$));
+        $i$$184_row$$34_rowContent$$ = $cellRenderer_rowRenderer$$({rowContext:this.$_getTableDomUtils$().$getRendererContextObject$($i$$184_row$$34_rowContent$$, $tableBodyCells_tableBodyRow$$3$$[0]), row:$i$$184_row$$34_rowContent$$.$pairs$()});
+        null != $i$$184_row$$34_rowContent$$ ? $tableBodyCells_tableBodyRow$$3$$.append($i$$184_row$$34_rowContent$$) : ($tableBodyCells_tableBodyRow$$3$$ = null == $docFrag_j$$28_tableBodyCell$$2$$ ? $$$$11$$($columns$$8_tableBody$$2$$.children()[$rowIdx$$14$$]) : $$$$11$$($docFrag_j$$28_tableBodyCell$$2$$.children()[$rowIdx$$14$$]), this.$_getTableDomUtils$().$clearCachedDomRowData$(), this.$_getTableDomUtils$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$));
         this.$_getTableDomUtils$().$createTableBodyCellAccSelect$($rowIdx$$14$$, $tableBodyCells_tableBodyRow$$3$$);
         $tableBodyCells_tableBodyRow$$3$$ = $tableBodyCells_tableBodyRow$$3$$.children("td");
-        for($i$$182_row$$34_rowContent$$ = 1;$i$$182_row$$34_rowContent$$ < $tableBodyCells_tableBodyRow$$3$$.length;$i$$182_row$$34_rowContent$$++) {
-          $docFrag_j$$27_tableBodyCell$$2$$ = $$$$11$$($tableBodyCells_tableBodyRow$$3$$[$i$$182_row$$34_rowContent$$]), this.$_getTableDomUtils$().$setTableBodyCellAttributes$($rowIdx$$14$$, $i$$182_row$$34_rowContent$$ - 1, $docFrag_j$$27_tableBodyCell$$2$$), this.$_getTableDomUtils$().$styleTableBodyCell$($i$$182_row$$34_rowContent$$ - 1, $docFrag_j$$27_tableBodyCell$$2$$)
+        for($i$$184_row$$34_rowContent$$ = 1;$i$$184_row$$34_rowContent$$ < $tableBodyCells_tableBodyRow$$3$$.length;$i$$184_row$$34_rowContent$$++) {
+          $docFrag_j$$28_tableBodyCell$$2$$ = $$$$11$$($tableBodyCells_tableBodyRow$$3$$[$i$$184_row$$34_rowContent$$]), this.$_getTableDomUtils$().$setTableBodyCellAttributes$($rowIdx$$14$$, $i$$184_row$$34_rowContent$$ - 1, $docFrag_j$$28_tableBodyCell$$2$$), this.$_getTableDomUtils$().$styleTableBodyCell$($i$$184_row$$34_rowContent$$ - 1, $docFrag_j$$28_tableBodyCell$$2$$)
         }
       }else {
-        for(null == $docFrag_j$$27_tableBodyCell$$2$$ ? ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$getTableBodyRow$($rowIdx$$14$$), $tableBodyCells_tableBodyRow$$3$$ || ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$createTableBodyRow$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$, this.$_getRowSelectionMode$()))) : ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$createTableBodyRow$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$, 
-        this.$_getRowSelectionMode$())), this.$_getTableDomUtils$().$replaceTableBodyRow$($rowIdx$$14$$, $tableBodyCells_tableBodyRow$$3$$, $docFrag_j$$27_tableBodyCell$$2$$), $docFrag_j$$27_tableBodyCell$$2$$ = 0;$docFrag_j$$27_tableBodyCell$$2$$ < $columns$$8_tableBody$$2$$.length;$docFrag_j$$27_tableBodyCell$$2$$++) {
-          $cellRenderer_rowRenderer$$ = this.$_getColumnRenderer$($docFrag_j$$27_tableBodyCell$$2$$, "cell"), this.$_getTableDomUtils$().$setTableBodyCell$($rowIdx$$14$$, $docFrag_j$$27_tableBodyCell$$2$$, $tableBodyCells_tableBodyRow$$3$$, $i$$182_row$$34_rowContent$$, $cellRenderer_rowRenderer$$)
+        for(null == $docFrag_j$$28_tableBodyCell$$2$$ ? ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$getTableBodyRow$($rowIdx$$14$$), $tableBodyCells_tableBodyRow$$3$$ || ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$createTableBodyRow$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$, this.$_getRowSelectionMode$()))) : ($tableBodyCells_tableBodyRow$$3$$ = this.$_getTableDomUtils$().$createTableBodyRow$(), this.$_getTableDomUtils$().$styleTableBodyRow$($tableBodyCells_tableBodyRow$$3$$, 
+        this.$_getRowSelectionMode$())), this.$_getTableDomUtils$().$replaceTableBodyRow$($rowIdx$$14$$, $tableBodyCells_tableBodyRow$$3$$, $docFrag_j$$28_tableBodyCell$$2$$), $docFrag_j$$28_tableBodyCell$$2$$ = 0;$docFrag_j$$28_tableBodyCell$$2$$ < $columns$$8_tableBody$$2$$.length;$docFrag_j$$28_tableBodyCell$$2$$++) {
+          $cellRenderer_rowRenderer$$ = this.$_getColumnRenderer$($docFrag_j$$28_tableBodyCell$$2$$, "cell"), this.$_getTableDomUtils$().$setTableBodyCell$($rowIdx$$14$$, $docFrag_j$$28_tableBodyCell$$2$$, $tableBodyCells_tableBodyRow$$3$$, $i$$184_row$$34_rowContent$$, $cellRenderer_rowRenderer$$)
         }
       }
     }, $_refreshTableFooter$:function() {
@@ -1106,10 +1106,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       $tableFooter_tableFooterRow$$.empty();
       if($columns$$9$$ && 0 < $columns$$9$$.length) {
         this.$_getTableDomUtils$().$createTableFooterAccSelect$($tableFooter_tableFooterRow$$);
-        var $i$$183$$, $column$$12_footerCellContent$$, $footerRenderer$$1$$, $footerCell$$;
-        for($i$$183$$ = 0;$i$$183$$ < $columns$$9$$.length;$i$$183$$++) {
-          $column$$12_footerCellContent$$ = $columns$$9$$[$i$$183$$], $footerRenderer$$1$$ = this.$_getColumnRenderer$($i$$183$$, "footer"), $footerCell$$ = this.$_getTableDomUtils$().$createTableFooterCell$(), this.$_getTableDomUtils$().$styleTableFooterCell$($i$$183$$, $footerCell$$), this.$_getTableDomUtils$().$insertTableFooterCell$($i$$183$$, $footerCell$$), $footerRenderer$$1$$ && ($column$$12_footerCellContent$$ = $footerRenderer$$1$$({footerContext:this.$_getTableDomUtils$().$getRendererContextObject$(null, 
-          $footerCell$$[0]), column:$column$$12_footerCellContent$$}), null != $column$$12_footerCellContent$$ ? ($footerCell$$.empty(), $footerCell$$.append($column$$12_footerCellContent$$)) : ($footerCell$$ = $$$$11$$($tableFooter_tableFooterRow$$.children(":not(." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_HIDDEN_CONTENT_ACC_CLASS$ + ")")[$i$$183$$]), this.$_getTableDomUtils$().$styleTableFooterCell$($i$$183$$, $footerCell$$)))
+        var $i$$185$$, $column$$12_footerCellContent$$, $footerRenderer$$1$$, $footerCell$$;
+        for($i$$185$$ = 0;$i$$185$$ < $columns$$9$$.length;$i$$185$$++) {
+          $column$$12_footerCellContent$$ = $columns$$9$$[$i$$185$$], $footerRenderer$$1$$ = this.$_getColumnRenderer$($i$$185$$, "footer"), $footerCell$$ = this.$_getTableDomUtils$().$createTableFooterCell$(), this.$_getTableDomUtils$().$styleTableFooterCell$($i$$185$$, $footerCell$$), this.$_getTableDomUtils$().$insertTableFooterCell$($i$$185$$, $footerCell$$), $footerRenderer$$1$$ && ($column$$12_footerCellContent$$ = $footerRenderer$$1$$({footerContext:this.$_getTableDomUtils$().$getRendererContextObject$(null, 
+          $footerCell$$[0]), column:$column$$12_footerCellContent$$}), null != $column$$12_footerCellContent$$ ? ($footerCell$$.empty(), $footerCell$$.append($column$$12_footerCellContent$$)) : ($footerCell$$ = $$$$11$$($tableFooter_tableFooterRow$$.children(":not(." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_HIDDEN_CONTENT_ACC_CLASS$ + ")")[$i$$185$$]), this.$_getTableDomUtils$().$styleTableFooterCell$($i$$185$$, $footerCell$$)))
         }
       }
     }, $_refreshTableHeader$:function() {
@@ -1124,12 +1124,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       $tableHeader_tableHeaderRow$$ = this.$_getTableDomUtils$().$getTableHeaderRow$();
       $tableHeader_tableHeaderRow$$.empty();
       if($columns$$10$$ && 0 < $columns$$10$$.length) {
-        var $i$$184_tableHeaderAccSelectRowColumn$$ = this.$_getTableDomUtils$().$createTableHeaderAccSelectRowColumn$();
-        $tableHeader_tableHeaderRow$$.append($i$$184_tableHeaderAccSelectRowColumn$$);
-        for(var $column$$13_headerColumnContent$$, $headerRenderer$$, $headerColumn$$3$$, $i$$184_tableHeaderAccSelectRowColumn$$ = 0;$i$$184_tableHeaderAccSelectRowColumn$$ < $columns$$10$$.length;$i$$184_tableHeaderAccSelectRowColumn$$++) {
-          $column$$13_headerColumnContent$$ = $columns$$10$$[$i$$184_tableHeaderAccSelectRowColumn$$], $headerRenderer$$ = this.$_getColumnRenderer$($i$$184_tableHeaderAccSelectRowColumn$$, "header"), $headerColumn$$3$$ = this.$_getTableDomUtils$().$createTableHeaderColumn$($i$$184_tableHeaderAccSelectRowColumn$$, this.$_getColumnSelectionMode$()), this.$_getTableDomUtils$().$insertTableHeaderColumn$($i$$184_tableHeaderAccSelectRowColumn$$, $headerColumn$$3$$), $headerRenderer$$ && ($column$$13_headerColumnContent$$ = 
-          $headerRenderer$$({headerContext:this.$_getTableDomUtils$().$getRendererContextObject$(null, $headerColumn$$3$$[0]), column:$column$$13_headerColumnContent$$}), null != $column$$13_headerColumnContent$$ ? ($headerColumn$$3$$.empty(), $headerColumn$$3$$.append($column$$13_headerColumnContent$$)) : ($headerColumn$$3$$ = $$$$11$$($tableHeader_tableHeaderRow$$.children(":not(." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_ACC_SELECT_ROW_CLASS$ + ")")[$i$$184_tableHeaderAccSelectRowColumn$$]), 
-          this.$_getTableDomUtils$().$setTableHeaderColumnAttributes$($i$$184_tableHeaderAccSelectRowColumn$$, $headerColumn$$3$$), this.$_getTableDomUtils$().$styleTableHeaderColumn$($i$$184_tableHeaderAccSelectRowColumn$$, $headerColumn$$3$$, this.$_getColumnSelectionMode$()))), this.$_getTableDomUtils$().$createTableHeaderColumnAccSelect$($i$$184_tableHeaderAccSelectRowColumn$$, this.$_getColumnSelectionMode$())
+        var $i$$186_tableHeaderAccSelectRowColumn$$ = this.$_getTableDomUtils$().$createTableHeaderAccSelectRowColumn$();
+        $tableHeader_tableHeaderRow$$.append($i$$186_tableHeaderAccSelectRowColumn$$);
+        for(var $column$$13_headerColumnContent$$, $headerRenderer$$, $headerColumn$$3$$, $i$$186_tableHeaderAccSelectRowColumn$$ = 0;$i$$186_tableHeaderAccSelectRowColumn$$ < $columns$$10$$.length;$i$$186_tableHeaderAccSelectRowColumn$$++) {
+          $column$$13_headerColumnContent$$ = $columns$$10$$[$i$$186_tableHeaderAccSelectRowColumn$$], $headerRenderer$$ = this.$_getColumnRenderer$($i$$186_tableHeaderAccSelectRowColumn$$, "header"), $headerColumn$$3$$ = this.$_getTableDomUtils$().$createTableHeaderColumn$($i$$186_tableHeaderAccSelectRowColumn$$, this.$_getColumnSelectionMode$()), this.$_getTableDomUtils$().$insertTableHeaderColumn$($i$$186_tableHeaderAccSelectRowColumn$$, $headerColumn$$3$$), $headerRenderer$$ && ($column$$13_headerColumnContent$$ = 
+          $headerRenderer$$({headerContext:this.$_getTableDomUtils$().$getRendererContextObject$(null, $headerColumn$$3$$[0]), column:$column$$13_headerColumnContent$$}), null != $column$$13_headerColumnContent$$ ? ($headerColumn$$3$$.empty(), $headerColumn$$3$$.append($column$$13_headerColumnContent$$)) : ($headerColumn$$3$$ = $$$$11$$($tableHeader_tableHeaderRow$$.children(":not(." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_ACC_SELECT_ROW_CLASS$ + ")")[$i$$186_tableHeaderAccSelectRowColumn$$]), 
+          this.$_getTableDomUtils$().$setTableHeaderColumnAttributes$($i$$186_tableHeaderAccSelectRowColumn$$, $headerColumn$$3$$), this.$_getTableDomUtils$().$styleTableHeaderColumn$($i$$186_tableHeaderAccSelectRowColumn$$, $headerColumn$$3$$, this.$_getColumnSelectionMode$()))), this.$_getTableDomUtils$().$createTableHeaderColumnAccSelect$($i$$186_tableHeaderAccSelectRowColumn$$, this.$_getColumnSelectionMode$())
         }
         this.$_renderedTableHeaderColumns$ = !0
       }
@@ -1159,9 +1159,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
         this.$_dataSourceEventHandlers$.push({eventType:$oj$$11$$.$RowSet$.$EventType$.CHANGE, eventHandler:this.$_handleDataRowChange$.bind(this)});
         this.$_dataSourceEventHandlers$.push({eventType:$oj$$11$$.$RowSet$.$EventType$.RESET, eventHandler:this.$_handleDataReset$.bind(this)});
         this.$_dataSourceEventHandlers$.push({eventType:$oj$$11$$.$RowSet$.$EventType$.ERROR, eventHandler:this.$_handleDataError$.bind(this)});
-        var $i$$185$$;
-        for($i$$185$$ = 0;$i$$185$$ < this.$_dataSourceEventHandlers$.length;$i$$185$$++) {
-          $data$$94$$.on(this.$_dataSourceEventHandlers$[$i$$185$$].eventType, this.$_dataSourceEventHandlers$[$i$$185$$].eventHandler)
+        var $i$$187$$;
+        for($i$$187$$ = 0;$i$$187$$ < this.$_dataSourceEventHandlers$.length;$i$$187$$++) {
+          $data$$94$$.on(this.$_dataSourceEventHandlers$[$i$$187$$].eventType, this.$_dataSourceEventHandlers$[$i$$187$$].eventHandler)
         }
       }
     }, $_registerDomEventListeners$:function() {
@@ -1174,17 +1174,17 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       }.bind(this))
     }, $_registerResizeListener$:function($element$$49$$) {
       if(!this.$_isResizeListenerAdded$) {
-        var $self$$59$$ = this;
+        var $self$$62$$ = this;
         $oj$$11$$.$DomUtils$.$addResizeListener$($element$$49$$[0], function() {
-          $self$$59$$.$_clearCachedTableDimensions$();
-          $self$$59$$.$_getTableDomUtils$().$refreshTableDimensions$()
+          $self$$62$$.$_clearCachedTableDimensions$();
+          $self$$62$$.$_getTableDomUtils$().$refreshTableDimensions$()
         });
         this.$_isResizeListenerAdded$ = !0
       }
     }, $_removeKeyboardKey$:function($keyCode$$2$$) {
-      var $keyboardKeys$$2$$ = this.$_getKeyboardKeys$(), $i$$186$$;
-      for($i$$186$$ = 0;$i$$186$$ < $keyboardKeys$$2$$.length;$i$$186$$++) {
-        $keyboardKeys$$2$$[$i$$186$$] == $keyCode$$2$$ && $keyboardKeys$$2$$.splice($i$$186$$, 1)
+      var $keyboardKeys$$2$$ = this.$_getKeyboardKeys$(), $i$$188$$;
+      for($i$$188$$ = 0;$i$$188$$ < $keyboardKeys$$2$$.length;$i$$188$$++) {
+        $keyboardKeys$$2$$[$i$$188$$] == $keyCode$$2$$ && $keyboardKeys$$2$$.splice($i$$188$$, 1)
       }
     }, $_scrollColumnIntoViewport$:function($columnIdx$$19_scrollbarWidth$$) {
       var $tableBody$$3$$ = this.$_getTableDomUtils$().$getTableBody$(), $headerColumnRect_tableHeaderColumn$$3$$ = this.$_getTableDomUtils$().$getTableHeaderColumn$($columnIdx$$19_scrollbarWidth$$);
@@ -1234,19 +1234,19 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
       }
     }, $_setLastHeaderColumnSelection$:function($columnIdx$$23$$, $selected$$17$$) {
       this.$_lastSelectedColumnIdxArray$ || (this.$_lastSelectedColumnIdxArray$ = []);
-      var $i$$187$$;
-      for($i$$187$$ = 0;$i$$187$$ < this.$_lastSelectedColumnIdxArray$.length;$i$$187$$++) {
-        if(this.$_lastSelectedColumnIdxArray$[$i$$187$$] == $columnIdx$$23$$) {
-          this.$_lastSelectedColumnIdxArray$.splice($i$$187$$, 1);
+      var $i$$189$$;
+      for($i$$189$$ = 0;$i$$189$$ < this.$_lastSelectedColumnIdxArray$.length;$i$$189$$++) {
+        if(this.$_lastSelectedColumnIdxArray$[$i$$189$$] == $columnIdx$$23$$) {
+          this.$_lastSelectedColumnIdxArray$.splice($i$$189$$, 1);
           break
         }
       }
       $selected$$17$$ && this.$_lastSelectedColumnIdxArray$.push($columnIdx$$23$$)
     }, $_setLastRowSelection$:function($rowIdx$$16$$, $selected$$18$$) {
       this.$_lastSelectedRowIdxArray$ || (this.$_lastSelectedRowIdxArray$ = []);
-      for(var $i$$188$$ = 0;$i$$188$$ < this.$_lastSelectedRowIdxArray$.length;$i$$188$$++) {
-        if(this.$_lastSelectedRowIdxArray$[$i$$188$$] == $rowIdx$$16$$) {
-          this.$_lastSelectedRowIdxArray$.splice($i$$188$$, 1);
+      for(var $i$$190$$ = 0;$i$$190$$ < this.$_lastSelectedRowIdxArray$.length;$i$$190$$++) {
+        if(this.$_lastSelectedRowIdxArray$[$i$$190$$] == $rowIdx$$16$$) {
+          this.$_lastSelectedRowIdxArray$.splice($i$$190$$, 1);
           break
         }
       }
@@ -1293,27 +1293,27 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
         $headerColumnAscLink$$2_headerColumnDscLink$$2_tableHeaderColumn$$4$$.removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_DISABLED$))
       }
     }, $_updateHeaderColumnCellsClass$:function($columnIdx$$25$$) {
-      var $selected$$20$$ = this.$_getHeaderColumnState$($columnIdx$$25$$).selected, $data$$95$$ = this.$_getData$(), $i$$189$$, $tableBodyCell$$3$$;
-      for($i$$189$$ = 0;$i$$189$$ < $data$$95$$.size();$i$$189$$++) {
-        $tableBodyCell$$3$$ = this.$_getTableDomUtils$().$getTableBodyCell$($i$$189$$, $columnIdx$$25$$), $selected$$20$$ ? $$$$11$$($tableBodyCell$$3$$).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$) : $$$$11$$($tableBodyCell$$3$$).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$)
+      var $selected$$20$$ = this.$_getHeaderColumnState$($columnIdx$$25$$).selected, $data$$95$$ = this.$_getData$(), $i$$191$$, $tableBodyCell$$3$$;
+      for($i$$191$$ = 0;$i$$191$$ < $data$$95$$.size();$i$$191$$++) {
+        $tableBodyCell$$3$$ = this.$_getTableDomUtils$().$getTableBodyCell$($i$$191$$, $columnIdx$$25$$), $selected$$20$$ ? $$$$11$$($tableBodyCell$$3$$).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$) : $$$$11$$($tableBodyCell$$3$$).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$)
       }
     }, $_updateRowCellsClass$:function($rowIdx$$19$$, $state$$2$$) {
       var $tableBodyCells$$1$$ = this.$_getTableDomUtils$().$getTableBodyCells$($rowIdx$$19$$), $focused$$3$$ = $state$$2$$.$focused$, $selected$$21$$ = $state$$2$$.selected, $hover$$ = $state$$2$$.hover;
       if($tableBodyCells$$1$$) {
         if(null != $hover$$) {
-          var $i$$190$$;
-          for($i$$190$$ = 0;$i$$190$$ < $tableBodyCells$$1$$.length;$i$$190$$++) {
-            $hover$$ ? $$$$11$$($tableBodyCells$$1$$[$i$$190$$]).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_HOVER$) : $$$$11$$($tableBodyCells$$1$$[$i$$190$$]).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_HOVER$)
+          var $i$$192$$;
+          for($i$$192$$ = 0;$i$$192$$ < $tableBodyCells$$1$$.length;$i$$192$$++) {
+            $hover$$ ? $$$$11$$($tableBodyCells$$1$$[$i$$192$$]).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_HOVER$) : $$$$11$$($tableBodyCells$$1$$[$i$$192$$]).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_HOVER$)
           }
         }
         if(null != $focused$$3$$) {
-          for($i$$190$$ = 0;$i$$190$$ < $tableBodyCells$$1$$.length;$i$$190$$++) {
-            $focused$$3$$ ? $$$$11$$($tableBodyCells$$1$$[$i$$190$$]).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_FOCUS$) : $$$$11$$($tableBodyCells$$1$$[$i$$190$$]).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_FOCUS$)
+          for($i$$192$$ = 0;$i$$192$$ < $tableBodyCells$$1$$.length;$i$$192$$++) {
+            $focused$$3$$ ? $$$$11$$($tableBodyCells$$1$$[$i$$192$$]).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_FOCUS$) : $$$$11$$($tableBodyCells$$1$$[$i$$192$$]).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_FOCUS$)
           }
         }
         if(null != $selected$$21$$) {
-          for($i$$190$$ = 0;$i$$190$$ < $tableBodyCells$$1$$.length;$i$$190$$++) {
-            $selected$$21$$ ? $$$$11$$($tableBodyCells$$1$$[$i$$190$$]).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$) : $$$$11$$($tableBodyCells$$1$$[$i$$190$$]).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$)
+          for($i$$192$$ = 0;$i$$192$$ < $tableBodyCells$$1$$.length;$i$$192$$++) {
+            $selected$$21$$ ? $$$$11$$($tableBodyCells$$1$$[$i$$192$$]).addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$) : $$$$11$$($tableBodyCells$$1$$[$i$$192$$]).removeClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_SELECTED$)
           }
         }
       }
@@ -1329,9 +1329,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     this.$_addRowSetEventListeners$();
     this.Init();
     if(null != $options$$240$$ && ("enabled" == $options$$240$$.startFetch || null == $options$$240$$.startFetch) || null == $options$$240$$) {
-      var $self$$60$$ = this;
+      var $self$$63$$ = this;
       setTimeout(function() {
-        $self$$60$$.fetch({startFetch:"enabled"})
+        $self$$63$$.fetch({startFetch:"enabled"})
       }, 0)
     }
   };
@@ -1345,8 +1345,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     this.$_rowSet$.fetch($options$$241$$)
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("FlattenedTreeTableDataSource.prototype.fetch", {fetch:$oj$$11$$.$FlattenedTreeTableDataSource$.prototype.fetch});
-  $oj$$11$$.$FlattenedTreeTableDataSource$.prototype.at = function $$oj$$11$$$$FlattenedTreeTableDataSource$$$at$($index$$135$$) {
-    return this.$_rowSet$.at($index$$135$$)
+  $oj$$11$$.$FlattenedTreeTableDataSource$.prototype.at = function $$oj$$11$$$$FlattenedTreeTableDataSource$$$at$($index$$136$$) {
+    return this.$_rowSet$.at($index$$136$$)
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("FlattenedTreeTableDataSource.prototype.at", {at:$oj$$11$$.$FlattenedTreeTableDataSource$.prototype.at});
   $oj$$11$$.$FlattenedTreeTableDataSource$.prototype.collapse = function $$oj$$11$$$$FlattenedTreeTableDataSource$$$collapse$($rowKey$$18$$) {
@@ -1365,8 +1365,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     return this.$_rowSet$.hasMore()
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("FlattenedTreeTableDataSource.prototype.hasMore", {hasMore:$oj$$11$$.$FlattenedTreeTableDataSource$.prototype.hasMore});
-  $oj$$11$$.$FlattenedTreeTableDataSource$.prototype.indexOf = function $$oj$$11$$$$FlattenedTreeTableDataSource$$$indexOf$($model$$38$$) {
-    return this.$_rowSet$.indexOf($model$$38$$)
+  $oj$$11$$.$FlattenedTreeTableDataSource$.prototype.indexOf = function $$oj$$11$$$$FlattenedTreeTableDataSource$$$indexOf$($model$$39$$) {
+    return this.$_rowSet$.indexOf($model$$39$$)
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("FlattenedTreeTableDataSource.prototype.indexOf", {indexOf:$oj$$11$$.$FlattenedTreeTableDataSource$.prototype.indexOf});
   $oj$$11$$.$FlattenedTreeTableDataSource$.prototype.on = function $$oj$$11$$$$FlattenedTreeTableDataSource$$$on$($eventType$$34$$, $eventHandler$$12$$) {
@@ -1398,33 +1398,33 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
   };
   $oj$$11$$.$Object$.$exportPrototypeSymbol$("FlattenedTreeTableDataSource.prototype.totalSize", {totalSize:$oj$$11$$.$FlattenedTreeTableDataSource$.prototype.totalSize});
   $oj$$11$$.$FlattenedTreeTableDataSource$.prototype.$_addRowSetEventListeners$ = function $$oj$$11$$$$FlattenedTreeTableDataSource$$$$_addRowSetEventListeners$$() {
-    var $self$$61$$ = this;
+    var $self$$64$$ = this;
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.ADD, function($event$$124$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.ADD, $event$$124$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.ADD, $event$$124$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.REMOVE, function($event$$125$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.REMOVE, $event$$125$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.REMOVE, $event$$125$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.REQUEST, function($event$$126$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.REQUEST, $event$$126$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.REQUEST, $event$$126$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.RESET, function($event$$127$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.RESET, $event$$127$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.RESET, $event$$127$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.SORT, function($event$$128$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.SORT, $event$$128$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.SORT, $event$$128$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.CHANGE, function($event$$129$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.CHANGE, $event$$129$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.CHANGE, $event$$129$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.DESTROY, function($event$$130$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.DESTROY, $event$$130$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.DESTROY, $event$$130$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.SYNC, function($event$$131$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.SYNC, $event$$131$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.SYNC, $event$$131$$)
     });
     this.$_rowSet$.on($oj$$11$$.$RowSet$.$EventType$.ERROR, function($event$$132$$) {
-      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$61$$, $oj$$11$$.$RowSet$.$EventType$.ERROR, $event$$132$$)
+      $oj$$11$$.$TableDataSource$.$superclass$.handleEvent.call($self$$64$$, $oj$$11$$.$RowSet$.$EventType$.ERROR, $event$$132$$)
     })
   };
   $oj$$11$$.$TableDomUtils$ = function $$oj$$11$$$$TableDomUtils$$($component$$8$$) {
@@ -1443,11 +1443,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     this.$_cachedDomTableBodyRows$ = null
   };
   $oj$$11$$.$TableDomUtils$.prototype.$createContextMenu$ = function $$oj$$11$$$$TableDomUtils$$$$createContextMenu$$($handleContextMenuBeforeShow$$, $handleContextMenuSelect$$) {
-    var $menuContainer$$1_menuContainerId$$ = null, $listItems$$1_sortMenu$$1$$ = $menuContainer$$1_menuContainerId$$ = null, $self$$62$$ = this;
+    var $menuContainer$$1_menuContainerId$$ = null, $listItems$$1_sortMenu$$1$$ = $menuContainer$$1_menuContainerId$$ = null, $self$$65$$ = this;
     null != this.options.data && (null == this.options.contextMenu && null == this.$getTable$().attr("contextmenu") ? ($menuContainer$$1_menuContainerId$$ = $$$$11$$(document.createElement("ul")), $menuContainer$$1_menuContainerId$$.css("display", "none"), $menuContainer$$1_menuContainerId$$.attr("id", this.$getTable$().id + "contextmenu"), this.$getTableContainer$().append($menuContainer$$1_menuContainerId$$), $listItems$$1_sortMenu$$1$$ = this.$createContextMenuItem$("sort"), $menuContainer$$1_menuContainerId$$.append($listItems$$1_sortMenu$$1$$), 
     $menuContainer$$1_menuContainerId$$.ojMenu(), this.$component$._setOption("contextMenu", "#" + $menuContainer$$1_menuContainerId$$.attr("id"))) : ($menuContainer$$1_menuContainerId$$ = null == this.options.contextMenu ? this.$getTable$().attr("contextmenu") : this.options.contextMenu, $menuContainer$$1_menuContainerId$$ = $$$$11$$("#" + $menuContainer$$1_menuContainerId$$), $listItems$$1_sortMenu$$1$$ = $menuContainer$$1_menuContainerId$$.find("[data-oj-command]"), $listItems$$1_sortMenu$$1$$.each(function() {
       var $command$$7$$;
-      0 === $$$$11$$(this).children("a").length && ($command$$7$$ = $$$$11$$(this).attr("data-oj-command").split("-"), $$$$11$$(this).replaceWith($self$$62$$.$createContextMenuItem$($command$$7$$[$command$$7$$.length - 1])))
+      0 === $$$$11$$(this).children("a").length && ($command$$7$$ = $$$$11$$(this).attr("data-oj-command").split("-"), $$$$11$$(this).replaceWith($self$$65$$.$createContextMenuItem$($command$$7$$[$command$$7$$.length - 1])))
     }), $menuContainer$$1_menuContainerId$$.ojMenu("refresh")), $menuContainer$$1_menuContainerId$$.on("ojbeforeshow", $handleContextMenuBeforeShow$$), $menuContainer$$1_menuContainerId$$.on("ojselect", $handleContextMenuSelect$$), this.$_menuContainer$ = $menuContainer$$1_menuContainerId$$)
   };
   $oj$$11$$.$TableDomUtils$.prototype.$createContextMenuItem$ = function $$oj$$11$$$$TableDomUtils$$$$createContextMenuItem$$($command$$8$$) {
@@ -1639,14 +1639,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     return null != $element$$56_tableBodyRow$$9$$ ? $element$$56_tableBodyRow$$9$$.index() : null
   };
   $oj$$11$$.$TableDomUtils$.prototype.$getEmptyTableDimensions$ = function $$oj$$11$$$$TableDomUtils$$$$getEmptyTableDimensions$$() {
-    var $table$$8$$ = this.$getTable$(), $tableBody$$5$$ = this.$getTableBody$(), $tableHeader$$3$$ = this.$getTableHeader$(), $tableFooter$$2$$ = this.$getTableFooter$();
-    $table$$8$$.empty();
+    var $table$$8$$ = this.$getTable$(), $tableBody$$5$$ = this.$getTableBody$(), $tableHeader$$3$$ = this.$getTableHeader$(), $tableFooter$$2$$ = this.$getTableFooter$(), $tableHeaderDisplay$$ = "", $tableBodyDisplay$$ = "", $tableFooterDisplay$$ = "";
+    null != $tableHeader$$3$$ && ($tableHeaderDisplay$$ = $tableHeader$$3$$.css("display").toString(), $tableHeader$$3$$.css("display", "none"));
+    null != $tableBody$$5$$ && ($tableBodyDisplay$$ = $tableBody$$5$$.css("display").toString(), $tableBody$$5$$.css("display", "none"));
+    null != $tableFooter$$2$$ && ($tableFooterDisplay$$ = $tableFooter$$2$$.css("display").toString(), $tableFooter$$2$$.css("display", "none"));
     $table$$8$$.removeClass($oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_TABLE_CLASS$);
     var $dimensions$$ = {height:$table$$8$$.height(), width:$table$$8$$.width()};
     $table$$8$$.addClass($oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_TABLE_CLASS$);
-    $table$$8$$.append($tableHeader$$3$$);
-    $table$$8$$.append($tableFooter$$2$$);
-    $table$$8$$.append($tableBody$$5$$);
+    null != $tableBody$$5$$ && $tableBody$$5$$.css("display", $tableBodyDisplay$$);
+    null != $tableHeader$$3$$ && $tableHeader$$3$$.css("display", $tableHeaderDisplay$$);
+    null != $tableFooter$$2$$ && $tableFooter$$2$$.css("display", $tableFooterDisplay$$);
     return $dimensions$$
   };
   $oj$$11$$.$TableDomUtils$.prototype.$getFirstAncestor$ = function $$oj$$11$$$$TableDomUtils$$$$getFirstAncestor$$($element$$57$$, $className$$12$$) {
@@ -1668,9 +1670,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     $context$$36$$.parentElement = $parentElement$$1$$;
     if(null != $row$$35$$) {
       $context$$36$$.status = this.$getRendererStatusObject$($row$$35$$);
-      var $rowContext$$ = $row$$35$$.context, $i$$191$$;
-      for($i$$191$$ in $rowContext$$) {
-        $rowContext$$.hasOwnProperty($i$$191$$) && ($context$$36$$[$i$$191$$] = $rowContext$$[$i$$191$$])
+      var $rowContext$$ = $row$$35$$.context, $i$$193$$;
+      for($i$$193$$ in $rowContext$$) {
+        $rowContext$$.hasOwnProperty($i$$193$$) && ($context$$36$$[$i$$193$$] = $rowContext$$[$i$$193$$])
       }
     }
     return $context$$36$$
@@ -1707,10 +1709,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     if($tableBodyCells$$2$$.length > $columnIdx$$30$$ && this.$getElementColumnIdx$($tableBodyCells$$2$$[$columnIdx$$30$$]) == $columnIdx$$30$$) {
       return $$$$11$$($tableBodyCells$$2$$[$columnIdx$$30$$])
     }
-    var $i$$192$$;
-    for($i$$192$$ = 0;$i$$192$$ < $tableBodyCells$$2$$.length;$i$$192$$++) {
-      if(this.$getElementColumnIdx$($tableBodyCells$$2$$[$i$$192$$]) == $columnIdx$$30$$) {
-        return $$$$11$$($tableBodyCells$$2$$[$i$$192$$])
+    var $i$$194$$;
+    for($i$$194$$ = 0;$i$$194$$ < $tableBodyCells$$2$$.length;$i$$194$$++) {
+      if(this.$getElementColumnIdx$($tableBodyCells$$2$$[$i$$194$$]) == $columnIdx$$30$$) {
+        return $$$$11$$($tableBodyCells$$2$$[$i$$194$$])
       }
     }
     return null
@@ -1734,10 +1736,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     if($tableBodyRows$$1$$.length > $rowIdx$$24$$ && this.$getElementRowIdx$($tableBodyRows$$1$$[$rowIdx$$24$$]) == $rowIdx$$24$$) {
       return $$$$11$$($tableBodyRows$$1$$[$rowIdx$$24$$])
     }
-    var $i$$193$$;
-    for($i$$193$$ = 0;$i$$193$$ < $tableBodyRows$$1$$.length;$i$$193$$++) {
-      if(this.$getElementRowIdx$($tableBodyRows$$1$$[$i$$193$$]) == $rowIdx$$24$$) {
-        return $$$$11$$($tableBodyRows$$1$$[$i$$193$$])
+    var $i$$195$$;
+    for($i$$195$$ = 0;$i$$195$$ < $tableBodyRows$$1$$.length;$i$$195$$++) {
+      if(this.$getElementRowIdx$($tableBodyRows$$1$$[$i$$195$$]) == $rowIdx$$24$$) {
+        return $$$$11$$($tableBodyRows$$1$$[$i$$195$$])
       }
     }
     return null
@@ -1782,10 +1784,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     if($headerColumns$$.length > $columnIdx$$31$$ && this.$getElementColumnIdx$($headerColumns$$[$columnIdx$$31$$]) == $columnIdx$$31$$) {
       return $$$$11$$($headerColumns$$[$columnIdx$$31$$])
     }
-    var $i$$194$$;
-    for($i$$194$$ = 0;$i$$194$$ < $headerColumns$$.length;$i$$194$$++) {
-      if(this.$getElementColumnIdx$($headerColumns$$[$i$$194$$]) == $columnIdx$$31$$) {
-        return $$$$11$$($headerColumns$$[$i$$194$$])
+    var $i$$196$$;
+    for($i$$196$$ = 0;$i$$196$$ < $headerColumns$$.length;$i$$196$$++) {
+      if(this.$getElementColumnIdx$($headerColumns$$[$i$$196$$]) == $columnIdx$$31$$) {
+        return $$$$11$$($headerColumns$$[$i$$196$$])
       }
     }
     return null
@@ -1972,13 +1974,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     this.$component$._hoverable($tableBodyRow$$19$$);
     $rowSelectionMode$$2$$ != $oj$$11$$.$TableDomUtils$.$_OPTION_SELECTION_MODES$.$_SINGLE$ && $rowSelectionMode$$2$$ != $oj$$11$$.$TableDomUtils$.$_OPTION_SELECTION_MODES$.$_MULTIPLE$ || $tableBodyRow$$19$$.addClass($oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_TABLE_DATA_ROW_SELECTOR_CLASS$)
   };
-  $oj$$11$$.$TableDomUtils$.prototype.$styleTableContainer$ = function $$oj$$11$$$$TableDomUtils$$$$styleTableContainer$$($tableContainer$$10$$, $height$$15_rootAttributes$$1$$, $value$$163_width$$17$$) {
+  $oj$$11$$.$TableDomUtils$.prototype.$styleTableContainer$ = function $$oj$$11$$$$TableDomUtils$$$$styleTableContainer$$($tableContainer$$10$$, $height$$15_rootAttributes$$1$$, $value$$164_width$$17$$) {
     0 < $height$$15_rootAttributes$$1$$ ? $tableContainer$$10$$.css("height", $height$$15_rootAttributes$$1$$) : $tableContainer$$10$$.css("height", "");
-    0 < $value$$163_width$$17$$ ? $tableContainer$$10$$.css("width", $value$$163_width$$17$$) : $tableContainer$$10$$.css("width", "");
+    0 < $value$$164_width$$17$$ ? $tableContainer$$10$$.css("width", $value$$164_width$$17$$) : $tableContainer$$10$$.css("width", "");
     $height$$15_rootAttributes$$1$$ = this.options.rootAttributes;
     $tableContainer$$10$$.attr("class", "");
     for(var $attr$$17$$ in $height$$15_rootAttributes$$1$$) {
-      $height$$15_rootAttributes$$1$$.hasOwnProperty($attr$$17$$) && ($value$$163_width$$17$$ = $height$$15_rootAttributes$$1$$[$attr$$17$$], $tableContainer$$10$$.attr($attr$$17$$, $value$$163_width$$17$$))
+      $height$$15_rootAttributes$$1$$.hasOwnProperty($attr$$17$$) && ($value$$164_width$$17$$ = $height$$15_rootAttributes$$1$$[$attr$$17$$], $tableContainer$$10$$.attr($attr$$17$$, $value$$164_width$$17$$))
     }
     $tableContainer$$10$$.addClass($oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_TABLE_CONTAINER_CLASS$);
     $tableContainer$$10$$.addClass($oj$$11$$.$TableDomUtils$.$MARKER_STYLE_CLASSES$.$_WIDGET$);
@@ -2018,11 +2020,11 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     return null
   };
   $oj$$11$$.$TableDomUtils$.prototype.$_refreshColumnHeaderPadding$ = function $$oj$$11$$$$TableDomUtils$$$$_refreshColumnHeaderPadding$$() {
-    var $columns$$12$$ = this.$component$.columnMetaData(), $i$$195$$, $headerColumn$$9_headerColumnRowDiv$$1$$;
+    var $columns$$12$$ = this.$component$.columnMetaData(), $i$$197$$, $headerColumn$$9_headerColumnRowDiv$$1$$;
     if(null != this.$getTableHeader$()) {
       var $isRTL$$2$$ = "rtl" === this.$component$.$_GetReadingDirection$(), $headerColumnAscDiv$$1$$, $headerColumnDscDiv$$1$$, $newHeaderColumnRowDivPadding_totalSortLinkWidth$$;
-      for($i$$195$$ = 0;$i$$195$$ < $columns$$12$$.length;$i$$195$$++) {
-        $headerColumn$$9_headerColumnRowDiv$$1$$ = this.$getTableHeaderColumn$($i$$195$$), null != $headerColumn$$9_headerColumnRowDiv$$1$$ && ($headerColumnAscDiv$$1$$ = $headerColumn$$9_headerColumnRowDiv$$1$$.find("." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_ASC_CLASS$), $headerColumnDscDiv$$1$$ = $headerColumn$$9_headerColumnRowDiv$$1$$.find("." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_DSC_CLASS$), $headerColumn$$9_headerColumnRowDiv$$1$$ = $headerColumn$$9_headerColumnRowDiv$$1$$.find("." + 
+      for($i$$197$$ = 0;$i$$197$$ < $columns$$12$$.length;$i$$197$$++) {
+        $headerColumn$$9_headerColumnRowDiv$$1$$ = this.$getTableHeaderColumn$($i$$197$$), null != $headerColumn$$9_headerColumnRowDiv$$1$$ && ($headerColumnAscDiv$$1$$ = $headerColumn$$9_headerColumnRowDiv$$1$$.find("." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_ASC_CLASS$), $headerColumnDscDiv$$1$$ = $headerColumn$$9_headerColumnRowDiv$$1$$.find("." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_DSC_CLASS$), $headerColumn$$9_headerColumnRowDiv$$1$$ = $headerColumn$$9_headerColumnRowDiv$$1$$.find("." + 
         $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_ROW_CLASS$), $newHeaderColumnRowDivPadding_totalSortLinkWidth$$ = $headerColumnAscDiv$$1$$.width() + $headerColumnDscDiv$$1$$.width(), this.$_headerColumnRowDivPadding$ || (this.$_headerColumnRowDivPadding$ = $isRTL$$2$$ ? $headerColumn$$9_headerColumnRowDiv$$1$$.css("padding-left") : $headerColumn$$9_headerColumnRowDiv$$1$$.css("padding-right")), $newHeaderColumnRowDivPadding_totalSortLinkWidth$$ = parseInt(this.$_headerColumnRowDivPadding$, 
         10) + $newHeaderColumnRowDivPadding_totalSortLinkWidth$$ + "px", $isRTL$$2$$ ? $headerColumn$$9_headerColumnRowDiv$$1$$.css("padding-left", $newHeaderColumnRowDivPadding_totalSortLinkWidth$$) : $headerColumn$$9_headerColumnRowDiv$$1$$.css("padding-right", $newHeaderColumnRowDivPadding_totalSortLinkWidth$$), $isRTL$$2$$ ? $headerColumnAscDiv$$1$$.css("left", $headerColumnDscDiv$$1$$.width() + "px") : $headerColumnAscDiv$$1$$.css("right", $headerColumnDscDiv$$1$$.width() + "px"))
       }
@@ -2035,13 +2037,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     null != $tableHeader$$9$$ ? ($tableContainer$$11_tableHeaderHeight$$1$$ = $tableHeader$$9$$.height(), $tableNoDataMessage$$.css("top", $tableContainer$$11_tableHeaderHeight$$1$$ + "px")) : $tableNoDataMessage$$.css("top", "0px")
   };
   $oj$$11$$.$TableDomUtils$.prototype.$_removeHeaderColumnAndCellColumnWidths$ = function $$oj$$11$$$$TableDomUtils$$$$_removeHeaderColumnAndCellColumnWidths$$() {
-    var $data$$99_firstRowIdx$$ = this.options.data, $columns$$13$$ = this.$component$.columnMetaData(), $i$$196_tableBodyRows$$3$$, $headerColumn$$10_tableBodyCell$$10$$;
-    for($i$$196_tableBodyRows$$3$$ = 0;$i$$196_tableBodyRows$$3$$ < $columns$$13$$.length;$i$$196_tableBodyRows$$3$$++) {
-      $headerColumn$$10_tableBodyCell$$10$$ = this.$getTableHeaderColumn$($i$$196_tableBodyRows$$3$$), null != $headerColumn$$10_tableBodyCell$$10$$ && $headerColumn$$10_tableBodyCell$$10$$.css("min-width", "")
+    var $data$$99_firstRowIdx$$ = this.options.data, $columns$$13$$ = this.$component$.columnMetaData(), $i$$198_tableBodyRows$$3$$, $headerColumn$$10_tableBodyCell$$10$$;
+    for($i$$198_tableBodyRows$$3$$ = 0;$i$$198_tableBodyRows$$3$$ < $columns$$13$$.length;$i$$198_tableBodyRows$$3$$++) {
+      $headerColumn$$10_tableBodyCell$$10$$ = this.$getTableHeaderColumn$($i$$198_tableBodyRows$$3$$), null != $headerColumn$$10_tableBodyCell$$10$$ && $headerColumn$$10_tableBodyCell$$10$$.css("min-width", "")
     }
-    if(null != $data$$99_firstRowIdx$$ && 0 < $data$$99_firstRowIdx$$.size() && ($i$$196_tableBodyRows$$3$$ = this.$getTableBodyRows$(), null != $i$$196_tableBodyRows$$3$$ && 0 < $i$$196_tableBodyRows$$3$$.length)) {
-      for($data$$99_firstRowIdx$$ = this.$getElementRowIdx$($i$$196_tableBodyRows$$3$$[0]), $i$$196_tableBodyRows$$3$$ = 0;$i$$196_tableBodyRows$$3$$ < $columns$$13$$.length;$i$$196_tableBodyRows$$3$$++) {
-        $headerColumn$$10_tableBodyCell$$10$$ = this.$getTableBodyCell$($data$$99_firstRowIdx$$, $i$$196_tableBodyRows$$3$$), $headerColumn$$10_tableBodyCell$$10$$.css("min-width", "")
+    if(null != $data$$99_firstRowIdx$$ && 0 < $data$$99_firstRowIdx$$.size() && ($i$$198_tableBodyRows$$3$$ = this.$getTableBodyRows$(), null != $i$$198_tableBodyRows$$3$$ && 0 < $i$$198_tableBodyRows$$3$$.length)) {
+      for($data$$99_firstRowIdx$$ = this.$getElementRowIdx$($i$$198_tableBodyRows$$3$$[0]), $i$$198_tableBodyRows$$3$$ = 0;$i$$198_tableBodyRows$$3$$ < $columns$$13$$.length;$i$$198_tableBodyRows$$3$$++) {
+        $headerColumn$$10_tableBodyCell$$10$$ = this.$getTableBodyCell$($data$$99_firstRowIdx$$, $i$$198_tableBodyRows$$3$$), $headerColumn$$10_tableBodyCell$$10$$.css("min-width", "")
       }
     }
   };
@@ -2057,20 +2059,20 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore", "ojs/ojmenu", "ojs/ojdata
     this.$_removeHeaderColumnAndCellColumnWidths$()
   };
   $oj$$11$$.$TableDomUtils$.prototype.$_setHeaderColumnAndCellColumnWidths$ = function $$oj$$11$$$$TableDomUtils$$$$_setHeaderColumnAndCellColumnWidths$$() {
-    var $data$$100_firstRowIdx$$1$$ = this.options.data, $columns$$14$$ = this.$component$.columnMetaData(), $columnWidths$$1$$ = [], $columnPaddingWidths$$1$$ = [], $i$$197_tableBodyRows$$4$$, $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$, $headerColumnTextDivHeight$$1_tableBodyCell$$11$$, $headerColumnTextDiv$$2$$;
-    for($i$$197_tableBodyRows$$4$$ = 0;$i$$197_tableBodyRows$$4$$ < $columns$$14$$.length;$i$$197_tableBodyRows$$4$$++) {
-      $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = this.$getTableHeaderColumn$($i$$197_tableBodyRows$$4$$), null != $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ && ($columnWidths$$1$$[$i$$197_tableBodyRows$$4$$] = $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.width(), $columnPaddingWidths$$1$$[$i$$197_tableBodyRows$$4$$] = parseInt($adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.css("padding-right"), 
+    var $data$$100_firstRowIdx$$1$$ = this.options.data, $columns$$14$$ = this.$component$.columnMetaData(), $columnWidths$$1$$ = [], $columnPaddingWidths$$1$$ = [], $i$$199_tableBodyRows$$4$$, $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$, $headerColumnTextDivHeight$$1_tableBodyCell$$11$$, $headerColumnTextDiv$$2$$;
+    for($i$$199_tableBodyRows$$4$$ = 0;$i$$199_tableBodyRows$$4$$ < $columns$$14$$.length;$i$$199_tableBodyRows$$4$$++) {
+      $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = this.$getTableHeaderColumn$($i$$199_tableBodyRows$$4$$), null != $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ && ($columnWidths$$1$$[$i$$199_tableBodyRows$$4$$] = $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.width(), $columnPaddingWidths$$1$$[$i$$199_tableBodyRows$$4$$] = parseInt($adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.css("padding-right"), 
       10) + parseInt($adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.css("padding-left"), 10), $headerColumnTextDivHeight$$1_tableBodyCell$$11$$ = null, ($headerColumnTextDiv$$2$$ = $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.find("." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_TEXT_CLASS$)) && 0 < $headerColumnTextDiv$$2$$.length && ($headerColumnTextDivHeight$$1_tableBodyCell$$11$$ = $headerColumnTextDiv$$2$$.get(0).clientHeight), 
       null != $headerColumnTextDivHeight$$1_tableBodyCell$$11$$ && ($adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.find("." + $oj$$11$$.$TableDomUtils$.$CSS_CLASSES$.$_COLUMN_HEADER_ROW_CLASS$), $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.css("min-height", $headerColumnTextDivHeight$$1_tableBodyCell$$11$$ + 
       "px")))
     }
-    for($i$$197_tableBodyRows$$4$$ = 0;$i$$197_tableBodyRows$$4$$ < $columns$$14$$.length;$i$$197_tableBodyRows$$4$$++) {
-      $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = this.$getTableHeaderColumn$($i$$197_tableBodyRows$$4$$), null != $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ && $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.css("min-width", $columnWidths$$1$$[$i$$197_tableBodyRows$$4$$] + "px")
+    for($i$$199_tableBodyRows$$4$$ = 0;$i$$199_tableBodyRows$$4$$ < $columns$$14$$.length;$i$$199_tableBodyRows$$4$$++) {
+      $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = this.$getTableHeaderColumn$($i$$199_tableBodyRows$$4$$), null != $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ && $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$.css("min-width", $columnWidths$$1$$[$i$$199_tableBodyRows$$4$$] + "px")
     }
-    if(null != $data$$100_firstRowIdx$$1$$ && 0 < $data$$100_firstRowIdx$$1$$.size() && ($i$$197_tableBodyRows$$4$$ = this.$getTableBodyRows$(), null != $i$$197_tableBodyRows$$4$$ && 0 < $i$$197_tableBodyRows$$4$$.length)) {
-      for($data$$100_firstRowIdx$$1$$ = this.$getElementRowIdx$($i$$197_tableBodyRows$$4$$[0]), $i$$197_tableBodyRows$$4$$ = 0;$i$$197_tableBodyRows$$4$$ < $columns$$14$$.length;$i$$197_tableBodyRows$$4$$++) {
-        $headerColumnTextDivHeight$$1_tableBodyCell$$11$$ = this.$getTableBodyCell$($data$$100_firstRowIdx$$1$$, $i$$197_tableBodyRows$$4$$), $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = parseInt($headerColumnTextDivHeight$$1_tableBodyCell$$11$$.css("padding-right"), 10) + parseInt($headerColumnTextDivHeight$$1_tableBodyCell$$11$$.css("padding-left"), 10), $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = 
-        $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ > $columnPaddingWidths$$1$$[$i$$197_tableBodyRows$$4$$] ? $columnWidths$$1$$[$i$$197_tableBodyRows$$4$$] - $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ + $columnPaddingWidths$$1$$[$i$$197_tableBodyRows$$4$$] : $columnWidths$$1$$[$i$$197_tableBodyRows$$4$$] + $columnPaddingWidths$$1$$[$i$$197_tableBodyRows$$4$$] - $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$, 
+    if(null != $data$$100_firstRowIdx$$1$$ && 0 < $data$$100_firstRowIdx$$1$$.size() && ($i$$199_tableBodyRows$$4$$ = this.$getTableBodyRows$(), null != $i$$199_tableBodyRows$$4$$ && 0 < $i$$199_tableBodyRows$$4$$.length)) {
+      for($data$$100_firstRowIdx$$1$$ = this.$getElementRowIdx$($i$$199_tableBodyRows$$4$$[0]), $i$$199_tableBodyRows$$4$$ = 0;$i$$199_tableBodyRows$$4$$ < $columns$$14$$.length;$i$$199_tableBodyRows$$4$$++) {
+        $headerColumnTextDivHeight$$1_tableBodyCell$$11$$ = this.$getTableBodyCell$($data$$100_firstRowIdx$$1$$, $i$$199_tableBodyRows$$4$$), $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = parseInt($headerColumnTextDivHeight$$1_tableBodyCell$$11$$.css("padding-right"), 10) + parseInt($headerColumnTextDivHeight$$1_tableBodyCell$$11$$.css("padding-left"), 10), $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ = 
+        $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ > $columnPaddingWidths$$1$$[$i$$199_tableBodyRows$$4$$] ? $columnWidths$$1$$[$i$$199_tableBodyRows$$4$$] - $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ + $columnPaddingWidths$$1$$[$i$$199_tableBodyRows$$4$$] : $columnWidths$$1$$[$i$$199_tableBodyRows$$4$$] + $columnPaddingWidths$$1$$[$i$$199_tableBodyRows$$4$$] - $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$, 
         $headerColumnTextDivHeight$$1_tableBodyCell$$11$$.css("min-width", $adjustedColumnWidth$$1_headerColumn$$11_headerColumnRowDiv$$3_tableBodyCellPaddingWidth$$1$$ + "px")
       }
     }

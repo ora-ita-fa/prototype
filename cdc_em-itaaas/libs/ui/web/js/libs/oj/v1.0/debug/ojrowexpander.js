@@ -10,6 +10,46 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojmodel','ojs/ojdata
  * @class 
  * @name oj.ojRowExpander
  * @augments oj.baseComponent
+ *
+ * @classdesc
+ * <h3 id="rowexpanderOverview-section">
+ *   JET DataGrid Component
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rowexpanderOverview-section"></a>
+ * </h3>
+ * <p>Description: A JET RowExpander is a component that is primarily used inside the JET Table and JET DataGrid widgets.  It enables hierarchical data to be display in a JET Table and JET DataGrid.</p>
+ *
+ * <p>To enable expand and collapse of rows, developers must specify oj.FlattenedTreeTableDataSource as data when used within JET Table and oj.FlattenedTreeDataGridDataSource as data when used within JET DataGrid.</p>
+ *
+ * <h3 id="keyboard-section">
+ *   Keyboard interaction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
+ * </h3>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Ctrl+Right Arrow</kbd></td>
+ *       <td>Expand the currently focused row that contains a row expander.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Ctrl+Left Arrow</kbd></td>
+ *       <td>Collapse the currently focused row that contains a row expander.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <h3 id="rtl-section">
+ *   Reading direction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rtl-section"></a>
+ * </h3>
+ * 
+ * <p>The location of the row expander will be reversed in RTL reading direction.</p>
+ * <p>As with any JET component, in the unusual case that the directionality (LTR or RTL) changes post-init, the component containing the row expander (JET Table or JET DataGrid) must be <code class="prettyprint">refresh()</code>ed.  
  */
 oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
 {

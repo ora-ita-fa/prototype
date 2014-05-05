@@ -40,8 +40,8 @@ var _oldVal = _scope['oj'];
 var oj = _scope['oj'] =
 {
   'version': "1.0",
-  'build' : "2448",
-  'revision': "7027",
+  'build' : "2493",
+  'revision': "7203",
           
   // This function is only meant to be used outside the library, so quoting the name
   // to avoid renaming is appropriate
@@ -3113,7 +3113,7 @@ oj.Model._init = function(model, attributes, options, properties) {
             // Move them in
             for (prop in attrCopy) {
                 if (attrCopy.hasOwnProperty(prop)) {
-                    model._setProp(prop, attrCopy[prop], options);
+                    model._setProp(prop, attrCopy[prop], false, false, options);
                 }
             }
         }
@@ -3344,11 +3344,14 @@ oj.Model.prototype.SetupId = function() {
     this['id'] = this.attributes[idAttr];
 };
 
-oj.Model.prototype._setPropInternal = function(prop, value) {
-    if (!oj.Object.innerEquals(this.attributes[prop], value)) {
+oj.Model.prototype._setPropInternal = function(prop, value, copyRegardless) {
+    var equality = oj.Object.innerEquals(this.attributes[prop], value);
+    if (copyRegardless || !equality) {
         this.attributes[prop] = value;
         this.SetupId();
-        return true;
+        // Return value management here seems bizarre due to backbone tests: do the direct set if copyRegardless, but only return if the
+        // inner equals was different
+        return !equality;
     }
     return false;
 };
@@ -3364,18 +3367,20 @@ oj.Model.prototype._addChange = function(property, value) {
 /**
  * @param {Object||string} prop
  * @param {Object} value
+ * @param {boolean} copyRegardless
+ * @param {boolean} propertyBag
  * @param {Object=} options
  * @returns {boolean}
  */
-oj.Model.prototype._setProp = function(prop, value, options) {
+oj.Model.prototype._setProp = function(prop, value, copyRegardless, propertyBag, options) {
     if (prop == null) {
         return true;
     }
     
-    var attrs = {}, p, isNested = this.nestedSet, changes, opts;
+    var attrs = {}, p, isNested = this.nestedSet, opts;
     opts = oj.Model._copyOptions(options);
 
-    if (arguments.length > 2) {
+    if (!propertyBag) {
         attrs[prop] = value;
     }
     else {
@@ -3385,10 +3390,8 @@ oj.Model.prototype._setProp = function(prop, value, options) {
                 attrs[p] = prop[p];
             }
         }
-        opts = value;
     }
-    opts = opts || {};
-    changes = [];
+    opts = opts || {};    
     
     if (!this._checkValid(attrs, {'validate':opts['validate']}, false)) {
         return false;
@@ -3396,6 +3399,7 @@ oj.Model.prototype._setProp = function(prop, value, options) {
     
     if (!isNested) {
         this._clearChanged();
+        this.changes = [];
     }
     
     // Store old value
@@ -3406,32 +3410,31 @@ oj.Model.prototype._setProp = function(prop, value, options) {
     this.nestedSet = true;
     for (p in attrs) {
         if (attrs.hasOwnProperty(p)) {
-            if (this._setPropInternal(p, attrs[p])) {    
+            if (this._setPropInternal(p, attrs[p], copyRegardless)) {    
                 // Trigger changes
                 this._addChange(p, attrs[p]);
-                changes.push(p);
+                this.changes.push(p);
             }
             else {
                 delete attrs[p];
             }
         }
     }
-    // Fire events
+    // Fire events: don't fire if silent 
     var silent = opts['silent'];
-    //if (!opts['silent']) {
-        for (p in attrs) {
-            if (attrs.hasOwnProperty(p)) {
-                if (changes.length && !silent) {
-                    this.pendingChanges = true;
-                }
-                this._fireAttrChange(p, attrs[p], opts, silent);
+    for (p in attrs) {
+        if (attrs.hasOwnProperty(p)) {
+            if (!silent && (this.changes.length > 0 || (isNested && this.changes.indexOf(p) === -1))) {
+                this.pendingChanges = true;
             }
+            this._fireAttrChange(p, attrs[p], opts, silent);
         }
-   //}
+    }
+    
     if (isNested) {
         return true;
     }
-    if (!silent) {
+    if (!silent && !isNested) {
         while (this.pendingChanges) {
             this.pendingChanges = false;
             this._fireChange(opts, silent);
@@ -3440,6 +3443,9 @@ oj.Model.prototype._setProp = function(prop, value, options) {
     
     this.nestedSet = false;
     return true;
+};
+
+oj.Model.prototype._areTherePendingChanges = function() {
 };
 
 /**
@@ -3479,6 +3485,9 @@ oj.Model.prototype.clear = function(options) {
 
 oj.Model._cloneAttributes = function(oldData, newData) {    
     var prop;
+    if (oldData === null) {
+        return null;
+    }
     newData = newData || {};
     for (prop in oldData) { 
         if (oldData.hasOwnProperty(prop)){// && oldData[prop] !== undefined) {
@@ -3494,7 +3503,27 @@ oj.Model._cloneAttributes = function(oldData, newData) {
                 }
             }
             else {
-                newData[prop] = oj.Model._cloneAttributes(oldData[prop], null);
+                if (oj.Model.IsArray(oldData[prop])) {
+                    // Handle arrays
+                    if (oldData[prop] === null) {
+                        newData[prop] = null;
+                    }
+                    else {
+                        newData[prop] = [];
+                        // Special case zero length array because of backbone unit test checking actual object value--strange
+                        if (oldData[prop].length === 0) {
+                            newData[prop] = oldData[prop];
+                        }
+                        else {
+                            for (var i = 0; i < oldData[prop].length; i++) {
+                                newData[prop].push(oj.Model._cloneAttributes(oldData[prop][i], null));
+                            }
+                        }
+                    }
+                }
+                else {
+                    newData[prop] = oj.Model._cloneAttributes(oldData[prop], null);
+                }
             }
         }
     }
@@ -3572,7 +3601,7 @@ oj.Model.prototype.set = function (property, value, options) {
                     }
                 }
                 else {
-                    if (!this._setProp(property, opts)) {
+                    if (!this._setProp(property, null, true, true, opts)) {
                         valid = false;
                     }
                 }
@@ -3587,7 +3616,7 @@ oj.Model.prototype.set = function (property, value, options) {
                             this._unsetInternal(arguments[i], null, false);
                         }
                         else {
-                            if (!this._setProp(arguments[i], arguments[i+1], opts)) {
+                            if (!this._setProp(arguments[i], arguments[i+1], false, false, opts)) {
                                 valid = false;
                             }
                         }
@@ -4109,7 +4138,7 @@ oj.Model.prototype._attrUnion = function(attrs) {
 };
 
 oj.Model.IsArray = function(obj) {
-    return obj.constructor === Array;
+    return obj != null && obj.constructor === Array;
 };
 
 oj.Model.IsFunction = function(obj) {
@@ -4507,7 +4536,7 @@ oj.Collection.prototype.url = null;
  * recordID : id of the record involved, if relevant<p>
  * fetchSize : how many records to return.  If not set, return all.<p>
  * startIndex: Starting record number of the set to return.<p>
- * fromID: Retrieve records starting with the record with the given unique ID. <p>
+ * startID: Retrieve records starting with the record with the given unique ID. <p>
  * since: Retrieve records with timestamps after the given timestamp.<p>
  * until: Retrieve records with timestamps up to the given timestamp.  Default is "until"<p>
  * sort:  field(s) by which to sort, if set<p>
@@ -5032,6 +5061,7 @@ oj.Collection.prototype._newModel = function(m, options) {
  *                          at: splice the new model into the collection at the value given (at:index) <p>
  *                          merge: if set, and if the given model already exists in the collection (matched by id), then merge the attribute/value sets, firing change events<p>
  *                          sort: if set, do not re-sort the collection even if the comparator is set. <p>
+ *                          force: if set to true, do an add to the collection no matter whether the item is found or not <p>
  *                          deferred: if true, return a promise as though this collection were virtual whether it is or not
  * 
  * @returns {Object} if deferred or virtual, return a promise when the set has completed
@@ -5051,6 +5081,7 @@ oj.Collection.prototype._addInternal = function(m, options, fillIn, deferred) {
     var modelArray = [], 
         at = options['at'],
         silent = options['silent'],
+        force = options['force'],
         i, index, cid,
         merge = options['merge'] || false,
         sort = options['sort'], needSort = true, added = false;
@@ -5125,13 +5156,15 @@ oj.Collection.prototype._addInternal = function(m, options, fillIn, deferred) {
     function mergeAttrs(collection, modelToTryAndMerge, modelFoundInCollection, newModel, deferred) {
         var existingModel;
         
-        if (merge && modelFoundInCollection) {
+        if (!force && merge && modelFoundInCollection) {
             // Try to merge the attributes--we're merging and the model (by id) was already in the collection
             needSort = modelFoundInCollection.Merge(modelToTryAndMerge, collection['comparator']);
         }
         else {
             // Make sure model is not already in there
-            existingModel = collection._getLocal(newModel);
+            if (!force) {
+                existingModel = collection._getLocal(newModel);
+            }
 
             addToCollection(collection, newModel, existingModel);
         }        
@@ -5149,6 +5182,10 @@ oj.Collection.prototype._addInternal = function(m, options, fillIn, deferred) {
             // Use original model array not cloned model if merging--otherwise we won't find the model in the collection
             modelToTryAndMerge = model instanceof oj.Model ? model : newModel;
             if (deferred) {
+                if (force) {
+                    mergeAttrs(collection, modelToTryAndMerge, undefined, newModel, deferred);
+                    return $.Deferred().resolve();
+                }
                 return collection._getInternal(modelToTryAndMerge, null, deferred, true).done(function (modInfo) {
                                                                     modelFoundInCollection = modInfo['m'];
                                                                     return mergeAttrs(collection, modelToTryAndMerge, modelFoundInCollection, newModel, deferred);
@@ -5933,6 +5970,9 @@ oj.Collection.prototype.get = function(id, options)
                 return modInfo['m'];
             });
         }
+        if (this._isVirtual()) {
+            return $.Deferred().resolve(internalGet['m']);
+        }
         if (internalGet.hasOwnProperty('m')) {
             return internalGet['m'];
         }
@@ -6010,14 +6050,23 @@ oj.Collection.prototype._getInternal = function(id, options, deferred, fillIn) {
     if (this._isVirtual()) {
         // Try to fetch using start ID.  cid not supported
         if (id === undefined && cid !== undefined) {
-            throw new Error("cid not supported on virtual get by ID: only id supported");
+            //throw new Error("cid not supported on virtual get by ID: only id supported");
+            var dfd = $.Deferred();
+            return dfd.resolve(oj.Collection._getModinfo(-1, undefined));
         }
         var dfd = $.Deferred();
         var self = this;
         var resp = function (resp) {
                         if (resp != null) {                            
                             var index = self._getOffset();
-                            dfd.resolve(oj.Collection._getModinfo(index, self._getModel(index)));
+                            // Check that the model at index is the right one
+                            var model = self._getModel(index);
+                            if (model !== undefined && model.Match(id, cid)) {
+                                dfd.resolve(oj.Collection._getModinfo(index, model));
+                            }
+                            else {
+                                dfd.resolve(oj.Collection._getModinfo(-1, undefined));
+                            }
                         }
                         else {
                             dfd.resolve(oj.Collection._getModinfo(-1, undefined));
@@ -8395,39 +8444,38 @@ $.widget('oj.baseComponent',
     
     $.each(this._savedAttributes, function (index, savedAttr)
     {
-  
       var element = $(savedAttr["element"]), 
           attributes = savedAttr["attributes"];
-  
+      
       //sanity check
       if (element.length === 1)
       {
-	    var currAttr = savedAttr["element"].attributes,
-		    removeAttr = [];
-		
-		//request is to remove any attributes that didn't exist previously
-		
-		for(var i=0, j=currAttr.length; i < j; i++) 
-		{
-		  if(!(currAttr[i]["name"] in attributes)) 
-		  {
-		    removeAttr.push(currAttr[i]["name"]);
-		  }
-		}
-		
-		for(var i=0, j=removeAttr.length; i < j; i++) 
-		{
-		  element.removeAttr(removeAttr[i]);
-		}
-		
+        var currAttr = savedAttr["element"].attributes,
+            removeAttr = [];
+
+        //request is to remove any attributes that didn't exist previously
+        //need to store the attributes in an array and remove them afterwards as otherwise there are side affects
+        for(var i=0, j=currAttr.length; i < j; i++) 
+        {
+          if(!(currAttr[i]["name"] in attributes)) 
+          {
+            removeAttr.push(currAttr[i]["name"]);
+          }
+        }
+
+        for(var i=0, j=removeAttr.length; i < j; i++) 
+        {
+          element.removeAttr(removeAttr[i]);
+        }
+
         for (var attribute in attributes)
         {
           element.attr(attribute, attributes[attribute]["attr"]);
         }
       }
-  
+
     });
-  
+    
   },
   
   /**
@@ -8521,11 +8569,11 @@ $.widget('oj.baseComponent',
    * 
    * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
    * look up the subcomponent associated with that string.  It contains:<p>
-   * component: optional - in the future there may be more than one component contained within a page element<p>
+   * component: optional component name - in the future there may be more than one component contained within a page element<p>
    * subId: the string, documented by the component, that the component expects in getNodeBySubId to 
    * locate a particular subcomponent.
    *    
-   * @returns {Element|null} the subcomponent located by the subId string passed in locator, if found.<p>
+   * @return {Element|null} the subcomponent located by the subId string passed in locator, if found.
    * @expose
    * @memberof! oj.baseComponent
    * @instance
@@ -8533,12 +8581,28 @@ $.widget('oj.baseComponent',
    */
   getNodeBySubId: function(locator)
   {
-    if (locator == null || locator['subId'])
+    if (locator == null || locator['subId'] == null)
     {
       return this.element ? this.element[0] : null;
     }
     
     // Non-null locators have to be handled by the component subclasses
+    return null;
+  },
+  
+  /**
+   * Return the subId string for the given child DOM node
+   * 
+   * @param {!Element} node - child DOM node
+   *    
+   * @return {string|null} - the subId for the DOM node or null when none is found
+   * @expose
+   * @memberof! oj.baseComponent
+   * @instance
+   * 
+   */
+  getSubIdByNode: function(node)
+  {
     return null;
   },
   
@@ -8558,8 +8622,8 @@ $.widget('oj.baseComponent',
     this['activeable'].removeClass( "oj-active" );
     
     _removeWidgetName(this.element, this.widgetName);
-	
-	//this._RestoreAttributes();
+    
+    //this._RestoreAttributes();
   },
   
   /**
@@ -10377,13 +10441,29 @@ oj.ComponentMessaging.registerMessagingStrategy(oj.ComponentMessaging._DISPLAY_T
 oj.Object.createSubclass(oj.PopupMessagingStrategy, oj.MessagingStrategy, "oj.PopupMessagingStrategy");
 
 /**
- * Some defaults to setup on handlers for events that open and close popups by component type
+ * Messaging popup defaults for components, by component type. A special 'default' type defines the 
+ * defaults for most editableValue components. 
+ * The following properties are available - 
+ * 'events' - these specify the on handlers for events that are setup to open and close popups
+ * 'position' - specifies the type of element the popup is positioned against.
  * @private
  */
-oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME = {
-  "ojRadioset": {open: "focusin mouseover", close: "mouseout"},
-  "ojCheckboxset": {open: "focusin mouseover", close: "mouseout"},
-  "default": {open: "focusin"}
+oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT = 
+{
+  "ojRadioset": 
+  {
+    position: 'launcher', 
+    events: {open: "focusin mouseover", close: "mouseout"}
+  },
+  "ojCheckboxset": 
+  {
+    position: 'launcher', 
+    events: {open: "focusin mouseover", close: "mouseout"}
+  },
+  "default": 
+  {
+    events: {open: "focusin"}
+  }
 };
 
 /**
@@ -10438,11 +10518,10 @@ oj.PopupMessagingStrategy.prototype.update = function (content)
  */
 oj.PopupMessagingStrategy.prototype.deactivate = function (content)
 {
-  var self = this, 
-      events = 
-        oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME[this.GetComponent().widgetName] ||
-        oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME["default"];
-  //var jRoot = this.GetComponent().widget();
+  var self = this, compDefaults = 
+    oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT[this.GetComponent().widgetName],
+      events = compDefaults ? compDefaults.events : 
+                  oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT["default"].events;
   
   // Remove event handlers setup on launcher
   if (events['open'])
@@ -10506,20 +10585,19 @@ oj.PopupMessagingStrategy.prototype._handleMouseLeave = function (e)
 oj.PopupMessagingStrategy.prototype._initMessagingPopup = function ()
 {
   var self = this; 
-  // TODO: Message tooltip setup needs to be delegated to a MessagingService?
-  // Setup default tooltip options on this, as we are a validating element and will likely 
-  // display hints, errors
   if (!this._isPopupInitialized())
   {
-    var jqLauncher = this.GetLauncher(), popupOptions,
-        events = 
-          oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME[this.GetComponent().widgetName] ||
-          oj.PopupMessagingStrategy._DEFAULT_OPEN_EVENTS_BY_COMPONENT_NAME["default"];
+    var jqLauncher = this.GetLauncher(), popupOptions, jPositionOf = this._getPopupPosition(),
+        compDefaults = 
+        oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT[this.GetComponent().widgetName],
+        events = compDefaults ? compDefaults.events : 
+                  oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT["default"].events;
     
-    // 1. associate the ojPopup component to wrapper <div> for popup content, not the launcher.
-    // 2. create just wrapper div and track it on component 
-    // 3. call open(launcher) on certain events. E.g., focusin.
-    // 4. autoDismissal happens automatically when focus leaves component
+    // 1. associate the ojPopup component to wrapper <div> for popup content
+    // 2. remember the popup content root
+    // 3. wire up on() event handlers for registered events that open and close popup. E.g., focusin.
+    // 4. autoDismissal happens automatically when focus leaves component. For other events like 
+    // mouseover it's required to call off() 
     
     this.$messagingContentRoot = $(this._getPopupContentHtml());
     // append to body instead of component root as styles set on it can bleed through
@@ -10527,10 +10605,10 @@ oj.PopupMessagingStrategy.prototype._initMessagingPopup = function ()
     popupOptions = {initialFocus: 'none', 
                          tail: 'simple', 
                          autoDismiss: 'focusLoss', 
-                         position: {my: 'start bottom', at: 'end top', collision: 'flipfit'}};
+                         position: {my: 'start bottom', at: 'end top', collision: 'flipfit', 
+                                    of: jPositionOf}};
                
     this.$messagingContentRoot.ojPopup(popupOptions);
-    // this._ojPopupContentNode = this.$messagingContentRoot.parent();
       
     if (events['open'])
     {
@@ -10540,55 +10618,29 @@ oj.PopupMessagingStrategy.prototype._initMessagingPopup = function ()
     {
       jqLauncher.on(events['close'], {'strategy': self}, self._closePopup);
     }
-    
-    /*
-    this._tooltip = jqLauncher.tooltip({
-                    position: {
-                      'my': 'left+14 bottom', 
-                      'at': 'right top', 
-                      'of': jqLauncher, 
-                      //jqLauncher.find('input[type=radio]:first'), // the element the tooltip will be positioned relative to
-                      'using': function(position, feedback) {
-                          $(this).css(position);
-                          $("<div>")
-                          .addClass("arrow")
-                          .addClass(feedback['vertical'])
-                          .addClass(feedback['horizontal'])
-                          .appendTo(this);
-                      }
-                    },
-                    'open': function (event, ui)
-                    {
-                      //window.console.log("tooltip opened: " + ui.tooltip.attr("id"));
-                    },
-                    'close' : function (event, ui)
-                    {
-                      //window.console.log("tooltip closed: ");
-                    },
-                    'content' : function ()
-                    {
-                      // called every time tooltip is enabled or open
-                      //window.console.log("tooltip content fetch: ");
-                      return self._buildNoteWindowHtml();
-                    },
-                    'items' : jqLauncher
-                  }).off("mouseover mouseout")
-                    .on("mouseleave", {target: $(this)}, self._handleMouseLeave)
-                    .on("focusout", {target: $(this)}, self._hideTooltip)
-                    .on("focusin", {target: $(this)}, self._showTooltip);
-    */
-            /*
-            for checkboxes and radio
-             
-                  }).on("mouseover", {}, self._showTooltip)
-                    .on("mouseout", {}, self._hideTooltip)
-                    .on("mouseleave", {}, self._handleMouseLeave)
-                    .on("focusin", {}, self._showTooltip)
-                    .on("focusout", {}, self._hideTooltip)
-                    .on("ojoptionchange", {}, self._handleValidityChange);
-            */  
-           
   }
+};
+
+/**
+ * Returns the jquery element popup should be position on. We always position on tip of component 
+ * root unless specifically overridden. Components like radion and checkboxset use the launcher, 
+ * which in the inputs
+ * @private
+ */
+oj.PopupMessagingStrategy.prototype._getPopupPosition = function()
+{
+  var compDefaults = 
+    oj.PopupMessagingStrategy._DEFAULTS_BY_COMPONENT[this.GetComponent().widgetName];
+  
+  if (compDefaults)
+  {
+    if (compDefaults.position && compDefaults.position === "launcher")
+    {
+      return this.GetLauncher();
+    }
+  }
+  
+  return this.GetComponent().widget();
 };
 
 oj.PopupMessagingStrategy.prototype._getPopupContentHtml = function ()
@@ -12343,8 +12395,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
    */
   _OPTION_TO_CSS_MAPPING: {
     "disabled": "oj-disabled",
-    "required": "oj-required",
-    "readOnly": "oj-read-only"
+    "required": "oj-required"
   },
   
   /**
@@ -12414,7 +12465,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
   _InitOptions : function()
   {
     var node = this.element, savedAttributes = this._GetSavedAttributes(node), 
-            attrsToRemove = ["required", "title"], domValue; 
+            attrsToRemove = ["required", "title"], domValue, attrVal, propVal; 
     this._super();
     
     // TODO: Blake says no options should be initialized by base. Code needs to be removed when the 
@@ -12451,9 +12502,17 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     // if options.required is not set (undefined), use required attribute on the element.
     if (this.options['required'] === undefined)
     {
-      // In the absence of attribute set default value to null
-      domValue = (this.element.attr("required") !== undefined) ? 
-        !!this.element.prop("required") : null;
+      attrVal = this.element.attr("required");
+      propVal = this.element.prop("required");
+      
+      // In the absence of attribute set default value to null. 
+      // If attribute is present and not undefined
+      //   - In IE9, required attribute is not supported at all, so prop() returns undefined. In 
+      //     such cases set default to !!attrVal
+      //   - Otherwise set to !!propVal
+      // TODO: review needed 
+      domValue = (attrVal !== undefined) ? 
+        ((propVal !== undefined) ? !!propVal : !!attrVal) : null;
       this.options['required'] = domValue ? "required" : "optional";
     }
     
@@ -12528,6 +12587,7 @@ oj.editableValue = $.widget('oj.editableValue', $['oj']['baseComponent'],
     this._Refresh("value", this.options['value'], fullRefresh);
     this._refreshAria("required", this.options.required);
     this._refreshTheming("required", this.options.required);
+    this._refreshTheming("disabled", this.options.disabled);
   },
 
   /**
@@ -14070,12 +14130,9 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
    */        
   _AfterCreate : function () 
   {
-    var ret = this._superApply(arguments);
-
-    if(this.options["disabled"])
-    {
-      this.disable();
-    }
+    var ret = this._superApply(arguments),
+        setOptions = ["disabled", "readOnly"],
+        self = this;
     
     if(this._CLASS_NAMES) 
     {
@@ -14085,6 +14142,14 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     this.element.on("blur", $.proxy(this._onBlurHandler, this));
     
     this._AppendInputHelper();
+    this._refreshStateTheming("readOnly", this.options.readOnly);
+    
+    //reason it should go through _setOption are for cases where the components are composite and just 
+    //placing it on the root node is not sufficient enough
+    $.each(setOptions, function(index, ele)
+    {
+      self._setOption(ele, self.options[ele]);
+    });
     
     return ret;
   },
@@ -14105,7 +14170,10 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     
     if (key === "readOnly")
     {
-      this.element.prop("readonly", !!value);
+      value = !!value;
+      this.element.prop("readonly", value);
+      this.widget().toggleClass( "oj-read-only", value );
+      this._refreshStateTheming("readOnly", this.options.readOnly);
     }
 
     if (key === "pattern")
@@ -14124,10 +14192,8 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   _destroy : function __destroy()
   {
     var ret = this._superApply(arguments);
-    
+
     this.element.off("blur");
-    
-    this.element.removeClass(this._CLASS_NAMES);
     
     if(this._inputHelper) 
     {
@@ -14138,10 +14204,18 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     {
       this.element.unwrap();
     }
-    
+
     return ret;
   },
-  
+   /**
+   * when below listed options are passed to the component, corresponding CSS will be toggled
+   * @private
+   * @const
+   * @type {Object}
+   */
+  _OPTION_TO_CSS_MAPPING: {
+    "readOnly": "oj-read-only"
+  }, 
   /**
    * Performs the attribute check/set by using _ATTR_CHECK variable [i.e. ojInputText must have type be set to "text"].
    * 
@@ -14214,10 +14288,12 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   {
     if(this._INPUT_HELPER_KEY && this._DoWrapElement()) 
     {
-      var helperLabeledById = this._GetSubId(this._INPUT_HELPER_KEY);
+      var describedBy = this.element.attr("aria-describedby") || "",
+          helperDescribedById = this._GetSubId(this._INPUT_HELPER_KEY);
       
-      this.element.attr("aria-labelledby", helperLabeledById);
-      this._inputHelper = $("<div class='oj-helper-hidden-accessible' id='" + helperLabeledById + "'>" + 
+      describedBy += " " + helperDescribedById;
+      this.element.attr("aria-describedby", describedBy);
+      this._inputHelper = $("<div class='oj-helper-hidden-accessible' id='" + helperDescribedById + "'>" + 
                               this.getTranslatedString(this._INPUT_HELPER_KEY) + "</div>");
       this.widget().append(this._inputHelper);
     }
@@ -14261,6 +14337,21 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     
     return $.extend(validatorMap, ret);
   },
+    /**
+   * Toggles css selector on the widget. E.g., when readOnly option changes, 
+   * the oj-read-only selector needs to be toggled.
+   * @param {string} option
+   * @param {Object|string} value 
+   * @private
+   */        
+  _refreshStateTheming : function (option, value)
+  {
+    if (this._OPTION_TO_CSS_MAPPING.hasOwnProperty(option)) 
+    {
+      // value is a boolean
+      this.widget().toggleClass(this._OPTION_TO_CSS_MAPPING[option], !!value);
+    }
+  },
   
   /**
    * Returns the regexp validator instance or creates it if needed and caches it.
@@ -14288,6 +14379,22 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   _GetSubId : function __getSubId(sub)
   {
     return this["uuid"] + "_" + sub;
+  },
+  
+  /**
+   * Returns a jquery object of the element that triggers messaging behavior. The trigger element 
+   * is usually an input or select or textarea element for which a value can be set/retrieved and 
+   * validated. 
+   * 
+   * @return {Object} jquery object 
+   * 
+   * @memberof! oj.editableValue
+   * @instance
+   * @protected
+   */
+  _GetMessagingLauncherElement : function ()
+  {
+    return this.widget();
   },
   
   /**
@@ -26451,7 +26558,7 @@ oj.Row.prototype.values = function()
  * @export
  * Return an array of attributes/value pairs found in the Row 
  * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
+ * @returns {Object} returns the Row's attribute/value pairs as an object property bag
  */
 oj.Row.prototype.pairs = function()
 {
@@ -26951,7 +27058,7 @@ oj.ArrayRow.prototype.values = function()
  * @export
  * Return an array of attributes/value pairs found in the Row 
  * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
+ * @returns {Object} returns the Row's attribute/value pairs as an object property bag
  */
 oj.ArrayRow.prototype.pairs = function()
 {
@@ -27551,7 +27658,7 @@ oj.ArrayRowSet.prototype._getRowArray = function(values, idAttribute, startIndex
   var rowArray = [], i, prop;
   for (i = 0; i <= endIndex; i++)
   {
-    var clonedRowValues = [];
+    var clonedRowValues = {};
     var rowValues = null;
     if (values[i] instanceof oj.Row)
     {
@@ -29132,6 +29239,326 @@ oj.DataGridResources.prototype.getMappedAttribute = function(key)
  * @class 
  * @name oj.ojDataGrid
  * @augments oj.baseComponent
+ *
+ * @classdesc
+ * <h3 id="datagridOverview-section">
+ *   JET DataGrid Component
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#datagridOverview-section"></a>
+ * </h3>
+ * <p>Description:</p>
+ * <p>A JET DataGrid is a themable, WAI-ARIA compliant component that displays data in a cell oriented grid.  Data inside the DataGrid can be associated with row and column headers.  Page authors can customize the content rendered inside cells and headers.</p>
+ *
+ * <h3 id="data-section">
+ *   Data
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#data-section"></a>
+ * </h3>
+ * <p>The JET DataGrid gets its data from a DataGridDataSource.  There are several types of DataGridDataSource that are provided out of the box:</p>
+ * <ul>
+ * <li>oj.ArrayDataGridDataSource</li>
+ * <li>oj.CollectionDataGridDataSource</li>
+ * <li>oj.PagingDataGridDataSource</li>
+ * <li>oj.FlattenedTreeDataGridDataSource</li>
+ * </ul>
+ *
+ * <p>oj.ArrayDataGridDataSource - Use this when the undering data is a static array.  The ArrayDataGridDataSource supports both single array (in which case each item in the array represents a row of data in the DataGrid) and two dimensional array (in which case each item in the array represents a cell in the DataGrid).  See the documentation for oj.ArrayDataGridDataSource for more details on the available options.</p>
+ *
+ * <p>oj.CollectionDataGridDataSource - Use this when oj.Collection is the model for the underlying data.  Note that the DataGrid will automatically react to model event from the underlying oj.Collection.  See the documentation for oj.CollectionDataGridDataSource for more details on the available options.</p>
+ *
+ * <p>oj.PagingDataGridDataSource - Use this when the DataGrid is driven by an associating ojPagingControl.  See the documentation for oj.PagingDataGridDataSource for more details on the available options.</p>
+ *
+ * <p>oj.FlattenedTreeDataGridDataSource - Use this when hierarchical data is displayed in the DataGrid.  The FlattenedDataGridDataSource takes an oj.TreeDataSource and adapts that to the DataGridDataSource.  The ojRowExpander works with the FlattenedTreeDataGridDataSource to enable expanding/collapsing of rows.</p>
+ *
+ * <p>Developer can also create their own DataSource by extending the oj.DataGridDataSource class.  See the cookbook for an example of a custom DataGridDataSource.</p>
+ *
+ * <h3 id="keyboard-section">
+ *   Keyboard interaction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
+ * </h3>
+ *
+ * <p>When a data cell has focus:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Tab</kbd></td>
+ *       <td>The first Tab into the DataGrid moves focus to the first cell of the first row.  The second Tab moves focus to the next focusable element outside of the DataGrid.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Left Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the previous column within the current row.  There is no wrapping at the beginning or end of the columns.  If a row header is present, then the row header next to the first column of the current row will gain focus.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Right Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the next column within the current row.  There is no wrapping at the beginning or end of the columns.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Up Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the previous row within the current column.  There is no wrapping at the beginning or end of the rows.  If a column header is present, then the column header above the first row of the current column will gain focus.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Down Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the next row within the current column.  There is no wrapping at the beginning or end of the rows.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Home</kbd></td>
+ *       <td>Moves focus to the first (available) cell of the current row.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>End</kbd></td>
+ *       <td>Moves focus to the last (available) cell of the current row.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Page Up</kbd></td>
+ *       <td>Moves focus to the first (available) cell in the current column.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Page Down</kbd></td>
+ *       <td>Moves focus to the last (available) cell in the current column.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Contrl+Space</kbd></td>
+ *       <td>Selects all the cells of the current column.  This is only available if multiple cell selection mode is enabled.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+Space</kbd></td>
+ *       <td>Selects all the cells of the current row.  This is only available if multiple cell selection mode is enabled.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+Arrow</kbd></td>
+ *       <td>Extends the current selection.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+F8</kbd></td>
+ *       <td>Freezes the current selection, therefore allowing user to move focus to another location to add additional cells to the current selection.  This is used to accomplish non-contiguous selection.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+F10</kbd></td>
+ *       <td>Brings up the context menu.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Ctrl+X</kbd></td>
+ *       <td>Marks the current row to move if dnd is enabled and the datasource supports move operation.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Ctrl+V</kbd></td>
+ *       <td>Move the row that is marked to directly under the current row.  If the row with the focused cell is the last row, then it will be move to the row above the current row.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>When a column header cell has focus:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Left Arrow</kbd></td>
+ *       <td>Moves focus to the previous column header.  There is no wrapping at the beginning or end of the column headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Right Arrow</kbd></td>
+ *       <td>Moves focus to the next column header.  There is no wrapping at the beginning or end of the column headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Down Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the first row directly below the column header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Enter</kbd></td>
+ *       <td>Toggle the sort order of the column if the column is sortable.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Shift+F10</kbd></td>
+ *       <td>Brings up the context menu.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>When a row header cell has focus:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Up Arrow</kbd></td>
+ *       <td>Moves focus to the previous row header.  There is no wrapping at the beginning or end of the row headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Down Arrow</kbd></td>
+ *       <td>Moves focus to the next row header.  There is no wrapping at the beginning or end of the row headers.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Right Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the first column directly next to the row header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Left Arrow</kbd></td>
+ *       <td>Moves focus to the cell of the first column directly next to the row header in RTL direction.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Enter</kbd></td>
+ *       <td>Toggle the sort order of the row if the row is sortable.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <h3 id="context-section">
+ *   Header Context And Cell Context
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#context-section"></a>
+ * </h3>
+ *
+ * <p>For all header and cell options, developers can specify a function as the return value.  The function takes a single argument, which is an object that contains contextual information about the particular header or cell.  This gives developers the flexibility to return different value depending on the context.</p>
+ *
+ * <p>For header options, the context paramter contains the following keys:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Description</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>axis</kbd></td>
+ *       <td>The axis of the header.  Possible values are 'row' and 'column'.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>component</kbd></td>
+ *       <td>A reference to the DataGrid component.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>index</kbd></td>
+ *       <td>The index of the header, where 0 is the index of the first header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>key</kbd></td>
+ *       <td>The key of the header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>data</kbd></td>
+ *       <td>The data object for the header.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>parentElement</kbd></td>
+ *       <td>The header cell element.  The renderer can use this to directly append content to the header cell element.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>For cell options, the context paramter contains the following keys:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Description</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>component</kbd></td>
+ *       <td>A reference to the DataGrid component.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>datasource</kbd></td>
+ *       <td>A reference to the data source object.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>indexes</kbd></td>
+ *       <td>The object that contains both the zero based row index and column index in which the cell is bound to.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>keys</kbd></td>
+ *       <td>The object that contains both the row key and column key which identifies the cell.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>data</kbd></td>
+ *       <td>The data object for the cell.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>parentElement</kbd></td>
+ *       <td>The data cell element.  The renderer can use this to directly append content to the data cell element.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>If a FlattenedTreeDataGridDataSource is used, the following additional contextual information are available:</p>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Description</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>depth</kbd></td>
+ *       <td>The depth of the row.  The depth of root row is 0.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>index</kbd></td>
+ *       <td>The index of the row relative to its parent.  The index of the first child is 0.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>state</kbd></td>
+ *       <td>The state of the row.  Possible values are "expanded", "collapsed", "leaf".</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>parentKey</kbd></td>
+ *       <td>The key of the parent row.  For root row the parent key is null.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <p></p>
+ * <p>Note that a custom DataGridDataSource can return additional header and cell context information.  Consult the documentation of the DataGridDataSource API for details.</p>
+ *
+ * <h3 id="context-section">
+ *   Selection
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#selection-section"></a>
+ * </h3>
+ *
+ * <p>The DataGrid supports both cell based and row based selection mode, which developers can specify using the selectionMode option.  For each mode developers can also specify whether single or multiple cells/rows can be selected.</p>
+ * <p>Developers can specify or retrieve selection from the DataGrid using the selection option.  A selection in DataGrid consists of an array of ranges.  Each range contains the following keys: startIndex, endIndex, startKey, endKey.  Each of the keys contains value for 'row' and 'column'.  If endIndex and endKey are not specified, that means the range is unbounded, i.e. the cells of the entire row/column are selected.</p>
+ *
+ * <h3 id="menu-section">
+ *   Context menu
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#menu-section"></a>
+ * </h3>
+ *
+ * <p>The DataGrid has a default context menu for operations such as header resize and sort.  Developers can also specify their own context menu by using the contextMenu option.  See the option for details.</p>
+ * 
+ * <h3 id="geometry-section">
+ *   Geometry Management
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#geometry-section"></a>
+ * </h3>
+ *
+ * <p>If the DataGrid is not styled with a fixed size, then it will responds to a change to the size of its container.  Note that unlike Table the content of the cell does not affect the height of the row.  The height of the rows must be pre-determined and specified by the developer or a default size will be used.</p>
+ *
+ * <h3 id="rtl-section">
+ *   Reading direction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rtl-section"></a>
+ * </h3>
+ * 
+ * <p>The order of the column headers will be rendered in reverse order in RTL reading direction.  The location of the row header will also be different between RTL and LTR direction.  It is up to the developers to ensure that the content of the header and data cell are rendered correctly according to the reading direction.</p>
+ * <p>As with any JET component, in the unusual case that the directionality (LTR or RTL) changes post-init, the datagrid must be <code class="prettyprint">refresh()</code>ed.  
+
  */
 oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
 {
@@ -29353,18 +29780,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                          *                                               return "background-color: green";
                          *                                            return;}}}});           
                          */
-                        style: null,
-                        /**
-                         * The template to use to render the row headers
-                         * 
-                         * @expose 
-                         * @memberof! oj.ojDataGrid
-                         * @instance
-                         * @type {string|null}
-                         * @default <code class="prettyprint">null</code>
-                         * 
-                         */
-                        template:null                        
+                        style: null
                     },
                     /** @expose */
                     column: {
@@ -29447,18 +29863,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                          *                                               return "background-color: green";
                          *                                            return;}}}});           
                          */
-                        style: null,
-                       /**
-                         * The template to use to render the column headers
-                         * 
-                         * @expose 
-                         * @memberof! oj.ojDataGrid
-                         * @instance
-                         * @type {string|null}
-                         * @default <code class="prettyprint">null</code>
-                         * 
-                         */                        
-                        template:null
+                        style: null
                     }
                 },
                 /** @expose */
@@ -29513,18 +29918,7 @@ oj.__registerWidget('oj.ojDataGrid', $['oj']['baseComponent'],
                      *                                               return "background-color: green";
                      *                                            return;}}});           
                      */
-                    style: null,
-                    /**
-                    * The template to use to render the cells
-                    * 
-                    * @expose 
-                    * @memberof! oj.ojDataGrid
-                    * @instance
-                    * @type {string|null}
-                    * @default <code class="prettyprint">null</code>
-                    * 
-                    */    
-                    template:null
+                    style: null
                 },
 
                 /**
@@ -32020,10 +32414,9 @@ the specific language governing permissions and limitations under the Apache Lic
         '<' : '&lt;',
         '>' : '&gt;',
         '"' : '&quot;',
-        "'" : '&#39;',
-        "/" : '&#47;'
+        "'" : '&#39;'
       };
-      return String(markup).replace(/[&<>"'\/\\]/g, function (match)
+      return String(markup).replace(/[&<>"'\\]/g, function (match)
         {
           return replace_map[match];
         });
@@ -33418,12 +33811,16 @@ the specific language governing permissions and limitations under the Apache Lic
             this._clear();
             _ComboUtils.killEventImmediately(e);
             this.close();
-            this.selection.focus(); //Fixed???
+            this.selection.focus();
           }
           ));
 
         selection.on("mousedown", this._bind(function (e)
           {
+            ///prevent user from focusing on disabled select
+            if (this.opts.element.prop("disabled"))
+              _ComboUtils.killEvent(e);
+
             if (this._opened())
             {
               this.close();
@@ -33830,7 +34227,11 @@ the specific language governing permissions and limitations under the Apache Lic
 
         //Don't allow focus on a disabled "select"
         if (this.opts.element.prop("disabled"))
+        {
           container.find(".oj-select-choice").attr("tabindex", "-1");
+          //Bug 18697446 - disabled select icon hover still shows chnages
+          container.find(".oj-select-open-icon").addClass("oj-disabled");
+        }
 
         return container;
       },
@@ -33850,6 +34251,9 @@ the specific language governing permissions and limitations under the Apache Lic
 
         //set focus to select box
         _ComboUtils._focus(this.selection);
+
+        ///remove "mouse click" listeners on spyglass
+        this.container.find(".oj-select-spyglass-box").off("mouseup click");
       },
 
       _opening : function (event)
@@ -34017,8 +34421,9 @@ the specific language governing permissions and limitations under the Apache Lic
           return;
         }
 
-        if (e.which === _ComboUtils.KEY.TAB)
+        switch (e.which)
         {
+        case _ComboUtils.KEY.TAB:
           this._selectHighlighted(
             {
               noFocus : true
@@ -34028,6 +34433,16 @@ the specific language governing permissions and limitations under the Apache Lic
           //James: tab out of an expanded poplist, focus is going all the way to the top of the page.
           this.selection.focus();
           return;
+
+        // open dropdown on Enter 
+        case _ComboUtils.KEY.ENTER:
+          if (e.target === this.selection[0] && ! this._opened())
+          {
+            this.open();
+            _ComboUtils.killEvent(e);
+            return;
+          }
+          break;
         }
 
        _OjSingleSelect.superclass._containerKeydownHandler.apply(this, arguments);
@@ -34065,6 +34480,18 @@ the specific language governing permissions and limitations under the Apache Lic
 
         //if search box is being displayed, focus on the search box otherwise focus on the select box
         _ComboUtils._focus(focusOnSearchBox ? this.search : this.selection);
+
+        ///disable "click" on spyglass
+        if (focusOnSearchBox)
+        {
+          var self = this;
+          searchBox.find(".oj-select-spyglass-box").on("mouseup click", function (e)
+          {
+            self.search.focus();
+            e.stopPropagation();
+          });
+        }
+
       },
 
       _hasSearchBox : function ()
@@ -34669,8 +35096,8 @@ the specific language governing permissions and limitations under the Apache Lic
      */
     _ComponentCreate : function ()
     {
-      this._setup();
       this._super();
+      this._setup();
     },
 
     _setup : function ()
@@ -35886,7 +36313,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   _UNSELECTABLE_CLASS : "oj-datepicker-unselectable",
   
   _DATEPICKER_DESCRIPTION_ID : "oj-datepicker-desc",
-  _GRID_LABEL_ID : "oj-datepicker-grid", 
+  _CALENDAR_DESCRIPTION_ID : "oj-datepicker-calendar", 
   _MAIN_DIV_ID : "oj-datepicker-div", 
   
   _INLINE_CLASS : "oj-datepicker-inline",
@@ -36002,7 +36429,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">null</code>
      */
-    min : null, 
+    min : undefined, 
 
     /**
      * The maximum selectable date. When set to null, there is no maximum.
@@ -36018,7 +36445,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
      * @memberof! oj.ojInputDate
      * @default <code class="prettyprint">null</code>
      */
-    max : null, 
+    max : undefined, 
 
     /**
      * The number of months to show at once.
@@ -36139,11 +36566,44 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   _InitOptions : function ()
   {
     this._super();
+    
     if (!this.options["value"]) 
     {
       // we are doing same as _GetElementValue. 
       this.options["value"] = "";
     }
+    
+    var minMax = ["min", "max"];
+    
+    for(var i=0, j=minMax.length; i < j; i++) 
+    {
+      
+      if (this.options[minMax[i]] === undefined) 
+      {
+        //try to see if set to the input attribute
+        var resolved = null,
+            attrVal = this.element.attr(minMax[i]);
+        
+        if (attrVal)
+        {
+          
+          try 
+          {
+            resolved = Date.parse(attrVal);
+            if (!isNaN(resolved))
+            {
+              resolved = new Date(resolved);
+            }
+          }
+          catch (e)
+          {
+          }
+        }
+        
+        this.options[minMax[i]] = resolved;
+      }
+    }
+    
   },
   
   /**
@@ -36171,7 +36631,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     
     $(document).on("mousedown", $.proxy(this._checkExternalClick, this));
     
-    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this._MAIN_DIV_ID) + "' role='region' aria-labelledby='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content'></div>"));
+    this._dpDiv = bindHover($("<div id='" + this._GetSubId(this._MAIN_DIV_ID) + "' role='region' aria-describedby='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "' class='oj-datepicker-content'></div>"));
     $("body").append(this._dpDiv);
     
     if(this._isInLine()) 
@@ -36227,21 +36687,6 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     }
     
     return retVal;
-  },
-  
-  /**
-   * @protected
-   * @override
-   * @instance
-   * @memberof! oj.ojInputDate
-   */        
-  _AfterCreate : function () 
-  {
-    var ret = this._superApply(arguments);
-    
-    this._disableEnable(this.options["disabled"]);
-    
-    return ret;
   },
   
   _setOption : function __setOption(key, value)
@@ -36423,7 +36868,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
       return false;
     }
   },
-
+  
   //This handler is when an user keys down with the calendar having focus
   _doKeyDown : function __doKeyDown(event)
   {
@@ -36671,7 +37116,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     }
     
     //Take care of accessibility
-    $("#" + this._GetSubId(this._GRID_LABEL_ID)).html(this.options["monthWide"][this._drawMonth] + " " + yearDisplay.format(new Date(this._drawYear, this._drawMonth, 1)));
+    $("#" + this._GetSubId(this._CALENDAR_DESCRIPTION_ID)).html(this.options["monthWide"][this._drawMonth] + " " + yearDisplay.format(new Date(this._drawYear, this._drawMonth, 1)));
 
     this._adjustDate();
   },
@@ -36713,11 +37158,11 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   //A date may be specified as an exact value or a relative one.
   _determineDate : function __determineDate(date, defaultDate)
   {
-    var _this = this, offsetNumeric = function (offset)
+    var self = this, offsetNumeric = function (offset)
     {
-      var date = _this._getTodayDate();
-      date.setDate(date.getDate() + offset);
-      return date;
+      var todayDate = self._getTodayDate();
+      todayDate.setDate(todayDate.getDate() + offset);
+      return todayDate;
     },
     newDate = (date == null || date === "" ? defaultDate : (typeof date === "number" ? (isNaN(date) ? defaultDate : offsetNumeric(date)) : new Date(date.getTime())));
 
@@ -36881,11 +37326,11 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 
     prevText = this.getTranslatedString("prevText");
 
-    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-prev-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='prev' data-event='click'" + " title='" + prevText + "'></a>" : "<a class='oj-datepicker-prev-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + prevText + "'></a>");
+    prev = (this._canAdjustMonth( - 1, drawYear, drawMonth) && !wDisabled ? "<a href='#' class='oj-datepicker-prev-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='prev' data-event='click'" + " title='" + prevText + "'></a>" : "<a class='oj-datepicker-prev-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + prevText + "'></a>");
 
     nextText = this.getTranslatedString("nextText");
 
-    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a class='oj-datepicker-next-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='next' data-event='click'" + " title='" + nextText + "'></a>" : "<a class='oj-datepicker-next-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + nextText + "'></a>");
+    next = (this._canAdjustMonth( + 1, drawYear, drawMonth) && !wDisabled ? "<a href='#' class='oj-datepicker-next-icon oj-enabled oj-component-icon oj-clickable-icon' data-handler='next' data-event='click'" + " title='" + nextText + "'></a>" : "<a class='oj-datepicker-next-icon oj-disabled oj-component-icon oj-clickable-icon' title='" + nextText + "'></a>");
 
     currentText = this.getTranslatedString("currentText");
     gotoDate = today;
@@ -36932,7 +37377,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
           calender += "'>";
         }
         calender += "<div class='oj-datepicker-header" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "'>" + (/all|left/.test(monthControl) && row === 0 ? (isRTL ? next : prev) : "") + (/all|right/.test(monthControl) && row === 0 ? (isRTL ? prev : next) : "") + this._generateMonthYearHeader(drawMonth, drawYear, minDate, maxDate, row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
-"</div><table class='oj-datepicker-calendar" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "' tabindex=-1 data-handler='calendarKey' data-event='keydown' aria-readonly='true' role='grid' " + "aria-labelledby='" + this._GetSubId(this._GRID_LABEL_ID) + "'><thead role='presentation'>" + "<tr role='row'>";
+"</div><table class='oj-datepicker-calendar" + (wDisabled ? " oj-disabled " : " oj-enabled ") + "' tabindex=-1 data-handler='calendarKey' data-event='keydown' aria-readonly='true' role='grid' " + "aria-labelledby='" + this._GetSubId(this._CALENDAR_DESCRIPTION_ID) + "'><thead role='presentation'>" + "<tr role='row'>";
         thead = (weekDisplay === "number" ? "<th class='oj-datepicker-week-col'>" + this.getTranslatedString("weekHeader") + "</th>" : "");
         for (dow = 0;dow < 7;dow++)
         {
@@ -37104,7 +37549,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     {
       html += (secondary || !((changeMonth === "select") && (changeYear === "select")) ? "&#xa0;" : "") + monthHtml;
     }
-    html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._GRID_LABEL_ID) + "'>" + monthNames[drawMonth] + " " + yearDisplay.format(new Date(drawYear, drawMonth, 1)) + "</span>";
+    html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._CALENDAR_DESCRIPTION_ID) + "'>" + monthNames[drawMonth] + " " + yearDisplay.format(new Date(drawYear, drawMonth, 1)) + "</span>";
     html += "<span class='oj-helper-hidden-accessible' id='" + this._GetSubId(this._DATEPICKER_DESCRIPTION_ID) + "'>" + this.getTranslatedString("datePicker") + "</span>";
     html += "</div>";// Close datepicker_header
     return html;
@@ -37146,35 +37591,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
    */
   _getMinMaxDate : function __getMinMaxDate(minMax)
   {
-    var byProperty = this._determineDate(this.options[minMax], null);
-
-    if (byProperty)
-    {
-      return byProperty;
-    }
-    else 
-    {
-      //try to see if set to the input attribute
-      var ret = null;
-      if (this.element.attr(minMax))
-      {
-        try 
-        {
-          ret = Date.parse(this.element.attr(minMax));
-          if (isNaN(ret))
-          {
-            return;
-          }
-          ret = new Date(ret);
-        }
-        catch (e)
-        {
-        }
-      }
-
-      this.options[minMax] = ret;
-      return ret;
-    }
+    return this._determineDate(this.options[minMax], null);
   },
 
   /**
@@ -37840,21 +38257,6 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       this._inputKeyDownHandler = $.proxy(this._doInputKeyDown, this);
       this.element.on("keydown", this._inputKeyDownHandler);
     }
-    
-    return ret;
-  },
-  
-  /**
-   * @protected
-   * @override
-   * @instance
-   * @memberof! oj.ojInputTime
-   */        
-  _AfterCreate : function () 
-  {
-    var ret = this._superApply(arguments);
-
-    this._setOption("disabled", this.options["disabled"]);
     
     return ret;
   },
@@ -38627,7 +39029,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
    */
   widget : function __widget()
   {
-    return !this._isContainedInDateTimePicker() ? this._super() : this._datePicker["widget"].widget();
+    return this._isIndependentInput() ? this._super() : this._datePicker["widget"].widget();
   }
   
 });
@@ -38868,7 +39270,7 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
   {
     var ret = this._superApply(arguments),
         timeConverter = this._getTimePickerConverter(this._GetConverter());
-
+    
     this._timePicker.ojInputTime("option", "disabled", this.options["disabled"]);
     
     if(this._isInLine()) 
@@ -39090,7 +39492,7 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
    */
   _GetMessagingLauncherElement : function ()
   {
-    return !this._isInLine() ? this._super() : this._timePickerElement;
+    return !this._isInLine() ? this._super() : this._timePickerElement.ojInputTime("widget");
   },
   
   /**
@@ -45277,16 +45679,43 @@ oj.TableDomUtils.prototype.getEmptyTableDimensions = function()
   var tableBody = this.getTableBody();
   var tableHeader = this.getTableHeader();
   var tableFooter = this.getTableFooter();
-  
-  table.empty();
+  var tableHeaderDisplay = '';
+  var tableBodyDisplay = '';
+  var tableFooterDisplay = '';
+
+  if (tableHeader != null)
+  {
+    tableHeaderDisplay = tableHeader.css('display').toString();
+    tableHeader.css('display', 'none');
+  }
+
+  if (tableBody != null)
+  {
+    tableBodyDisplay = tableBody.css('display').toString();
+    tableBody.css('display', 'none');
+  }
+  if (tableFooter != null)
+  {
+    tableFooterDisplay = tableFooter.css('display').toString();
+    tableFooter.css('display', 'none');
+  }
   table.removeClass(oj.TableDomUtils.CSS_CLASSES._TABLE_CLASS);
-  
+
   var dimensions = {height: table.height(), width: table.width()};
-  
+
   table.addClass(oj.TableDomUtils.CSS_CLASSES._TABLE_CLASS);
-  table.append(tableHeader);
-  table.append(tableFooter);
-  table.append(tableBody);
+  if (tableBody != null)
+  {
+    tableBody.css('display', tableBodyDisplay);
+  }
+  if (tableHeader != null)
+  {
+    tableHeader.css('display', tableHeaderDisplay);
+  }
+  if (tableFooter != null)
+  {
+    tableFooter.css('display', tableFooterDisplay);
+  }
 
   return dimensions;
 };
@@ -47119,7 +47548,7 @@ oj.ModelRow.prototype.values = function()
  * @export
  * Return an array of attributes/value pairs found in the Row 
  * 
- * @returns {Object} returns the Row's attribute/value pairs as an array
+ * @returns {Object} returns the Row's attribute/value pairs as an object property bag
  */
 oj.ModelRow.prototype.pairs = function()
 {
@@ -47940,7 +48369,10 @@ DvtStyleProcessor._mergeOptionsAndDivStyle = function(cssDiv, optionsStyle, bInc
   if (optionsStyle)
   {
     oldStyle = cssDiv.attr("style");
-    cssDiv.attr("style", oldStyle + optionsStyle);
+    if (oldStyle)
+      cssDiv.attr("style", oldStyle + optionsStyle);
+    else
+      cssDiv.attr("style", optionsStyle);
   }
 
   var styleString = '';
@@ -47960,11 +48392,85 @@ DvtStyleProcessor._mergeOptionsAndDivStyle = function(cssDiv, optionsStyle, bInc
   }
   return styleString;
 }
+
+/**
+ * Creates dummy divs for each component style class and merges their values with the component options object.
+ * @param {Object} element DOM node to add CSS styles to for processing
+ * @param {Object} options The options object to merge CSS properties with
+ * @param {Array} componentClasses The style classes associated with the component
+ * @param {Object} childClasses Style classes associated with a component's children
+ * @private
+ */ 
+DvtStyleProcessor.processStyles = function(element, options, componentClasses, childClasses)
+{
+  // Add the common css properties
+  var oldClasses = element.attr("class");
+  var newClasses = '';
+  for (var i=0; i<componentClasses.length; i++)
+    newClasses = newClasses + componentClasses[i] + " ";
+  if (oldClasses)
+    newClasses += oldClasses;
+  element.attr("class", newClasses);
+
+  var outerDummyDiv = $(document.createElement("div"));
+  outerDummyDiv.attr("style", "display:none;");
+  element.append(outerDummyDiv);
+  // overwrite inherited values to prevent populating options object with them
+  outerDummyDiv.css("font-family", DvtStyleProcessor._INHERITED_FONT_FAMILY);
+  outerDummyDiv.css("font-size", DvtStyleProcessor._INHERITED_FONT_SIZE);
+  outerDummyDiv.css("color", DvtStyleProcessor._INHERITED_FONT_COLOR);
+  outerDummyDiv.css("font-weight", DvtStyleProcessor._INHERITED_FONT_WEIGHT);
+  outerDummyDiv.css("font-style", DvtStyleProcessor._INHERITED_FONT_STYLE);
+  for (var styleClass in childClasses) {
+    var dummyDiv = $(document.createElement("div"));
+    dummyDiv.addClass(styleClass);
+    outerDummyDiv.append(dummyDiv);
+    DvtStyleProcessor._processStyle(options, dummyDiv, childClasses[styleClass]);
+  }
+}
+
+/**
+ * Resolves the css properties within a dummy div
+ * @param {Object} options The options object to merge CSS properties with
+ * @param {Object} cssDiv The div to use for processing CSS style
+ * @param {Object} definition Map of CSS style attribute and values to process
+ * @private
+ */ 
+DvtStyleProcessor._processStyle = function(options, cssDiv, definition)
+{
+  if (definition instanceof Array) {
+    for (var i=0;i<definition.length; i++) 
+      DvtStyleProcessor._resolveStyle(options, cssDiv, definition[i]);
+  } else {
+    DvtStyleProcessor._resolveStyle(options, cssDiv, definition);
+  }
+}
+      
+/**
+ * Helper function to resolve the css properties within a dummy div.
+ * @param {Object} options The options object to merge CSS properties with
+ * @param {Object} cssDiv The div to use for processing CSS style
+ * @param {Object} definition Map of CSS style attribute and values to process
+ * @private
+ */ 
+DvtStyleProcessor._resolveStyle = function(options, cssDiv, definition)
+{
+  var path = new DvtJsonPath(options, definition['path']);
+  var value;
+  if(definition['property']) {
+    var handler = DvtStyleProcessor[definition['property']];
+    if (!handler)
+      value = DvtStyleProcessor.defaultStyleProcessor(cssDiv, definition['property']);
+    else
+      value = handler(cssDiv, path.getValue());
+  }
+  if(value != null
+     && !(typeof value == 'string' && value.replace(/^\s+/g, '') == '')) {
+    path.setValue(value);
+  }
+}
 oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
-  _loadedResources : [],
-  _checkResources : [],
-  _supportedLocales : ['ar','cs','da','de','el','es','fi','fr','hu','it','iw','ja','ko','nl','no','pl','pt','pt_BR','ro','ru','sk','sv','th','tr','zh_CN','zh_TW'],
-  
+ 
   /** 
    * @override
    * @protected
@@ -47988,7 +48494,9 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     this._context.getStage().addChild(this._component);  
     
     // Create dummy divs for style classes and merge style class values with json options object
-    this._processStyles(this._GetChildStyleClasses());
+    DvtStyleProcessor.processStyles(this.element, this.options, 
+                                    this._GetComponentStyleClasses(), 
+                                    this._GetChildStyleClasses());
     
     // Retrieve and apply the translated strings onto the component bundle
     this._processTranslations();
@@ -48031,7 +48539,20 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
     if (this._component && this._component.getAutomation)
       automation = this._component.getAutomation();
     if (automation)
-      return automation.getDomElementForSubId(locator);
+      return automation.getDomElementForSubId(locator['subId']);
+    return null;
+  },
+  
+  /** 
+   * @override
+   */
+  getSubIdByNode : function(node) {
+    // subcomponents should override for jsDoc to list subId values
+    var automation;
+    if (this._component && this._component.getAutomation)
+      automation = this._component.getAutomation();
+    if (automation)
+      return automation.getSubIdForDomElement(node);
     return null;
   },
   
@@ -48062,79 +48583,6 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
    */
   _GetChildStyleClasses : function() {
     return {};
-  },
-  
-  /**
-   * Creates dummy divs for each component style class and merges their values with the component options object.
-   * @param {Array} styleClasses
-   * @private
-   */ 
-  _processStyles : function(styleClasses) {
-    // TODO AMDAI Consider refactoring to DvtStyleProcessor
-    // Add the common css properties
-    var componentClasses = this._GetComponentStyleClasses();
-    var oldClasses = this.element.attr("class");
-		var newClasses = '';
-    for (var i=0; i<componentClasses.length; i++)
-			newClasses = newClasses + componentClasses[i] + " ";
-    if (oldClasses)
-      newClasses += oldClasses;
-    this.element.attr("class", newClasses);
-    
-    var outerDummyDiv = $(document.createElement("div"));
-    outerDummyDiv.attr("style", "display:none;");
-    this.element.append(outerDummyDiv);
-    // overwrite inherited values to prevent populating options object with them
-    outerDummyDiv.css("font-family", DvtStyleProcessor._INHERITED_FONT_FAMILY);
-    outerDummyDiv.css("font-size", DvtStyleProcessor._INHERITED_FONT_SIZE);
-    outerDummyDiv.css("color", DvtStyleProcessor._INHERITED_FONT_COLOR);
-    outerDummyDiv.css("font-weight", DvtStyleProcessor._INHERITED_FONT_WEIGHT);
-    outerDummyDiv.css("font-style", DvtStyleProcessor._INHERITED_FONT_STYLE);
-    for (var styleClass in styleClasses) {
-      var dummyDiv = $(document.createElement("div"));
-      dummyDiv.addClass(styleClass);
-      outerDummyDiv.append(dummyDiv);
-      this._processStyle(dummyDiv, styleClasses[styleClass]);
-    }
-  },
-
-  /**
-   * Resolves the css properties within a dummy div
-   * @param {Object} cssDiv
-   * @param {Object} definition
-   * @private
-   */ 
-  _processStyle : function(cssDiv, definition) {
-    // TODO AMDAI Consider refactoring to DvtStyleProcessor
-    if (definition instanceof Array) {
-      for (var i=0;i<definition.length; i++) 
-        this._resolveStyle(cssDiv, definition[i]);
-    } else {
-      this._resolveStyle(cssDiv, definition);
-    }
-  },
-  
-  /**
-   * Helper function to resolve the css properties within a dummy div.
-   * @param {Object} cssDiv
-   * @param {Object} definition
-   * @private
-   */ 
-  _resolveStyle : function(cssDiv, definition) { 
-    // TODO AMDAI Consider refactoring to DvtStyleProcessor
-    var path = new DvtJsonPath(this.options, definition['path']);
-    var value;
-    if(definition['property']) {
-      var handler = DvtStyleProcessor[definition['property']];
-      if (!handler)
-      	value = DvtStyleProcessor.defaultStyleProcessor(cssDiv, definition['property']);
-      else
-      	value = handler(cssDiv, path.getValue());
-    }
-    if(value != null
-       && !(typeof value == 'string' && value.replace(/^\s+/g, '') == '')) {
-      path.setValue(value);
-    }
   },
   
   /**
@@ -48293,68 +48741,12 @@ oj.__registerWidget('oj.dvtBaseComponent', $['oj']['baseComponent'], {
   _LoadResources : function() {
     // subcomponents should override
   }, 
-  
-  /**
-   * Utility function for loading resource bundles.
-   * @protected
-   */
-  _LoadResourceBundle : function(url) {
-    // TODO AMDAI Move this to thematic map since the other DVTs are not likely to use.
-    var locale = oj.Config.getLocale();
-    if (locale.indexOf("en") === 0) {
-      this._loadResourceBundleByUrl(url + ".js");
-    } else {
-      // split locale by subtags and try to load resource bundle that satisfies
-      var splitLocale = locale.split('_');
-      var localeList = [];
-      for (var j = 0; j < splitLocale.length; j++) {
-        var tempLocale = '';
-        for (var k = 0; k < (j + 1); k++) {
-          if (k != 0)
-            tempLocale += '_';
-          tempLocale += splitLocale[k];
-        }
-        localeList.push(tempLocale)
-      }
-      
-      // Go thru list of supported DVT languages
-      for (var i = localeList.length - 1; i >= 0; i++) {
-        if (this._supportedLocales.indexOf(localeList[i]) !== -1)
-          this._loadResourceBundleByUrl(url + "_" + localeList[i] + ".js");
-      }
-    }
-  },
-  
-  /**
-   * Utility function for loading resource bundles by url.
-   * @private
-   */
-  _loadResourceBundleByUrl : function(url) {
-    // TODO AMDAI Move this to thematic map since the other DVTs are not likely to use.
-    // resource is already loaded or function tried to load this resource but failed
-    if(this._loadedResources[url])
-      return;
-    
-    var resolvedUrl = oj.Config.getResourceUrl(url);
-    var thisRef = this;
-    var loadedBundles = this._loadedResources;
-    $.getScript(resolvedUrl, function( data, textStatus, jqxhr ) {
-      loadedBundles[url] = true;
-      thisRef._Render();
-    });
-  },
           
   /**
    * Called to render the component at the current size.
    * @protected
    */
   _Render : function() {
-    // do not render until all resources are loaded
-    for (var i=0; i<this._checkResources.length; i++) {
-      if (!this._loadedResources[this._checkResources[i]])
-        return;
-    }
-    
     // Fix 18498656: If the component is not attached to a visible subtree of the DOM, rendering will fail because 
     // getBBox calls will not return the correct values.  Log an error message in this case and avoid rendering.
     if(!this._context.isReadyToRender())
@@ -49664,14 +50056,21 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
         },
         
         /**
-         * JQ selector identifying the JET Menu that the button should launch. If specified, the button is a WAI-ARIA-compliant menu button.  
+         * <p>JQ selector identifying the JET Menu that the button should launch. If specified, the button is a WAI-ARIA-compliant menu button.  
          * 
          * <p>By default, menu buttons have a downward pointing "dropdown" arrow for their end icon.  See the <code class="prettyprint">icons</code> option for details.
          * 
          * <p>Menu button functionality is supported for Buttons based on button or anchor tags.  (Buttons based on input tags either do not support the dropdown icon, 
          * or do not make sense for use as a menu button, or both.)
          * 
-         * <p>The JET Menu should be initialized before the JET Button that launches it.
+         * <p>The JET Menu should be initialized before being set on a button's <code class="prettyprint">menu</code> option.  This means that if the menu is specified 
+         * at create time, then the menu should be initialized first, before the button referencing it is initialized.  If the components are initialized using 
+         * <code class="prettyprint">ojComponent</code> bindings, then the order can be controlled either by using separate <code class="prettyprint">applyBindings</code> 
+         * calls, or by placing the menu before the button in the document.
+         * 
+         * <p>The menu-before-button ordering can lead to a less intuitive tab order.  To avoid this while using a single <code class="prettyprint">applyBindings</code> call, the
+         * <code class="prettyprint">menu</code> option can be set after both components are initialized, thus meeting the requirement that the menu be inited when set 
+         * on the button.
          * 
          * @expose
          * @memberof! oj.ojButton
@@ -55499,7 +55898,9 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
   },
   
   _loadedBasemaps : [],
-  _checkBasemaps : [],
+  _checkBasemaps : [],  
+  _supportedLocales : ['ar','cs','da','de','el','es','fi','fr','hu','it','iw','ja','ko','nl','no','pl','pt','pt_BR','ro','ru','sk','sv','th','tr','zh_CN','zh_TW'],
+ 
   
   /**
    * @override
@@ -55591,26 +55992,56 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
     }
   },
   
-  _loadBasemapHelper : function(basemap, layer, locale) {
-    var relativeUrl = 'resources/internal-deps/dvt/thematicMap/basemaps/DvtBaseMap'+basemap+layer+'.js';
-    var resolvedUrl = oj.Config.getResourceUrl(relativeUrl);
-
-    var loadedBasemaps = this._loadedBasemaps;
-    // check to see if basemap is already loaded
-    if (loadedBasemaps[relativeUrl])
+  /**
+   * Utility function for loading resource bundles by url.
+   * @param {string} url The url of the resource to load
+   * @private
+   */
+  _loadResourceByUrl : function(url) {
+    // resource is already loaded or function tried to load this resource but failed
+    if(this._loadedBasemaps[url])
       return;
-
-    this._checkBasemaps.push(relativeUrl);
+    
+    var resolvedUrl = oj.Config.getResourceUrl(url);
     var thisRef = this;
+    var loadedBundles = this._loadedBasemaps;
     $.getScript(resolvedUrl, function( data, textStatus, jqxhr ) {
-      loadedBasemaps[relativeUrl] = true;
+      loadedBundles[url] = true;
       thisRef._Render();
     });
+  },
+  
+  _loadBasemapHelper : function(basemap, layer, locale) {
+    var relativeUrl = 'resources/internal-deps/dvt/thematicMap/basemaps/DvtBaseMap'+basemap+layer+'.js';
+    this._checkBasemaps.push(relativeUrl);
 
     if (locale.indexOf('en') === -1) {
-      var bundleName = basemap+layer+'Bundle';
-      this._LoadResourceBundle('resources/internal-deps/dvt/thematicMap/resourceBundles/'+bundleName);
+      // split locale by subtags and try to load resource bundle that satisfies
+      var splitLocale = locale.split('_');
+      var localeList = [];
+      for (var j = 0; j < splitLocale.length; j++) {
+        var tempLocale = '';
+        for (var k = 0; k < (j + 1); k++) {
+          if (k != 0)
+            tempLocale += '_';
+          tempLocale += splitLocale[k];
+        }
+        localeList.push(tempLocale)
+      }
+
+      var bundleName = 'resources/internal-deps/dvt/thematicMap/resourceBundles/'+basemap+layer+'Bundle';
+      // Go thru list of supported DVT languages
+      for (var i = localeList.length - 1; i >= 0; i++) {
+        if (this._supportedLocales.indexOf(localeList[i]) !== -1) {
+          var bundleUrl = bundleName + "_" + localeList[i] + ".js";
+//          this._checkBasemaps.push(bundleUrl);
+          this._loadResourceByUrl(bundleUrl);
+          break;
+        }
+      }
     }
+    
+    this._loadResourceByUrl(relativeUrl);
   },
   
   /**
@@ -55640,7 +56071,17 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
    * @override
    */
   getNodeBySubId : function(locator) {
-    this._super(locator);
+    return this._super(locator);
+  },
+  
+  /**
+   * Thematic map supports the following ids for sub elements:
+   * dataLayerId:area[id] - An area indexed by the given id in a data layer with id dataLayerId
+   * dataLayerId:marker[id] - A marker indexed by the given id in a data layer with id dataLayerId
+   * @override
+   */
+  getSubIdByNode : function(locator) {
+    return this._super(locator);
   },
   
   /**
@@ -55649,6 +56090,7 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
    * @param {String} id The area id 
    * @return {Object} The thematic map area with the given id 
    *                             within the given data layer or null if none exists
+   * @expose
    */
   getArea : function(dataLayerId, id) {
     var auto = this._component.getAutomation();
@@ -55661,6 +56103,7 @@ oj.__registerWidget('oj.ojThematicMap', $['oj']['dvtBaseComponent'],
    * @param {String} id The marker id 
    * @return {Object} The thematic map marker with the given id 
    *                             within the given data layer or null if none exists
+   * @expose
    */
   getMarker : function(dataLayerId, id) {
     var auto = this._component.getAutomation();
@@ -56771,16 +57214,16 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 		return { height: this.originalSize.height + dy };
 	    },
 	    "se": function(event, dx, dy) {
-		return $.extend(this._change.s.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		return $.extend(this._change["s"].apply(this, arguments), this._change["e"].apply(this, [event, dx, dy]));
 	    },
 	    "sw": function(event, dx, dy) {
-		return $.extend(this._change.s.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		return $.extend(this._change["s"].apply(this, arguments), this._change["w"].apply(this, [event, dx, dy]));
 	    },
 	    "ne": function(event, dx, dy) {
-		return $.extend(this._change.n.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		return $.extend(this._change["n"].apply(this, arguments), this._change["e"].apply(this, [event, dx, dy]));
 	    },
 	    "nw": function(event, dx, dy) {
-		return $.extend(this._change.n.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		return $.extend(this._change["n"].apply(this, arguments), this._change["w"].apply(this, [event, dx, dy]));
 	    }
 	},
 
@@ -58701,22 +59144,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 	    // we do not need to put the dialog at the end during create.
 	    // 
 
-	    /*
-
-	    this.uiDialog.appendTo( this._appendTo() ); 
-
-	    if (_putback) {
-
-		this._placeHolderId = _placeHolderPrefix + this._elementId;
-
-		this._placeHolder = $("<div>")
-		    .hide()
-		    .attr({'id' : this._placeHolderId});
-
-		this._placeHolder.insertBefore(this.element);  // position placeHolder at original in-line DOM location
-	    }
-
-*/
+	    // this._relocateWithPutback();
 
 	    /*
 	    if (this.options.location === "auto") 
@@ -58971,6 +59399,8 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 	    this._resizableComponent = this.uiDialog['ojResizable'].bind(this.uiDialog);
 
 	    // this.uiDialog.['ojResizable']({
+	    // this.uiDialog.resizable({
+
 	    this._resizableComponent({
 		cancel: ".oj-dialog-content",
 		containment: "document",
@@ -58979,7 +59409,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 		// maxWidth: options.maxWidth,
 		// maxHeight: options.maxHeight,
 		// minWidth: options.minWidth,
-		// minHeight: this._minHeight(),
+		minHeight: this._minHeight(),
 
 		handles: resizeHandles,
 		start: function( event, ui ) {
@@ -59301,24 +59731,6 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 	    //
 	    this.overlay = $("<div>")
 		.addClass("oj-component-overlay oj-dialog-front");
-
-/*
-
-
-	    if (_putback) {
-
-		this._placeHolderId = _placeHolderPrefix + this._elementId;
-
-		this._placeHolder = $("<div>")
-		    .hide()
-		    .attr({'id' : this._placeHolderId});
-
-		// this._placeHolder.insertBefore(this.element);  // position placeHolder at original in-line DOM location
-		this._placeHolder.insertBefore($('#' + this._wrapperId));  // position placeHolder at original in-line DOM location, before the wrapper id
-	    }
-
-	    this.uiDialog.appendTo( this._appendTo() ); 
-*/
 
 	    this.overlay.appendTo( this._appendTo() ); // original
 
@@ -59684,7 +60096,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
       s += "shift+" ;
     }
 //  if (e.metaKey) {
-//    s += "meta+" ;                // TDO
+//    s += "meta+" ;                // TDO  Mac!
 //  }
 
     var key = e.which ;
@@ -59893,9 +60305,12 @@ oj.ThematicMapArea.prototype.getLabel = function() {
   * </br>
   * A Tree can be populated via standard HTML markup using a &lt;ul&gt; list structure - refer to
   * <code class="prettyprint">option</code> property <code class="prettyprint">"data"</code>.  In
-  * the case where HTML markup has been defined in the Tree's containing &lt;div&gt;, on startup the &lt;ul&gt;
-  * markup is detached from the containing &lt;div&gt;, saved, and used as a template to create a new
-  * tree structure in its place.  When the tree is destroyed, the original markup is restored.
+  * the case where the <code class="prettyprint">"data"</code> option has not been defined, ojTree
+  * will use any HTML markup defined in the Tree's containing &lt;div&gt;, and on startup the &lt;ul&gt;
+  * the markup will be detached from the containing &lt;div&gt;, saved, and used as a template to create a new
+  * tree structure in its place.  When the tree is destroyed, the original markup is restored.  Lazy loading of 
+  * a node's children (when expanded) is performed if any node indicates that it has children,  
+  * but its child &lt;ul&gt; list is left empty.
   * </p></br>Example: Using HTML markup to populate a Tree.
   * <pre class="prettyprint">
   * <code>
@@ -60273,7 +60688,8 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                   *                        // status = "success"
                   *                        // obj    = the AJAX object.
                   *                        trace("Ajax " + status) ;
-                  *                        // return the data, can transform it first if required ;
+                  *                        // return the data, can transform it first if required.
+                  *                        // if no return value, the data is used untransformed.
                   *          },
                   *          "error" : function(reason, feedback, obj) {
                   *                        // reason e.g. "parsererror"
@@ -60793,7 +61209,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 				deselectAll : null,
 
 				/**
-				  * Triggered when a tree node is destroyed.
+				  * Triggered when a tree is destroyed.
 				  *
 				  * @expose 
 				  * @event 
@@ -61447,7 +61863,6 @@ oj.ThematicMapArea.prototype.getLabel = function() {
        *  @public
        *  @instance
        *  @memberof! oj.ojTree 
-       *
        */ 
      remove : function(node)
      {
@@ -61607,7 +62022,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
      },
 
      /** Returns the full path to a node, either as an array of ID's or node names, depending on
-       * the value of the "idmode" argument.
+       * the value of the "idMode" argument.
        *
        * @param {HTMLElement | Object | string} node - Can be a DOM element, a jQuery wrapped node, 
        *                       or a selector pointing to the element.
@@ -61774,15 +62189,15 @@ oj.ThematicMapArea.prototype.getLabel = function() {
        * </table>
        * <p>
        * <table style="border-collapse:collapse;border:1px solid"><tr style="background-color:#eee;"><th>Property</th><th>Value</th><th>Description</th></tr>
-       *  <tr><td>subId</td><td><em>"parent"</em> |<em>"prevSib"</em> | <em>"nextSib"</em> | "first"</em> |"last"</em></td><td>Returns a node &lt;li&gt; element
+       *  <tr><td>subId</td><td><em>"parent"</em> |</br><em>"prevSib"</em> |</br> <em>"nextSib"</em> |</br> "first"</em> |</br><em>"last"</em></td><td>Returns a node &lt;li&gt; element
        *                 based on the "subId" value and the "node" value.
        *                 <ul><li>"parent" - returns the parent of the node specified by "node", or null if there is no parent</li></br>
        *                   <li>"prevSib" - returns the previous sibling of the node specified by "node", or null if there is no previous sibling</li></br>
        *                   <li>"nextSib" - returns the next sibling of the node specified by "node", or null if there is no next sibling</li></br>
        *                   <li>"first" - returns the first child of the parent node specified by "node". If "node"
-       *                                 is -1 or omitted, the top node of the tree is returned.</li></br>
+       *                                 is -1 or omitted, the first node of the tree is returned.</li></br>
        *                   <li>"last" - returns the last child of the parent node specified by "node". If "node"
-       *                                is -1 or omitted, the bottom node of the tree is returned</li></br>
+       *                                is -1 or omitted, the last node of the tree is returned</li></br>
        *                 </ul>
        *  <tr><td>node</td><td>String | Object</td><td>Can be a selector for the node (e.g. "#mynode"), a DOM
        *                 element (a node &lt;li&gt; or any element contained within the &lt;li&gt;), a jQuery
@@ -61800,11 +62215,10 @@ oj.ThematicMapArea.prototype.getLabel = function() {
         return this._processSubId(locator)
      },
 
-
      /**
-       *  Remove all traces of ojTree in the DOM (only the ones set using oj-tree*)
-       *  and cleans out all events.
-       *
+       *  Removes all traces of ojTree in the DOM (only the ones set using oj-tree*)
+       *  and cleans out all events.  If the tree was constructed from original user
+       *  markup found in the div, reinstate the markup.
        *  @expose 
        *  @public
        *  @instance
@@ -61812,25 +62226,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
        */
      destroy : function ()
      {
-        var  n = this._getIndex();
-
-        this._$container
-            .unbind(".oj-tree")
-            .undelegate(".oj-tree")
-            .removeData("oj-tree-instance-id")
-            .find("[class^='oj-tree']")
-            .addBack()
-            .attr("class", function ()
-                    {
-                      return this["className"].replace(/oj-tree[^ ]*|$/ig,'');
-                    });
-
-        _removeKeyFilter(this._$container_ul) ;        // keyboard listener
-
-        $(document)
-            .unbind(".oj-tree-" + n)
-            .undelegate(".oj-tree-" + n);
-
+        this._emitEvent({ "obj" : -1}, "destroy"); 
         this._super() ;
      },
 
@@ -61855,11 +62251,32 @@ oj.ThematicMapArea.prototype.getLabel = function() {
         this._$container_ul = null ;                                // the containing <ul>
         this._data          = {} ;                                  // working data
         this._tds           = null ;                                // Tree DataSource
-        this._index         = this._newIndex() ;
+        this._index         = this._newIndex() ;                    // index for this instance
         _aInstances.push(this) ;
         this._isRtl         = this._GetReadingDirection() === "rtl";
         this._initTree() ;
         this._bCreate       = false ;
+     },
+
+     /**
+       *  Widget is being destroyed.
+       *  @private
+       */
+     _destroy : function()
+     {
+        this._clearTree() ;    // Clean out the DOM.  After this, the tree markup has
+                               // been removed from the div, and all event handlers
+                               // removed.
+
+        // If the tree was constructed from existing user markup found in the div,
+        // reinstate that markup to reset the div to its original state pre tree create.
+        if (this._data.html.useExistingMarkup) {
+          if (this._data.html.cloneMarkup) {
+            this._$container.append(this._data.html.cloneMarkup) ;
+          }
+        }
+  
+        this._super() ;
      },
 
 
@@ -61931,6 +62348,41 @@ oj.ThematicMapArea.prototype.getLabel = function() {
         return ret ;
      },
 
+     /**
+       *  Clears out the tree dom
+       *  @private
+       */
+     _clearTree : function()
+     {
+        var  n = this._getIndex();
+
+        this._$container
+            .unbind(".oj-tree")
+            .undelegate(".oj-tree")
+            .removeData("oj-tree-instance-id")
+            .find("[class^='oj-tree']")
+            .addBack()
+            .attr("class", function ()
+                    {
+                      return this["className"].replace(/oj-tree[^ ]*|$/ig,'');
+                    });
+
+        var cl = this._$container.attr("class") ;      // if jQuery has left us with a
+        cl = cl.trim();                                // class of blanks, remove it.
+        if (cl.length === 0) {
+          this._$container.removeAttr("class") ;
+        }
+
+        _removeKeyFilter(this._$container_ul) ;        // remove keyboard listener because
+                                                       // _$container_ul will be removed
+        $(document)
+            .unbind(".oj-tree-" + n)
+            .undelegate(".oj-tree-" + n);
+
+        // Remove the constructed tree from the DOM.
+        this._$container_ul.remove() ;
+        this._$container_ul = null ;
+     },
 
      /**
        *  Returns a jQuery wrapped tree node.  obj can be a selector pointing 
@@ -62147,7 +62599,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
           this._data.core.locked = false;
           this._$container_ul.removeClass("oj-tree-locked").css("opacity", this._data.ui.opacity);
         }
-//      this.__callback({});
+//      this._emitEvent({});
      },
 
      /**
@@ -64074,7 +64526,7 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 
 
      /**
-       *   Process the user tree <ul> list placed in the tree div.
+       *   Process the user tree <ul> list placed in the tree div, or loaded via ajax.
        *   @private
        */
      _load_node_html : function (obj, s_call, e_call)
@@ -64113,22 +64565,22 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                     if (!obj || obj == -1 )  {
                       this._$container_ul
                               .empty()
-                              .append(this._data.html.originalContainerHtml)
-                              .find("li, a").filter(function () {
+                              .append(this._data.html.markup)
+                              .find("li, a")
+                              .filter(function () {
                                                return (!this.firstChild || !this.firstChild.tagName ||
                                                        this.firstChild.tagName !== "INS");
-                                             }).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
-                                               .filter("a").children("ins:first-child")
-                                               .not(".oj-tree-icon")
-                                               .addClass(OJT_ICON);
+                                                   })
+                              .prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
+                              .filter("a").children("ins:first-child")
+                              .not(".oj-tree-icon")
+                              .addClass(OJT_ICON);
+
+                      //  No point in checking for empty parent <ul> because we don't have a
+                      //  "data" option in the first place, so no lazy loading posssible.
 
                       //  Add the <a> text <span> for hover/click styling
-                      $.each(this._$container_ul.find("li a"), function (i, val) {
-            	          var ih = val.innerHTML ;
-                          ih = ih.replace("ins>", "ins><span class='" + OJT_TITLE + "'>") ;
-                          ih += "</span>" ;
-            	          val.innerHTML = ih ;
-                      });
+                      this._insertHtmlTextSpan(this._$container_ul) ;
 
                       if (this._data.types.defType) {             // if "default" type defined
                         this._addDefType(this._$container_ul) ;   // apply to nodes with no asooc type
@@ -64151,15 +64603,23 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                              d = $("<ul />").append(d);
                            }
                            this._$container_ul
-                               .empty().append(d.children())
-                               .find("li, a").filter(function ()
-                                                {
-                                                   return (!this.firstChild || !this.firstChild.tagName ||
-                                                           this.firstChild.tagName !== "INS");
-                                                })
-                                             .prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
-                                             .filter("a").children("ins:first-child")
-                                             .not(".oj-tree-icon").addClass(OJT_ICON);
+                               .empty()
+                               .append(d
+                               .children())
+                               .find("li, a")
+                               .filter(function ()
+                                           {
+                                              return (!this.firstChild || !this.firstChild.tagName ||
+                                                      this.firstChild.tagName !== "INS");
+                                           })
+                               .prepend("<ins class='oj-tree-icon'>&#160;</ins>").end()
+                               .filter("a")
+                               .children("ins:first-child")
+                               .not(".oj-tree-icon")
+                               .addClass(OJT_ICON);
+
+                           //  Add the <a> text <span> for hover/click styling
+                           this._insertHtmlTextSpan(this._$container_ul) ;
 
                            if (this._data.types.defType) {             // if "default" type defined
                              this._addDefType(this._$container_ul) ;   // apply to nodes with no asooc type
@@ -64202,9 +64662,8 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                         };
                     success_func = function (d, t, x)
                         {
-                          var parent;
+                          var parent, lazy ;
                           var sf = this._getOptions()["data"]["ajax"]["success"];  // reget the options
-
                           if (sf) {                                                // without our updated ajax
                             d = sf.call(this, d, t, x) || d;                       // changes to avoid forever loop
                           }
@@ -64221,28 +64680,51 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                             if (obj == -1 || !obj) {
                               this._$container_ul.empty()
                                                  .append(d.children())
-                                                 .find("li, a").filter(function ()
+                                                 .find("li, a")
+                                                 .filter(function ()
                                                     {
-                                                      return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
-                                                     }).prepend("<ins class='oj-tree-icon'>&#160;</ins>")
-                                                       .end().filter("a").children("ins:first-child")
-                                                       .not(".oj-tree-icon").addClass(OJT_ICON);
+                                                      return !this.firstChild || !this.firstChild.tagName ||
+                                                                                 this.firstChild.tagName !== "INS";
+                                                    })
+                                                 .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
+                                                 .end()
+                                                 .filter("a")
+                                                 .children("ins:first-child")
+                                                 .not(".oj-tree-icon")
+                                                 .addClass(OJT_ICON);
+
                               parent = this._$container_ul ;
+
                             }
                             else  {
-                               obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
-                               obj.append(d).children("ul").find("li, a")
-                                                           .filter(function () {
-                                                                      return (!this.firstChild || !this.firstChild.tagName ||
-                                                                              this.firstChild.tagName !== "INS");
-                                                                   }
-                                                            ).prepend("<ins class='oj-tree-icon'>&#160;</ins>").end().filter("a")
-                                                                                                               .children("ins:first-child")
-                                                                                                               .not(".oj-tree-icon")
-                                                                                                               .addClass(OJT_ICON);
+                               obj.children("a.oj-tree-loading")
+                                  .removeClass("oj-tree-loading");
+
+                               this._removeEmptyUL(obj) ;
+
+                               obj.append(d)
+                                  .children("ul")
+                                  .find("li, a")
+                                  .filter(function () {
+                                             return (!this.firstChild || !this.firstChild.tagName ||
+                                                                         this.firstChild.tagName !== "INS");
+                                          })
+                                  .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
+                                  .end()
+                                  .filter("a")
+                                  .children("ins:first-child")
+                                  .not(".oj-tree-icon")
+                                  .addClass(OJT_ICON);
                                obj.removeData("oj-tree-is-loading");
                                parent = obj ;
                             }
+
+                            //  Look for parents with empty children <ul> list (lazy loading),
+                            //  and add the closed class to make it a parent.
+                            this._handleHtmlParentNoChildren(parent) ;
+
+                            //  Add the <a> text <span> for hover/click styling
+                            this._insertHtmlTextSpan(parent) ;
 
                             // If "default" type defined, apply to nodes with no assoc type
                             if (this._data.types.defType && parent)  {
@@ -64299,17 +64781,59 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 
 
      /**
+       *   Look for parents with empty children <ul> list (lazy loading), and add the closed
+       *   class to make it a parent.
+       *   @private
+       */
+     _handleHtmlParentNoChildren : function (parent)
+     {
+        var lazy = parent
+                     .find(parent.is("ul")?  "li ul" : "ul")
+                     .filter(function () {
+                                return (!this.firstChild ||
+                                        this.childNodes.length == 0 ||
+                                        (this.childNodes.length == 1 && this.firstChild.nodeType ==3));
+                                       }) ;
+        $.each(lazy, function() {
+                                  $(this).closest("li")
+                                         .addClass(OJT_CLOSED) ;
+                                }) ;
+     },
+
+
+     /**
+       *   Remove an empty <ul> in a node (lazy loading).
+       *   @private
+       */
+     _removeEmptyUL : function(parent)
+     {
+        var l = parent.find("ul")
+                     .filter(function () {
+                                return (!this.firstChild ||
+                                        this.childNodes.length == 0 ||
+                                        (this.childNodes.length == 1 && this.firstChild.nodeType ==3));
+                                       }) ;
+       if (l.length > 0) {
+         l.remove() ;
+       }
+     },
+
+
+
+
+     /**
        *   Load an HTML <ul><li>...</ul> markup string
        *   @private
        */
      _loadHtmlString : function (s, obj, s_call, e_call)
      {
+        var parent ;
+
         if (s && s !== "" && s.toString && s.toString().replace(/^[\s\n]+$/,"") !== "") {
           s = $(s);
           if (! s.is("ul")) {
             s = $("<ul />").append(s);
           }
-
 
           if (obj == -1 || !obj) {
             this._$container_ul.empty()
@@ -64320,24 +64844,19 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                                                  this.firstChild.tagName !== "INS");
                                        })
                                .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
-                               .end().filter("a").children("ins:first-child")
-                               .not(".oj-tree-icon").addClass(OJT_ICON);
+                               .end().filter("a")
+                               .children("ins:first-child")
+                               .not(".oj-tree-icon")
+                               .addClass(OJT_ICON);
 
-            //  Add the <a> text <span> for hover/click styling
-            $.each(this._$container_ul.find("li a"), function (i, val) {
-            	         var ih = val.innerHTML ;
-                         ih = ih.replace("ins>", "ins><span class='" + OJT_TITLE + "'>") ;
-                         ih += "</span>" ;
-            	         val.innerHTML = ih ;
-                      });
+            parent = this._$container_ul ;
 
-            //  If the "default" node type has been defined, add the def type to any nodes
-            //  that have not been given an explicit type
+            //  No point in checking for empty parent <ul> because we don't have a
+            //  "data" option in the first place, so no lazy loading posssible.
 
             //  If the "default" node type has been defined, add the def type to any nodes
             //  that have not been given an explicit type
             this._addDefType(this._$container_ul) ;
-
           }
           else  {
             obj.children("a.oj-tree-loading").removeClass("oj-tree-loading");
@@ -64345,18 +64864,29 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                .children("ul")
                .find("li, a")
                .filter(function ()
-                             {
-                                return !this.firstChild || !this.firstChild.tagName || this.firstChild.tagName !== "INS";
-                             })
+                          {
+                             return !this.firstChild || !this.firstChild.tagName ||
+                                                         this.firstChild.tagName !== "INS";
+                          })
                .prepend("<ins class='oj-tree-icon'>&#160;</ins>")
-               .end().filter("a").children("ins:first-child")
-               .not(".oj-tree-icon").addClass("oj-tree-icon");
+               .end().filter("a")
+               .children("ins:first-child")
+               .not(".oj-tree-icon")
+               .addClass("oj-tree-icon");
             obj.removeData("oj-tree-is-loading");
 
-            //  If the "default" node type has been defined, add the def type to any nodes
-            //  that have not been given an explicit type
+            parent = obj ;
+
+            //  If the "default" node type has been defined, add the def type to
+            //  any nodes that have not been given an explicit type
             this._addDefType(this.obj) ;
           }
+
+            //  Add the <a> text <span> for hover/click styling
+          if (parent) {
+            this._insertHtmlTextSpan(parent) ;
+          }
+
           this._clean_node(obj);
           if (s_call)  {
             s_call.call(this);
@@ -64383,6 +64913,20 @@ oj.ThematicMapArea.prototype.getLabel = function() {
             }
           }
         }
+     },
+
+     /**
+       *  Insert the <a> text <span> for hover/click styling
+       *  @private
+       */
+     _insertHtmlTextSpan : function(elem)
+     {
+        $.each(elem.find("li a"), function (i, val) {
+        	 var ih = val.innerHTML ;
+             ih = ih.replace("ins>", "ins><span class='" + OJT_TITLE + "'>") ;
+             ih += "</span>" ;
+        	 val.innerHTML = ih ;
+        });
      },
 
      /**
@@ -65642,11 +66186,22 @@ oj.ThematicMapArea.prototype.getLabel = function() {
 
        if (this._data.html.useExistingMarkup) {
          // this used to use html() and clean the whitespace, but this way any attached data was lost
-         this._data.html.originalContainerHtml = this._$container.find(" > ul > li").clone(true);
+         this._data.html.markup      = this._$container.find(" > ul > li");
+         this._data.html.cloneMarkup = this._data.html.markup.clone(true);
+
          // remove white space from LI node - otherwise nodes appear a bit to the right
-         this._data.html.originalContainerHtml.find("li").addBack().contents().filter(function()
-                                                               { return this.nodeType == 3;
-                                                               }).remove();
+//         this._data.html.originalContainerHtml.find("li").addBack()
+//                                                         .contents()
+//                                                         .filter(function()
+//                                                             {
+//                                                                return this.nodeType == 3;
+//                                                             }).remove();
+         this._data.html.markup.find("li").addBack()
+                                          .contents()
+                                          .filter(function()
+                                              {
+                                                 return this.nodeType == 3;
+                                              }).remove();
        }
 
        this._load_node = this._load_node_H ;
@@ -66802,9 +67357,9 @@ oj.ThematicMapArea.prototype.getLabel = function() {
                               "ajax"   : false
                             };
 
-       data.html.useExistingMarkup     = false ;  // true == use existing div markup
-       data.html.originalContainerHtml = false ;
-
+       data.html.useExistingMarkup  = false ;  // true == use existing div markup
+       data.html.markup             = false ;  // the user's markup 
+       data.html.cloneMarkup        = false ;  // clone of user's orig markup
 
         //  Themes
 
@@ -67735,7 +68290,6 @@ _this._done = false ;
         //    </a>
         // </li>
 
-
         var  subId      = locator["subId"],
              origNode   = locator["node"],
              node       = (origNode? this._getNode(origNode) : null),
@@ -67989,7 +68543,10 @@ _this._done = false ;
  *  checkbox input elements and calling <code class="prettyprint">ojCheckboxset()</code>. You can enable and disable a checkbox set, 
  *  which will enable and disable all contained checkboxes. 
  * </p>
- * 
+ * <p>
+ *  Checkboxset does not have a readOnly option since HTML does not support
+ *  readonly on radios and checkboxes.
+ * </p>
  * <h3 id="keyboard-section">
  *   Keyboard interaction
  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
@@ -69706,6 +70263,35 @@ oj.ComponentBinding.getDefaultInstance().setupManagedAttributes(
 }
 ());
 /**
+ * An object used for automation verification of chart axes
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartAxis = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the title of an axis
+ * @return {String} The axis title
+ * @export
+ */
+oj.ChartAxis.prototype.getTitle = function() {
+  return this._data ? this._data['title'] : null;
+};
+
+/**
+ * Returns the bounds of an axis
+ * @return {Object} An object containing the x, y coordinates and width and height of the axis
+ * @export
+ */
+oj.ChartAxis.prototype.getBounds = function() {
+  return this._data ? this._data['bounds'] : null;
+};
+
+/**
  * @class 
  * @name oj.ojChart
  * @augments oj.baseComponent
@@ -69985,8 +70571,201 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
     // Add cursors
     resources['panCursorDown'] = oj.Config.getResourceUrl('resources/internal-deps/dvt/chart/hand-closed.cur');
     resources['panCursorUp'] = oj.Config.getResourceUrl('resources/internal-deps/dvt/chart/hand-open.cur');
+  },
+  
+   /**
+   * Test authors should target chart sub elements using the following locators:
+   * dataItem[seriesIndex][groupIndex] - A data item indexed by its series index and group index. 
+   *                                        [groupIndex] is not required for pie and funnel chart types
+   * series[seriesIndex] - A legend item that represents the series with the given seriesIndex
+   * group[groupIndex] - A categorical axis label that represents the group with the given groupIndex 
+   * @override
+   * @expose
+   */
+  getNodeBySubId : function(locator) {
+    return this._super(locator);
+  },
+  
+  /**
+   * Returns the locator attribute values represented by the subcomponent node.
+   * @param {Element} node The subcomponent node used by the component to lookup the subId string
+   * @return {Object} An Object containing at minimum a subId property
+   * whose value is a string and allows the component to
+   * look up the subcomponent associated with that string.  Valide chart subIds include:
+   * dataItem[seriesIndex][groupIndex] - A data item indexed by its series index and group index. 
+   *                                        [groupIndex] is not required for pie and funnel chart types
+   * series[seriesIndex] - A legend item that represents the series with the given seriesIndex
+   * group[groupIndex] - A categorical axis label that represents the group with the given groupIndex 
+   * @expose
+   */
+  getSubIdByNode:function(node) {
+    return this._super(node);  
+  }, 
+  
+  /**
+   * Returns the chart title. 
+   * @return {String} The chart title
+   * @expose
+   */
+  getTitle: function() {
+    var auto = this._component.getAutomation();
+    return auto.getTitle();
+  },
+  
+  /**
+   * Returns the group corresponding to the given index
+   * @param {String} groupIndex the group index
+   * @return {String} The group name corresponding to the given group index
+   * @expose
+   */
+  getGroup: function(groupIndex) {
+    var auto = this._component.getAutomation();
+    return auto.getGroup(groupIndex);
+  },
+  
+  /**
+   * Returns the series corresponding to the given index
+   * @param {String} seriesIndex the series index
+   * @return {String} The series name corresponding to the given series index
+   * @expose
+   */
+  getSeries: function(seriesIndex) {
+    var auto = this._component.getAutomation();
+    return auto.getSeries(seriesIndex);
+  },
+  
+  /**
+   * Returns number of groups in the chart data
+   * @return {Number} The number of groups
+   * @expose
+   */
+  getGroupCount: function() {
+    var auto = this._component.getAutomation();
+    return auto.getGroupCount();
+  },
+  
+  /**
+   * Returns number of series in the chart data
+   * @return {Number} The number of series
+   * @expose
+   */
+  getSeriesCount: function() {
+    var auto = this._component.getAutomation();
+    return auto.getSeriesCount();
+  },
+  
+  /**
+   * Returns a ChartDataItem object for automation testing verification.
+   * @param {String} seriesIndex The series index
+   * @param {String} groupIndex The group index
+   * @return {Object} The chart data item with the given series index and group index 
+   *                             or null if none exists
+   * @expose
+   */
+  getDataItem : function(seriesIndex, groupIndex) {
+    var auto = this._component.getAutomation();
+    return new oj.ChartDataItem(auto.getDataItem(seriesIndex, groupIndex));
+  },
+  
+  /**
+   * Returns a ChartLegend object for automation testing verification.
+   * @return {Object} The legend for this chart
+   * @expose
+   */
+  getLegend : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartLegend(auto.getLegend());
+  },
+  
+  /**
+   * Returns a ChartPlotArea object for automation testing verification.
+   * @return {Object} The plot area for this chart
+   * @expose
+   */
+  getPlotArea : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartPlotArea(auto.getPlotArea());
+  },
+  
+  /**
+   * Returns a ChartAxis object for automation testing verification.
+   * @return {Object} The xAxis for this chart or null if it doesn't exist
+   * @expose
+   */
+  getXAxis : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartAxis(auto.getXAxis());
+  },
+  
+  /**
+   * Returns a ChartAxis object for automation testing verification.
+   * @return {Object} The yAxis for this chart or null if it doesn't exist
+   * @expose
+   */
+  getYAxis : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartAxis(auto.getYAxis());
+  },
+  
+  /**
+   * Returns a ChartAxis object for automation testing verification.
+   * @return {Object} The y2Axis for this chart or null if it doesn't exist
+   * @expose
+   */
+  getY2Axis : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartAxis(auto.getY2Axis());
   }
 });
+/**
+ * An object used for automation verification of a chart plot area
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartPlotArea = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the bounds of the plot area
+ * @return {Object} An object containing the x, y coordinates and width and height of the plotarea
+ * @export
+ */
+oj.ChartPlotArea.prototype.getBounds = function() {
+  return this._data ? this._data['bounds'] : null;
+};
+
+/**
+ * An object used for automation verification of a chart legend
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartLegend = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the title of a legend
+ * @return {String} The legend title
+ * @export
+ */
+oj.ChartLegend.prototype.getTitle = function() {
+  return this._data ? this._data['title'] : null;
+};
+
+/**
+ * Returns the bounds of a legend
+ * @return {Object} An object containing the x, y coordinates and width and height of the legend
+ * @export
+ */
+oj.ChartLegend.prototype.getBounds = function() {
+  return this._data ? this._data['bounds'] : null;
+};
+
 /**
  * @class 
  * @name oj.ojSparkChart
@@ -70064,6 +70843,124 @@ oj.__registerWidget('oj.ojSparkChart', $['oj']['dvtBaseComponent'],
     this._super();
   }
 });
+/**
+ * An object used for automation verification of chart data items
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartDataItem = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the group of a chart data item
+ * @returns {String} The data item group
+ * @export
+ */
+oj.ChartDataItem.prototype.getGroup = function() {
+  return this._data ? this._data['group'] : null;
+};
+
+/**
+ * Returns the series of a chart data item
+ * @returns {String} The data item series
+ * @export
+ */
+oj.ChartDataItem.prototype.getSeries = function() {
+  return this._data ? this._data['series'] : null;
+};
+
+/**
+ * Returns the border color of a chart data item
+ * @returns {String} The data item border color
+ * @export
+ */
+oj.ChartDataItem.prototype.getBorderColor = function() {
+  return this._data ? this._data['borderColor'] : null;
+};
+
+/**
+ * Returns the color of a chart data item
+ * @returns {String} The data item color
+ * @export
+ */
+oj.ChartDataItem.prototype.getColor = function() {
+  return this._data ? this._data['color'] : null;
+};
+
+/**
+ * Returns the label of a chart data item
+ * @returns {String} The data item label
+ * @export
+ */
+oj.ChartDataItem.prototype.getLabel = function() {
+  return this._data ? this._data['label'] : null;
+};
+
+/**
+ * Returns the value of a chart data item.
+ * @returns {Number} The data item value
+ * @export
+ */
+oj.ChartDataItem.prototype.getValue = function() {
+  return this._data ? this._data['value'] : null;
+};
+
+/**
+ * Returns the target value of a chart data item. Only applies to funnel chart types.
+ * @returns {Number} The data item target value
+ * @export
+ */
+oj.ChartDataItem.prototype.getTargetValue = function() {
+  return this._data ? this._data['targetValue'] : null;
+};
+
+/**
+ * Returns the tooltip of a chart data item.
+ * @returns {String} The data item tooltip
+ * @export
+ */
+oj.ChartDataItem.prototype.getTooltip = function() {
+  return this._data ? this._data['tooltip'] : null;
+};
+
+/**
+ * Returns the x value of a chart data item.
+ * @returns {Number} The data item x value
+ * @export
+ */
+oj.ChartDataItem.prototype.getX = function() {
+  return this._data ? this._data['x'] : null;
+};
+
+/**
+ * Returns the y value of a chart data item.
+ * @returns {Number} The data item y value
+ * @export
+ */
+oj.ChartDataItem.prototype.getY = function() {
+  return this._data ? this._data['y'] : null;
+};
+
+/**
+ * Returns the z value of a chart data item.
+ * @returns {Number} The data item z value
+ * @export
+ */
+oj.ChartDataItem.prototype.getZ = function() {
+  return this._data ? this._data['z'] : null;
+};
+
+/**
+ * Returns whether or not the data item is selected
+ * @returns {Boolean} The data item selection state
+ * @export
+ */
+oj.ChartDataItem.prototype.getSelected = function() {
+  return this._data ? this._data['selected'] : null;
+};
 /**
  * oj.Collection based implementation of TreeDataSource
  * @param {Object} options an object containing the following options:<p>
@@ -71966,9 +72863,6 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
  *   </tbody>
  *  </table>
  * 
- * <p>Disabled items can receive keyboard focus, but do not allow any other interaction.
- * 
- * 
  * <h3 id="rtl-section">
  *   Reading direction
  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rtl-section"></a>
@@ -72181,9 +73075,9 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
        * @memberof! oj.ojTabs
        * @instance
        * @type {string}
-       * @default <code class="prettyprint">Tab is removable</code>
+       * @default <code class="prettyprint">Removable</code>
        */
-      removeCueText : "Tab is removable", 
+      removeCueText : "Removable",
 
       /** 
        * Specifies if the tabs can be reordered within the tab bar by drag-and-drop
@@ -72307,8 +73201,8 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
-       * @property {jQuery} ui.tab The tab that is about to be removed.
-       * @property {jQuery} ui.panel The panel that is about to be removed.
+       * @property {jQuery} ui.header The tab that is about to be removed.
+       * @property {jQuery} ui.content The panel that is about to be removed.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">beforeRemove</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -72329,8 +73223,8 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
-       * @property {jQuery} ui.tab The tab that was just removed.
-       * @property {jQuery} ui.panel The panel that was just removed.
+       * @property {jQuery} ui.header The tab that was just removed.
+       * @property {jQuery} ui.content The panel that was just removed.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">afterRemove</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -72674,13 +73568,15 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
 
     _refresh : function ()
     {
+      var options = this.options;
+
       // check for length avoids error when initializing empty list
-      if (this.tabs.length && this.options.selected != -1)
-        this.active = this._findActive(this.options.selected);
+      if (this.tabs.length && options.selected != -1)
+        this.active = this._findActive(options.selected);
       else 
         this.active = $();
 
-      this._setupDisabled(this.options.disabled);
+      this._setupDisabled(options.disabled);
 
       this._createCloseIcons();
 
@@ -72717,23 +73613,28 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
         });
       }
 
-
       //Bug 18270242 - When ojtab first displays beforeSelect & afterSelect events are not raised  
       // handle active numbers: negative, out of range
       if (this._initialActivate !== undefined)
       {
         var active = this._initialActivate;
         if (active != 0 && (active < 0 || active > this.tabs.length))
-          this.options.selected = 0;
+          options.selected = 0;
         else
-          this.options.selected = active;
+          options.selected = active;
 
-        this._activate(active);
+        //Bug 18539151 - ojtabs should not let user set focus on disabled tabs
+        //if the selected tab is disabled, select the next enabled tab
+        if ($.inArray(active, options.disabled) !==  - 1)
+        {
+          options.selected = this._activateNextTab(active);
+        }
 
+        this._activate(options.selected);
         this._initialActivate = undefined;
       }
 
-      if (this.options.orientation == "horizontal")
+      if (options.orientation == "horizontal")
       {
         //always add conveyor
         this._truncateBeforeOverflow();
@@ -73047,7 +73948,20 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
             newHeader : tab, 
             /** @expose */
             newContent : toShow
+          },
+
+          deselectData = 
+          {
+            /** @expose */
+            oldHeader : eventData.newHeader,
+            /** @expose */
+            oldContent : eventData.newContent,
+            /** @expose */
+            newHeader : eventData.oldHeader,
+            /** @expose */
+            newContent : eventData.oldContent
           };
+
 
       event.preventDefault();
 
@@ -73059,7 +73973,7 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
           (clickedIsActive) || 
           // allow canceling deselect
           ((! this._initialActivate) &&
-           (this._trigger("beforeDeselect", event, eventData) === false)) ||
+           (this._trigger("beforeDeselect", event, deselectData) === false)) ||
           // allow canceling select
           (this._trigger("beforeSelect", event, eventData) === false))
       {
@@ -73194,28 +74108,23 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
       //create close icon only if it's not disabled
       if (this.options.removable)
       {
+//        var removeCueText = this.getTranslatedString("removeCueText");
         var removeCueText = this.options.removeCueText;
-        this.tabs.not(".oj-disabled").each(function ()
+        this.tabs.not(".oj-disabled").each(function (index)
         {
           var div = $(this).find("> :first-child");
 
-          //add cue text for screen reader users
-          var a1 = $(div).find("> :first-child");
-          $("<span>")
-            .addClass("oj-helper-hidden-accessible")
-            .attr(
-              {
-                "role" : "presentation"
-              })
-            .text(removeCueText)
-            .appendTo(a1);
+          //add cue text for removable icon for screen reader users
+          var rmId = _ID_PREFIX + "rm_" + index;
+          $(this).attr("aria-describedby", rmId);
 
           $("<a href='#'>")
             .addClass("oj-tabs-icon oj-component-icon oj-clickable-icon " + _CLOSE_ICON)
             .attr(
               {
+                "id": rmId,
                 "tabIndex" : "-1",
-                "aria-labelledby" : $(this).attr( "id" ),
+                "aria-label" : removeCueText,
                 "role" : "presentation"
               })
             .appendTo(div);
@@ -73386,9 +74295,9 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
           eventData = 
           {
             /** @expose */
-            tab : tab, 
+            header : tab, 
             /** @expose */
-            panel : panel
+            content : panel
           };
 
       //trigger before delete event and only delete if it's not cancelled
@@ -73423,7 +74332,13 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
         panel.remove();
         tab.remove();
 
+        //fire select event 
+        this._initialActivate = this.options.selected;
         this.refresh();
+
+        //set focus on the active
+        this.active.focus();
+
         this._trigger("afterRemove", event, eventData);
       }
     },
@@ -73481,10 +74396,23 @@ oj.CollectionNodeSet.prototype.getChildNodeSet = function(index) {
             {
               self._getPanelForTab(prevTab).after(mvContent);
             }
-            else
+            else if (self.panels.length > 0)
             {
-              tabBar.after(mvContent);
+              self.panels.first().before(mvContent);
             }
+
+            //Bug 18680706 - calling refresh after reordering tabs causes tabs to loose there disabled state 
+            //update disabled and active
+            var arr  = [];
+            tabBar.children(".oj-disabled").each(
+              function() {
+                arr.push($(this).index());
+              }
+            );
+
+            self.options.disabled = arr;
+            self.options.selected = tabBar.children(".oj-tabs-active").index();
+
           }
         })
       }
@@ -75224,13 +76152,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
      * $(".selector").ojInputNumber({"readOnly": true});
      * 
      * @expose 
-     * @type {?boolean}
+     * @type {?boolean|undefined}
      * @default <code class="prettyprint">false</code>
      * @public
      * @instance
      * @memberof! oj.ojInputNumber
      */
-    readOnly: null,
+    readOnly: undefined,
     /**
      * This option allows setting HTML5's placeholder attribute. Though it is possible to set 
      * placeholder attribute on the element itself, the component will only read the value during 
@@ -75260,89 +76188,137 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
      * @memberof! oj.ojInputNumber */
     step : undefined
   },
+  // P U B L I C    M E T H O D S
    /**
-  * @private
-  * @const
-  */
-  _BUNDLE_KEY:
+ * <p>Increments the value by the specified number of steps. 
+ * Without the parameter, a single step is incremented.</p>
+   <p>If the resulting value is above the max, below the min, 
+   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
+ * @public
+ * @param {Number} steps - Number of steps to increment, defaults to 1.
+ * @expose
+ * @memberof! oj.ojInputNumber 
+ */
+  stepUp : function (steps)
   {
-    _TOOLTIP_DECREMENT: 'tooltipDecrement',
-    _TOOLTIP_INCREMENT: 'tooltipIncrement'    
+    this._step(steps, true);
   },
-  /**
-   * After _ComponentCreate and _AfterCreate, 
-   * the widget should be 100% set up. this._super should be called first.
-   * @override
-   * @protected
-   * @instance
-   * @memberof! oj.ojInputNumber
-   */
-  _ComponentCreate : function ()
+ /**
+ * <p>Decrements the value by the specified number of steps. 
+ * Without the parameter, a single step is decremented.</p>
+   <p>If the resulting value is above the max, below the min, 
+   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
+ * @public
+ * @param {Number} steps - Number of steps to decrement, defaults to 1.
+ * @expose
+ * @memberof! oj.ojInputNumber 
+ */
+  stepDown : function (steps)
   {
-    this._super();
-    
-    this._draw();
-    
-    this._on(this._events);
-
-    // turning off autocomplete prevents the browser from remembering the
-    // value when navigating through history, so we re-enable autocomplete
-    // if the page is unloaded before the widget is destroyed. #7790
-    this._on(this.window, 
-    {
-      "beforeunload" : function ()
-      {
-        this.element.removeAttr("autocomplete");
-      }
-    });
-    
-    // input type=number does not support the 'pattern' attribute, so
-    // neither should ojInputNumber.
-    // remove this before EditableValue grabs it and uses it.
-    this.element.removeAttr("pattern");
-    
-    this._inputNumberDefaultValidators = {};
-
-
-  },
-  
+    this._step(steps, false);
+  }, 
   /**
-   * This is where we do things right after the component was created.
-   * this._super should be called first.
+   * Reacts to changes to the 'min' and/or 'max' option by
+   * resetting the NumberRangeValidator.
    * 
+   * @param {String|Object|string=} key a single string representing a 
+   * key or an object representing a group 
+   * of options
+   * @param {Object=} value of the key
+   */
+  option : function (key, value)
+  {
+    var retVal = this._superApply(arguments);
+    
+    // key === max, key === min, key is both min and max, so it's an object
+    
+    if (key === "max" || key === "min" || 
+        (typeof key === "object" && 
+         (key['min'] !== undefined || key['max'] !== undefined)))
+    {
+      var min = undefined, max = undefined;
+      if (key === "max")
+      {      
+        max = value != null ? value : undefined;
+      }
+      else if (key === "min")
+      {
+        min = value != null ? value : undefined;
+      }
+      else
+      {
+        // it's an object
+        if (key['max'] !== undefined)
+          max = key['max'] != null ? key['max'] : undefined;
+        if (key['min'] !== undefined)
+          min = key['min'] != null ? key['min'] : undefined;
+      }
+      // since validators are immutable, they will contain min + max as local values. 
+      // Because of this will need to recreate
+      var numberRangeOptions = {'min': min, 
+          'max': max,
+          'converter': this._GetConverter()};
+
+      this._createRangeValidator(numberRangeOptions);
+      this._ResetAllValidators();
+    }
+    return retVal;
+  },
+  /**
+   * Return the subcomponent node represented by the documented locator attribute values.
+   * Test authors should target inputNumber's sub elements using the following names:
+   * <ul>
+   * <li><b>oj-inputnumber-up</b>: the inputNumber's up arrow</li>
+   * <li><b>oj-inputnumber-down</b>: the inputNumber's down arrow</li>
+   * <li><b>oj-inputnumber-input</b>: the inputNumber's input</li>
+   * </ul>
+   * @expose
    * @override
    * @memberof! oj.ojInputNumber
    * @instance
-   * @protected
+   * @param {Object} locator An Object containing at minimum a subId property 
+   * whose value is a string, documented by the component, that allows the component to 
+   * look up the subcomponent associated with that string.  It contains:
+   * <ul>
+   * <li>
+   * component: optional - in the future there may be more than one component 
+   *   contained within a page element
+   * </li>
+   * <li>
+   * subId: the string, documented by the component, that the component expects 
+   * in getNodeBySubId to locate a particular subcomponent 
+   * </li>
+   * </ul>  
+   * @returns {Element|null} the subcomponent located by the subId string 
+   * passed in locator, if found.
    */
-  _AfterCreate : function ()
+  getNodeBySubId: function(locator)
   {
-    this._super();
+    if (locator == null)
+    {
+      return this.element ? this.element[0] : null;
+    }
     
-    // handle string values that need to be parsed
-    // jmw do I really need to do this?
-    //this._setOption("max", this.options.max);
-    //this._setOption("min", this.options.min);
-    this._setOption("step", this.options.step);
+    var subId = locator['subId'];
+    if (subId === "oj-inputnumber-up") {
+      return this.widget().find(".oj-inputnumber-up")[0];
+    }
+    if (subId === "oj-inputnumber-down") {
+      return this.widget().find(".oj-inputnumber-down")[0];
+    }
+    if (subId === "oj-inputnumber-input") {
+      return this.widget().find(".oj-inputnumber-input")[0];
+    }
+    
+    
+    // Non-null locators have to be handled by the component subclasses
+    return null;
+  }, 
         
-    // READONLY:
-    // if options.readOnly is not set, or not valid, get it from the element
-    // if options.readOnly is set to a valid value (boolean), set it on the 
-    // element to keep the two in sync. 
-    if ( typeof this.options.readOnly !== "boolean" ) 
-    {
-      // !! ensures it is a boolean
-      this.options.readOnly = !!this.element.prop( "readonly" );
-    } 
-    else 
-    {
-      this.element.prop( "readonly", this.options.readOnly );
-    }  
-    
-    this._refreshAriaMinMaxValue();
-    this._updateButtons();
-  },
-    /**
+  // P R O T E C T E D    C O N S T A N T S   A N D   M E T H O D S
+
+  // *********** START WIDGET FACTORY METHODS (they retain _camelcase naming convention) **********
+  /**
    * Initializes the option represented by the 'key' using either the option
    *  value or the element value. If option is undefined, we get it from the DOM.
    *  This method sets options 'value', 'min', 'max', 'step'. 
@@ -75354,6 +76330,27 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
   _InitOptions : function ()
   {
     this._super();
+    
+    // READONLY:
+    // if options.readOnly is not set (undefined), read from DOM not saved attributes
+    // if options.readOnly is set to a valid value (boolean), set it on the 
+    // element to keep the two in sync. 
+    // Since inputNumber has no subclasses we will default to false. Otherwise,
+    // we want to default to null so that the subclass knows that the app
+    // dev didn't set the field see EditableValue's disabled (radioset needs
+    // disabled to be null because it treats disabled as a tri-state: true,
+    // false, not set - the children's disabled field on the html wins)
+    if (this.options['readOnly'] === undefined)
+    {
+      // In the absence of attribute set default value to false
+      this.options['readOnly'] = this.element.attr("readonly") !== undefined ? 
+        !!this.element.prop("readonly") : false;
+    }
+    if (typeof this.options['readOnly'] !== "boolean")
+    {
+      throw new Error("InputNumber's option 'readOnly' has a invalid value set; \n\
+            it should be a boolean: " + this.options['readOnly']);
+    }
     
     // EditableValue basically does the same thing. Instead of getting it
     // from this.element.val(), it gets it from the savedAttributes. 
@@ -75417,9 +76414,187 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
           that.options[value] = that._parse(that.options[value]);
       }
     });
-
   },
-          
+  /**
+   * After _ComponentCreate and _AfterCreate, 
+   * the widget should be 100% set up. this._super should be called first.
+   * @override
+   * @protected
+   * @instance
+   * @memberof! oj.ojInputNumber
+   */
+  _ComponentCreate : function ()
+  {
+    var node = this.element;
+    this._super();
+    // update element DOM for readOnly
+    if (typeof this.options['readOnly'] === "boolean")
+    {
+      node.prop("readonly", this.options['readOnly']);
+    }
+    
+    this._draw();
+    
+    this._on(this._events);
+
+    // turning off autocomplete prevents the browser from remembering the
+    // value when navigating through history, so we re-enable autocomplete
+    // if the page is unloaded before the widget is destroyed. #7790
+    this._on(this.window, 
+    {
+      "beforeunload" : function ()
+      {
+        node.removeAttr("autocomplete");
+      }
+    });
+
+    // input type=number does not support the 'pattern' attribute, so
+    // neither should ojInputNumber.
+    // remove this before EditableValue grabs it and uses it.
+    node.removeAttr("pattern");
+    
+    this._inputNumberDefaultValidators = {};
+  },
+  /**
+   * This is where we do things right after the component was created.
+   * this._super should be called first.
+   * 
+   * @override
+   * @memberof! oj.ojInputNumber
+   * @instance
+   * @protected
+   */
+  _AfterCreate : function ()
+  {
+    this._super();
+    this._refreshAriaMinMaxValue();
+    this._refreshStateTheming("readOnly", this.options.readOnly);
+    this._updateButtons();
+  },
+  /**
+   * Handles options specific to inputnumber.
+   * Note that _setOption does not get called during create in the super class. 
+   * It only gets called when the component has already been created.
+   * However, we do call _setOption in _draw for certain attributes 
+   * (disabled)
+   * @override
+   * @protected
+   * @memberof! oj.ojInputNumber
+   */
+  _setOption : function (key, value)
+  {
+    // we don't coerce value for null or undefined, so to clear out value
+    // they can set it to null or undefined.
+    if (key === "value")
+      value = this._coerceInputNumberValue(value);
+
+    if (key === "max" || key === "min")
+    {
+      if (typeof value === "string")
+      {
+        value = this._parse(value);
+      }
+    } 
+    if (key === "step")
+    {
+      value = this._parseStep(value);
+    }
+    
+    // the superclass calls _Refresh. Our _Refresh calls _updateButton
+    // and _refreshAriaMinMaxValue.
+    this._super(key, value);
+
+    // when a dom element supports disabled, use that, and not aria-disabled.
+    // having both is an error. 
+    // having aria-disabled on root dom element is ok (if it is added in base class)
+    if (key === "disabled")
+    {
+      if (value)
+      {
+        this.element.prop("disabled", true);
+      }
+      else 
+      {
+        this.element.prop("disabled", false);
+      }
+    }
+    // when a dom element supports readonly, use that, and not aria-readonly.
+    // having both is an error
+    if (key === "readOnly")
+    {
+      this.element.prop("readonly", !!value);
+      this._refreshStateTheming("readOnly", this.options.readOnly);   
+    }
+  }, 
+ /**
+   * Override of protected base class method.  
+   * Method name needn't be quoted since is in externs.js.
+   * @protected
+   * @memberof! oj.ojInputNumber
+   * @instance
+   */
+  _destroy : function ()
+  {    
+    this.element.removeClass("oj-inputnumber-input")
+            .prop("disabled", false)
+            .removeAttr("autocomplete")
+            .removeAttr("aria-valuemin")
+            .removeAttr("aria-valuemax")
+            .removeAttr("aria-valuenow")
+            .removeAttr("aria-valuetext")
+            .removeAttr("aria-disabled");
+    // don't have to remove the root styles since we remove the root element in _destroy
+    // TODO: need a generic way to save off attributes and then restore them.
+    // attribute name/value array.
+    this.element.attr("type", this.saveType);
+    this._super();
+    this._off(this.element, "keydown keyup focus blur mousedown mouseup mouseenter mouseleave");
+    this.uiInputNumber.replaceWith(this.element);
+    clearTimeout(this.timer);
+  }, 
+  /**
+   * Used for explicit cases where the component needs to be refreshed 
+   * (e.g., when the value option changes or other UI gestures).
+   * @override
+   * @protected
+   * @memberof! oj.ojInputNumber
+   */
+  _Refresh : function (name, value)
+  {
+    this._super(name, value);
+    if (name === "value" || name === "max" || name === "min")
+    {
+      this._refreshAriaMinMaxValue();
+    }
+    this._updateButtons();
+  },
+  // *********** END WIDGET FACTORY METHODS **********
+     /**
+   * Whether the a value can be set on the component. 
+   * If the component is disabled (or readOnly) then 
+   * then setting value on component is a no-op. 
+   * 
+   * @see #_SetValue
+   * @memberof! oj.ojInputNumber
+   * @instance
+   * @protected
+   */
+  _CanSetValue: function ()
+  {
+    var canSetValue = this._super();
+    
+    if (!canSetValue)
+      return false;
+    
+    var readOnly = this.options['readOnly'] || false;
+    
+    if (readOnly)
+    {
+      return false;
+    }
+    
+    return true;
+  }, 
   /**
    * Sets up the default numberRange validators.
    * 
@@ -75447,6 +76622,18 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     }
  
     return $.extend(this._inputNumberDefaultValidators, ret);
+  },
+  /**
+   * Returns the default styleclass for the component.
+   * 
+   * @return {string}
+   * @memberof! oj.ojInputNumber
+   * @override
+   * @protected
+   */
+  _GetDefaultStyleClass : function ()
+  {
+    return "oj-inputnumber";
   },
   _events : 
   {
@@ -75549,6 +76736,30 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       this._stop(event);
     }
   },
+  
+  // I N T E R N A L   P R I V A T E   C O N S T A N T S    A N D   M E T H O D S 
+  // Subclasses should not override or call these methods
+ /**
+  * @private
+  * @const
+  */
+  _BUNDLE_KEY:
+  {
+    _TOOLTIP_DECREMENT: 'tooltipDecrement',
+    _TOOLTIP_INCREMENT: 'tooltipIncrement'    
+  },
+  /**
+   * when below listed options are passed to the component, corresponding CSS will be toggled
+   * @private
+   * @const
+   * @type {Object}
+   */
+  _OPTION_TO_CSS_MAPPING: {
+    "readOnly": "oj-read-only"
+  },
+  /**
+   * @private
+   */
   _draw : function ()
   {
     var uiInputNumber = this.uiInputNumber = this.element.addClass("oj-inputnumber-input")
@@ -75583,22 +76794,10 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     // and rely on the up/down arrow keys
     this.buttons = uiInputNumber.find(".oj-inputnumber-button")
             .attr("tabIndex",  "-1").attr("aria-hidden",true);
-
-    // disable inputnumber if element was already disabled
-    if (this.options.disabled)
-    {
-      // calls _setOption disable is true
-      this.disable();
-    }
-    
-    // set readOnly on inputnumber if element was already in readonly
-    if (this.options.readOnly)
-    {
-      // calls _setOption disable is true
-      this._setOption("readOnly", true);
-    }
-
   },
+  /**
+   * @private
+   */
   _keydown : function (event)
   {
     var options = this.options, keyCode = $.ui.keyCode;
@@ -75619,20 +76818,32 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
 
     return false;
   },
+  /**
+   * @private
+   */
   _uiInputNumberHtml : function ()
   {
     return "<span class='oj-inputnumber oj-component'></span>";
   },
+  /**
+   * @private
+   */
   _buttonHtml : function ()
   {
     return "" + "<a class='oj-inputnumber-button oj-inputnumber-down'></a>" + 
             "<a class='oj-inputnumber-button oj-inputnumber-up'></a>";
   },
+  /**
+   * @private
+   */
   _start : function ()
   {
     this.spinning = true;
     return true;
   },
+  /**
+   * @private
+   */
   _repeat : function (i, steps, event)
   {
     // repeat spinning as long as the key is down and min/max isn't reached
@@ -75647,6 +76858,11 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
 
     this._spin(steps * this.options.step, event);
   },
+  /**
+   * @private
+   * @param {Number} step - Number of steps to increment.
+   * @param {Object=} event an optional event if this was a result of ui interaction.
+   */
   _spin : function (step, event)
   {
     // When the component's 'value' changes, the displayValue is automatically updated.
@@ -75657,7 +76873,10 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     
     this._SetValue(value, event, this._VALIDATION_MODE.VALIDATORS_ONLY);
   },
-  // called from _adjustValue
+  /**
+   * called from _adjustValue
+   * @private
+   */
   _precision : function ()
   {
     var precision = this._precisionOf(this.options.step);
@@ -75667,7 +76886,12 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     }
     return precision;
   },
-  // called from _adjustValue->_precision
+  /**
+   * return the number of digits after the '.'
+   * called from _adjustValue->_precision
+   * @private
+   * @param {Number} num - Number from which to calculate the precision
+   */
   _precisionOf : function (num)
   {
     var str = num.toString(), decimal = str.indexOf(".");
@@ -75747,6 +76971,9 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     
     return newValue;
   },
+  /**
+   * @private
+   */
   _stop : function (event)
   {
     if (!this.spinning)
@@ -75756,6 +76983,9 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     clearTimeout(this.timer);
     this.spinning = false;
   },
+  /**
+   * @private
+   */
   _updateButtons: function()
   {
     var value = this._GetDisplayValue() || 0;
@@ -75785,6 +77015,9 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       upButton.ojButton("enable");      
     }    
   },
+  /**
+   * @private
+   */
   _blurEnterSetValue: function(event)
   {
       this._stop();
@@ -75795,142 +77028,30 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       }    
   },
   /**
-   * Handles options specific to inputnumber.
-   * Note that _setOption does not get called during create in the super class. 
-   * It only gets called when the component has already been created.
-   * However, we do call _setOption in _draw for certain attributes 
-   * (disabled/readOnly)
-   * @override
-   * @protected
-   * @memberof! oj.ojInputNumber
+   * @private
    */
-  _setOption : function (key, value)
-  {
-    // we don't coerce value for null or undefined, so to clear out value
-    // they can set it to null or undefined.
-    if (key === "value")
-      value = this._coerceInputNumberValue(value);
-
-    if (key === "max" || key === "min")
-    {
-      if (typeof value === "string")
-      {
-        value = this._parse(value);
-      }
-    } 
-    if (key === "step")
-    {
-      value = this._parseStep(value);
-    }
-    
-    // the superclass calls _Refresh. Our _Refresh calls _updateButton
-    // and _refreshAriaMinMaxValue.
-    this._super(key, value);
-
-    // when a dom element supports disabled, use that, and not aria-disabled.
-    // having both is an error. 
-    // having aria-disabled on root dom element is ok (if it is added in base class)
-    if (key === "disabled")
-    {
-      if (value)
-      {
-        this.element.prop("disabled", true);
-      }
-      else 
-      {
-        this.element.prop("disabled", false);
-      }
-    }
-    // when a dom element supports readonly, use that, and not aria-readonly.
-    // having both is an error
-    if (key === "readOnly")
-    {
-      if (value)
-      {
-        this.element.prop("readonly", true);
-      }
-      else 
-      {
-        this.element.prop("readonly", false);
-      }
-    }
-//    // when min or max changes reset the validators
-//    if (key === "max" || key === "min")
-//    {
-//      // min and max need to be 'undefined' to be reset in the numberrangevalidator
-//      var min = this.options['min'] != null ? this.options['min'] : undefined, 
-//      max = this.options['max'] != null ? this.options['max'] : undefined;
-//      // since validators are immutable, they will contain min + max as local values. 
-//      // Because of this will need to recreate
-//      var numberRangeOptions = {'min': min, 
-//          'max': max,
-//          'converter': this._GetConverter()};
-//
-//      this._createRangeValidator(numberRangeOptions);
-//      this._ResetAllValidators();
-//    } 
-  }, 
-    /**
-   * Reacts to changes to the 'min' and/or 'max' option by
-   * resetting the NumberRangeValidator.
-   * 
-   * @param {String|Object|string=} key a single string representing a 
-   * key or an object representing a group 
-   * of options
-   * @param {Object=} value of the key
-   */
-  option : function (key, value)
-  {
-    var retVal = this._superApply(arguments);
-    
-    // key === max, key === min, key is both min and max, so it's an object
-    
-    if (key === "max" || key === "min" || 
-        (typeof key === "object" && 
-         (key['min'] !== undefined || key['max'] !== undefined)))
-    {
-      var min = undefined, max = undefined;
-      if (key === "max")
-      {      
-        max = value != null ? value : undefined;
-      }
-      else if (key === "min")
-      {
-        min = value != null ? value : undefined;
-      }
-      else
-      {
-        // it's an object
-        if (key['max'] !== undefined)
-          max = key['max'] != null ? key['max'] : undefined;
-        if (key['min'] !== undefined)
-          min = key['min'] != null ? key['min'] : undefined;
-      }
-      // since validators are immutable, they will contain min + max as local values. 
-      // Because of this will need to recreate
-      var numberRangeOptions = {'min': min, 
-          'max': max,
-          'converter': this._GetConverter()};
-
-      this._createRangeValidator(numberRangeOptions);
-      this._ResetAllValidators();
-    }
-    return retVal;
-  },
   _createRangeValidator : function(options)
   {
     this._inputNumberDefaultValidators[oj.ValidatorFactory.VALIDATOR_TYPE_NUMBERRANGE] = 
       oj.Validation.validatorFactory(oj.ValidatorFactory.VALIDATOR_TYPE_NUMBERRANGE)
       .createValidator(options);
   },
+  /**
+   * @private
+   */
   _coerceInputNumberValue : function (val)
   {
     // 
     if (val !== null)
       return val = + val;
+    else
+      return val;
   },
   // The user can clear out min/max by setting the option to null, so we
   // do not coerce null.
+  /**
+   * @private
+   */
   _parse : function (val)
   {
     // do not coerce if null
@@ -75966,9 +77087,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
 //    return val === "" || isNaN(val) ? null : val;
 
   },
-  /* We are following the behavior of HTML-5 the best we can. According
+  /**
+   * parse the step's value
+   * We are following the behavior of HTML-5 the best we can. According
    * to the spec, it says step must be a number greater than 0. 
-   * Chrome defaults it to 1 if it is not. */
+   * Chrome defaults it to 1 if it is not. 
+   * @private
+   */
   _parseStep : function (val)
   {
     var defaultStep = 1;
@@ -75980,10 +77105,25 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
       parsedStep = defaultStep;
     return parsedStep;
   },
+  /**
+   * Toggles css selector on the widget. E.g., when readOnly option changes, 
+   * the oj-read-only selector needs to be toggled.
+   * @param {string} option
+   * @param {Object|string} value 
+   * @private
+   */        
+  _refreshStateTheming : function (option, value)
+  {
+    if (this._OPTION_TO_CSS_MAPPING.hasOwnProperty(option)) 
+    {
+      // value is a boolean
+      this.widget().toggleClass(this._OPTION_TO_CSS_MAPPING[option], !!value);
+    }
+  },
   /* updates the aria-value information */
   _refreshAriaMinMaxValue : function ()
   {
-    var valuenow = this._parse(this.options.value);
+    var valuenow = this._coerceInputNumberValue(this.options.value);
     var valuetext = this.element.val();
     
     this.element.attr(
@@ -75996,162 +77136,13 @@ oj.__registerWidget("oj.ojInputNumber", $['oj']['editableValue'],
     if (!this._ValueEquals(""+valuenow, valuetext))
       this.element.attr({"aria-valuetext" : valuetext});
   },
-
-  /**
-   * Used for explicit cases where the component needs to be refreshed 
-   * (e.g., when the value option changes or other UI gestures).
-   * @override
-   * @protected
-   * @memberof! oj.ojInputNumber
-   */
-  _Refresh : function (name, value)
-  {
-    this._super(name, value);
-    if (name === "value" || name === "max" || name === "min")
-    {
-      this._refreshAriaMinMaxValue();
-    }
-    this._updateButtons();
-  },
-  /**
-   * Returns the default styleclass for the component.
-   * 
-   * @return {string}
-   * @memberof! oj.ojInputNumber
-   * @override
-   * @protected
-   */
-  _GetDefaultStyleClass : function ()
-  {
-    return "oj-inputnumber";
-  },
-  /**
-   * @override
-   * @private
-   */
-  _destroy : function ()
-  {    
-    this.element.removeClass("oj-inputnumber-input")
-            .prop("disabled", false)
-            .removeAttr("autocomplete")
-            .removeAttr("aria-valuemin")
-            .removeAttr("aria-valuemax")
-            .removeAttr("aria-valuenow")
-            .removeAttr("aria-valuetext")
-            .removeAttr("aria-disabled");
-    // TODO: need a generic way to save off attributes and then restore them.
-    // attribute name/value array.
-    this.element.attr("type", this.saveType);
-    this._super();
-    this._off(this.element, "keydown keyup focus blur mousedown mouseup mouseenter mouseleave");
-    this.uiInputNumber.replaceWith(this.element);
-    clearTimeout(this.timer);
-  },
   
   /**
-   * Return the subcomponent node represented by the documented locator attribute values.
-   * Test authors should target inputNumber's sub elements using the following names:
-   * <ul>
-   * <li><b>oj-inputnumber-up</b>: the inputNumber's up arrow</li>
-   * <li><b>oj-inputnumber-down</b>: the inputNumber's down arrow</li>
-   * <li><b>oj-inputnumber-input</b>: the inputNumber's input</li>
-   * </ul>
-   * @expose
-   * @override
-   * @memberof! oj.ojInputNumber
-   * @instance
-   * @param {Object} locator An Object containing at minimum a subId property 
-   * whose value is a string, documented by the component, that allows the component to 
-   * look up the subcomponent associated with that string.  It contains:
-   * <ul>
-   * <li>
-   * component: optional - in the future there may be more than one component 
-   *   contained within a page element
-   * </li>
-   * <li>
-   * subId: the string, documented by the component, that the component expects 
-   * in getNodeBySubId to locate a particular subcomponent 
-   * </li>
-   * </ul>  
-   * @returns {Element|null} the subcomponent located by the subId string 
-   * passed in locator, if found.
+   * step the inputnumber value up or down
+   * @private
+   * @param {Number} steps - Number of steps to increment.
+   * @param {boolean} up If true step up, else step down.
    */
-  getNodeBySubId: function(locator)
-  {
-    if (locator == null)
-    {
-      return this.element ? this.element[0] : null;
-    }
-    
-    var subId = locator['subId'];
-    if (subId === "oj-inputnumber-up") {
-      return this.widget().find(".oj-inputnumber-up")[0];
-    }
-    if (subId === "oj-inputnumber-down") {
-      return this.widget().find(".oj-inputnumber-down")[0];
-    }
-    if (subId === "oj-inputnumber-input") {
-      return this.widget().find(".oj-inputnumber-input")[0];
-    }
-    
-    
-    // Non-null locators have to be handled by the component subclasses
-    return null;
-  },  
-   /**
-   * Whether the a value can be set on the component. 
-   * If the component is disabled (or readOnly) then 
-   * then setting value on component is a no-op. 
-   * 
-   * @see #_SetValue
-   * @memberof! oj.ojInputNumber
-   * @instance
-   * @protected
-   */
-  _CanSetValue: function ()
-  {
-    var canSetValue = this._super();
-    
-    if (!canSetValue)
-      return false;
-    
-    var readOnly = this.options['readOnly'] || false;
-    
-    if (readOnly)
-    {
-      return false;
-    }
-    
-    return true;
-  }, 
- /**
- * <p>Increments the value by the specified number of steps. 
- * Without the parameter, a single step is incremented.</p>
-   <p>If the resulting value is above the max, below the min, 
-   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
- * @public
- * @param {Number} steps - Number of steps to increment, defaults to 1.
- * @expose
- * @memberof! oj.ojInputNumber 
- */
-  stepUp : function (steps)
-  {
-    this._step(steps, true);
-  },
- /**
- * <p>Decrements the value by the specified number of steps. 
- * Without the parameter, a single step is decremented.</p>
-   <p>If the resulting value is above the max, below the min, 
-   or results in a step mismatch, the value will be adjusted to the closest valid value.</p>
- * @public
- * @param {Number} steps - Number of steps to decrement, defaults to 1.
- * @expose
- * @memberof! oj.ojInputNumber 
- */
-  stepDown : function (steps)
-  {
-    this._step(steps, false);
-  },  
   _step : function (steps, up)
   {
     this._start();
@@ -77208,6 +78199,10 @@ oj.KnockoutUtils._augment = function(len, getCallback) {
  *  radio input elements and calling <code class="prettyprint">ojRadioset()</code>. 
  *  You can enable and disable a radio set, 
  *  which will enable and disable all contained radios. 
+ * </p>
+ * <p>
+ *  Radioset does not have a readOnly option since HTML does not support
+ *  readonly on radios and checkboxes.
  * </p>
  * 
  * <h3 id="keyboard-section">
@@ -80515,10 +81510,10 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
 
       this._createTail();
       this._setChrome();
+      this._createLiveRegion();
 
       // callback that overrides the positon['using'] for setting the tail.
       this._usingCallback = $.proxy(this._usingHandler, this);
-
     },
    /**
     * @memberof! oj.ojPopup
@@ -80535,10 +81530,12 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
         this.close();
 
       this._destroyTail();
+      this._destroyLiveRegion();
       delete this._usingCallback;
 
       this._rootElement.replaceWith(this.element);
       this.element.hide();
+
     },
     /**
      * Returns a <code class="prettyprint">jQuery</code> object containing the generated wrapper.
@@ -80586,24 +81583,23 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
           return;
       }
 
+      this._setLauncher(launcher);
+
+      var rootElement = this._rootElement;
+      launcher = this._launcher;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+      oj.Assert.assertPrototype(launcher, jQuery);
+
+      if (oj.StringUtils.isEmptyOrUndefined(rootElement.attr("id")))
+        rootElement.uniqueId();
+
       if (this._trigger("beforeOpen") === false)
         return;
 
-      var options = this.options;
-      this._setLauncher(launcher);
       this._setPosition(position);
 
-      // TODO make a generic service that has a single resize listener and
-      //      only publishes to popups that are in the active layer (aka modality).
-      //      
-      // establish a window resize listener to reevaluate best fit for
-      // positioning
-      var rootElement = this._rootElement;
-      oj.Assert.assertPrototype(rootElement, jQuery);
 
-      launcher = this._launcher;
-      oj.Assert.assertPrototype(launcher, jQuery);
-
+      var options = this.options;
       this._setAutoDismiss(options["autoDismiss"]);
 
       this._on(true, $(window), 
@@ -80619,11 +81615,7 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
         'keydown' : this._keydownHandler
       });
 
-      if (oj.StringUtils.isEmptyOrUndefined(rootElement.attr("id")))
-        rootElement.uniqueId();
-
-      var popupId = rootElement.attr("id");
-      launcher.attr("aria-describedby", popupId);
+      this._addDescribedBy();
 
       rootElement.removeAttr("aria-hidden");
       rootElement.attr("role", "tooltip");
@@ -80636,6 +81628,11 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
       this._trigger("open");
 
       this._intialFocus();
+
+      var message = this.getTranslatedString("none" === options["initialFocus"] ?
+                                             "ariaLiveRegionInitialFocusNone":
+                                             "ariaLiveRegionInitialFocusFirstFocusable");
+      this._announceLiveRegion(message);
     },
     /**
      * Closes the popup. This method does not accept any arguments.
@@ -80663,15 +81660,15 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
       // if the content has focus, restore the the launcher
       this._restoreFocus();
 
+      var launcher = this._launcher;
       var rootElement = this._rootElement;
       oj.Assert.assertPrototype(rootElement, jQuery);
+      oj.Assert.assertPrototype(launcher, jQuery);
 
       rootElement.hide();
       rootElement.attr("aria-hidden", "true");
 
-      var launcher = this._launcher;
-      oj.Assert.assertPrototype(launcher, jQuery);
-      launcher.removeAttr("aria-describedby");
+      this._removeDescribedBy();
       this._setAutoDismiss();
 
       this._off($(window), "resize");
@@ -81234,6 +82231,113 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
       // if event target is not under the laucher or popup root dom subtrees, dismiss
       if (!oj.DomUtils.isAncestorOrSelf(launcher[0], target) && !oj.DomUtils.isAncestorOrSelf(rootElement[0], target))
         this.close();
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _addDescribedBy: function () 
+    {
+      var launcher = this._launcher;
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(launcher, jQuery);
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      var popupId = rootElement.attr("id");
+      var describedby = launcher.attr("aria-describedby");
+      var tokens = describedby ? describedby.split(/\s+/) : [];
+      tokens.push(popupId);
+      describedby = $.trim(tokens.join(" "));
+      launcher.attr("aria-describedby", describedby);
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _removeDescribedBy: function() {
+      var launcher = this._launcher;
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(launcher, jQuery);
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      var popupId = rootElement.attr("id");
+      var describedby = launcher.attr("aria-describedby");
+      var tokens = describedby ? describedby.split(/\s+/) : [];
+      var index = $.inArray(popupId, tokens);
+      if (index !== -1)
+        tokens.splice(index, 1);
+
+      describedby = $.trim(tokens.join(" "));
+      if (describedby)
+        launcher.attr("aria-describedby", describedby);
+      else
+        launcher.removeAttr("aria-describedby");
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _createLiveRegion: function()
+    {
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+
+      // append the aria-live region communicating navigation keys
+      var popupId = rootElement.attr("id");
+      var liveRegionId = this._getSubId("ariaLive");
+      var liveRegion = this._liveRegion = $( "<div>" );
+      liveRegion.attr({'id': liveRegionId, 'role': 'log', 'aria-live': 'assertive', 'aria-relevant': 'additions'});
+      liveRegion.addClass("oj-helper-hidden-accessible");
+      liveRegion.appendTo(document.body);
+      rootElement.attr("aria-controls", liveRegionId);
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @param {string} message to be announced in the live region
+    * @return {void}
+    */
+    _announceLiveRegion: function(message)
+    {
+      var liveRegion = this._liveRegion;
+      oj.Assert.assertPrototype(liveRegion, jQuery);
+      liveRegion.children().remove();
+      $("<div>").text(message).appendTo(liveRegion);
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @return {void}
+    */
+    _destroyLiveRegion: function()
+    {
+      var liveRegion = this._liveRegion;
+      oj.Assert.assertPrototype(liveRegion, jQuery);
+      liveRegion.remove();
+      delete this._liveRegion;
+
+      var rootElement = this._rootElement;
+      oj.Assert.assertPrototype(rootElement, jQuery);
+      rootElement.removeAttr("aria-controls");
+    },
+   /**
+    * @memberof! oj.ojPopup
+    * @instance
+    * @private 
+    * @param {string} sub id that will become a composite id prefixed with the components uuid
+    * @return {string}
+    */
+    _getSubId: function(sub)
+    {
+      return this["uuid"] + "_" + sub;
     }
   });
 
@@ -81243,6 +82347,46 @@ oj.__registerWidget('oj.ojLegend', $['oj']['dvtBaseComponent'],
  * @class 
  * @name oj.ojRowExpander
  * @augments oj.baseComponent
+ *
+ * @classdesc
+ * <h3 id="rowexpanderOverview-section">
+ *   JET DataGrid Component
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rowexpanderOverview-section"></a>
+ * </h3>
+ * <p>Description: A JET RowExpander is a component that is primarily used inside the JET Table and JET DataGrid widgets.  It enables hierarchical data to be display in a JET Table and JET DataGrid.</p>
+ *
+ * <p>To enable expand and collapse of rows, developers must specify oj.FlattenedTreeTableDataSource as data when used within JET Table and oj.FlattenedTreeDataGridDataSource as data when used within JET DataGrid.</p>
+ *
+ * <h3 id="keyboard-section">
+ *   Keyboard interaction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
+ * </h3>
+ * <table class="keyboard-table">
+ *   <thead>
+ *     <tr>
+ *       <th>Key</th>
+ *       <th>Use</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td><kbd>Ctrl+Right Arrow</kbd></td>
+ *       <td>Expand the currently focused row that contains a row expander.</td>
+ *     </tr>
+ *     <tr>
+ *       <td><kbd>Ctrl+Left Arrow</kbd></td>
+ *       <td>Collapse the currently focused row that contains a row expander.</td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * <h3 id="rtl-section">
+ *   Reading direction
+ *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rtl-section"></a>
+ * </h3>
+ * 
+ * <p>The location of the row expander will be reversed in RTL reading direction.</p>
+ * <p>As with any JET component, in the unusual case that the directionality (LTR or RTL) changes post-init, the component containing the row expander (JET Table or JET DataGrid) must be <code class="prettyprint">refresh()</code>ed.  
  */
 oj.__registerWidget('oj.ojRowExpander', $['oj']['baseComponent'],
 {

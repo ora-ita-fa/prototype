@@ -41,7 +41,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$17$$, $$$$
       $clikAwayHandler$$ || ($clikAwayHandler$$ = function $$clikAwayHandler$$$($event$$186$$) {
         if("focus" === $event$$186$$.type || "mousedown" === $event$$186$$.type || 93 == $event$$186$$.which || 121 == $event$$186$$.which && $event$$186$$.shiftKey || 93 == $event$$186$$.keyCode) {
           var $openPopupMenus$$ = $_openPopupMenus$$.slice(0, $_openPopupMenus$$.length);
-          $$$$17$$.each($openPopupMenus$$, function($index$$142$$, $menu$$9$$) {
+          $$$$17$$.each($openPopupMenus$$, function($index$$143$$, $menu$$9$$) {
             $$$$17$$($event$$186$$.target).closest($menu$$9$$.element).length || "keydown" !== $event$$186$$.type && ("mousedown" !== $event$$186$$.type || 3 !== $event$$186$$.which) && $$$$17$$($event$$186$$.target).closest($menu$$9$$.$_launcher$).length || ($menu$$9$$.collapseAll($event$$186$$), $menu$$9$$.$_launcher$ && $menu$$9$$.$__dismiss$($event$$186$$))
           })
         }
@@ -60,8 +60,8 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$17$$, $$$$
       this.$_unregisterClickAwayHandler$();
       0 <= $_openPopupMenus$$.indexOf(this) && $_openPopupMenus$$.splice($_openPopupMenus$$.indexOf(this), 1)
     }, $_keydown$:function($event$$187$$) {
-      function $escape$$1$$($value$$172$$) {
-        return $value$$172$$.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$\x26")
+      function $escape$$1$$($value$$173$$) {
+        return $value$$173$$.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$\x26")
       }
       var $match$$16_prev$$2$$, $activeItemId_character$$, $skip_topLevelAnchorSelector$$, $regex$$1$$, $preventDefault$$ = !0;
       switch($event$$187$$.keyCode) {
@@ -87,9 +87,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$17$$, $$$$
         case $$$$17$$.ui.keyCode.SPACE:
           this.$_activate$($event$$187$$);
           this.$__spaceEnterDownInMenu$ = !0;
-          var $self$$70$$ = this;
+          var $self$$73$$ = this;
           setTimeout(function() {
-            $self$$70$$.$__spaceEnterDownInMenu$ = !1
+            $self$$73$$.$__spaceEnterDownInMenu$ = !1
           }, 100);
           break;
         case $$$$17$$.ui.keyCode.ESCAPE:
@@ -112,9 +112,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$17$$, $$$$
       this.$_setup$()
     }, $_setup$:function() {
       this.$isRtl$ = "rtl" === this.$_GetReadingDirection$();
-      var $self$$71$$ = this, $children$$4_submenus$$ = this.element.find(this.options.menuSelector);
+      var $self$$74$$ = this, $children$$4_submenus$$ = this.element.find(this.options.menuSelector);
       $children$$4_submenus$$.filter(":not(.oj-menu)").addClass("oj-menu oj-component").hide().attr({role:this.role, "aria-hidden":"true"}).each(function() {
-        var $menu$$10$$ = $$$$17$$(this), $item$$5_itemId$$ = $self$$71$$.$_getSubmenuItem$($menu$$10$$), $submenuIcon$$ = $$$$17$$("\x3cspan\x3e");
+        var $menu$$10$$ = $$$$17$$(this), $item$$5_itemId$$ = $self$$74$$.$_getSubmenuItem$($menu$$10$$), $submenuIcon$$ = $$$$17$$("\x3cspan\x3e");
         $submenuIcon$$.addClass("oj-menu-submenu-icon oj-component-icon").data("oj-ojMenu-submenu-icon", !0);
         $item$$5_itemId$$.attr("aria-haspopup", "true").attr("aria-expanded", "false").prepend($submenuIcon$$);
         $item$$5_itemId$$ = $item$$5_itemId$$.attr("id");
@@ -163,7 +163,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$17$$, $$$$
         var $launcher$$7$$ = $params$$15$$.launcher;
         if(this._trigger("beforeShow", $event$$193$$, {launcher:$launcher$$7$$})) {
           var $launcher$$7$$ = "string" === $$$$17$$.type($launcher$$7$$) ? $$$$17$$("#" + $launcher$$7$$) : $launcher$$7$$, $currentMenu$$ = this.element[0], $focusFirstItem_openPopupMenus$$1_position$$6$$ = $_openPopupMenus$$.slice(0, $_openPopupMenus$$.length);
-          $$$$17$$.each($focusFirstItem_openPopupMenus$$1_position$$6$$, function($index$$143$$, $menu$$11$$) {
+          $$$$17$$.each($focusFirstItem_openPopupMenus$$1_position$$6$$, function($index$$144$$, $menu$$11$$) {
             $menu$$11$$.element[0] !== $currentMenu$$ && ($menu$$11$$.collapseAll($event$$193$$), $menu$$11$$.$_launcher$ && $menu$$11$$.$__dismiss$($event$$193$$))
           });
           $focusFirstItem_openPopupMenus$$1_position$$6$$ = $$$$17$$.extend({}, this.options.menuPosition);
@@ -194,14 +194,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$17$$, $$$$
       this.$_collapseAll$($event$$194$$, $all$$1$$, this.delay)
     }, $_collapseAll$:function($event$$195$$, $all$$2$$, $delay$$3$$) {
       function $collapseMenu$$() {
-        var $currentMenu$$1$$ = $all$$2$$ ? $self$$72$$.element : $$$$17$$($event$$195$$ && $event$$195$$.target).closest($self$$72$$.element.find(".oj-menu"));
-        $currentMenu$$1$$.length || ($currentMenu$$1$$ = $self$$72$$.element);
-        $self$$72$$.$_close$($currentMenu$$1$$);
-        $self$$72$$.blur($event$$195$$);
-        $self$$72$$.$activeMenu$ = $currentMenu$$1$$
+        var $currentMenu$$1$$ = $all$$2$$ ? $self$$75$$.element : $$$$17$$($event$$195$$ && $event$$195$$.target).closest($self$$75$$.element.find(".oj-menu"));
+        $currentMenu$$1$$.length || ($currentMenu$$1$$ = $self$$75$$.element);
+        $self$$75$$.$_close$($currentMenu$$1$$);
+        $self$$75$$.blur($event$$195$$);
+        $self$$75$$.$activeMenu$ = $currentMenu$$1$$
       }
       clearTimeout(this.$timer$);
-      var $self$$72$$ = this;
+      var $self$$75$$ = this;
       $delay$$3$$ ? this.$timer$ = this._delay($collapseMenu$$, $delay$$3$$) : $collapseMenu$$()
     }, $_close$:function($startMenu$$) {
       $startMenu$$ || ($startMenu$$ = this.$active$ ? this.$active$.parent() : this.element);

@@ -344,14 +344,21 @@ oj.__registerWidget("oj.ojButton", $['oj']['baseComponent'],
         },
         
         /**
-         * JQ selector identifying the JET Menu that the button should launch. If specified, the button is a WAI-ARIA-compliant menu button.  
+         * <p>JQ selector identifying the JET Menu that the button should launch. If specified, the button is a WAI-ARIA-compliant menu button.  
          * 
          * <p>By default, menu buttons have a downward pointing "dropdown" arrow for their end icon.  See the <code class="prettyprint">icons</code> option for details.
          * 
          * <p>Menu button functionality is supported for Buttons based on button or anchor tags.  (Buttons based on input tags either do not support the dropdown icon, 
          * or do not make sense for use as a menu button, or both.)
          * 
-         * <p>The JET Menu should be initialized before the JET Button that launches it.
+         * <p>The JET Menu should be initialized before being set on a button's <code class="prettyprint">menu</code> option.  This means that if the menu is specified 
+         * at create time, then the menu should be initialized first, before the button referencing it is initialized.  If the components are initialized using 
+         * <code class="prettyprint">ojComponent</code> bindings, then the order can be controlled either by using separate <code class="prettyprint">applyBindings</code> 
+         * calls, or by placing the menu before the button in the document.
+         * 
+         * <p>The menu-before-button ordering can lead to a less intuitive tab order.  To avoid this while using a single <code class="prettyprint">applyBindings</code> call, the
+         * <code class="prettyprint">menu</code> option can be set after both components are initialized, thus meeting the requirement that the menu be inited when set 
+         * on the button.
          * 
          * @expose
          * @memberof! oj.ojButton

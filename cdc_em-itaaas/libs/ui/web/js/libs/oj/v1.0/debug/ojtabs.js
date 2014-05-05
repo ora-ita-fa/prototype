@@ -111,9 +111,6 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
  *   </tbody>
  *  </table>
  * 
- * <p>Disabled items can receive keyboard focus, but do not allow any other interaction.
- * 
- * 
  * <h3 id="rtl-section">
  *   Reading direction
  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#rtl-section"></a>
@@ -326,9 +323,9 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
        * @memberof! oj.ojTabs
        * @instance
        * @type {string}
-       * @default <code class="prettyprint">Tab is removable</code>
+       * @default <code class="prettyprint">Removable</code>
        */
-      removeCueText : "Tab is removable", 
+      removeCueText : "Removable",
 
       /** 
        * Specifies if the tabs can be reordered within the tab bar by drag-and-drop
@@ -452,8 +449,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
-       * @property {jQuery} ui.tab The tab that is about to be removed.
-       * @property {jQuery} ui.panel The panel that is about to be removed.
+       * @property {jQuery} ui.header The tab that is about to be removed.
+       * @property {jQuery} ui.content The panel that is about to be removed.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">beforeRemove</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -474,8 +471,8 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
        * @instance
        * @property {Event} event <code class="prettyprint">jQuery</code> event object
        * @property {Object} ui Parameters
-       * @property {jQuery} ui.tab The tab that was just removed.
-       * @property {jQuery} ui.panel The panel that was just removed.
+       * @property {jQuery} ui.header The tab that was just removed.
+       * @property {jQuery} ui.content The panel that was just removed.
        * 
        * @example <caption>Initialize the tabs with the <code class="prettyprint">afterRemove</code> callback specified:</caption>
        * $( ".selector" ).ojTabs({
@@ -819,13 +816,15 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
 
     _refresh : function ()
     {
+      var options = this.options;
+
       // check for length avoids error when initializing empty list
-      if (this.tabs.length && this.options.selected != -1)
-        this.active = this._findActive(this.options.selected);
+      if (this.tabs.length && options.selected != -1)
+        this.active = this._findActive(options.selected);
       else 
         this.active = $();
 
-      this._setupDisabled(this.options.disabled);
+      this._setupDisabled(options.disabled);
 
       this._createCloseIcons();
 
@@ -862,23 +861,28 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
         });
       }
 
-
       //Bug 18270242 - When ojtab first displays beforeSelect & afterSelect events are not raised  
       // handle active numbers: negative, out of range
       if (this._initialActivate !== undefined)
       {
         var active = this._initialActivate;
         if (active != 0 && (active < 0 || active > this.tabs.length))
-          this.options.selected = 0;
+          options.selected = 0;
         else
-          this.options.selected = active;
+          options.selected = active;
 
-        this._activate(active);
+        //Bug 18539151 - ojtabs should not let user set focus on disabled tabs
+        //if the selected tab is disabled, select the next enabled tab
+        if ($.inArray(active, options.disabled) !==  - 1)
+        {
+          options.selected = this._activateNextTab(active);
+        }
 
+        this._activate(options.selected);
         this._initialActivate = undefined;
       }
 
-      if (this.options.orientation == "horizontal")
+      if (options.orientation == "horizontal")
       {
         //always add conveyor
         this._truncateBeforeOverflow();
@@ -1192,7 +1196,20 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
             newHeader : tab, 
             /** @expose */
             newContent : toShow
+          },
+
+          deselectData = 
+          {
+            /** @expose */
+            oldHeader : eventData.newHeader,
+            /** @expose */
+            oldContent : eventData.newContent,
+            /** @expose */
+            newHeader : eventData.oldHeader,
+            /** @expose */
+            newContent : eventData.oldContent
           };
+
 
       event.preventDefault();
 
@@ -1204,7 +1221,7 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
           (clickedIsActive) || 
           // allow canceling deselect
           ((! this._initialActivate) &&
-           (this._trigger("beforeDeselect", event, eventData) === false)) ||
+           (this._trigger("beforeDeselect", event, deselectData) === false)) ||
           // allow canceling select
           (this._trigger("beforeSelect", event, eventData) === false))
       {
@@ -1339,28 +1356,23 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
       //create close icon only if it's not disabled
       if (this.options.removable)
       {
+//        var removeCueText = this.getTranslatedString("removeCueText");
         var removeCueText = this.options.removeCueText;
-        this.tabs.not(".oj-disabled").each(function ()
+        this.tabs.not(".oj-disabled").each(function (index)
         {
           var div = $(this).find("> :first-child");
 
-          //add cue text for screen reader users
-          var a1 = $(div).find("> :first-child");
-          $("<span>")
-            .addClass("oj-helper-hidden-accessible")
-            .attr(
-              {
-                "role" : "presentation"
-              })
-            .text(removeCueText)
-            .appendTo(a1);
+          //add cue text for removable icon for screen reader users
+          var rmId = _ID_PREFIX + "rm_" + index;
+          $(this).attr("aria-describedby", rmId);
 
           $("<a href='#'>")
             .addClass("oj-tabs-icon oj-component-icon oj-clickable-icon " + _CLOSE_ICON)
             .attr(
               {
+                "id": rmId,
                 "tabIndex" : "-1",
-                "aria-labelledby" : $(this).attr( "id" ),
+                "aria-label" : removeCueText,
                 "role" : "presentation"
               })
             .appendTo(div);
@@ -1531,9 +1543,9 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
           eventData = 
           {
             /** @expose */
-            tab : tab, 
+            header : tab, 
             /** @expose */
-            panel : panel
+            content : panel
           };
 
       //trigger before delete event and only delete if it's not cancelled
@@ -1568,7 +1580,13 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
         panel.remove();
         tab.remove();
 
+        //fire select event 
+        this._initialActivate = this.options.selected;
         this.refresh();
+
+        //set focus on the active
+        this.active.focus();
+
         this._trigger("afterRemove", event, eventData);
       }
     },
@@ -1626,10 +1644,23 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojconveyorbelt'],
             {
               self._getPanelForTab(prevTab).after(mvContent);
             }
-            else
+            else if (self.panels.length > 0)
             {
-              tabBar.after(mvContent);
+              self.panels.first().before(mvContent);
             }
+
+            //Bug 18680706 - calling refresh after reordering tabs causes tabs to loose there disabled state 
+            //update disabled and active
+            var arr  = [];
+            tabBar.children(".oj-disabled").each(
+              function() {
+                arr.push($(this).index());
+              }
+            );
+
+            self.options.disabled = arr;
+            self.options.selected = tabBar.children(".oj-tabs-active").index();
+
           }
         })
       }

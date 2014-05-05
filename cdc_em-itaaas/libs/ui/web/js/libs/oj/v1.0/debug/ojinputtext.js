@@ -235,12 +235,9 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
    */        
   _AfterCreate : function () 
   {
-    var ret = this._superApply(arguments);
-
-    if(this.options["disabled"])
-    {
-      this.disable();
-    }
+    var ret = this._superApply(arguments),
+        setOptions = ["disabled", "readOnly"],
+        self = this;
     
     if(this._CLASS_NAMES) 
     {
@@ -250,6 +247,14 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     this.element.on("blur", $.proxy(this._onBlurHandler, this));
     
     this._AppendInputHelper();
+    this._refreshStateTheming("readOnly", this.options.readOnly);
+    
+    //reason it should go through _setOption are for cases where the components are composite and just 
+    //placing it on the root node is not sufficient enough
+    $.each(setOptions, function(index, ele)
+    {
+      self._setOption(ele, self.options[ele]);
+    });
     
     return ret;
   },
@@ -270,7 +275,10 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     
     if (key === "readOnly")
     {
-      this.element.prop("readonly", !!value);
+      value = !!value;
+      this.element.prop("readonly", value);
+      this.widget().toggleClass( "oj-read-only", value );
+      this._refreshStateTheming("readOnly", this.options.readOnly);
     }
 
     if (key === "pattern")
@@ -289,10 +297,8 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   _destroy : function __destroy()
   {
     var ret = this._superApply(arguments);
-    
+
     this.element.off("blur");
-    
-    this.element.removeClass(this._CLASS_NAMES);
     
     if(this._inputHelper) 
     {
@@ -303,10 +309,18 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     {
       this.element.unwrap();
     }
-    
+
     return ret;
   },
-  
+   /**
+   * when below listed options are passed to the component, corresponding CSS will be toggled
+   * @private
+   * @const
+   * @type {Object}
+   */
+  _OPTION_TO_CSS_MAPPING: {
+    "readOnly": "oj-read-only"
+  }, 
   /**
    * Performs the attribute check/set by using _ATTR_CHECK variable [i.e. ojInputText must have type be set to "text"].
    * 
@@ -379,10 +393,12 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   {
     if(this._INPUT_HELPER_KEY && this._DoWrapElement()) 
     {
-      var helperLabeledById = this._GetSubId(this._INPUT_HELPER_KEY);
+      var describedBy = this.element.attr("aria-describedby") || "",
+          helperDescribedById = this._GetSubId(this._INPUT_HELPER_KEY);
       
-      this.element.attr("aria-labelledby", helperLabeledById);
-      this._inputHelper = $("<div class='oj-helper-hidden-accessible' id='" + helperLabeledById + "'>" + 
+      describedBy += " " + helperDescribedById;
+      this.element.attr("aria-describedby", describedBy);
+      this._inputHelper = $("<div class='oj-helper-hidden-accessible' id='" + helperDescribedById + "'>" + 
                               this.getTranslatedString(this._INPUT_HELPER_KEY) + "</div>");
       this.widget().append(this._inputHelper);
     }
@@ -426,6 +442,21 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
     
     return $.extend(validatorMap, ret);
   },
+    /**
+   * Toggles css selector on the widget. E.g., when readOnly option changes, 
+   * the oj-read-only selector needs to be toggled.
+   * @param {string} option
+   * @param {Object|string} value 
+   * @private
+   */        
+  _refreshStateTheming : function (option, value)
+  {
+    if (this._OPTION_TO_CSS_MAPPING.hasOwnProperty(option)) 
+    {
+      // value is a boolean
+      this.widget().toggleClass(this._OPTION_TO_CSS_MAPPING[option], !!value);
+    }
+  },
   
   /**
    * Returns the regexp validator instance or creates it if needed and caches it.
@@ -453,6 +484,22 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
   _GetSubId : function __getSubId(sub)
   {
     return this["uuid"] + "_" + sub;
+  },
+  
+  /**
+   * Returns a jquery object of the element that triggers messaging behavior. The trigger element 
+   * is usually an input or select or textarea element for which a value can be set/retrieved and 
+   * validated. 
+   * 
+   * @return {Object} jquery object 
+   * 
+   * @memberof! oj.editableValue
+   * @instance
+   * @protected
+   */
+  _GetMessagingLauncherElement : function ()
+  {
+    return this.widget();
   },
   
   /**

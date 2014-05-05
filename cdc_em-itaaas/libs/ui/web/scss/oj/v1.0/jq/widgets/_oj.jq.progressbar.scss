@@ -12,6 +12,7 @@ $includeProgressbarClasses: $includeAllClasses !default;
 
     .oj-progressbar { 
         // explicitly set box-sizing when height and border both specified
+        // todo: why content box?
         box-sizing: content-box;
         height: 10px;   
         width: 200px;  	

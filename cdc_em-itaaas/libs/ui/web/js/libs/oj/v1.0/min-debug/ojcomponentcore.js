@@ -83,8 +83,8 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
     }
     $getters_widgetHierNames$$.push("default");
     $allProperties_prop$$48_proto$$1$$ = $oj$$2$$.Components.$getDefaultOptions$();
-    for(var $i$$66$$ = $getters_widgetHierNames$$.length;0 <= $i$$66$$;$i$$66$$--) {
-      var $props$$2$$ = $allProperties_prop$$48_proto$$1$$[$getters_widgetHierNames$$[$i$$66$$]];
+    for(var $i$$67$$ = $getters_widgetHierNames$$.length;0 <= $i$$67$$;$i$$67$$--) {
+      var $props$$2$$ = $allProperties_prop$$48_proto$$1$$[$getters_widgetHierNames$$[$i$$67$$]];
       void 0 !== $props$$2$$ && ($defaults$$1$$ = $$$$2$$.widget.extend($defaults$$1$$, $props$$2$$))
     }
     return $defaults$$1$$
@@ -115,8 +115,8 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
   }, $_GetSavedAttributes$:function($element$$14$$) {
     var $savedAttributes$$ = this.$_savedAttributes$;
     $element$$14$$ = $element$$14$$[0];
-    for(var $i$$67$$ = 0, $j$$7$$ = $savedAttributes$$.length;$i$$67$$ < $j$$7$$;$i$$67$$++) {
-      var $curr$$ = $savedAttributes$$[$i$$67$$];
+    for(var $i$$68$$ = 0, $j$$7$$ = $savedAttributes$$.length;$i$$68$$ < $j$$7$$;$i$$68$$++) {
+      var $curr$$ = $savedAttributes$$[$i$$68$$];
       if($curr$$.element === $element$$14$$) {
         return $curr$$.attributes
       }
@@ -126,12 +126,12 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
     $$$$2$$.each(this.$_savedAttributes$, function($index$$68$$, $savedAttr$$) {
       var $element$$15$$ = $$$$2$$($savedAttr$$.element), $attributes$$11$$ = $savedAttr$$.attributes;
       if(1 === $element$$15$$.length) {
-        for(var $currAttr$$ = $savedAttr$$.element.attributes, $removeAttr$$ = [], $i$$68$$ = 0, $j$$8$$ = $currAttr$$.length;$i$$68$$ < $j$$8$$;$i$$68$$++) {
-          $currAttr$$[$i$$68$$].name in $attributes$$11$$ || $removeAttr$$.push($currAttr$$[$i$$68$$].name)
+        for(var $currAttr$$ = $savedAttr$$.element.attributes, $removeAttr$$ = [], $i$$69$$ = 0, $j$$8$$ = $currAttr$$.length;$i$$69$$ < $j$$8$$;$i$$69$$++) {
+          $currAttr$$[$i$$69$$].name in $attributes$$11$$ || $removeAttr$$.push($currAttr$$[$i$$69$$].name)
         }
-        $i$$68$$ = 0;
-        for($j$$8$$ = $removeAttr$$.length;$i$$68$$ < $j$$8$$;$i$$68$$++) {
-          $element$$15$$.removeAttr($removeAttr$$[$i$$68$$])
+        $i$$69$$ = 0;
+        for($j$$8$$ = $removeAttr$$.length;$i$$69$$ < $j$$8$$;$i$$69$$++) {
+          $element$$15$$.removeAttr($removeAttr$$[$i$$69$$])
         }
         for(var $attribute$$1$$ in $attributes$$11$$) {
           $element$$15$$.attr($attribute$$1$$, $attributes$$11$$[$attribute$$1$$].attr)
@@ -151,8 +151,8 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
     $pattern$$2$$ = this.options[$key$$26$$];
     return null == $pattern$$2$$ ? $key$$26$$ : $oj$$2$$.$Translations$.$applyParameters$($pattern$$2$$.toString(), $params$$2$$)
   }, getNodeBySubId:function($locator$$) {
-    return null == $locator$$ || $locator$$.subId ? this.element ? this.element[0] : null : null
-  }, destroy:function() {
+    return null == $locator$$ || null == $locator$$.subId ? this.element ? this.element[0] : null : null
+  }, getSubIdByNode:$JSCompiler_returnArg$$(null), destroy:function() {
     this.$_unbindContextMenu$();
     this._super();
     this.widget().removeClass("oj-disabled");
@@ -268,24 +268,24 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
     ($offSpan$$.innerHTML = $value$$68$$) && 0 <= $value$$68$$.indexOf("\\x3c") && $oj$$2$$.$DomUtils$.$_cleanElementHtml$($offSpan$$);
     return $offSpan$$
   };
-  $oj$$2$$.$DomUtils$.$_cleanElementHtml$ = function $$oj$$2$$$$DomUtils$$$_cleanElementHtml$$($node$$5$$) {
-    for(var $children$$ = $node$$5$$.childNodes, $child$$1$$, $attrs$$15$$, $attr$$11$$, $childHasAttr$$, $i$$69$$, $count$$10$$ = $children$$.length - 1;0 <= $count$$10$$;) {
+  $oj$$2$$.$DomUtils$.$_cleanElementHtml$ = function $$oj$$2$$$$DomUtils$$$_cleanElementHtml$$($node$$6$$) {
+    for(var $children$$ = $node$$6$$.childNodes, $child$$1$$, $attrs$$15$$, $attr$$11$$, $childHasAttr$$, $i$$70$$, $count$$10$$ = $children$$.length - 1;0 <= $count$$10$$;) {
       if($child$$1$$ = $children$$.item($count$$10$$), 1 === $child$$1$$.nodeType) {
         if($oj$$2$$.$DomUtils$.$_LEGAL_ELEMENTS$[$child$$1$$.nodeName]) {
-          for($attrs$$15$$ = $child$$1$$.attributes, $i$$69$$ = $attrs$$15$$.length - 1;0 <= $i$$69$$;$i$$69$$--) {
-            $attr$$11$$ = $attrs$$15$$[$i$$69$$], ($childHasAttr$$ = void 0 !== $$$$2$$($child$$1$$).attr($attr$$11$$)) && ($oj$$2$$.$DomUtils$.$_LEGAL_ATTRIBUTES$[$attr$$11$$.name] || $child$$1$$.removeAttribute($attr$$11$$.nodeName))
+          for($attrs$$15$$ = $child$$1$$.attributes, $i$$70$$ = $attrs$$15$$.length - 1;0 <= $i$$70$$;$i$$70$$--) {
+            $attr$$11$$ = $attrs$$15$$[$i$$70$$], ($childHasAttr$$ = void 0 !== $$$$2$$($child$$1$$).attr($attr$$11$$)) && ($oj$$2$$.$DomUtils$.$_LEGAL_ATTRIBUTES$[$attr$$11$$.name] || $child$$1$$.removeAttribute($attr$$11$$.nodeName))
           }
         }
         $oj$$2$$.$DomUtils$.$_cleanElementHtml$($child$$1$$)
       }else {
-        $node$$5$$.removeChild($child$$1$$)
+        $node$$6$$.removeChild($child$$1$$)
       }
     }
   };
-  $oj$$2$$.$DomUtils$.$isAncestor$ = function $$oj$$2$$$$DomUtils$$$isAncestor$$($ancestorNode$$, $node$$6$$) {
+  $oj$$2$$.$DomUtils$.$isAncestor$ = function $$oj$$2$$$$DomUtils$$$isAncestor$$($ancestorNode$$, $node$$7$$) {
     $oj$$2$$.$Assert$.$assertDomElement$($ancestorNode$$);
-    $oj$$2$$.$Assert$.$assertDomElement$($node$$6$$);
-    for(var $parentNode$$1$$ = $node$$6$$.parentNode;$parentNode$$1$$;) {
+    $oj$$2$$.$Assert$.$assertDomElement$($node$$7$$);
+    for(var $parentNode$$1$$ = $node$$7$$.parentNode;$parentNode$$1$$;) {
       if($parentNode$$1$$ == $ancestorNode$$) {
         return!0
       }
@@ -293,10 +293,10 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
     }
     return!1
   };
-  $oj$$2$$.$DomUtils$.$isAncestorOrSelf$ = function $$oj$$2$$$$DomUtils$$$isAncestorOrSelf$$($ancestorNode$$1$$, $node$$7$$) {
+  $oj$$2$$.$DomUtils$.$isAncestorOrSelf$ = function $$oj$$2$$$$DomUtils$$$isAncestorOrSelf$$($ancestorNode$$1$$, $node$$8$$) {
     $oj$$2$$.$Assert$.$assertDomElement$($ancestorNode$$1$$);
-    $oj$$2$$.$Assert$.$assertDomElement$($node$$7$$);
-    return $node$$7$$ == $ancestorNode$$1$$ ? !0 : $oj$$2$$.$DomUtils$.$isAncestor$($ancestorNode$$1$$, $node$$7$$)
+    $oj$$2$$.$Assert$.$assertDomElement$($node$$8$$);
+    return $node$$8$$ == $ancestorNode$$1$$ ? !0 : $oj$$2$$.$DomUtils$.$isAncestor$($ancestorNode$$1$$, $node$$8$$)
   };
   $oj$$2$$.$DomUtils$.$addResizeListener$ = function $$oj$$2$$$$DomUtils$$$addResizeListener$$($elem$$14$$, $listener$$32$$) {
     var $jelem$$1$$ = $$$$2$$($elem$$14$$), $tracker$$ = $jelem$$1$$.data($oj$$2$$.$DomUtils$.$_RESIZE_TRACKER_KEY$);
@@ -392,20 +392,20 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
   $oj$$2$$.$ComponentMessaging$.prototype.$activate$ = function $$oj$$2$$$$ComponentMessaging$$$$activate$$($launcher$$, $content$$5$$) {
     var $that$$ = this;
     $oj$$2$$.$Assert$.$assertObject$($content$$5$$);
-    this.$_activated$ ? this.$_reactivate$($launcher$$, $content$$5$$) : ($$$$2$$.each(this.$_strategies$, function($i$$70$$, $strategy$$) {
+    this.$_activated$ ? this.$_reactivate$($launcher$$, $content$$5$$) : ($$$$2$$.each(this.$_strategies$, function($i$$71$$, $strategy$$) {
       $strategy$$.$activate$($that$$.$_component$, $launcher$$, $content$$5$$)
     }), this.$_activated$ = !0)
   };
   $oj$$2$$.$ComponentMessaging$.prototype.update = function $$oj$$2$$$$ComponentMessaging$$$update$($content$$6$$) {
     $oj$$2$$.$Assert$.$assertObject$($content$$6$$);
     $oj$$2$$.$Assert$.$assertBoolean$(this.$_activated$);
-    this.$_activated$ && $$$$2$$.each(this.$_strategies$, function($i$$71$$, $strategy$$1$$) {
+    this.$_activated$ && $$$$2$$.each(this.$_strategies$, function($i$$72$$, $strategy$$1$$) {
       $strategy$$1$$.update($content$$6$$)
     })
   };
   $oj$$2$$.$ComponentMessaging$.prototype.$deactivate$ = function $$oj$$2$$$$ComponentMessaging$$$$deactivate$$($content$$7$$) {
     $oj$$2$$.$Assert$.$assertObject$($content$$7$$);
-    $$$$2$$.each(this.$_strategies$, function($i$$72$$, $strategy$$2$$) {
+    $$$$2$$.each(this.$_strategies$, function($i$$73$$, $strategy$$2$$) {
       $strategy$$2$$.$deactivate$($content$$7$$)
     });
     this.$_activated$ = !1;
@@ -618,8 +618,8 @@ define(["ojs/ojcore", "jquery", "jqueryui"], function($oj$$2$$, $$$$2$$) {
   $oj$$2$$.$PositionUtils$ = {};
   $oj$$2$$.$PositionUtils$.$normalizeHorizontalAlignment$ = function $$oj$$2$$$$PositionUtils$$$normalizeHorizontalAlignment$$($position$$, $isRtl$$) {
     $oj$$2$$.$Assert$.$assertObject$($position$$, "position");
-    for(var $target$$73$$ = $$$$2$$.extend({}, $position$$), $i$$73$$ = 0;$i$$73$$ < $oj$$2$$.$PositionUtils$.$_ALIGN_RULE_PROPERTIES$.length;$i$$73$$++) {
-      var $propName$$ = $oj$$2$$.$PositionUtils$.$_ALIGN_RULE_PROPERTIES$[$i$$73$$], $align$$ = $target$$73$$[$propName$$];
+    for(var $target$$73$$ = $$$$2$$.extend({}, $position$$), $i$$74$$ = 0;$i$$74$$ < $oj$$2$$.$PositionUtils$.$_ALIGN_RULE_PROPERTIES$.length;$i$$74$$++) {
+      var $propName$$ = $oj$$2$$.$PositionUtils$.$_ALIGN_RULE_PROPERTIES$[$i$$74$$], $align$$ = $target$$73$$[$propName$$];
       $align$$ && ($target$$73$$[$propName$$] = $align$$.replace("start", $isRtl$$ ? "right" : "left").replace("end", $isRtl$$ ? "left" : "right"))
     }
     return $target$$73$$

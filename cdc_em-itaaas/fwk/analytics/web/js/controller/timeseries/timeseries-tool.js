@@ -100,7 +100,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
 
                 var chartType = 'line';
                 try {
-                    chartType = config.chartType;
+                    chartType = timeSeriesConfig.chartType;
                 } catch (ignore) {
 
                 }
@@ -142,12 +142,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 }
 
                 var rollupConfig;
+                var enableRollup=false;
                 try {
-                    //rollupConfig = qdg.QueryDescriptor[0].startingRollupLevels;
+                    enableRollup=timeSeriesConfig.enableRollup;
+                    rollupConfig = qdg.QueryDescriptor[0].startingRollupLevels;
                 } catch (ignore) {
 
                 }
-                if (rollupConfig && rollupConfig.length > 0) {
+                if (enableRollup){// &&rollupConfig && rollupConfig.length > 0) {
                     $(rollupEl).addClass("rollup-table-enabled ");
                     $(chartEl).addClass("chart-rollup-enabled");
                     ko.applyBindings({

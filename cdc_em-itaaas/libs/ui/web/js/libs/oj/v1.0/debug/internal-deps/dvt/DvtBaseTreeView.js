@@ -238,10 +238,10 @@ DvtBaseTreeView.prototype.LayoutBreadcrumbs = function(availSpace) {
     var rootLabel = this._root ? this._root.getLabel() : null;
 
     if (this._breadcrumbs)
-      this._eventHandler.removeComponentKeyboardHandler(this._breadcrumbs);
+      this._eventHandler.removeComponentKeyboardHandler(this._breadcrumbs.getEventManager());
 
     this._breadcrumbs = DvtTreeBreadcrumbsRenderer.render(this, availSpace, this._ancestors, rootLabel);
-    this._eventHandler.addComponentKeyboardHandlerAt(this._breadcrumbs, 0);
+    this._eventHandler.addComponentKeyboardHandlerAt(this._breadcrumbs.getEventManager(), 0);
   }
   else {
     this._eventHandler.removeComponentKeyboardHandler(this._breadcrumbs);

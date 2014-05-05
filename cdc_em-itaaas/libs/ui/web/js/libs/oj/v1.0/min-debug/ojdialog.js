@@ -58,15 +58,15 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       return $mouseHandled$$ = !1
     }, $_mouseDistanceMet$:function($event$$227$$) {
       return Math.max(Math.abs(this.$_mouseDownEvent$.pageX - $event$$227$$.pageX), Math.abs(this.$_mouseDownEvent$.pageY - $event$$227$$.pageY)) >= this.options.distance
-    }, $_mouseDelayMet$:$JSCompiler_get$$("$mouseDelayMet$"), $_num$:function($value$$176$$) {
-      return parseInt($value$$176$$, 10) || 0
-    }, $_isNumber$:function($value$$177$$) {
-      return!isNaN(parseInt($value$$177$$, 10))
-    }, $_hasScroll$:function($el$$10$$, $a$$58$$) {
+    }, $_mouseDelayMet$:$JSCompiler_get$$("$mouseDelayMet$"), $_num$:function($value$$177$$) {
+      return parseInt($value$$177$$, 10) || 0
+    }, $_isNumber$:function($value$$178$$) {
+      return!isNaN(parseInt($value$$178$$, 10))
+    }, $_hasScroll$:function($el$$10$$, $a$$64$$) {
       if("hidden" === $$$$20$$($el$$10$$).css("overflow")) {
         return!1
       }
-      var $scroll$$13$$ = $a$$58$$ && "left" === $a$$58$$ ? "scrollLeft" : "scrollTop", $has$$ = !1;
+      var $scroll$$13$$ = $a$$64$$ && "left" === $a$$64$$ ? "scrollLeft" : "scrollTop", $has$$ = !1;
       if(0 < $el$$10$$[$scroll$$13$$]) {
         return!0
       }
@@ -75,7 +75,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       $el$$10$$[$scroll$$13$$] = 0;
       return $has$$
     }, _create:function() {
-      var $n$$20$$, $i$$218$$, $handle$$19$$, $axis$$19$$, $hname$$, $that$$5$$ = this, $o$$ = this.options;
+      var $n$$20$$, $i$$219$$, $handle$$19$$, $axis$$19$$, $hname$$, $that$$5$$ = this, $o$$ = this.options;
       this.element.addClass("oj-resizable");
       $$$$20$$.extend(this, {$_aspectRatio$:!!$o$$.aspectRatio, aspectRatio:$o$$.aspectRatio, $originalElement$:this.element, $_proportionallyResizeElements$:[], $_helper$:$o$$.helper || $o$$.ghost || $o$$.animate ? $o$$.helper || "oj-resizable-helper" : null});
       this.element[0].nodeName.match(/canvas|textarea|input|select|button|img/i) && (this.element.wrap($$$$20$$("\x3cdiv class\x3d'ui-wrapper' style\x3d'overflow: hidden;'\x3e\x3c/div\x3e").css({position:this.element.css("position"), width:this.element.outerWidth(), height:this.element.outerHeight(), top:this.element.css("top"), left:this.element.css("left")})), this.element = this.element.parent().data("oj-resizable", this.element.resizable("instance")), this.$elementIsWrapper$ = !0, this.element.css({marginLeft:this.$originalElement$.css("marginLeft"), 
@@ -83,16 +83,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       this.$_proportionallyResize$());
       this.handles = $o$$.handles || ($$$$20$$(".oj-resizable-handle", this.element).length ? {$n$:".oj-resizable-n", $e$:".oj-resizable-e", $s$:".oj-resizable-s", $w$:".oj-resizable-w", $se$:".oj-resizable-se", $sw$:".oj-resizable-sw", $ne$:".oj-resizable-ne", $nw$:".oj-resizable-nw"} : "e,s,se");
       if(this.handles.constructor === String) {
-        for("all" === this.handles && (this.handles = "n,e,s,w,se,sw,ne,nw"), $n$$20$$ = this.handles.split(","), this.handles = {}, $i$$218$$ = 0;$i$$218$$ < $n$$20$$.length;$i$$218$$++) {
-          $handle$$19$$ = $$$$20$$.trim($n$$20$$[$i$$218$$]), $hname$$ = "oj-resizable-" + $handle$$19$$, $axis$$19$$ = $$$$20$$("\x3cdiv class\x3d'oj-resizable-handle " + $hname$$ + "'\x3e\x3c/div\x3e"), this.handles[$handle$$19$$] = ".oj-resizable-" + $handle$$19$$, this.element.append($axis$$19$$)
+        for("all" === this.handles && (this.handles = "n,e,s,w,se,sw,ne,nw"), $n$$20$$ = this.handles.split(","), this.handles = {}, $i$$219$$ = 0;$i$$219$$ < $n$$20$$.length;$i$$219$$++) {
+          $handle$$19$$ = $$$$20$$.trim($n$$20$$[$i$$219$$]), $hname$$ = "oj-resizable-" + $handle$$19$$, $axis$$19$$ = $$$$20$$("\x3cdiv class\x3d'oj-resizable-handle " + $hname$$ + "'\x3e\x3c/div\x3e"), this.handles[$handle$$19$$] = ".oj-resizable-" + $handle$$19$$, this.element.append($axis$$19$$)
         }
       }
       this.$_renderAxis$ = function $this$$_renderAxis$$($target$$78$$) {
-        var $i$$219$$, $axis$$20_padPos$$, $padWrapper$$;
+        var $i$$220$$, $axis$$20_padPos$$, $padWrapper$$;
         $target$$78$$ = $target$$78$$ || this.element;
-        for($i$$219$$ in this.handles) {
-          this.handles[$i$$219$$].constructor === String && (this.handles[$i$$219$$] = this.element.children(this.handles[$i$$219$$]).first().show()), this.$elementIsWrapper$ && this.$originalElement$[0].nodeName.match(/textarea|input|select|button/i) && ($axis$$20_padPos$$ = $$$$20$$(this.handles[$i$$219$$], this.element), $padWrapper$$ = /sw|ne|nw|se|n|s/.test($i$$219$$) ? $axis$$20_padPos$$.outerHeight() : $axis$$20_padPos$$.outerWidth(), $axis$$20_padPos$$ = ["padding", /ne|nw|n/.test($i$$219$$) ? 
-          "Top" : /se|sw|s/.test($i$$219$$) ? "Bottom" : /^e$/.test($i$$219$$) ? "Right" : "Left"].join(""), $target$$78$$.css($axis$$20_padPos$$, $padWrapper$$), this.$_proportionallyResize$()), $$$$20$$(this.handles[$i$$219$$])
+        for($i$$220$$ in this.handles) {
+          this.handles[$i$$220$$].constructor === String && (this.handles[$i$$220$$] = this.element.children(this.handles[$i$$220$$]).first().show()), this.$elementIsWrapper$ && this.$originalElement$[0].nodeName.match(/textarea|input|select|button/i) && ($axis$$20_padPos$$ = $$$$20$$(this.handles[$i$$220$$], this.element), $padWrapper$$ = /sw|ne|nw|se|n|s/.test($i$$220$$) ? $axis$$20_padPos$$.outerHeight() : $axis$$20_padPos$$.outerWidth(), $axis$$20_padPos$$ = ["padding", /ne|nw|n/.test($i$$220$$) ? 
+          "Top" : /se|sw|s/.test($i$$220$$) ? "Bottom" : /^e$/.test($i$$220$$) ? "Right" : "Left"].join(""), $target$$78$$.css($axis$$20_padPos$$, $padWrapper$$), this.$_proportionallyResize$()), $$$$20$$(this.handles[$i$$220$$])
         }
       };
       this.$_renderAxis$(this.element);
@@ -117,9 +117,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       $_destroy$$(this.$originalElement$);
       return this
     }, $_mouseCapture$:function($event$$228$$) {
-      var $i$$220$$, $handle$$20$$, $capture$$ = !1;
-      for($i$$220$$ in this.handles) {
-        if($handle$$20$$ = $$$$20$$(this.handles[$i$$220$$])[0], $handle$$20$$ === $event$$228$$.target || $$$$20$$.contains($handle$$20$$, $event$$228$$.target)) {
+      var $i$$221$$, $handle$$20$$, $capture$$ = !1;
+      for($i$$221$$ in this.handles) {
+        if($handle$$20$$ = $$$$20$$(this.handles[$i$$221$$])[0], $handle$$20$$ === $event$$228$$.target || $$$$20$$.contains($handle$$20$$, $event$$228$$.target)) {
           $capture$$ = !0
         }
       }
@@ -149,21 +149,21 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       this.$_propagate$("start", $event$$229$$);
       return!0
     }, $_mouseDrag$:function($event$$230$$) {
-      var $data$$107_dx$$4$$, $el$$12$$ = this.helper, $props$$6$$ = {}, $dy$$4_smp$$ = this.$originalMousePosition$;
-      $data$$107_dx$$4$$ = $event$$230$$.pageX - $dy$$4_smp$$.left || 0;
+      var $data$$106_dx$$4$$, $el$$12$$ = this.helper, $props$$6$$ = {}, $dy$$4_smp$$ = this.$originalMousePosition$;
+      $data$$106_dx$$4$$ = $event$$230$$.pageX - $dy$$4_smp$$.left || 0;
       var $dy$$4_smp$$ = $event$$230$$.pageY - $dy$$4_smp$$.top || 0, $trigger$$ = this.$_change$[this.axis];
       this.$prevPosition$ = {top:this.position.top, left:this.position.left};
       this.$prevSize$ = {width:this.size.width, height:this.size.height};
       if(!$trigger$$) {
         return!1
       }
-      $data$$107_dx$$4$$ = $trigger$$.apply(this, [$event$$230$$, $data$$107_dx$$4$$, $dy$$4_smp$$]);
+      $data$$106_dx$$4$$ = $trigger$$.apply(this, [$event$$230$$, $data$$106_dx$$4$$, $dy$$4_smp$$]);
       this.$_updateVirtualBoundaries$($event$$230$$.shiftKey);
       if(this.$_aspectRatio$ || $event$$230$$.shiftKey) {
-        $data$$107_dx$$4$$ = this.$_updateRatio$($data$$107_dx$$4$$, $event$$230$$)
+        $data$$106_dx$$4$$ = this.$_updateRatio$($data$$106_dx$$4$$, $event$$230$$)
       }
-      $data$$107_dx$$4$$ = this.$_respectSize$($data$$107_dx$$4$$, $event$$230$$);
-      this.$_updateCache$($data$$107_dx$$4$$);
+      $data$$106_dx$$4$$ = this.$_respectSize$($data$$106_dx$$4$$, $event$$230$$);
+      this.$_updateCache$($data$$106_dx$$4$$);
       this.$_propagate$("resize", $event$$230$$);
       this.position.top !== this.$prevPosition$.top && ($props$$6$$.top = this.position.top + "px");
       this.position.left !== this.$prevPosition$.left && ($props$$6$$.left = this.position.left + "px");
@@ -184,49 +184,49 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       this.$_helper$ && this.helper.remove();
       return!1
     }, $_updateVirtualBoundaries$:function($forceAspectRatio_pMinWidth$$) {
-      var $pMaxWidth$$, $pMinHeight$$, $pMaxHeight$$, $b$$42$$;
-      $b$$42$$ = {minWidth:0, maxWidth:Infinity, minHeight:0, maxHeight:Infinity};
+      var $pMaxWidth$$, $pMinHeight$$, $pMaxHeight$$, $b$$43$$;
+      $b$$43$$ = {minWidth:0, maxWidth:Infinity, minHeight:0, maxHeight:Infinity};
       if(this.$_aspectRatio$ || $forceAspectRatio_pMinWidth$$) {
-        $forceAspectRatio_pMinWidth$$ = $b$$42$$.minHeight * this.aspectRatio, $pMinHeight$$ = $b$$42$$.minWidth / this.aspectRatio, $pMaxWidth$$ = $b$$42$$.maxHeight * this.aspectRatio, $pMaxHeight$$ = $b$$42$$.maxWidth / this.aspectRatio, $forceAspectRatio_pMinWidth$$ > $b$$42$$.minWidth && ($b$$42$$.minWidth = $forceAspectRatio_pMinWidth$$), $pMinHeight$$ > $b$$42$$.minHeight && ($b$$42$$.minHeight = $pMinHeight$$), $pMaxWidth$$ < $b$$42$$.maxWidth && ($b$$42$$.maxWidth = $pMaxWidth$$), $pMaxHeight$$ < 
-        $b$$42$$.maxHeight && ($b$$42$$.maxHeight = $pMaxHeight$$)
+        $forceAspectRatio_pMinWidth$$ = $b$$43$$.minHeight * this.aspectRatio, $pMinHeight$$ = $b$$43$$.minWidth / this.aspectRatio, $pMaxWidth$$ = $b$$43$$.maxHeight * this.aspectRatio, $pMaxHeight$$ = $b$$43$$.maxWidth / this.aspectRatio, $forceAspectRatio_pMinWidth$$ > $b$$43$$.minWidth && ($b$$43$$.minWidth = $forceAspectRatio_pMinWidth$$), $pMinHeight$$ > $b$$43$$.minHeight && ($b$$43$$.minHeight = $pMinHeight$$), $pMaxWidth$$ < $b$$43$$.maxWidth && ($b$$43$$.maxWidth = $pMaxWidth$$), $pMaxHeight$$ < 
+        $b$$43$$.maxHeight && ($b$$43$$.maxHeight = $pMaxHeight$$)
       }
-      this.$_vBoundaries$ = $b$$42$$
-    }, $_updateCache$:function($data$$108$$) {
+      this.$_vBoundaries$ = $b$$43$$
+    }, $_updateCache$:function($data$$107$$) {
       this.offset = this.helper.offset();
-      this.$_isNumber$($data$$108$$.left) && (this.position.left = $data$$108$$.left);
-      this.$_isNumber$($data$$108$$.top) && (this.position.top = $data$$108$$.top);
-      this.$_isNumber$($data$$108$$.height) && (this.size.height = $data$$108$$.height);
-      this.$_isNumber$($data$$108$$.width) && (this.size.width = $data$$108$$.width)
-    }, $_updateRatio$:function($data$$109$$) {
-      var $cpos$$ = this.position, $csize$$ = this.size, $a$$60$$ = this.axis;
-      this.$_isNumber$($data$$109$$.height) ? $data$$109$$.width = $data$$109$$.height * this.aspectRatio : this.$_isNumber$($data$$109$$.width) && ($data$$109$$.height = $data$$109$$.width / this.aspectRatio);
-      "sw" === $a$$60$$ && ($data$$109$$.left = $cpos$$.left + ($csize$$.width - $data$$109$$.width), $data$$109$$.top = null);
-      "nw" === $a$$60$$ && ($data$$109$$.top = $cpos$$.top + ($csize$$.height - $data$$109$$.height), $data$$109$$.left = $cpos$$.left + ($csize$$.width - $data$$109$$.width));
+      this.$_isNumber$($data$$107$$.left) && (this.position.left = $data$$107$$.left);
+      this.$_isNumber$($data$$107$$.top) && (this.position.top = $data$$107$$.top);
+      this.$_isNumber$($data$$107$$.height) && (this.size.height = $data$$107$$.height);
+      this.$_isNumber$($data$$107$$.width) && (this.size.width = $data$$107$$.width)
+    }, $_updateRatio$:function($data$$108$$) {
+      var $cpos$$ = this.position, $csize$$ = this.size, $a$$66$$ = this.axis;
+      this.$_isNumber$($data$$108$$.height) ? $data$$108$$.width = $data$$108$$.height * this.aspectRatio : this.$_isNumber$($data$$108$$.width) && ($data$$108$$.height = $data$$108$$.width / this.aspectRatio);
+      "sw" === $a$$66$$ && ($data$$108$$.left = $cpos$$.left + ($csize$$.width - $data$$108$$.width), $data$$108$$.top = null);
+      "nw" === $a$$66$$ && ($data$$108$$.top = $cpos$$.top + ($csize$$.height - $data$$108$$.height), $data$$108$$.left = $cpos$$.left + ($csize$$.width - $data$$108$$.width));
+      return $data$$108$$
+    }, $_respectSize$:function($data$$109$$) {
+      var $o$$4$$ = this.$_vBoundaries$, $a$$67_ch$$2$$ = this.axis, $ismaxw$$ = this.$_isNumber$($data$$109$$.width) && $o$$4$$.maxWidth && $o$$4$$.maxWidth < $data$$109$$.width, $ismaxh$$ = this.$_isNumber$($data$$109$$.height) && $o$$4$$.maxHeight && $o$$4$$.maxHeight < $data$$109$$.height, $isminw$$ = this.$_isNumber$($data$$109$$.width) && $o$$4$$.minWidth && $o$$4$$.minWidth > $data$$109$$.width, $isminh$$ = this.$_isNumber$($data$$109$$.height) && $o$$4$$.minHeight && $o$$4$$.minHeight > $data$$109$$.height, 
+      $dw$$ = this.$originalPosition$.left + this.$originalSize$.width, $dh$$ = this.position.top + this.size.height, $cw$$ = /sw|nw|w/.test($a$$67_ch$$2$$), $a$$67_ch$$2$$ = /nw|ne|n/.test($a$$67_ch$$2$$);
+      $isminw$$ && ($data$$109$$.width = $o$$4$$.minWidth);
+      $isminh$$ && ($data$$109$$.height = $o$$4$$.minHeight);
+      $ismaxw$$ && ($data$$109$$.width = $o$$4$$.maxWidth);
+      $ismaxh$$ && ($data$$109$$.height = $o$$4$$.maxHeight);
+      $isminw$$ && $cw$$ && ($data$$109$$.left = $dw$$ - $o$$4$$.minWidth);
+      $ismaxw$$ && $cw$$ && ($data$$109$$.left = $dw$$ - $o$$4$$.maxWidth);
+      $isminh$$ && $a$$67_ch$$2$$ && ($data$$109$$.top = $dh$$ - $o$$4$$.minHeight);
+      $ismaxh$$ && $a$$67_ch$$2$$ && ($data$$109$$.top = $dh$$ - $o$$4$$.maxHeight);
+      $data$$109$$.width || $data$$109$$.height || $data$$109$$.left || !$data$$109$$.top ? $data$$109$$.width || ($data$$109$$.height || $data$$109$$.top || !$data$$109$$.left) || ($data$$109$$.left = null) : $data$$109$$.top = null;
       return $data$$109$$
-    }, $_respectSize$:function($data$$110$$) {
-      var $o$$4$$ = this.$_vBoundaries$, $a$$61_ch$$2$$ = this.axis, $ismaxw$$ = this.$_isNumber$($data$$110$$.width) && $o$$4$$.maxWidth && $o$$4$$.maxWidth < $data$$110$$.width, $ismaxh$$ = this.$_isNumber$($data$$110$$.height) && $o$$4$$.maxHeight && $o$$4$$.maxHeight < $data$$110$$.height, $isminw$$ = this.$_isNumber$($data$$110$$.width) && $o$$4$$.minWidth && $o$$4$$.minWidth > $data$$110$$.width, $isminh$$ = this.$_isNumber$($data$$110$$.height) && $o$$4$$.minHeight && $o$$4$$.minHeight > $data$$110$$.height, 
-      $dw$$ = this.$originalPosition$.left + this.$originalSize$.width, $dh$$ = this.position.top + this.size.height, $cw$$ = /sw|nw|w/.test($a$$61_ch$$2$$), $a$$61_ch$$2$$ = /nw|ne|n/.test($a$$61_ch$$2$$);
-      $isminw$$ && ($data$$110$$.width = $o$$4$$.minWidth);
-      $isminh$$ && ($data$$110$$.height = $o$$4$$.minHeight);
-      $ismaxw$$ && ($data$$110$$.width = $o$$4$$.maxWidth);
-      $ismaxh$$ && ($data$$110$$.height = $o$$4$$.maxHeight);
-      $isminw$$ && $cw$$ && ($data$$110$$.left = $dw$$ - $o$$4$$.minWidth);
-      $ismaxw$$ && $cw$$ && ($data$$110$$.left = $dw$$ - $o$$4$$.maxWidth);
-      $isminh$$ && $a$$61_ch$$2$$ && ($data$$110$$.top = $dh$$ - $o$$4$$.minHeight);
-      $ismaxh$$ && $a$$61_ch$$2$$ && ($data$$110$$.top = $dh$$ - $o$$4$$.maxHeight);
-      $data$$110$$.width || $data$$110$$.height || $data$$110$$.left || !$data$$110$$.top ? $data$$110$$.width || ($data$$110$$.height || $data$$110$$.top || !$data$$110$$.left) || ($data$$110$$.left = null) : $data$$110$$.top = null;
-      return $data$$110$$
     }, $_proportionallyResize$:function() {
       if(this.$_proportionallyResizeElements$.length) {
-        var $i$$221$$, $j$$30$$, $borders$$, $paddings$$, $prel$$, $element$$59$$ = this.helper || this.element;
-        for($i$$221$$ = 0;$i$$221$$ < this.$_proportionallyResizeElements$.length;$i$$221$$++) {
-          $prel$$ = this.$_proportionallyResizeElements$[$i$$221$$];
+        var $i$$222$$, $j$$31$$, $borders$$, $paddings$$, $prel$$, $element$$60$$ = this.helper || this.element;
+        for($i$$222$$ = 0;$i$$222$$ < this.$_proportionallyResizeElements$.length;$i$$222$$++) {
+          $prel$$ = this.$_proportionallyResizeElements$[$i$$222$$];
           if(!this.$borderDif$) {
-            for(this.$borderDif$ = [], $borders$$ = [$prel$$.css("borderTopWidth"), $prel$$.css("borderRightWidth"), $prel$$.css("borderBottomWidth"), $prel$$.css("borderLeftWidth")], $paddings$$ = [$prel$$.css("paddingTop"), $prel$$.css("paddingRight"), $prel$$.css("paddingBottom"), $prel$$.css("paddingLeft")], $j$$30$$ = 0;$j$$30$$ < $borders$$.length;$j$$30$$++) {
-              this.$borderDif$[$j$$30$$] = (parseInt($borders$$[$j$$30$$], 10) || 0) + (parseInt($paddings$$[$j$$30$$], 10) || 0)
+            for(this.$borderDif$ = [], $borders$$ = [$prel$$.css("borderTopWidth"), $prel$$.css("borderRightWidth"), $prel$$.css("borderBottomWidth"), $prel$$.css("borderLeftWidth")], $paddings$$ = [$prel$$.css("paddingTop"), $prel$$.css("paddingRight"), $prel$$.css("paddingBottom"), $prel$$.css("paddingLeft")], $j$$31$$ = 0;$j$$31$$ < $borders$$.length;$j$$31$$++) {
+              this.$borderDif$[$j$$31$$] = (parseInt($borders$$[$j$$31$$], 10) || 0) + (parseInt($paddings$$[$j$$31$$], 10) || 0)
             }
           }
-          $prel$$.css({height:$element$$59$$.height() - this.$borderDif$[0] - this.$borderDif$[2] || 0, width:$element$$59$$.width() - this.$borderDif$[1] - this.$borderDif$[3] || 0})
+          $prel$$.css({height:$element$$60$$.height() - this.$borderDif$[0] - this.$borderDif$[2] || 0, width:$element$$60$$.width() - this.$borderDif$[1] - this.$borderDif$[3] || 0})
         }
       }
     }, $_renderProxy$:function() {
@@ -241,13 +241,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
     }, s:function($event$$235$$, $dx$$8$$, $dy$$6$$) {
       return{height:this.$originalSize$.height + $dy$$6$$}
     }, se:function($event$$236$$, $dx$$9$$, $dy$$7$$) {
-      return $$$$20$$.extend(this.$_change$.$s$.apply(this, arguments), this.$_change$.$e$.apply(this, [$event$$236$$, $dx$$9$$, $dy$$7$$]))
+      return $$$$20$$.extend(this.$_change$.s.apply(this, arguments), this.$_change$.e.apply(this, [$event$$236$$, $dx$$9$$, $dy$$7$$]))
     }, sw:function($event$$237$$, $dx$$10$$, $dy$$8$$) {
-      return $$$$20$$.extend(this.$_change$.$s$.apply(this, arguments), this.$_change$.$w$.apply(this, [$event$$237$$, $dx$$10$$, $dy$$8$$]))
+      return $$$$20$$.extend(this.$_change$.s.apply(this, arguments), this.$_change$.w.apply(this, [$event$$237$$, $dx$$10$$, $dy$$8$$]))
     }, ne:function($event$$238$$, $dx$$11$$, $dy$$9$$) {
-      return $$$$20$$.extend(this.$_change$.$n$.apply(this, arguments), this.$_change$.$e$.apply(this, [$event$$238$$, $dx$$11$$, $dy$$9$$]))
+      return $$$$20$$.extend(this.$_change$.n.apply(this, arguments), this.$_change$.e.apply(this, [$event$$238$$, $dx$$11$$, $dy$$9$$]))
     }, nw:function($event$$239$$, $dx$$12$$, $dy$$10$$) {
-      return $$$$20$$.extend(this.$_change$.$n$.apply(this, arguments), this.$_change$.$w$.apply(this, [$event$$239$$, $dx$$12$$, $dy$$10$$]))
+      return $$$$20$$.extend(this.$_change$.n.apply(this, arguments), this.$_change$.w.apply(this, [$event$$239$$, $dx$$12$$, $dy$$10$$]))
     }}, $_propagate$:function($n$$21$$, $event$$240$$) {
       $$$$20$$.ui.plugin.call(this, $n$$21$$, [$event$$240$$, this.ui()]);
       "resize" !== $n$$21$$ && this._trigger($n$$21$$, $event$$240$$, this.ui())
@@ -258,20 +258,20 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       var $that$$7$$ = $$$$20$$(this).data("oj-resizable"), $o$$6$$ = $that$$7$$.options, $pr$$1$$ = $that$$7$$.$_proportionallyResizeElements$, $ista$$1_style$$11$$ = $pr$$1$$.length && /textarea/i.test($pr$$1$$[0].nodeName), $left$$7_soffseth$$1$$ = $ista$$1_style$$11$$ && $that$$7$$.$_hasScroll$($pr$$1$$[0], "left") ? 0 : $that$$7$$.$sizeDiff$.height, $ista$$1_style$$11$$ = {width:$that$$7$$.size.width - ($ista$$1_style$$11$$ ? 0 : $that$$7$$.$sizeDiff$.width), height:$that$$7$$.size.height - 
       $left$$7_soffseth$$1$$}, $left$$7_soffseth$$1$$ = parseInt($that$$7$$.element.css("left"), 10) + ($that$$7$$.position.left - $that$$7$$.$originalPosition$.left) || null, $top$$4$$ = parseInt($that$$7$$.element.css("top"), 10) + ($that$$7$$.position.top - $that$$7$$.$originalPosition$.top) || null;
       $that$$7$$.element.animate($$$$20$$.extend($ista$$1_style$$11$$, $top$$4$$ && $left$$7_soffseth$$1$$ ? {top:$top$$4$$, left:$left$$7_soffseth$$1$$} : {}), {duration:$o$$6$$.animateDuration, $easing$:$o$$6$$.animateEasing, step:function() {
-        var $data$$111$$ = {width:parseInt($that$$7$$.element.css("width"), 10), height:parseInt($that$$7$$.element.css("height"), 10), top:parseInt($that$$7$$.element.css("top"), 10), left:parseInt($that$$7$$.element.css("left"), 10)};
-        $pr$$1$$ && $pr$$1$$.length && $$$$20$$($pr$$1$$[0]).css({width:$data$$111$$.width, height:$data$$111$$.height});
-        $that$$7$$.$_updateCache$($data$$111$$);
+        var $data$$110$$ = {width:parseInt($that$$7$$.element.css("width"), 10), height:parseInt($that$$7$$.element.css("height"), 10), top:parseInt($that$$7$$.element.css("top"), 10), left:parseInt($that$$7$$.element.css("left"), 10)};
+        $pr$$1$$ && $pr$$1$$.length && $$$$20$$($pr$$1$$[0]).css({width:$data$$110$$.width, height:$data$$110$$.height});
+        $that$$7$$.$_updateCache$($data$$110$$);
         $that$$7$$.$_propagate$("resize", $event$$241$$)
       }})
     }});
     $$$$20$$.ui.plugin.add("resizable", "containment", {start:function() {
-      var $element$$60$$, $p$$6$$, $co_oc$$, $ch$$3_height$$18$$, $cw$$1_width$$20$$, $that$$8$$ = $$$$20$$(this).data("oj-resizable"), $ce_el$$14$$ = $that$$8$$.element;
+      var $element$$61$$, $p$$6$$, $co_oc$$, $ch$$3_height$$18$$, $cw$$1_width$$20$$, $that$$8$$ = $$$$20$$(this).data("oj-resizable"), $ce_el$$14$$ = $that$$8$$.element;
       $co_oc$$ = $that$$8$$.options.containment;
       if($ce_el$$14$$ = $co_oc$$ instanceof $$$$20$$ ? $co_oc$$.get(0) : /parent/.test($co_oc$$) ? $ce_el$$14$$.parent().get(0) : $co_oc$$) {
-        $that$$8$$.$containerElement$ = $$$$20$$($ce_el$$14$$), /document/.test($co_oc$$) || $co_oc$$ === document ? ($that$$8$$.$containerOffset$ = {left:0, top:0}, $that$$8$$.$containerPosition$ = {left:0, top:0}, $that$$8$$.$parentData$ = {element:$$$$20$$(document), left:0, top:0, width:$$$$20$$(document).width(), height:$$$$20$$(document).height() || document.body.parentNode.scrollHeight}) : ($element$$60$$ = $$$$20$$($ce_el$$14$$), $p$$6$$ = [], $$$$20$$(["Top", "Right", "Left", "Bottom"]).each(function($i$$222$$, 
+        $that$$8$$.$containerElement$ = $$$$20$$($ce_el$$14$$), /document/.test($co_oc$$) || $co_oc$$ === document ? ($that$$8$$.$containerOffset$ = {left:0, top:0}, $that$$8$$.$containerPosition$ = {left:0, top:0}, $that$$8$$.$parentData$ = {element:$$$$20$$(document), left:0, top:0, width:$$$$20$$(document).width(), height:$$$$20$$(document).height() || document.body.parentNode.scrollHeight}) : ($element$$61$$ = $$$$20$$($ce_el$$14$$), $p$$6$$ = [], $$$$20$$(["Top", "Right", "Left", "Bottom"]).each(function($i$$223$$, 
         $name$$95$$) {
-          $p$$6$$[$i$$222$$] = $that$$8$$.$_num$($element$$60$$.css("padding" + $name$$95$$))
-        }), $that$$8$$.$containerOffset$ = $element$$60$$.offset(), $that$$8$$.$containerPosition$ = $element$$60$$.position(), $that$$8$$.$containerSize$ = {height:$element$$60$$.innerHeight() - $p$$6$$[3], width:$element$$60$$.innerWidth() - $p$$6$$[1]}, $co_oc$$ = $that$$8$$.$containerOffset$, $ch$$3_height$$18$$ = $that$$8$$.$containerSize$.height, $cw$$1_width$$20$$ = $that$$8$$.$containerSize$.width, $cw$$1_width$$20$$ = $that$$8$$.$_hasScroll$($ce_el$$14$$, "left") ? $ce_el$$14$$.scrollWidth : 
+          $p$$6$$[$i$$223$$] = $that$$8$$.$_num$($element$$61$$.css("padding" + $name$$95$$))
+        }), $that$$8$$.$containerOffset$ = $element$$61$$.offset(), $that$$8$$.$containerPosition$ = $element$$61$$.position(), $that$$8$$.$containerSize$ = {height:$element$$61$$.innerHeight() - $p$$6$$[3], width:$element$$61$$.innerWidth() - $p$$6$$[1]}, $co_oc$$ = $that$$8$$.$containerOffset$, $ch$$3_height$$18$$ = $that$$8$$.$containerSize$.height, $cw$$1_width$$20$$ = $that$$8$$.$containerSize$.width, $cw$$1_width$$20$$ = $that$$8$$.$_hasScroll$($ce_el$$14$$, "left") ? $ce_el$$14$$.scrollWidth : 
         $cw$$1_width$$20$$, $ch$$3_height$$18$$ = $that$$8$$.$_hasScroll$($ce_el$$14$$) ? $ce_el$$14$$.scrollHeight : $ch$$3_height$$18$$, $that$$8$$.$parentData$ = {element:$ce_el$$14$$, left:$co_oc$$.left, top:$co_oc$$.top, width:$cw$$1_width$$20$$, height:$ch$$3_height$$18$$})
       }
     }, resize:function($event$$242$$, $ui$$8$$) {
@@ -315,7 +315,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       function $_alsoResize$$($exp$$5$$, $c$$25$$) {
         $$$$20$$($exp$$5$$).each(function() {
           var $el$$16$$ = $$$$20$$(this), $start$$25$$ = $$$$20$$(this).data("oj-resizable-alsoresize"), $style$$12$$ = {};
-          $$$$20$$.each($c$$25$$ && $c$$25$$.length ? $c$$25$$ : $el$$16$$.parents($ui$$9$$.$originalElement$[0]).length ? ["width", "height"] : ["width", "height", "top", "left"], function($i$$223$$, $prop$$76$$) {
+          $$$$20$$.each($c$$25$$ && $c$$25$$.length ? $c$$25$$ : $el$$16$$.parents($ui$$9$$.$originalElement$[0]).length ? ["width", "height"] : ["width", "height", "top", "left"], function($i$$224$$, $prop$$76$$) {
             var $sum$$ = ($start$$25$$[$prop$$76$$] || 0) + ($delta$$3$$[$prop$$76$$] || 0);
             $sum$$ && 0 <= $sum$$ && ($style$$12$$[$prop$$76$$] = $sum$$ || null)
           });
@@ -342,14 +342,14 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       $that$$15$$.ghost && $that$$15$$.helper && $that$$15$$.helper.get(0).removeChild($that$$15$$.ghost.get(0))
     }});
     $$$$20$$.ui.plugin.add("resizable", "grid", {resize:function() {
-      var $that$$16$$ = $$$$20$$(this).data("oj-resizable"), $o$$13$$ = $that$$16$$.options, $cs$$3_oy$$ = $that$$16$$.size, $os$$1$$ = $that$$16$$.$originalSize$, $op$$1$$ = $that$$16$$.$originalPosition$, $a$$62$$ = $that$$16$$.axis, $grid$$ = "number" === typeof $o$$13$$.grid ? [$o$$13$$.grid, $o$$13$$.grid] : $o$$13$$.grid, $gridX$$ = $grid$$[0] || 1, $gridY$$ = $grid$$[1] || 1, $ox$$ = Math.round(($cs$$3_oy$$.width - $os$$1$$.width) / $gridX$$) * $gridX$$, $cs$$3_oy$$ = Math.round(($cs$$3_oy$$.height - 
+      var $that$$16$$ = $$$$20$$(this).data("oj-resizable"), $o$$13$$ = $that$$16$$.options, $cs$$3_oy$$ = $that$$16$$.size, $os$$1$$ = $that$$16$$.$originalSize$, $op$$1$$ = $that$$16$$.$originalPosition$, $a$$68$$ = $that$$16$$.axis, $grid$$ = "number" === typeof $o$$13$$.grid ? [$o$$13$$.grid, $o$$13$$.grid] : $o$$13$$.grid, $gridX$$ = $grid$$[0] || 1, $gridY$$ = $grid$$[1] || 1, $ox$$ = Math.round(($cs$$3_oy$$.width - $os$$1$$.width) / $gridX$$) * $gridX$$, $cs$$3_oy$$ = Math.round(($cs$$3_oy$$.height - 
       $os$$1$$.height) / $gridY$$) * $gridY$$, $newWidth$$2$$ = $os$$1$$.width + $ox$$, $newHeight$$2$$ = $os$$1$$.height + $cs$$3_oy$$, $isMaxWidth$$ = $o$$13$$.maxWidth && $o$$13$$.maxWidth < $newWidth$$2$$, $isMaxHeight$$ = $o$$13$$.maxHeight && $o$$13$$.maxHeight < $newHeight$$2$$, $isMinWidth$$ = $o$$13$$.minWidth && $o$$13$$.minWidth > $newWidth$$2$$, $isMinHeight$$ = $o$$13$$.minHeight && $o$$13$$.minHeight > $newHeight$$2$$;
       $o$$13$$.grid = $grid$$;
       $isMinWidth$$ && ($newWidth$$2$$ += $gridX$$);
       $isMinHeight$$ && ($newHeight$$2$$ += $gridY$$);
       $isMaxWidth$$ && ($newWidth$$2$$ -= $gridX$$);
       $isMaxHeight$$ && ($newHeight$$2$$ -= $gridY$$);
-      /^(se|s|e)$/.test($a$$62$$) ? ($that$$16$$.size.width = $newWidth$$2$$, $that$$16$$.size.height = $newHeight$$2$$) : /^(ne)$/.test($a$$62$$) ? ($that$$16$$.size.width = $newWidth$$2$$, $that$$16$$.size.height = $newHeight$$2$$, $that$$16$$.position.top = $op$$1$$.top - $cs$$3_oy$$) : /^(sw)$/.test($a$$62$$) ? ($that$$16$$.size.width = $newWidth$$2$$, $that$$16$$.size.height = $newHeight$$2$$, $that$$16$$.position.left = $op$$1$$.left - $ox$$) : (0 < $newHeight$$2$$ - $gridY$$ ? ($that$$16$$.size.height = 
+      /^(se|s|e)$/.test($a$$68$$) ? ($that$$16$$.size.width = $newWidth$$2$$, $that$$16$$.size.height = $newHeight$$2$$) : /^(ne)$/.test($a$$68$$) ? ($that$$16$$.size.width = $newWidth$$2$$, $that$$16$$.size.height = $newHeight$$2$$, $that$$16$$.position.top = $op$$1$$.top - $cs$$3_oy$$) : /^(sw)$/.test($a$$68$$) ? ($that$$16$$.size.width = $newWidth$$2$$, $that$$16$$.size.height = $newHeight$$2$$, $that$$16$$.position.left = $op$$1$$.left - $ox$$) : (0 < $newHeight$$2$$ - $gridY$$ ? ($that$$16$$.size.height = 
       $newHeight$$2$$, $that$$16$$.position.top = $op$$1$$.top - $cs$$3_oy$$) : ($that$$16$$.size.height = $gridY$$, $that$$16$$.position.top = $op$$1$$.top + $os$$1$$.height - $gridY$$), 0 < $newWidth$$2$$ - $gridX$$ ? ($that$$16$$.size.width = $newWidth$$2$$, $that$$16$$.position.left = $op$$1$$.left - $ox$$) : ($that$$16$$.size.width = $gridX$$, $that$$16$$.position.left = $op$$1$$.left + $os$$1$$.width - $gridX$$))
     }})
   })();
@@ -366,9 +366,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       this.$_createWrapper$();
       this.element.show().removeAttr("title").addClass("oj-dialog-content oj-dialog-default-content").appendTo(this.$uiDialog$);
       this.$userDefinedDialog$ = !1;
-      var $b$$43_nestedContent$$ = this.element.find(".oj-dialog");
-      $b$$43_nestedContent$$.length ? $b$$43_nestedContent$$.parents(".oj-dialog-header").length && (this.$userDefinedDialog$ = !0) : this.element.find(".oj-dialog-header").length && (this.$userDefinedDialog$ = !0);
-      this.$userDefinedDialog$ && ($b$$43_nestedContent$$ = this.element.find(".oj-dialog-header"), $b$$43_nestedContent$$.prependTo(this.$uiDialog$), "icon" === this.options.cancelBehavior && this.$_createCloseButton$($b$$43_nestedContent$$));
+      var $b$$44_nestedContent$$ = this.element.find(".oj-dialog");
+      $b$$44_nestedContent$$.length ? $b$$44_nestedContent$$.parents(".oj-dialog-header").length && (this.$userDefinedDialog$ = !0) : this.element.find(".oj-dialog-header").length && (this.$userDefinedDialog$ = !0);
+      this.$userDefinedDialog$ && ($b$$44_nestedContent$$ = this.element.find(".oj-dialog-header"), $b$$44_nestedContent$$.prependTo(this.$uiDialog$), "icon" === this.options.cancelBehavior && this.$_createCloseButton$($b$$44_nestedContent$$));
       this.$userDefinedDialog$ || this.$_createTitlebar$();
       "title-bar" === this.options.dragAffordance && $$$$20$$.fn.draggable && this.$_makeDraggable$();
       "resizable" === this.options.resizeBehavior && $$$$20$$.fn.resizable && this.$_makeResizable$();
@@ -486,7 +486,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       function $filteredUi$$($ui$$10$$) {
         return{position:$ui$$10$$.position, offset:$ui$$10$$.offset}
       }
-      var $that$$19$$ = this, $options$$264$$ = this.options;
+      var $that$$19$$ = this, $options$$267$$ = this.options;
       this.$uiDialog$.draggable({cancel:".oj-dialog-content, .oj-dialog-header-close", handle:".oj-dialog-header", containment:"document", start:function($event$$252$$, $ui$$11$$) {
         $$$$20$$(this).addClass("oj-dialog-dragging");
         $that$$19$$.$_blockFrames$();
@@ -494,7 +494,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       }, $drag$:function($event$$253$$, $ui$$12$$) {
         $that$$19$$._trigger("drag", $event$$253$$, $filteredUi$$($ui$$12$$))
       }, stop:function($event$$254$$, $ui$$13$$) {
-        $options$$264$$.position = [$ui$$13$$.position.left - $that$$19$$.document.scrollLeft(), $ui$$13$$.position.top - $that$$19$$.document.scrollTop()];
+        $options$$267$$.position = [$ui$$13$$.position.left - $that$$19$$.document.scrollLeft(), $ui$$13$$.position.top - $that$$19$$.document.scrollTop()];
         $$$$20$$(this).removeClass("oj-dialog-dragging");
         $that$$19$$.$_unblockFrames$();
         $that$$19$$._trigger("dragStop", $event$$254$$, $filteredUi$$($ui$$13$$))
@@ -503,50 +503,50 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       function $filteredUi$$1$$($ui$$14$$) {
         return{$originalPosition$:$ui$$14$$.$originalPosition$, $originalSize$:$ui$$14$$.$originalSize$, position:$ui$$14$$.position, size:$ui$$14$$.size}
       }
-      var $that$$20$$ = this, $options$$265$$ = this.options, $position$$8$$ = this.$uiDialog$.css("position");
+      var $that$$20$$ = this, $options$$268$$ = this.options, $position$$8$$ = this.$uiDialog$.css("position");
       this.$_resizableComponent$ = this.$uiDialog$.ojResizable.bind(this.$uiDialog$);
-      this.$_resizableComponent$({cancel:".oj-dialog-content", containment:"document", alsoResize:this.element, handles:"n,e,s,w,se,sw,ne,nw", start:function($event$$255$$, $ui$$15$$) {
+      this.$_resizableComponent$({cancel:".oj-dialog-content", containment:"document", alsoResize:this.element, minHeight:this.$_minHeight$(), handles:"n,e,s,w,se,sw,ne,nw", start:function($event$$255$$, $ui$$15$$) {
         $$$$20$$(this).addClass("oj-dialog-resizing");
         $that$$20$$.$_blockFrames$();
         $that$$20$$._trigger("ojstart", $event$$255$$, $filteredUi$$1$$($ui$$15$$))
       }, resize:function($event$$256$$, $ui$$16$$) {
         $that$$20$$._trigger("ojresize", $event$$256$$, $filteredUi$$1$$($ui$$16$$))
       }, stop:function($event$$257$$, $ui$$17$$) {
-        $options$$265$$.height = $$$$20$$(this).height();
-        $options$$265$$.width = $$$$20$$(this).width();
+        $options$$268$$.height = $$$$20$$(this).height();
+        $options$$268$$.width = $$$$20$$(this).width();
         $$$$20$$(this).removeClass("oj-dialog-resizing");
         $that$$20$$.$_unblockFrames$();
         $that$$20$$._trigger("ojstop", $event$$257$$, $filteredUi$$1$$($ui$$17$$))
       }}).css("position", $position$$8$$)
     }, $_minHeight$:function() {
-      var $options$$266$$ = this.options;
-      return"auto" === $options$$266$$.height ? this.$_cssMinHeight$ : Math.min(this.$_cssMinHeight$, $options$$266$$.height)
+      var $options$$269$$ = this.options;
+      return"auto" === $options$$269$$.height ? this.$_cssMinHeight$ : Math.min(this.$_cssMinHeight$, $options$$269$$.height)
     }, $_position$:function() {
       var $isVisible$$ = this.$uiDialog$.is(":visible");
       $isVisible$$ || this.$uiDialog$.show();
       this.$uiDialog$.position(this.options.position);
       $isVisible$$ || this.$uiDialog$.hide()
-    }, _setOptions:function($options$$267$$) {
+    }, _setOptions:function($options$$270$$) {
       var $that$$21$$ = this, $resize$$2$$ = !1, $resizableOptions$$ = {};
-      $$$$20$$.each($options$$267$$, function($key$$82$$, $value$$178$$) {
-        $that$$21$$._setOption($key$$82$$, $value$$178$$);
+      $$$$20$$.each($options$$270$$, function($key$$82$$, $value$$179$$) {
+        $that$$21$$._setOption($key$$82$$, $value$$179$$);
         $key$$82$$ in $sizeRelatedOptions$$ && ($resize$$2$$ = !0);
-        $key$$82$$ in $resizableRelatedOptions$$ && ($resizableOptions$$[$key$$82$$] = $value$$178$$)
+        $key$$82$$ in $resizableRelatedOptions$$ && ($resizableOptions$$[$key$$82$$] = $value$$179$$)
       });
       $resize$$2$$ && (this.$_size$(), this.$_position$());
       this.$uiDialog$.is(":data(oj-resizable)") && this.$_resizableComponent$("option", $resizableOptions$$)
-    }, _setOption:function($key$$83$$, $value$$179$$) {
+    }, _setOption:function($key$$83$$, $value$$180$$) {
       var $isDraggable_isResizable$$, $uiDialog$$ = this.$uiDialog$;
-      "disabled" !== $key$$83$$ && (this._super($key$$83$$, $value$$179$$), "draggable" === $key$$83$$ && (($isDraggable_isResizable$$ = $uiDialog$$.is(":data(oj-draggable)")) && !$value$$179$$ && $uiDialog$$.draggable("destroy"), !$isDraggable_isResizable$$ && $value$$179$$ && this.$_makeDraggable$()), "position" === $key$$83$$ && this.$_position$(), "resizable" === $key$$83$$ && (($isDraggable_isResizable$$ = $uiDialog$$.is(":data(oj-resizable)")) && !$value$$179$$ && $uiDialog$$.$_resizableComponent$("destroy"), 
-      $isDraggable_isResizable$$ && "string" === typeof $value$$179$$ && $uiDialog$$.$_resizableComponent$("option", "handles", $value$$179$$), $isDraggable_isResizable$$ || !1 === $value$$179$$ || this.$_makeResizable$()), "title" === $key$$83$$ && this.$_title$(this.$uiDialogTitlebar$.find(".oj-dialog-title")))
+      "disabled" !== $key$$83$$ && (this._super($key$$83$$, $value$$180$$), "draggable" === $key$$83$$ && (($isDraggable_isResizable$$ = $uiDialog$$.is(":data(oj-draggable)")) && !$value$$180$$ && $uiDialog$$.draggable("destroy"), !$isDraggable_isResizable$$ && $value$$180$$ && this.$_makeDraggable$()), "position" === $key$$83$$ && this.$_position$(), "resizable" === $key$$83$$ && (($isDraggable_isResizable$$ = $uiDialog$$.is(":data(oj-resizable)")) && !$value$$180$$ && $uiDialog$$.$_resizableComponent$("destroy"), 
+      $isDraggable_isResizable$$ && "string" === typeof $value$$180$$ && $uiDialog$$.$_resizableComponent$("option", "handles", $value$$180$$), $isDraggable_isResizable$$ || !1 === $value$$180$$ || this.$_makeResizable$()), "title" === $key$$83$$ && this.$_title$(this.$uiDialogTitlebar$.find(".oj-dialog-title")))
     }, $_size$:function() {
-      var $nonContentHeight$$, $minContentHeight$$, $maxContentHeight$$, $options$$268$$ = this.options;
+      var $nonContentHeight$$, $minContentHeight$$, $maxContentHeight$$, $options$$271$$ = this.options;
       this.element.show().css({width:"auto", minHeight:0, maxHeight:"none", height:0});
-      this.$_cssMinWidth$ > $options$$268$$.width && ($options$$268$$.width = this.$_cssMinWidth$);
-      $nonContentHeight$$ = this.$uiDialog$.css({height:"auto", width:$options$$268$$.width}).outerHeight();
+      this.$_cssMinWidth$ > $options$$271$$.width && ($options$$271$$.width = this.$_cssMinWidth$);
+      $nonContentHeight$$ = this.$uiDialog$.css({height:"auto", width:$options$$271$$.width}).outerHeight();
       $minContentHeight$$ = Math.max(0, this.$_cssMinHeight$ - $nonContentHeight$$);
       $maxContentHeight$$ = "number" === typeof this.$_cssMaxHeight$ ? Math.max(0, this.$_cssMaxHeight$ - $nonContentHeight$$) : "none";
-      "auto" === $options$$268$$.height ? this.element.css({minHeight:$minContentHeight$$, maxHeight:$maxContentHeight$$, height:"auto"}) : this.element.height(Math.max(0, $options$$268$$.height - $nonContentHeight$$));
+      "auto" === $options$$271$$.height ? this.element.css({minHeight:$minContentHeight$$, maxHeight:$maxContentHeight$$, height:"auto"}) : this.element.height(Math.max(0, $options$$271$$.height - $nonContentHeight$$));
       this.$uiDialog$.is(":data(oj-resizable)") && this.$uiDialog$.$_resizableComponent$("option", "minHeight", this.$_minHeight$())
     }, $_blockFrames$:function() {
       this.$iframeBlocks$ = this.document.find("iframe").map(function() {
@@ -577,12 +577,12 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
       }
     }, $_destroyOverlay$:function() {
       "modeless" !== this.options.modality && this.$overlay$ && ($$$$20$$.ui.dialog.overlayInstances--, $$$$20$$.ui.dialog.overlayInstances || this.document.unbind("focusin.dialog"), this.$overlay$.remove(), this.$overlay$ = null)
-    }, getNodeBySubId:function($dotSubId_locator$$13_subId$$8$$) {
-      if(null == $dotSubId_locator$$13_subId$$8$$) {
+    }, getNodeBySubId:function($dotSubId_locator$$14_subId$$8$$) {
+      if(null == $dotSubId_locator$$14_subId$$8$$) {
         return this.element ? this.element[0] : null
       }
-      $dotSubId_locator$$13_subId$$8$$ = $dotSubId_locator$$13_subId$$8$$.subId;
-      switch($dotSubId_locator$$13_subId$$8$$) {
+      $dotSubId_locator$$14_subId$$8$$ = $dotSubId_locator$$14_subId$$8$$.subId;
+      switch($dotSubId_locator$$14_subId$$8$$) {
         case "oj-dialog":
         ;
         case "oj-dialog-header":
@@ -610,7 +610,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$20$$, $$$$
         case "oj-resizable-ne":
         ;
         case "oj-resizable-nw":
-          return $dotSubId_locator$$13_subId$$8$$ = "." + $dotSubId_locator$$13_subId$$8$$, this.widget().find($dotSubId_locator$$13_subId$$8$$)[0]
+          return $dotSubId_locator$$14_subId$$8$$ = "." + $dotSubId_locator$$14_subId$$8$$, this.widget().find($dotSubId_locator$$14_subId$$8$$)[0]
       }
       return null
     }});

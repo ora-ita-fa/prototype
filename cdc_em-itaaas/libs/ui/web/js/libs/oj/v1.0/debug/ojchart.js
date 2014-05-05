@@ -1,6 +1,35 @@
 define(['ojs/ojcore', 'jquery', 'ojs/ojcomponentcore', 'ojs/ojdvt-base', 'ojs/internal-deps/dvt/DvtChart'], function(oj, $)
 {
 /**
+ * An object used for automation verification of chart axes
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartAxis = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the title of an axis
+ * @return {String} The axis title
+ * @export
+ */
+oj.ChartAxis.prototype.getTitle = function() {
+  return this._data ? this._data['title'] : null;
+};
+
+/**
+ * Returns the bounds of an axis
+ * @return {Object} An object containing the x, y coordinates and width and height of the axis
+ * @export
+ */
+oj.ChartAxis.prototype.getBounds = function() {
+  return this._data ? this._data['bounds'] : null;
+};
+
+/**
  * @class 
  * @name oj.ojChart
  * @augments oj.baseComponent
@@ -280,8 +309,201 @@ oj.__registerWidget('oj.ojChart', $['oj']['dvtBaseComponent'],
     // Add cursors
     resources['panCursorDown'] = oj.Config.getResourceUrl('resources/internal-deps/dvt/chart/hand-closed.cur');
     resources['panCursorUp'] = oj.Config.getResourceUrl('resources/internal-deps/dvt/chart/hand-open.cur');
+  },
+  
+   /**
+   * Test authors should target chart sub elements using the following locators:
+   * dataItem[seriesIndex][groupIndex] - A data item indexed by its series index and group index. 
+   *                                        [groupIndex] is not required for pie and funnel chart types
+   * series[seriesIndex] - A legend item that represents the series with the given seriesIndex
+   * group[groupIndex] - A categorical axis label that represents the group with the given groupIndex 
+   * @override
+   * @expose
+   */
+  getNodeBySubId : function(locator) {
+    return this._super(locator);
+  },
+  
+  /**
+   * Returns the locator attribute values represented by the subcomponent node.
+   * @param {Element} node The subcomponent node used by the component to lookup the subId string
+   * @return {Object} An Object containing at minimum a subId property
+   * whose value is a string and allows the component to
+   * look up the subcomponent associated with that string.  Valide chart subIds include:
+   * dataItem[seriesIndex][groupIndex] - A data item indexed by its series index and group index. 
+   *                                        [groupIndex] is not required for pie and funnel chart types
+   * series[seriesIndex] - A legend item that represents the series with the given seriesIndex
+   * group[groupIndex] - A categorical axis label that represents the group with the given groupIndex 
+   * @expose
+   */
+  getSubIdByNode:function(node) {
+    return this._super(node);  
+  }, 
+  
+  /**
+   * Returns the chart title. 
+   * @return {String} The chart title
+   * @expose
+   */
+  getTitle: function() {
+    var auto = this._component.getAutomation();
+    return auto.getTitle();
+  },
+  
+  /**
+   * Returns the group corresponding to the given index
+   * @param {String} groupIndex the group index
+   * @return {String} The group name corresponding to the given group index
+   * @expose
+   */
+  getGroup: function(groupIndex) {
+    var auto = this._component.getAutomation();
+    return auto.getGroup(groupIndex);
+  },
+  
+  /**
+   * Returns the series corresponding to the given index
+   * @param {String} seriesIndex the series index
+   * @return {String} The series name corresponding to the given series index
+   * @expose
+   */
+  getSeries: function(seriesIndex) {
+    var auto = this._component.getAutomation();
+    return auto.getSeries(seriesIndex);
+  },
+  
+  /**
+   * Returns number of groups in the chart data
+   * @return {Number} The number of groups
+   * @expose
+   */
+  getGroupCount: function() {
+    var auto = this._component.getAutomation();
+    return auto.getGroupCount();
+  },
+  
+  /**
+   * Returns number of series in the chart data
+   * @return {Number} The number of series
+   * @expose
+   */
+  getSeriesCount: function() {
+    var auto = this._component.getAutomation();
+    return auto.getSeriesCount();
+  },
+  
+  /**
+   * Returns a ChartDataItem object for automation testing verification.
+   * @param {String} seriesIndex The series index
+   * @param {String} groupIndex The group index
+   * @return {Object} The chart data item with the given series index and group index 
+   *                             or null if none exists
+   * @expose
+   */
+  getDataItem : function(seriesIndex, groupIndex) {
+    var auto = this._component.getAutomation();
+    return new oj.ChartDataItem(auto.getDataItem(seriesIndex, groupIndex));
+  },
+  
+  /**
+   * Returns a ChartLegend object for automation testing verification.
+   * @return {Object} The legend for this chart
+   * @expose
+   */
+  getLegend : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartLegend(auto.getLegend());
+  },
+  
+  /**
+   * Returns a ChartPlotArea object for automation testing verification.
+   * @return {Object} The plot area for this chart
+   * @expose
+   */
+  getPlotArea : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartPlotArea(auto.getPlotArea());
+  },
+  
+  /**
+   * Returns a ChartAxis object for automation testing verification.
+   * @return {Object} The xAxis for this chart or null if it doesn't exist
+   * @expose
+   */
+  getXAxis : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartAxis(auto.getXAxis());
+  },
+  
+  /**
+   * Returns a ChartAxis object for automation testing verification.
+   * @return {Object} The yAxis for this chart or null if it doesn't exist
+   * @expose
+   */
+  getYAxis : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartAxis(auto.getYAxis());
+  },
+  
+  /**
+   * Returns a ChartAxis object for automation testing verification.
+   * @return {Object} The y2Axis for this chart or null if it doesn't exist
+   * @expose
+   */
+  getY2Axis : function() {
+    var auto = this._component.getAutomation();
+    return new oj.ChartAxis(auto.getY2Axis());
   }
 });
+/**
+ * An object used for automation verification of a chart plot area
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartPlotArea = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the bounds of the plot area
+ * @return {Object} An object containing the x, y coordinates and width and height of the plotarea
+ * @export
+ */
+oj.ChartPlotArea.prototype.getBounds = function() {
+  return this._data ? this._data['bounds'] : null;
+};
+
+/**
+ * An object used for automation verification of a chart legend
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartLegend = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the title of a legend
+ * @return {String} The legend title
+ * @export
+ */
+oj.ChartLegend.prototype.getTitle = function() {
+  return this._data ? this._data['title'] : null;
+};
+
+/**
+ * Returns the bounds of a legend
+ * @return {Object} An object containing the x, y coordinates and width and height of the legend
+ * @export
+ */
+oj.ChartLegend.prototype.getBounds = function() {
+  return this._data ? this._data['bounds'] : null;
+};
+
 /**
  * @class 
  * @name oj.ojSparkChart
@@ -359,4 +581,122 @@ oj.__registerWidget('oj.ojSparkChart', $['oj']['dvtBaseComponent'],
     this._super();
   }
 });
+/**
+ * An object used for automation verification of chart data items
+ * Applications should not create this object.
+ * @param {Object} data An object containing verification data
+ * @constructor
+ * @export
+ */  
+oj.ChartDataItem = function(data) {
+  this._data = data;
+};
+
+/**
+ * Returns the group of a chart data item
+ * @returns {String} The data item group
+ * @export
+ */
+oj.ChartDataItem.prototype.getGroup = function() {
+  return this._data ? this._data['group'] : null;
+};
+
+/**
+ * Returns the series of a chart data item
+ * @returns {String} The data item series
+ * @export
+ */
+oj.ChartDataItem.prototype.getSeries = function() {
+  return this._data ? this._data['series'] : null;
+};
+
+/**
+ * Returns the border color of a chart data item
+ * @returns {String} The data item border color
+ * @export
+ */
+oj.ChartDataItem.prototype.getBorderColor = function() {
+  return this._data ? this._data['borderColor'] : null;
+};
+
+/**
+ * Returns the color of a chart data item
+ * @returns {String} The data item color
+ * @export
+ */
+oj.ChartDataItem.prototype.getColor = function() {
+  return this._data ? this._data['color'] : null;
+};
+
+/**
+ * Returns the label of a chart data item
+ * @returns {String} The data item label
+ * @export
+ */
+oj.ChartDataItem.prototype.getLabel = function() {
+  return this._data ? this._data['label'] : null;
+};
+
+/**
+ * Returns the value of a chart data item.
+ * @returns {Number} The data item value
+ * @export
+ */
+oj.ChartDataItem.prototype.getValue = function() {
+  return this._data ? this._data['value'] : null;
+};
+
+/**
+ * Returns the target value of a chart data item. Only applies to funnel chart types.
+ * @returns {Number} The data item target value
+ * @export
+ */
+oj.ChartDataItem.prototype.getTargetValue = function() {
+  return this._data ? this._data['targetValue'] : null;
+};
+
+/**
+ * Returns the tooltip of a chart data item.
+ * @returns {String} The data item tooltip
+ * @export
+ */
+oj.ChartDataItem.prototype.getTooltip = function() {
+  return this._data ? this._data['tooltip'] : null;
+};
+
+/**
+ * Returns the x value of a chart data item.
+ * @returns {Number} The data item x value
+ * @export
+ */
+oj.ChartDataItem.prototype.getX = function() {
+  return this._data ? this._data['x'] : null;
+};
+
+/**
+ * Returns the y value of a chart data item.
+ * @returns {Number} The data item y value
+ * @export
+ */
+oj.ChartDataItem.prototype.getY = function() {
+  return this._data ? this._data['y'] : null;
+};
+
+/**
+ * Returns the z value of a chart data item.
+ * @returns {Number} The data item z value
+ * @export
+ */
+oj.ChartDataItem.prototype.getZ = function() {
+  return this._data ? this._data['z'] : null;
+};
+
+/**
+ * Returns whether or not the data item is selected
+ * @returns {Boolean} The data item selection state
+ * @export
+ */
+oj.ChartDataItem.prototype.getSelected = function() {
+  return this._data ? this._data['selected'] : null;
+};
 });

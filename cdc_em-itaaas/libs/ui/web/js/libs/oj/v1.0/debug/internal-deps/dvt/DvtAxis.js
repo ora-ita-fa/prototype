@@ -370,11 +370,11 @@ DvtAxisAutomation.prototype.GetSubIdForDomElement = function(displayable) {
  * @export
  */
 DvtAxisAutomation.prototype.getDomElementForSubId = function(subId) {
-  if(this._axisInfo instanceof DvtGroupAxisInfo){
+  if (this._axisInfo instanceof DvtGroupAxisInfo) {
     var openParen = subId.indexOf('[');
     var closeParen = subId.indexOf(']');
 
-    if(openParen > 0 && closeParen > 0) {
+    if (openParen > 0 && closeParen > 0) {
       var groupIndex = subId.substring(openParen + 1, closeParen);
       var labels = this._axisInfo.getLabels(this._axis.getCtx());
       return labels[groupIndex].getElem();
@@ -506,9 +506,9 @@ DvtAxisRenderer.render = function(axis, availSpace) {
 
   if (options['rendered'] == 'off')
     return;
-  
+
   axis.__setBounds(availSpace.clone());
-  
+
   // Render the title
   DvtAxisRenderer._renderTitle(axis, axisInfo, availSpace);
 
@@ -2064,6 +2064,8 @@ DvtGroupAxisInfo.prototype.Init = function(context, options, availSpace) {
   this._isLabelRotated = false;
 
   this._renderGridAtLabels = options['_renderGridAtLabels'];
+
+  this._level1Labels = null;
 };
 
 
@@ -2098,6 +2100,7 @@ DvtGroupAxisInfo.prototype._rotateLabels = function(labels, container, overflow)
   }
 
   var labelDims = this.GuessLabelDims(labels, container); // the guess returns the exact heights
+
   return this.SkipLabels(labels, labelDims);
 };
 
@@ -2137,13 +2140,27 @@ DvtGroupAxisInfo.prototype._setOverflow = function(startOverflow, endOverflow, l
   this.EndOverflow = endOverflow;
 };
 
-
 /**
  * @override
  */
 DvtGroupAxisInfo.prototype.getLabels = function(context, levelIdx) {
   if (levelIdx && levelIdx > 0) // group axis has only one level
     return null;
+
+  if (!this._level1Labels)
+    this._level1Labels = this._generateLabels(context);
+
+  return this._level1Labels;
+
+};
+
+/**
+ * Generates the labels
+ * @param {DvtContext} context
+ * @return {Array} The labels for this axis
+ * @private
+ */
+DvtGroupAxisInfo.prototype._generateLabels = function(context) {
 
   var labels = [];
   var container = context.getStage();

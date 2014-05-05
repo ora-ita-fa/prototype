@@ -13,11 +13,13 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$39$$, $$$$
       this.element.show();
       this.$_createTail$();
       this.$_setChrome$();
+      this.$_createLiveRegion$();
       this.$_usingCallback$ = $$$$37$$.proxy(this.$_usingHandler$, this)
     }, _destroy:function() {
       this._super();
       this.isOpen() && this.close();
       this.$_destroyTail$();
+      this.$_destroyLiveRegion$();
       delete this.$_usingCallback$;
       this.$_rootElement$.replaceWith(this.element);
       this.element.hide()
@@ -25,67 +27,67 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$39$$, $$$$
       if(this.isOpen() && (this.close(), this.isOpen())) {
         return
       }
+      this.$_setLauncher$($launcher$$10$$);
+      var $message$$35_rootElement$$1$$ = this.$_rootElement$;
+      $launcher$$10$$ = this.$_launcher$;
+      $oj$$39$$.$Assert$.$assertPrototype$($message$$35_rootElement$$1$$, jQuery);
+      $oj$$39$$.$Assert$.$assertPrototype$($launcher$$10$$, jQuery);
+      $oj$$39$$.$StringUtils$.$isEmptyOrUndefined$($message$$35_rootElement$$1$$.attr("id")) && $message$$35_rootElement$$1$$.uniqueId();
       if(!1 !== this._trigger("beforeOpen")) {
-        var $options$$302$$ = this.options;
-        this.$_setLauncher$($launcher$$10$$);
         this.$_setPosition$($position$$17$$);
-        var $rootElement$$1$$ = this.$_rootElement$;
-        $oj$$39$$.$Assert$.$assertPrototype$($rootElement$$1$$, jQuery);
-        $launcher$$10$$ = this.$_launcher$;
-        $oj$$39$$.$Assert$.$assertPrototype$($launcher$$10$$, jQuery);
-        this.$_setAutoDismiss$($options$$302$$.autoDismiss);
+        var $options$$306$$ = this.options;
+        this.$_setAutoDismiss$($options$$306$$.autoDismiss);
         this._on(!0, $$$$37$$(window), {resize:this.$_resizeHandler$});
-        this._on(!0, $rootElement$$1$$, {keydown:this.$_keydownHandler$});
+        this._on(!0, $message$$35_rootElement$$1$$, {keydown:this.$_keydownHandler$});
         this._on(!0, $launcher$$10$$, {keydown:this.$_keydownHandler$});
-        $oj$$39$$.$StringUtils$.$isEmptyOrUndefined$($rootElement$$1$$.attr("id")) && $rootElement$$1$$.uniqueId();
-        var $popupId$$ = $rootElement$$1$$.attr("id");
-        $launcher$$10$$.attr("aria-describedby", $popupId$$);
-        $rootElement$$1$$.removeAttr("aria-hidden");
-        $rootElement$$1$$.attr("role", "tooltip");
-        $position$$17$$ = $options$$302$$.position;
-        $rootElement$$1$$.show();
-        $rootElement$$1$$.position($oj$$39$$.$PositionUtils$.$normalizeHorizontalAlignment$($position$$17$$, "rtl" === this.$_GetReadingDirection$()));
+        this.$_addDescribedBy$();
+        $message$$35_rootElement$$1$$.removeAttr("aria-hidden");
+        $message$$35_rootElement$$1$$.attr("role", "tooltip");
+        $position$$17$$ = $options$$306$$.position;
+        $message$$35_rootElement$$1$$.show();
+        $message$$35_rootElement$$1$$.position($oj$$39$$.$PositionUtils$.$normalizeHorizontalAlignment$($position$$17$$, "rtl" === this.$_GetReadingDirection$()));
         this._trigger("open");
-        this.$_intialFocus$()
+        this.$_intialFocus$();
+        $message$$35_rootElement$$1$$ = this.$getTranslatedString$("none" === $options$$306$$.initialFocus ? "ariaLiveRegionInitialFocusNone" : "ariaLiveRegionInitialFocusFirstFocusable");
+        this.$_announceLiveRegion$($message$$35_rootElement$$1$$)
       }
     }, close:function() {
       if(this.isOpen() && !1 !== this._trigger("beforeClose")) {
         this.$_restoreFocus$();
-        var $position$$18_rootElement$$2$$ = this.$_rootElement$;
-        $oj$$39$$.$Assert$.$assertPrototype$($position$$18_rootElement$$2$$, jQuery);
-        $position$$18_rootElement$$2$$.hide();
-        $position$$18_rootElement$$2$$.attr("aria-hidden", "true");
-        var $launcher$$11$$ = this.$_launcher$;
-        $oj$$39$$.$Assert$.$assertPrototype$($launcher$$11$$, jQuery);
-        $launcher$$11$$.removeAttr("aria-describedby");
+        var $launcher$$11_position$$18$$ = this.$_launcher$, $rootElement$$2$$ = this.$_rootElement$;
+        $oj$$39$$.$Assert$.$assertPrototype$($rootElement$$2$$, jQuery);
+        $oj$$39$$.$Assert$.$assertPrototype$($launcher$$11_position$$18$$, jQuery);
+        $rootElement$$2$$.hide();
+        $rootElement$$2$$.attr("aria-hidden", "true");
+        this.$_removeDescribedBy$();
         this.$_setAutoDismiss$();
         this._off($$$$37$$(window), "resize");
-        this._off($position$$18_rootElement$$2$$, "keydown");
-        this._off($launcher$$11$$, "keydown");
+        this._off($rootElement$$2$$, "keydown");
+        this._off($launcher$$11_position$$18$$, "keydown");
         delete this.$_launcher$;
-        $position$$18_rootElement$$2$$ = this.options.position;
-        $position$$18_rootElement$$2$$._ofo && (delete $position$$18_rootElement$$2$$._ofo, delete $position$$18_rootElement$$2$$.of);
+        $launcher$$11_position$$18$$ = this.options.position;
+        $launcher$$11_position$$18$$._ofo && (delete $launcher$$11_position$$18$$._ofo, delete $launcher$$11_position$$18$$.of);
         this._trigger("close")
       }
     }, isOpen:function() {
       return this.$_rootElement$.is(":visible")
-    }, _setOption:function($key$$116$$, $value$$206$$) {
-      var $options$$303$$ = this.options;
+    }, _setOption:function($key$$116$$, $value$$208$$) {
+      var $options$$307$$ = this.options;
       switch($key$$116$$) {
         case "tail":
-          $value$$206$$ !== $options$$303$$.tail && this.$_setTail$($value$$206$$);
+          $value$$208$$ !== $options$$307$$.tail && this.$_setTail$($value$$208$$);
           break;
         case "chrome":
-          $value$$206$$ !== $options$$303$$.chrome && this.$_setChrome$($value$$206$$);
+          $value$$208$$ !== $options$$307$$.chrome && this.$_setChrome$($value$$208$$);
           break;
         case "position":
-          this.$_setPosition$($value$$206$$);
+          this.$_setPosition$($value$$208$$);
           this.isOpen() && this.$_resizeHandler$();
           return;
         case "autoDismiss":
-          this.isOpen() && $value$$206$$ !== $options$$303$$.autoDismiss && this.$_setAutoDismiss$($value$$206$$)
+          this.isOpen() && $value$$208$$ !== $options$$307$$.autoDismiss && this.$_setAutoDismiss$($value$$208$$)
       }
-      this._super($key$$116$$, $value$$206$$)
+      this._super($key$$116$$, $value$$208$$)
     }, $_getRootStyle$:$JSCompiler_returnArg$$("oj-popup"), $_setTail$:function($tail$$) {
       this.$_destroyTail$();
       this.$_createTail$($tail$$);
@@ -136,16 +138,16 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$39$$, $$$$
       $oj$$39$$.$Assert$.$assertPrototype$($launcher$$12$$, jQuery);
       this.$_launcher$ = $launcher$$12$$
     }, $_setPosition$:function($position$$19$$) {
-      var $launcher$$13_options$$304_usingCallback$$ = this.options;
-      $position$$19$$ && ($launcher$$13_options$$304_usingCallback$$.position = $$$$37$$.extend($launcher$$13_options$$304_usingCallback$$[$position$$19$$], $position$$19$$));
-      $position$$19$$ = $launcher$$13_options$$304_usingCallback$$.position;
-      $launcher$$13_options$$304_usingCallback$$ = this.$_usingCallback$;
-      $oj$$39$$.$Assert$.$assertFunction$($launcher$$13_options$$304_usingCallback$$);
-      $$$$37$$.isFunction($position$$19$$.using) && $position$$19$$.using !== $launcher$$13_options$$304_usingCallback$$ && ($position$$19$$.origUsing = $position$$19$$.using);
-      $position$$19$$.using = $launcher$$13_options$$304_usingCallback$$;
-      $launcher$$13_options$$304_usingCallback$$ = this.$_launcher$;
-      $oj$$39$$.$Assert$.$assertPrototype$($launcher$$13_options$$304_usingCallback$$, jQuery);
-      $position$$19$$.of || ($position$$19$$.of = $launcher$$13_options$$304_usingCallback$$, $position$$19$$._ofo = !0)
+      var $launcher$$13_options$$308_usingCallback$$ = this.options;
+      $position$$19$$ && ($launcher$$13_options$$308_usingCallback$$.position = $$$$37$$.extend($launcher$$13_options$$308_usingCallback$$[$position$$19$$], $position$$19$$));
+      $position$$19$$ = $launcher$$13_options$$308_usingCallback$$.position;
+      $launcher$$13_options$$308_usingCallback$$ = this.$_usingCallback$;
+      $oj$$39$$.$Assert$.$assertFunction$($launcher$$13_options$$308_usingCallback$$);
+      $$$$37$$.isFunction($position$$19$$.using) && $position$$19$$.using !== $launcher$$13_options$$308_usingCallback$$ && ($position$$19$$.origUsing = $position$$19$$.using);
+      $position$$19$$.using = $launcher$$13_options$$308_usingCallback$$;
+      $launcher$$13_options$$308_usingCallback$$ = this.$_launcher$;
+      $oj$$39$$.$Assert$.$assertPrototype$($launcher$$13_options$$308_usingCallback$$, jQuery);
+      $position$$19$$.of || ($position$$19$$.of = $launcher$$13_options$$308_usingCallback$$, $position$$19$$._ofo = !0)
     }, $_usingHandler$:function($pos$$12$$, $props$$7$$) {
       var $leftPercent_rootElement$$7_rootHeight_rootWidth_topPercent$$ = $props$$7$$.element.element;
       $oj$$39$$.$Assert$.$assertPrototype$($leftPercent_rootElement$$7_rootHeight_rootWidth_topPercent$$, jQuery);
@@ -177,9 +179,9 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$39$$, $$$$
       $oj$$39$$.$Assert$.$assertObject$($position$$20$$);
       $rootElement$$8$$.position($oj$$39$$.$PositionUtils$.$normalizeHorizontalAlignment$($position$$20$$, "rtl" === this.$_GetReadingDirection$()))
     }, $_intialFocus$:function($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$) {
-      var $options$$306$$ = this.options;
-      if($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$ || "none" !== $options$$306$$.initialFocus) {
-        if($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$ || "firstFocusable" === $options$$306$$.initialFocus) {
+      var $options$$310$$ = this.options;
+      if($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$ || "none" !== $options$$310$$.initialFocus) {
+        if($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$ || "firstFocusable" === $options$$310$$.initialFocus) {
           $first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$ = this.element.find(":focusable"), 0 < $first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$.length ? ($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$ = $first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$[0], $oj$$39$$.$Assert$.$assertDomElement$($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$), $$$$37$$($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$).focus()) : ($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$ = this.$_rootElement$, 
           $oj$$39$$.$Assert$.$assertPrototype$($first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$, jQuery), $first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$.attr("tabindex", "-1"), $first$$8_nodes$$4_rootElement$$9_skipOptionCheck$$.focus()), this._trigger("focus")
         }
@@ -236,6 +238,45 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$39$$, $$$$
       $event$$345_target$$82$$ = $event$$345_target$$82$$.target;
       $oj$$39$$.$Assert$.$assertDomElement$($event$$345_target$$82$$);
       $oj$$39$$.$DomUtils$.$isAncestorOrSelf$($launcher$$17$$[0], $event$$345_target$$82$$) || $oj$$39$$.$DomUtils$.$isAncestorOrSelf$($rootElement$$11$$[0], $event$$345_target$$82$$) || this.close()
+    }, $_addDescribedBy$:function() {
+      var $launcher$$18$$ = this.$_launcher$, $popupId_rootElement$$12$$ = this.$_rootElement$;
+      $oj$$39$$.$Assert$.$assertPrototype$($launcher$$18$$, jQuery);
+      $oj$$39$$.$Assert$.$assertPrototype$($popupId_rootElement$$12$$, jQuery);
+      var $popupId_rootElement$$12$$ = $popupId_rootElement$$12$$.attr("id"), $describedby_tokens$$2$$ = $launcher$$18$$.attr("aria-describedby"), $describedby_tokens$$2$$ = $describedby_tokens$$2$$ ? $describedby_tokens$$2$$.split(/\s+/) : [];
+      $describedby_tokens$$2$$.push($popupId_rootElement$$12$$);
+      $describedby_tokens$$2$$ = $$$$37$$.trim($describedby_tokens$$2$$.join(" "));
+      $launcher$$18$$.attr("aria-describedby", $describedby_tokens$$2$$)
+    }, $_removeDescribedBy$:function() {
+      var $launcher$$19$$ = this.$_launcher$, $index$$188_popupId$$1_rootElement$$13$$ = this.$_rootElement$;
+      $oj$$39$$.$Assert$.$assertPrototype$($launcher$$19$$, jQuery);
+      $oj$$39$$.$Assert$.$assertPrototype$($index$$188_popupId$$1_rootElement$$13$$, jQuery);
+      var $index$$188_popupId$$1_rootElement$$13$$ = $index$$188_popupId$$1_rootElement$$13$$.attr("id"), $describedby$$1_tokens$$3$$ = $launcher$$19$$.attr("aria-describedby"), $describedby$$1_tokens$$3$$ = $describedby$$1_tokens$$3$$ ? $describedby$$1_tokens$$3$$.split(/\s+/) : [], $index$$188_popupId$$1_rootElement$$13$$ = $$$$37$$.inArray($index$$188_popupId$$1_rootElement$$13$$, $describedby$$1_tokens$$3$$);
+      -1 !== $index$$188_popupId$$1_rootElement$$13$$ && $describedby$$1_tokens$$3$$.splice($index$$188_popupId$$1_rootElement$$13$$, 1);
+      ($describedby$$1_tokens$$3$$ = $$$$37$$.trim($describedby$$1_tokens$$3$$.join(" "))) ? $launcher$$19$$.attr("aria-describedby", $describedby$$1_tokens$$3$$) : $launcher$$19$$.removeAttr("aria-describedby")
+    }, $_createLiveRegion$:function() {
+      var $rootElement$$14$$ = this.$_rootElement$;
+      $oj$$39$$.$Assert$.$assertPrototype$($rootElement$$14$$, jQuery);
+      $rootElement$$14$$.attr("id");
+      var $liveRegionId$$ = this.$_getSubId$("ariaLive"), $liveRegion$$ = this.$_liveRegion$ = $$$$37$$("\x3cdiv\x3e");
+      $liveRegion$$.attr({id:$liveRegionId$$, role:"log", "aria-live":"assertive", "aria-relevant":"additions"});
+      $liveRegion$$.addClass("oj-helper-hidden-accessible");
+      $liveRegion$$.appendTo(document.body);
+      $rootElement$$14$$.attr("aria-controls", $liveRegionId$$)
+    }, $_announceLiveRegion$:function($message$$36$$) {
+      var $liveRegion$$1$$ = this.$_liveRegion$;
+      $oj$$39$$.$Assert$.$assertPrototype$($liveRegion$$1$$, jQuery);
+      $liveRegion$$1$$.children().remove();
+      $$$$37$$("\x3cdiv\x3e").text($message$$36$$).appendTo($liveRegion$$1$$)
+    }, $_destroyLiveRegion$:function() {
+      var $liveRegion$$2_rootElement$$15$$ = this.$_liveRegion$;
+      $oj$$39$$.$Assert$.$assertPrototype$($liveRegion$$2_rootElement$$15$$, jQuery);
+      $liveRegion$$2_rootElement$$15$$.remove();
+      delete this.$_liveRegion$;
+      $liveRegion$$2_rootElement$$15$$ = this.$_rootElement$;
+      $oj$$39$$.$Assert$.$assertPrototype$($liveRegion$$2_rootElement$$15$$, jQuery);
+      $liveRegion$$2_rootElement$$15$$.removeAttr("aria-controls")
+    }, $_getSubId$:function($sub$$1$$) {
+      return this.uuid + "_" + $sub$$1$$
     }})
   })()
 });

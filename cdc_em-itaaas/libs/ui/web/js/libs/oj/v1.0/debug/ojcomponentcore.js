@@ -535,39 +535,38 @@ $.widget('oj.baseComponent',
     
     $.each(this._savedAttributes, function (index, savedAttr)
     {
-  
       var element = $(savedAttr["element"]), 
           attributes = savedAttr["attributes"];
-  
+      
       //sanity check
       if (element.length === 1)
       {
-	    var currAttr = savedAttr["element"].attributes,
-		    removeAttr = [];
-		
-		//request is to remove any attributes that didn't exist previously
-		
-		for(var i=0, j=currAttr.length; i < j; i++) 
-		{
-		  if(!(currAttr[i]["name"] in attributes)) 
-		  {
-		    removeAttr.push(currAttr[i]["name"]);
-		  }
-		}
-		
-		for(var i=0, j=removeAttr.length; i < j; i++) 
-		{
-		  element.removeAttr(removeAttr[i]);
-		}
-		
+        var currAttr = savedAttr["element"].attributes,
+            removeAttr = [];
+
+        //request is to remove any attributes that didn't exist previously
+        //need to store the attributes in an array and remove them afterwards as otherwise there are side affects
+        for(var i=0, j=currAttr.length; i < j; i++) 
+        {
+          if(!(currAttr[i]["name"] in attributes)) 
+          {
+            removeAttr.push(currAttr[i]["name"]);
+          }
+        }
+
+        for(var i=0, j=removeAttr.length; i < j; i++) 
+        {
+          element.removeAttr(removeAttr[i]);
+        }
+
         for (var attribute in attributes)
         {
           element.attr(attribute, attributes[attribute]["attr"]);
         }
       }
-  
+
     });
-  
+    
   },
   
   /**
@@ -661,11 +660,11 @@ $.widget('oj.baseComponent',
    * 
    * @param {Object} locator An Object containing at minimum a subId property whose value is a string, documented by the component, that allows the component to 
    * look up the subcomponent associated with that string.  It contains:<p>
-   * component: optional - in the future there may be more than one component contained within a page element<p>
+   * component: optional component name - in the future there may be more than one component contained within a page element<p>
    * subId: the string, documented by the component, that the component expects in getNodeBySubId to 
    * locate a particular subcomponent.
    *    
-   * @returns {Element|null} the subcomponent located by the subId string passed in locator, if found.<p>
+   * @return {Element|null} the subcomponent located by the subId string passed in locator, if found.
    * @expose
    * @memberof! oj.baseComponent
    * @instance
@@ -673,12 +672,28 @@ $.widget('oj.baseComponent',
    */
   getNodeBySubId: function(locator)
   {
-    if (locator == null || locator['subId'])
+    if (locator == null || locator['subId'] == null)
     {
       return this.element ? this.element[0] : null;
     }
     
     // Non-null locators have to be handled by the component subclasses
+    return null;
+  },
+  
+  /**
+   * Return the subId string for the given child DOM node
+   * 
+   * @param {!Element} node - child DOM node
+   *    
+   * @return {string|null} - the subId for the DOM node or null when none is found
+   * @expose
+   * @memberof! oj.baseComponent
+   * @instance
+   * 
+   */
+  getSubIdByNode: function(node)
+  {
     return null;
   },
   
@@ -698,8 +713,8 @@ $.widget('oj.baseComponent',
     this['activeable'].removeClass( "oj-active" );
     
     _removeWidgetName(this.element, this.widgetName);
-	
-	//this._RestoreAttributes();
+    
+    //this._RestoreAttributes();
   },
   
   /**

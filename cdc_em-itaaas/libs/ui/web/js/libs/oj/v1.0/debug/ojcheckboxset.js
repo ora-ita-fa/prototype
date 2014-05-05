@@ -37,7 +37,10 @@ define(['ojs/ojcore', 'jquery', 'ojs/ojeditablevalue', 'ojs/ojradiocheckbox'],
  *  checkbox input elements and calling <code class="prettyprint">ojCheckboxset()</code>. You can enable and disable a checkbox set, 
  *  which will enable and disable all contained checkboxes. 
  * </p>
- * 
+ * <p>
+ *  Checkboxset does not have a readOnly option since HTML does not support
+ *  readonly on radios and checkboxes.
+ * </p>
  * <h3 id="keyboard-section">
  *   Keyboard interaction
  *   <a class="bookmarkable-link" title="Bookmarkable Link" href="#keyboard-section"></a>
