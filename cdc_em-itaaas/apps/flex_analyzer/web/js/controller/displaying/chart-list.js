@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-define(['ojs/ojcore', 'knockout', 'jquery',
+define(['ojall', 'knockout', 'jquery',
     '/analytics/js/model/timeseries/itaToolRemoteDataSource.js', 
     '/analytics/js/model/timeseries/itaTimeSeriesConfig.js',
     '/flex_analyzer/js/controller/setting/fa-config.js',
-    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
+    'jqueryui',
      '/analytics/js/controller/timeseries/timeseries-tool.js'],
         function(oj, ko, $, itaToolRemoteDataSource,itaTimeSeriesConfig, faConfig) {
             $(function() {

@@ -1,7 +1,7 @@
 <div class="timeseries-tool">
     <div class="header" data-bind="text: title">
         <div  class="aggregation-selector">
-            <select data-bind="ojComponent: {component: 'ojSelect', rootAttributes: {style:'max-width:20em'}}">
+            <select data-bind="ojComponent: {component: 'ojSelect', optionChange: optionChange}">
                 <optgroup data-bind="attr: {label:'Select Aggregates'}, foreach: aggregates">
                     <option data-bind="value:alias, text:alias"/>
                 </optgroup>

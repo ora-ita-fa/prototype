@@ -165,9 +165,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                 var aggregatesEl = $newChart.find(".aggregation-selector").get(0);
                 ko.applyBindings(
                         {
-                            aggregates: aggregates
+                            aggregates: aggregates,
+                            optionChange: function(event, ui) {
+                                console.log(event);
+                                console.log(ui);
+                            }
                         }, aggregatesEl);
-
+               
             });
         }
     });

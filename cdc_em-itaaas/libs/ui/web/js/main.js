@@ -11,10 +11,11 @@ requirejs.config({
         'knockout': PUBLIC_LIB_PATH + 'knockout/knockout-3.1.0',
         'jquery': PUBLIC_LIB_PATH + 'jquery/jquery-2.1.0.min',
         'jqueryui': PUBLIC_LIB_PATH + 'jquery/jquery-ui.min',
-        'ojs': PUBLIC_LIB_PATH + 'oj/v1.0/debug',
+        'ojs': PUBLIC_LIB_PATH + 'oj/v1.0/min',
         'ojL10n': PUBLIC_LIB_PATH + 'oj/v1.0/ojL10n',
         'text': PUBLIC_LIB_PATH + 'require/text',
-        'ojtranslations': PUBLIC_LIB_PATH + 'oj/v1.0/resources'
+        'ojtranslations': PUBLIC_LIB_PATH + 'oj/v1.0/resources',
+        'ojall': PUBLIC_LIB_PATH + 'ojall'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {

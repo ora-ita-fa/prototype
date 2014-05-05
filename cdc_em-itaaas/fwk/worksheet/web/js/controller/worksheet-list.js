@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'ojs/ojtable', 'ojs/ojdatetimepicker','ojs/ojdatacollection-common','jqueryui'], function(oj, ko, $, ita) {
+define(['ojall', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'ojs/ojtable', 'ojs/ojdatetimepicker','ojs/ojdatacollection-common','jqueryui'], function(oj, ko, $, ita) {
     $(function() {
         var worksheetData;
         var worksheet;
