@@ -65,8 +65,12 @@ and open the template in the editor.
         .measure-selector {
             height: 320px;
             width: 290px;
+            
+            li {
+                margin-left: 0;
+            }
 
-            a ins {
+            a ins.oj-tree-icon {
                 background-repeat: no-repeat;
                 background-position: top left;
                 background-image: url('#{$img-path}/warehouse_measure_ena.png');
@@ -80,13 +84,15 @@ and open the template in the editor.
             overflow-x: hidden;
 
             > ul > li {
-                > a ins {
+                margin-left: 0;
+                
+                > a ins.oj-tree-icon {
                     background-image: url('#{$img-path}/warehouse_dimension_ena.png');
                     background-repeat: no-repeat;
                     background-position: top left;
                 }
 
-                > ul > li > a ins {
+                > ul > li > a ins.oj-tree-icon {
                     background-image: url('#{$img-path}/warehouse_attribute.png');
                     background-repeat: no-repeat;
                     background-position: top left;
