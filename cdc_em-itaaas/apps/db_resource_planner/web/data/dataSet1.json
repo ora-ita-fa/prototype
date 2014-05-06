@@ -39,7 +39,7 @@
                         "dimensionName": "TIME"
                     }
                 },
-                "componentValues": ["Center3"]
+                "bx ": ["Center3"]
             },
             "dataSeries": {
                 "series": [{

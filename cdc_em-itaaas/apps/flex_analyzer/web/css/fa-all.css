@@ -39,7 +39,7 @@ and open the template in the editor.
     border: 2px solid silver;
     display: inline-block;
     width: 100%;
-    height: 247px;
+    height: 342px;
     margin: 5px;
     vertical-align: top; }
   .chart-list-main .icon-size, .chart-list-main .icon-style, .chart-list-main .menus-bar .action-icon, .chart-list-main .menus-bar .delete-icon, .chart-list-main .menus-bar .create-icon, .chart-list-main .menus-bar .import-icon, .chart-list-main .menus-bar .edit-icon, .chart-list-main .menus-bar .control-icon, .chart-list-main .menus-bar .view-icon, .chart-list-main .menus-bar .layout-icon, .chart-list-main #menu-container .command-icon, .chart-list-main #menu-container .line-icon, .chart-list-main #menu-container .bar-icon, .chart-list-main #menu-container .one-column, .chart-list-main #menu-container .two-column, .chart-list-main #menu-container .three-column, .chart-list-main .menus-bar img, .chart-list-main .timeseries-main .right .data-display .chart-options .type .img, .timeseries-main .right .data-display .chart-options .type .chart-list-main .img, .chart-list-main .timeseries-main .right .data-display .chart-options .type .line-icon, .timeseries-main .right .data-display .chart-options .type .chart-list-main .line-icon, .chart-list-main .timeseries-main .right .data-display .chart-options .type .bar-icon, .timeseries-main .right .data-display .chart-options .type .chart-list-main .bar-icon, .chart-list-main .timeseries-main .right .data-display .chart-options .type .area-icon, .timeseries-main .right .data-display .chart-options .type .chart-list-main .area-icon {
@@ -65,36 +65,36 @@ and open the template in the editor.
       vertical-align: middle;
       color: #0572CE; }
     .chart-list-main .menus-bar .action-icon {
-      background-image: url("/flex_analyzer/images//action-icon.png"); }
+      background-image: url("/flex_analyzer/images/action-icon.png"); }
     .chart-list-main .menus-bar .delete-icon {
-      background-image: url("/flex_analyzer/images//delete-icon.png"); }
+      background-image: url("/flex_analyzer/images/delete-icon.png"); }
     .chart-list-main .menus-bar .create-icon {
-      background-image: url("/flex_analyzer/images//new_ena.png"); }
+      background-image: url("/flex_analyzer/images/new_ena.png"); }
     .chart-list-main .menus-bar .import-icon {
-      background-image: url("/flex_analyzer/images//importIcon_ena.png"); }
+      background-image: url("/flex_analyzer/images/importIcon_ena.png"); }
     .chart-list-main .menus-bar .edit-icon {
-      background-image: url("/flex_analyzer/images//edit_ena.png"); }
+      background-image: url("/flex_analyzer/images/edit_ena.png"); }
     .chart-list-main .menus-bar .control-icon {
-      background-image: url("/flex_analyzer/images//agent_ena.png"); }
+      background-image: url("/flex_analyzer/images/agent_ena.png"); }
     .chart-list-main .menus-bar .view-icon {
-      background-image: url("/flex_analyzer/images//eyeglasses.png"); }
+      background-image: url("/flex_analyzer/images/eyeglasses.png"); }
     .chart-list-main .menus-bar .layout-icon {
-      background-image: url("/flex_analyzer/images//layout-icon.png"); }
+      background-image: url("/flex_analyzer/images/layout-icon.png"); }
   .chart-list-main #menu-container a {
     padding-left: 20px;
     padding-right: 18px; }
   .chart-list-main #menu-container .command-icon {
-    background-image: url("/flex_analyzer/images//command-icon.png"); }
+    background-image: url("/flex_analyzer/images/command-icon.png"); }
   .chart-list-main #menu-container .line-icon {
-    background-image: url("/flex_analyzer/images//graph_line.png"); }
+    background-image: url("/flex_analyzer/images/graph_line.png"); }
   .chart-list-main #menu-container .bar-icon {
-    background-image: url("/flex_analyzer/images//graph_bar.png"); }
+    background-image: url("/flex_analyzer/images/graph_bar.png"); }
   .chart-list-main #menu-container .one-column {
-    background-image: url("/flex_analyzer/images//layout-1-icon.png"); }
+    background-image: url("/flex_analyzer/images/layout-1-icon.png"); }
   .chart-list-main #menu-container .two-column {
-    background-image: url("/flex_analyzer/images//layout-2-icon.png"); }
+    background-image: url("/flex_analyzer/images/layout-2-icon.png"); }
   .chart-list-main #menu-container .three-column {
-    background-image: url("/flex_analyzer/images//layout-3-icon.png"); }
+    background-image: url("/flex_analyzer/images/layout-3-icon.png"); }
   .chart-list-main #menu-container #btn-save-worksheet {
     float: right; }
 
@@ -155,23 +155,27 @@ and open the template in the editor.
     .timeseries-main .left .measure-selector {
       height: 320px;
       width: 290px; }
-      .timeseries-main .left .measure-selector a ins {
+      .timeseries-main .left .measure-selector li {
+        margin-left: 0; }
+      .timeseries-main .left .measure-selector a ins.oj-tree-icon {
         background-repeat: no-repeat;
         background-position: top left;
-        background-image: url("/flex_analyzer/images//warehouse_measure_ena.png"); }
+        background-image: url("/flex_analyzer/images/warehouse_measure_ena.png"); }
     .timeseries-main .left .dimension-selector {
       width: 290px;
       height: 320px;
       overflow-y: scroll;
       overflow-x: hidden; }
-      .timeseries-main .left .dimension-selector > ul > li > a ins {
-        background-image: url("/flex_analyzer/images//warehouse_dimension_ena.png");
-        background-repeat: no-repeat;
-        background-position: top left; }
-      .timeseries-main .left .dimension-selector > ul > li > ul > li > a ins {
-        background-image: url("/flex_analyzer/images//warehouse_attribute.png");
-        background-repeat: no-repeat;
-        background-position: top left; }
+      .timeseries-main .left .dimension-selector > ul > li {
+        margin-left: 0; }
+        .timeseries-main .left .dimension-selector > ul > li > a ins.oj-tree-icon {
+          background-image: url("/flex_analyzer/images/warehouse_dimension_ena.png");
+          background-repeat: no-repeat;
+          background-position: top left; }
+        .timeseries-main .left .dimension-selector > ul > li > ul > li > a ins.oj-tree-icon {
+          background-image: url("/flex_analyzer/images/warehouse_attribute.png");
+          background-repeat: no-repeat;
+          background-position: top left; }
   .timeseries-main .middle {
     padding: 30px;
     margin-left: 300px;
@@ -218,11 +222,11 @@ and open the template in the editor.
         border-right: 1px solid #d6dfe6;
         text-align: right; }
         .timeseries-main .right .data-display .chart-options .type .line-icon :before {
-          content: url("/flex_analyzer/images//graph_line.png"); }
+          content: url("/flex_analyzer/images/graph_line.png"); }
         .timeseries-main .right .data-display .chart-options .type .bar-icon :before {
-          content: url("/flex_analyzer/images//graph_bar.png"); }
+          content: url("/flex_analyzer/images/graph_bar.png"); }
         .timeseries-main .right .data-display .chart-options .type .area-icon :before {
-          content: url("/flex_analyzer/images//graph_area.png"); }
+          content: url("/flex_analyzer/images/graph_area.png"); }
       .timeseries-main .right .data-display .chart-options .displays {
         float: left; }
         .timeseries-main .right .data-display .chart-options .displays .show-title {

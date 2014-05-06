@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-define(['ojs/ojcore', 'knockout', 'jquery',
+define(['ojall', 'knockout', 'jquery',
     '/analytics/js/model/timeseries/itaToolRemoteDataSource.js', 
     '/analytics/js/model/timeseries/itaTimeSeriesConfig.js',
     '/flex_analyzer/js/controller/setting/fa-config.js',
-    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
+    'jqueryui',
      '/analytics/js/controller/timeseries/timeseries-tool.js'],
         function(oj, ko, $, itaToolRemoteDataSource,itaTimeSeriesConfig, faConfig) {
             $(function() {
@@ -24,8 +24,11 @@ define(['ojs/ojcore', 'knockout', 'jquery',
                     
                     var _itaTimeSeriesConfig=new itaTimeSeriesConfig(faConfig.chartType,faConfig.enableRollup);
                     console.log(_itaTimeSeriesConfig);
-                    var _dataSource = new itaToolRemoteDataSource("/flex_analyzer/data/sample-qdg-fa.json",null,_itaTimeSeriesConfig);
-                    
+                    var _dataSource = new itaToolRemoteDataSource(
+                            "/flex_analyzer/data/sample-qdg-fa.json",
+                            "/db_resource_planner/data/dataSet1.json",
+                            _itaTimeSeriesConfig);
+
                     ko.applyBindings({dataSource: _dataSource}, $newChart.get(0));
                         
                 }

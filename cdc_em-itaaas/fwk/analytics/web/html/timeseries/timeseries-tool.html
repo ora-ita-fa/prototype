@@ -1,6 +1,13 @@
 <div class="timeseries-tool">
-    <h3 class="header" data-bind="text: title">
-    </h3>
+    <div class="header" data-bind="text: title">
+        <div  class="aggregation-selector">
+            <select data-bind="ojComponent: {component: 'ojSelect', optionChange: optionChange}">
+                <optgroup data-bind="attr: {label:'Select Aggregates'}, foreach: aggregates">
+                    <option data-bind="value:alias, text:alias"/>
+                </optgroup>
+            </select>
+        </div>
+    </div>
     <div class="main">
         <div class="rollup-table" 
              data-bind="
@@ -25,7 +32,7 @@
                 xAxis: xAxisData,
                 yAxis: yAxisData,
                 legend: {
-                    rendered: 'off'
+                    rendered: 'on'
                 }
             }">
         </div>

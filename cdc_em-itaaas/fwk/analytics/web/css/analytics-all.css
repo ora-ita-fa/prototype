@@ -206,9 +206,14 @@ and open the template in the editor.
     Author     : danfjian
 */
 .timeseries-tool {
-  height: 100%; }
+  height: 340px; }
+  .timeseries-tool .header .aggregation-selector {
+    float: right;
+    margin-top: 5px;
+    margin-right: 20px;
+    width: 250px; }
   .timeseries-tool .main {
-    height: inherit; }
+    height: 300px; }
     .timeseries-tool .main .rollup-table {
       height: 100%;
       width: 19%;
@@ -218,9 +223,9 @@ and open the template in the editor.
     .timeseries-tool .main .rollup-table-enabled {
       display: block; }
     .timeseries-tool .main .chart {
-      height: 100%;
       width: 99%;
-      float: left; }
+      float: left;
+      height: 300px; }
     .timeseries-tool .main .chart-rollup-enabled {
       width: 80%; }
 
@@ -309,3 +314,5 @@ and open the template in the editor.
 .pivot-horizontal-header div {
   min-height: 30px;
   line-height: 30px; }
+
+/*# sourceMappingURL=analytics-all.css.map */

@@ -1,8 +1,13 @@
 {
+    "aggrs": {
+        "func": "sum",
+        "formatter": "Total %s"
+    },
     "x": [
         {
             "key": "measure",
             "text": "Measure",
+            "measure": true,
             "attrs": [
                 {
                     "text": "Sales",
@@ -21,37 +26,10 @@
                     "text": "All Channels",
                     "value": "All Channels"
                 }
-            ],
-            "aggrs": [
-                {
-                    "text": "Channel Total",
-                    "func": "sum"
-                }
-            ]
-        },
-        {
-            "key": "geography",
-            "text": "Geography",
-            "attrs": [
-                {
-                    "text": "World",
-                    "value": "World"
-                },
-                {
-                    "text": "Boston",
-                    "value": "Boston"
-                }
-            ],
-            "aggrs": [
-                {
-                    "text": "Geography Total",
-                    "func": "sum"
-                }
             ]
         }
     ],
     "y": [
-        
         {
             "key": "product",
             "text": "Product",
@@ -63,12 +41,6 @@
                 {
                     "text": "Canoes",
                     "value": "Canoes"
-                }
-            ],
-            "aggrs": [
-                {
-                    "text": "Product Total",
-                    "func": "sum"
                 }
             ]
         },
@@ -84,11 +56,19 @@
                     "text": "2008",
                     "value": 2008
                 }
-            ],
-            "aggrs": [
+            ]
+        },
+        {
+            "key": "geography",
+            "text": "Geography",
+            "attrs": [
                 {
-                    "text": "Time Total",
-                    "func": "sum"
+                    "text": "World",
+                    "value": "World"
+                },
+                {
+                    "text": "Boston",
+                    "value": "Boston"
                 }
             ]
         }
