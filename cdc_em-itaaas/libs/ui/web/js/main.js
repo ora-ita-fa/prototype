@@ -9,6 +9,7 @@ requirejs.config({
     // Path mappings for the logical module names
     paths: {
         'knockout': PUBLIC_LIB_PATH + 'knockout/knockout-3.1.0',
+        'komapping': PUBLIC_LIB_PATH + 'knockout/knockout.mapping-latest.debug',
         'jquery': PUBLIC_LIB_PATH + 'jquery/jquery-2.1.0.min',
         'jqueryui': PUBLIC_LIB_PATH + 'jquery/jquery-ui.min',
         'ojs': PUBLIC_LIB_PATH + 'oj/v1.0/min',
@@ -41,9 +42,10 @@ requirejs.config({
 require(['ojs/ojcore', 'knockout', 'jquery',
 //    'text!../patterntemplates/EMHeaderTemplate.html',
 //    'text!../patterntemplates/EMFooterTemplate.html',
-    'ojs/ojknockout', 'ojs/ojcomponents'],
-        function(oj, ko, $, t0, t1)
+    'ojs/ojknockout', 'ojs/ojcomponents', 'komapping'],
+        function(oj, ko, $, t0, t1, komapping)
         {
+            ko.mapping = komapping;
             $(function() {
                 $.get('/resources/templates/em-header.html', function(data) {
                     var $header = $('#demo_appheader_div');

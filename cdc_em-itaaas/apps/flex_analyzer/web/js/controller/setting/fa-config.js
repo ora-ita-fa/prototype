@@ -4,10 +4,11 @@
  * and open the template in the editor.
  */
 
-
-define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
+define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
     '/analytics/js/view_model/timeseries/ChartRegionModel.js',
-    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart','ojs/ojradioset'], function(oj, ko, $, ita, ChartRegionModel) {
+    '/flex_analyzer/js/view_model/setting/FaSetting.js',
+    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart','ojs/ojradioset'], function(oj, ko, $, ita, ChartRegionModel, FaSetting) {
+    console.log(ko.mapping);
     var faConfig={
         selectedMeasures:[],
         selectedDimensions:[]
@@ -19,21 +20,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                     // This will be called when the binding is first applied to an element
                     // Set up any initial state, event handlers, etc. here
 
-                    function ChartTypeModel() {
-                        this.chartTypeButtonClick = function(data, event) {
-                            faConfig.chartType = event.currentTarget.id;
-                            if (faConfig.chartType === 'line')
-                                model.chartType('line');
-                            else if (faConfig.chartType === 'bar')
-                                model.chartType('bar');
-                            else if (faConfig.chartType === 'area')
-                                model.chartType('area');
-                            return true;
-                        };
-                    }
+
 
                     var model = new ChartRegionModel();
-                    var chartTypeModel = new ChartTypeModel();
 
                     function koBind() {
                         $.getJSON('/warehouse/metadata/subject/2162/cube/2171', function(resp) {
@@ -81,7 +70,24 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                         });
 
                         ko.applyBindings(model, $('#chart-container')[0]);
-                        ko.applyBindings(chartTypeModel, $('#tabs')[0]);
+                        
+                        var chartTypeButtonClick = function(data, event) {
+                            faConfig.chartType = event.currentTarget.id;
+                            if (faConfig.chartType === 'line')
+                                model.chartType('line');
+                            else if (faConfig.chartType === 'bar')
+                                model.chartType('bar');
+                            else if (faConfig.chartType === 'area')
+                                model.chartType('area');
+                            return true;
+                        };
+                        var faSetting = new FaSetting({
+                            chartTypeButtonClick: chartTypeButtonClick,
+                            showConfig: function() {
+                                console.log(ko.toJS(faSetting));
+                            }
+                        });
+                        ko.applyBindings(faSetting, $('#tabs')[0]);
                     }
                     function registerListeners(){
                         $("#measure-selector").on("ojselect", function(event, data) {
