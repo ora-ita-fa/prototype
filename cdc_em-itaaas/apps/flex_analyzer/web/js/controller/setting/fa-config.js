@@ -7,10 +7,10 @@
 
 define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
     '/analytics/js/view_model/timeseries/ChartRegionModel.js',
-    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart'], function(oj, ko, $, ita, ChartRegionModel) {
+    'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart','ojs/ojradioset'], function(oj, ko, $, ita, ChartRegionModel) {
     var faConfig={
-        selectedMeasures:{},
-        selectedDimensions:{}
+        selectedMeasures:[],
+        selectedDimensions:[]
     };
     ita.registerTool(
             {
@@ -88,8 +88,31 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                             console.log(event);
                             var id = data.item.attr("id");     //  get tree node id attribute
                             //.if()
-                            faConfig.selectedMeasures=id;
+                            if(faConfig.selectedMeasures.indexOf(id))
+                                faConfig.selectedMeasures.push(id);
                         });
+                        $("#measure-selector").on( "ojdeselect", function( event, data ) {
+                            var id = data.item.attr("id");     //  get tree node id attribute
+                            var index=faConfig.selectedMeasures.indexOf(id);
+                            if (index > -1) {
+                                faConfig.selectedMeasures.splice(index, 1);
+                            }
+                        } );
+                        
+                        $("#dimension-selector").on("ojselect", function(event, data) {
+                            console.log(event);
+                            var id = data.item.attr("id");     //  get tree node id attribute
+                            //.if()
+                            if(faConfig.selectedDimensions.indexOf(id))
+                                faConfig.selectedDimensions.push(id);
+                        });
+                        $("#dimension-selector").on( "ojdeselect", function( event, data ) {
+                            var id = data.item.attr("id");     //  get tree node id attribute
+                            var index=faConfig.selectedDimensions.indexOf(id);
+                            if (index > -1) {
+                                faConfig.selectedDimensions.splice(index, 1);
+                            }
+                        } );
                     }
                     function initTabs() {
                         $('#lowest-level-div').hide();

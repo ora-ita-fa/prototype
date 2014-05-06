@@ -182,9 +182,10 @@ define({
         'nextText': 'Next',
         'currentText': 'Today',
         'weekHeader': 'Wk',
+        'weekText': "Week",
         'datePicker': 'Date Picker',
         'inputHelp': 'Press Key down or Key up for access to Calendar',
-        'inputHelpBoth': 'Press Key down or Key up for access to Calendar and Alt + Key down or Alt Key up for access to time drop down'
+        'inputHelpBoth': 'Press Key down or Key up for access to Calendar and Shift + Key down or Shift Key up for access to time drop down'
       },
 
       'oj-ojInputTime':

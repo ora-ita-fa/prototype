@@ -17,7 +17,7 @@ define(['ojs/ojcore', 'knockout', 'jquery',
                 function addChart() {
                     //print faConfig Content
                     for(var prop in faConfig){
-                      console.log(prop+ " : " +faConfig[prop]);
+                      console.log(faConfig.selectedMeasures);
                     }
                     var $newChart = $($("#chart-template").html());
                     $(".chart-list").append($newChart);

@@ -24,7 +24,7 @@
         <div class="header-bar">
             <h2>Data Selection</h2>
         </div>
-        <div class="selected-measures">Selected Measures</div>
+        <div class="selected-measures"><label  >Selected Measures</label></div>
 
         <div class="main-config">
             <!-- <div class="sample-chart">
@@ -82,45 +82,68 @@
          }
          ">
         <div>
-            <span>Filters</span>
+            <span>Select</span>
+            <div id="select-container" class="oj-form">
+                <label for="cube"><img src="/flex_analyzer/images/warehouse_cube.png" alt="line chart" style="margin-right: 3px"/>Cube</label>
+                <input id="cube" data-bind="ojComponent: {component: 'ojInputText', value:'text'}">
+
+                <label  for="measures"><img src="/flex_analyzer/images/warehouse_measureAggregate.png" alt="line chart" style="margin-right: 3px"/>Measures</label>
+                <input id="measures" data-bind="ojComponent: {component: 'ojInputText', value:'text'}">
+
+                <label for="targets"><img src="/flex_analyzer/images/warehouse_dimension_ena.png" alt="line chart" style="margin-right: 3px"/>Targets</label>
+                <input id="targets" data-bind="ojComponent: {component: 'ojInputText', value:'text'}">
+            </div>
         </div>
         <div class="data-display">
             <span>Data Display</span>
-            <div>
-                <table>
-                    <tr>
-                        <th>* Region Name</th>
-                        <td><input/></td>
-                    </tr>
-                    <tr>
-                        <th rowspan="2">Display</th>
-                        <td>
-                            <label>
-                                <input type="radio" name="data-display-display"/>
-                                Chart
-                            </label>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>
-                                <input type="radio" name="data-display-display"/>
-                                Table of
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Region Height(px)</th>
-                        <td>
-                            <label>
-                                <input type="checkbox"/>
-                                Auto
-                            </label>
-                            <label> Slider Control Place Holder</label>
-                        </td>
-                    </tr>
-                </table>
+            <div id="data-display-container" class="oj-form oj-md-odd-cols-4 oj-md-labels-inline">
+                <div class="oj-row">  
+                    <div class="oj-col">
+                        <label for="regionName">Region Name</label>
+                    </div>
+                    <div class="oj-col">
+                        <input id="regionName" data-bind="ojComponent: {component: 'ojInputText', value:''}" required>
+                    </div>
+                </div>
+                <div class="oj-row">  
+                    <div class="oj-col">
+                        <label for="chartopt1">Display</label> <input id="chartopt1" data-bind="ojComponent: {component: 'ojInputText', value:''}" style="display: none">
+                    </div>
+                    <div class="oj-col">
+                        <div id="radiosetSetBasicDemoId" aria-labelledby="displayType"
+                         data-bind="ojComponent: {component: 'ojRadioset' }" >
+                        <span class="oj-choice-row">
+                            <input id="chartopt" type="radio" name="displayType" value="chart">
+                            <label for="chartopt">Chart</label>
+                        </span>
+                        <span class="oj-choice-row">
+                            <input id="tableopt" type="radio" name="displayType" value="table">
+                            <label for="tableopt">Table of</label>
+                        </span>
+                    </div>
+                    </div>
+                </div>
+                <div class="oj-row">  
+                    <div class="oj-col">
+                        <label for="inputRegionHeight">Region Height(px)</label>
+                    </div>
+                    <div class="oj-col">
+                            <div id="radiosetSetBasicDemoId" aria-labelledby="displayType"
+                                 data-bind="ojComponent: {component: 'ojCheckboxset' }" >
+                                <span class="oj-choice-row">
+                                    <input id="autoHeight" type="checkbox" value="auto">
+                                    <label for="chartopt" style="margin-right:10px">Auto</label>
+                                    <input id="inputRegionHeight"
+                                           data-bind="ojComponent: {component: 'ojInputNumber',
+                                                                        disabled: true,
+                                                                        max: 400, 
+                                                                        min:150, 
+                                                                        step:10, 
+                                                                        value:200}"/>
+                                </span>
+                            </div>
+                    </div>  
+                </div>
                 <div class="chart-options">
                     <h3>Chart Options</h3>
                     <hr/>

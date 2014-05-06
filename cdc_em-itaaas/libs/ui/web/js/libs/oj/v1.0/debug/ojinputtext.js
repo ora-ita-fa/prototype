@@ -310,6 +310,8 @@ oj.__registerWidget("oj.inputBase", $['oj']['editableValue'],
       this.element.unwrap();
     }
 
+    this._RestoreAttributes(); //remove when _RestoreAttributes is uncommented from jqueryui-base
+    
     return ret;
   },
    /**

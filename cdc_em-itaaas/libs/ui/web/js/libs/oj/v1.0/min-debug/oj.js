@@ -22,7 +22,7 @@ function $goog$exportSymbol$$($publicPath$$, $object$$) {
 }
 ;var $_scope$$ = {};
 "undefined" !== typeof window ? $_scope$$ = window : "undefined" !== typeof self && ($_scope$$ = self);
-var $_oldVal$$ = $_scope$$.oj, $oj$$ = $_scope$$.oj = {version:"1.0", build:"2493", revision:"7203", noConflict:function $$_scope$$$oj$noConflict$() {
+var $_oldVal$$ = $_scope$$.oj, $oj$$ = $_scope$$.oj = {version:"1.0", build:"2494", revision:"7206", noConflict:function $$_scope$$$oj$noConflict$() {
   $_scope$$.oj = $_oldVal$$
 }};
 $oj$$.$Logger$ = {};
@@ -4262,6 +4262,7 @@ $oj$$.$__registerWidget$("oj.inputBase", $.oj.editableValue, {version:"1.0.0", w
   this.element.off("blur");
   this.$_inputHelper$ && this.$_inputHelper$.remove();
   this.$_DoWrapElement$() && this.element.unwrap();
+  this.$_RestoreAttributes$();
   return $ret$$5$$
 }, $_OPTION_TO_CSS_MAPPING$:{readOnly:"oj-read-only"}, $_processAttrCheck$:function __processAttrCheck() {
   for(var $attrCheck$$ = this._ATTR_CHECK, $i$$85$$ = 0, $j$$11$$ = $attrCheck$$.length;$i$$85$$ < $j$$11$$;$i$$85$$++) {
@@ -10962,6 +10963,7 @@ $_UNSELECTABLE_CLASS$:"oj-datepicker-unselectable", $_DATEPICKER_DESCRIPTION_ID$
 }, $_InitBase$:function __InitBase() {
   this.$_datepickerShowing$ = !1;
   this.$_isInLineVal$ = this.$_triggerNode$ = null;
+  this.$_ignoreShow$ = !1;
   this.$_maxRows$ = 4;
   this.$_drawYear$ = this.$_currentYear$ = this.$_drawMonth$ = this.$_currentMonth$ = this.$_currentDay$ = 0;
   this.$_showDatePickerHandler$ = this.$_inputKeyDownHandler$ = null;
@@ -11174,13 +11176,13 @@ $_UNSELECTABLE_CLASS$:"oj-datepicker-unselectable", $_DATEPICKER_DESCRIPTION_ID$
     }}[this.getAttribute("data-handler")])
   })
 }, $_generateHTML$:function __generateHTML() {
-  var $maxDraw_prev$$1_prevText$$, $next$$1_nextText$$, $currentText_weekDisplay$$, $controls_daysOutsideMonth$$, $buttonPanel_buttonPanelDisplay$$, $dayNames$$ = this.options.dayWide, $dayNamesMin$$ = this.options.dayNarrow, $monthNames$$ = this.options.monthWide, $monthNamesShort$$ = this.options.monthAbbreviated, $firstDay$$ = this.options.firstDayOfWeek, $html$$1$$, $dow_leadDays_monthControl$$, $row$$21$$, $group$$2$$, $col$$1$$, $day$$3_selected$$10$$, $rowCellId$$, $dayOverClass$$, $dayOverId$$ = 
-  "", $calender$$, $curRows_daysInMonth$$3_numRows_thead$$, $printDate$$, $dRow$$, $tbody$$, $daySettings$$, $otherMonth$$, $currMetaData_pYear_unselectable$$, $tempDate_today$$ = new Date, $tempDate_today$$ = new Date($tempDate_today$$.getFullYear(), $tempDate_today$$.getMonth(), $tempDate_today$$.getDate()), $isRTL$$1$$ = this.$_IsRTL$();
+  var $maxDraw_prev$$1_prevText$$, $next$$1_nextText$$, $currentText_weekDisplay$$, $controls_daysOutsideMonth$$, $buttonPanel_buttonPanelDisplay$$, $dayNames$$ = this.options.dayWide, $dayNamesMin$$ = this.options.dayNarrow, $monthNames$$ = this.options.monthWide, $monthNamesShort$$ = this.options.monthAbbreviated, $firstDay$$ = this.options.firstDayOfWeek, $html$$1$$, $calculatedWeek_dow_leadDays_monthControl$$, $row$$21$$, $group$$2$$, $col$$1$$, $selected$$10$$, $rowCellId$$, $dayOverClass$$, 
+  $dayOverId$$ = "", $calender$$, $curRows_daysInMonth$$3_numRows_thead$$, $day$$3_printDate$$, $dRow$$, $tbody$$, $daySettings$$, $otherMonth$$, $currMetaData_pYear_unselectable$$, $tempDate_today$$ = new Date, $tempDate_today$$ = new Date($tempDate_today$$.getFullYear(), $tempDate_today$$.getMonth(), $tempDate_today$$.getDate()), $isRTL$$1$$ = this.$_IsRTL$();
   $buttonPanel_buttonPanelDisplay$$ = this.options.buttonPanel;
   var $numMonths$$1$$ = this.$_getNumberOfMonths$(), $currentMonthPos_drawMonth$$ = this.options.currentMonthPos, $dayMetaData$$2$$ = this.options.dayMetaData;
   $currMetaData_pYear_unselectable$$ = null;
   var $isMultiMonth$$ = 1 !== $numMonths$$1$$[0] || 1 !== $numMonths$$1$$[1], $minDate$$ = this.$_getMinMaxDate$("min"), $maxDate$$ = this.$_getMinMaxDate$("max"), $currentMonthPos_drawMonth$$ = this.$_drawMonth$ - $currentMonthPos_drawMonth$$, $drawYear$$ = this.$_drawYear$, $compareDate$$ = new Date(this.$_currentYear$, this.$_currentMonth$, this.$_currentDay$), $valueDate$$ = this.$_getDate$(), $selectedDay$$ = $valueDate$$.getDate(), $selectedMonth$$ = $valueDate$$.getMonth(), $selectedYear$$ = 
-  $valueDate$$.getFullYear(), $wDisabled$$ = this.options.disabled;
+  $valueDate$$.getFullYear(), $wDisabled$$ = this.options.disabled, $weekText$$ = this.$getTranslatedString$("weekText");
   $valueDate$$.setHours(0);
   $valueDate$$.setMinutes(0);
   $valueDate$$.setSeconds(0);
@@ -11204,12 +11206,12 @@ $_UNSELECTABLE_CLASS$:"oj-datepicker-unselectable", $_DATEPICKER_DESCRIPTION_ID$
   $currentText_weekDisplay$$ = this.options.weekDisplay;
   $controls_daysOutsideMonth$$ = this.options.daysOutsideMonth;
   $html$$1$$ = "";
-  $dow_leadDays_monthControl$$ = "all";
+  $calculatedWeek_dow_leadDays_monthControl$$ = "all";
   for($row$$21$$ = 0;$row$$21$$ < $numMonths$$1$$[0];$row$$21$$++) {
     $group$$2$$ = "";
     this.$_maxRows$ = 4;
     for($col$$1$$ = 0;$col$$1$$ < $numMonths$$1$$[1];$col$$1$$++) {
-      $dow_leadDays_monthControl$$ = "all";
+      $calculatedWeek_dow_leadDays_monthControl$$ = "all";
       $calender$$ = "";
       if($isMultiMonth$$) {
         $calender$$ += "\x3cdiv class\x3d'oj-datepicker-group";
@@ -11217,55 +11219,57 @@ $_UNSELECTABLE_CLASS$:"oj-datepicker-unselectable", $_DATEPICKER_DESCRIPTION_ID$
           switch($col$$1$$) {
             case 0:
               $calender$$ += " oj-datepicker-group-first";
-              $dow_leadDays_monthControl$$ = $isRTL$$1$$ ? "right" : "left";
+              $calculatedWeek_dow_leadDays_monthControl$$ = $isRTL$$1$$ ? "right" : "left";
               break;
             case $numMonths$$1$$[1] - 1:
               $calender$$ += " oj-datepicker-group-last";
-              $dow_leadDays_monthControl$$ = $isRTL$$1$$ ? "left" : "right";
+              $calculatedWeek_dow_leadDays_monthControl$$ = $isRTL$$1$$ ? "left" : "right";
               break;
             default:
-              $calender$$ += " oj-datepicker-group-middle", $dow_leadDays_monthControl$$ = ""
+              $calender$$ += " oj-datepicker-group-middle", $calculatedWeek_dow_leadDays_monthControl$$ = ""
           }
         }
         $calender$$ += "'\x3e"
       }
-      $calender$$ += "\x3cdiv class\x3d'oj-datepicker-header" + ($wDisabled$$ ? " oj-disabled " : " oj-enabled ") + "'\x3e" + (/all|left/.test($dow_leadDays_monthControl$$) && 0 === $row$$21$$ ? $isRTL$$1$$ ? $next$$1_nextText$$ : $maxDraw_prev$$1_prevText$$ : "") + (/all|right/.test($dow_leadDays_monthControl$$) && 0 === $row$$21$$ ? $isRTL$$1$$ ? $maxDraw_prev$$1_prevText$$ : $next$$1_nextText$$ : "") + this.$_generateMonthYearHeader$($currentMonthPos_drawMonth$$, $drawYear$$, $minDate$$, $maxDate$$, 
-      0 < $row$$21$$ || 0 < $col$$1$$, $monthNames$$, $monthNamesShort$$) + "\x3c/div\x3e\x3ctable class\x3d'oj-datepicker-calendar" + ($wDisabled$$ ? " oj-disabled " : " oj-enabled ") + "' tabindex\x3d-1 data-handler\x3d'calendarKey' data-event\x3d'keydown' aria-readonly\x3d'true' role\x3d'grid' aria-labelledby\x3d'" + this.$_GetSubId$(this.$_CALENDAR_DESCRIPTION_ID$) + "'\x3e\x3cthead role\x3d'presentation'\x3e\x3ctr role\x3d'row'\x3e";
+      $calender$$ += "\x3cdiv class\x3d'oj-datepicker-header" + ($wDisabled$$ ? " oj-disabled " : " oj-enabled ") + "'\x3e" + (/all|left/.test($calculatedWeek_dow_leadDays_monthControl$$) && 0 === $row$$21$$ ? $isRTL$$1$$ ? $next$$1_nextText$$ : $maxDraw_prev$$1_prevText$$ : "") + (/all|right/.test($calculatedWeek_dow_leadDays_monthControl$$) && 0 === $row$$21$$ ? $isRTL$$1$$ ? $maxDraw_prev$$1_prevText$$ : $next$$1_nextText$$ : "") + this.$_generateMonthYearHeader$($currentMonthPos_drawMonth$$, 
+      $drawYear$$, $minDate$$, $maxDate$$, 0 < $row$$21$$ || 0 < $col$$1$$, $monthNames$$, $monthNamesShort$$) + "\x3c/div\x3e\x3ctable class\x3d'oj-datepicker-calendar" + ($wDisabled$$ ? " oj-disabled " : " oj-enabled ") + "' tabindex\x3d-1 data-handler\x3d'calendarKey' data-event\x3d'keydown' aria-readonly\x3d'true' role\x3d'grid' aria-labelledby\x3d'" + this.$_GetSubId$(this.$_CALENDAR_DESCRIPTION_ID$) + "'\x3e\x3cthead role\x3d'presentation'\x3e\x3ctr role\x3d'row'\x3e";
       $curRows_daysInMonth$$3_numRows_thead$$ = "number" === $currentText_weekDisplay$$ ? "\x3cth class\x3d'oj-datepicker-week-col'\x3e" + this.$getTranslatedString$("weekHeader") + "\x3c/th\x3e" : "";
-      for($dow_leadDays_monthControl$$ = 0;7 > $dow_leadDays_monthControl$$;$dow_leadDays_monthControl$$++) {
-        $day$$3_selected$$10$$ = ($dow_leadDays_monthControl$$ + parseInt($firstDay$$, 10)) % 7, $curRows_daysInMonth$$3_numRows_thead$$ += "\x3cth role\x3d'columnheader' aria-label\x3d'" + $dayNames$$[$day$$3_selected$$10$$] + "'" + (5 <= ($dow_leadDays_monthControl$$ + $firstDay$$ + 6) % 7 ? " class\x3d'oj-datepicker-week-end'" : "") + "\x3e\x3cspan title\x3d'" + $dayNames$$[$day$$3_selected$$10$$] + "'\x3e" + $dayNamesMin$$[$day$$3_selected$$10$$] + "\x3c/span\x3e\x3c/th\x3e"
+      for($calculatedWeek_dow_leadDays_monthControl$$ = 0;7 > $calculatedWeek_dow_leadDays_monthControl$$;$calculatedWeek_dow_leadDays_monthControl$$++) {
+        $day$$3_printDate$$ = ($calculatedWeek_dow_leadDays_monthControl$$ + parseInt($firstDay$$, 10)) % 7, $curRows_daysInMonth$$3_numRows_thead$$ += "\x3cth role\x3d'columnheader' aria-label\x3d'" + $dayNames$$[$day$$3_printDate$$] + "'" + (5 <= ($calculatedWeek_dow_leadDays_monthControl$$ + $firstDay$$ + 6) % 7 ? " class\x3d'oj-datepicker-week-end'" : "") + "\x3e\x3cspan title\x3d'" + $dayNames$$[$day$$3_printDate$$] + "'\x3e" + $dayNamesMin$$[$day$$3_printDate$$] + "\x3c/span\x3e\x3c/th\x3e"
       }
       $calender$$ += $curRows_daysInMonth$$3_numRows_thead$$ + "\x3c/tr\x3e\x3c/thead\x3e\x3ctbody role\x3d'presentation'\x3e";
       $curRows_daysInMonth$$3_numRows_thead$$ = this.$_getDaysInMonth$($drawYear$$, $currentMonthPos_drawMonth$$);
       $drawYear$$ === $selectedYear$$ && $currentMonthPos_drawMonth$$ === $selectedMonth$$ && ($selectedDay$$ = Math.min($selectedDay$$, $curRows_daysInMonth$$3_numRows_thead$$));
-      $dow_leadDays_monthControl$$ = (this.$_getFirstDayOfMonth$($drawYear$$, $currentMonthPos_drawMonth$$) - $firstDay$$ + 7) % 7;
-      $curRows_daysInMonth$$3_numRows_thead$$ = Math.ceil(($dow_leadDays_monthControl$$ + $curRows_daysInMonth$$3_numRows_thead$$) / 7);
+      $calculatedWeek_dow_leadDays_monthControl$$ = (this.$_getFirstDayOfMonth$($drawYear$$, $currentMonthPos_drawMonth$$) - $firstDay$$ + 7) % 7;
+      $curRows_daysInMonth$$3_numRows_thead$$ = Math.ceil(($calculatedWeek_dow_leadDays_monthControl$$ + $curRows_daysInMonth$$3_numRows_thead$$) / 7);
       this.$_maxRows$ = $curRows_daysInMonth$$3_numRows_thead$$ = $isMultiMonth$$ ? this.$_maxRows$ > $curRows_daysInMonth$$3_numRows_thead$$ ? this.$_maxRows$ : $curRows_daysInMonth$$3_numRows_thead$$ : $curRows_daysInMonth$$3_numRows_thead$$;
-      $printDate$$ = new Date($drawYear$$, $currentMonthPos_drawMonth$$, 1 - $dow_leadDays_monthControl$$);
+      $day$$3_printDate$$ = new Date($drawYear$$, $currentMonthPos_drawMonth$$, 1 - $calculatedWeek_dow_leadDays_monthControl$$);
       for($dRow$$ = 0;$dRow$$ < $curRows_daysInMonth$$3_numRows_thead$$;$dRow$$++) {
         $calender$$ += "\x3ctr role\x3d'row'\x3e";
-        $tbody$$ = "none" === $currentText_weekDisplay$$ ? "" : "\x3ctd class\x3d'oj-datepicker-week-col'\x3e" + this.options.calculateWeek($printDate$$) + "\x3c/td\x3e";
-        for($dow_leadDays_monthControl$$ = 0;7 > $dow_leadDays_monthControl$$;$dow_leadDays_monthControl$$++) {
-          $otherMonth$$ = $printDate$$.getMonth() !== $currentMonthPos_drawMonth$$;
-          $day$$3_selected$$10$$ = $printDate$$.getTime() === $valueDate$$.getTime();
-          $rowCellId$$ = "oj-dp-" + $dRow$$ + "-" + $dow_leadDays_monthControl$$;
-          ($dayOverClass$$ = $printDate$$.getTime() === $compareDate$$.getTime() && $currentMonthPos_drawMonth$$ === this.$_currentMonth$) && ($dayOverId$$ = $rowCellId$$);
+        $calculatedWeek_dow_leadDays_monthControl$$ = this.options.calculateWeek($day$$3_printDate$$);
+        $tbody$$ = "none" === $currentText_weekDisplay$$ ? "" : "\x3ctd class\x3d'oj-datepicker-week-col' role\x3d'rowheader' aria-label\x3d'" + $weekText$$ + " " + $calculatedWeek_dow_leadDays_monthControl$$ + "'\x3e" + $calculatedWeek_dow_leadDays_monthControl$$ + "\x3c/td\x3e";
+        for($calculatedWeek_dow_leadDays_monthControl$$ = 0;7 > $calculatedWeek_dow_leadDays_monthControl$$;$calculatedWeek_dow_leadDays_monthControl$$++) {
+          $otherMonth$$ = $day$$3_printDate$$.getMonth() !== $currentMonthPos_drawMonth$$;
+          $selected$$10$$ = $day$$3_printDate$$.getTime() === $valueDate$$.getTime();
+          $rowCellId$$ = "oj-dp-" + $dRow$$ + "-" + $calculatedWeek_dow_leadDays_monthControl$$;
+          ($dayOverClass$$ = $day$$3_printDate$$.getTime() === $compareDate$$.getTime() && $currentMonthPos_drawMonth$$ === this.$_currentMonth$) && ($dayOverId$$ = $rowCellId$$);
           $daySettings$$ = [!0, ""];
-          $currMetaData_pYear_unselectable$$ = $printDate$$.getFullYear();
-          var $pMonth$$ = $printDate$$.getMonth(), $pDate$$ = $printDate$$.getDate(), $getMetaData$$1$$ = function getMetaData$$2($dayMetaData$$3$$, $position$$5$$, $params$$11$$) {
+          $currMetaData_pYear_unselectable$$ = $day$$3_printDate$$.getFullYear();
+          var $pMonth_selectedDate$$ = $day$$3_printDate$$.getMonth(), $pDate$$ = $day$$3_printDate$$.getDate(), $getMetaData$$1$$ = function getMetaData$$2($dayMetaData$$3$$, $position$$5$$, $params$$11$$) {
             if(!$dayMetaData$$3$$ || $position$$5$$ === $params$$11$$.length) {
               return $dayMetaData$$3$$
             }
             var $nextPos$$1$$ = $position$$5$$ + 1;
             return getMetaData$$2($dayMetaData$$3$$[$params$$11$$[$position$$5$$]], $nextPos$$1$$, $params$$11$$) || getMetaData$$2($dayMetaData$$3$$["*"], $nextPos$$1$$, $params$$11$$)
           };
-          $dayMetaData$$2$$ && ($currMetaData_pYear_unselectable$$ = $getMetaData$$1$$($dayMetaData$$2$$, 0, [$currMetaData_pYear_unselectable$$, $pMonth$$ + 1, $pDate$$])) && ($daySettings$$ = [!$currMetaData_pYear_unselectable$$.disabled, $currMetaData_pYear_unselectable$$.className || ""], $currMetaData_pYear_unselectable$$.tooltip && $daySettings$$.push($currMetaData_pYear_unselectable$$.tooltip));
-          $currMetaData_pYear_unselectable$$ = $otherMonth$$ && "selectable" !== $controls_daysOutsideMonth$$ || !$daySettings$$[0] || $minDate$$ && $printDate$$ < $minDate$$ || $maxDate$$ && $printDate$$ > $maxDate$$;
-          $tbody$$ += "\x3ctd role\x3d'gridcell' aria-disabled\x3d'" + !!$currMetaData_pYear_unselectable$$ + "' aria-selected\x3d'" + $day$$3_selected$$10$$ + "' id\x3d'" + $rowCellId$$ + "' class\x3d'" + (5 <= ($dow_leadDays_monthControl$$ + $firstDay$$ + 6) % 7 ? " oj-datepicker-week-end" : "") + ($otherMonth$$ ? " oj-datepicker-other-month" : "") + ($dayOverClass$$ ? " " + this.$_DAYOVER_CLASS$ : "") + ($currMetaData_pYear_unselectable$$ || $wDisabled$$ ? " " + this.$_UNSELECTABLE_CLASS$ + " oj-disabled" : 
-          " oj-enabled") + ($otherMonth$$ && "hidden" === $controls_daysOutsideMonth$$ ? "" : " " + $daySettings$$[1] + ($day$$3_selected$$10$$ ? " " + this.$_CURRENT_CLASS$ : "") + ($printDate$$.getTime() === $tempDate_today$$.getTime() ? " oj-datepicker-today" : "")) + "'" + ($otherMonth$$ && "hidden" === $controls_daysOutsideMonth$$ || !$daySettings$$[2] ? "" : " title\x3d'" + $daySettings$$[2].replace(/'/g, "\x26#39;") + "'") + ($currMetaData_pYear_unselectable$$ ? "" : " data-handler\x3d'selectDay' data-event\x3d'click' data-month\x3d'" + 
-          $printDate$$.getMonth() + "' data-year\x3d'" + $printDate$$.getFullYear() + "'") + "\x3e" + ($otherMonth$$ && "hidden" === $controls_daysOutsideMonth$$ ? "\x26#xa0;" : $currMetaData_pYear_unselectable$$ || $wDisabled$$ ? "\x3cspan class\x3d'oj-disabled'\x3e" + $printDate$$.getDate() + "\x3c/span\x3e" : "\x3ca class\x3d'oj-enabled" + ($printDate$$.getTime() === $valueDate$$.getTime() ? " oj-selected" : "") + ($otherMonth$$ ? " oj-priority-secondary" : "") + "' href\x3d'#'\x3e" + $printDate$$.getDate() + 
-          "\x3c/a\x3e") + "\x3c/td\x3e";
-          $printDate$$.setDate($printDate$$.getDate() + 1)
+          $dayMetaData$$2$$ && ($currMetaData_pYear_unselectable$$ = $getMetaData$$1$$($dayMetaData$$2$$, 0, [$currMetaData_pYear_unselectable$$, $pMonth_selectedDate$$ + 1, $pDate$$])) && ($daySettings$$ = [!$currMetaData_pYear_unselectable$$.disabled, $currMetaData_pYear_unselectable$$.className || ""], $currMetaData_pYear_unselectable$$.tooltip && $daySettings$$.push($currMetaData_pYear_unselectable$$.tooltip));
+          $pMonth_selectedDate$$ = $day$$3_printDate$$.getTime() === $valueDate$$.getTime();
+          $currMetaData_pYear_unselectable$$ = $otherMonth$$ && "selectable" !== $controls_daysOutsideMonth$$ || !$daySettings$$[0] || $minDate$$ && $day$$3_printDate$$ < $minDate$$ || $maxDate$$ && $day$$3_printDate$$ > $maxDate$$;
+          $tbody$$ += "\x3ctd role\x3d'gridcell' aria-disabled\x3d'" + !!$currMetaData_pYear_unselectable$$ + "' aria-selected\x3d'" + $selected$$10$$ + "' id\x3d'" + $rowCellId$$ + "' class\x3d'" + (5 <= ($calculatedWeek_dow_leadDays_monthControl$$ + $firstDay$$ + 6) % 7 ? " oj-datepicker-week-end" : "") + ($otherMonth$$ ? " oj-datepicker-other-month" : "") + ($dayOverClass$$ ? " " + this.$_DAYOVER_CLASS$ : "") + ($currMetaData_pYear_unselectable$$ || $wDisabled$$ ? " " + this.$_UNSELECTABLE_CLASS$ + 
+          " oj-disabled" : " oj-enabled") + ($otherMonth$$ && "hidden" === $controls_daysOutsideMonth$$ ? "" : " " + $daySettings$$[1] + ($selected$$10$$ ? " " + this.$_CURRENT_CLASS$ : "") + ($day$$3_printDate$$.getTime() === $tempDate_today$$.getTime() ? " oj-datepicker-today" : "")) + "'" + ($otherMonth$$ && "hidden" === $controls_daysOutsideMonth$$ || !$daySettings$$[2] ? "" : " title\x3d'" + $daySettings$$[2].replace(/'/g, "\x26#39;") + "'") + ($currMetaData_pYear_unselectable$$ ? "" : " data-handler\x3d'selectDay' data-event\x3d'click' data-month\x3d'" + 
+          $day$$3_printDate$$.getMonth() + "' data-year\x3d'" + $day$$3_printDate$$.getFullYear() + "'") + "\x3e" + ($otherMonth$$ && "hidden" === $controls_daysOutsideMonth$$ ? "\x26#xa0;" : $currMetaData_pYear_unselectable$$ || $wDisabled$$ ? "\x3cspan class\x3d'oj-disabled'\x3e" + $day$$3_printDate$$.getDate() + "\x3c/span\x3e" : "\x3ca class\x3d'oj-enabled" + ($pMonth_selectedDate$$ ? " oj-selected" : "") + ($otherMonth$$ ? " oj-priority-secondary" : "") + "' " + ($pMonth_selectedDate$$ || $dayOverClass$$ ? 
+          "" : "tabindex\x3d'-1' ") + " href\x3d'#'\x3e" + $day$$3_printDate$$.getDate() + "\x3c/a\x3e") + "\x3c/td\x3e";
+          $day$$3_printDate$$.setDate($day$$3_printDate$$.getDate() + 1)
         }
         $calender$$ += $tbody$$ + "\x3c/tr\x3e"
       }
@@ -11418,7 +11422,7 @@ $_UNSELECTABLE_CLASS$:"oj-datepicker-unselectable", $_DATEPICKER_DESCRIPTION_ID$
   }
   return null
 }, hide:function __hide() {
-  this.$_datepickerShowing$ && !this.$_isInLineVal$ && (this.$_dpDiv$.hide(), this.$_datepickerShowing$ = !1);
+  this.$_datepickerShowing$ && !this.$_isInLineVal$ && (this.$_dpDiv$.hide(), this.$_datepickerShowing$ = !1, "focus" === this.options.showOn && (this.$_ignoreShow$ = !0), this.element.focus());
   return this
 }, refresh:function __refresh() {
   this._superApply(arguments);
@@ -11426,15 +11430,19 @@ $_UNSELECTABLE_CLASS$:"oj-datepicker-unselectable", $_DATEPICKER_DESCRIPTION_ID$
   return this
 }, show:function __show() {
   if(!this.$_datepickerShowing$ && !this.options.disabled) {
-    var $rtl$$ = this.$_IsRTL$();
-    this.$_dpDiv$.empty();
-    this.$_updateDatepicker$();
-    this.$_dpDiv$.css({top:"", left:"", position:"absolute"});
-    this.$_dpDiv$.position({my:$rtl$$ ? "right top" : "left top", at:$rtl$$ ? "right bottom" : "left bottom", of:this.element, collision:"fit"});
-    this.$_datepickerShowing$ = !0;
-    this.$_dpDiv$.show();
-    this.$_dpDiv$.find(".oj-datepicker-calendar").focus();
-    return this
+    if(this.$_ignoreShow$) {
+      this.$_ignoreShow$ = !1
+    }else {
+      var $rtl$$ = this.$_IsRTL$();
+      this.$_dpDiv$.empty();
+      this.$_updateDatepicker$();
+      this.$_dpDiv$.css({top:"", left:"", position:"absolute"});
+      this.$_dpDiv$.position({my:$rtl$$ ? "right top" : "left top", at:$rtl$$ ? "right bottom" : "left bottom", of:this.element, collision:"fit"});
+      this.$_datepickerShowing$ = !0;
+      this.$_dpDiv$.show();
+      this.$_dpDiv$.find(".oj-datepicker-calendar").focus();
+      return this
+    }
   }
 }, calendarDisplay:$JSCompiler_get$$("$_dpDiv$")});
 $oj$$.$__registerWidget$("oj.ojInputTime", $.oj.inputBase, {version:"1.0.0", widgetEventPrefix:"oj", _CLASS_NAMES:"oj-inputdatetime-input", _WIDGET_CLASS_NAMES:"oj-inputdatetime-time-only oj-component oj-inputdatetime oj-inputdatetime-input-container", $_INPUT_HELPER_KEY$:"inputHelp", _ATTR_CHECK:[{attr:"type", setMandatory:"text"}], $_TIME_PICKER_ID$:"ojInputTime", $_TRIGGER_CLASS$:"oj-inputdatetime-input-trigger", $_TRIGGER_TIME_CLASS$:"oj-inputdatetime-time-icon", options:{converter:$oj$$.$Validation$.$converterFactory$($oj$$.$ConverterFactory$.CONVERTER_TYPE_DATETIME).createConverter({hour:"2-digit", 
@@ -11537,12 +11545,6 @@ hour12:!0, minute:"2-digit"}), timeIncrement:"T00:30:00:00", datePicker:null}, $
     $timeNode$$.append($liNode$$)
   }
   this.$_timePickerDisplay$.append($timeNode$$);
-  $(".oj-listbox-result", $timeNode$$).on("mousemove", function() {
-    $(".oj-listbox-highlighted", $timeNode$$).removeClass("oj-listbox-highlighted");
-    var $ref$$2$$ = $(this);
-    $ref$$2$$.addClass("oj-listbox-highlighted");
-    $timeNode$$.attr("aria-activedescendant", $ref$$2$$.first()[0].id)
-  });
   var $self$$57$$ = this;
   $timeNode$$.on("click", function($event$$68$$) {
     $self$$57$$.hide();
@@ -11603,7 +11605,7 @@ hour12:!0, minute:"2-digit"}), timeIncrement:"T00:30:00:00", datePicker:null}, $
   var $prevActive$$ = $(".oj-listbox-highlighted", this.$_timePickerDisplay$), $ulElement$$ = $("ul", this.$_timePickerDisplay$);
   if(1 === $prevActive$$.length) {
     var $node$$16$$ = $($prevActive$$)[$prevOrNext$$]();
-    1 === $node$$16$$.length && ($prevActive$$.removeClass("oj-listbox-highlighted"), $node$$16$$.addClass("oj-listbox-highlighted"), $ulElement$$.attr("aria-activedescendant", $node$$16$$.first()[0].id), this.$_checkScrollTop$($node$$16$$))
+    1 === $node$$16$$.length && ($prevActive$$.removeClass("oj-listbox-highlighted"), $node$$16$$.addClass("oj-listbox-highlighted"), $ulElement$$.attr("aria-activedescendant", $node$$16$$.children()[0].id), this.$_checkScrollTop$($node$$16$$))
   }
 }, $_processTimeSelection$:function __processTimeSelection() {
   var $selected$$11_timePickerDisplay$$ = this.$_timePickerDisplay$, $prevSelected$$ = $("[aria-selected]", $selected$$11_timePickerDisplay$$), $ulElement$$1$$ = $("ul", $selected$$11_timePickerDisplay$$), $selected$$11_timePickerDisplay$$ = $(".oj-listbox-highlighted div", $selected$$11_timePickerDisplay$$);
@@ -11624,7 +11626,7 @@ hour12:!0, minute:"2-digit"}), timeIncrement:"T00:30:00:00", datePicker:null}, $
     $("ul", this.$_timePickerDisplay$).focus()
   }
 }, hide:function __hide$$1() {
-  this.$_timepickerShowing$ && (this.$_timePickerDisplay$.hide(), this.$_timepickerShowing$ = !1)
+  this.$_timepickerShowing$ && (this.$_timePickerDisplay$.hide(), this.$_timepickerShowing$ = !1, this.element.focus())
 }, refresh:function __refresh$$1() {
   this._superApply(arguments);
   this.$_generateTime$();
@@ -11706,11 +11708,11 @@ $oj$$.$__registerWidget$("oj.ojInputDateTime", $.oj.ojInputDate, {version:"1.0.0
   return $.isEmptyObject($options$$218$$) ? null : this.$_timeConverter$ = $converter$$5_resolvedOptions$$5_timeConverter$$2$$ = $oj$$.$Validation$.$converterFactory$($oj$$.$ConverterFactory$.CONVERTER_TYPE_DATETIME).createConverter($options$$218$$)
 }, $_timeSelected$:function __timeSelected($event$$74$$, $params$$13$$) {
   if("value" === $params$$13$$.option) {
-    var $currDate$$ = new Date(this.$_getDate$()), $selectedDate$$ = this.$_timeConverter$.parse($params$$13$$.value);
-    $currDate$$.setHours($selectedDate$$.getHours());
-    $currDate$$.setMinutes($selectedDate$$.getMinutes());
-    $currDate$$.setSeconds($selectedDate$$.getSeconds());
-    $currDate$$.setMilliseconds($selectedDate$$.getMilliseconds());
+    var $currDate$$ = new Date(this.$_getDate$()), $selectedDate$$1$$ = this.$_timeConverter$.parse($params$$13$$.value);
+    $currDate$$.setHours($selectedDate$$1$$.getHours());
+    $currDate$$.setMinutes($selectedDate$$1$$.getMinutes());
+    $currDate$$.setSeconds($selectedDate$$1$$.getSeconds());
+    $currDate$$.setMilliseconds($selectedDate$$1$$.getMilliseconds());
     this.option("value", $currDate$$)
   }
 }, $_doInputKeyDown$:function __doInputKeyDown$$2($event$$75$$) {
@@ -11720,7 +11722,7 @@ $oj$$.$__registerWidget$("oj.ojInputDateTime", $.oj.ojInputDate, {version:"1.0.0
       case $kc$$4$$.UP:
       ;
       case $kc$$4$$.DOWN:
-        $event$$75$$.altKey && (this.$_timePicker$.ojInputTime("show"), $handled$$4$$ = !0)
+        $event$$75$$.shiftKey && (this.$_timePicker$.ojInputTime("show"), $handled$$4$$ = !0)
     }
   }
   return $handled$$4$$ ? ($event$$75$$.preventDefault(), $event$$75$$.stopPropagation(), !1) : this._superApply(arguments)
@@ -16880,10 +16882,10 @@ $oj$Object$exportPrototypeSymbol$$("ThematicMapArea.prototype.getLabel", {$getLa
       }
     }
     $node$$47$$ && ($node$$47$$.length && this.$_set_text$.apply(this, Array.prototype.slice.call(arguments))) && this.$_emitEvent$({obj:$node$$47$$, title:$text$$13$$, prevTitle:$t$$3$$}, "rename")
-  }, $_move_node$:function($obj$$62$$, $d$$3_o$$17_ref$$3$$, $position$$11$$, $is_copy$$, $is_prepared$$, $skip_check$$) {
+  }, $_move_node$:function($obj$$62$$, $d$$3_o$$17_ref$$2$$, $position$$11$$, $is_copy$$, $is_prepared$$, $skip_check$$) {
     if(!($obj$$62$$.hasClass && $obj$$62$$.hasClass("oj-disabled") || this.$_data$.$core$.locked)) {
       if(!$is_prepared$$) {
-        return this.$_prepare_move$($obj$$62$$, $d$$3_o$$17_ref$$3$$, $position$$11$$, function($p$$11$$) {
+        return this.$_prepare_move$($obj$$62$$, $d$$3_o$$17_ref$$2$$, $position$$11$$, function($p$$11$$) {
           this.$_move_node$($p$$11$$, !1, !1, $is_copy$$, !0, $skip_check$$)
         })
       }
@@ -16892,19 +16894,19 @@ $oj$Object$exportPrototypeSymbol$$("ThematicMapArea.prototype.getLabel", {$getLa
         return!1
       }
       this.$__rollback$();
-      $d$$3_o$$17_ref$$3$$ = !1;
-      $is_copy$$ ? ($d$$3_o$$17_ref$$3$$ = $obj$$62$$.$o$.clone(!0), $d$$3_o$$17_ref$$3$$.find("*[id]").addBack().each(function() {
+      $d$$3_o$$17_ref$$2$$ = !1;
+      $is_copy$$ ? ($d$$3_o$$17_ref$$2$$ = $obj$$62$$.$o$.clone(!0), $d$$3_o$$17_ref$$2$$.find("*[id]").addBack().each(function() {
         this.id && (this.id = "copy_" + this.id)
-      })) : $d$$3_o$$17_ref$$3$$ = $obj$$62$$.$o$;
-      $obj$$62$$.$or$.length ? $obj$$62$$.$or$.before($d$$3_o$$17_ref$$3$$) : ($obj$$62$$.$np$.children("ul").length || $("\x3cul /\x3e").appendTo($obj$$62$$.$np$), $obj$$62$$.$np$.children("ul:eq(0)").append($d$$3_o$$17_ref$$3$$));
+      })) : $d$$3_o$$17_ref$$2$$ = $obj$$62$$.$o$;
+      $obj$$62$$.$or$.length ? $obj$$62$$.$or$.before($d$$3_o$$17_ref$$2$$) : ($obj$$62$$.$np$.children("ul").length || $("\x3cul /\x3e").appendTo($obj$$62$$.$np$), $obj$$62$$.$np$.children("ul:eq(0)").append($d$$3_o$$17_ref$$2$$));
       try {
         $obj$$62$$.$ot$.$_clean_node$($obj$$62$$.$op$), $obj$$62$$.$rt$.$_clean_node$($obj$$62$$.$np$), $obj$$62$$.$op$.find("\x3e ul \x3e li").length || $obj$$62$$.$op$.removeClass("oj-tree-open oj-tree-closed").removeAttr("aria-expanded").addClass("oj-tree-leaf").children("ul").remove()
       }catch($e$$72$$) {
       }
-      $is_copy$$ && (this.$_data$.$core$.$prepared_move$.$cy$ = !0, this.$_data$.$core$.$prepared_move$.$oc$ = $d$$3_o$$17_ref$$3$$);
-      $d$$3_o$$17_ref$$3$$ = $.extend(!0, {}, this.$_data$.$core$.$prepared_move$);
-      $d$$3_o$$17_ref$$3$$.obj = $obj$$62$$.$o$;
-      this.$_emitEvent$($d$$3_o$$17_ref$$3$$, "move");
+      $is_copy$$ && (this.$_data$.$core$.$prepared_move$.$cy$ = !0, this.$_data$.$core$.$prepared_move$.$oc$ = $d$$3_o$$17_ref$$2$$);
+      $d$$3_o$$17_ref$$2$$ = $.extend(!0, {}, this.$_data$.$core$.$prepared_move$);
+      $d$$3_o$$17_ref$$2$$.obj = $obj$$62$$.$o$;
+      this.$_emitEvent$($d$$3_o$$17_ref$$2$$, "move");
       return this.$_data$.$core$.$prepared_move$
     }
   }, $_getMove$:function() {
@@ -18418,15 +18420,15 @@ $oj$Object$exportPrototypeSymbol$$("ThematicMapArea.prototype.getLabel", {$getLa
     this.$_data$.$crrm$.$ct_nodes$ && (this.$_crrm_move_node$(this.$_data$.$crrm$.$ct_nodes$, $obj$$97$$), this.$_data$.$crrm$.$ct_nodes$ = !1);
     this.$_data$.$crrm$.$cp_nodes$ && this.$_crrm_move_node$(this.$_data$.$crrm$.$cp_nodes$, $obj$$97$$, !1, !0);
     this.$_emitEvent$({obj:$obj$$97$$, nodes:$nodes$$3$$}, "paste")
-  }, $_crrm_move_node$:function($obj$$98$$, $ref$$4$$, $position$$13$$, $is_copy$$1$$, $is_prepared$$1$$, $skip_check$$1$$) {
+  }, $_crrm_move_node$:function($obj$$98$$, $ref$$3$$, $position$$13$$, $is_copy$$1$$, $is_prepared$$1$$, $skip_check$$1$$) {
     var $s$$34$$ = this.$_data$.$crrm$.$defaults$.move;
     if(!$is_prepared$$1$$) {
-      return"undefined" === typeof $position$$13$$ && ($position$$13$$ = $s$$34$$.defaultPosition), "inside" !== $position$$13$$ || $s$$34$$.defaultPosition.match(/^(before|after)$/) || ($position$$13$$ = $s$$34$$.defaultPosition), this.$_move_node$($obj$$98$$, $ref$$4$$, $position$$13$$, $is_copy$$1$$, !1, $skip_check$$1$$)
+      return"undefined" === typeof $position$$13$$ && ($position$$13$$ = $s$$34$$.defaultPosition), "inside" !== $position$$13$$ || $s$$34$$.defaultPosition.match(/^(before|after)$/) || ($position$$13$$ = $s$$34$$.defaultPosition), this.$_move_node$($obj$$98$$, $ref$$3$$, $position$$13$$, $is_copy$$1$$, !1, $skip_check$$1$$)
     }
     if(!0 === $s$$34$$.alwaysCopy || "multitree" === $s$$34$$.alwaysCopy && $obj$$98$$.$rt$.$_index$ !== $obj$$98$$.$ot$.$_index$) {
       $is_copy$$1$$ = !0
     }
-    this.$_move_node$($obj$$98$$, $ref$$4$$, $position$$13$$, $is_copy$$1$$, !0, $skip_check$$1$$)
+    this.$_move_node$($obj$$98$$, $ref$$3$$, $position$$13$$, $is_copy$$1$$, !0, $skip_check$$1$$)
   }, $_crrm_remove$:function($obj$$99$$) {
     $obj$$99$$ = this.$_getNode$($obj$$99$$, !0);
     this.$__rollback$();

@@ -531,6 +531,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     this._datepickerShowing = false;
     this._triggerNode = null;
     this._isInLineVal = null;
+    this._ignoreShow = false; //only case is when of showOn of focus and one hides the element [need to avoid showing]
     this._maxRows = 4;
 
     this._currentDay = 0;
@@ -1211,7 +1212,8 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
         currMetaData = null, isMultiMonth = (numMonths[0] !== 1 || numMonths[1] !== 1), minDate = this._getMinMaxDate("min"), 
         maxDate = this._getMinMaxDate("max"), drawMonth = this._drawMonth - currentMonthPos, drawYear = this._drawYear, 
         compareDate = new Date(this._currentYear, this._currentMonth, this._currentDay), valueDate = this._getDate(), 
-        selectedDay = valueDate.getDate(), selectedMonth = valueDate.getMonth(), selectedYear = valueDate.getFullYear(), wDisabled = this.options["disabled"];
+        selectedDay = valueDate.getDate(), selectedMonth = valueDate.getMonth(), selectedYear = valueDate.getFullYear(), 
+        wDisabled = this.options["disabled"], calculatedWeek, weekText = this.getTranslatedString("weekText");
 
     valueDate.setHours(0);
     valueDate.setMinutes(0);
@@ -1316,7 +1318,9 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
         {
           // create date picker rows
           calender += "<tr role='row'>";
-          tbody = (weekDisplay === "none" ? "" : "<td class='oj-datepicker-week-col'>" + this.options["calculateWeek"](printDate) + "</td>");
+          
+          calculatedWeek = this.options["calculateWeek"](printDate);
+          tbody = (weekDisplay === "none" ? "" : "<td class='oj-datepicker-week-col' role='rowheader' aria-label='" + weekText + " " + calculatedWeek + "'>" + calculatedWeek + "</td>");
           for (dow = 0;dow < 7;dow++)
           {
             // create date picker days
@@ -1354,6 +1358,7 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
                 }
               }
             }
+            var selectedDate = printDate.getTime() === valueDate.getTime();
 
             unselectable = (otherMonth && daysOutsideMonth !== "selectable") || !daySettings[0] || (minDate && printDate < minDate) || (maxDate && printDate > maxDate);
             tbody += "<td role='gridcell' aria-disabled='" + !!unselectable + "' aria-selected='" + selected + "' id='" + rowCellId + "' " + "class='" + ((dow + firstDay + 6) % 7 >= 5 ? " oj-datepicker-week-end" : "") + // highlight weekends
@@ -1366,9 +1371,9 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
 ((!otherMonth || daysOutsideMonth !== "hidden") && daySettings[2] ? " title='" + daySettings[2].replace(/'/g, "&#39;") + "'" : "") + // cell title
 (unselectable ? "" : " data-handler='selectDay' data-event='click' data-month='" + printDate.getMonth() + "' data-year='" + printDate.getFullYear() + "'") + ">" + // actions
 (otherMonth && daysOutsideMonth === "hidden" ? "&#xa0;" : // display for other months
-(unselectable || wDisabled ? "<span class='oj-disabled'>" + printDate.getDate() + "</span>" : "<a class='oj-enabled" + (printDate.getTime() === valueDate.getTime() ? " oj-selected" : "") + // highlight selected day
+(unselectable || wDisabled ? "<span class='oj-disabled'>" + printDate.getDate() + "</span>" : "<a class='oj-enabled" + (selectedDate ? " oj-selected" : "") + // highlight selected day
 (otherMonth ? " oj-priority-secondary" : "") + // distinguish dates from other months
-"' href='#'>" + printDate.getDate() + "</a>")) + "</td>";// display selectable date
+"' " + (selectedDate || dayOverClass ? "" : "tabindex='-1' ") + " href='#'>" + printDate.getDate() + "</a>")) + "</td>";// display selectable date
             printDate.setDate(printDate.getDate() + 1);
           }
           calender += tbody + "</tr>";
@@ -1921,6 +1926,12 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
     {
       this._dpDiv.hide();
       this._datepickerShowing = false;
+      
+      if(this.options["showOn"] === "focus") 
+      {
+        this._ignoreShow = true;
+      }
+      this.element.focus();
     }
 
     return this;
@@ -1951,6 +1962,13 @@ oj.__registerWidget("oj.ojInputDate", $['oj']['inputBase'],
   {
     if (this._datepickerShowing || this.options["disabled"])
     {
+      return;
+    }
+    
+    if (this._ignoreShow) 
+    {
+      //set within hide or elsewhere and focus is placed back on this.element
+      this._ignoreShow = false;
       return;
     }
 
@@ -2414,16 +2432,6 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
 
     this._timePickerDisplay.append(timeNode);
 
-    $(".oj-listbox-result", timeNode).on("mousemove", function ()
-    {
-      $(".oj-listbox-highlighted", timeNode).removeClass("oj-listbox-highlighted");
-      
-      var ref = $(this);
-      ref.addClass("oj-listbox-highlighted");
-      
-      timeNode.attr("aria-activedescendant", ref.first()[0].id);
-    });
-
     var self = this;
     timeNode.on("click", function (event)
     {
@@ -2578,7 +2586,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
       {
         prevActive.removeClass("oj-listbox-highlighted");
         node.addClass("oj-listbox-highlighted");
-        ulElement.attr("aria-activedescendant", node.first()[0].id);
+        ulElement.attr("aria-activedescendant", node.children()[0].id);
         this._checkScrollTop(node);
       }
     }
@@ -2694,6 +2702,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
     {
       this._timePickerDisplay.hide();
       this._timepickerShowing = false;
+      this.element.focus();
     }
   },
   
@@ -3039,7 +3048,7 @@ oj.__registerWidget("oj.ojInputTime", $['oj']['inputBase'],
  *       <td>Places focus on Done button if it exists.
  *     </tr>
  *     <tr>
- *       <td><kbd>Alt + DownArrow or UpArrow</kbd></td>
+ *       <td><kbd>Shift + DownArrow or UpArrow</kbd></td>
  *       <td>Shows the timepicker and moves the focus into the expanded timepicker list</td>
  *     </tr>
  * </tbody></table>
@@ -3302,7 +3311,7 @@ oj.__registerWidget("oj.ojInputDateTime", $['oj']['ojInputDate'],
       {
         case kc.UP: ;
         case kc.DOWN:
-          if(event.altKey)
+          if(event.shiftKey)
           {
             this._timePicker.ojInputTime("show");
             handled = true;

@@ -49,6 +49,7 @@ define(['knockout'], function(ko) {
             numSeries=1;
         for(i=0;i<numSeries;i++)
         {
+            console.log( data.yAxisSeries[i].originalSeries.values.length);
             newLineSeries.push({name : data.yAxisSeries[i].originalSeries.seriesLabel, items : data.yAxisSeries[i].originalSeries.values,type:'line',lineWidth:'0',markerDisplayed:"on"},
                 {name : data.yAxisSeries[i].forecastSeries.seriesLabel, items : data.yAxisSeries[i].forecastSeries.values});
                 
@@ -62,7 +63,7 @@ define(['knockout'], function(ko) {
         for(i =0;i<data.xAxisValues.length;i++)
         {
             var dateValue= new Date(data.xAxisValues[i]);
-            xAxisDates[i] = dateValue ;// monthNames[dateValue.getMonth()]+" "+dateValue.getDate()+","+dateValue.getFullYear().toString().substr(2,2);
+            xAxisDates[i] =dateValue;// monthNames[dateValue.getMonth()]+" "+dateValue.getDate()+","+dateValue.getFullYear().toString().substr(2,2);
         }
         
         var forecastStartIndex = data.yAxisSeries[0].originalSeries.values.length;
@@ -71,12 +72,14 @@ define(['knockout'], function(ko) {
                  {text:'Forecasted Portion', type: 'area', min: xAxisDates[forecastStartIndex], max: xAxisDates[forecastEndIndex], color: '#d3d3d3', displayInLegend: 'on', location: 'back'}    
                 ]};
         
-        for(var i=0;i<boundSeries.length;i++)
+            console.log(boundSeries.length);
+        for(var i=0;i<boundSeries.length;i++){
             newLineSeries.push(boundSeries[i]);
-        
+            console.log(boundSeries[i].items);
+        }
+        console.log(xAxisDates.length);
         self.yAxisSeries(newLineSeries);
         self.xAxisValues(xAxisDates);
-        self.forecastArea(shadedArea);
         $("#loading-pane").hide();
         $("#forecast-chart").show();
         //}

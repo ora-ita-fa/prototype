@@ -472,10 +472,10 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$21$$, $$$$
         }
       }
       $node$$47$$ && ($node$$47$$.length && this.$_set_text$.apply(this, Array.prototype.slice.call(arguments))) && this.$_emitEvent$({obj:$node$$47$$, title:$text$$13$$, prevTitle:$t$$3$$}, "rename")
-    }, $_move_node$:function($obj$$62$$, $d$$3_o$$17_ref$$3$$, $position$$11$$, $is_copy$$, $is_prepared$$, $skip_check$$) {
+    }, $_move_node$:function($obj$$62$$, $d$$3_o$$17_ref$$2$$, $position$$11$$, $is_copy$$, $is_prepared$$, $skip_check$$) {
       if(!($obj$$62$$.hasClass && $obj$$62$$.hasClass("oj-disabled") || this.$_data$.$core$.locked)) {
         if(!$is_prepared$$) {
-          return this.$_prepare_move$($obj$$62$$, $d$$3_o$$17_ref$$3$$, $position$$11$$, function($p$$11$$) {
+          return this.$_prepare_move$($obj$$62$$, $d$$3_o$$17_ref$$2$$, $position$$11$$, function($p$$11$$) {
             this.$_move_node$($p$$11$$, !1, !1, $is_copy$$, !0, $skip_check$$)
           })
         }
@@ -484,19 +484,19 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$21$$, $$$$
           return!1
         }
         this.$__rollback$();
-        $d$$3_o$$17_ref$$3$$ = !1;
-        $is_copy$$ ? ($d$$3_o$$17_ref$$3$$ = $obj$$62$$.$o$.clone(!0), $d$$3_o$$17_ref$$3$$.find("*[id]").addBack().each(function() {
+        $d$$3_o$$17_ref$$2$$ = !1;
+        $is_copy$$ ? ($d$$3_o$$17_ref$$2$$ = $obj$$62$$.$o$.clone(!0), $d$$3_o$$17_ref$$2$$.find("*[id]").addBack().each(function() {
           this.id && (this.id = "copy_" + this.id)
-        })) : $d$$3_o$$17_ref$$3$$ = $obj$$62$$.$o$;
-        $obj$$62$$.$or$.length ? $obj$$62$$.$or$.before($d$$3_o$$17_ref$$3$$) : ($obj$$62$$.$np$.children("ul").length || $$$$21$$("\x3cul /\x3e").appendTo($obj$$62$$.$np$), $obj$$62$$.$np$.children("ul:eq(0)").append($d$$3_o$$17_ref$$3$$));
+        })) : $d$$3_o$$17_ref$$2$$ = $obj$$62$$.$o$;
+        $obj$$62$$.$or$.length ? $obj$$62$$.$or$.before($d$$3_o$$17_ref$$2$$) : ($obj$$62$$.$np$.children("ul").length || $$$$21$$("\x3cul /\x3e").appendTo($obj$$62$$.$np$), $obj$$62$$.$np$.children("ul:eq(0)").append($d$$3_o$$17_ref$$2$$));
         try {
           $obj$$62$$.$ot$.$_clean_node$($obj$$62$$.$op$), $obj$$62$$.$rt$.$_clean_node$($obj$$62$$.$np$), $obj$$62$$.$op$.find("\x3e ul \x3e li").length || $obj$$62$$.$op$.removeClass("oj-tree-open oj-tree-closed").removeAttr("aria-expanded").addClass("oj-tree-leaf").children("ul").remove()
         }catch($e$$72$$) {
         }
-        $is_copy$$ && (this.$_data$.$core$.$prepared_move$.$cy$ = !0, this.$_data$.$core$.$prepared_move$.$oc$ = $d$$3_o$$17_ref$$3$$);
-        $d$$3_o$$17_ref$$3$$ = $$$$21$$.extend(!0, {}, this.$_data$.$core$.$prepared_move$);
-        $d$$3_o$$17_ref$$3$$.obj = $obj$$62$$.$o$;
-        this.$_emitEvent$($d$$3_o$$17_ref$$3$$, "move");
+        $is_copy$$ && (this.$_data$.$core$.$prepared_move$.$cy$ = !0, this.$_data$.$core$.$prepared_move$.$oc$ = $d$$3_o$$17_ref$$2$$);
+        $d$$3_o$$17_ref$$2$$ = $$$$21$$.extend(!0, {}, this.$_data$.$core$.$prepared_move$);
+        $d$$3_o$$17_ref$$2$$.obj = $obj$$62$$.$o$;
+        this.$_emitEvent$($d$$3_o$$17_ref$$2$$, "move");
         return this.$_data$.$core$.$prepared_move$
       }
     }, $_getMove$:function() {
@@ -2010,15 +2010,15 @@ define(["ojs/ojcore", "jquery", "ojs/ojcomponentcore"], function($oj$$21$$, $$$$
       this.$_data$.$crrm$.$ct_nodes$ && (this.$_crrm_move_node$(this.$_data$.$crrm$.$ct_nodes$, $obj$$97$$), this.$_data$.$crrm$.$ct_nodes$ = !1);
       this.$_data$.$crrm$.$cp_nodes$ && this.$_crrm_move_node$(this.$_data$.$crrm$.$cp_nodes$, $obj$$97$$, !1, !0);
       this.$_emitEvent$({obj:$obj$$97$$, nodes:$nodes$$3$$}, "paste")
-    }, $_crrm_move_node$:function($obj$$98$$, $ref$$4$$, $position$$13$$, $is_copy$$1$$, $is_prepared$$1$$, $skip_check$$1$$) {
+    }, $_crrm_move_node$:function($obj$$98$$, $ref$$3$$, $position$$13$$, $is_copy$$1$$, $is_prepared$$1$$, $skip_check$$1$$) {
       var $s$$34$$ = this.$_data$.$crrm$.$defaults$.move;
       if(!$is_prepared$$1$$) {
-        return"undefined" === typeof $position$$13$$ && ($position$$13$$ = $s$$34$$.defaultPosition), "inside" !== $position$$13$$ || $s$$34$$.defaultPosition.match(/^(before|after)$/) || ($position$$13$$ = $s$$34$$.defaultPosition), this.$_move_node$($obj$$98$$, $ref$$4$$, $position$$13$$, $is_copy$$1$$, !1, $skip_check$$1$$)
+        return"undefined" === typeof $position$$13$$ && ($position$$13$$ = $s$$34$$.defaultPosition), "inside" !== $position$$13$$ || $s$$34$$.defaultPosition.match(/^(before|after)$/) || ($position$$13$$ = $s$$34$$.defaultPosition), this.$_move_node$($obj$$98$$, $ref$$3$$, $position$$13$$, $is_copy$$1$$, !1, $skip_check$$1$$)
       }
       if(!0 === $s$$34$$.alwaysCopy || "multitree" === $s$$34$$.alwaysCopy && $obj$$98$$.$rt$.$_index$ !== $obj$$98$$.$ot$.$_index$) {
         $is_copy$$1$$ = !0
       }
-      this.$_move_node$($obj$$98$$, $ref$$4$$, $position$$13$$, $is_copy$$1$$, !0, $skip_check$$1$$)
+      this.$_move_node$($obj$$98$$, $ref$$3$$, $position$$13$$, $is_copy$$1$$, !0, $skip_check$$1$$)
     }, $_crrm_remove$:function($obj$$99$$) {
       $obj$$99$$ = this.$_getNode$($obj$$99$$, !0);
       this.$__rollback$();

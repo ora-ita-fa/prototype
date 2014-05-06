@@ -37,6 +37,7 @@ define(["ojs/ojcore", "jquery", "ojs/ojeditablevalue"], function($oj$$4$$, $$$$4
     this.element.off("blur");
     this.$_inputHelper$ && this.$_inputHelper$.remove();
     this.$_DoWrapElement$() && this.element.unwrap();
+    this.$_RestoreAttributes$();
     return $ret$$5$$
   }, $_OPTION_TO_CSS_MAPPING$:{readOnly:"oj-read-only"}, $_processAttrCheck$:function __processAttrCheck() {
     for(var $attrCheck$$ = this._ATTR_CHECK, $i$$85$$ = 0, $j$$11$$ = $attrCheck$$.length;$i$$85$$ < $j$$11$$;$i$$85$$++) {
