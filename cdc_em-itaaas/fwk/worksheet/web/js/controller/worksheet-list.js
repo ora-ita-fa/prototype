@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojselectcombobox', 'ojs/ojchart', 'ojs/ojtable', 'ojs/ojdatetimepicker','ojs/ojdatacollection-common','jqueryui'], function(oj, ko, $, ita) {
+define(['ojall', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart', 'ojs/ojtable', 'ojs/ojdatetimepicker','ojs/ojdatacollection-common','jqueryui'], function(oj, ko, $, ita) {
     $(function() {
         var worksheetData;
         var worksheet;
@@ -17,6 +17,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents'
             
         var availableWorksheets = [ ];
             for (var key in data) {
+                console.log(data[key].Name);
                 var value=data[key].Name;
                 availableWorksheets.push(data[key].Name.substring(value.indexOf('>')+1, value.lastIndexOf('</a>')));
 //            $.each(data[key], function(k, arrayItem) {
