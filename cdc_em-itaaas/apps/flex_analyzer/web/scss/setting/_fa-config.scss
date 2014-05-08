@@ -61,44 +61,89 @@ and open the template in the editor.
         position: absolute;
         top: 0;
         left: 0;
+        
+        .measure-title {
+            float: left;
+        }
+        
+        .cube-dropdown-button {
+            float: right;
+        }
+        
+        .cube-selector-container {
+            display: none;
+            position: absolute;
+            border: 1px solid #c4ced7;
+            height: 350px;
+            width: 320px;
+            left: 0;
+            top: 200px;
+            background-color: white;
+            z-index: 1000;
+        }
+        
+        .custom-icon-tree {
+            overflow-y: scroll;
+            overflow-x: scroll;
+            
+            a ins.oj-tree-icon {
+                background-repeat: no-repeat;
+                background-position: top left;
+            }
+        }
+        
+        .cube-selector {
+            @extend .custom-icon-tree;
+            
+            width: 318px;
+            height: 316px;
+
+            > ul > li {
+                margin-left: 0;
+                
+                > a ins.oj-tree-icon {
+                    background-image: url('#{$img-path}/warehouse_subject.png');
+                }
+
+                > ul > li > a ins.oj-tree-icon {
+                    background-image: url('#{$img-path}/warehouse_cube.png');
+                }
+            }
+        }
 
         .measure-selector {
-            height: 320px;
+            @extend .custom-icon-tree;
+            
             width: 290px;
+            height: 320px;
             
             li {
                 margin-left: 0;
             }
 
             a ins.oj-tree-icon {
-                background-repeat: no-repeat;
-                background-position: top left;
                 background-image: url('#{$img-path}/warehouse_measure_ena.png');
             }
         }
 
         .dimension-selector {
+            @extend .custom-icon-tree;
             width: 290px;
             height: 320px;
-            overflow-y: scroll;
-            overflow-x: hidden;
 
             > ul > li {
                 margin-left: 0;
                 
                 > a ins.oj-tree-icon {
                     background-image: url('#{$img-path}/warehouse_dimension_ena.png');
-                    background-repeat: no-repeat;
-                    background-position: top left;
                 }
 
                 > ul > li > a ins.oj-tree-icon {
                     background-image: url('#{$img-path}/warehouse_attribute.png');
-                    background-repeat: no-repeat;
-                    background-position: top left;
                 }
             }
         }
+        
     }
 
     .middle {

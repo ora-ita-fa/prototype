@@ -25,52 +25,93 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                     var model = new ChartRegionModel();
 
                     function koBind() {
-                        $.getJSON('/warehouse/metadata/subject/2162/cube/2171', function(resp) {
-                            var measuresFromAPI = [];
-                            $.each(resp.measures, function(i, measure) {
-                                var measureNode = measure;
-                                measureNode.title = measure.displayName;
-                                measureNode.attr = {id: measure.name};
-                                measuresFromAPI.push(measureNode);
+                        
+                        $.getJSON('/warehouse/metadata/subjects', function(resp) {
+                            var subjectsForOj = [];
+                            $.each(resp, function() {
+                                var subjectNode = this;
+                                subjectNode.title = this.displayName;
+                                subjectNode.attr = {
+                                    id: this.id,
+                                    type: "subject"
+                                };
+                                subjectsForOj.push(subjectNode);
+                                
+                                subjectNode.children = [];
+                                $.each(this.cubes, function() {
+                                    var cubeNode = this;
+                                    cubeNode.title = this.displayName;
+                                    cubeNode.attr = {
+                                        id: this.id,
+                                        subjectId: this.subjectId,
+                                        type: "cube"
+                                    };
+                                    subjectNode.children.push(cubeNode);
+                                });
                             });
-
-                            ko.applyBindings({measures: measuresFromAPI}, $("#measure-selector")[0]);
-
-                            var dimensionsFromAPI = [];
-                            $.each(resp.dimensionRefs, function(i, roleDimension) {
-                                var dimensionNode = roleDimension;
-                                dimensionNode.title = roleDimension.roleDisplayName;
-                                dimensionNode.attr = {id: roleDimension.roleName};
-
-                                function getBaseDimension(baseDimensionName) {
-                                    var baseDim;
-                                    $.each(resp.dimensions, function(i, dimension) {
-                                        if (dimension.name === baseDimensionName) {
-                                            baseDim = dimension;
-                                            return false;
-                                        }
-                                    });
-                                    return baseDim;
-                                }
-
-                                var attrNodes = [];
-                                var baseDimension = getBaseDimension(roleDimension.dimension);
-                                $.each(baseDimension.attributes, function(i, attr) {
-                                    var attrNode = attr;
-                                    attrNode.title = attr.displayName;
-                                    attrNode.attr = {id: attr.attributeId};
-                                    attrNodes.push(attrNode);
+                            ko.applyBindings({cubes:subjectsForOj, changeCube: changeCube},$(".cube-selector-container")[0]);
+                        });
+                        
+                        function changeCube(event, ui) {
+                            $node = $(ui.item[0]);
+                            if ($node.attr("type") !== "cube") {
+                                return;
+                            }
+                            var subjectId = $node.attr("subjectId");
+                            var cubeId= $node.attr("id");
+                            
+                            ko.cleanNode($("#measure-selector")[0]);
+                            $("#measure-selector").empty();
+                            ko.cleanNode($("#dimension-selector")[0]);
+                            $("#dimension-selector").empty();
+                            
+                            $.getJSON('/warehouse/metadata/subject/' + subjectId +'/cube/' + cubeId, function(resp) {
+                                var measuresForOj = [];
+                                $.each(resp.measures, function(i, measure) {
+                                    var measureNode = measure;
+                                    measureNode.title = measure.displayName;
+                                    measureNode.attr = {id: measure.name};
+                                    measuresForOj.push(measureNode);
                                 });
 
-                                dimensionNode.children = attrNodes;
-                                dimensionsFromAPI.push(dimensionNode);
+                                ko.applyBindings({measures: measuresForOj}, $("#measure-selector")[0]);
+
+                                var dimensionsFromAPI = [];
+                                $.each(resp.dimensionRefs, function(i, roleDimension) {
+                                    var dimensionNode = roleDimension;
+                                    dimensionNode.title = roleDimension.roleDisplayName;
+                                    dimensionNode.attr = {id: roleDimension.roleName};
+
+                                    function getBaseDimension(baseDimensionName) {
+                                        var baseDim;
+                                        $.each(resp.dimensions, function(i, dimension) {
+                                            if (dimension.name === baseDimensionName) {
+                                                baseDim = dimension;
+                                                return false;
+                                            }
+                                        });
+                                        return baseDim;
+                                    }
+
+                                    var attrNodes = [];
+                                    var baseDimension = getBaseDimension(roleDimension.dimension);
+                                    $.each(baseDimension.attributes, function(i, attr) {
+                                        var attrNode = attr;
+                                        attrNode.title = attr.displayName;
+                                        attrNode.attr = {id: attr.attributeId};
+                                        attrNodes.push(attrNode);
+                                    });
+
+                                    dimensionNode.children = attrNodes;
+                                    dimensionsFromAPI.push(dimensionNode);
+                                });
+
+                                ko.applyBindings({dimensions: dimensionsFromAPI}, $("#dimension-selector")[0]);
                             });
-                            
-                            ko.applyBindings({dimensions: dimensionsFromAPI}, $("#dimension-selector")[0]);
-                        });
+                        }
 
                         ko.applyBindings(model, $('#chart-container')[0]);
-                        
+
                         var chartTypeButtonClick = function(data, event) {
                             faConfig.chartType = event.currentTarget.id;
                             if (faConfig.chartType === 'line')
@@ -83,11 +124,28 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                         };
                         var faSetting = new FaSetting({
                             chartTypeButtonClick: chartTypeButtonClick,
-                            showConfig: function() {
-                                console.log(ko.toJS(faSetting));
+                            saveConfig: function() {
+                                var json = (ko.toJSON(faSetting.settings));
+                                console.log(json);
+                                sessionStorage["region"] = json;
                             }
-                        });
+                        }, sessionStorage["region"]);
                         ko.applyBindings(faSetting, $('#tabs')[0]);
+
+                        function showCubeSelector() {
+                            $(".cube-selector-container").show().position({
+                                at: "left top",
+                                my: "left bottom",
+                                of: '.cube-dropdown-button'
+                            });
+                        }
+
+                        $(".cube-selector-container").mouseleave(function() {
+                            $(this).hide();
+                        });
+
+                        ko.applyBindings({showCubeSelector: showCubeSelector},
+                        $(".cube-dropdown-button")[0]);
                     }
                     function registerListeners(){
                         $("#measure-selector").on("ojselect", function(event, data) {
@@ -165,6 +223,8 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                         registerListeners();
                         initTabs();
                     });
+                    
+                  
                 }
             }
     );

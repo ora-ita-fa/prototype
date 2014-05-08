@@ -152,30 +152,51 @@ and open the template in the editor.
     position: absolute;
     top: 0;
     left: 0; }
+    .timeseries-main .left .measure-title {
+      float: left; }
+    .timeseries-main .left .cube-dropdown-button {
+      float: right; }
+    .timeseries-main .left .cube-selector-container {
+      display: none;
+      position: absolute;
+      border: 1px solid #c4ced7;
+      height: 350px;
+      width: 320px;
+      left: 0;
+      top: 200px;
+      background-color: white;
+      z-index: 1000; }
+    .timeseries-main .left .custom-icon-tree, .timeseries-main .left .cube-selector, .timeseries-main .left .measure-selector, .timeseries-main .left .dimension-selector {
+      overflow-y: scroll;
+      overflow-x: scroll; }
+      .timeseries-main .left .custom-icon-tree a ins.oj-tree-icon, .timeseries-main .left .cube-selector a ins.oj-tree-icon, .timeseries-main .left .measure-selector a ins.oj-tree-icon, .timeseries-main .left .dimension-selector a ins.oj-tree-icon {
+        background-repeat: no-repeat;
+        background-position: top left; }
+    .timeseries-main .left .cube-selector {
+      width: 318px;
+      height: 316px; }
+      .timeseries-main .left .cube-selector > ul > li {
+        margin-left: 0; }
+        .timeseries-main .left .cube-selector > ul > li > a ins.oj-tree-icon {
+          background-image: url("/flex_analyzer/images/warehouse_subject.png"); }
+        .timeseries-main .left .cube-selector > ul > li > ul > li > a ins.oj-tree-icon {
+          background-image: url("/flex_analyzer/images/warehouse_cube.png"); }
     .timeseries-main .left .measure-selector {
-      height: 320px;
-      width: 290px; }
+      width: 290px;
+      height: 320px; }
       .timeseries-main .left .measure-selector li {
         margin-left: 0; }
       .timeseries-main .left .measure-selector a ins.oj-tree-icon {
-        background-repeat: no-repeat;
-        background-position: top left;
         background-image: url("/flex_analyzer/images/warehouse_measure_ena.png"); }
     .timeseries-main .left .dimension-selector {
       width: 290px;
-      height: 320px;
-      overflow-y: scroll;
-      overflow-x: hidden; }
+      height: 320px; }
       .timeseries-main .left .dimension-selector > ul > li {
         margin-left: 0; }
         .timeseries-main .left .dimension-selector > ul > li > a ins.oj-tree-icon {
-          background-image: url("/flex_analyzer/images/warehouse_dimension_ena.png");
-          background-repeat: no-repeat;
-          background-position: top left; }
+          background-image: url("/flex_analyzer/images/warehouse_dimension_ena.png"); }
         .timeseries-main .left .dimension-selector > ul > li > ul > li > a ins.oj-tree-icon {
-          background-image: url("/flex_analyzer/images/warehouse_attribute.png");
-          background-repeat: no-repeat;
-          background-position: top left; }
+          background-image: url("/flex_analyzer/images/warehouse_attribute.png"); }
   .timeseries-main .middle {
     padding: 30px;
     margin-left: 300px;

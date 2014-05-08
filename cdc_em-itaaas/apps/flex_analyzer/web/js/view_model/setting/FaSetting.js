@@ -5,9 +5,9 @@
  */
 
 define(['knockout'], function(ko) {
-    function FaSetting(eventBindings, settingsJs) {
-        if (settingsJs) {
-            this.settings = ko.mapping.fromJS(settingsJs);
+    function FaSetting(eventBindings, settingsJson) {
+        if (settingsJson) {
+            this.settings = ko.mapping.fromJSON(settingsJson);
         } else {
             this.settings = {
                 selectedMeasures: ko.observableArray(),
