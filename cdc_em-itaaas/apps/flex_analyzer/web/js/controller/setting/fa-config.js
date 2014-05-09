@@ -8,7 +8,7 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
     '/analytics/js/view_model/timeseries/ChartRegionModel.js',
     '/flex_analyzer/js/view_model/setting/FaSetting.js',
     'ojs/ojknockout', 'ojs/ojcomponents', 'ojs/ojchart','ojs/ojradioset'], function(oj, ko, $, ita, ChartRegionModel, FaSetting) {
-    console.log(ko.mapping);
+
     var faConfig={
         selectedMeasures:[],
         selectedDimensions:[]
@@ -19,12 +19,24 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                 init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
                     // This will be called when the binding is first applied to an element
                     // Set up any initial state, event handlers, etc. here
-
-
+                    
+                    var settings = new FaSetting();
 
                     var model = new ChartRegionModel();
 
                     function koBind() {
+                        
+                        var chartTypeButtonClick = function(data, event) {
+                            faConfig.chartType = event.currentTarget.id;
+                            if (faConfig.chartType === 'line')
+                                model.chartType('line');
+                            else if (faConfig.chartType === 'bar')
+                                model.chartType('bar');
+                            else if (faConfig.chartType === 'area')
+                                model.chartType('area');
+                            return true;
+                        };
+                        
                         $.getJSON('/warehouse/metadata/subjects', function(resp) {
                             var subjectsForOj = [];
                             $.each(resp, function() {
@@ -33,7 +45,7 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                                 subjectNode.attr = {
                                     id: this.id,
                                     type: "subject",
-                                    displayName: this.displayName,
+                                    displayName: this.displayName
                                 };
                                 subjectsForOj.push(subjectNode);
                                 
@@ -54,27 +66,15 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                             ko.applyBindings({cubes:subjectsForOj, changeCube: changeCube},$(".cube-selector-container")[0]);
                         });
                         
-                        function changeCube(event, ui) {
-                            $node = $(ui.item[0]);
-                            if ($node.attr("type") !== "cube") {
-                                return;
-                            }
-                            var subjectId = $node.attr("subjectId");
-                            var subjectDisplayName = $node.attr("subjectDisplayName");
-                            var cubeId= $node.attr("id");
-                            var cubeDisplayName= $node.attr("displayName");
-                            
-                            faSetting.settings.selectedCube.displayName(cubeDisplayName);
-                            faSetting.settings.selectedCube.id(cubeId);
-                            faSetting.settings.selectedSubject.displayName(subjectDisplayName);
-                            faSetting.settings.selectedSubject.id(subjectId);
-                            
+                        settings.selectedCube.subscribe(function(newSelectedCube) {
                             ko.cleanNode($("#measure-selector")[0]);
                             $("#measure-selector").empty();
                             ko.cleanNode($("#dimension-selector")[0]);
                             $("#dimension-selector").empty();
                             
-                            $.getJSON('/warehouse/metadata/subject/' + subjectId +'/cube/' + cubeId, function(resp) {
+                            var subjectId = newSelectedCube.subject.id;
+                            var cubeId = newSelectedCube.id;
+                              $.getJSON('/warehouse/metadata/subject/' + subjectId +'/cube/' + cubeId, function(resp) {
                                 var measuresForOj = [];
                                 $.each(resp.measures, function(i, measure) {
                                     var measureNode = measure;
@@ -117,30 +117,49 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
 
                                 ko.applyBindings({dimensions: dimensionsFromAPI}, $("#dimension-selector")[0]);
                             });
+                        
+                        });
+                        
+                        if(localStorage["region"]) {
+                            ko.mapping.fromJS($.parseJSON(localStorage["region"]), settings);
+                            console.log(settings.selectedCube());
+                        }
+                        
+                        function changeCube(event, ui) {
+                            var $node = $(ui.item[0]);
+                            if ($node.attr("type") !== "cube") {
+                                return;
+                            }
+                            var subjectId = $node.attr("subjectId");
+                            var subjectDisplayName = $node.attr("subjectDisplayName");
+                            var cubeId= $node.attr("id");
+                            var cubeDisplayName= $node.attr("displayName");
+                            
+                            settings.selectedCube({
+                                id: cubeId,
+                                displayName: cubeDisplayName,
+                                subject: {
+                                    id: subjectId,
+                                    displayName: subjectDisplayName
+                                }
+                            });
+                            
                             $("#cube-selector-container").hide();
                         }
 
                         ko.applyBindings(model, $('#chart-container')[0]);
 
-                        var chartTypeButtonClick = function(data, event) {
-                            faConfig.chartType = event.currentTarget.id;
-                            if (faConfig.chartType === 'line')
-                                model.chartType('line');
-                            else if (faConfig.chartType === 'bar')
-                                model.chartType('bar');
-                            else if (faConfig.chartType === 'area')
-                                model.chartType('area');
-                            return true;
-                        };
-                        var faSetting = new FaSetting({
+                        var tabBindings = {
                             chartTypeButtonClick: chartTypeButtonClick,
                             saveConfig: function() {
-                                var json = (ko.toJSON(faSetting.settings));
+                                var json = (ko.mapping.toJSON(settings));
                                 console.log(json);
-                                sessionStorage["region"] = json;
-                            }
-                        }, sessionStorage["region"]);
-                        ko.applyBindings(faSetting, $('#tabs')[0]);
+                                localStorage["region"] = json;
+                            },
+                            settings: settings
+                        };
+                        console.log(tabBindings);
+                        ko.applyBindings(tabBindings, $('#tabs')[0]);
 
                         function showCubeSelector() {
                             $(".cube-selector-container").show().position({
@@ -150,20 +169,19 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                             });
                         }
                         
-                        //hide cube pick popup dialog click area out of dialog rather than mouse leave
+                        //hide cube pick popup dialog click area out of dialog
                         $(".timeseries-main").click(function(event) {
-                            if ($(event.target).parent().get( 0 ).id !== 'pick-cube-button' && !$(event.target).parents().filter('#cube-selector-container').length && event.target.id !== 'cube-selector-container' && event.target.id !== 'pick-cube-button') {
-                                // close cube selector dialog
+                            var $target = $(event.target);
+                            if (!$target.closest('#pick-cube-button').length
+                                    && !$target.closest('#cube-selector-container').length){
                                 $("#cube-selector-container").hide();
                             }
                         });
-//                        $(".cube-selector-container").mouseleave(function() {
-//                            $(this).hide();
-//                        });
 
-                        ko.applyBindings({showCubeSelector: showCubeSelector,selectedCube:faSetting.settings.selectedCube},
+                        ko.applyBindings({showCubeSelector: showCubeSelector,selectedCube: settings.selectedCube},
                         $(".cube-dropdown-button")[0]);
                     }
+                    
                     function registerListeners(){
                         $("#measure-selector").on("ojselect", function(event, data) {
                             console.log(event);
@@ -195,6 +213,7 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                             }
                         } );
                     }
+                    
                     function initTabs() {
                         $('#lowest-level-div').hide();
                         $('#check-by-month-of-year').change(function() {

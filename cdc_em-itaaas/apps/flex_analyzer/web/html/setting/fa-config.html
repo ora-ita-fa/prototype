@@ -7,7 +7,7 @@
             <button id="pick-cube-button" class="cube-dropdown-button" data-bind="ojComponent: {
                     component:'ojButton',
                     icons: {end:'oj-fwk-icon-caret-s oj-fwk-icon'}, 
-                    label: selectedCube.displayName
+                    label: selectedCube().displayName
                     }, click: showCubeSelector">
             </button>
             <div class="cube-selector-container" id="cube-selector-container">
@@ -179,7 +179,7 @@
                 <div class="chart-options" data-bind="with: chartOptions">
                     <h3>Chart Options</h3>
                     <hr/>
-                    <div class="type" data-bind="with: $root.eventBindings"> 
+                    <div class="type" data-bind="with: $root"> 
                         <button  id="line"
                                  class="line-icon"
                                  data-bind="click: chartTypeButtonClick,
@@ -245,7 +245,7 @@
 
                         </div>
                     </div>
-                    <div><input type="button" value="save config json" data-bind="click: $root.eventBindings.saveConfig"/></div>
+                    <div><input type="button" value="save config json" data-bind="click: $root.saveConfig"/></div>
                 </div>
             </div>
         </div>

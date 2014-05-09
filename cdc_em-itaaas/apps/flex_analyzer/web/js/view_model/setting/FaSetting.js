@@ -5,41 +5,38 @@
  */
 
 define(['knockout'], function(ko) {
-    function FaSetting(eventBindings, settingsJson) {
-        if (settingsJson) {
-            this.settings = ko.mapping.fromJSON(settingsJson);
-        } else {
-            this.settings = {
-                selectedSubject: {
-                    displayName: ko.observable('<Subject>'), 
-                    id: ko.observable()
-                },
-                selectedCube: {
-                    displayName: ko.observable('<Cube>'), 
-                    id: ko.observable()
-                },
-                selectedMeasures: ko.observableArray(),
-                dataDisplay: {
-                    regionName: ko.observable(),
-                    displayType: ko.observable("chart"),
-                    regionAutoHeight: ko.observable(false),
-                    regionHeightPx: ko.observable(200),
-                    chartOptions: {
-                        chartType: ko.observable("line"),
-                        showMultipleDataSeries: ko.observable(true),
-                        showLegend: ko.observable(true),
-                        showTooltips: ko.observable(true),
-                        showXaxisLabel: ko.observable(false),
-                        xAxisLabel: ko.observable("<Cutomized X-Axis Label>"),
-                        showYaxisLabel: ko.observable(false),
-                        yAxisLabel: ko.observable("<Cutomized X-Axis Label>")
-                    }
-                }
-            };
-        }
-        
-        this.eventBindings = eventBindings;
-    }
+    function FaSetting() {
+        this.selectedCube = ko.observable({
+            displayName: '<Cube>',
+            id: 0,
+            subject: {
+                displayName: '<Subject>',
+                id: 1
+            }
+        });
+        this.selectedMeasures = ko.observableArray();
+        this.dataDisplay = {
+            regionName: ko.observable(),
+            displayType: ko.observable("chart"),
+            regionAutoHeight: ko.observable(false),
+            regionHeightPx: ko.observable(200),
+            chartOptions: {
+                chartType: ko.observable("line"),
+                showMultipleDataSeries: ko.observable(true),
+                showLegend: ko.observable(true),
+                showTooltips: ko.observable(true),
+                showXaxisLabel: ko.observable(false),
+                xAxisLabel: ko.observable("<Cutomized X-Axis Label>"),
+                showYaxisLabel: ko.observable(false),
+                yAxisLabel: ko.observable("<Cutomized X-Axis Label>")
+            }
+        };
 
+        var me = this;
+        this.selectedCube.update = function(options) {
+            me.selectedCube(options.data);
+        };
+    }
+    
     return FaSetting;
 });
