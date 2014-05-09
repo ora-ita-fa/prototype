@@ -1,1 +1,227 @@
-{"MyQueryWS.QueryDefinition":{"subjectName":"TVMDWFSUBJECT","cubeName":"TVMDWFLOAD","sourceReference":{"sdk.emwanalyticstools.model.query.CubeSourceReference":{"alias":null,"cubeName":"TVMDWFLOAD","cubeTableName":"EMWC_TVMDWFLOAD"}},"aggregations":{"java.util.LinkedHashSet":[{"sdk.emwanalyticstools.model.query.MeasureAggregation":{"function":"AVG","alias":"avgActiveMem","functionParameters":null,"measureDef":{"MyQueryWS.MeasureDefinition":{"name":"ACTIVE MEMORY","displayName":"ActiveMem","cubeColumn":"ACTIVE_MEMORY","measureType":1,"unitType":"byte","metricGroup":null,"targetType":null,"metricColumn":null,"defaultAggregation":1,"parentCubeName":null}}}},{"sdk.emwanalyticstools.model.query.AggregationAggregation":{"function":"TRUNC_FMT","alias":"EMWC_TVMDWFLOAD_START_TIME_ID","functionParameters":{"java.util.ArrayList":["'mm'"]},"aggregation":{"sdk.emwanalyticstools.model.query.DateAggregation":{"function":"MIN","alias":null,"functionParameters":null,"dimensionName":"TIME","cubeName":"TVMDWFLOAD"}},"treatAsMeasure":false}}]},"selections":null,"groupByEntities":{"java.util.LinkedHashSet":[{"sdk.emwanalyticstools.model.query.GroupByLevelEntity":{"withRollup":false,"levelDef":{"MyQueryWS.LevelDefinition":{"subjectName":null,"cubeName":null,"name":"TARGETLEVELCOSTCENTER","displayName":"Cost Center","description":"Cost Center","levelOrder":2,"createdDate":{"java.sql.Date":"2014-03-22"},"createdBy":"SYSEMW","includeParentIdentifiers":0,"parentHierarchyName":"TARGETHIERBYCOSTCENTER","parentDimName":"TARGET","Attributes":{"java.util.ArrayList":[{"MyQueryWS.AttributeDefinition":{"name":"COSTCENTER","displayName":"Cost Center","dataType":0,"precision":1024,"dimensionColumn":"COSTCENTER","naturalKey":0,"naturalKeyPos":0,"levelIdentifier":1,"levelDescriptor":1,"defaultHierarchyName":"TARGETHIERBYCOSTCENTER","defaultLevelName":"TARGETLEVELCOSTCENTER","disableGroupBy":false,"levelOrder":0,"parentDimName":"TARGET","parentLevelName":"TARGETLEVELCOSTCENTER"}}]}}},"levelAttributes":{"java.util.LinkedHashSet":[{"sdk.emwanalyticstools.model.query.AttributeSelection":{"alias":"TARGET_COSTCENTER","function":null,"functionParameters":null,"attrDef":{"MyQueryWS.AttributeDefinition":{"name":"COSTCENTER","displayName":"Cost Center","dataType":0,"precision":1024,"dimensionColumn":"COSTCENTER","naturalKey":0,"naturalKeyPos":0,"levelIdentifier":1,"levelDescriptor":1,"defaultHierarchyName":"TARGETHIERBYCOSTCENTER","defaultLevelName":"TARGETLEVELCOSTCENTER","disableGroupBy":false,"levelOrder":0,"parentDimName":"TARGET","parentLevelName":"TARGETLEVELCOSTCENTER"}}}}]}}},{"sdk.emwanalyticstools.model.query.GroupByLevelEntity":{"withRollup":false,"levelDef":{"MyQueryWS.LevelDefinition":{"subjectName":null,"cubeName":null,"name":"TIMELEVELMONTHOFYEAR","displayName":"Month of Year","description":"Month of year","levelOrder":3,"createdDate":{"java.sql.Date":"2014-03-22"},"createdBy":"SYSEMW","includeParentIdentifiers":1,"parentHierarchyName":"TIMEHIERBYMONTHOFYEAR","parentDimName":"START_TIME","Attributes":{"java.util.ArrayList":[{"MyQueryWS.AttributeDefinition":{"name":"MONTHOFYEAR","displayName":"Month of year","dataType":0,"precision":2,"dimensionColumn":"MONTHOFYEAR","naturalKey":0,"naturalKeyPos":0,"levelIdentifier":1,"levelDescriptor":1,"defaultHierarchyName":"TIMEHIERBYMONTHOFYEAR","defaultLevelName":"TIMELEVELMONTHOFYEAR","disableGroupBy":false,"levelOrder":0,"parentDimName":"TIME","parentLevelName":"TIMELEVELMONTHOFYEAR"}}]}}},"levelAttributes":{"java.util.LinkedHashSet":[{"sdk.emwanalyticstools.model.query.AttributeSelection":{"alias":"START_TIME_MONTHOFYEAR","function":null,"functionParameters":null,"attrDef":{"MyQueryWS.AttributeDefinition":{"name":"MONTHOFYEAR","displayName":"Month of year","dataType":0,"precision":2,"dimensionColumn":"MONTHOFYEAR","naturalKey":0,"naturalKeyPos":0,"levelIdentifier":1,"levelDescriptor":1,"defaultHierarchyName":"TIMEHIERBYMONTHOFYEAR","defaultLevelName":"TIMELEVELMONTHOFYEAR","disableGroupBy":false,"levelOrder":0,"parentDimName":"TIME","parentLevelName":"TIMELEVELMONTHOFYEAR"}}}}]}}}]},"rollupLowestLevels":{"java.util.LinkedHashSet":[]},"startingRollupLevels":{"java.util.LinkedHashSet":[]},"hasDynamicHierarchy":false,"dynHierList":null,"whereExpression":{"sdk.emwanalyticstools.model.query.FilterExpression":{"conjunction":"AND","filters":{"java.util.LinkedHashSet":[{"sdk.emwanalyticstools.model.query.TimeRangeFilter":{"startDate":{"java.util.Date":1335299421221},"endDate":{"java.util.Date":1398371421222}}}]}}},"havingExpression":null,"identity":"query-599","topnConfig":null,"parameters":null}}
+{
+    "MyQueryWS.QueryDefinition": {
+        "subjectName": "TVMDWFSUBJECT",
+        "cubeName": "TVMDWFLOAD",
+        "sourceReference": {
+            "sdk.emwanalyticstools.model.query.CubeSourceReference": {
+                "alias": null,
+                "cubeName": "TVMDWFLOAD",
+                "cubeTableName": "EMWC_TVMDWFLOAD"
+            }
+        },
+        "aggregations": {
+            "java.util.LinkedHashSet": [{
+                    "sdk.emwanalyticstools.model.query.MeasureAggregation": {
+                        "function": "AVG",
+                        "alias": "avgActiveMem",
+                        "functionParameters": null,
+                        "measureDef": {
+                            "MyQueryWS.MeasureDefinition": {
+                                "name": "ACTIVE MEMORY",
+                                "displayName": "ActiveMem",
+                                "cubeColumn": "ACTIVE_MEMORY",
+                                "measureType": 1,
+                                "unitType": "byte",
+                                "metricGroup": null,
+                                "targetType": null,
+                                "metricColumn": null,
+                                "defaultAggregation": 1,
+                                "parentCubeName": null
+                            }
+                        }
+                    }
+                }, {
+                    "sdk.emwanalyticstools.model.query.AggregationAggregation": {
+                        "function": "TRUNC_FMT",
+                        "alias": "EMWC_TVMDWFLOAD_START_TIME_ID",
+                        "functionParameters": {
+                            "java.util.ArrayList": ["'mm'"]
+                        },
+                        "aggregation": {
+                            "sdk.emwanalyticstools.model.query.DateAggregation": {
+                                "function": "MIN",
+                                "alias": null,
+                                "functionParameters": null,
+                                "dimensionName": "TIME",
+                                "cubeName": "TVMDWFLOAD"
+                            }
+                        },
+                        "treatAsMeasure": false
+                    }
+                }]
+        },
+        "selections": null,
+        "groupByEntities": {
+            "java.util.LinkedHashSet": [{
+                    "sdk.emwanalyticstools.model.query.GroupByLevelEntity": {
+                        "withRollup": false,
+                        "levelDef": {
+                            "MyQueryWS.LevelDefinition": {
+                                "subjectName": null,
+                                "cubeName": null,
+                                "name": "TARGETLEVELCOSTCENTER",
+                                "displayName": "Cost Center",
+                                "description": "Cost Center",
+                                "levelOrder": 2,
+                                "createdDate": {
+                                    "java.sql.Date": "2014-03-22"
+                                },
+                                "createdBy": "SYSEMW",
+                                "includeParentIdentifiers": 0,
+                                "parentHierarchyName": "TARGETHIERBYCOSTCENTER",
+                                "parentDimName": "TARGET",
+                                "Attributes": {
+                                    "java.util.ArrayList": [{
+                                            "MyQueryWS.AttributeDefinition": {
+                                                "name": "COSTCENTER",
+                                                "displayName": "Cost Center",
+                                                "dataType": 0,
+                                                "precision": 1024,
+                                                "dimensionColumn": "COSTCENTER",
+                                                "naturalKey": 0,
+                                                "naturalKeyPos": 0,
+                                                "levelIdentifier": 1,
+                                                "levelDescriptor": 1,
+                                                "defaultHierarchyName": "TARGETHIERBYCOSTCENTER",
+                                                "defaultLevelName": "TARGETLEVELCOSTCENTER",
+                                                "disableGroupBy": false,
+                                                "levelOrder": 0,
+                                                "parentDimName": "TARGET",
+                                                "parentLevelName": "TARGETLEVELCOSTCENTER"
+                                            }
+                                        }]
+                                }
+                            }
+                        },
+                        "levelAttributes": {
+                            "java.util.LinkedHashSet": [{
+                                    "sdk.emwanalyticstools.model.query.AttributeSelection": {
+                                        "alias": "TARGET_COSTCENTER",
+                                        "function": null,
+                                        "functionParameters": null,
+                                        "attrDef": {
+                                            "MyQueryWS.AttributeDefinition": {
+                                                "name": "COSTCENTER",
+                                                "displayName": "Cost Center",
+                                                "dataType": 0,
+                                                "precision": 1024,
+                                                "dimensionColumn": "COSTCENTER",
+                                                "naturalKey": 0,
+                                                "naturalKeyPos": 0,
+                                                "levelIdentifier": 1,
+                                                "levelDescriptor": 1,
+                                                "defaultHierarchyName": "TARGETHIERBYCOSTCENTER",
+                                                "defaultLevelName": "TARGETLEVELCOSTCENTER",
+                                                "disableGroupBy": false,
+                                                "levelOrder": 0,
+                                                "parentDimName": "TARGET",
+                                                "parentLevelName": "TARGETLEVELCOSTCENTER"
+                                            }
+                                        }
+                                    }
+                                }]
+                        }
+                    }
+                }, {
+                    "sdk.emwanalyticstools.model.query.GroupByLevelEntity": {
+                        "withRollup": false,
+                        "levelDef": {
+                            "MyQueryWS.LevelDefinition": {
+                                "subjectName": null,
+                                "cubeName": null,
+                                "name": "TIMELEVELMONTHOFYEAR",
+                                "displayName": "Month of Year",
+                                "description": "Month of year",
+                                "levelOrder": 3,
+                                "createdDate": {
+                                    "java.sql.Date": "2014-03-22"
+                                },
+                                "createdBy": "SYSEMW",
+                                "includeParentIdentifiers": 1,
+                                "parentHierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                                "parentDimName": "START_TIME",
+                                "Attributes": {
+                                    "java.util.ArrayList": [{
+                                            "MyQueryWS.AttributeDefinition": {
+                                                "name": "MONTHOFYEAR",
+                                                "displayName": "Month of year",
+                                                "dataType": 0,
+                                                "precision": 2,
+                                                "dimensionColumn": "MONTHOFYEAR",
+                                                "naturalKey": 0,
+                                                "naturalKeyPos": 0,
+                                                "levelIdentifier": 1,
+                                                "levelDescriptor": 1,
+                                                "defaultHierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                                                "defaultLevelName": "TIMELEVELMONTHOFYEAR",
+                                                "disableGroupBy": false,
+                                                "levelOrder": 0,
+                                                "parentDimName": "TIME",
+                                                "parentLevelName": "TIMELEVELMONTHOFYEAR"
+                                            }
+                                        }]
+                                }
+                            }
+                        },
+                        "levelAttributes": {
+                            "java.util.LinkedHashSet": [{
+                                    "sdk.emwanalyticstools.model.query.AttributeSelection": {
+                                        "alias": "START_TIME_MONTHOFYEAR",
+                                        "function": null,
+                                        "functionParameters": null,
+                                        "attrDef": {
+                                            "MyQueryWS.AttributeDefinition": {
+                                                "name": "MONTHOFYEAR",
+                                                "displayName": "Month of year",
+                                                "dataType": 0,
+                                                "precision": 2,
+                                                "dimensionColumn": "MONTHOFYEAR",
+                                                "naturalKey": 0,
+                                                "naturalKeyPos": 0,
+                                                "levelIdentifier": 1,
+                                                "levelDescriptor": 1,
+                                                "defaultHierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                                                "defaultLevelName": "TIMELEVELMONTHOFYEAR",
+                                                "disableGroupBy": false,
+                                                "levelOrder": 0,
+                                                "parentDimName": "TIME",
+                                                "parentLevelName": "TIMELEVELMONTHOFYEAR"
+                                            }
+                                        }
+                                    }
+                                }]
+                        }
+                    }
+                }]
+        },
+        "rollupLowestLevels": {
+            "java.util.LinkedHashSet": []
+        },
+        "startingRollupLevels": {
+            "java.util.LinkedHashSet": []
+        },
+        "hasDynamicHierarchy": false,
+        "dynHierList": null,
+        "whereExpression": {
+            "sdk.emwanalyticstools.model.query.FilterExpression": {
+                "conjunction": "AND",
+                "filters": {
+                    "java.util.LinkedHashSet": [{
+                            "sdk.emwanalyticstools.model.query.TimeRangeFilter": {
+                                "startDate": {
+                                    "java.util.Date": 1335299421221
+                                },
+                                "endDate": {
+                                    "java.util.Date": 1398371421222
+                                }
+                            }
+                        }]
+                }
+            }
+        },
+        "havingExpression": null,
+        "identity": "query-599",
+        "topnConfig": null,
+        "parameters": null
+    }
+}

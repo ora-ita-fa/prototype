@@ -41,7 +41,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
 
                 var chartEl = $newChart.find('.chart').get(0);
 
-
                 $newChart.resizable({
                     stop: function(event, ui) {
                         ko.cleanNode(chartEl);

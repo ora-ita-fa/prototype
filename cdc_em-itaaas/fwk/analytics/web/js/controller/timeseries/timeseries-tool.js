@@ -17,9 +17,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
            
             var qdg = dataSource.getQueryDescriptorGroup();
             var dsg = dataSource.getDataSetGroup();
-            console.log(dsg);
             var config = dataSource.getConfig();
-            console.log(config);
             var timeWindow = valueAccessor().timeWindow;
 
             $.get("/analytics/html/timeseries/timeseries-tool.html", function(resp) {
@@ -73,6 +71,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', '/analytics/js/common/ita-core.js',
                         });
                         demoChart.lineSeriesValue = ko.observable(seriesList);
                         demoChart.lineGroupsValue = timeGroup;
+                    }
+                }else{
+                    if (dsg && dsg.groups && dsg.series) {
+                        demoChart.lineSeriesValue = dsg.series;
+                        demoChart.lineGroupsValue = dsg.groups;
                     }
                 }
                 if (timeWindow && timeWindow.subscribe && typeof timeWindow.subscribe === 'function') {
