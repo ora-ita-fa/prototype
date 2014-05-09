@@ -157,6 +157,7 @@ and open the template in the editor.
     .timeseries-main .left .cube-dropdown-button {
       float: right; }
     .timeseries-main .left .cube-selector-container {
+      padding: 5px;
       display: none;
       position: absolute;
       border: 1px solid #c4ced7;
@@ -166,6 +167,23 @@ and open the template in the editor.
       top: 200px;
       background-color: white;
       z-index: 1000; }
+      .timeseries-main .left .cube-selector-container .search-keyword-input {
+        max-width: 88%; }
+      .timeseries-main .left .cube-selector-container .search_cube {
+        float: left;
+        display: inline;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 5px;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 23px;
+        height: 20px;
+        background-image: url("/flex_analyzer/images/search_list_not_selected.png"); }
+        .timeseries-main .left .cube-selector-container .search_cube:hover {
+          background-image: url("/flex_analyzer/images/search_list_mouse_over.png"); }
+        .timeseries-main .left .cube-selector-container .search_cube:active {
+          background-image: url("/flex_analyzer/images/search_list_mouse_down.png"); }
     .timeseries-main .left .custom-icon-tree, .timeseries-main .left .cube-selector, .timeseries-main .left .measure-selector, .timeseries-main .left .dimension-selector {
       overflow-y: scroll;
       overflow-x: scroll; }
@@ -307,5 +325,3 @@ and open the template in the editor.
         float: right; }
     .timeseries-main .right .correlation .correlation-analyze {
       float: right; }
-
-/*# sourceMappingURL=fa-all.css.map */

@@ -10,6 +10,14 @@ define(['knockout'], function(ko) {
             this.settings = ko.mapping.fromJSON(settingsJson);
         } else {
             this.settings = {
+                selectedSubject: {
+                    displayName: ko.observable('<Subject>'), 
+                    id: ko.observable()
+                },
+                selectedCube: {
+                    displayName: ko.observable('<Cube>'), 
+                    id: ko.observable()
+                },
                 selectedMeasures: ko.observableArray(),
                 dataDisplay: {
                     regionName: ko.observable(),

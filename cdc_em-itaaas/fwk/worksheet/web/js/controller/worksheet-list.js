@@ -49,10 +49,10 @@ define(['ojall', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojcomponents', 'oj
                 handleSearchEvent: function(data1, event) {
                     var self = this;
                     var newData = $.grep(worksheetData, function(element, index) {
-                        if (self.filteredWorksheetName() !== null)
+                        if (self.filteredWorksheetName())
                             if (element.Name.indexOf(self.filteredWorksheetName()) === -1)
                                 return false;
-                        if ( self.selectedAppType()[0] !== null) {
+                        if ( self.selectedAppType()[0]) {
                             if (element.ApplicationTypeID !== self.selectedAppType()[0])                                
                                 return false;
 

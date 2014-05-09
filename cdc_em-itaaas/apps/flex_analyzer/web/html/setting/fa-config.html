@@ -4,16 +4,19 @@
             <h2 class="measure-title">
                 Measures
             </h2>
-            <button class="cube-dropdown-button" data-bind="ojComponent: {
+            <button id="pick-cube-button" class="cube-dropdown-button" data-bind="ojComponent: {
                     component:'ojButton',
                     icons: {end:'oj-fwk-icon-caret-s oj-fwk-icon'}, 
-                    label: '<Cube>'
+                    label: selectedCube.displayName
                     }, click: showCubeSelector">
             </button>
-            <div class="cube-selector-container">
+            <div class="cube-selector-container" id="cube-selector-container">
                 <div class="search-box">
-                    <input data-bind="ojComponent: {component: 'ojInputText', 
-                           value: 'key word'}"/>
+                    <div role="img" class="search_cube" ></div>
+                    <input placeholder= '<Entery cube name for search>' data-bind="ojComponent: {component: 'ojInputText', 
+                               rootAttributes: {
+                                                   class:'search-keyword-input'
+                                               }}"/>
                 </div>
                 <div id="cube-selector" class="cube-selector tree-table"
                     data-bind="
@@ -31,6 +34,7 @@
              ojComponent:{
                  component: 'ojTree',
                  selectionMode: 'multiple', 
+                 dnd: {reorder : true},
                  data:measures}
              ">
         </div>
@@ -40,6 +44,7 @@
              ojComponent:{
                  component: 'ojTree', 
                  selectionMode: 'multiple',
+                 dnd: {reorder : true},
                  data:dimensions}
              ">
         </div>

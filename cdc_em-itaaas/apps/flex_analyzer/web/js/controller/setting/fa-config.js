@@ -25,7 +25,6 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                     var model = new ChartRegionModel();
 
                     function koBind() {
-                        
                         $.getJSON('/warehouse/metadata/subjects', function(resp) {
                             var subjectsForOj = [];
                             $.each(resp, function() {
@@ -33,7 +32,8 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                                 subjectNode.title = this.displayName;
                                 subjectNode.attr = {
                                     id: this.id,
-                                    type: "subject"
+                                    type: "subject",
+                                    displayName: this.displayName,
                                 };
                                 subjectsForOj.push(subjectNode);
                                 
@@ -43,7 +43,9 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                                     cubeNode.title = this.displayName;
                                     cubeNode.attr = {
                                         id: this.id,
-                                        subjectId: this.subjectId,
+                                        subjectId: subjectNode.id,
+                                        subjectDisplayName:subjectNode.displayName,
+                                        displayName: this.displayName,
                                         type: "cube"
                                     };
                                     subjectNode.children.push(cubeNode);
@@ -58,7 +60,14 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                                 return;
                             }
                             var subjectId = $node.attr("subjectId");
+                            var subjectDisplayName = $node.attr("subjectDisplayName");
                             var cubeId= $node.attr("id");
+                            var cubeDisplayName= $node.attr("displayName");
+                            
+                            faSetting.settings.selectedCube.displayName(cubeDisplayName);
+                            faSetting.settings.selectedCube.id(cubeId);
+                            faSetting.settings.selectedSubject.displayName(subjectDisplayName);
+                            faSetting.settings.selectedSubject.id(subjectId);
                             
                             ko.cleanNode($("#measure-selector")[0]);
                             $("#measure-selector").empty();
@@ -108,6 +117,7 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
 
                                 ko.applyBindings({dimensions: dimensionsFromAPI}, $("#dimension-selector")[0]);
                             });
+                            $("#cube-selector-container").hide();
                         }
 
                         ko.applyBindings(model, $('#chart-container')[0]);
@@ -139,12 +149,19 @@ define(['ojs/ojcore', 'knockout',  'jquery', '/analytics/js/common/ita-core.js',
                                 of: '.cube-dropdown-button'
                             });
                         }
-
-                        $(".cube-selector-container").mouseleave(function() {
-                            $(this).hide();
+                        
+                        //hide cube pick popup dialog click area out of dialog rather than mouse leave
+                        $(".timeseries-main").click(function(event) {
+                            if ($(event.target).parent().get( 0 ).id !== 'pick-cube-button' && !$(event.target).parents().filter('#cube-selector-container').length && event.target.id !== 'cube-selector-container' && event.target.id !== 'pick-cube-button') {
+                                // close cube selector dialog
+                                $("#cube-selector-container").hide();
+                            }
                         });
+//                        $(".cube-selector-container").mouseleave(function() {
+//                            $(this).hide();
+//                        });
 
-                        ko.applyBindings({showCubeSelector: showCubeSelector},
+                        ko.applyBindings({showCubeSelector: showCubeSelector,selectedCube:faSetting.settings.selectedCube},
                         $(".cube-dropdown-button")[0]);
                     }
                     function registerListeners(){
