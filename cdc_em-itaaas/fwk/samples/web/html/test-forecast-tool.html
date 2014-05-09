@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Forecast Tool Sample Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/resources/css/libs/oj/v1.0/alta/oj-alta.css" id="css">
+        <link rel="stylesheet" href="/resources/css/samples/site/alta/demo-alta-site-min.css" id="sitecss" >
+        <link rel="stylesheet" href="/analytics/css/analytics-all.css">
+        <script src="/resources/js/libs/require/require.js"></script>
+        <script src="/resources/js/main.js"></script>
+    </head>
+    <body>
+        <br>
+        <div class="chart-container" >  
+            <div data-bind="
+                        itaComponent: {
+                            component: 'forecast-tool', 
+                            dataSource: dataSource
+                            /* or any other parameters the region would accept */
+                        }" style="width: 1400px;height:300px">
+            </div> 
+        </div>
+        <script>
+        
+            require(['ojs/ojcore', 'knockout', 'jquery',
+                '/analytics/js/model/timeseries/itaToolRemoteDataSource.js', 
+                '/analytics/js/model/timeseries/itaToolLocalDataSource.js',
+                '/analytics/js/model/forecast/itaForecastConfig.js',
+                'ojs/ojknockout','ojs/ojcomponents', 'ojs/ojchart', 'jqueryui',
+                '/analytics/js/controller/forecast/forecast-tool.js'
+            ], function(oj, ko, $, itaToolRemoteDataSource,itaToolLocalDataSource,itaForecastConfig) {
+                $(
+                    function() {
+                        
+                        var forecastConfig = new itaForecastConfig();
+                        //var forecastDataSource = new itaToolRemoteDataSource("http://dhcp-1op1-1op2-west-144-25-170-26.usdhcp.oraclecorp.com:7101/MyEMWToolsWS-EmwTools-context-root/jersey/QueryService/getQDJson",null,forecastConfig);
+                        var forecastDataSource = new itaToolRemoteDataSource("/analytics/data/forecast/qd.json",null,forecastConfig);
+                        
+                        ko.applyBindings({
+                            dataSource: forecastDataSource
+                        }, $(".chart-container>div")[0]);
+
+                    }
+                );
+            });
+        </script>
+    </body>
+</html>

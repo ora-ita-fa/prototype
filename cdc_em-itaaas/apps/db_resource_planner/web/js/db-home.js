@@ -5,7 +5,7 @@
  */
 
 
-define(['ojs/ojcore', 'knockout', 'jquery',
+define(['ojall', 'knockout', 'jquery',
     '/analytics/js/model/timeseries/itaToolRemoteDataSource.js',
     '/analytics/js/model/timeseries/itaToolLocalDataSource.js',
     '/analytics/js/model/forecast/itaForecastConfig.js',
@@ -117,10 +117,10 @@ define(['ojs/ojcore', 'knockout', 'jquery',
                 var forecastConfig = new itaForecastConfig();
 
                 // var forecastDataSource = new itaToolRemoteDataSource("http://dhcp-1op1-1op2-west-144-25-170-26.usdhcp.oraclecorp.com:7101/MyEMWToolsWS-EmwTools-context-root/jersey/QueryService/getQDJson",null,forecastConfig);
-                var forecastDataSource = new itaToolRemoteDataSource("/analytics/data/forecast/qd.json", null, forecastConfig);
+               // var forecastDataSource = new itaToolRemoteDataSource("/analytics/data/forecast/qd.json", null, forecastConfig);
 
                 ko.applyBindings({
-                    datasource4: forecastDataSource
+                    datasource4: sampleDataSource4
                 }, $(".chart-container>div")[3]);
 
 
